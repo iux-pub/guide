@@ -1,0 +1,118 @@
+// 버튼 컴포넌트
+// BEM Block: .btn
+// Variants: --primary, --secondary, --outline, --text, --ghost, --link
+// Sizes: --sm, --lg
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid transparent;
+  border-radius: var(--radius-base);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+
+  // 비활성 상태
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // 포커스 표시 (접근성)
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  // --- Variant modifiers ---
+
+  // 주요 동작 (제출, 저장)
+  &--primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-dark);
+    }
+  }
+
+  // 보조 동작
+  &--secondary {
+    background-color: var(--color-gray-100);
+    color: var(--color-text);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-200);
+    }
+  }
+
+  // 테두리만, 덜 강조
+  &--outline {
+    border-color: var(--color-border);
+    background-color: transparent;
+    color: var(--color-text);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-bg-secondary);
+    }
+  }
+
+  // 텍스트 버튼
+  &--text {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-bg-secondary);
+    }
+  }
+
+  // 고스트 버튼
+  &--ghost {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-100);
+    }
+  }
+
+  // 링크 스타일 버튼
+  &--link {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: transparent;
+    text-decoration: underline;
+
+    &:hover:not(:disabled) {
+      color: var(--color-primary-dark);
+    }
+  }
+
+  // --- Size modifiers ---
+
+  // 작은 버튼 (터치 영역 44px 보장)
+  &--sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    min-height: 4.4rem;
+  }
+
+  // 큰 버튼
+  &--lg {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-md);
+  }
+}

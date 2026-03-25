@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>버튼 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">버튼 (Button)</h1>
+
+    <!-- Primary -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Primary</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--primary">저장하기</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--primary"&gt;저장하기&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Secondary -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Secondary</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--secondary">작성 취소</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--secondary"&gt;작성 취소&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Outline -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Outline</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--outline">더 보기</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--outline"&gt;더 보기&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Text</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--text">텍스트 버튼</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--text"&gt;텍스트 버튼&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Ghost -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Ghost</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--ghost">고스트 버튼</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--ghost"&gt;고스트 버튼&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Link -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Link</h2>
+      <div class="pg__preview">
+        <a href="#" class="btn btn--link">링크 버튼</a>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;a href="#" class="btn btn--link"&gt;링크 버튼&lt;/a&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 크기 변형 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">크기 변형 (Sizes)</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--primary btn--sm">Small</button>
+        <button type="button" class="btn btn--primary">Default</button>
+        <button type="button" class="btn btn--primary btn--lg">Large</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--primary btn--sm"&gt;Small&lt;/button&gt;
+&lt;button type="button" class="btn btn--primary"&gt;Default&lt;/button&gt;
+&lt;button type="button" class="btn btn--primary btn--lg"&gt;Large&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 비활성 상태 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">비활성 (Disabled)</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--primary" disabled>Primary 비활성</button>
+        <button type="button" class="btn btn--secondary" disabled>Secondary 비활성</button>
+        <button type="button" class="btn btn--outline" disabled>Outline 비활성</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--primary" disabled&gt;Primary 비활성&lt;/button&gt;
+&lt;button type="button" class="btn btn--secondary" disabled&gt;Secondary 비활성&lt;/button&gt;
+&lt;button type="button" class="btn btn--outline" disabled&gt;Outline 비활성&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

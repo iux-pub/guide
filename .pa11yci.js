@@ -12,7 +12,8 @@ const pages = [
   'modal.html',
   'tab.html',
   'pagination.html',
-  'breadcrumb.html'
+  'breadcrumb.html',
+  'a11y-checklist.html'
 ]
 
 module.exports = {

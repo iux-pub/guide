@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디자인 토큰 플레이그라운드</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 레이아웃 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .pg__header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-lg) var(--spacing-md);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .pg__footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-lg) var(--spacing-md);
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+    }
+
+    .pg__nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .pg__nav-link {
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--radius-base);
+      background-color: var(--color-bg-secondary);
+      text-decoration: none;
+      color: var(--color-text);
+      font-size: var(--font-size-sm);
+    }
+
+    .pg__nav-link:hover,
+    .pg__nav-link:focus {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .pg__section {
+      margin-bottom: var(--spacing-3xl);
+    }
+
+    .pg__section-title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .pg__subsection-title {
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-secondary);
+    }
+
+    /* 색상 스와치 그리드 */
+    .pg__swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .pg__swatch {
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-base);
+      overflow: hidden;
+    }
+
+    .pg__swatch-color {
+      width: 100%;
+      height: 80px;
+    }
+
+    .pg__swatch-info {
+      padding: var(--spacing-sm);
+      font-size: var(--font-size-xs);
+      line-height: var(--leading-base);
+    }
+
+    .pg__swatch-name {
+      display: block;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text);
+    }
+
+    .pg__swatch-value {
+      display: block;
+      color: var(--color-text-secondary);
+    }
+
+    /* 타이포그래피 데모 */
+    .pg__type-row {
+      display: flex;
+      align-items: baseline;
+      gap: var(--spacing-md);
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .pg__type-label {
+      flex-shrink: 0;
+      width: 160px;
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      font-family: monospace;
+    }
+
+    .pg__type-sample {
+      flex: 1;
+    }
+
+    /* 폰트 사이즈 데모 클래스 */
+    .demo-font-2xl { font-size: var(--font-size-2xl); }
+    .demo-font-xl { font-size: var(--font-size-xl); }
+    .demo-font-lg { font-size: var(--font-size-lg); }
+    .demo-font-md { font-size: var(--font-size-md); }
+    .demo-font-base { font-size: var(--font-size-base); }
+    .demo-font-sm { font-size: var(--font-size-sm); }
+    .demo-font-xs { font-size: var(--font-size-xs); }
+
+    /* 폰트 웨이트 데모 클래스 */
+    .demo-weight-regular { font-weight: var(--font-weight-regular); }
+    .demo-weight-medium { font-weight: var(--font-weight-medium); }
+    .demo-weight-semibold { font-weight: var(--font-weight-semibold); }
+    .demo-weight-bold { font-weight: var(--font-weight-bold); }
+
+    /* 라인 하이트 데모 클래스 */
+    .demo-leading-tight { line-height: var(--leading-tight); }
+    .demo-leading-base { line-height: var(--leading-base); }
+    .demo-leading-loose { line-height: var(--leading-loose); }
+
+    .pg__leading-demo {
+      max-width: 480px;
+      padding: var(--spacing-sm);
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* 간격 스케일 */
+    .pg__spacing-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .pg__spacing-box {
+      background-color: var(--color-primary);
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .pg__spacing-box--xs { width: var(--spacing-xs); height: var(--spacing-xs); }
+    .pg__spacing-box--sm { width: var(--spacing-sm); height: var(--spacing-sm); }
+    .pg__spacing-box--md { width: var(--spacing-md); height: var(--spacing-md); }
+    .pg__spacing-box--lg { width: var(--spacing-lg); height: var(--spacing-lg); }
+    .pg__spacing-box--xl { width: var(--spacing-xl); height: var(--spacing-xl); }
+    .pg__spacing-box--2xl { width: var(--spacing-2xl); height: var(--spacing-2xl); }
+    .pg__spacing-box--3xl { width: var(--spacing-3xl); height: var(--spacing-3xl); }
+
+    .pg__spacing-label {
+      font-size: var(--font-size-xs);
+      font-family: monospace;
+      color: var(--color-text-secondary);
+    }
+
+    /* 기타 토큰 — 라디우스 */
+    .pg__radius-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+
+    .pg__radius-item {
+      text-align: center;
+    }
+
+    .pg__radius-box {
+      width: 80px;
+      height: 80px;
+      background-color: var(--color-primary-light);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .pg__radius-box--sm { border-radius: var(--radius-sm); }
+    .pg__radius-box--base { border-radius: var(--radius-base); }
+    .pg__radius-box--lg { border-radius: var(--radius-lg); }
+    .pg__radius-box--xl { border-radius: var(--radius-xl); }
+    .pg__radius-box--full { border-radius: var(--radius-full); }
+
+    .pg__radius-label {
+      font-size: var(--font-size-xs);
+      font-family: monospace;
+      color: var(--color-text-secondary);
+    }
+
+    /* 기타 토큰 — 쉐도우 */
+    .pg__shadow-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-lg);
+    }
+
+    .pg__shadow-card {
+      width: 160px;
+      height: 100px;
+      background-color: var(--color-white);
+      border-radius: var(--radius-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-size-xs);
+      font-family: monospace;
+      color: var(--color-text-secondary);
+    }
+
+    .pg__shadow-card--sm { box-shadow: var(--shadow-sm); }
+    .pg__shadow-card--base { box-shadow: var(--shadow-base); }
+    .pg__shadow-card--lg { box-shadow: var(--shadow-lg); }
+
+    /* 기타 토큰 — 트랜지션 */
+    .pg__transition-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+
+    .pg__transition-box {
+      width: 120px;
+      height: 60px;
+      background-color: var(--color-primary);
+      color: var(--color-white);
+      border-radius: var(--radius-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-size-xs);
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    .pg__transition-box:hover {
+      background-color: var(--color-primary-dark);
+    }
+
+    .pg__transition-box--fast { transition: background-color var(--transition-fast); }
+    .pg__transition-box--base { transition: background-color var(--transition-base); }
+    .pg__transition-box--slow { transition: background-color var(--transition-slow); }
+
+    /* Z-index 목록 */
+    .pg__zindex-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .pg__zindex-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-xs) 0;
+      border-bottom: 1px solid var(--color-border-light);
+      font-size: var(--font-size-sm);
+    }
+
+    .pg__zindex-name {
+      font-family: monospace;
+      color: var(--color-text);
+      font-weight: var(--font-weight-medium);
+      width: 200px;
+    }
+
+    .pg__zindex-value {
+      color: var(--color-text-secondary);
+    }
+
+    /* 그리드 데모 */
+    .pg__grid-demo {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .pg__grid-cell {
+      background-color: var(--color-primary-dark);
+      color: var(--color-white);
+      padding: var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-size: var(--font-size-xs);
+      font-family: monospace;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pg__grid-cell--span-1 { grid-column: span 1; }
+    .pg__grid-cell--span-2 { grid-column: span 2; }
+    .pg__grid-cell--span-3 { grid-column: span 3; }
+    .pg__grid-cell--span-4 { grid-column: span 4; }
+    .pg__grid-cell--span-6 { grid-column: span 6; }
+    .pg__grid-cell--span-8 { grid-column: span 8; }
+    .pg__grid-cell--span-12 { grid-column: span 12; }
+
+    .pg__grid-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    /* 색상 스와치 — 배경색 클래스 */
+    .pg__swatch-color--primary { background-color: var(--color-primary); }
+    .pg__swatch-color--primary-light { background-color: var(--color-primary-light); }
+    .pg__swatch-color--primary-dark { background-color: var(--color-primary-dark); }
+    .pg__swatch-color--gray-900 { background-color: var(--color-gray-900); }
+    .pg__swatch-color--gray-800 { background-color: var(--color-gray-800); }
+    .pg__swatch-color--gray-700 { background-color: var(--color-gray-700); }
+    .pg__swatch-color--gray-600 { background-color: var(--color-gray-600); }
+    .pg__swatch-color--gray-500 { background-color: var(--color-gray-500); }
+    .pg__swatch-color--gray-400 { background-color: var(--color-gray-400); }
+    .pg__swatch-color--gray-300 { background-color: var(--color-gray-300); }
+    .pg__swatch-color--gray-200 { background-color: var(--color-gray-200); }
+    .pg__swatch-color--gray-100 { background-color: var(--color-gray-100); }
+    .pg__swatch-color--gray-50 { background-color: var(--color-gray-50); }
+    .pg__swatch-color--danger { background-color: var(--color-danger); }
+    .pg__swatch-color--warning { background-color: var(--color-warning); }
+    .pg__swatch-color--success { background-color: var(--color-success); }
+    .pg__swatch-color--info { background-color: var(--color-info); }
+    .pg__swatch-color--text { background-color: var(--color-text); }
+    .pg__swatch-color--text-secondary { background-color: var(--color-text-secondary); }
+    .pg__swatch-color--text-disabled { background-color: var(--color-text-disabled); }
+    .pg__swatch-color--bg { background-color: var(--color-bg); border: 1px solid var(--color-border-light); }
+    .pg__swatch-color--bg-secondary { background-color: var(--color-bg-secondary); }
+    .pg__swatch-color--border { background-color: var(--color-border); }
+    .pg__swatch-color--border-light { background-color: var(--color-border-light); }
+
+    /* skip-to-content */
+    .skip-to-content {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 9999;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background-color: var(--color-primary);
+      color: var(--color-white);
+      text-decoration: none;
+    }
+
+    .skip-to-content:focus {
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">본문 바로가기</a>
+
+  <header class="pg__header">
+    <h1>디자인 토큰 플레이그라운드</h1>
+    <p>INFOMIND UX 가이드 시스템의 디자인 토큰을 시각적으로 확인하는 페이지입니다.</p>
+
+    <nav aria-label="페이지 내 섹션 네비게이션">
+      <div class="pg__nav">
+        <a href="#section-color" class="pg__nav-link">색상 팔레트</a>
+        <a href="#section-typography" class="pg__nav-link">타이포그래피</a>
+        <a href="#section-spacing" class="pg__nav-link">간격 스케일</a>
+        <a href="#section-misc" class="pg__nav-link">기타 토큰</a>
+        <a href="#section-grid" class="pg__nav-link">그리드 시스템</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="pg">
+
+    <!-- ==================== 1. 색상 팔레트 ==================== -->
+    <section id="section-color" class="pg__section" aria-labelledby="heading-color">
+      <h2 id="heading-color" class="pg__section-title">색상 팔레트 (Color Palette)</h2>
+
+      <!-- Primary -->
+      <h3 class="pg__subsection-title">Primary</h3>
+      <div class="pg__swatches">
+        <div class="pg__swatch" aria-label="Primary 색상, #256ef4">
+          <div class="pg__swatch-color pg__swatch-color--primary" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-primary</span>
+            <span class="pg__swatch-value">#256ef4</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Primary Light 색상, #6a9df7">
+          <div class="pg__swatch-color pg__swatch-color--primary-light" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-primary-light</span>
+            <span class="pg__swatch-value">#6a9df7</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Primary Dark 색상, #083891">
+          <div class="pg__swatch-color pg__swatch-color--primary-dark" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-primary-dark</span>
+            <span class="pg__swatch-value">#083891</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gray Scale -->
+      <h3 class="pg__subsection-title">Gray Scale</h3>
+      <div class="pg__swatches">
+        <div class="pg__swatch" aria-label="Gray 900 색상, #222">
+          <div class="pg__swatch-color pg__swatch-color--gray-900" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-900</span>
+            <span class="pg__swatch-value">#222</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 800 색상, #333">
+          <div class="pg__swatch-color pg__swatch-color--gray-800" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-800</span>
+            <span class="pg__swatch-value">#333</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 700 색상, #555">
+          <div class="pg__swatch-color pg__swatch-color--gray-700" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-700</span>
+            <span class="pg__swatch-value">#555</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 600 색상, #666">
+          <div class="pg__swatch-color pg__swatch-color--gray-600" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-600</span>
+            <span class="pg__swatch-value">#666</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 500 색상, #999">
+          <div class="pg__swatch-color pg__swatch-color--gray-500" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-500</span>
+            <span class="pg__swatch-value">#999</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 400 색상, #b1b8be">
+          <div class="pg__swatch-color pg__swatch-color--gray-400" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-400</span>
+            <span class="pg__swatch-value">#b1b8be</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 300 색상, #ccc">
+          <div class="pg__swatch-color pg__swatch-color--gray-300" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-300</span>
+            <span class="pg__swatch-value">#ccc</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 200 색상, #ddd">
+          <div class="pg__swatch-color pg__swatch-color--gray-200" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-200</span>
+            <span class="pg__swatch-value">#ddd</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 100 색상, #efefef">
+          <div class="pg__swatch-color pg__swatch-color--gray-100" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-100</span>
+            <span class="pg__swatch-value">#efefef</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Gray 50 색상, #f8f8f8">
+          <div class="pg__swatch-color pg__swatch-color--gray-50" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-gray-50</span>
+            <span class="pg__swatch-value">#f8f8f8</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semantic -->
+      <h3 class="pg__subsection-title">Semantic</h3>
+      <div class="pg__swatches">
+        <div class="pg__swatch" aria-label="Danger 색상, #de3412">
+          <div class="pg__swatch-color pg__swatch-color--danger" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-danger</span>
+            <span class="pg__swatch-value">#de3412</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Warning 색상, #c78500">
+          <div class="pg__swatch-color pg__swatch-color--warning" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-warning</span>
+            <span class="pg__swatch-value">#c78500</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Success 색상, #228738">
+          <div class="pg__swatch-color pg__swatch-color--success" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-success</span>
+            <span class="pg__swatch-value">#228738</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Info 색상, #0b78cb">
+          <div class="pg__swatch-color pg__swatch-color--info" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-info</span>
+            <span class="pg__swatch-value">#0b78cb</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <h3 class="pg__subsection-title">Text</h3>
+      <div class="pg__swatches">
+        <div class="pg__swatch" aria-label="Text 색상, #1e2124">
+          <div class="pg__swatch-color pg__swatch-color--text" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-text</span>
+            <span class="pg__swatch-value">#1e2124</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Text Secondary 색상, #666">
+          <div class="pg__swatch-color pg__swatch-color--text-secondary" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-text-secondary</span>
+            <span class="pg__swatch-value">#666</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Text Disabled 색상, #999">
+          <div class="pg__swatch-color pg__swatch-color--text-disabled" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-text-disabled</span>
+            <span class="pg__swatch-value">#999</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background -->
+      <h3 class="pg__subsection-title">Background</h3>
+      <div class="pg__swatches">
+        <div class="pg__swatch" aria-label="Background 색상, #fff">
+          <div class="pg__swatch-color pg__swatch-color--bg" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-bg</span>
+            <span class="pg__swatch-value">#fff</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Background Secondary 색상, #f8f8f8">
+          <div class="pg__swatch-color pg__swatch-color--bg-secondary" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-bg-secondary</span>
+            <span class="pg__swatch-value">#f8f8f8</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Border -->
+      <h3 class="pg__subsection-title">Border</h3>
+      <div class="pg__swatches">
+        <div class="pg__swatch" aria-label="Border 색상, #ccc">
+          <div class="pg__swatch-color pg__swatch-color--border" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-border</span>
+            <span class="pg__swatch-value">#ccc</span>
+          </div>
+        </div>
+        <div class="pg__swatch" aria-label="Border Light 색상, #efefef">
+          <div class="pg__swatch-color pg__swatch-color--border-light" aria-hidden="true"></div>
+          <div class="pg__swatch-info">
+            <span class="pg__swatch-name">--color-border-light</span>
+            <span class="pg__swatch-value">#efefef</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. 타이포그래피 스케일 ==================== -->
+    <section id="section-typography" class="pg__section" aria-labelledby="heading-typography">
+      <h2 id="heading-typography" class="pg__section-title">타이포그래피 스케일 (Typography Scale)</h2>
+
+      <!-- Font Family -->
+      <h3 class="pg__subsection-title">Font Family</h3>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-family-base</span>
+        <span class="pg__type-sample">'Pretendard GOV', 'Malgun Gothic', 'apple sd gothic neo', sans-serif</span>
+      </div>
+
+      <!-- Font Size -->
+      <h3 class="pg__subsection-title">Font Size</h3>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-2xl (3.2rem / 32px)</span>
+        <span class="pg__type-sample demo-font-2xl">가나다라 ABCD 1234</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-xl (2.8rem / 28px)</span>
+        <span class="pg__type-sample demo-font-xl">가나다라 ABCD 1234</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-lg (2.4rem / 24px)</span>
+        <span class="pg__type-sample demo-font-lg">가나다라 ABCD 1234</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-md (2rem / 20px)</span>
+        <span class="pg__type-sample demo-font-md">가나다라 ABCD 1234</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-base (1.6rem / 16px)</span>
+        <span class="pg__type-sample demo-font-base">가나다라 ABCD 1234</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-sm (1.4rem / 14px)</span>
+        <span class="pg__type-sample demo-font-sm">가나다라 ABCD 1234</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-size-xs (1.2rem / 12px)</span>
+        <span class="pg__type-sample demo-font-xs">가나다라 ABCD 1234</span>
+      </div>
+
+      <!-- Font Weight -->
+      <h3 class="pg__subsection-title">Font Weight</h3>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-weight-regular (400)</span>
+        <span class="pg__type-sample demo-weight-regular">가나다라마바사 Regular 텍스트입니다</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-weight-medium (500)</span>
+        <span class="pg__type-sample demo-weight-medium">가나다라마바사 Medium 텍스트입니다</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-weight-semibold (600)</span>
+        <span class="pg__type-sample demo-weight-semibold">가나다라마바사 Semibold 텍스트입니다</span>
+      </div>
+      <div class="pg__type-row">
+        <span class="pg__type-label">--font-weight-bold (700)</span>
+        <span class="pg__type-sample demo-weight-bold">가나다라마바사 Bold 텍스트입니다</span>
+      </div>
+
+      <!-- Line Height -->
+      <h3 class="pg__subsection-title">Line Height</h3>
+      <div class="pg__leading-demo demo-leading-tight">
+        <strong>--leading-tight (1.2)</strong><br>
+        웹 접근성은 모든 사용자가 웹 콘텐츠에 접근하고 이용할 수 있도록 보장하는 것을 의미합니다. 시각, 청각, 운동 능력 등에 관계없이 누구나 정보를 얻을 수 있어야 합니다. WCAG 2.1 AA 기준을 준수하면 대부분의 사용자가 콘텐츠를 이용할 수 있습니다.
+      </div>
+      <div class="pg__leading-demo demo-leading-base">
+        <strong>--leading-base (1.6)</strong><br>
+        웹 접근성은 모든 사용자가 웹 콘텐츠에 접근하고 이용할 수 있도록 보장하는 것을 의미합니다. 시각, 청각, 운동 능력 등에 관계없이 누구나 정보를 얻을 수 있어야 합니다. WCAG 2.1 AA 기준을 준수하면 대부분의 사용자가 콘텐츠를 이용할 수 있습니다.
+      </div>
+      <div class="pg__leading-demo demo-leading-loose">
+        <strong>--leading-loose (1.8)</strong><br>
+        웹 접근성은 모든 사용자가 웹 콘텐츠에 접근하고 이용할 수 있도록 보장하는 것을 의미합니다. 시각, 청각, 운동 능력 등에 관계없이 누구나 정보를 얻을 수 있어야 합니다. WCAG 2.1 AA 기준을 준수하면 대부분의 사용자가 콘텐츠를 이용할 수 있습니다.
+      </div>
+    </section>
+
+    <!-- ==================== 3. 간격 스케일 ==================== -->
+    <section id="section-spacing" class="pg__section" aria-labelledby="heading-spacing">
+      <h2 id="heading-spacing" class="pg__section-title">간격 스케일 (Spacing Scale)</h2>
+
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--xs" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-xs &mdash; 0.4rem (4px)</span>
+      </div>
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--sm" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-sm &mdash; 0.8rem (8px)</span>
+      </div>
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--md" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-md &mdash; 1.6rem (16px)</span>
+      </div>
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--lg" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-lg &mdash; 2.4rem (24px)</span>
+      </div>
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--xl" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-xl &mdash; 3.2rem (32px)</span>
+      </div>
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--2xl" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-2xl &mdash; 4.8rem (48px)</span>
+      </div>
+      <div class="pg__spacing-row">
+        <div class="pg__spacing-box pg__spacing-box--3xl" aria-hidden="true"></div>
+        <span class="pg__spacing-label">--spacing-3xl &mdash; 6.4rem (64px)</span>
+      </div>
+    </section>
+
+    <!-- ==================== 4. 기타 토큰 ==================== -->
+    <section id="section-misc" class="pg__section" aria-labelledby="heading-misc">
+      <h2 id="heading-misc" class="pg__section-title">기타 토큰 (Miscellaneous)</h2>
+
+      <!-- Border Radius -->
+      <h3 class="pg__subsection-title">Border Radius</h3>
+      <div class="pg__radius-grid">
+        <div class="pg__radius-item">
+          <div class="pg__radius-box pg__radius-box--sm" aria-hidden="true"></div>
+          <span class="pg__radius-label">--radius-sm<br>4px</span>
+        </div>
+        <div class="pg__radius-item">
+          <div class="pg__radius-box pg__radius-box--base" aria-hidden="true"></div>
+          <span class="pg__radius-label">--radius-base<br>8px</span>
+        </div>
+        <div class="pg__radius-item">
+          <div class="pg__radius-box pg__radius-box--lg" aria-hidden="true"></div>
+          <span class="pg__radius-label">--radius-lg<br>12px</span>
+        </div>
+        <div class="pg__radius-item">
+          <div class="pg__radius-box pg__radius-box--xl" aria-hidden="true"></div>
+          <span class="pg__radius-label">--radius-xl<br>16px</span>
+        </div>
+        <div class="pg__radius-item">
+          <div class="pg__radius-box pg__radius-box--full" aria-hidden="true"></div>
+          <span class="pg__radius-label">--radius-full<br>9999px</span>
+        </div>
+      </div>
+
+      <!-- Box Shadow -->
+      <h3 class="pg__subsection-title">Box Shadow</h3>
+      <div class="pg__shadow-grid">
+        <div class="pg__shadow-card pg__shadow-card--sm" aria-label="Shadow Small 데모">--shadow-sm</div>
+        <div class="pg__shadow-card pg__shadow-card--base" aria-label="Shadow Base 데모">--shadow-base</div>
+        <div class="pg__shadow-card pg__shadow-card--lg" aria-label="Shadow Large 데모">--shadow-lg</div>
+      </div>
+
+      <!-- Transition -->
+      <h3 class="pg__subsection-title">Transition</h3>
+      <p class="pg__spacing-label">마우스를 올려 속도 차이를 확인하세요.</p>
+      <div class="pg__transition-grid">
+        <div class="pg__transition-box pg__transition-box--fast" role="img" aria-label="Fast transition 데모, 0.15초">
+          --transition-fast<br>0.15s
+        </div>
+        <div class="pg__transition-box pg__transition-box--base" role="img" aria-label="Base transition 데모, 0.3초">
+          --transition-base<br>0.3s
+        </div>
+        <div class="pg__transition-box pg__transition-box--slow" role="img" aria-label="Slow transition 데모, 0.5초">
+          --transition-slow<br>0.5s
+        </div>
+      </div>
+
+      <!-- Z-index -->
+      <h3 class="pg__subsection-title">Z-index Scale</h3>
+      <ul class="pg__zindex-list">
+        <li class="pg__zindex-item">
+          <span class="pg__zindex-name">--z-dropdown</span>
+          <span class="pg__zindex-value">100</span>
+        </li>
+        <li class="pg__zindex-item">
+          <span class="pg__zindex-name">--z-sticky</span>
+          <span class="pg__zindex-value">200</span>
+        </li>
+        <li class="pg__zindex-item">
+          <span class="pg__zindex-name">--z-fixed</span>
+          <span class="pg__zindex-value">300</span>
+        </li>
+        <li class="pg__zindex-item">
+          <span class="pg__zindex-name">--z-modal-backdrop</span>
+          <span class="pg__zindex-value">400</span>
+        </li>
+        <li class="pg__zindex-item">
+          <span class="pg__zindex-name">--z-modal</span>
+          <span class="pg__zindex-value">500</span>
+        </li>
+        <li class="pg__zindex-item">
+          <span class="pg__zindex-name">--z-toast</span>
+          <span class="pg__zindex-value">600</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ==================== 5. 그리드 시스템 ==================== -->
+    <section id="section-grid" class="pg__section" aria-labelledby="heading-grid">
+      <h2 id="heading-grid" class="pg__section-title">그리드 시스템 (Grid System)</h2>
+      <p>12컬럼 CSS Grid 기반 레이아웃 시스템입니다.</p>
+
+      <!-- 12 x 1col -->
+      <p class="pg__grid-label">12 x 1 컬럼</p>
+      <div class="pg__grid-demo" role="img" aria-label="12개 1컬럼 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+        <div class="pg__grid-cell pg__grid-cell--span-1">1</div>
+      </div>
+
+      <!-- 6 + 6 -->
+      <p class="pg__grid-label">6 + 6 컬럼</p>
+      <div class="pg__grid-demo" role="img" aria-label="6+6 컬럼 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-6">6</div>
+        <div class="pg__grid-cell pg__grid-cell--span-6">6</div>
+      </div>
+
+      <!-- 4 + 4 + 4 -->
+      <p class="pg__grid-label">4 + 4 + 4 컬럼</p>
+      <div class="pg__grid-demo" role="img" aria-label="4+4+4 컬럼 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-4">4</div>
+        <div class="pg__grid-cell pg__grid-cell--span-4">4</div>
+        <div class="pg__grid-cell pg__grid-cell--span-4">4</div>
+      </div>
+
+      <!-- 3 + 3 + 3 + 3 -->
+      <p class="pg__grid-label">3 + 3 + 3 + 3 컬럼</p>
+      <div class="pg__grid-demo" role="img" aria-label="3+3+3+3 컬럼 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-3">3</div>
+        <div class="pg__grid-cell pg__grid-cell--span-3">3</div>
+        <div class="pg__grid-cell pg__grid-cell--span-3">3</div>
+        <div class="pg__grid-cell pg__grid-cell--span-3">3</div>
+      </div>
+
+      <!-- 8 + 4 -->
+      <p class="pg__grid-label">8 + 4 컬럼 (콘텐츠 + 사이드바)</p>
+      <div class="pg__grid-demo" role="img" aria-label="8+4 컬럼 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-8">8</div>
+        <div class="pg__grid-cell pg__grid-cell--span-4">4</div>
+      </div>
+
+      <!-- 2 + 8 + 2 -->
+      <p class="pg__grid-label">2 + 8 + 2 컬럼</p>
+      <div class="pg__grid-demo" role="img" aria-label="2+8+2 컬럼 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-2">2</div>
+        <div class="pg__grid-cell pg__grid-cell--span-8">8</div>
+        <div class="pg__grid-cell pg__grid-cell--span-2">2</div>
+      </div>
+
+      <!-- 12 full -->
+      <p class="pg__grid-label">12 컬럼 (전체 너비)</p>
+      <div class="pg__grid-demo" role="img" aria-label="12 컬럼 전체 너비 그리드 데모">
+        <div class="pg__grid-cell pg__grid-cell--span-12">12</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pg__footer">
+    <p>INFOMIND UX Guide System &mdash; 디자인 토큰 플레이그라운드</p>
+  </footer>
+</body>
+</html>

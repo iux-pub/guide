@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>모달 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">모달 (Modal)</h1>
+
+    <!-- 기본 모달 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 모달</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--primary" data-modal-open="modal-default">모달 열기</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;!-- 트리거 버튼 --&gt;
+&lt;button type="button" class="btn btn--primary" data-modal-open="modal-default"&gt;모달 열기&lt;/button&gt;
+
+&lt;!-- 모달 --&gt;
+&lt;div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" aria-hidden="true"&gt;
+  &lt;div class="modal__overlay"&gt;&lt;/div&gt;
+  &lt;div class="modal__container"&gt;
+    &lt;div class="modal__header"&gt;
+      &lt;h2 class="modal__title" id="modal-default-title"&gt;모달 제목&lt;/h2&gt;
+      &lt;button type="button" class="modal__close" aria-label="닫기" data-modal-close&gt;&amp;times;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="modal__body"&gt;
+      &lt;p&gt;모달 본문 내용입니다.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="modal__footer"&gt;
+      &lt;button type="button" class="btn btn--outline" data-modal-close&gt;작성 취소&lt;/button&gt;
+      &lt;button type="button" class="btn btn--primary"&gt;저장하기&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">삭제 확인 모달</h2>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--outline" data-modal-open="modal-delete">삭제 모달 열기</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;button type="button" class="btn btn--outline" data-modal-open="modal-delete"&gt;삭제 모달 열기&lt;/button&gt;
+
+&lt;div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" aria-hidden="true"&gt;
+  &lt;div class="modal__overlay"&gt;&lt;/div&gt;
+  &lt;div class="modal__container"&gt;
+    &lt;div class="modal__header"&gt;
+      &lt;h2 class="modal__title" id="modal-delete-title"&gt;항목 삭제&lt;/h2&gt;
+      &lt;button type="button" class="modal__close" aria-label="닫기" data-modal-close&gt;&amp;times;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="modal__body"&gt;
+      &lt;p&gt;정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="modal__footer"&gt;
+      &lt;button type="button" class="btn btn--outline" data-modal-close&gt;작성 취소&lt;/button&gt;
+      &lt;button type="button" class="btn btn--primary" style="background-color: var(--color-danger)"&gt;항목 삭제&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 기본 모달 (실제 동작) -->
+  <div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" aria-hidden="true">
+    <div class="modal__overlay"></div>
+    <div class="modal__container">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-default-title">모달 제목</h2>
+        <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
+      </div>
+      <div class="modal__body">
+        <p>모달 본문 내용입니다. ESC 키를 누르거나 오버레이를 클릭하면 닫힙니다.</p>
+        <p>Tab 키로 포커스가 모달 내부에서만 순환합니다 (포커스 트랩).</p>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--outline" data-modal-close>작성 취소</button>
+        <button type="button" class="btn btn--primary">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 모달 (실제 동작) -->
+  <div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" aria-hidden="true">
+    <div class="modal__overlay"></div>
+    <div class="modal__container">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-delete-title">항목 삭제</h2>
+        <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
+      </div>
+      <div class="modal__body">
+        <p>정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--outline" data-modal-close>작성 취소</button>
+        <button type="button" class="btn btn--primary" style="background-color: var(--color-danger)">항목 삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/modal.js"></script>
+</body>
+</html>

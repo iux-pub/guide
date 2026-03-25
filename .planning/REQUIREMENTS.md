@@ -53,12 +53,12 @@
 
 ### 접근성 (A11Y)
 
-- [ ] **A11Y-01**: KWCAG/WCAG 2.1 AA 퍼블리싱 체크리스트 (체크 가능한 항목별 목록)
-- [ ] **A11Y-02**: KWCAG 2.2 확대 항목 (33개 검사항목) 반영
+- [x] **A11Y-01**: KWCAG/WCAG 2.1 AA 퍼블리싱 체크리스트 (체크 가능한 항목별 목록)
+- [x] **A11Y-02**: KWCAG 2.2 확대 항목 (33개 검사항목) 반영
 - [ ] **A11Y-03**: 컴포넌트별 접근성 패턴 내장 (aria-*, role, tabindex, 키보드 네비게이션)
 - [ ] **A11Y-04**: 스크린리더 전용 콘텐츠 (.sr-only) 패턴 가이드
 - [ ] **A11Y-05**: 색상 대비 가이드 (4.5:1 이상, 확인 도구 안내)
-- [ ] **A11Y-06**: pa11y-ci 자동화 접근성 테스트 통합 가이드
+- [x] **A11Y-06**: pa11y-ci 자동화 접근성 테스트 통합 가이드
 
 ### 문서 사이트 (DOCS)
 
@@ -132,12 +132,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-09 | Phase 3 | Complete |
 | COMP-10 | Phase 3 | Complete |
 | COMP-11 | Phase 3 | Complete |
-| A11Y-01 | Phase 4 | Pending |
-| A11Y-02 | Phase 4 | Pending |
+| A11Y-01 | Phase 4 | Complete |
+| A11Y-02 | Phase 4 | Complete |
 | A11Y-03 | Phase 4 | Pending |
 | A11Y-04 | Phase 4 | Pending |
 | A11Y-05 | Phase 4 | Pending |
-| A11Y-06 | Phase 4 | Pending |
+| A11Y-06 | Phase 4 | Complete |
 | DOCS-01 | Phase 5 | Pending |
 | DOCS-02 | Phase 5 | Pending |
 | DOCS-03 | Phase 5 | Pending |

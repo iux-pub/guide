@@ -86,7 +86,7 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — pa11y-ci 자동 검증 파이프라인 + KWCAG 2.2 마크다운 체크리스트
 - [x] 04-02-PLAN.md — 컴포넌트별 접근성 가이드 8개 + sr-only 패턴 + 색상 대비 가이드
-- [ ] 04-03-PLAN.md — HTML 인터랙티브 체크리스트 + pa11y-ci 전체 검증 실행
+- [x] 04-03-PLAN.md — HTML 인터랙티브 체크리스트 + pa11y-ci 전체 검증 실행
 
 ### Phase 5: Documentation Site
 **Goal**: Eleventy 기반 정적 문서 사이트에서 토큰, 컨벤션, 컴포넌트, 접근성 가이드를 한곳에서 열람하고 검색할 수 있으며, 문서 사이트 자체도 접근성을 준수하는 상태

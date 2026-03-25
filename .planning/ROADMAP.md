@@ -98,13 +98,14 @@ Plans:
   3. 문서 내 검색(pagefind 등)으로 토큰명, 컴포넌트명, 가이드 키워드를 찾을 수 있다
   4. 문서 사이트 자체가 pa11y-ci 검사를 통과한다 (KWCAG/WCAG AA)
   5. 모든 가이드 문서가 CLAUDE.md / 스킬 파일 형태로도 제공되어 AI 프롬프트에 즉시 주입 가능하다
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
+- [ ] 05-01-PLAN.md — Eleventy 인프라 + Nunjucks 레이아웃 + 네비게이션 + 문서 SCSS
+- [ ] 05-02-PLAN.md — 토큰/컨벤션/접근성 가이드 문서 페이지 + CLAUDE.md 업데이트
+- [ ] 05-03-PLAN.md — 컴포넌트 문서 페이지 + iframe 미리보기 + 코드 복사 기능
+- [ ] 05-04-PLAN.md — pagefind 검색 확인 + pa11y-ci 접근성 검증 + 사용자 확인
 
 ### Phase 6: Rollout -- Handoff + Onboarding
 **Goal**: 신규 팀원이 가이드를 보고 바로 프로젝트를 시작할 수 있고, 디자이너-퍼블리셔 간 핸드오프 규칙이 명확하며, 스타터 킷으로 새 프로젝트를 즉시 셋업할 수 있는 상태
@@ -131,5 +132,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Conventions | 0/2 | Not started | - |
 | 3. Components | 0/4 | Not started | - |
 | 4. Accessibility | 0/3 | Not started | - |
-| 5. Documentation Site | 0/3 | Not started | - |
+| 5. Documentation Site | 0/4 | Not started | - |
 | 6. Rollout | 0/2 | Not started | - |

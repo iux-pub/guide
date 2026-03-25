@@ -43,8 +43,8 @@
 - [ ] **COMP-02**: 폼 컴포넌트 HTML+SCSS (Input, Select, Checkbox, Radio, Textarea, 유효성 상태)
 - [ ] **COMP-03**: 카드 컴포넌트 HTML+SCSS (Header, Body, Footer 구조)
 - [ ] **COMP-04**: 테이블 컴포넌트 HTML+SCSS (기본, 스트라이프, 반응형 테이블)
-- [ ] **COMP-05**: 모달 컴포넌트 HTML+SCSS (오버레이, 포커스 트랩, 닫기 처리)
-- [ ] **COMP-06**: 탭 컴포넌트 HTML+SCSS (role="tablist", aria-selected, 키보드 네비게이션)
+- [x] **COMP-05**: 모달 컴포넌트 HTML+SCSS (오버레이, 포커스 트랩, 닫기 처리)
+- [x] **COMP-06**: 탭 컴포넌트 HTML+SCSS (role="tablist", aria-selected, 키보드 네비게이션)
 - [ ] **COMP-07**: 페이지네이션 컴포넌트 HTML+SCSS (이전/다음, 숫자, aria-label)
 - [ ] **COMP-08**: 브레드크럼 컴포넌트 HTML+SCSS (aria-label="breadcrumb", aria-current)
 - [x] **COMP-09**: HTML 페이지 보일러플레이트 (lang="ko", viewport, skip-to-content, 시맨틱 구조)
@@ -125,8 +125,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-02 | Phase 3 | Pending |
 | COMP-03 | Phase 3 | Pending |
 | COMP-04 | Phase 3 | Pending |
-| COMP-05 | Phase 3 | Pending |
-| COMP-06 | Phase 3 | Pending |
+| COMP-05 | Phase 3 | Complete |
+| COMP-06 | Phase 3 | Complete |
 | COMP-07 | Phase 3 | Pending |
 | COMP-08 | Phase 3 | Pending |
 | COMP-09 | Phase 3 | Complete |

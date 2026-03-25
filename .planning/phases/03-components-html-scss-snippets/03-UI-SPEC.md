@@ -146,18 +146,18 @@ Exceptions:
 
 | Element | Copy | 비고 |
 |---------|------|------|
-| Primary CTA (btn--primary 데모) | "확인" | 한국어 기본, 프로젝트별 변경 |
-| Secondary CTA (btn--secondary 데모) | "취소" | |
-| Destructive CTA (btn--danger 데모) | "삭제" | |
+| Primary CTA (btn--primary 데모) | "저장하기" | 한국어 기본, 프로젝트별 변경 |
+| Secondary CTA (btn--secondary 데모) | "작성 취소" | |
+| Destructive CTA (btn--danger 데모) | "항목 삭제" | |
 | 폼 제출 버튼 | "등록하기" | |
 | 폼 에러 메시지 | "필수 입력 항목입니다." | `aria-describedby`로 입력과 연결 |
 | 폼 성공 메시지 | "입력이 확인되었습니다." | |
 | 폼 placeholder | "내용을 입력하세요" | |
 | 모달 닫기 버튼 | "닫기" | `aria-label="닫기"` |
-| 모달 확인 CTA | "확인" | |
-| 모달 취소 CTA | "취소" | |
+| 모달 확인 CTA | "저장하기" | |
+| 모달 취소 CTA | "작성 취소" | |
 | 테이블 caption (데모) | "사용자 목록" | `<caption>` 필수 제공 |
-| 테이블 빈 상태 | "데이터가 없습니다." | `<td colspan>` 내 표시 |
+| 테이블 빈 상태 | "등록된 데이터가 없습니다. 새 항목을 추가해 주세요." | `<td colspan>` 내 표시 |
 | 페이지네이션 이전 | "이전" | `aria-label="이전 페이지"` |
 | 페이지네이션 다음 | "다음" | `aria-label="다음 페이지"` |
 | 페이지네이션 현재 | "현재 페이지" | `aria-current="page"` + `aria-label="현재 페이지, {N}페이지"` |
@@ -172,7 +172,7 @@ Exceptions:
 | Action | Confirmation Approach |
 |--------|----------------------|
 | 모달 닫기 (일반) | 확인 없이 ESC/닫기 버튼으로 즉시 닫기 |
-| 삭제 확인 모달 (데모) | 별도 확인 모달: "정말 삭제하시겠습니까?" + "삭제" (danger) / "취소" 버튼 |
+| 삭제 확인 모달 (데모) | 별도 확인 모달: "정말 삭제하시겠습니까?" + "항목 삭제" (danger) / "작성 취소" 버튼 |
 
 ---
 
@@ -184,7 +184,7 @@ Exceptions:
 
 | Variant | Class | 설명 |
 |---------|-------|------|
-| Primary | `.btn--primary` | 주요 동작 (제출, 확인) |
+| Primary | `.btn--primary` | 주요 동작 (제출, 저장) |
 | Secondary | `.btn--secondary` | 보조 동작 |
 | Outline | `.btn--outline` | 테두리만, 덜 강조 |
 | Text | `.btn--text` | 배경/테두리 없음 |

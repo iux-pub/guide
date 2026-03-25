@@ -67,7 +67,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 03-01-PLAN.md — 인프라 준비 + HTML 보일러플레이트 + 버튼 컴포넌트
+- [x] 03-01-PLAN.md — 인프라 준비 + HTML 보일러플레이트 + 버튼 컴포넌트
 - [ ] 03-02-PLAN.md — 폼, 카드, 테이블, 브레드크럼, 페이지네이션 컴포넌트 (SCSS + Playground)
 - [ ] 03-03-PLAN.md — 모달, 탭 컴포넌트 (SCSS + 바닐라 JS + Playground)
 - [ ] 03-04-PLAN.md — AI 스니펫 파일 + CLAUDE.md 업데이트

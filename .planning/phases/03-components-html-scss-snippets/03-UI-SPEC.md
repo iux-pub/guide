@@ -49,31 +49,33 @@ Exceptions:
 
 62.5% REM 트릭 적용 (1rem = 10px). 모든 값은 토큰 CSS Custom Property 사용 필수.
 
+**4 sizes, 2 weights** — 이 Phase에서 사용하는 타이포그래피 역할:
+
 | Role | Size | Token | Weight | Token | Line Height | Token |
 |------|------|-------|--------|-------|-------------|-------|
-| Caption/XS | 12px (1.2rem) | `var(--font-size-xs)` | 400 | `var(--font-weight-regular)` | 1.6 | `var(--leading-base)` |
-| Label/SM | 14px (1.4rem) | `var(--font-size-sm)` | 500 | `var(--font-weight-medium)` | 1.6 | `var(--leading-base)` |
-| Body/Base | 16px (1.6rem) | `var(--font-size-base)` | 400 | `var(--font-weight-regular)` | 1.6 | `var(--leading-base)` |
-| Subheading/MD | 20px (2.0rem) | `var(--font-size-md)` | 600 | `var(--font-weight-semibold)` | 1.2 | `var(--leading-tight)` |
-| Heading/LG | 24px (2.4rem) | `var(--font-size-lg)` | 700 | `var(--font-weight-bold)` | 1.2 | `var(--leading-tight)` |
-| Display/XL | 28px (2.8rem) | `var(--font-size-xl)` | 700 | `var(--font-weight-bold)` | 1.2 | `var(--leading-tight)` |
+| Caption/Label | 14px (1.4rem) | `var(--font-size-sm)` | 400 | `var(--font-weight-regular)` | 1.6 | `var(--leading-base)` |
+| Body | 16px (1.6rem) | `var(--font-size-base)` | 400 | `var(--font-weight-regular)` | 1.6 | `var(--leading-base)` |
+| Subheading | 20px (2.0rem) | `var(--font-size-md)` | 700 | `var(--font-weight-bold)` | 1.2 | `var(--leading-tight)` |
+| Heading/Display | 24px (2.4rem) | `var(--font-size-lg)` | 700 | `var(--font-weight-bold)` | 1.2 | `var(--leading-tight)` |
+
+**통합 안내:** 프로젝트 토큰에는 `--font-size-xs` (12px), `--font-size-xl` (28px), `--font-size-2xl` (32px)과 `--font-weight-medium` (500), `--font-weight-semibold` (600)이 정의되어 있으나, 이 Phase의 8개 컴포넌트는 위 4가지 크기와 2가지 굵기만 사용한다. 프로젝트별 확장 시 추가 토큰 활용 가능.
 
 ### 컴포넌트별 타이포그래피 매핑
 
 | Component | Element | Size Token | Weight Token |
 |-----------|---------|------------|--------------|
-| btn | 기본 텍스트 | `--font-size-base` | `--font-weight-medium` |
-| btn--sm | 텍스트 | `--font-size-sm` | `--font-weight-medium` |
-| btn--lg | 텍스트 | `--font-size-md` | `--font-weight-medium` |
-| form | label | `--font-size-sm` | `--font-weight-medium` |
+| btn | 기본 텍스트 | `--font-size-base` | `--font-weight-bold` |
+| btn--sm | 텍스트 | `--font-size-sm` | `--font-weight-bold` |
+| btn--lg | 텍스트 | `--font-size-md` | `--font-weight-bold` |
+| form | label | `--font-size-sm` | `--font-weight-bold` |
 | form | input 텍스트 | `--font-size-base` | `--font-weight-regular` |
-| form | 도움말/에러 메시지 | `--font-size-xs` | `--font-weight-regular` |
+| form | 도움말/에러 메시지 | `--font-size-sm` | `--font-weight-regular` |
 | card | 제목 | `--font-size-lg` | `--font-weight-bold` |
 | card | 본문 | `--font-size-base` | `--font-weight-regular` |
-| table | 헤더(th) | `--font-size-sm` | `--font-weight-semibold` |
+| table | 헤더(th) | `--font-size-sm` | `--font-weight-bold` |
 | table | 셀(td) | `--font-size-sm` | `--font-weight-regular` |
 | modal | 제목 | `--font-size-lg` | `--font-weight-bold` |
-| tab | 탭 레이블 | `--font-size-base` | `--font-weight-medium` |
+| tab | 탭 레이블 | `--font-size-base` | `--font-weight-bold` |
 | pagination | 숫자/레이블 | `--font-size-sm` | `--font-weight-regular` |
 | breadcrumb | 링크 텍스트 | `--font-size-sm` | `--font-weight-regular` |
 
@@ -340,13 +342,15 @@ Exceptions:
 
 각 컴포넌트별 `src/playground/*.html` 미리보기 페이지의 레이아웃 계약.
 
+주요 시각적 앵커: `.pg__title` (h1, 가장 큰 타이포그래피 요소 -- `--font-size-lg` 24px bold). 페이지 최상단에 위치하며, 사용자가 어떤 컴포넌트 페이지에 있는지 즉시 인지하는 초점 역할을 한다.
+
 ### 구조
 
 ```
 .pg                          -- 최대 너비 1200px, 중앙 정렬
-  .pg__title                 -- 컴포넌트명 (h1, 28px bold)
+  .pg__title                 -- 컴포넌트명 (h1, 24px bold)
   .pg__section               -- variant별 섹션 (margin-bottom: 48px)
-    .pg__subtitle            -- variant명 (h2, 20px semibold)
+    .pg__subtitle            -- variant명 (h2, 20px bold)
     .pg__preview             -- 렌더링 미리보기 영역 (padding: 24px, 연한 테두리)
     .pg__code                -- HTML 소스코드 (<pre><code>, 배경 #f8f8f8)
 ```

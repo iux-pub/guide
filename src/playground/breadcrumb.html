@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>브레드크럼 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">브레드크럼 (Breadcrumb)</h1>
+
+    <!-- 기본 (3단계) -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 (3단계)</h2>
+      <div class="pg__preview">
+        <nav class="breadcrumb" aria-label="현재 위치">
+          <ol class="breadcrumb__list">
+            <li class="breadcrumb__item">
+              <a href="#" class="breadcrumb__link">홈</a>
+            </li>
+            <li class="breadcrumb__item">
+              <a href="#" class="breadcrumb__link">컴포넌트</a>
+            </li>
+            <li class="breadcrumb__item">
+              <span class="breadcrumb__current" aria-current="page">브레드크럼</span>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;nav class="breadcrumb" aria-label="현재 위치"&gt;
+  &lt;ol class="breadcrumb__list"&gt;
+    &lt;li class="breadcrumb__item"&gt;
+      &lt;a href="#" class="breadcrumb__link"&gt;홈&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="breadcrumb__item"&gt;
+      &lt;a href="#" class="breadcrumb__link"&gt;컴포넌트&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="breadcrumb__item"&gt;
+      &lt;span class="breadcrumb__current" aria-current="page"&gt;브레드크럼&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 긴 경로 (5단계) -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">긴 경로 (5단계, 모바일 반응형)</h2>
+      <div class="pg__preview">
+        <nav class="breadcrumb" aria-label="현재 위치">
+          <ol class="breadcrumb__list">
+            <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
+              <a href="#" class="breadcrumb__link">홈</a>
+            </li>
+            <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
+              <a href="#" class="breadcrumb__link">관리자</a>
+            </li>
+            <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
+              <a href="#" class="breadcrumb__link">시스템 설정</a>
+            </li>
+            <li class="breadcrumb__item">
+              <a href="#" class="breadcrumb__link">사용자 관리</a>
+            </li>
+            <li class="breadcrumb__item">
+              <span class="breadcrumb__current" aria-current="page">사용자 상세</span>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;nav class="breadcrumb" aria-label="현재 위치"&gt;
+  &lt;ol class="breadcrumb__list"&gt;
+    &lt;li class="breadcrumb__item breadcrumb__item--mobile-hidden"&gt;
+      &lt;a href="#" class="breadcrumb__link"&gt;홈&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="breadcrumb__item breadcrumb__item--mobile-hidden"&gt;
+      &lt;a href="#" class="breadcrumb__link"&gt;관리자&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="breadcrumb__item breadcrumb__item--mobile-hidden"&gt;
+      &lt;a href="#" class="breadcrumb__link"&gt;시스템 설정&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="breadcrumb__item"&gt;
+      &lt;a href="#" class="breadcrumb__link"&gt;사용자 관리&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="breadcrumb__item"&gt;
+      &lt;span class="breadcrumb__current" aria-current="page"&gt;사용자 상세&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

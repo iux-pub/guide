@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>접근성 체크리스트 - KWCAG/WCAG 2.1 AA</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .pg__desc {
+      font-size: 1.6rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* 체크리스트 BEM 스타일 */
+    .a11y-checklist__toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .a11y-checklist__progress {
+      flex: 1;
+      min-width: 200px;
+      height: 24px;
+      background-color: var(--color-gray-100);
+      border-radius: var(--radius-full);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .a11y-checklist__progress-bar {
+      height: 100%;
+      background-color: var(--color-success);
+      border-radius: var(--radius-full);
+      transition: width var(--transition-base);
+      width: 0;
+    }
+
+    .a11y-checklist__progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+
+    .a11y-checklist__reset {
+      flex-shrink: 0;
+    }
+
+    .a11y-checklist__section {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-base);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .a11y-checklist__section legend {
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-bold);
+      padding: 0 var(--spacing-sm);
+    }
+
+    .a11y-checklist__item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--color-border-light);
+      cursor: pointer;
+      line-height: var(--leading-base);
+    }
+
+    .a11y-checklist__item:last-child {
+      border-bottom: none;
+    }
+
+    .a11y-checklist__check {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--color-success);
+    }
+
+    .a11y-checklist__label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+    }
+
+    .a11y-checklist__check:checked + .a11y-checklist__label {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .a11y-checklist__badge--new {
+      display: inline-block;
+      background-color: var(--color-info);
+      color: var(--color-white);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      padding: 0 6px;
+      border-radius: var(--radius-sm);
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .a11y-checklist__na {
+      margin-top: var(--spacing-xl);
+    }
+
+    .a11y-checklist__na-title {
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .a11y-checklist__na-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-size-sm);
+    }
+
+    .a11y-checklist__na-table th,
+    .a11y-checklist__na-table td {
+      text-align: left;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .a11y-checklist__na-table th {
+      background-color: var(--color-bg-secondary);
+      font-weight: var(--font-weight-semibold);
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">본문 바로가기</a>
+  <div class="pg">
+    <main id="main-content">
+      <h1 class="pg__title">KWCAG/WCAG 2.1 AA 퍼블리싱 체크리스트</h1>
+      <p class="pg__desc">KWCAG 2.2 확대 적용 (33개 검사항목 기준, 2026년 전자정부 웹사이트 의무)</p>
+
+      <!-- 툴바: 진행률 + 리셋 -->
+      <div class="a11y-checklist__toolbar">
+        <div class="a11y-checklist__progress" role="progressbar"
+             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+             aria-label="체크리스트 진행률">
+          <div class="a11y-checklist__progress-bar"></div>
+          <span class="a11y-checklist__progress-text">0 / 0 완료</span>
+        </div>
+        <button type="button" class="btn btn--outline a11y-checklist__reset">
+          체크리스트 초기화
+        </button>
+      </div>
+
+      <!-- 공통 항목 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>공통 항목</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="5-1-1">
+          <span class="a11y-checklist__label">
+            <strong>5.1.1</strong> 적절한 대체 텍스트 제공 -- 이미지에 alt 속성 필수, 장식용 이미지는 alt="" + role="presentation"
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="5-3-2">
+          <span class="a11y-checklist__label">
+            <strong>5.3.2</strong> 콘텐츠의 선형구조 -- CSS 제거해도 콘텐츠 순서가 논리적, tabindex 양수값 사용 금지
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="5-4-1">
+          <span class="a11y-checklist__label">
+            <strong>5.4.1</strong> 색에 무관한 콘텐츠 인식 -- 색상만으로 정보를 전달하지 않음, 오류/성공 상태에 아이콘 또는 텍스트 병행
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="5-4-3">
+          <span class="a11y-checklist__label">
+            <strong>5.4.3</strong> 텍스트 콘텐츠의 명도 대비 -- 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="6-1-2">
+          <span class="a11y-checklist__label">
+            <strong>6.1.2</strong> 초점 이동과 표시 -- 모든 인터랙티브 요소에 focus-visible 스타일, 초점 순서 논리적
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="6-4-2">
+          <span class="a11y-checklist__label">
+            <strong>6.4.2</strong> 제목 제공 -- 페이지 title, 제목 레벨 순서 준수 (h1 > h2 > h3)
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="7-1-1">
+          <span class="a11y-checklist__label">
+            <strong>7.1.1</strong> 기본 언어 표시 -- html lang="ko" 필수 지정
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="common" data-id="8-1-1">
+          <span class="a11y-checklist__label">
+            <strong>8.1.1</strong> 마크업 오류 방지 -- 열고 닫는 태그 쌍 일치, id 중복 없음
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 버튼 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>버튼 (btn)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="btn" data-id="btn-5-4-1">
+          <span class="a11y-checklist__label">
+            <strong>5.4.1</strong> 색에 무관한 콘텐츠 인식 -- 버튼 상태를 색상만으로 구분하지 않음, disabled 속성 + opacity 병행
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="btn" data-id="btn-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- Tab 키 접근, Enter/Space 동작, 네이티브 button 태그 사용
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="btn" data-id="btn-6-1-3">
+          <span class="a11y-checklist__label">
+            <strong>6.1.3</strong> 조작 가능 -- 최소 터치 영역 44px x 44px, 버튼 간 간격 충분
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="btn" data-id="btn-6-5-3">
+          <span class="a11y-checklist__label">
+            <strong>6.5.3</strong> 레이블과 네임 -- 아이콘만 있는 버튼에 aria-label 필수
+            <span class="a11y-checklist__badge--new">NEW</span>
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 폼 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>폼 (form)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-5-3-3">
+          <span class="a11y-checklist__label">
+            <strong>5.3.3</strong> 명확한 지시사항 제공 -- 입력 형식 안내, 필수 항목에 색상 외 텍스트 병행
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-5-4-1">
+          <span class="a11y-checklist__label">
+            <strong>5.4.1</strong> 색에 무관한 콘텐츠 인식 -- 유효성 검사 오류를 색상만으로 표시하지 않음
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- 모든 입력 필드에 Tab 키 접근, Enter 키 제출
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-6-5-3">
+          <span class="a11y-checklist__label">
+            <strong>6.5.3</strong> 레이블과 네임 -- label의 for 속성이 입력 필드 id와 연결
+            <span class="a11y-checklist__badge--new">NEW</span>
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-7-2-1">
+          <span class="a11y-checklist__label">
+            <strong>7.2.1</strong> 사용자 요구에 따른 실행 -- 포커스 이동만으로 자동 제출 금지
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-7-3-1">
+          <span class="a11y-checklist__label">
+            <strong>7.3.1</strong> 오류 정정 -- 오류 시 항목 식별 + 수정 방법 안내, aria-describedby 연결
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="form" data-id="form-7-3-2">
+          <span class="a11y-checklist__label">
+            <strong>7.3.2</strong> 레이블 제공 -- 모든 입력 필드에 label 연결, placeholder만으로 대체 금지
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 카드 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>카드 (card)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="card" data-id="card-5-1-1">
+          <span class="a11y-checklist__label">
+            <strong>5.1.1</strong> 적절한 대체 텍스트 제공 -- 카드 내 이미지에 alt 텍스트, 장식용은 alt=""
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="card" data-id="card-5-4-4">
+          <span class="a11y-checklist__label">
+            <strong>5.4.4</strong> 콘텐츠 간의 구분 -- 카드 간 시각적 경계 명확, 색상만으로 구분하지 않음
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="card" data-id="card-6-4-3">
+          <span class="a11y-checklist__label">
+            <strong>6.4.3</strong> 적절한 링크 텍스트 -- 링크 텍스트가 목적지를 설명
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 테이블 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>테이블 (table)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="table" data-id="table-5-3-1">
+          <span class="a11y-checklist__label">
+            <strong>5.3.1</strong> 표의 구성 -- caption 필수, thead + th scope="col", 행 제목 th scope="row"
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="table" data-id="table-5-4-4">
+          <span class="a11y-checklist__label">
+            <strong>5.4.4</strong> 콘텐츠 간의 구분 -- 행 간 구분선 또는 교대 배경색, 빈 셀에 "-" 표시
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="table" data-id="table-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- 테이블 내 링크/버튼에 Tab 키 접근
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 모달 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>모달 (modal)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="modal" data-id="modal-5-3-2">
+          <span class="a11y-checklist__label">
+            <strong>5.3.2</strong> 콘텐츠의 선형구조 -- 모달 열림 시 포커스 내부 이동, 닫힘 시 트리거로 복귀
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="modal" data-id="modal-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- Esc 키 닫기, Tab 순환 (포커스 트랩)
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="modal" data-id="modal-6-1-3">
+          <span class="a11y-checklist__label">
+            <strong>6.1.3</strong> 조작 가능 -- 닫기 버튼 최소 44px, aria-label="닫기" 제공
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="modal" data-id="modal-7-2-1">
+          <span class="a11y-checklist__label">
+            <strong>7.2.1</strong> 사용자 요구에 따른 실행 -- 모달이 자동으로 열리지 않음
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="modal" data-id="modal-8-2-1">
+          <span class="a11y-checklist__label">
+            <strong>8.2.1</strong> 웹 애플리케이션 접근성 준수 -- role="dialog" + aria-modal="true", aria-labelledby 연결
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 탭 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>탭 (tab)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="tab" data-id="tab-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- 좌우 화살표 키 탭 전환, Home/End 키 지원
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="tab" data-id="tab-6-1-3">
+          <span class="a11y-checklist__label">
+            <strong>6.1.3</strong> 조작 가능 -- 탭 버튼 터치 영역 보장, 전환 시 깜빡임 없음
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="tab" data-id="tab-6-4-2">
+          <span class="a11y-checklist__label">
+            <strong>6.4.2</strong> 제목 제공 -- 탭 그룹에 적절한 레이블 (aria-label 또는 연결된 제목)
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="tab" data-id="tab-8-2-1">
+          <span class="a11y-checklist__label">
+            <strong>8.2.1</strong> 웹 애플리케이션 접근성 준수 -- role="tablist/tab/tabpanel", aria-selected, aria-controls
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 페이지네이션 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>페이지네이션 (pagination)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="pagination" data-id="page-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- 모든 페이지 링크에 Tab 키 접근
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="pagination" data-id="page-6-4-3">
+          <span class="a11y-checklist__label">
+            <strong>6.4.3</strong> 적절한 링크 텍스트 -- aria-label="N 페이지", aria-current="page" 표시
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="pagination" data-id="page-5-1-1">
+          <span class="a11y-checklist__label">
+            <strong>5.1.1</strong> 적절한 대체 텍스트 제공 -- 화살표 아이콘에 aria-label 또는 sr-only 텍스트
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 브레드크럼 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>브레드크럼 (breadcrumb)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="breadcrumb" data-id="bread-6-4-3">
+          <span class="a11y-checklist__label">
+            <strong>6.4.3</strong> 적절한 링크 텍스트 -- 링크가 페이지를 명확히 설명, 현재 페이지 aria-current="page"
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="breadcrumb" data-id="bread-5-3-2">
+          <span class="a11y-checklist__label">
+            <strong>5.3.2</strong> 콘텐츠의 선형구조 -- nav aria-label="현재 위치", ol 순서 목록 사용
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="breadcrumb" data-id="bread-6-1-1">
+          <span class="a11y-checklist__label">
+            <strong>6.1.1</strong> 키보드 사용 보장 -- 모든 링크에 Tab 키 접근, 구분자 aria-hidden="true"
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 보일러플레이트 -->
+      <fieldset class="a11y-checklist__section">
+        <legend>보일러플레이트 (boilerplate)</legend>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="boilerplate" data-id="boiler-6-4-1">
+          <span class="a11y-checklist__label">
+            <strong>6.4.1</strong> 반복 영역 건너뛰기 -- 본문 건너뛰기 링크 최상단 배치, 포커스 시 표시
+          </span>
+        </label>
+
+        <label class="a11y-checklist__item">
+          <input type="checkbox" class="a11y-checklist__check"
+                 data-category="boilerplate" data-id="boiler-7-1-1">
+          <span class="a11y-checklist__label">
+            <strong>7.1.1</strong> 기본 언어 표시 -- html lang="ko" 필수, 다국어 시 해당 영역에 lang 속성
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- 해당 없음 항목 -->
+      <div class="a11y-checklist__na">
+        <h2 class="a11y-checklist__na-title">해당 없음 항목 (참고)</h2>
+        <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--spacing-md);">
+          현재 컴포넌트에 해당하지 않는 검사항목이다. 프로젝트 확장 시 재검토가 필요하다.
+        </p>
+        <table class="a11y-checklist__na-table">
+          <caption class="sr-only">해당 없음 검사항목 목록</caption>
+          <thead>
+            <tr>
+              <th scope="col">번호</th>
+              <th scope="col">검사항목</th>
+              <th scope="col">비해당 사유</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>5.2.1</td>
+              <td>자막 제공</td>
+              <td>멀티미디어 콘텐츠 없음</td>
+            </tr>
+            <tr>
+              <td>5.4.2</td>
+              <td>자동 재생 금지</td>
+              <td>자동 재생 미디어 없음</td>
+            </tr>
+            <tr>
+              <td>6.1.4</td>
+              <td>문자 단축키 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>문자 단축키 미사용</td>
+            </tr>
+            <tr>
+              <td>6.2.1</td>
+              <td>응답시간 조절</td>
+              <td>시간 제한 기능 없음</td>
+            </tr>
+            <tr>
+              <td>6.2.2</td>
+              <td>정지 기능 제공</td>
+              <td>자동 갱신/이동 콘텐츠 없음</td>
+            </tr>
+            <tr>
+              <td>6.3.1</td>
+              <td>깜빡임과 번쩍임 사용 제한</td>
+              <td>깜빡임/번쩍임 효과 없음</td>
+            </tr>
+            <tr>
+              <td>6.4.4</td>
+              <td>고정된 참조 위치 정보 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>단일 페이지 구조</td>
+            </tr>
+            <tr>
+              <td>6.5.1</td>
+              <td>단일 포인터 입력 지원 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>복합 포인터 조작 없음</td>
+            </tr>
+            <tr>
+              <td>6.5.2</td>
+              <td>포인터 입력 취소 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>커스텀 포인터 조작 없음</td>
+            </tr>
+            <tr>
+              <td>6.5.4</td>
+              <td>동작기반 작동 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>기기 동작 기반 기능 없음</td>
+            </tr>
+            <tr>
+              <td>7.2.2</td>
+              <td>찾기 쉬운 도움 정보 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>가이드 사이트 자체가 도움 정보</td>
+            </tr>
+            <tr>
+              <td>7.3.3</td>
+              <td>접근 가능한 인증 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>인증 기능 없음</td>
+            </tr>
+            <tr>
+              <td>7.3.4</td>
+              <td>반복 입력 정보 <span class="a11y-checklist__badge--new">NEW</span></td>
+              <td>반복 입력 요구 기능 없음</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../src/js/a11y-checklist.js"></script>
+</body>
+</html>

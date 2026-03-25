@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>폼 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">폼 (Form)</h1>
+
+    <!-- 텍스트 입력 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">텍스트 입력</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label" for="input-text">이름</label>
+          <input type="text" id="input-text" class="form__input" placeholder="내용을 입력하세요">
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label" for="input-text"&gt;이름&lt;/label&gt;
+  &lt;input type="text" id="input-text" class="form__input" placeholder="내용을 입력하세요"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 필수 입력 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">필수 입력</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label form__label--required" for="input-required">이메일</label>
+          <input type="email" id="input-required" class="form__input" placeholder="내용을 입력하세요" required aria-required="true">
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label form__label--required" for="input-required"&gt;이메일&lt;/label&gt;
+  &lt;input type="email" id="input-required" class="form__input" placeholder="내용을 입력하세요" required aria-required="true"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 에러 상태 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">에러 상태</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label form__label--required" for="input-error">이메일</label>
+          <input type="email" id="input-error" class="form__input form__input--error" placeholder="내용을 입력하세요" aria-invalid="true" aria-describedby="error-msg">
+          <span id="error-msg" class="form__message form__message--error" role="alert">필수 입력 항목입니다.</span>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label form__label--required" for="input-error"&gt;이메일&lt;/label&gt;
+  &lt;input type="email" id="input-error" class="form__input form__input--error"
+    placeholder="내용을 입력하세요" aria-invalid="true" aria-describedby="error-msg"&gt;
+  &lt;span id="error-msg" class="form__message form__message--error" role="alert"&gt;
+    필수 입력 항목입니다.
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 성공 상태 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">성공 상태</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label" for="input-success">이메일</label>
+          <input type="email" id="input-success" class="form__input form__input--success" value="user@example.com">
+          <span class="form__message form__message--success">입력이 확인되었습니다.</span>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label" for="input-success"&gt;이메일&lt;/label&gt;
+  &lt;input type="email" id="input-success" class="form__input form__input--success" value="user@example.com"&gt;
+  &lt;span class="form__message form__message--success"&gt;입력이 확인되었습니다.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 비활성 상태 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">비활성 (Disabled)</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label" for="input-disabled">이름</label>
+          <input type="text" id="input-disabled" class="form__input" value="비활성 입력" disabled>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label" for="input-disabled"&gt;이름&lt;/label&gt;
+  &lt;input type="text" id="input-disabled" class="form__input" value="비활성 입력" disabled&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Select 드롭다운 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Select 드롭다운</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label" for="select-demo">부서 선택</label>
+          <select id="select-demo" class="form__select">
+            <option value="">선택하세요</option>
+            <option value="ux">UX팀</option>
+            <option value="dev">개발팀</option>
+            <option value="plan">기획팀</option>
+          </select>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label" for="select-demo"&gt;부서 선택&lt;/label&gt;
+  &lt;select id="select-demo" class="form__select"&gt;
+    &lt;option value=""&gt;선택하세요&lt;/option&gt;
+    &lt;option value="ux"&gt;UX팀&lt;/option&gt;
+    &lt;option value="dev"&gt;개발팀&lt;/option&gt;
+    &lt;option value="plan"&gt;기획팀&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Textarea -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Textarea</h2>
+      <div class="pg__preview">
+        <div class="form__group">
+          <label class="form__label" for="textarea-demo">비고</label>
+          <textarea id="textarea-demo" class="form__textarea" placeholder="내용을 입력하세요"></textarea>
+          <span class="form__help">최대 500자까지 입력 가능합니다.</span>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="form__group"&gt;
+  &lt;label class="form__label" for="textarea-demo"&gt;비고&lt;/label&gt;
+  &lt;textarea id="textarea-demo" class="form__textarea" placeholder="내용을 입력하세요"&gt;&lt;/textarea&gt;
+  &lt;span class="form__help"&gt;최대 500자까지 입력 가능합니다.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 체크박스 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">체크박스</h2>
+      <div class="pg__preview">
+        <label class="form__checkbox">
+          <input type="checkbox" class="form__checkbox-input" id="checkbox-1">
+          <span class="form__checkbox-label">이용약관에 동의합니다</span>
+        </label>
+        <label class="form__checkbox">
+          <input type="checkbox" class="form__checkbox-input" id="checkbox-2" checked>
+          <span class="form__checkbox-label">마케팅 정보 수신 동의</span>
+        </label>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;label class="form__checkbox"&gt;
+  &lt;input type="checkbox" class="form__checkbox-input" id="checkbox-1"&gt;
+  &lt;span class="form__checkbox-label"&gt;이용약관에 동의합니다&lt;/span&gt;
+&lt;/label&gt;
+&lt;label class="form__checkbox"&gt;
+  &lt;input type="checkbox" class="form__checkbox-input" id="checkbox-2" checked&gt;
+  &lt;span class="form__checkbox-label"&gt;마케팅 정보 수신 동의&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 라디오 버튼 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">라디오 버튼</h2>
+      <div class="pg__preview">
+        <label class="form__radio">
+          <input type="radio" class="form__radio-input" name="gender" id="radio-1" checked>
+          <span class="form__radio-label">남성</span>
+        </label>
+        <label class="form__radio">
+          <input type="radio" class="form__radio-input" name="gender" id="radio-2">
+          <span class="form__radio-label">여성</span>
+        </label>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;label class="form__radio"&gt;
+  &lt;input type="radio" class="form__radio-input" name="gender" id="radio-1" checked&gt;
+  &lt;span class="form__radio-label"&gt;남성&lt;/span&gt;
+&lt;/label&gt;
+&lt;label class="form__radio"&gt;
+  &lt;input type="radio" class="form__radio-input" name="gender" id="radio-2"&gt;
+  &lt;span class="form__radio-label"&gt;여성&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

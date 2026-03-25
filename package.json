@@ -9,19 +9,27 @@
     "lint:css": "stylelint \"src/scss/**/*.scss\"",
     "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix",
     "test:a11y": "npm run build:css && pa11y-ci --config .pa11yci.js",
-    "test:a11y:single": "axe"
+    "test:a11y:single": "axe",
+    "build:docs-css": "sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules",
+    "build:site": "npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
+    "serve": "concurrently \"sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch\" \"sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules --watch\" \"npx @11ty/eleventy --serve\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "clipboard": "^2.0.11",
     "modern-normalize": "^3.0.1",
     "sass": "^1.98.0",
     "sass-rem": "^4.0.1"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.5",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "@axe-core/cli": "^4.11.1",
+    "concurrently": "^9.2.1",
     "pa11y-ci": "^4.1.0",
+    "pagefind": "^1.4.0",
     "stylelint": "^17.5.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-selector-bem-pattern": "^4.0.1"

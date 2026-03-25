@@ -1,0 +1,348 @@
+// INFOMIND UX 가이드 -- 문서 사이트 전용 스타일
+// 프로젝트 토큰을 참조하되, 문서 레이아웃 스타일은 style.css와 분리
+
+@use '1-settings' as settings;
+@use '2-tools/responsive' as resp;
+@use '2-tools/mixins' as mix;
+
+// ============================================
+// skip-to-content -- 본문 바로가기 링크
+// ============================================
+.skip-to-content {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: var(--font-size-base);
+  z-index: var(--z-toast);
+
+  &:focus {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+// ============================================
+// 문서 레이아웃 -- 사이드바 + 콘텐츠
+// ============================================
+.docs-layout {
+  display: flex;
+  min-height: 100vh;
+
+  &__sidebar {
+    display: none;
+    width: 28rem;
+    min-width: 28rem;
+    border-right: 1px solid var(--color-border-light);
+    background: var(--color-bg-secondary);
+    padding: var(--spacing-lg) 0;
+
+    @include resp.respond-to('tablet-up') {
+      display: block;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    // 모바일 오버레이 모드
+    &--open {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: var(--z-modal);
+      overflow-y: auto;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    padding: var(--spacing-lg) var(--spacing-md);
+    max-width: 80rem;
+
+    @include resp.respond-to('tablet-up') {
+      padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+  }
+}
+
+// ============================================
+// 사이드바 네비게이션
+// ============================================
+.docs-nav {
+  padding: 0 var(--spacing-md);
+
+  &__section {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  &__title {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    margin: 0;
+  }
+
+  &__link {
+    display: block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast), color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    &--active {
+      color: var(--color-primary);
+      font-weight: var(--font-weight-medium);
+      background: var(--color-bg);
+    }
+  }
+}
+
+// ============================================
+// 모바일 헤더 + 햄버거 메뉴
+// ============================================
+.docs-mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg);
+
+  @include resp.respond-to('tablet-up') {
+    display: none;
+  }
+
+  &__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-bg-secondary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ============================================
+// 검색 위젯
+// ============================================
+.docs-search {
+  padding: 0 var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+// ============================================
+// 코드 블록 + 복사 버튼
+// ============================================
+pre[class*='language-'] {
+  position: relative;
+  border-radius: var(--radius-base);
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-md);
+  background: var(--color-gray-900);
+  overflow-x: auto;
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-base);
+
+  code {
+    font-size: inherit;
+    background: none;
+    padding: 0;
+  }
+}
+
+.copy-btn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-gray-600);
+  border-radius: var(--radius-sm);
+  background: var(--color-gray-800);
+  color: var(--color-gray-300);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-gray-700);
+    color: var(--color-white);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+// ============================================
+// 문서 콘텐츠 타이포그래피
+// ============================================
+.docs-layout__content {
+  h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text);
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-tight);
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+  }
+
+  h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-tight);
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+  }
+
+  p {
+    margin-bottom: var(--spacing-md);
+    line-height: var(--leading-loose);
+  }
+
+  ul,
+  ol {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
+  }
+
+  li {
+    margin-bottom: var(--spacing-xs);
+    line-height: var(--leading-base);
+  }
+
+  code {
+    font-size: var(--font-size-sm);
+    background: var(--color-gray-100);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-sm);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+
+    th,
+    td {
+      padding: var(--spacing-sm);
+      border: 1px solid var(--color-border);
+      text-align: left;
+    }
+
+    th {
+      background: var(--color-bg-secondary);
+      font-weight: var(--font-weight-semibold);
+    }
+  }
+}
+
+// ============================================
+// 컴포넌트 미리보기 (iframe)
+// ============================================
+.preview {
+  margin: var(--spacing-md) 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+
+  &__frame {
+    background: var(--color-white);
+  }
+
+  &__iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
+}
+
+// ============================================
+// 모바일 오버레이 배경
+// ============================================
+.docs-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal-backdrop);
+
+  &--active {
+    display: block;
+  }
+}

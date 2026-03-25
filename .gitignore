@@ -1,3 +1,4 @@
 node_modules/
 dist/
 reports/a11y-report.json
+_site/

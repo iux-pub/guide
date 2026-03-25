@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML 보일러플레이트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+
+    .pg__desc {
+      font-size: 1.4rem;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">HTML 페이지 보일러플레이트</h1>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 구조</h2>
+      <p class="pg__desc">
+        모든 HTML 페이지의 기본 골격. 접근성 필수 요소(본문 바로가기, 시맨틱 태그, ARIA role)를 포함한다.
+      </p>
+
+      <div class="pg__preview">
+        <a href="#main-content" class="skip-to-content">본문 바로가기</a>
+
+        <header class="site-header" role="banner">
+          <div class="container">
+            <p style="color: #999; font-size: 1.4rem;">[header: 로고, GNB 영역]</p>
+          </div>
+        </header>
+
+        <main id="main-content" class="site-main" role="main">
+          <div class="container">
+            <p style="color: #999; font-size: 1.4rem;">[main: 페이지 콘텐츠 영역]</p>
+          </div>
+        </main>
+
+        <footer class="site-footer" role="contentinfo">
+          <div class="container">
+            <p style="color: #999; font-size: 1.4rem;">[footer: 푸터 영역]</p>
+          </div>
+        </footer>
+      </div>
+
+      <div class="pg__code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;페이지 제목&lt;/title&gt;
+  &lt;link rel="stylesheet" href="../../dist/css/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;a href="#main-content" class="skip-to-content"&gt;본문 바로가기&lt;/a&gt;
+
+  &lt;header class="site-header" role="banner"&gt;
+    &lt;div class="container"&gt;
+      &lt;!-- 로고, GNB --&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;main id="main-content" class="site-main" role="main"&gt;
+    &lt;div class="container"&gt;
+      &lt;!-- 페이지 콘텐츠 --&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+
+  &lt;footer class="site-footer" role="contentinfo"&gt;
+    &lt;div class="container"&gt;
+      &lt;!-- 푸터 --&gt;
+    &lt;/div&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">필수 요소 체크리스트</h2>
+      <div class="pg__preview">
+        <ul style="font-size: 1.4rem; line-height: 2; list-style: none; padding: 0;">
+          <li>1. <code>lang="ko"</code> -- 문서 언어 선언</li>
+          <li>2. <code>meta viewport</code> -- 반응형 뷰포트 설정</li>
+          <li>3. <code>.skip-to-content</code> -- 본문 바로가기 링크 (접근성)</li>
+          <li>4. <code>role="banner"</code> -- header 랜드마크</li>
+          <li>5. <code>role="main"</code> -- main 랜드마크</li>
+          <li>6. <code>role="contentinfo"</code> -- footer 랜드마크</li>
+          <li>7. <code>id="main-content"</code> -- 본문 바로가기 타겟</li>
+          <li>8. <code>.container</code> -- 콘텐츠 최대 너비 제한</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

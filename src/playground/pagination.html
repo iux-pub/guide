@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>페이지네이션 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">페이지네이션 (Pagination)</h1>
+
+    <!-- 기본 (1~5) -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 (1~5, 현재 3페이지)</h2>
+      <div class="pg__preview">
+        <nav class="pagination" aria-label="검색 결과 페이지 탐색">
+          <ul class="pagination__list">
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--prev" aria-label="이전 페이지">이전</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="1페이지">1</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="2페이지">2</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--current" aria-current="page" aria-label="현재 페이지, 3페이지">3</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="4페이지">4</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="5페이지">5</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--next" aria-label="다음 페이지">다음</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;nav class="pagination" aria-label="검색 결과 페이지 탐색"&gt;
+  &lt;ul class="pagination__list"&gt;
+    &lt;li class="pagination__item"&gt;
+      &lt;a href="#" class="pagination__link pagination__link--prev" aria-label="이전 페이지"&gt;이전&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="pagination__item"&gt;
+      &lt;a href="#" class="pagination__link" aria-label="1페이지"&gt;1&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="pagination__item"&gt;
+      &lt;a href="#" class="pagination__link pagination__link--current"
+        aria-current="page" aria-label="현재 페이지, 3페이지"&gt;3&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li class="pagination__item"&gt;
+      &lt;a href="#" class="pagination__link pagination__link--next" aria-label="다음 페이지"&gt;다음&lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 비활성 이전 버튼 (첫 페이지) -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">첫 페이지 (이전 비활성)</h2>
+      <div class="pg__preview">
+        <nav class="pagination" aria-label="검색 결과 페이지 탐색">
+          <ul class="pagination__list">
+            <li class="pagination__item">
+              <span class="pagination__link pagination__link--prev pagination__link--disabled" aria-disabled="true">이전</span>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--current" aria-current="page" aria-label="현재 페이지, 1페이지">1</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="2페이지">2</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="3페이지">3</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="4페이지">4</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="5페이지">5</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--next" aria-label="다음 페이지">다음</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;span class="pagination__link pagination__link--prev pagination__link--disabled"
+  aria-disabled="true"&gt;이전&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 많은 페이지 (모바일 반응형) -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">많은 페이지 (1~10, 모바일 반응형)</h2>
+      <div class="pg__preview">
+        <nav class="pagination" aria-label="검색 결과 페이지 탐색">
+          <ul class="pagination__list">
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--prev" aria-label="이전 페이지">이전</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="1페이지">1</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="2페이지">2</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="3페이지">3</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="4페이지">4</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--current" aria-current="page" aria-label="현재 페이지, 5페이지">5</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="6페이지">6</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="7페이지">7</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="8페이지">8</a>
+            </li>
+            <li class="pagination__item pagination__item--mobile-hidden">
+              <a href="#" class="pagination__link" aria-label="9페이지">9</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link" aria-label="10페이지">10</a>
+            </li>
+            <li class="pagination__item">
+              <a href="#" class="pagination__link pagination__link--next" aria-label="다음 페이지">다음</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;!-- 모바일: 이전/다음 + 현재 + 처음/마지막만 표시 --&gt;
+&lt;li class="pagination__item pagination__item--mobile-hidden"&gt;
+  &lt;a href="#" class="pagination__link" aria-label="2페이지"&gt;2&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

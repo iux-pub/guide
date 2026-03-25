@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} | {{ site.title }}</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/docs.css">
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content sr-only">본문 바로가기</a>
+
+  {% include "partials/nav-mobile.njk" %}
+
+  <div class="docs-layout">
+    {% include "partials/nav-sidebar.njk" %}
+    <main id="main-content" class="docs-layout__content" data-pagefind-body>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <div class="docs-overlay" id="docs-overlay"></div>
+
+  <script src="/pagefind/pagefind-ui.js"></script>
+  <script src="/assets/js/nav-mobile.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

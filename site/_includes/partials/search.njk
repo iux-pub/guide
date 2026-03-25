@@ -1,0 +1,17 @@
+<div class="docs-search" role="search" aria-label="문서 검색">
+  <div id="search"></div>
+</div>
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    if (typeof PagefindUI !== 'undefined') {
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        translations: {
+          placeholder: '검색어를 입력하세요',
+          zero_results: '검색 결과가 없습니다'
+        }
+      })
+    }
+  })
+</script>

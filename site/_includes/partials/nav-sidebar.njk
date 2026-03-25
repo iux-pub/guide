@@ -1,0 +1,19 @@
+<aside class="docs-layout__sidebar" id="sidebar" role="navigation" aria-label="문서 탐색">
+  <nav class="docs-nav">
+    {% include "partials/search.njk" %}
+    {% for section in navigation.sections %}
+    <div class="docs-nav__section">
+      <span class="docs-nav__title">{{ section.title }}</span>
+      <ul class="docs-nav__list">
+        {% for item in section.items %}
+        <li class="docs-nav__item">
+          <a href="{{ item.url }}" class="docs-nav__link{% if page.url == item.url %} docs-nav__link--active{% endif %}" {% if page.url == item.url %}aria-current="page"{% endif %}>
+            {{ item.title }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </nav>
+</aside>

@@ -1,0 +1,58 @@
+{
+  "sections": [
+    {
+      "title": "토큰",
+      "key": "tokens",
+      "items": [
+        { "title": "개요", "url": "/tokens/" },
+        { "title": "색상", "url": "/tokens/color/" },
+        { "title": "타이포그래피", "url": "/tokens/typography/" },
+        { "title": "간격", "url": "/tokens/spacing/" },
+        { "title": "그리드", "url": "/tokens/grid/" }
+      ]
+    },
+    {
+      "title": "컨벤션",
+      "key": "conventions",
+      "items": [
+        { "title": "개요", "url": "/conventions/" },
+        { "title": "BEM 네이밍", "url": "/conventions/bem/" },
+        { "title": "SCSS 구조", "url": "/conventions/scss-structure/" }
+      ]
+    },
+    {
+      "title": "컴포넌트",
+      "key": "components",
+      "items": [
+        { "title": "개요", "url": "/components/" },
+        { "title": "버튼", "url": "/components/btn/" },
+        { "title": "폼", "url": "/components/form/" },
+        { "title": "카드", "url": "/components/card/" },
+        { "title": "테이블", "url": "/components/table/" },
+        { "title": "모달", "url": "/components/modal/" },
+        { "title": "탭", "url": "/components/tab/" },
+        { "title": "페이지네이션", "url": "/components/pagination/" },
+        { "title": "브레드크럼", "url": "/components/breadcrumb/" },
+        { "title": "보일러플레이트", "url": "/components/boilerplate/" }
+      ]
+    },
+    {
+      "title": "접근성",
+      "key": "accessibility",
+      "items": [
+        { "title": "개요", "url": "/accessibility/" },
+        { "title": "체크리스트", "url": "/accessibility/checklist/" },
+        { "title": "색상 대비", "url": "/accessibility/color-contrast/" },
+        { "title": "스크린리더 전용", "url": "/accessibility/sr-only/" },
+        { "title": "버튼", "url": "/accessibility/btn/" },
+        { "title": "폼", "url": "/accessibility/form/" },
+        { "title": "카드", "url": "/accessibility/card/" },
+        { "title": "테이블", "url": "/accessibility/table/" },
+        { "title": "모달", "url": "/accessibility/modal/" },
+        { "title": "탭", "url": "/accessibility/tab/" },
+        { "title": "브레드크럼", "url": "/accessibility/breadcrumb/" },
+        { "title": "페이지네이션", "url": "/accessibility/pagination/" }
+      ]
+    }
+  ]
+}

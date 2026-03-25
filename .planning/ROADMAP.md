@@ -81,11 +81,12 @@ Plans:
   2. pa11y-ci를 실행하면 Phase 3에서 만든 컴포넌트 페이지들이 자동 검사되고 결과 리포트가 출력된다
   3. 컴포넌트별 접근성 패턴(aria-*, role, tabindex, 키보드 네비게이션)이 가이드에 정리되어 있다
   4. .sr-only 패턴과 색상 대비 가이드(4.5:1 이상)가 예제와 함께 문서화되어 있다
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — pa11y-ci 자동 검증 파이프라인 + KWCAG 2.2 마크다운 체크리스트
+- [ ] 04-02-PLAN.md — 컴포넌트별 접근성 가이드 8개 + sr-only 패턴 + 색상 대비 가이드
+- [ ] 04-03-PLAN.md — HTML 인터랙티브 체크리스트 + pa11y-ci 전체 검증 실행
 
 ### Phase 5: Documentation Site
 **Goal**: Eleventy 기반 정적 문서 사이트에서 토큰, 컨벤션, 컴포넌트, 접근성 가이드를 한곳에서 열람하고 검색할 수 있으며, 문서 사이트 자체도 접근성을 준수하는 상태
@@ -129,6 +130,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Foundation | 0/3 | Not started | - |
 | 2. Conventions | 0/2 | Not started | - |
 | 3. Components | 0/4 | Not started | - |
-| 4. Accessibility | 0/2 | Not started | - |
+| 4. Accessibility | 0/3 | Not started | - |
 | 5. Documentation Site | 0/3 | Not started | - |
 | 6. Rollout | 0/2 | Not started | - |

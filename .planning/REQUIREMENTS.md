@@ -8,7 +8,7 @@
 ### AI 활용성 (AI)
 
 - [ ] **AI-01**: 모든 가이드 문서가 AI 프롬프트로 바로 활용 가능한 구조화된 형태 (CLAUDE.md / 스킬 파일 등)
-- [ ] **AI-02**: 컴포넌트 스니펫이 AI가 복사해서 바로 코드 생성에 활용 가능한 포맷
+- [x] **AI-02**: 컴포넌트 스니펫이 AI가 복사해서 바로 코드 생성에 활용 가능한 포맷
 - [x] **AI-03**: 디자인 토큰/BEM 규칙이 AI 지시문(instruction) 형태로도 제공되어 프로젝트 시작 시 즉시 주입 가능
 
 ### 디자인 토큰 (TOKEN)
@@ -48,7 +48,7 @@
 - [x] **COMP-07**: 페이지네이션 컴포넌트 HTML+SCSS (이전/다음, 숫자, aria-label)
 - [x] **COMP-08**: 브레드크럼 컴포넌트 HTML+SCSS (aria-label="breadcrumb", aria-current)
 - [x] **COMP-09**: HTML 페이지 보일러플레이트 (lang="ko", viewport, skip-to-content, 시맨틱 구조)
-- [ ] **COMP-10**: 각 컴포넌트에 라이브 미리보기 제공 (코드 옆에 렌더링된 결과)
+- [x] **COMP-10**: 각 컴포넌트에 라이브 미리보기 제공 (코드 옆에 렌더링된 결과)
 - [x] **COMP-11**: 모든 컴포넌트 KRDS 공공 디자인시스템 가이드라인 준수 확인
 
 ### 접근성 (A11Y)
@@ -102,7 +102,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AI-01 | Phase 5 | Pending |
-| AI-02 | Phase 3 | Pending |
+| AI-02 | Phase 3 | Complete |
 | AI-03 | Phase 2 | Complete |
 | TOKEN-01 | Phase 1 | Complete |
 | TOKEN-02 | Phase 1 | Complete |
@@ -130,7 +130,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-07 | Phase 3 | Complete |
 | COMP-08 | Phase 3 | Complete |
 | COMP-09 | Phase 3 | Complete |
-| COMP-10 | Phase 3 | Pending |
+| COMP-10 | Phase 3 | Complete |
 | COMP-11 | Phase 3 | Complete |
 | A11Y-01 | Phase 4 | Pending |
 | A11Y-02 | Phase 4 | Pending |

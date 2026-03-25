@@ -1,0 +1,29 @@
+{
+  "name": "infomind-ux-guide",
+  "version": "1.0.0",
+  "description": "인포마인드 UX 디자인/퍼블리싱 가이드 시스템",
+  "private": true,
+  "scripts": {
+    "build:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules",
+    "watch:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch",
+    "lint:css": "stylelint \"src/scss/**/*.scss\"",
+    "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix",
+    "test:a11y": "npm run build:css && pa11y-ci --config .pa11yci.js",
+    "test:a11y:single": "axe"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "modern-normalize": "^3.0.1",
+    "sass": "^1.98.0",
+    "sass-rem": "^4.0.1"
+  },
+  "devDependencies": {
+    "@axe-core/cli": "^4.11.1",
+    "pa11y-ci": "^4.1.0",
+    "stylelint": "^17.5.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-selector-bem-pattern": "^4.0.1"
+  }
+}

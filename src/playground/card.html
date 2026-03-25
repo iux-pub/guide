@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__preview .card {
+      max-width: 400px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">카드 (Card)</h1>
+
+    <!-- 기본 카드 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 카드</h2>
+      <div class="pg__preview">
+        <article class="card">
+          <div class="card__header">
+            <h3 class="card__title">카드 제목</h3>
+          </div>
+          <div class="card__body">
+            <p class="card__text">카드 본문 내용입니다. 다양한 정보를 표시할 수 있습니다.</p>
+          </div>
+          <div class="card__footer">
+            <button type="button" class="btn btn--outline">취소</button>
+            <button type="button" class="btn btn--primary">확인</button>
+          </div>
+        </article>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;article class="card"&gt;
+  &lt;div class="card__header"&gt;
+    &lt;h3 class="card__title"&gt;카드 제목&lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;div class="card__body"&gt;
+    &lt;p class="card__text"&gt;카드 본문 내용입니다.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card__footer"&gt;
+    &lt;button type="button" class="btn btn--outline"&gt;취소&lt;/button&gt;
+    &lt;button type="button" class="btn btn--primary"&gt;확인&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 가로형 카드 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">가로형 카드 (Horizontal)</h2>
+      <div class="pg__preview">
+        <article class="card card--horizontal">
+          <div class="card__media">
+            <img class="card__image" src="https://placehold.co/300x200/efefef/999?text=Image" alt="샘플 이미지">
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">가로형 카드 제목</h3>
+            <p class="card__text">가로형 카드는 태블릿 이상에서 이미지와 콘텐츠가 나란히 배치됩니다.</p>
+          </div>
+        </article>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;article class="card card--horizontal"&gt;
+  &lt;div class="card__media"&gt;
+    &lt;img class="card__image" src="image.jpg" alt="이미지 설명"&gt;
+  &lt;/div&gt;
+  &lt;div class="card__body"&gt;
+    &lt;h3 class="card__title"&gt;가로형 카드 제목&lt;/h3&gt;
+    &lt;p class="card__text"&gt;가로형 카드 본문입니다.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 이미지형 카드 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">이미지형 카드 (Image)</h2>
+      <div class="pg__preview">
+        <article class="card card--image">
+          <div class="card__media">
+            <img class="card__image" src="https://placehold.co/400x200/efefef/999?text=Image" alt="샘플 이미지">
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">이미지형 카드 제목</h3>
+            <p class="card__text">상단에 이미지가 배치되는 기본 세로 레이아웃입니다.</p>
+          </div>
+        </article>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;article class="card card--image"&gt;
+  &lt;div class="card__media"&gt;
+    &lt;img class="card__image" src="image.jpg" alt="이미지 설명"&gt;
+  &lt;/div&gt;
+  &lt;div class="card__body"&gt;
+    &lt;h3 class="card__title"&gt;이미지형 카드 제목&lt;/h3&gt;
+    &lt;p class="card__text"&gt;이미지형 카드 본문입니다.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Featured 카드 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Featured 카드</h2>
+      <div class="pg__preview">
+        <article class="card card--featured">
+          <div class="card__header">
+            <h3 class="card__title">Featured 카드 제목</h3>
+          </div>
+          <div class="card__body">
+            <p class="card__text">강조 표시가 필요한 카드에 사용합니다. 주요 색상 테두리가 적용됩니다.</p>
+          </div>
+          <div class="card__footer">
+            <button type="button" class="btn btn--primary">자세히 보기</button>
+          </div>
+        </article>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;article class="card card--featured"&gt;
+  &lt;div class="card__header"&gt;
+    &lt;h3 class="card__title"&gt;Featured 카드 제목&lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;div class="card__body"&gt;
+    &lt;p class="card__text"&gt;강조 표시가 필요한 카드에 사용합니다.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card__footer"&gt;
+    &lt;button type="button" class="btn btn--primary"&gt;자세히 보기&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>테이블 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">테이블 (Table)</h1>
+
+    <!-- 기본 테이블 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 테이블</h2>
+      <div class="pg__preview">
+        <table class="table">
+          <caption class="sr-only">사용자 목록</caption>
+          <thead class="table__head">
+            <tr class="table__row">
+              <th class="table__th" scope="col">이름</th>
+              <th class="table__th" scope="col">이메일</th>
+              <th class="table__th" scope="col">역할</th>
+            </tr>
+          </thead>
+          <tbody class="table__body">
+            <tr class="table__row">
+              <td class="table__td">홍길동</td>
+              <td class="table__td">hong@example.com</td>
+              <td class="table__td">관리자</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">김영희</td>
+              <td class="table__td">kim@example.com</td>
+              <td class="table__td">편집자</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">이철수</td>
+              <td class="table__td">lee@example.com</td>
+              <td class="table__td">뷰어</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;table class="table"&gt;
+  &lt;caption class="sr-only"&gt;사용자 목록&lt;/caption&gt;
+  &lt;thead class="table__head"&gt;
+    &lt;tr class="table__row"&gt;
+      &lt;th class="table__th" scope="col"&gt;이름&lt;/th&gt;
+      &lt;th class="table__th" scope="col"&gt;이메일&lt;/th&gt;
+      &lt;th class="table__th" scope="col"&gt;역할&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody class="table__body"&gt;
+    &lt;tr class="table__row"&gt;
+      &lt;td class="table__td"&gt;홍길동&lt;/td&gt;
+      &lt;td class="table__td"&gt;hong@example.com&lt;/td&gt;
+      &lt;td class="table__td"&gt;관리자&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Striped 테이블 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Striped 테이블</h2>
+      <div class="pg__preview">
+        <table class="table table--striped">
+          <caption class="sr-only">사용자 목록</caption>
+          <thead class="table__head">
+            <tr class="table__row">
+              <th class="table__th" scope="col">이름</th>
+              <th class="table__th" scope="col">이메일</th>
+              <th class="table__th" scope="col">역할</th>
+            </tr>
+          </thead>
+          <tbody class="table__body">
+            <tr class="table__row">
+              <td class="table__td">홍길동</td>
+              <td class="table__td">hong@example.com</td>
+              <td class="table__td">관리자</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">김영희</td>
+              <td class="table__td">kim@example.com</td>
+              <td class="table__td">편집자</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">이철수</td>
+              <td class="table__td">lee@example.com</td>
+              <td class="table__td">뷰어</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">박지민</td>
+              <td class="table__td">park@example.com</td>
+              <td class="table__td">편집자</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;table class="table table--striped"&gt;
+  &lt;caption class="sr-only"&gt;사용자 목록&lt;/caption&gt;
+  &lt;!-- thead/tbody 동일 --&gt;
+&lt;/table&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Bordered 테이블 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">Bordered 테이블</h2>
+      <div class="pg__preview">
+        <table class="table table--bordered">
+          <caption class="sr-only">사용자 목록</caption>
+          <thead class="table__head">
+            <tr class="table__row">
+              <th class="table__th" scope="col">이름</th>
+              <th class="table__th" scope="col">이메일</th>
+              <th class="table__th" scope="col">역할</th>
+            </tr>
+          </thead>
+          <tbody class="table__body">
+            <tr class="table__row">
+              <td class="table__td">홍길동</td>
+              <td class="table__td">hong@example.com</td>
+              <td class="table__td">관리자</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">김영희</td>
+              <td class="table__td">kim@example.com</td>
+              <td class="table__td">편집자</td>
+            </tr>
+            <tr class="table__row">
+              <td class="table__td">이철수</td>
+              <td class="table__td">lee@example.com</td>
+              <td class="table__td">뷰어</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;table class="table table--bordered"&gt;
+  &lt;caption class="sr-only"&gt;사용자 목록&lt;/caption&gt;
+  &lt;!-- thead/tbody 동일 --&gt;
+&lt;/table&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 반응형 테이블 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">반응형 테이블 (가로 스크롤)</h2>
+      <div class="pg__preview">
+        <div class="table__wrapper">
+          <table class="table">
+            <caption class="sr-only">프로젝트 현황</caption>
+            <thead class="table__head">
+              <tr class="table__row">
+                <th class="table__th" scope="col">프로젝트명</th>
+                <th class="table__th" scope="col">담당자</th>
+                <th class="table__th" scope="col">시작일</th>
+                <th class="table__th" scope="col">종료일</th>
+                <th class="table__th" scope="col">진행률</th>
+                <th class="table__th" scope="col">상태</th>
+              </tr>
+            </thead>
+            <tbody class="table__body">
+              <tr class="table__row">
+                <td class="table__td">홈페이지 리뉴얼</td>
+                <td class="table__td">홍길동</td>
+                <td class="table__td">2026-01-01</td>
+                <td class="table__td">2026-06-30</td>
+                <td class="table__td">75%</td>
+                <td class="table__td">진행중</td>
+              </tr>
+              <tr class="table__row">
+                <td class="table__td">모바일 앱 개발</td>
+                <td class="table__td">김영희</td>
+                <td class="table__td">2026-02-15</td>
+                <td class="table__td">2026-08-31</td>
+                <td class="table__td">40%</td>
+                <td class="table__td">진행중</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="table__wrapper"&gt;
+  &lt;table class="table"&gt;
+    &lt;caption class="sr-only"&gt;프로젝트 현황&lt;/caption&gt;
+    &lt;!-- 많은 컬럼일 때 모바일 가로 스크롤 --&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 빈 상태 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">빈 상태</h2>
+      <div class="pg__preview">
+        <table class="table">
+          <caption class="sr-only">사용자 목록</caption>
+          <thead class="table__head">
+            <tr class="table__row">
+              <th class="table__th" scope="col">이름</th>
+              <th class="table__th" scope="col">이메일</th>
+              <th class="table__th" scope="col">역할</th>
+            </tr>
+          </thead>
+          <tbody class="table__body">
+            <tr class="table__row">
+              <td class="table__empty" colspan="3">등록된 데이터가 없습니다. 새 항목을 추가해 주세요.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;tbody class="table__body"&gt;
+  &lt;tr class="table__row"&gt;
+    &lt;td class="table__empty" colspan="3"&gt;
+      등록된 데이터가 없습니다. 새 항목을 추가해 주세요.
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

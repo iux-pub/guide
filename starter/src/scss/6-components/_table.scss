@@ -54,18 +54,14 @@
 
   // --- Variant modifiers ---
 
-  // 스트라이프 테이블
-  &--striped {
-    .table__body .table__row:nth-child(even) {
-      background-color: var(--color-bg-secondary);
-    }
+  // 스트라이프 테이블 (tbody 영역만 적용, thead 제외)
+  &--striped &__body &__row:nth-child(even) {
+    background-color: var(--color-bg-secondary);
   }
 
   // 테두리 테이블
-  &--bordered {
-    .table__th,
-    .table__td {
-      border: 1px solid var(--color-border-light);
-    }
+  &--bordered &__th,
+  &--bordered &__td {
+    border: 1px solid var(--color-border-light);
   }
 }

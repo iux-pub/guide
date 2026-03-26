@@ -1,4 +1,8 @@
 node_modules/
 dist/
-reports/a11y-report.json
 _site/
+reports/
+.DS_Store
+*.log
+.sass-cache/
+.claude/worktrees/

@@ -8,7 +8,7 @@ export default function(eleventyConfig) {
   // 정적 자원 passthrough copy
   eleventyConfig.addPassthroughCopy('site/assets')
   // dist/css를 그대로 복사 -- 문서 사이트와 playground iframe 모두 /dist/css/ 경로 사용
-  eleventyConfig.addPassthroughCopy({ 'dist/css': 'dist/css' })
+  eleventyConfig.addPassthroughCopy({ 'dist/css': 'dist/css' }).addWatchTarget('dist/css/')
   // Prism.js 코드 하이라이팅 테마
   eleventyConfig.addPassthroughCopy({ 'node_modules/prismjs/themes/prism-tomorrow.min.css': 'assets/css/prism-tomorrow.css' })
   eleventyConfig.addPassthroughCopy({ 'src/playground': 'playground' })

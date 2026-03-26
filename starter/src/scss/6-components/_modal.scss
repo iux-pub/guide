@@ -22,7 +22,8 @@
   &__overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgb(0 0 0 / 50%); // fallback: --color-black 50%
+    background-color: color-mix(in srgb, var(--color-black) 50%, transparent);
     z-index: var(--z-modal-backdrop);
     transition: opacity var(--transition-base);
   }

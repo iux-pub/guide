@@ -48,7 +48,7 @@
       background-color var(--transition-fast),
       border-color var(--transition-fast);
 
-    &:hover:not(.pagination__link--disabled):not(.pagination__link--current) {
+    &:hover:not(.pagination__link--disabled, .pagination__link--current) {
       background-color: var(--color-bg-secondary);
     }
 

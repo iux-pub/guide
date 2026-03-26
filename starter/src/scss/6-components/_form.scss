@@ -48,7 +48,8 @@
     &:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px rgba(37, 110, 244, 0.2);
+      box-shadow: 0 0 0 2px rgb(37 110 244 / 20%); // fallback: --color-primary 20%
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 20%, transparent);
     }
 
     &:disabled {
@@ -62,7 +63,8 @@
       border-color: var(--color-danger);
 
       &:focus {
-        box-shadow: 0 0 0 2px rgba(222, 52, 18, 0.2);
+        box-shadow: 0 0 0 2px rgb(222 52 18 / 20%); // fallback: --color-danger 20%
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger) 20%, transparent);
       }
     }
 
@@ -71,7 +73,8 @@
       border-color: var(--color-success);
 
       &:focus {
-        box-shadow: 0 0 0 2px rgba(34, 135, 56, 0.2);
+        box-shadow: 0 0 0 2px rgb(34 135 56 / 20%); // fallback: --color-success 20%
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-success) 20%, transparent);
       }
     }
   }

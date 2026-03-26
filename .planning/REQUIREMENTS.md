@@ -171,6 +171,36 @@
 - [ ] **BUILD-01**: npm run build 통합 — tokens → CSS → docs-css → prompts → site 전체 파이프라인 한 명령
 - [ ] **BUILD-02**: npm run build:prompts 스크립트 — tokens.json + snippets에서 prompts/*.md 자동 재생성
 
+## v1.2 Requirements
+
+### 마이크로카피 (MICRO)
+
+- [ ] **MICRO-01**: 마이크로카피 가이드 — 에러 메시지 3-part 공식(what/why/how), 버튼 텍스트 규칙(동사형 2~4단어), 톤 매핑(B2B/소비자/공공), 플레이스홀더 규칙, 숫자 포맷
+
+### 인터랙션 (INTER)
+
+- [ ] **INTER-01**: 인터랙션 타이밍 규격 — 컴포넌트별 전환 시간(버튼 100ms, 모달 300ms), 이징 함수, prefers-reduced-motion 대응, Figma 프로토타입 설정 매핑
+
+### 디자인 감사 (AUDIT)
+
+- [ ] **AUDIT-01**: 디자인 감사 프레임워크 — 17점 체크리스트 + Quick 5 기본 점검 + 점수 체계(100점 만점, Critical/Warning/Tip 심각도)
+
+### UI 상태 패턴 (STATE)
+
+- [ ] **STATE-01**: UI 상태 패턴 가이드 — 로딩(Skeleton vs Spinner vs ProgressBar 의사결정 트리), 에러(3단계 심각도 + Alert 구조), 빈 상태(아이콘+제목+설명+CTA 템플릿), 폼 유효성 타이밍(blur/change/submit)
+
+### 아이콘 시스템 (ICON)
+
+- [ ] **ICON-01**: 아이콘 시스템 규격 — 8pt 그리드(12/16/20/24/32/40/48px만 허용), Lucide 표준 라이브러리, 금지 사이즈(18/22/26/28/36px), 접근성(aria-hidden + 텍스트 라벨)
+
+### 미학 원칙 (AESTH)
+
+- [ ] **AESTH-01**: 프론트엔드 미학 원칙 — AI 슬롭 안티패턴(Inter 기본폰트, 보라색 그라디언트, 예측 가능 레이아웃), 5트랙 디자인 사고, 비대칭 레이아웃 원칙, INFOMIND 제품별 UI 스타일 매핑
+
+### 문서 사이트 통합 (DSSITE)
+
+- [ ] **DSSITE-01**: 위 6개 가이드를 문서 사이트 site/design/ 섹션으로 통합 + 네비게이션 + pa11yci
+
 ## v2 Requirements
 
 ### 확장 기능

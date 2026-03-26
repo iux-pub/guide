@@ -7,6 +7,7 @@
 - [x] **v0.9.5 리뷰 기반 품질 강화** - Phases 12-13 (complete)
 - [ ] **v1.0 AI 범용 프롬프트 시스템** - Phases 14-15 (in progress)
 - [ ] **v1.1 시스템 고도화** - Phases 16-18
+- [ ] **v1.2 디자인 역량 강화** - Phases 19-20
 
 ## Phases
 
@@ -41,16 +42,27 @@
 
 </details>
 
-### v1.0 AI 범용 프롬프트 시스템
+<details>
+<summary>v1.0 AI 범용 프롬프트 시스템 (Phases 14-15) - IN PROGRESS</summary>
 
 - [ ] **Phase 14: 프롬프트 파일 생성** - 6개 AI 프롬프트 마크다운 파일 작성 (prompts/ 디렉토리)
 - [ ] **Phase 15: 문서 사이트 프롬프트 통합** - site/prompts/ 섹션, 사용 가이드, 복사 기능
 
-### v1.1 시스템 고도화
+</details>
+
+<details>
+<summary>v1.1 시스템 고도화 (Phases 16-18)</summary>
 
 - [ ] **Phase 16: 토큰 파이프라인** - tokens.json 싱글 소스 + SCSS/프롬프트 자동 생성 스크립트
 - [ ] **Phase 17: 컴포넌트 조합 패턴** - 실전 레이아웃 예제 3종 + 문서 사이트 조합 패턴 페이지
 - [ ] **Phase 18: 빌드 통합** - npm run build 전체 파이프라인 + 프롬프트 자동 재생성
+
+</details>
+
+### v1.2 디자인 역량 강화
+
+- [ ] **Phase 19: 디자인 가이드 콘텐츠** - info-design 스킬 기반 6개 디자인 가이드 마크다운 문서 생성
+- [ ] **Phase 20: 문서 사이트 통합** - site/design/ 섹션 네비게이션, pa11yci, info-design 스킬 역갱신
 
 ## Phase Details
 
@@ -147,6 +159,9 @@
 
 </details>
 
+<details>
+<summary>v1.0 Phase Details (In Progress)</summary>
+
 ### Phase 14: 프롬프트 파일 생성
 **Goal**: 팀의 디자인/퍼블리싱 규칙이 6개 AI 프롬프트 파일로 체계화되어, 어떤 AI 도구에든 즉시 주입 가능하다
 **Depends on**: Phase 13 (기존 가이드 문서, 토큰, 컴포넌트, 접근성 규칙이 모두 완성된 상태)
@@ -171,6 +186,11 @@
   4. 프롬프트 섹션 페이지가 기존 사이트와 동일한 KWCAG/WCAG AA 접근성 수준을 유지한다
 **Plans**: TBD
 **UI hint**: yes
+
+</details>
+
+<details>
+<summary>v1.1 Phase Details</summary>
 
 ### Phase 16: 토큰 파이프라인
 **Goal**: 토큰이 tokens.json 하나에서 관리되고, SCSS 변수와 AI 프롬프트가 스크립트 한 번으로 자동 생성된다
@@ -206,11 +226,37 @@
   4. `package.json`의 scripts 섹션에 build, build:tokens, build:prompts 명령이 정의되어 있고, 각각 독립 실행도 가능하다
 **Plans**: TBD
 
+</details>
+
+### Phase 19: 디자인 가이드 콘텐츠
+**Goal**: info-design 스킬의 핵심 콘텐츠가 6개 마크다운 문서로 추출되어, 디자인 품질 기준이 "코딩 규칙"에서 "디자인 시스템" 수준으로 확장된다
+**Depends on**: Phase 18 (v1.1 완료 후 시작, 문서 사이트와 빌드 파이프라인이 존재하는 상태)
+**Requirements**: MICRO-01, INTER-01, AUDIT-01, STATE-01, ICON-01, AESTH-01
+**Success Criteria** (what must be TRUE):
+  1. `site/design/microcopy.md` 파일이 존재하며, 에러 메시지 3-part 공식(what/why/how), 버튼 텍스트 규칙(동사형 2~4단어), 톤 매핑(B2B/소비자/공공), 플레이스홀더 규칙, 숫자 포맷을 실무 예제와 함께 제공한다
+  2. `site/design/interaction-timing.md` 파일이 존재하며, 컴포넌트별 전환 시간(버튼 100ms, 모달 300ms 등), 이징 함수, prefers-reduced-motion 대응, Figma 프로토타입 설정 매핑을 담고 있다
+  3. `site/design/design-audit.md` 파일이 존재하며, 17점 체크리스트 + Quick 5 기본 점검 + 점수 체계(100점 만점, Critical/Warning/Tip 심각도)가 팀이 즉시 적용 가능한 형태로 제공된다
+  4. `site/design/ui-states.md` 파일이 존재하며, 로딩(Skeleton vs Spinner vs ProgressBar 의사결정 트리), 에러(3단계 심각도), 빈 상태(아이콘+제목+설명+CTA 템플릿), 폼 유효성 타이밍을 담고 있다
+  5. `site/design/icon-system.md` 파일이 존재하며, 8pt 그리드(허용 사이즈 12/16/20/24/32/40/48px), Lucide 표준, 금지 사이즈, 접근성(aria-hidden + 텍스트 라벨) 규격을 정의한다
+  6. `site/design/aesthetics.md` 파일이 존재하며, AI 슬롭 안티패턴, 5트랙 디자인 사고, 비대칭 레이아웃 원칙, INFOMIND 제품별 UI 스타일 매핑을 담고 있다
+**Plans**: TBD
+
+### Phase 20: 문서 사이트 통합
+**Goal**: 6개 디자인 가이드가 문서 사이트의 "디자인" 섹션으로 통합되어 네비게이션에서 접근 가능하고, 접근성 테스트를 통과하며, info-design 스킬이 역갱신된다
+**Depends on**: Phase 19 (6개 마크다운 문서가 존재해야 사이트에 통합 가능)
+**Requirements**: DSSITE-01
+**Success Criteria** (what must be TRUE):
+  1. 문서 사이트 네비게이션에 "디자인" 섹션이 존재하며, 6개 디자인 가이드 페이지(마이크로카피, 인터랙션 타이밍, 디자인 감사, UI 상태, 아이콘 시스템, 미학 원칙)로 접근 가능하다
+  2. `.pa11yci.js`에 `site/design/` 하위 6개 페이지 URL이 추가되어 pa11y-ci 접근성 테스트를 통과한다
+  3. info-design 스킬의 references/ 파일에서 가이드 시스템 문서 링크가 역참조로 추가되어, 스킬과 가이드 사이트가 양방향으로 연결된다
+  4. 디자인 섹션 페이지가 기존 사이트와 동일한 레이아웃, 코드 하이라이팅, copy-to-clipboard 기능을 사용한다
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18
-(Phase 17은 Phase 16과 독립적이나, 순차 실행. Phase 18은 Phase 16에 의존.)
+Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -231,4 +277,6 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18
 | 15. 문서 사이트 프롬프트 통합 | v1.0 | 0/TBD | Complete | 2026-03-26 |
 | 16. 토큰 파이프라인 | v1.1 | 0/TBD | Not started | - |
 | 17. 컴포넌트 조합 패턴 | v1.1 | 0/TBD | Not started | - |
-| 18. 빌드 통합 | v1.1 | 0/TBD | Complete    | 2026-03-26 |
+| 18. 빌드 통합 | v1.1 | 0/TBD | Complete | 2026-03-26 |
+| 19. 디자인 가이드 콘텐츠 | v1.2 | 0/TBD | Not started | - |
+| 20. 문서 사이트 통합 | v1.2 | 0/TBD | Not started | - |

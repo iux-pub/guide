@@ -336,14 +336,27 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUILD-01 | Phase 18 | Pending |
 | BUILD-02 | Phase 18 | Pending |
 
+### v1.2 (Planned)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| MICRO-01 | Phase 19 | Pending |
+| INTER-01 | Phase 19 | Pending |
+| AUDIT-01 | Phase 19 | Pending |
+| STATE-01 | Phase 19 | Pending |
+| ICON-01 | Phase 19 | Pending |
+| AESTH-01 | Phase 19 | Pending |
+| DSSITE-01 | Phase 20 | Pending |
+
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)
 - v0.9 requirements: 17 total (all complete)
 - v0.9.5 requirements: 8 total (all complete)
 - v1.0 requirements: 8 total (mapped: 8)
 - v1.1 requirements: 7 total (mapped: 7)
+- v1.2 requirements: 7 total (mapped: 7)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 -- v1.1 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-26 -- v1.2 로드맵 생성, 트레이서빌리티 업데이트*

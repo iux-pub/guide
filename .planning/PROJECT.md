@@ -8,16 +8,15 @@
 
 신규 프로젝트 시작 시 디자인/퍼블리싱 규칙을 처음부터 다시 정하지 않고, 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
 
-## Current Milestone: v1.0 AI 범용 프롬프트 시스템
+## Current Milestone: v1.1 시스템 고도화
 
-**Goal:** 가이드 시스템의 규칙을 어떤 AI 도구에든 주입 가능한 범용 프롬프트 세트로 제공하여, 디자인/퍼블리싱 AI 워크플로우에 팀 표준을 즉시 적용
+**Goal:** 수동 관리 포인트를 자동화하고 기존 컴포넌트의 실전 활용도를 높여서 "쓰기만 하면 되는" 수준으로 끌어올림
 
 **Target features:**
-- 디자인 AI 프롬프트 (Google Stitch, Figma AI, Galileo, Lovable) — 토큰, 컴포넌트, 접근성 규칙
-- 퍼블리싱 AI 프롬프트 (Cursor, Copilot, v0, Windsurf) — BEM, ITCSS, 토큰, 반응형
-- 대화형 AI 프롬프트 (ChatGPT, Gemini, Claude 웹) — 컨텍스트 주입용 규칙 요약
-- 피그마 AI 프롬프트 (Figma AI, Figma Make) — 네이밍, 구조, Variable 규칙
-- 문서 사이트에 프롬프트 복사 페이지 제공
+- 토큰 파이프라인: tokens.json 싱글 소스 → SCSS + CSS + 프롬프트 자동 생성
+- 컴포넌트 조합 패턴: 실전 레이아웃 예제 (모달+폼, 카드그리드, 검색+테이블)
+- 프롬프트 자동 생성: 토큰/컴포넌트 변경 시 prompts/*.md 자동 재생성
+- 빌드 통합: npm run build 한 명령으로 전체 파이프라인 실행
 - 기여 가이드 + 거버넌스 문서
 
 ## Requirements

@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: AI 범용 프롬프트 시스템
-status: executing
-stopped_at: Phase 15 Plan 1 완료 (AI 프롬프트 문서 사이트 통합)
+milestone: v1.1
+milestone_name: 시스템 고도화
+status: Defining requirements
+stopped_at: v1.1 마일스톤 시작
 last_updated: "2026-03-26T08:42:05.803Z"
 last_activity: 2026-03-26
 progress:

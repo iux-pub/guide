@@ -1,13 +1,13 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: 핵심 경화
-status: Ready to plan
-stopped_at: v1.3 로드맵 생성 완료
-last_updated: "2026-03-26"
+milestone: v1.2
+milestone_name: 디자인 역량 강화
+status: planning
+stopped_at: v1.3 로드맵 생성 완료, Phase 21 계획 대기
+last_updated: "2026-03-26T22:12:35.011Z"
 last_activity: 2026-03-26
 progress:
-  total_phases: 22
+  total_phases: 16
   completed_phases: 7
   total_plans: 19
   completed_plans: 25
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 
 ## Current Position
 
-Phase: 21 of 22 (빌드 + 인프라 경화)
+Phase: 22 of 22 (content audit)
 Plan: Not started
 Status: Ready to plan
 Last activity: 2026-03-26

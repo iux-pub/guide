@@ -310,5 +310,5 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20 -> 21 ->
 | 18. 빌드 통합 | v1.1 | 0/TBD | Complete | 2026-03-26 |
 | 19. 디자인 가이드 콘텐츠 | v1.2 | 0/TBD | Not started | - |
 | 20. 문서 사이트 통합 | v1.2 | 0/TBD | Complete | 2026-03-26 |
-| 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Not started | - |
-| 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Not started | - |
+| 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Complete    | 2026-03-26 |
+| 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete    | 2026-03-26 |

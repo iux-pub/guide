@@ -26,7 +26,7 @@ Google Stitch, Galileo, Lovable, v0
 ### Primary (프로젝트별 오버라이드 가능)
 
 | 토큰 | 값 | 용도 |
-|------|----|------|
+|----|----|----|
 | `--color-primary` | #256ef4 | 기본 브랜드 색상 |
 | `--color-primary-light` | #6a9df7 | 밝은 브랜드 색상 |
 | `--color-primary-dark` | #083891 | 어두운 브랜드 색상 |
@@ -34,7 +34,7 @@ Google Stitch, Galileo, Lovable, v0
 ### Gray 스케일
 
 | 토큰 | 값 |
-|------|----|
+|----|----|
 | `--color-gray-900` | #222 |
 | `--color-gray-800` | #333 |
 | `--color-gray-700` | #555 |
@@ -49,7 +49,7 @@ Google Stitch, Galileo, Lovable, v0
 ### Semantic (KRDS 기준)
 
 | 토큰 | 값 | 용도 |
-|------|----|------|
+|----|----|----|
 | `--color-danger` | #de3412 | 에러, 삭제 |
 | `--color-warning` | #c78500 | 경고 |
 | `--color-success` | #228738 | 성공, 완료 |
@@ -58,7 +58,7 @@ Google Stitch, Galileo, Lovable, v0
 ### Text
 
 | 토큰 | 값 | 용도 |
-|------|----|------|
+|----|----|----|
 | `--color-text` | #1e2124 | 본문 텍스트 |
 | `--color-text-secondary` | #666 | 보조 텍스트 |
 | `--color-text-disabled` | #999 | 비활성 텍스트 |
@@ -66,21 +66,21 @@ Google Stitch, Galileo, Lovable, v0
 ### Background
 
 | 토큰 | 값 | 용도 |
-|------|----|------|
+|----|----|----|
 | `--color-bg` | #fff | 기본 배경 |
 | `--color-bg-secondary` | #f8f8f8 | 보조 배경 |
 
 ### Border
 
 | 토큰 | 값 | 용도 |
-|------|----|------|
+|----|----|----|
 | `--color-border` | #ccc | 기본 테두리 |
 | `--color-border-light` | #efefef | 밝은 테두리 |
 
 ### 기본
 
 | 토큰 | 값 |
-|------|----|
+|----|----|
 | `--color-white` | #fff |
 | `--color-black` | #000 |
 
@@ -96,7 +96,7 @@ Google Stitch, Galileo, Lovable, v0
 ### 폰트 크기
 
 | 토큰 | rem | px |
-|------|-----|----|
+|----|----|----|
 | `--font-size-2xl` | 3.2rem | 32px |
 | `--font-size-xl` | 2.8rem | 28px |
 | `--font-size-lg` | 2.4rem | 24px |
@@ -108,7 +108,7 @@ Google Stitch, Galileo, Lovable, v0
 ### 폰트 굵기
 
 | 토큰 | 값 |
-|------|----|
+|----|----|
 | `--font-weight-regular` | 400 |
 | `--font-weight-medium` | 500 |
 | `--font-weight-semibold` | 600 |
@@ -117,7 +117,7 @@ Google Stitch, Galileo, Lovable, v0
 ### 줄 간격
 
 | 토큰 | 값 |
-|------|----|
+|----|----|
 | `--leading-tight` | 1.2 |
 | `--leading-base` | 1.6 |
 | `--leading-loose` | 1.8 |
@@ -129,7 +129,7 @@ Google Stitch, Galileo, Lovable, v0
 4px 기반 스케일. 이 스케일에 없는 값(5px, 10px, 15px, 20px, 30px)을 사용하지 않는다.
 
 | 토큰 | px |
-|------|----|
+|----|----|
 | `--spacing-xs` | 4px |
 | `--spacing-sm` | 8px |
 | `--spacing-md` | 16px |
@@ -145,7 +145,7 @@ Google Stitch, Galileo, Lovable, v0
 ### Border Radius
 
 | 토큰 | 값 |
-|------|----|
+|----|----|
 | `--radius-sm` | 4px |
 | `--radius-base` | 8px |
 | `--radius-lg` | 12px |
@@ -155,17 +155,17 @@ Google Stitch, Galileo, Lovable, v0
 ### Box Shadow
 
 | 토큰 | 값 |
-|------|----|
-| `--shadow-sm` | 0 1px 2px rgba(0,0,0,0.05) |
-| `--shadow-base` | 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06) |
-| `--shadow-lg` | 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05) |
+|----|----|
+| `--shadow-sm` | 0 1px 2px rgba(0, 0, 0, 0.05) |
+| `--shadow-base` | 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06) |
+| `--shadow-lg` | 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) |
 
 ---
 
 ## 브레이크포인트
 
 | 해상도 | 범위 | 기본 시안 너비 |
-|--------|------|--------------|
+|----|----|----|
 | 모바일 | 0 ~ 767px | 360px |
 | 태블릿 | 768px ~ 1279px | 768px |
 | PC | 1280px ~ | 1920px (콘텐츠 max-width: 1200px) |
@@ -173,7 +173,7 @@ Google Stitch, Galileo, Lovable, v0
 ### 그리드
 
 | 해상도 | 컬럼 | 거터 | 좌우 여백 |
-|--------|------|------|----------|
+|----|----|----|----------|
 | 모바일 | 4 | 16px | 16px |
 | 태블릿 | 12 | 24px | 24px |
 | PC | 12 | 24px | 40px (max-width: 1200px) |
@@ -185,108 +185,118 @@ Google Stitch, Galileo, Lovable, v0
 ### 버튼 (btn)
 
 ```
-.btn                    -- Block
-.btn--primary           -- 주요 동작
+.btn--primary           -- 주요 동작 (제출, 저장)
 .btn--secondary         -- 보조 동작
-.btn--outline           -- 테두리만
+.btn--outline           -- 테두리만, 덜 강조
 .btn--text              -- 배경/테두리 없음
-.btn--ghost             -- 투명, 호버 시 배경
-.btn--sm                -- 작은 크기 (높이 32px, 터치 영역 44px 보장)
-.btn--lg                -- 큰 크기 (높이 48px)
+.btn--ghost             -- 투명, 호버 시 배경 표시
+.btn--link              -- 링크 스타일 (밑줄)
+.btn--sm                -- 높이 32px (min-height: 4.4rem으로 터치 영역 44px 보장), `--font-size-sm`
+.btn--lg                -- 높이 48px, `--font-size-md`
+:disabled 속성            -- `opacity: 0.5`, `cursor: not-allowed`
 ```
 
 ### 폼 (form)
 
 ```
 .form__group            -- label + input 래퍼
-.form__label            -- 레이블
-.form__label--required  -- 필수 항목 (*)
-.form__input            -- 텍스트 입력
-.form__input--error     -- 에러 상태
-.form__input--success   -- 성공 상태
-.form__select           -- 드롭다운
+.form__label            -- 입력 필드 레이블
+.form__label--required  -- 필수 항목 표시 (* 추가)
+.form__input            -- 텍스트, 이메일, 패스워드 등
+.form__select           -- 드롭다운 선택
 .form__textarea         -- 여러 줄 입력
-.form__checkbox         -- 체크박스 래퍼
-.form__radio            -- 라디오 래퍼
-.form__help             -- 도움말 텍스트
-.form__message--error   -- 에러 메시지
-.form__message--success -- 성공 메시지
+.form__checkbox         -- 체크박스 + 레이블 래퍼
+.form__checkbox-input   -- 체크박스 입력
+.form__checkbox-label   -- 체크박스 텍스트
+.form__radio            -- 라디오 + 레이블 래퍼
+.form__radio-input      -- 라디오 입력
+.form__radio-label      -- 라디오 텍스트
+.form__help             -- 입력 안내 텍스트
+.form__input--error     -- 빨간 테두리
+.form__message--error   -- 빨간 에러 텍스트
+.form__input--success   -- 초록 테두리
+.form__message--success -- 초록 성공 텍스트
+:disabled 속성            -- 비활성 스타일
+.form--inline           -- tablet-up에서 가로 배치
 ```
 
 ### 카드 (card)
 
 ```
-.card                   -- Block
+.card                   -- 세로 레이아웃 (header/body/footer)
+.card--horizontal       -- tablet-up에서 이미지 좌측 + 콘텐츠 우측
+.card--image            -- 상단 이미지 + 콘텐츠
+.card--featured         -- accent 테두리 강조 (2px primary)
 .card__header           -- 상단 영역
 .card__title            -- 제목
 .card__body             -- 본문 영역
 .card__text             -- 본문 텍스트
-.card__footer           -- 하단 영역
-.card__media            -- 이미지 래퍼
-.card__image            -- 이미지
-.card--horizontal       -- 가로형 (tablet-up)
-.card--image            -- 이미지형
-.card--featured         -- 강조 (accent 테두리)
+.card__footer           -- 하단 영역 (액션 버튼 등)
+.card__media            -- 미디어(이미지) 래퍼
+.card__image            -- 이미지 요소
 ```
 
 ### 테이블 (table)
 
 ```
-.table                  -- Block
-.table__wrapper         -- 반응형 스크롤 래퍼
-.table__head            -- thead
-.table__th              -- th (bold, nowrap)
-.table__body            -- tbody
-.table__row             -- tr
-.table__td              -- td
-.table__empty           -- 데이터 없음
-.table--striped         -- 줄무늬
-.table--bordered        -- 전체 테두리
+.table                  -- 시맨틱 테이블 (caption + thead + tbody)
+.table--striped         -- 짝수 행 배경색 (가독성 향상)
+.table--bordered        -- 모든 셀 테두리
+.table__wrapper         -- 모바일 가로 스크롤
+.table__head            -- thead 스타일
+.table__th              -- th 스타일 (bold, nowrap)
+.table__body            -- tbody 스타일
+.table__row             -- tr 스타일
+.table__td              -- td 스타일
+.table__empty           -- 데이터 없음 안내
 ```
 
 ### 모달 (modal)
 
 ```
-.modal                  -- Block (role="dialog")
-.modal__overlay         -- 반투명 배경
-.modal__container       -- 대화상자
-.modal__header          -- 제목 + 닫기
-.modal__title           -- 제목
-.modal__body            -- 본문
-.modal__footer          -- 액션 버튼
-.modal__close           -- 닫기 버튼
+.modal                  -- `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
+.modal__overlay         -- 반투명 배경 (클릭 시 닫기)
+.modal__container       -- 실제 대화상자 (모바일: 전체화면, tablet-up: max-width 56rem)
+.modal__header          -- 제목 + 닫기 버튼
+.modal__title           -- 모달 제목 (`aria-labelledby` 타겟)
+.modal__body            -- 본문 콘텐츠
+.modal__footer          -- 액션 버튼 영역
+.modal__close           -- 닫기 버튼 (`aria-label="닫기"`)
 ```
 
 ### 탭 (tab)
 
 ```
-.tab                    -- Block
-.tab__list              -- 탭 버튼 목록 (role="tablist")
-.tab__button            -- 탭 버튼 (role="tab")
-.tab__panel             -- 콘텐츠 패널 (role="tabpanel")
+.tab                    -- 탭 전체 래퍼
+.tab__list              -- `role="tablist"`, 탭 버튼 목록 (모바일: 가로 스크롤)
+.tab__button            -- `role="tab"`, 개별 탭 버튼
+.tab__panel             -- `role="tabpanel"`, 탭 콘텐츠 영역
 ```
 
 ### 페이지네이션 (pagination)
 
 ```
-.pagination             -- Block (<nav>)
-.pagination__list       -- 목록
-.pagination__item       -- 항목
-.pagination__link       -- 페이지 링크
-.pagination__link--current  -- 현재 페이지
-.pagination__link--prev     -- 이전
-.pagination__link--next     -- 다음
-.pagination__link--disabled -- 비활성
+.pagination             -- `<nav aria-label="페이지 네비게이션">`
+.pagination__list       -- `<ul>` 목록
+.pagination__item       -- `<li>` 항목
+.pagination__item--mobile-hidden-- 모바일에서 숨김, tablet-up에서 표시
+.pagination__link       -- `<a>` 페이지 링크
+.pagination__link--current-- 현재 페이지 (primary 배경색)
+.pagination__link--prev -- "이전" 버튼
+.pagination__link--next -- "다음" 버튼
+.pagination__link--disabled-- 첫/마지막 페이지에서 비활성
 ```
 
 ### 브레드크럼 (breadcrumb)
 
 ```
-.breadcrumb             -- Block (<nav>)
-.breadcrumb__list       -- 순서 목록 (<ol>)
-.breadcrumb__item       -- 항목
-.breadcrumb__link       -- 링크
-.breadcrumb__current    -- 현재 위치 (텍스트)
+.breadcrumb             -- `<nav aria-label="현재 위치">`
+.breadcrumb__list       -- `<ol>` 순서 있는 목록
+.breadcrumb__item       -- `<li>` 항목
+.breadcrumb__item--mobile-hidden-- 모바일에서 숨김, tablet-up에서 표시
+.breadcrumb__link       -- 이전 페이지 링크
+.breadcrumb__current    -- 현재 위치 (링크 아님, 텍스트)
+CSS ::before            -- `/` 구분자 (스크린리더 자동 무시)
 ```
 
 ---

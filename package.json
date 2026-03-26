@@ -10,6 +10,7 @@
     "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix",
     "test:a11y": "npm run build:css && pa11y-ci --config .pa11yci.js",
     "test:a11y:single": "axe",
+    "build:prompts": "node scripts/build-prompts.js",
     "build:docs-css": "sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules",
     "build:site": "npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
     "serve": "concurrently \"sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch\" \"sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules --watch\" \"npx @11ty/eleventy --serve\""

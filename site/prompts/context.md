@@ -33,7 +33,7 @@ ChatGPT, Gemini, Claude 웹
 모든 값은 CSS Custom Properties를 사용하라. 하드코딩 금지.
 
 - **색상:** `--color-primary` (#256ef4), gray-50~900, danger/warning/success/info, text/bg/border
-- **폰트:** Pretendard GOV, 크기 `--font-size-{2xl~xs}` (32~12px), 굵기 400/500/600/700
+- **폰트:** Pretendard GOV, 크기 `--font-size-{2xl~xs}` (12~32px), 굵기 400/500/600/700
 - **줄 간격:** `--leading-{tight/base/loose}` (1.2/1.6/1.8)
 - **간격:** `--spacing-{xs~3xl}` (4/8/16/24/32/48/64px)
 - **반지름:** `--radius-{sm/base/lg/xl/full}` (4/8/12/16/9999px)
@@ -47,14 +47,14 @@ ChatGPT, Gemini, Claude 웹
 
 | 컴포넌트 | Block | 주요 Modifier/Element |
 |----------|-------|---------------------|
-| 버튼 | `.btn` | `--primary/secondary/outline/text/ghost/sm/lg` |
-| 폼 | `.form` | `__group/__label/__input/__select/__textarea/__message` |
-| 카드 | `.card` | `__header/__title/__body/__footer/--horizontal/--featured` |
-| 테이블 | `.table` | `__wrapper/__head/__th/__body/__row/__td/--striped` |
-| 모달 | `.modal` | `__overlay/__container/__header/__title/__body/__footer/__close` |
+| 버튼 | `.btn` | `--primary/--secondary/--outline/--text/--ghost/--link` |
+| 폼 | `.form` | `__group/__label/__label--required/__input/__select/__textarea` |
+| 카드 | `.card` | `--horizontal/--image/--featured/__header/__title/__body` |
+| 테이블 | `.table` | `--striped/--bordered/__wrapper/__head/__th/__body` |
+| 모달 | `.modal` | `__overlay/__container/__header/__title/__body/__footer` |
 | 탭 | `.tab` | `__list/__button/__panel` |
-| 페이지네이션 | `.pagination` | `__list/__item/__link/--current/--prev/--next` |
-| 브레드크럼 | `.breadcrumb` | `__list/__item/__link/__current` |
+| 페이지네이션 | `.pagination` | `__list/__item/__item--mobile-hidden/__link/__link--current/__link--prev` |
+| 브레드크럼 | `.breadcrumb` | `__list/__item/__item--mobile-hidden/__link/__current/CSS ::before` |
 
 ## 접근성
 

@@ -6,6 +6,7 @@
 - [x] **v0.9 디자인 컨벤션 + 프로세스 강화** - Phases 7-11 (complete)
 - [x] **v0.9.5 리뷰 기반 품질 강화** - Phases 12-13 (complete)
 - [ ] **v1.0 AI 범용 프롬프트 시스템** - Phases 14-15 (in progress)
+- [ ] **v1.1 시스템 고도화** - Phases 16-18
 
 ## Phases
 
@@ -44,6 +45,12 @@
 
 - [ ] **Phase 14: 프롬프트 파일 생성** - 6개 AI 프롬프트 마크다운 파일 작성 (prompts/ 디렉토리)
 - [ ] **Phase 15: 문서 사이트 프롬프트 통합** - site/prompts/ 섹션, 사용 가이드, 복사 기능
+
+### v1.1 시스템 고도화
+
+- [ ] **Phase 16: 토큰 파이프라인** - tokens.json 싱글 소스 + SCSS/프롬프트 자동 생성 스크립트
+- [ ] **Phase 17: 컴포넌트 조합 패턴** - 실전 레이아웃 예제 3종 + 문서 사이트 조합 패턴 페이지
+- [ ] **Phase 18: 빌드 통합** - npm run build 전체 파이프라인 + 프롬프트 자동 재생성
 
 ## Phase Details
 
@@ -165,10 +172,45 @@
 **Plans**: TBD
 **UI hint**: yes
 
+### Phase 16: 토큰 파이프라인
+**Goal**: 토큰이 tokens.json 하나에서 관리되고, SCSS 변수와 AI 프롬프트가 스크립트 한 번으로 자동 생성된다
+**Depends on**: Phase 15 (v1.0 완료 후 시작, 기존 토큰 SCSS와 프롬프트 파일이 존재하는 상태)
+**Requirements**: PIPE-01, PIPE-02, PIPE-03
+**Success Criteria** (what must be TRUE):
+  1. `tokens.json` 파일이 DTCG 포맷($value, $type)으로 존재하며, 현재 `_tokens-*.scss` 파일의 모든 토큰 값(색상, 타이포, 간격, 그리드, 기타)을 포함한다
+  2. 빌드 스크립트 실행 시 `tokens.json`에서 `_tokens-*.scss` 파일이 자동 생성되며, 생성된 CSS Custom Properties가 기존 수동 작성본과 동일한 결과를 낸다
+  3. 빌드 스크립트 실행 시 `tokens.json`에서 `prompts/design.md`의 토큰 섹션이 자동 갱신되어, 토큰 값 변경이 프롬프트에 즉시 반영된다
+  4. `tokens.json` 값을 변경한 뒤 스크립트를 재실행하면 SCSS와 프롬프트 양쪽 모두에 변경이 반영된다
+**Plans**: TBD
+
+### Phase 17: 컴포넌트 조합 패턴
+**Goal**: 개별 컴포넌트를 조합한 실전 레이아웃 예제가 playground와 문서 사이트에서 확인 가능하다
+**Depends on**: Phase 15 (v1.0 완료 후 시작, 문서 사이트와 컴포넌트가 존재하는 상태)
+**Requirements**: COMBO-01, COMBO-02
+**Success Criteria** (what must be TRUE):
+  1. `src/playground/` 에 3종 조합 예제(모달+폼, 카드그리드+페이지네이션, 검색폼+테이블)의 HTML 파일이 존재하며 브라우저에서 렌더링된다
+  2. 각 조합 예제가 기존 컴포넌트 SCSS(`_modal.scss`, `_form.scss`, `_card.scss`, `_table.scss`, `_pagination.scss`)를 재사용하며, 추가 SCSS가 최소한이다
+  3. 문서 사이트 `site/components/` 하위에 조합 패턴 문서 페이지가 존재하며, iframe 또는 코드 예제로 각 조합을 미리볼 수 있다
+  4. 조합 예제의 HTML이 KWCAG/WCAG AA 접근성을 유지한다 (aria 속성, 키보드 네비게이션, 포커스 관리)
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 18: 빌드 통합
+**Goal**: `npm run build` 한 명령으로 토큰 생성부터 SCSS 컴파일, 프롬프트 재생성, 문서 사이트 빌드까지 전체 파이프라인이 실행된다
+**Depends on**: Phase 16 (토큰 파이프라인 스크립트가 있어야 빌드에 통합 가능)
+**Requirements**: BUILD-01, BUILD-02
+**Success Criteria** (what must be TRUE):
+  1. `npm run build` 실행 시 tokens -> SCSS -> CSS -> prompts -> site 순서로 전체 빌드가 오류 없이 완료된다
+  2. `npm run build:prompts` 실행 시 `tokens.json`과 `src/snippets/`를 읽어 `prompts/*.md` 파일이 자동 재생성된다
+  3. 토큰 값 또는 스니펫 내용을 변경한 뒤 `npm run build`를 실행하면 최종 사이트와 프롬프트에 변경이 반영된다
+  4. `package.json`의 scripts 섹션에 build, build:tokens, build:prompts 명령이 정의되어 있고, 각각 독립 실행도 가능하다
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 14 -> 15
+Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18
+(Phase 17은 Phase 16과 독립적이나, 순차 실행. Phase 18은 Phase 16에 의존.)
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -186,4 +228,7 @@ Phases execute in numeric order: 14 -> 15
 | 12. 코드 품질 수정 | v0.9.5 | 0/TBD | Complete | 2026-03-26 |
 | 13. 사이트 UX + 온보딩 | v0.9.5 | 0/TBD | Complete | 2026-03-26 |
 | 14. 프롬프트 파일 생성 | v1.0 | 0/TBD | Not started | - |
-| 15. 문서 사이트 프롬프트 통합 | v1.0 | 0/TBD | Complete    | 2026-03-26 |
+| 15. 문서 사이트 프롬프트 통합 | v1.0 | 0/TBD | Complete | 2026-03-26 |
+| 16. 토큰 파이프라인 | v1.1 | 0/TBD | Not started | - |
+| 17. 컴포넌트 조합 패턴 | v1.1 | 0/TBD | Not started | - |
+| 18. 빌드 통합 | v1.1 | 0/TBD | Not started | - |

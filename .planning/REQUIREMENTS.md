@@ -294,13 +294,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROMPT-SITE01 | Phase 15 | Pending |
 | PROMPT-SITE02 | Phase 15 | Pending |
 
+### v1.1 (Planned)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| PIPE-01 | Phase 16 | Pending |
+| PIPE-02 | Phase 16 | Pending |
+| PIPE-03 | Phase 16 | Pending |
+| COMBO-01 | Phase 17 | Pending |
+| COMBO-02 | Phase 17 | Pending |
+| BUILD-01 | Phase 18 | Pending |
+| BUILD-02 | Phase 18 | Pending |
+
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)
 - v0.9 requirements: 17 total (all complete)
 - v0.9.5 requirements: 8 total (all complete)
 - v1.0 requirements: 8 total (mapped: 8)
+- v1.1 requirements: 7 total (mapped: 7)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 -- v1.0 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-26 -- v1.1 로드맵 생성, 트레이서빌리티 업데이트*

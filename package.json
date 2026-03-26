@@ -14,7 +14,7 @@
     "build:site": "npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
     "build:tokens": "node scripts/build-tokens.js",
     "build:prompts": "node scripts/build-prompts.js",
-    "build": "npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:site && npm run sync:starter",
+    "build": "npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:site",
     "test": "npm run lint:css && npm run build:css && npm run build:docs-css && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
     "sync:starter": "bash scripts/sync-starter.sh",
     "serve": "concurrently \"sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch\" \"sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules --watch\" \"npx @11ty/eleventy --serve\""

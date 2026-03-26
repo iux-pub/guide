@@ -109,6 +109,28 @@
 - [ ] **GOV-03**: 기여 가이드 + 이슈/버그 리포트 템플릿
 - [ ] **GOV-04**: 토큰/컴포넌트 추가·변경 승인 프로세스 (거버넌스)
 
+## v0.9.5 Requirements
+
+### SCSS 버그 수정 (FIX)
+
+- [ ] **FIX-01**: _table.scss striped 범위 복원 — &__body 하위만 스트라이프 적용
+- [ ] **FIX-02**: _form.scss, _modal.scss color-mix() 브라우저 호환 — rgba fallback 추가
+- [ ] **FIX-03**: Stylelint 경고 정리 — clip→clip-path, rgba→modern notation, :not() 문법
+
+### 접근성 테스트 보강 (A11FIX)
+
+- [ ] **A11FIX-01**: .pa11yci.js 누락 URL 추가 (design-qa 3, guides 5, onboarding 3 = 11개)
+
+### 문서 사이트 UX (SITE)
+
+- [ ] **SITE-01**: 홈페이지 완성 — v0.9 추가 섹션(피그마, 테스트, 거버넌스, 퍼블리싱 심화) 링크 추가
+- [ ] **SITE-02**: 이전/다음 페이지 네비게이션 — 페이지 하단에 순차 이동 링크
+- [ ] **SITE-03**: 문서 간 상호 링크 — figma/* ↔ components/*, tokens/* 양방향 참조
+
+### 온보딩 개선 (ONBOARD)
+
+- [ ] **ONBOARD-01**: starter README 개선 — 퍼블리셔 퀵스타트 6단계, 빌드 출력 설명, 커스터마이징 확장
+
 ## v2 Requirements
 
 ### 확장 기능

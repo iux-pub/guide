@@ -8,16 +8,17 @@
 
 신규 프로젝트 시작 시 디자인/퍼블리싱 규칙을 처음부터 다시 정하지 않고, 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
 
-## Current Milestone: v0.9 디자인 컨벤션 + 프로세스 강화
+## Current Milestone: v0.9.5 리뷰 기반 품질 강화
 
-**Goal:** 디자인(Figma) 단계부터 QA까지 팀 전체 프로세스를 커버하는 가이드라인 완성
+**Goal:** gstack PR 리뷰 + 4관점(디자이너/퍼블리셔/개발자/사용자) 리뷰에서 발견된 이슈를 수정하여 프로덕션 품질 달성
 
 **Target features:**
-- 피그마 컨벤션 (컴포넌트 네이밍, 레이어 구조, Auto Layout 규칙, Variable 네이밍)
-- 디자인 QA 체크리스트 (핸드오프 전 자체 점검)
-- 크로스 브라우저/디바이스 테스트 가이드
-- 시맨틱 HTML 마크업 가이드 + 이미지 처리 규칙
-- 컴포넌트 라이프사이클 (stable/beta/experimental) + 버전 정책
+- SCSS 버그 수정: table striped 범위, color-mix 브라우저 호환, stylelint 경고 정리
+- pa11yci 누락 URL 추가 (design-qa, guides, onboarding)
+- 홈페이지 완성 (v0.9 섹션 링크 추가)
+- 이전/다음 페이지 네비게이션 추가
+- starter README 개선 (퍼블리셔 퀵스타트)
+- 문서 사이트 간 상호 링크 강화
 - 기여 가이드 + 거버넌스 문서
 
 ## Requirements

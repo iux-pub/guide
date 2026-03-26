@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.9
-milestone_name: 디자인 컨벤션 + 프로세스 강화
-status: completed
-stopped_at: Completed 11-01-PLAN.md
+milestone: v0.9.5
+milestone_name: 리뷰 기반 품질 강화
+status: Defining requirements
+stopped_at: v0.9.5 마일스톤 시작
 last_updated: "2026-03-26T03:37:54.273Z"
 last_activity: 2026-03-26
 progress:

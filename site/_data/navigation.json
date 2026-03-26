@@ -85,6 +85,19 @@
       ]
     },
     {
+      "title": "AI 프롬프트",
+      "key": "prompts",
+      "items": [
+        { "title": "개요", "url": "/prompts/" },
+        { "title": "디자인 AI", "url": "/prompts/design/" },
+        { "title": "피그마 AI", "url": "/prompts/figma/" },
+        { "title": "퍼블리싱 AI", "url": "/prompts/publishing/" },
+        { "title": "컴포넌트", "url": "/prompts/components/" },
+        { "title": "대화형 AI", "url": "/prompts/context/" },
+        { "title": "코드 리뷰", "url": "/prompts/review/" }
+      ]
+    },
+    {
       "title": "거버넌스",
       "key": "governance",
       "items": [

@@ -36,7 +36,14 @@ const docPages = [
   'governance/index.html',
   'governance/lifecycle/index.html',
   'governance/versioning/index.html',
-  'governance/governance-process/index.html'
+  'governance/governance-process/index.html',
+  'prompts/index.html',
+  'prompts/design/index.html',
+  'prompts/figma/index.html',
+  'prompts/publishing/index.html',
+  'prompts/components/index.html',
+  'prompts/context/index.html',
+  'prompts/review/index.html'
 ]
 
 module.exports = {

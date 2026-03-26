@@ -66,23 +66,27 @@
     @include resp.respond-to('tablet-up') {
       display: flex;
       flex-direction: row;
+    }
+  }
 
-      .card__media {
-        width: 30%;
-        flex-shrink: 0;
-      }
+  // 가로형 카드 내 미디어
+  &--horizontal &__media {
+    @include resp.respond-to('tablet-up') {
+      width: 30%;
+      flex-shrink: 0;
+    }
+  }
 
-      .card__body {
-        flex: 1;
-      }
+  // 가로형 카드 내 본문
+  &--horizontal &__body {
+    @include resp.respond-to('tablet-up') {
+      flex: 1;
     }
   }
 
   // 이미지형 카드 (상단 이미지)
-  &--image {
-    .card__media {
-      border-bottom: 1px solid var(--color-border-light);
-    }
+  &--image &__media {
+    border-bottom: 1px solid var(--color-border-light);
   }
 
   // 강조 카드

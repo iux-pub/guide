@@ -43,7 +43,14 @@ const docPages = [
   'prompts/publishing/index.html',
   'prompts/components/index.html',
   'prompts/context/index.html',
-  'prompts/review/index.html'
+  'prompts/review/index.html',
+  'design/index.html',
+  'design/microcopy/index.html',
+  'design/interaction-timing/index.html',
+  'design/design-audit/index.html',
+  'design/ui-states/index.html',
+  'design/icon-system/index.html',
+  'design/aesthetics/index.html'
 ]
 
 module.exports = {

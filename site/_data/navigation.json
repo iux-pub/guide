@@ -21,6 +21,19 @@
       ]
     },
     {
+      "title": "디자인",
+      "key": "design",
+      "items": [
+        { "title": "개요", "url": "/design/" },
+        { "title": "마이크로카피", "url": "/design/microcopy/" },
+        { "title": "인터랙션 타이밍", "url": "/design/interaction-timing/" },
+        { "title": "디자인 감사", "url": "/design/design-audit/" },
+        { "title": "UI 상태 패턴", "url": "/design/ui-states/" },
+        { "title": "아이콘 시스템", "url": "/design/icon-system/" },
+        { "title": "프론트엔드 미학", "url": "/design/aesthetics/" }
+      ]
+    },
+    {
       "title": "토큰",
       "key": "tokens",
       "items": [

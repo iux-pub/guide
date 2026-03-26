@@ -228,7 +228,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HAND-02 | Phase 6 | Complete |
 | HAND-03 | Phase 6 | Complete |
 
-### v0.9 (In Progress)
+### v0.9 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
@@ -236,39 +236,53 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIG-02 | Phase 7 | Complete |
 | FIG-03 | Phase 7 | Complete |
 | FIG-04 | Phase 7 | Complete |
-| DQA-01 | Phase 8 | Pending |
-| DQA-02 | Phase 8 | Pending |
-| PUB-01 | Phase 9 | Pending |
-| PUB-02 | Phase 9 | Pending |
-| PUB-03 | Phase 9 | Pending |
-| PUB-04 | Phase 9 | Pending |
-| TEST-01 | Phase 10 | Pending |
-| TEST-02 | Phase 10 | Pending |
-| TEST-03 | Phase 10 | Pending |
-| GOV-01 | Phase 11 | Pending |
-| GOV-02 | Phase 11 | Pending |
-| GOV-03 | Phase 11 | Pending |
-| GOV-04 | Phase 11 | Pending |
+| DQA-01 | Phase 8 | Complete |
+| DQA-02 | Phase 8 | Complete |
+| PUB-01 | Phase 9 | Complete |
+| PUB-02 | Phase 9 | Complete |
+| PUB-03 | Phase 9 | Complete |
+| PUB-04 | Phase 9 | Complete |
+| TEST-01 | Phase 10 | Complete |
+| TEST-02 | Phase 10 | Complete |
+| TEST-03 | Phase 10 | Complete |
+| GOV-01 | Phase 11 | Complete |
+| GOV-02 | Phase 11 | Complete |
+| GOV-03 | Phase 11 | Complete |
+| GOV-04 | Phase 11 | Complete |
 
-### v0.9.5 (Pending)
+### v0.9.5 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIX-01 | Phase 12 | Pending |
-| FIX-02 | Phase 12 | Pending |
-| FIX-03 | Phase 12 | Pending |
-| A11FIX-01 | Phase 12 | Pending |
-| SITE-01 | Phase 13 | Pending |
-| SITE-02 | Phase 13 | Pending |
-| SITE-03 | Phase 13 | Pending |
-| ONBOARD-01 | Phase 13 | Pending |
+| FIX-01 | Phase 12 | Complete |
+| FIX-02 | Phase 12 | Complete |
+| FIX-03 | Phase 12 | Complete |
+| A11FIX-01 | Phase 12 | Complete |
+| SITE-01 | Phase 13 | Complete |
+| SITE-02 | Phase 13 | Complete |
+| SITE-03 | Phase 13 | Complete |
+| ONBOARD-01 | Phase 13 | Complete |
+
+### v1.0 (In Progress)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| PROMPT-D01 | Phase 14 | Pending |
+| PROMPT-D02 | Phase 14 | Pending |
+| PROMPT-P01 | Phase 14 | Pending |
+| PROMPT-P02 | Phase 14 | Pending |
+| PROMPT-C01 | Phase 14 | Pending |
+| PROMPT-C02 | Phase 14 | Pending |
+| PROMPT-SITE01 | Phase 15 | Pending |
+| PROMPT-SITE02 | Phase 15 | Pending |
 
 **Coverage:**
-- v1 requirements: 46 total (all complete)
-- v0.9 requirements: 17 total (mapped: 17)
-- v0.9.5 requirements: 8 total (mapped: 8)
+- v0.8 requirements: 46 total (all complete)
+- v0.9 requirements: 17 total (all complete)
+- v0.9.5 requirements: 8 total (all complete)
+- v1.0 requirements: 8 total (mapped: 8)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 -- v0.9.5 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-26 -- v1.0 로드맵 생성, 트레이서빌리티 업데이트*

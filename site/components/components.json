@@ -1,0 +1,5 @@
+{
+  "layout": "layouts/component.njk",
+  "section": "components",
+  "tags": "component"
+}

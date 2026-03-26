@@ -1,0 +1,14 @@
+{# 컴포넌트 미리보기 iframe 매크로 #}
+{% macro preview(src, title, height) %}
+<div class="preview">
+  <div class="preview__frame">
+    <iframe
+      src="{{ src }}"
+      title="{{ title }} 컴포넌트 미리보기"
+      height="{{ height | default(400) }}"
+      loading="lazy"
+      class="preview__iframe"
+    ></iframe>
+  </div>
+</div>
+{% endmacro %}

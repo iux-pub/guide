@@ -9,6 +9,7 @@ export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy('site/assets')
   eleventyConfig.addPassthroughCopy({ 'dist/css': 'assets/css' })
   eleventyConfig.addPassthroughCopy({ 'src/playground': 'playground' })
+  eleventyConfig.addPassthroughCopy({ 'node_modules/clipboard/dist/clipboard.min.js': 'assets/js/clipboard.min.js' })
 
   // pagefind 빌드 후 인덱싱
   eleventyConfig.on('eleventy.after', async () => {

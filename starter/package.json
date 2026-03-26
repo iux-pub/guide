@@ -1,0 +1,22 @@
+{
+  "name": "infomind-project-starter",
+  "version": "1.0.0",
+  "description": "인포마인드 UX 프로젝트 스타터 킷 — ITCSS + BEM + 디자인 토큰",
+  "private": true,
+  "scripts": {
+    "build:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules",
+    "watch:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch",
+    "lint:css": "stylelint \"src/scss/**/*.scss\"",
+    "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix"
+  },
+  "dependencies": {
+    "modern-normalize": "^3.0.1",
+    "sass": "^1.98.0",
+    "sass-rem": "^4.0.1"
+  },
+  "devDependencies": {
+    "stylelint": "^17.5.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-selector-bem-pattern": "^4.0.1"
+  }
+}

@@ -75,6 +75,40 @@
 - [ ] **HAND-02**: 피그마→코드 핸드오프 규칙 (컴포넌트 네이밍 매핑, 토큰 연결, 전달 항목)
 - [ ] **HAND-03**: 프로젝트 스타터 킷 (SCSS+HTML 보일러플레이트 패키지 다운로드/설치)
 
+## v0.9 Requirements
+
+### 피그마 컨벤션 (FIG)
+
+- [ ] **FIG-01**: 피그마 컴포넌트 네이밍 규칙 (계층 구조, 구분자, 대소문자 규칙)
+- [ ] **FIG-02**: 피그마 레이어/프레임 구조 가이드 (페이지 정리, 그룹 네이밍)
+- [ ] **FIG-03**: 피그마 Variable 네이밍 규칙 + CSS Custom Property 매핑
+- [ ] **FIG-04**: 피그마 Auto Layout 규칙 (패딩/갭 토큰 매핑, 반응형 동작 정의)
+
+### 디자인 QA (DQA)
+
+- [ ] **DQA-01**: 디자인 QA 체크리스트 (핸드오프 전 디자이너 자체 점검 항목)
+- [ ] **DQA-02**: 디자인→코드 픽셀 퍼펙트 허용 범위 정의 (간격, 폰트, 컬러 오차 기준)
+
+### 테스트 가이드 (TEST)
+
+- [ ] **TEST-01**: 타겟 브라우저/디바이스 목록 + 크로스 브라우저 테스트 체크리스트
+- [ ] **TEST-02**: 모바일/터치 테스트 가이드 (호버 상태, 터치 타겟, 제스처)
+- [ ] **TEST-03**: CSS 회귀 테스트 가이드 (의도하지 않은 스타일 변경 감지)
+
+### 퍼블리싱 심화 (PUB)
+
+- [ ] **PUB-01**: 시맨틱 HTML 마크업 가이드 (heading 계층, section/article/nav/aside 사용법)
+- [ ] **PUB-02**: 이미지 처리 규칙 (WebP 대응, lazy loading, SVG 최적화, 파일 네이밍)
+- [ ] **PUB-03**: CSS 성능 가이드라인 (선택자 깊이 제한, 미사용 CSS 감지, 파일 크기 기준)
+- [ ] **PUB-04**: CSS 애니메이션/트랜지션 가이드 (타이밍, prefers-reduced-motion 대응)
+
+### 거버넌스 & 버전 관리 (GOV)
+
+- [ ] **GOV-01**: 컴포넌트 라이프사이클 라벨링 (stable/beta/experimental 기준 정의)
+- [ ] **GOV-02**: 가이드 시스템 버전 정책 (시맨틱 버전, 변경 이력 형식)
+- [ ] **GOV-03**: 기여 가이드 + 이슈/버그 리포트 템플릿
+- [ ] **GOV-04**: 토큰/컴포넌트 추가·변경 승인 프로세스 (거버넌스)
+
 ## v2 Requirements
 
 ### 확장 기능
@@ -155,4 +189,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after roadmap creation*
+*Last updated: 2026-03-26 — v0.9 requirements added*

@@ -1,0 +1,106 @@
+// 모달 컴포넌트
+// BEM Block: .modal
+// WAI-ARIA: dialog-modal 패턴
+// 모바일: 전체 화면, tablet-up: 중앙 정렬 max-width 560px
+
+@use '../2-tools/responsive' as resp;
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  align-items: center;
+  justify-content: center;
+
+  // JS가 aria-hidden="false"로 변경 시 표시
+  &[aria-hidden='false'] {
+    display: flex;
+  }
+
+  // 오버레이 (반투명 배경)
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: var(--z-modal-backdrop);
+    transition: opacity var(--transition-base);
+  }
+
+  // 모달 컨테이너
+  &__container {
+    position: relative;
+    z-index: var(--z-modal);
+    background-color: var(--color-bg);
+    border-radius: 0;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+
+    @include resp.respond-to('tablet-up') {
+      width: auto;
+      height: auto;
+      max-width: 56rem;
+      max-height: 90vh;
+      margin: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+    }
+  }
+
+  // 헤더
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  // 제목
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  // 닫기 버튼
+  &__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--radius-base);
+    color: var(--color-text-secondary);
+    transition: background-color var(--transition-fast);
+
+    &:hover {
+      background-color: var(--color-bg-secondary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  // 본문
+  &__body {
+    padding: var(--spacing-lg);
+  }
+
+  // 푸터
+  &__footer {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-end;
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--color-border-light);
+  }
+}

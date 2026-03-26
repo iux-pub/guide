@@ -1,0 +1,26 @@
+// 반응형 미디어쿼리 믹스인 (D-09)
+// D-04: 3단계 — 모바일(0~767px), 태블릿(768px~1279px), PC(1280px~)
+// tablet-up: 태블릿+PC 공통 스타일 적용 시 사용 — D-04의 3단계 구분에서
+//   태블릿과 PC가 동일한 레이아웃(12컬럼)을 공유하는 경우가 빈번하므로
+//   편의를 위해 추가. min-width: $breakpoint-tablet 이상 전체를 커버.
+@use '../1-settings/breakpoints' as bp;
+
+@mixin respond-to($device) {
+  @if $device == 'mobile' {
+    @media (max-width: #{bp.$breakpoint-tablet - 1px}) {
+      @content;
+    }
+  } @else if $device == 'tablet' {
+    @media (min-width: #{bp.$breakpoint-tablet}) and (max-width: #{bp.$breakpoint-pc - 1px}) {
+      @content;
+    }
+  } @else if $device == 'tablet-up' {
+    @media (min-width: #{bp.$breakpoint-tablet}) {
+      @content;
+    }
+  } @else if $device == 'pc' {
+    @media (min-width: #{bp.$breakpoint-pc}) {
+      @content;
+    }
+  }
+}

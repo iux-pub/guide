@@ -1,0 +1,6 @@
+// REM 변환 함수 — sass-rem v4
+// 주의: 62.5% 트릭 적용으로 1rem = 10px
+// sass-rem 기본 base는 16px이므로, 62.5% 트릭과 함께 사용 시
+// 토큰(var(--spacing-*), var(--font-size-*))을 우선 사용하세요
+// sass-rem은 믹스인 내부 계산용으로만 활용합니다
+@use 'sass-rem' as rem;

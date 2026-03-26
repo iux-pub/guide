@@ -4,6 +4,7 @@
 
 - [x] **v0.8 Foundation** - Phases 1-6 (complete)
 - [ ] **v0.9 디자인 컨벤션 + 프로세스 강화** - Phases 7-11 (in progress)
+- [ ] **v0.9.5 리뷰 기반 품질 강화** - Phases 12-13
 
 ## Phases
 
@@ -21,11 +22,16 @@
 
 ### v0.9 디자인 컨벤션 + 프로세스 강화
 
-- [ ] **Phase 7: 피그마 컨벤션** - 컴포넌트 네이밍, 레이어 구조, Variable, Auto Layout 규칙
+- [x] **Phase 7: 피그마 컨벤션** - 컴포넌트 네이밍, 레이어 구조, Variable, Auto Layout 규칙
 - [ ] **Phase 8: 디자인 QA + 핸드오프 품질** - QA 체크리스트, 픽셀 퍼펙트 허용 범위
 - [ ] **Phase 9: 퍼블리싱 심화 가이드** - 시맨틱 HTML, 이미지 처리, CSS 성능, 애니메이션
 - [x] **Phase 10: 테스트 가이드** - 크로스 브라우저, 모바일/터치, CSS 회귀 테스트 (completed 2026-03-26)
 - [x] **Phase 11: 거버넌스 + 버전 관리** - 컴포넌트 라이프사이클, 버전 정책, 기여 가이드 (completed 2026-03-26)
+
+### v0.9.5 리뷰 기반 품질 강화
+
+- [ ] **Phase 12: 코드 품질 수정** - SCSS 버그 수정 + pa11yci 누락 URL 추가
+- [ ] **Phase 13: 사이트 UX + 온보딩 개선** - 홈페이지 완성, 페이지 네비게이션, 상호 링크, README 개선
 
 ## Phase Details
 
@@ -86,10 +92,33 @@
   4. GitHub 이슈 템플릿(버그, 기능 요청)과 기여 가이드가 저장소에 존재한다
 **Plans**: TBD
 
+### Phase 12: 코드 품질 수정
+**Goal**: PR 리뷰에서 발견된 SCSS 버그가 수정되고, pa11yci가 모든 문서 페이지를 커버한다
+**Depends on**: Phase 11 (v0.9 완료 기반)
+**Requirements**: FIX-01, FIX-02, FIX-03, A11FIX-01
+**Success Criteria** (what must be TRUE):
+  1. table 컴포넌트의 striped 스타일이 &__body 하위 행에만 적용되고, thead/tfoot에는 적용되지 않는다
+  2. color-mix() 사용 부분(form, modal)에 rgba fallback이 있어 구형 브라우저에서도 색상이 표시된다
+  3. `npm run lint:css` 실행 시 clip, rgba, :not() 관련 stylelint 경고가 0건이다
+  4. `npm run test:a11y` 실행 시 design-qa, guides, onboarding 페이지를 포함한 모든 URL이 테스트된다
+**Plans**: TBD
+
+### Phase 13: 사이트 UX + 온보딩 개선
+**Goal**: 문서 사이트의 탐색 경험이 완성되고, 신규 퍼블리셔가 README만으로 프로젝트를 시작할 수 있다
+**Depends on**: Phase 12
+**Requirements**: SITE-01, SITE-02, SITE-03, ONBOARD-01
+**Success Criteria** (what must be TRUE):
+  1. 홈페이지에서 v0.9 추가 섹션(피그마, 테스트, 거버넌스, 퍼블리싱 심화) 링크가 보이고 클릭하면 해당 페이지로 이동한다
+  2. 모든 가이드 페이지 하단에 이전/다음 페이지 링크가 있어 순차적으로 탐색할 수 있다
+  3. 피그마 가이드에서 관련 컴포넌트/토큰 페이지로, 역으로 컴포넌트/토큰 페이지에서 피그마 가이드로 상호 링크가 존재한다
+  4. starter 킷 README에 퍼블리셔 퀵스타트 6단계, 빌드 출력 설명, 커스터마이징 안내가 포함되어 있다
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11
+Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 (Phase 9 can start independently of 7-8)
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -103,5 +132,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11
 | 7. 피그마 컨벤션 | v0.9 | 1/1 | Complete | 2026-03-26 |
 | 8. 디자인 QA + 핸드오프 품질 | v0.9 | 0/TBD | Not started | - |
 | 9. 퍼블리싱 심화 가이드 | v0.9 | 0/TBD | Not started | - |
-| 10. 테스트 가이드 | v0.9 | 0/TBD | Complete    | 2026-03-26 |
-| 11. 거버넌스 + 버전 관리 | v0.9 | 0/TBD | Complete    | 2026-03-26 |
+| 10. 테스트 가이드 | v0.9 | 0/TBD | Complete | 2026-03-26 |
+| 11. 거버넌스 + 버전 관리 | v0.9 | 0/TBD | Complete | 2026-03-26 |
+| 12. 코드 품질 수정 | v0.9.5 | 0/TBD | Not started | - |
+| 13. 사이트 UX + 온보딩 개선 | v0.9.5 | 0/TBD | Not started | - |

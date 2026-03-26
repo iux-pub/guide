@@ -228,12 +228,25 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GOV-03 | Phase 11 | Pending |
 | GOV-04 | Phase 11 | Pending |
 
+### v0.9.5 (Pending)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| FIX-01 | Phase 12 | Pending |
+| FIX-02 | Phase 12 | Pending |
+| FIX-03 | Phase 12 | Pending |
+| A11FIX-01 | Phase 12 | Pending |
+| SITE-01 | Phase 13 | Pending |
+| SITE-02 | Phase 13 | Pending |
+| SITE-03 | Phase 13 | Pending |
+| ONBOARD-01 | Phase 13 | Pending |
+
 **Coverage:**
 - v1 requirements: 46 total (all complete)
-- v0.9 requirements: 17 total
-- Mapped to phases: 17
+- v0.9 requirements: 17 total (mapped: 17)
+- v0.9.5 requirements: 8 total (mapped: 8)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 -- v0.9 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-26 -- v0.9.5 로드맵 생성, 트레이서빌리티 업데이트*

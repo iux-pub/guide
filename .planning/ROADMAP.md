@@ -38,7 +38,7 @@
   2. 피그마 레이어/프레임 정리 규칙(페이지 구성, 그룹 네이밍)이 예제와 함께 문서화되어 있다
   3. 피그마 Variable 이름과 CSS Custom Property 이름의 매핑 테이블이 존재한다
   4. Auto Layout 패딩/갭 값이 디자인 토큰 스케일과 1:1로 매핑된 참조표가 있다
-**Plans**: TBD
+**Plans**: 1 (complete)
 **UI hint**: yes
 
 ### Phase 8: 디자인 QA + 핸드오프 품질
@@ -100,7 +100,7 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11
 | 4. Accessibility | v0.8 | 3/3 | Complete | 2026-03-25 |
 | 5. Documentation Site | v0.8 | 4/4 | Complete | 2026-03-26 |
 | 6. Rollout | v0.8 | 2/2 | Complete | 2026-03-26 |
-| 7. 피그마 컨벤션 | v0.9 | 0/TBD | Not started | - |
+| 7. 피그마 컨벤션 | v0.9 | 1/1 | Complete | 2026-03-26 |
 | 8. 디자인 QA + 핸드오프 품질 | v0.9 | 0/TBD | Not started | - |
 | 9. 퍼블리싱 심화 가이드 | v0.9 | 0/TBD | Not started | - |
 | 10. 테스트 가이드 | v0.9 | 0/TBD | Not started | - |

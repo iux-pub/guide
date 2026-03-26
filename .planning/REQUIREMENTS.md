@@ -79,10 +79,10 @@
 
 ### 피그마 컨벤션 (FIG)
 
-- [ ] **FIG-01**: 피그마 컴포넌트 네이밍 규칙 (계층 구조, 구분자, 대소문자 규칙)
-- [ ] **FIG-02**: 피그마 레이어/프레임 구조 가이드 (페이지 정리, 그룹 네이밍)
-- [ ] **FIG-03**: 피그마 Variable 네이밍 규칙 + CSS Custom Property 매핑
-- [ ] **FIG-04**: 피그마 Auto Layout 규칙 (패딩/갭 토큰 매핑, 반응형 동작 정의)
+- [x] **FIG-01**: 피그마 컴포넌트 네이밍 규칙 (계층 구조, 구분자, 대소문자 규칙)
+- [x] **FIG-02**: 피그마 레이어/프레임 구조 가이드 (페이지 정리, 그룹 네이밍)
+- [x] **FIG-03**: 피그마 Variable 네이밍 규칙 + CSS Custom Property 매핑
+- [x] **FIG-04**: 피그마 Auto Layout 규칙 (패딩/갭 토큰 매핑, 반응형 동작 정의)
 
 ### 디자인 QA (DQA)
 
@@ -188,10 +188,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIG-01 | Phase 7 | Pending |
-| FIG-02 | Phase 7 | Pending |
-| FIG-03 | Phase 7 | Pending |
-| FIG-04 | Phase 7 | Pending |
+| FIG-01 | Phase 7 | Complete |
+| FIG-02 | Phase 7 | Complete |
+| FIG-03 | Phase 7 | Complete |
+| FIG-04 | Phase 7 | Complete |
 | DQA-01 | Phase 8 | Pending |
 | DQA-02 | Phase 8 | Pending |
 | PUB-01 | Phase 9 | Pending |

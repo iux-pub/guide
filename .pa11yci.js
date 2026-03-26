@@ -1,9 +1,11 @@
-// pa11y-ci 설정 — playground HTML 접근성 검사
+// pa11y-ci 설정 — playground HTML + 문서 사이트 접근성 검사
 const path = require('path')
 
 const playgroundDir = path.resolve(__dirname, 'src/playground')
+const siteDir = path.resolve(__dirname, '_site')
 
-const pages = [
+// playground 페이지
+const playgroundPages = [
   'index.html',
   'btn.html',
   'form.html',
@@ -14,6 +16,19 @@ const pages = [
   'pagination.html',
   'breadcrumb.html',
   'a11y-checklist.html'
+]
+
+// 문서 사이트 주요 페이지
+const docPages = [
+  'index.html',
+  'tokens/index.html',
+  'tokens/color/index.html',
+  'conventions/index.html',
+  'conventions/bem/index.html',
+  'components/index.html',
+  'components/btn/index.html',
+  'accessibility/index.html',
+  'accessibility/checklist/index.html'
 ]
 
 module.exports = {
@@ -29,5 +44,8 @@ module.exports = {
       args: ['--no-sandbox']
     }
   },
-  urls: pages.map(p => `file://${path.join(playgroundDir, p)}`)
+  urls: [
+    ...playgroundPages.map(p => `file://${path.join(playgroundDir, p)}`),
+    ...docPages.map(p => `file://${path.join(siteDir, p)}`)
+  ]
 }

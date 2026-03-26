@@ -83,6 +83,17 @@
         { "title": "시작 가이드", "url": "/onboarding/getting-started/" },
         { "title": "피그마→코드 핸드오프", "url": "/onboarding/handoff/" }
       ]
+    },
+    {
+      "title": "거버넌스",
+      "key": "governance",
+      "items": [
+        { "title": "개요", "url": "/governance/" },
+        { "title": "컴포넌트 라이프사이클", "url": "/governance/lifecycle/" },
+        { "title": "버전 정책", "url": "/governance/versioning/" },
+        { "title": "변경 승인 프로세스", "url": "/governance/governance-process/" },
+        { "title": "기여 가이드", "url": "/governance/contributing/" }
+      ]
     }
   ]
 }

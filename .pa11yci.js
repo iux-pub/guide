@@ -32,7 +32,11 @@ const docPages = [
   'testing/index.html',
   'testing/browser-testing/index.html',
   'testing/mobile-testing/index.html',
-  'testing/css-regression/index.html'
+  'testing/css-regression/index.html',
+  'governance/index.html',
+  'governance/lifecycle/index.html',
+  'governance/versioning/index.html',
+  'governance/governance-process/index.html'
 ]
 
 module.exports = {

@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.9
-milestone_name: 디자인 컨벤션 + 프로세스 강화
-status: executing
-stopped_at: Phase 13 Plan 01 완료 (사이트 UX + 온보딩 개선)
+milestone: v1.0
+milestone_name: AI 범용 프롬프트 시스템
+status: Defining requirements
+stopped_at: v1.0 마일스톤 시작
 last_updated: "2026-03-26T04:30:15.087Z"
 last_activity: 2026-03-26
 progress:

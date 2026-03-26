@@ -55,6 +55,17 @@
       ]
     },
     {
+      "title": "피그마 컨벤션",
+      "key": "figma",
+      "items": [
+        { "title": "개요", "url": "/figma/" },
+        { "title": "컴포넌트 네이밍", "url": "/figma/component-naming/" },
+        { "title": "레이어/프레임 구조", "url": "/figma/layer-structure/" },
+        { "title": "Variable 네이밍", "url": "/figma/variables/" },
+        { "title": "Auto Layout 규칙", "url": "/figma/auto-layout/" }
+      ]
+    },
+    {
       "title": "온보딩",
       "key": "onboarding",
       "items": [

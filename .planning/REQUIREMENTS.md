@@ -131,6 +131,28 @@
 
 - [ ] **ONBOARD-01**: starter README 개선 — 퍼블리셔 퀵스타트 6단계, 빌드 출력 설명, 커스터마이징 확장
 
+## v1.0 Requirements
+
+### 디자인 AI 프롬프트 (PROMPT-D)
+
+- [ ] **PROMPT-D01**: 디자인 AI용 범용 프롬프트 (`prompts/design.md`) — 토큰(색상/타이포/간격), 컴포넌트 구조, 접근성 규칙을 AI 종속 문법 없이 작성
+- [ ] **PROMPT-D02**: 피그마 AI 전용 프롬프트 (`prompts/figma.md`) — 컴포넌트 네이밍, Variable, Auto Layout, 레이어 구조 규칙
+
+### 퍼블리싱 AI 프롬프트 (PROMPT-P)
+
+- [ ] **PROMPT-P01**: 퍼블리싱 AI용 범용 프롬프트 (`prompts/publishing.md`) — BEM, ITCSS, 토큰, 반응형, 접근성 규칙을 CLAUDE.md에서 AI 종속 문법 제거하여 추출
+- [ ] **PROMPT-P02**: 컴포넌트 스니펫 프롬프트 (`prompts/components.md`) — 8개 컴포넌트 HTML+CSS 패턴을 AI가 바로 참조 가능한 형태로 압축
+
+### 대화형 AI 프롬프트 (PROMPT-C)
+
+- [ ] **PROMPT-C01**: 대화형 AI용 컨텍스트 프롬프트 (`prompts/context.md`) — 팀 규칙 전체를 2000토큰 이내로 압축한 요약 버전
+- [ ] **PROMPT-C02**: 코드 리뷰 프롬프트 (`prompts/review.md`) — BEM/토큰/접근성 체크리스트를 AI 리뷰어에게 주입 가능한 형태
+
+### 프롬프트 배포 (PROMPT-SITE)
+
+- [ ] **PROMPT-SITE01**: 문서 사이트에 프롬프트 섹션 추가 (`site/prompts/`) — 각 프롬프트를 복사 버튼과 함께 제공
+- [ ] **PROMPT-SITE02**: 프롬프트 사용 가이드 — 어떤 AI 도구에 어떤 프롬프트를 넣는지 매핑 테이블
+
 ## v2 Requirements
 
 ### 확장 기능

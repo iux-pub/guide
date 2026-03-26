@@ -53,6 +53,15 @@
         { "title": "브레드크럼", "url": "/accessibility/breadcrumb/" },
         { "title": "페이지네이션", "url": "/accessibility/pagination/" }
       ]
+    },
+    {
+      "title": "온보딩",
+      "key": "onboarding",
+      "items": [
+        { "title": "개요", "url": "/onboarding/" },
+        { "title": "시작 가이드", "url": "/onboarding/getting-started/" },
+        { "title": "피그마→코드 핸드오프", "url": "/onboarding/handoff/" }
+      ]
     }
   ]
 }

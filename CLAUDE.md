@@ -523,6 +523,17 @@ src/scss/
 ```
 <!-- GSD:architecture-end -->
 
+### 접근성 가이드 참조 경로
+
+- 퍼블리싱 체크리스트: docs/accessibility/checklist.md
+- 색상 대비 가이드: docs/accessibility/color-contrast.md
+- 스크린리더 전용 패턴: docs/accessibility/sr-only.md
+- 컴포넌트별 접근성: docs/accessibility/{component}.md (btn, form, card, table, modal, tab, breadcrumb, pagination)
+
+### 문서 사이트
+
+문서 사이트: `npm run build:site`로 빌드 후 _site/ 에서 열람. `npm run serve`로 개발 서버 실행.
+
 <!-- GSD:workflow-start source:GSD defaults -->
 ## GSD Workflow Enforcement
 

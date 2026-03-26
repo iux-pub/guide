@@ -1,6 +1,6 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v0.8
 milestone_name: milestone
 status: Milestone complete
 stopped_at: Phase 6 context gathered

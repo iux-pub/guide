@@ -28,7 +28,11 @@ const docPages = [
   'components/index.html',
   'components/btn/index.html',
   'accessibility/index.html',
-  'accessibility/checklist/index.html'
+  'accessibility/checklist/index.html',
+  'testing/index.html',
+  'testing/browser-testing/index.html',
+  'testing/mobile-testing/index.html',
+  'testing/css-regression/index.html'
 ]
 
 module.exports = {

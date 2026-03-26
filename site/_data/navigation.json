@@ -66,6 +66,16 @@
       ]
     },
     {
+      "title": "테스트",
+      "key": "testing",
+      "items": [
+        { "title": "개요", "url": "/testing/" },
+        { "title": "크로스 브라우저", "url": "/testing/browser-testing/" },
+        { "title": "모바일/터치", "url": "/testing/mobile-testing/" },
+        { "title": "CSS 회귀 테스트", "url": "/testing/css-regression/" }
+      ]
+    },
+    {
       "title": "온보딩",
       "key": "onboarding",
       "items": [

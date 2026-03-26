@@ -1,0 +1,78 @@
+---
+title: 테이블
+order: 4
+playground_src: /playground/table.html
+preview_height: 500
+---
+
+## 기본 마크업
+
+```html
+<div class="table__wrapper">
+  <table class="table">
+    <caption class="sr-only">회원 목록</caption>
+    <thead class="table__head">
+      <tr>
+        <th class="table__th" scope="col">이름</th>
+        <th class="table__th" scope="col">이메일</th>
+        <th class="table__th" scope="col">가입일</th>
+      </tr>
+    </thead>
+    <tbody class="table__body">
+      <tr class="table__row">
+        <td class="table__td">홍길동</td>
+        <td class="table__td">hong@example.com</td>
+        <td class="table__td">2026-01-15</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+## Variant 목록
+
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| 기본 | `.table` | 시맨틱 테이블 |
+| Striped | `.table--striped` | 짝수 행 배경색 |
+| Bordered | `.table--bordered` | 모든 셀 테두리 |
+| Responsive | `.table__wrapper` | 모바일 가로 스크롤 |
+
+## Striped 테이블
+
+```html
+<table class="table table--striped">
+  <caption class="sr-only">주문 내역</caption>
+  <!-- thead, tbody 동일 구조 -->
+</table>
+```
+
+## 빈 상태
+
+```html
+<table class="table">
+  <caption class="sr-only">검색 결과</caption>
+  <thead class="table__head">
+    <tr>
+      <th class="table__th" scope="col">제목</th>
+      <th class="table__th" scope="col">날짜</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__row">
+      <td class="table__empty" colspan="2">검색 결과가 없습니다.</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+## 접근성 주의사항
+
+- `<caption>` 필수 제공 (시각적으로 숨길 경우 `.sr-only`)
+- 헤더 셀에 `scope="col"` 또는 `scope="row"` 필수 지정
+- 빈 상태 시 `<td colspan="">` 안내 텍스트 제공
+- 반응형 래퍼 `.table__wrapper`로 모바일 가로 스크롤 지원
+
+## SCSS 파일
+
+`src/scss/6-components/_table.scss`

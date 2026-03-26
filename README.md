@@ -32,13 +32,15 @@ http://localhost:8080 에서 문서 사이트를 열람할 수 있다.
 ## 새 프로젝트 시작 (스타터 킷)
 
 ```bash
-cp -r starter/ ../my-new-project
-cd ../my-new-project
+git clone https://github.com/iux-pub/starter.git my-project
+cd my-project
 npm install
 npm run build:css
 ```
 
-`_project-overrides.scss`에서 Primary 색상을 프로젝트에 맞게 변경한다.
+`src/scss/_project-overrides.scss`에서 Primary 색상을 프로젝트에 맞게 변경한다.
+
+> 스타터 킷 저장소: https://github.com/iux-pub/starter
 
 ## 프로젝트 구조
 

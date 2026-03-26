@@ -5,18 +5,37 @@ order: 2
 
 신규 팀원이 가이드 시스템을 설치하고 활용하기까지의 과정을 6단계로 안내한다. 각 단계마다 심화 문서 링크를 제공하므로 필요한 부분을 깊이 있게 학습할 수 있다.
 
-## Step 1: 설치
+## 새 프로젝트 시작
 
-저장소를 클론하고 의존성을 설치한 뒤, CSS 빌드가 정상 동작하는지 확인한다.
+스타터 킷을 clone하여 바로 시작한다. 가이드 문서 사이트, 테스트 도구 등 불필요한 파일 없이 SCSS + HTML + JS만 포함된 최소 구성이다.
 
 ```bash
-git clone <저장소 URL>
-cd <프로젝트 디렉토리>
+git clone https://github.com/iux-pub/starter.git my-project
+cd my-project
 npm install
 npm run build:css
 ```
 
-빌드가 성공하면 `src/css/style.css` 파일이 생성된다. 에러가 발생하면 Node.js 버전(18 이상)과 npm 버전을 확인한다.
+빌드 성공 시 `dist/css/style.css`가 생성된다. `index.html`을 브라우저에서 열어 확인한다.
+
+커스터마이징은 `src/scss/_project-overrides.scss`에서 Primary 색상을 변경하는 것부터 시작한다.
+
+> **가이드 문서 열람:** [https://github.com/iux-pub/guide](https://github.com/iux-pub/guide) 저장소의 문서 사이트 참조
+
+---
+
+## Step 1: 설치 (가이드 시스템 전체)
+
+가이드 시스템 전체를 로컬에서 실행하려면 guide 저장소를 사용한다.
+
+```bash
+git clone https://github.com/iux-pub/guide.git
+cd guide
+npm install --legacy-peer-deps
+npm run build:css
+```
+
+빌드가 성공하면 `dist/css/style.css` 파일이 생성된다. 에러가 발생하면 Node.js 버전(18 이상)과 npm 버전을 확인한다.
 
 ## Step 2: SCSS 구조 이해
 

@@ -28,7 +28,11 @@ const docPages = [
   'components/index.html',
   'components/btn/index.html',
   'accessibility/index.html',
-  'accessibility/checklist/index.html'
+  'accessibility/checklist/index.html',
+  'governance/index.html',
+  'governance/lifecycle/index.html',
+  'governance/versioning/index.html',
+  'governance/governance-process/index.html'
 ]
 
 module.exports = {

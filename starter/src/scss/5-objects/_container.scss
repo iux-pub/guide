@@ -1,0 +1,11 @@
+// 컨테이너 레이아웃 — KRDS 표준형 기반
+// D-05: max-width 1200px
+// D-06: 1280px 뷰포트에서 1200px 콘텐츠 + 좌우 40px
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: var(--grid-margin);
+  padding-left: var(--grid-margin);
+}

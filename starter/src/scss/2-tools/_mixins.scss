@@ -1,0 +1,47 @@
+// 범용 믹스인 — 기존 inCMSv3 믹스인 현대화 (D-08)
+// vendor prefix 완전 제거, 불필요한 믹스인 삭제, 필요한 것만 유지
+
+// flex 센터 정렬
+@mixin flex-center($direction: row) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @if $direction != row {
+    flex-direction: $direction;
+  }
+}
+
+// width + height 100%
+@mixin full {
+  width: 100%;
+  height: 100%;
+}
+
+// 한 줄 말줄임
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 여러 줄 말줄임 (신규 추가)
+@mixin ellipsis-multiline($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// 배경 이미지 커버
+@mixin bg-cover {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+// placeholder 스타일 (표준만, 레거시 prefix 제거)
+@mixin placeholder($color: var(--color-gray-500)) {
+  &::placeholder {
+    color: $color;
+  }
+}

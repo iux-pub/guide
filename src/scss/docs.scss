@@ -215,6 +215,12 @@
 .docs-search {
   padding: 0 var(--spacing-sm);
   margin-bottom: var(--spacing-lg);
+
+  // pagefind UI input 크기 조정
+  .pagefind-ui__search-input {
+    font-size: var(--font-size-sm) !important; // pagefind 인라인 스타일 오버라이드 필요
+    padding: var(--spacing-sm) !important;
+  }
 }
 
 // ============================================

@@ -6,3 +6,4 @@ reports/
 *.log
 .sass-cache/
 .claude/worktrees/
+screen_*.png

@@ -7,7 +7,7 @@
 
 ### AI 활용성 (AI)
 
-- [ ] **AI-01**: 모든 가이드 문서가 AI 프롬프트로 바로 활용 가능한 구조화된 형태 (CLAUDE.md / 스킬 파일 등)
+- [x] **AI-01**: 모든 가이드 문서가 AI 프롬프트로 바로 활용 가능한 구조화된 형태 (CLAUDE.md / 스킬 파일 등)
 - [x] **AI-02**: 컴포넌트 스니펫이 AI가 복사해서 바로 코드 생성에 활용 가능한 포맷
 - [x] **AI-03**: 디자인 토큰/BEM 규칙이 AI 지시문(instruction) 형태로도 제공되어 프로젝트 시작 시 즉시 주입 가능
 
@@ -62,18 +62,18 @@
 
 ### 문서 사이트 (DOCS)
 
-- [ ] **DOCS-01**: Eleventy 기반 문서 사이트 구축 (정적 HTML 출력)
-- [ ] **DOCS-02**: 컴포넌트 미리보기 + 코드 예제 페이지
-- [ ] **DOCS-03**: 코드 예제 copy-to-clipboard 기능
-- [ ] **DOCS-04**: 문서 내 검색 기능 (pagefind 등)
-- [ ] **DOCS-05**: 가이드 문서 페이지 (토큰, BEM, SCSS 구조, 접근성 등)
-- [ ] **DOCS-06**: 문서 사이트 자체가 KWCAG/WCAG AA 준수
+- [x] **DOCS-01**: Eleventy 기반 문서 사이트 구축 (정적 HTML 출력)
+- [x] **DOCS-02**: 컴포넌트 미리보기 + 코드 예제 페이지
+- [x] **DOCS-03**: 코드 예제 copy-to-clipboard 기능
+- [x] **DOCS-04**: 문서 내 검색 기능 (pagefind 등)
+- [x] **DOCS-05**: 가이드 문서 페이지 (토큰, BEM, SCSS 구조, 접근성 등)
+- [x] **DOCS-06**: 문서 사이트 자체가 KWCAG/WCAG AA 준수
 
 ### 핸드오프 & 온보딩 (HAND)
 
-- [ ] **HAND-01**: 신규 팀원 온보딩 가이드 (가이드 시스템 사용법, 시작 방법)
-- [ ] **HAND-02**: 피그마→코드 핸드오프 규칙 (컴포넌트 네이밍 매핑, 토큰 연결, 전달 항목)
-- [ ] **HAND-03**: 프로젝트 스타터 킷 (SCSS+HTML 보일러플레이트 패키지 다운로드/설치)
+- [x] **HAND-01**: 신규 팀원 온보딩 가이드 (가이드 시스템 사용법, 시작 방법)
+- [x] **HAND-02**: 피그마→코드 핸드오프 규칙 (컴포넌트 네이밍 매핑, 토큰 연결, 전달 항목)
+- [x] **HAND-03**: 프로젝트 스타터 킷 (SCSS+HTML 보일러플레이트 패키지 다운로드/설치)
 
 ## v0.9 Requirements
 
@@ -133,9 +133,11 @@
 
 Which phases cover which requirements. Updated during roadmap creation.
 
+### v0.8 (Complete)
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AI-01 | Phase 5 | Pending |
+| AI-01 | Phase 5 | Complete |
 | AI-02 | Phase 3 | Complete |
 | AI-03 | Phase 2 | Complete |
 | TOKEN-01 | Phase 1 | Complete |
@@ -172,21 +174,44 @@ Which phases cover which requirements. Updated during roadmap creation.
 | A11Y-04 | Phase 4 | Complete |
 | A11Y-05 | Phase 4 | Complete |
 | A11Y-06 | Phase 4 | Complete |
-| DOCS-01 | Phase 5 | Pending |
-| DOCS-02 | Phase 5 | Pending |
-| DOCS-03 | Phase 5 | Pending |
-| DOCS-04 | Phase 5 | Pending |
-| DOCS-05 | Phase 5 | Pending |
-| DOCS-06 | Phase 5 | Pending |
-| HAND-01 | Phase 6 | Pending |
-| HAND-02 | Phase 6 | Pending |
-| HAND-03 | Phase 6 | Pending |
+| DOCS-01 | Phase 5 | Complete |
+| DOCS-02 | Phase 5 | Complete |
+| DOCS-03 | Phase 5 | Complete |
+| DOCS-04 | Phase 5 | Complete |
+| DOCS-05 | Phase 5 | Complete |
+| DOCS-06 | Phase 5 | Complete |
+| HAND-01 | Phase 6 | Complete |
+| HAND-02 | Phase 6 | Complete |
+| HAND-03 | Phase 6 | Complete |
+
+### v0.9 (In Progress)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| FIG-01 | Phase 7 | Pending |
+| FIG-02 | Phase 7 | Pending |
+| FIG-03 | Phase 7 | Pending |
+| FIG-04 | Phase 7 | Pending |
+| DQA-01 | Phase 8 | Pending |
+| DQA-02 | Phase 8 | Pending |
+| PUB-01 | Phase 9 | Pending |
+| PUB-02 | Phase 9 | Pending |
+| PUB-03 | Phase 9 | Pending |
+| PUB-04 | Phase 9 | Pending |
+| TEST-01 | Phase 10 | Pending |
+| TEST-02 | Phase 10 | Pending |
+| TEST-03 | Phase 10 | Pending |
+| GOV-01 | Phase 11 | Pending |
+| GOV-02 | Phase 11 | Pending |
+| GOV-03 | Phase 11 | Pending |
+| GOV-04 | Phase 11 | Pending |
 
 **Coverage:**
-- v1 requirements: 46 total
-- Mapped to phases: 46
+- v1 requirements: 46 total (all complete)
+- v0.9 requirements: 17 total
+- Mapped to phases: 17
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 — v0.9 requirements added*
+*Last updated: 2026-03-26 -- v0.9 로드맵 생성, 트레이서빌리티 업데이트*

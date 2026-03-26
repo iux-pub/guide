@@ -15,7 +15,7 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
   background: var(--color-primary);
@@ -32,7 +32,7 @@
     padding: var(--spacing-sm) var(--spacing-md);
     margin: 0;
     overflow: visible;
-    clip: auto;
+    clip-path: none;
     white-space: normal;
   }
 }
@@ -89,32 +89,6 @@
 // ============================================
 .docs-nav {
   padding: 0 var(--spacing-md);
-
-  // 사이드바 상단 타이틀 + 버전
-  &__brand {
-    display: flex;
-    align-items: baseline;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-border-light);
-    margin-bottom: var(--spacing-md);
-  }
-
-  &__brand-title {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-primary);
-  }
-
-  &__brand-version {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    background-color: var(--color-bg-secondary);
-    padding: 0.1rem var(--spacing-xs);
-    border-radius: var(--radius-sm);
-  }
 
   &__section {
     margin-bottom: var(--spacing-lg);
@@ -361,71 +335,12 @@ pre[class*='language-'] {
 .docs-overlay {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   z-index: var(--z-modal-backdrop);
 
   &--active {
     display: block;
-  }
-}
-
-// ============================================
-// 이전/다음 페이지 네비게이션
-// ============================================
-.docs-nav-prev-next {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-2xl);
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--color-border-light);
-
-  &__link {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-sm) var(--spacing-md);
-    text-decoration: none;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-base);
-    transition: border-color var(--transition-fast), background var(--transition-fast);
-    max-width: 50%;
-
-    &:hover {
-      border-color: var(--color-primary);
-      background: var(--color-bg-secondary);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-    }
-
-    &--prev {
-      align-items: flex-start;
-    }
-
-    &--next {
-      align-items: flex-end;
-      margin-left: auto;
-    }
-  }
-
-  &__label {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    font-weight: var(--font-weight-medium);
-  }
-
-  &__title {
-    font-size: var(--font-size-base);
-    color: var(--color-primary);
-    font-weight: var(--font-weight-semibold);
   }
 }
 
@@ -451,12 +366,12 @@ pre[class*='language-'] {
 
   &__name {
     font-weight: var(--font-weight-semibold);
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
     font-size: var(--font-size-xs);
   }
 
   &__value {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
     opacity: 0.85;
   }
 

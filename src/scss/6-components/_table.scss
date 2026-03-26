@@ -54,8 +54,8 @@
 
   // --- Variant modifiers ---
 
-  // 스트라이프 테이블
-  &--striped &__row:nth-child(even) {
+  // 스트라이프 테이블 (tbody 영역만 적용, thead 제외)
+  &--striped &__body &__row:nth-child(even) {
     background-color: var(--color-bg-secondary);
   }
 

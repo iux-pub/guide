@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>조합 패턴: 모달 + 폼 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__desc {
+      font-size: 1.6rem;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .pg__preview {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: #f8f8f8;
+      border: 1px solid #efefef;
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">조합 패턴: 모달 + 폼</h1>
+
+    <!-- 모달 안에 폼 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">회원가입 모달 폼</h2>
+      <p class="pg__desc">버튼 클릭 시 모달이 열리고, 모달 내부에 회원가입 폼이 포함된 조합 패턴입니다. 포커스 트랩과 ESC 닫기가 동작합니다.</p>
+      <div class="pg__preview">
+        <button type="button" class="btn btn--primary" data-modal-open="modal-signup">회원가입</button>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;!-- 트리거 버튼 --&gt;
+&lt;button type="button" class="btn btn--primary" data-modal-open="modal-signup"&gt;회원가입&lt;/button&gt;
+
+&lt;!-- 회원가입 모달 --&gt;
+&lt;div class="modal" id="modal-signup" role="dialog" aria-modal="true"
+     aria-labelledby="modal-signup-title" aria-hidden="true"&gt;
+  &lt;div class="modal__overlay"&gt;&lt;/div&gt;
+  &lt;div class="modal__container"&gt;
+    &lt;div class="modal__header"&gt;
+      &lt;h2 class="modal__title" id="modal-signup-title"&gt;회원가입&lt;/h2&gt;
+      &lt;button type="button" class="modal__close" aria-label="닫기" data-modal-close&gt;&amp;times;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="modal__body"&gt;
+      &lt;form&gt;
+        &lt;div class="form__group"&gt;
+          &lt;label class="form__label form__label--required" for="signup-name"&gt;이름&lt;/label&gt;
+          &lt;input type="text" id="signup-name" class="form__input" placeholder="이름을 입력하세요" required aria-required="true"&gt;
+        &lt;/div&gt;
+        &lt;div class="form__group"&gt;
+          &lt;label class="form__label form__label--required" for="signup-email"&gt;이메일&lt;/label&gt;
+          &lt;input type="email" id="signup-email" class="form__input" placeholder="이메일을 입력하세요" required aria-required="true"&gt;
+        &lt;/div&gt;
+        &lt;div class="form__group"&gt;
+          &lt;label class="form__label form__label--required" for="signup-password"&gt;비밀번호&lt;/label&gt;
+          &lt;input type="password" id="signup-password" class="form__input" placeholder="비밀번호를 입력하세요" required aria-required="true"&gt;
+          &lt;span class="form__help"&gt;8자 이상, 영문+숫자 조합&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+    &lt;div class="modal__footer"&gt;
+      &lt;button type="button" class="btn btn--outline" data-modal-close&gt;취소&lt;/button&gt;
+      &lt;button type="submit" class="btn btn--primary"&gt;가입하기&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 회원가입 모달 (실제 동작) -->
+  <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-labelledby="modal-signup-title" aria-hidden="true">
+    <div class="modal__overlay"></div>
+    <div class="modal__container">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-signup-title">회원가입</h2>
+        <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
+      </div>
+      <div class="modal__body">
+        <form>
+          <div class="form__group">
+            <label class="form__label form__label--required" for="signup-name">이름</label>
+            <input type="text" id="signup-name" class="form__input" placeholder="이름을 입력하세요" required aria-required="true">
+          </div>
+          <div class="form__group">
+            <label class="form__label form__label--required" for="signup-email">이메일</label>
+            <input type="email" id="signup-email" class="form__input" placeholder="이메일을 입력하세요" required aria-required="true">
+          </div>
+          <div class="form__group">
+            <label class="form__label form__label--required" for="signup-password">비밀번호</label>
+            <input type="password" id="signup-password" class="form__input" placeholder="비밀번호를 입력하세요" required aria-required="true">
+            <span class="form__help">8자 이상, 영문+숫자 조합</span>
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn btn--outline" data-modal-close>취소</button>
+        <button type="submit" class="btn btn--primary">가입하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/modal.js"></script>
+</body>
+</html>

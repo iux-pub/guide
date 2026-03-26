@@ -31,7 +31,7 @@
 ### v0.9.5 리뷰 기반 품질 강화
 
 - [ ] **Phase 12: 코드 품질 수정** - SCSS 버그 수정 + pa11yci 누락 URL 추가
-- [ ] **Phase 13: 사이트 UX + 온보딩 개선** - 홈페이지 완성, 페이지 네비게이션, 상호 링크, README 개선
+- [x] **Phase 13: 사이트 UX + 온보딩 개선** - 홈페이지 완성, 페이지 네비게이션, 상호 링크, README 개선 (completed 2026-03-26)
 
 ## Phase Details
 
@@ -135,4 +135,4 @@ Phases execute in numeric order: 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13
 | 10. 테스트 가이드 | v0.9 | 0/TBD | Complete | 2026-03-26 |
 | 11. 거버넌스 + 버전 관리 | v0.9 | 0/TBD | Complete | 2026-03-26 |
 | 12. 코드 품질 수정 | v0.9.5 | 0/TBD | Not started | - |
-| 13. 사이트 UX + 온보딩 개선 | v0.9.5 | 0/TBD | Not started | - |
+| 13. 사이트 UX + 온보딩 개선 | v0.9.5 | 0/TBD | Complete    | 2026-03-26 |

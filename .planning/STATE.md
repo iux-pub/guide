@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.9.5
-milestone_name: 리뷰 기반 품질 강화
-status: In progress
-stopped_at: Phase 13 Plan 01 완료
-last_updated: "2026-03-26"
+milestone: v0.9
+milestone_name: 디자인 컨벤션 + 프로세스 강화
+status: executing
+stopped_at: Phase 13 Plan 01 완료 (사이트 UX + 온보딩 개선)
+last_updated: "2026-03-26T04:30:15.087Z"
 last_activity: 2026-03-26
 progress:
-  total_phases: 13
-  completed_phases: 10
+  total_phases: 7
+  completed_phases: 1
   total_plans: 1
-  completed_plans: 1
+  completed_plans: 4
   percent: 77
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 ## Current Position
 
 Phase: 13 of 13 (사이트 UX + 온보딩 개선)
-Plan: 01 완료
+Plan: Not started
 Status: In progress
-Last activity: 2026-03-26 -- Phase 13 Plan 01 실행 완료
+Last activity: 2026-03-26
 
 Progress: [███████████████░░░░░] ~77% (v0.8 complete, v0.9 partial, v0.9.5 in progress)
 

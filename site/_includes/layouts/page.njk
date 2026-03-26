@@ -3,4 +3,25 @@
 {% block content %}
 <h1>{{ title }}</h1>
 {{ content | safe }}
+
+{# 동일 섹션 내 이전/다음 페이지 네비게이션 #}
+{% set pn = page.url | prevNextInSection(navigation) %}
+{% if pn.prev or pn.next %}
+<nav class="docs-nav-prev-next" aria-label="페이지 네비게이션">
+  {% if pn.prev %}
+  <a href="{{ pn.prev.url }}" class="docs-nav-prev-next__link docs-nav-prev-next__link--prev" aria-label="이전: {{ pn.prev.title }}">
+    <span class="docs-nav-prev-next__label">이전</span>
+    <span class="docs-nav-prev-next__title">{{ pn.prev.title }}</span>
+  </a>
+  {% else %}
+  <span></span>
+  {% endif %}
+  {% if pn.next %}
+  <a href="{{ pn.next.url }}" class="docs-nav-prev-next__link docs-nav-prev-next__link--next" aria-label="다음: {{ pn.next.title }}">
+    <span class="docs-nav-prev-next__label">다음</span>
+    <span class="docs-nav-prev-next__title">{{ pn.next.title }}</span>
+  </a>
+  {% endif %}
+</nav>
+{% endif %}
 {% endblock %}

@@ -14,6 +14,22 @@ export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ 'src/playground': 'playground' })
   eleventyConfig.addPassthroughCopy({ 'node_modules/clipboard/dist/clipboard.min.js': 'assets/js/clipboard.min.js' })
 
+  // 동일 섹션 내 이전/다음 페이지 필터
+  eleventyConfig.addFilter('prevNextInSection', (pageUrl, navigation) => {
+    if (!navigation || !navigation.sections) return { prev: null, next: null }
+    for (const section of navigation.sections) {
+      const items = section.items || []
+      const idx = items.findIndex(item => item.url === pageUrl)
+      if (idx !== -1) {
+        return {
+          prev: idx > 0 ? items[idx - 1] : null,
+          next: idx < items.length - 1 ? items[idx + 1] : null
+        }
+      }
+    }
+    return { prev: null, next: null }
+  })
+
   // pagefind 빌드 후 인덱싱
   eleventyConfig.on('eleventy.after', async () => {
     const { execSync } = await import('child_process')

@@ -186,4 +186,4 @@ Phases execute in numeric order: 14 -> 15
 | 12. 코드 품질 수정 | v0.9.5 | 0/TBD | Complete | 2026-03-26 |
 | 13. 사이트 UX + 온보딩 | v0.9.5 | 0/TBD | Complete | 2026-03-26 |
 | 14. 프롬프트 파일 생성 | v1.0 | 0/TBD | Not started | - |
-| 15. 문서 사이트 프롬프트 통합 | v1.0 | 0/TBD | Not started | - |
+| 15. 문서 사이트 프롬프트 통합 | v1.0 | 0/TBD | Complete    | 2026-03-26 |

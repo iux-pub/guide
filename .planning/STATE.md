@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: AI 범용 프롬프트 시스템
-status: In progress
+status: executing
 stopped_at: Phase 15 Plan 1 완료 (AI 프롬프트 문서 사이트 통합)
-last_updated: "2026-03-26"
+last_updated: "2026-03-26T08:42:05.803Z"
 last_activity: 2026-03-26
 progress:
   total_phases: 15
-  completed_phases: 13
-  total_plans: 21
-  completed_plans: 21
+  completed_phases: 7
+  total_plans: 19
+  completed_plans: 23
   percent: 90
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 ## Current Position
 
 Phase: 15 of 15 (AI 프롬프트 문서 사이트 통합)
-Plan: 1 of 1 (완료)
+Plan: Not started
 Status: In progress
-Last activity: 2026-03-26 -- Phase 15 Plan 1 완료
+Last activity: 2026-03-26
 
 Progress: [██████████████████░░] ~90% (v0.8-v0.9.5 complete, v1.0 진행중)
 

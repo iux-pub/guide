@@ -153,6 +153,24 @@
 - [ ] **PROMPT-SITE01**: 문서 사이트에 프롬프트 섹션 추가 (`site/prompts/`) — 각 프롬프트를 복사 버튼과 함께 제공
 - [ ] **PROMPT-SITE02**: 프롬프트 사용 가이드 — 어떤 AI 도구에 어떤 프롬프트를 넣는지 매핑 테이블
 
+## v1.1 Requirements
+
+### 토큰 파이프라인 (PIPE)
+
+- [ ] **PIPE-01**: tokens.json 싱글 소스 생성 — DTCG 포맷($value, $type)으로 색상/타이포/간격/그리드/기타 토큰 정의
+- [ ] **PIPE-02**: tokens.json → SCSS :root 자동 생성 스크립트 — 기존 _tokens-*.scss 파일을 스크립트 출력으로 대체
+- [ ] **PIPE-03**: tokens.json → prompts/design.md 토큰 섹션 자동 생성 — 프롬프트 내 토큰 값이 항상 최신 유지
+
+### 컴포넌트 조합 패턴 (COMBO)
+
+- [ ] **COMBO-01**: 실전 레이아웃 예제 3종 — 모달+폼, 카드그리드+페이지네이션, 검색폼+테이블 playground HTML
+- [ ] **COMBO-02**: 조합 패턴 문서 페이지 — site/components/ 하위에 조합 예제 문서 + iframe 미리보기
+
+### 빌드 통합 (BUILD)
+
+- [ ] **BUILD-01**: npm run build 통합 — tokens → CSS → docs-css → prompts → site 전체 파이프라인 한 명령
+- [ ] **BUILD-02**: npm run build:prompts 스크립트 — tokens.json + snippets에서 prompts/*.md 자동 재생성
+
 ## v2 Requirements
 
 ### 확장 기능

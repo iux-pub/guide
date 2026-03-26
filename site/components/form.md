@@ -94,3 +94,8 @@ preview_height: 800
 ## SCSS 파일
 
 `src/scss/6-components/_form.scss`
+
+## 관련 문서
+
+- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 폼 네이밍 규칙과 BEM 매핑
+- [접근성: 폼](/accessibility/form/) -- 폼 접근성 가이드

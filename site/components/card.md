@@ -68,3 +68,8 @@ preview_height: 600
 ## SCSS 파일
 
 `src/scss/6-components/_card.scss`
+
+## 관련 문서
+
+- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 카드 네이밍 규칙과 BEM 매핑
+- [접근성: 카드](/accessibility/card/) -- 카드 접근성 가이드

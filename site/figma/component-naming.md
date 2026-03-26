@@ -116,3 +116,15 @@ Variant: primary, secondary, outline, text
 Size: sm, md, lg
 State: default, hover, active, focus, disabled
 ```
+
+## 관련 문서
+
+- [버튼 컴포넌트](/components/btn/) -- BEM 마크업과 스타일 가이드
+- [폼 컴포넌트](/components/form/) -- 입력 필드, 체크박스, 라디오 가이드
+- [카드 컴포넌트](/components/card/) -- 카드 레이아웃 가이드
+- [테이블 컴포넌트](/components/table/) -- 테이블 마크업 가이드
+- [모달 컴포넌트](/components/modal/) -- 모달 다이얼로그 가이드
+- [탭 컴포넌트](/components/tab/) -- 탭 인터페이스 가이드
+- [페이지네이션 컴포넌트](/components/pagination/) -- 페이지네이션 가이드
+- [브레드크럼 컴포넌트](/components/breadcrumb/) -- 브레드크럼 네비게이션 가이드
+- [피그마→코드 핸드오프](/onboarding/handoff/) -- 상세 매핑 테이블

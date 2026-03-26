@@ -55,3 +55,8 @@ preview_height: 500
 ## SCSS 파일
 
 `src/scss/6-components/_btn.scss`
+
+## 관련 문서
+
+- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 버튼 네이밍 규칙과 BEM 매핑
+- [접근성: 버튼](/accessibility/btn/) -- 버튼 접근성 가이드

@@ -74,3 +74,8 @@ preview_height: 400
 
 - JS: `src/js/modal.js`
 - SCSS: `src/scss/6-components/_modal.scss`
+
+## 관련 문서
+
+- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 모달 네이밍 규칙과 BEM 매핑
+- [접근성: 모달](/accessibility/modal/) -- 모달 접근성 가이드

@@ -172,3 +172,11 @@ order: 4
 2. PascalCase를 소문자(kebab-case)로 변환한다
 3. `--` 접두사를 붙인다
 4. 중간 카테고리가 불필요하면 생략한다 (`Typography / Font Size / base` → `--font-size-base`)
+
+## 관련 문서
+
+- [색상 토큰](/tokens/color/) -- CSS Custom Properties 색상 정의
+- [타이포그래피 토큰](/tokens/typography/) -- 폰트 크기, 굵기, 줄 간격 정의
+- [간격 토큰](/tokens/spacing/) -- 간격 스케일 정의
+- [그리드 토큰](/tokens/grid/) -- 그리드 시스템과 컨테이너 규격
+- [Auto Layout 규칙](/figma/auto-layout/) -- 피그마 Auto Layout과 토큰 매핑

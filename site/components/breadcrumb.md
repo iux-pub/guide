@@ -65,3 +65,8 @@ preview_height: 200
 ## SCSS 파일
 
 `src/scss/6-components/_breadcrumb.scss`
+
+## 관련 문서
+
+- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 브레드크럼 네이밍 규칙과 BEM 매핑
+- [접근성: 브레드크럼](/accessibility/breadcrumb/) -- 브레드크럼 접근성 가이드

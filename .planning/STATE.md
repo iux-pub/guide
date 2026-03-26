@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: 핵심 경화
-status: Defining requirements
-stopped_at: v1.3 마일스톤 시작
-last_updated: "2026-03-26T13:50:18.022Z"
+status: Ready to plan
+stopped_at: v1.3 로드맵 생성 완료
+last_updated: "2026-03-26"
 last_activity: 2026-03-26
 progress:
-  total_phases: 20
+  total_phases: 22
   completed_phases: 7
   total_plans: 19
   completed_plans: 25
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** 신규 프로젝트 시작 시 검증된 팀 표준을 즉시 적용할 수 있어야 한다
-**Current focus:** v1.2 디자인 역량 강화 - Phase 20 Plan 1 완료, Phase 19 대기
+**Current focus:** v1.3 핵심 경화 - Phase 21 계획 대기
 
 ## Current Position
 
-Phase: 20 of 20 (디자인 사이트 통합)
+Phase: 21 of 22 (빌드 + 인프라 경화)
 Plan: Not started
-Status: Phase 20 완료, Phase 19 대기
+Status: Ready to plan
 Last activity: 2026-03-26
 
-Progress: [████████████████░░░░] ~83% (v0.8-v1.1 complete, v1.2 Phase 20 완료, Phase 19 대기)
+Progress: [████████████████░░░░] ~83% (v0.8-v1.2 complete, v1.3 Phase 21 대기)
 
 ## Performance Metrics
 
@@ -55,8 +55,8 @@ Recent decisions affecting current work:
 - [v0.8]: ITCSS + BEM + Style Dictionary 없이 SCSS :root 직접 정의 방식
 - [v0.8]: Eleventy + Nunjucks 문서 사이트, site/ 디렉토리
 - [v1.1 P18]: SCSS 직접 파싱으로 토큰 추출, build:tokens 플레이스홀더 (Phase 16 대기)
-- [v1.2]: info-design 스킬 references/ 파일에서 핵심 콘텐츠 추출하여 site/design/ 마크다운 생성
 - [v1.2 P20]: 디자인 섹션을 피그마 컨벤션과 토큰 사이에 배치
+- [v1.3]: 규모 확장 없이 기존 산출물의 신뢰성을 프로덕션 수준으로 끌어올림
 
 ### Pending Todos
 
@@ -65,9 +65,10 @@ None yet.
 ### Blockers/Concerns
 
 - Phase 19는 info-design 스킬 references/ 파일 접근이 필요 -- 콘텐츠 소스
+- Phase 21 BSYS-02: worktree 20개 브랜치 삭제 시 주의 필요
 
 ## Session Continuity
 
 Last session: 2026-03-26
-Stopped at: Phase 20 Plan 1 완료 (디자인 사이트 통합)
+Stopped at: v1.3 로드맵 생성 완료, Phase 21 계획 대기
 Resume file: None

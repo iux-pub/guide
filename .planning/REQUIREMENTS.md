@@ -366,6 +366,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AESTH-01 | Phase 19 | Pending |
 | DSSITE-01 | Phase 20 | Pending |
 
+### v1.3 (Planned)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| BSYS-01 | Phase 21 | Pending |
+| BSYS-02 | Phase 21 | Pending |
+| BSYS-03 | Phase 21 | Pending |
+| BSYS-04 | Phase 21 | Pending |
+| STARTER-01 | Phase 21 | Pending |
+| STARTER-02 | Phase 21 | Pending |
+| CONTENT-01 | Phase 22 | Pending |
+
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)
 - v0.9 requirements: 17 total (all complete)
@@ -373,8 +385,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1.0 requirements: 8 total (mapped: 8)
 - v1.1 requirements: 7 total (mapped: 7)
 - v1.2 requirements: 7 total (mapped: 7)
+- v1.3 requirements: 7 total (mapped: 7)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 -- v1.2 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-26 -- v1.3 로드맵 생성, 트레이서빌리티 업데이트*

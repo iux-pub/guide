@@ -8,6 +8,7 @@
 - [ ] **v1.0 AI 범용 프롬프트 시스템** - Phases 14-15 (in progress)
 - [ ] **v1.1 시스템 고도화** - Phases 16-18
 - [ ] **v1.2 디자인 역량 강화** - Phases 19-20
+- [ ] **v1.3 핵심 경화** - Phases 21-22
 
 ## Phases
 
@@ -63,6 +64,11 @@
 
 - [ ] **Phase 19: 디자인 가이드 콘텐츠** - info-design 스킬 기반 6개 디자인 가이드 마크다운 문서 생성
 - [ ] **Phase 20: 문서 사이트 통합** - site/design/ 섹션 네비게이션, pa11yci, info-design 스킬 역갱신
+
+### v1.3 핵심 경화
+
+- [ ] **Phase 21: 빌드 + 인프라 경화** - .gitignore, worktree 정리, serve 핫리로드, npm test, starter 실증
+- [ ] **Phase 22: 콘텐츠 감사 + 보강** - 71페이지 스캔, 얇은 페이지 보강
 
 ## Phase Details
 
@@ -253,10 +259,34 @@
 **Plans**: TBD
 **UI hint**: yes
 
+### Phase 21: 빌드 + 인프라 경화
+**Goal**: 빌드 시스템과 개발 인프라가 프로덕션 수준으로 정비되어, 클린 환경에서 빌드/린트/테스트가 한 번에 통과하고 개발 서버가 SCSS 변경을 즉시 반영한다
+**Depends on**: Phase 20 (v1.2 완료 후 시작, 기존 빌드 스크립트와 starter kit이 존재하는 상태)
+**Requirements**: BSYS-01, BSYS-02, BSYS-03, BSYS-04, STARTER-01, STARTER-02
+**Success Criteria** (what must be TRUE):
+  1. `.gitignore`에 `_site/`, `.claude/worktrees/`, `.DS_Store`, `*.log`, `dist/`가 명시적으로 제외되어 있고, `git status`에 빌드 산출물이 나타나지 않는다
+  2. 불필요한 worktree 브랜치가 삭제되고 `.claude/worktrees/` 디렉토리가 정리되어, `git worktree list`에 잔해가 없다
+  3. `npm run serve` 실행 중 SCSS 파일을 수정하면 `_site/dist/css/` 내 CSS가 자동 재컴파일되어 브라우저 새로고침 없이(또는 즉시 새로고침으로) 변경이 반영된다
+  4. `npm test` 한 명령으로 `lint:css`와 `test:a11y`가 순차 실행되어 전체 검증이 완료된다
+  5. 클린 디렉토리에서 `cp -r starter/ /tmp/test-project/ && cd /tmp/test-project && npm install && npm run build:css`가 오류 없이 성공한다
+  6. starter kit 내에서 `npm run lint:css` 실행 시 경고만 출력되고 에러 없이 통과하며, playground HTML이 브라우저에서 정상 렌더링된다
+**Plans**: TBD
+
+### Phase 22: 콘텐츠 감사 + 보강
+**Goal**: 문서 사이트의 71페이지 중 얇은 페이지가 식별되고 보강되어, 모든 페이지가 최소 품질 기준(제목 + 개요 + 본문 내용 + 예제)을 충족한다
+**Depends on**: Phase 21 (인프라 정비 후 콘텐츠 작업이 안정적)
+**Requirements**: CONTENT-01
+**Success Criteria** (what must be TRUE):
+  1. 71페이지 전체에 대한 감사 결과가 존재하며, 100줄 미만인 얇은 페이지 목록이 식별되어 있다
+  2. 식별된 얇은 페이지가 보강되어, 각 페이지에 제목, 개요(해당 주제가 왜 필요한지), 본문 내용, 실무 예제가 포함되어 있다
+  3. 보강된 페이지가 `npm test`(lint + a11y)를 통과한다
+  4. 보강 전/후의 페이지 줄 수 비교가 감사 결과에 기록되어 있다
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20
+Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20 -> 21 -> 22
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -279,4 +309,6 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20
 | 17. 컴포넌트 조합 패턴 | v1.1 | 0/TBD | Not started | - |
 | 18. 빌드 통합 | v1.1 | 0/TBD | Complete | 2026-03-26 |
 | 19. 디자인 가이드 콘텐츠 | v1.2 | 0/TBD | Not started | - |
-| 20. 문서 사이트 통합 | v1.2 | 0/TBD | Complete    | 2026-03-26 |
+| 20. 문서 사이트 통합 | v1.2 | 0/TBD | Complete | 2026-03-26 |
+| 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Not started | - |
+| 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Not started | - |

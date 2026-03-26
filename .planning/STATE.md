@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v0.8
-milestone_name: milestone
-status: Milestone complete
-stopped_at: Phase 6 context gathered
+milestone: v0.9
+milestone_name: 디자인 컨벤션 + 프로세스 강화
+status: Defining requirements
+stopped_at: Milestone v0.9 started
 last_updated: "2026-03-26T01:24:45.590Z"
 progress:
   total_phases: 6

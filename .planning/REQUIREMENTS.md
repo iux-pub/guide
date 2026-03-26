@@ -201,6 +201,24 @@
 
 - [ ] **DSSITE-01**: 위 6개 가이드를 문서 사이트 site/design/ 섹션으로 통합 + 네비게이션 + pa11yci
 
+## v1.3 Requirements
+
+### 빌드 시스템 (BSYS)
+
+- [ ] **BSYS-01**: .gitignore 강화 — _site/, .claude/worktrees/, .DS_Store, *.log, dist/ 명시적 제외
+- [ ] **BSYS-02**: worktree 잔해 정리 — 20개 worktree 브랜치 삭제, .claude/worktrees/ 디렉토리 정리
+- [ ] **BSYS-03**: serve 모드 CSS 핫리로드 — npm run serve에서 SCSS 변경 시 _site/dist/css/ 자동 갱신
+- [ ] **BSYS-04**: npm test 통합 — lint:css + test:a11y를 한 명령으로 실행
+
+### starter kit 실증 (STARTER)
+
+- [ ] **STARTER-01**: 클린 디렉토리에서 starter kit 독립 빌드 검증 — cp -r starter/ /tmp/test-project/ → npm install → npm run build:css → 성공 확인
+- [ ] **STARTER-02**: starter kit에서 lint:css, playground HTML 정상 동작 확인
+
+### 콘텐츠 감사 (CONTENT)
+
+- [ ] **CONTENT-01**: 71페이지 중 100줄 미만 얇은 페이지 식별 + 보강 (최소 기준: 제목 + 개요 + 본문 내용 + 예제)
+
 ## v2 Requirements
 
 ### 확장 기능

@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: 디자인 역량 강화
-status: Phase 20 완료, Phase 19 대기
-stopped_at: Phase 20 Plan 1 완료 (디자인 사이트 통합)
+milestone: v1.3
+milestone_name: 핵심 경화
+status: Defining requirements
+stopped_at: v1.3 마일스톤 시작
 last_updated: "2026-03-26T13:50:18.022Z"
 last_activity: 2026-03-26
 progress:

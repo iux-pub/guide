@@ -8,17 +8,15 @@
 
 신규 프로젝트 시작 시 디자인/퍼블리싱 규칙을 처음부터 다시 정하지 않고, 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
 
-## Current Milestone: v1.2 디자인 역량 강화
+## Current Milestone: v1.3 핵심 경화 (Hardening)
 
-**Goal:** info-design 스킬의 고유 콘텐츠를 통합하여 디자인 품질 기준을 "코딩 규칙"에서 "디자인 시스템" 수준으로 끌어올림
+**Goal:** 규모 확장 없이 기존 산출물의 신뢰성을 프로덕션 수준으로 끌어올림
 
 **Target features:**
-- 마이크로카피 가이드 (에러 메시지 공식, 버튼 텍스트, 톤 매핑)
-- 인터랙션 타이밍 규격 (전환 시간/이징, prefers-reduced-motion)
-- 디자인 감사 프레임워크 (17점 체크리스트 + Quick 5 + 점수 체계)
-- UI 상태 패턴 (로딩/에러/빈 상태 전략)
-- 아이콘 시스템 (8pt 그리드, Lucide 표준)
-- 프론트엔드 미학 원칙 (AI 슬롭 방지, 안티패턴)
+- 빌드 시스템 정비 (serve CSS 핫리로드, worktree 정리, .gitignore 강화)
+- starter kit 실증 (클린 clone → build → lint → a11y 전체 통과)
+- 콘텐츠 품질 감사 (얇은 페이지 식별 + 보강)
+- e2e 검증 자동화 (npm test 한 명령으로 전체 검증)
 - 기여 가이드 + 거버넌스 문서
 
 ## Requirements

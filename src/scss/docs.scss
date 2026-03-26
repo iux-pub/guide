@@ -346,3 +346,41 @@ pre[class*='language-'] {
     display: block;
   }
 }
+
+// ============================================
+// color-grid / color-swatch -- 색상 토큰 시각화
+// ============================================
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.color-swatch {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 120px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-base);
+
+  &__name {
+    font-weight: var(--font-weight-semibold);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: var(--font-size-xs);
+  }
+
+  &__value {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    opacity: 0.85;
+  }
+
+  &__desc {
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    opacity: 0.75;
+  }
+}

@@ -266,7 +266,7 @@
 - [x] **SIZE-01**: 폼 라벨, 테이블 기본 폰트 등 최소 기준을 16px(var(--font-size-base))로 상향
 - [x] **SIZE-02**: 탭 버튼 패딩 확대 (수직 8px→12px, 수평 16px→20px)
 - [x] **SIZE-03**: 카드/모달/테이블 등 내부 여백을 컴포넌트 특성에 맞게 확대 (시원시원한 현대적 느낌)
-- [ ] **SIZE-04**: 변경된 사이즈/여백을 playground HTML 미리보기에 반영
+- [x] **SIZE-04**: 변경된 사이즈/여백을 playground HTML 미리보기에 반영
 
 ## v2 Requirements
 
@@ -458,7 +458,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SIZE-01 | Phase 26 | Complete |
 | SIZE-02 | Phase 26 | Complete |
 | SIZE-03 | Phase 26 | Complete |
-| SIZE-04 | Phase 27 | Pending |
+| SIZE-04 | Phase 27 | Complete |
 | TOKFIX-02 | Phase 27 | Complete |
 
 **Coverage:**

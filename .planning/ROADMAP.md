@@ -322,7 +322,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 27-01-PLAN.md -- 스니펫 + 프롬프트 + CLAUDE.md 역갱신
-- [ ] 27-02-PLAN.md -- site/ 문서 갱신 + CSS 빌드 + npm test
+- [x] 27-02-PLAN.md -- site/ 문서 갱신 + CSS 빌드 + npm test
 
 ## Progress
 

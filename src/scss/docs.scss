@@ -415,8 +415,8 @@ pre[class*='language-'] {
     }
   }
 
-  // 인라인 코드 개선
-  code {
+  // 인라인 코드 (코드 블록 밖에서만)
+  :not(pre) > code {
     font-family: 'JetBrains Mono', SFMono-Regular, Consolas, monospace;
     font-size: 0.88em;
     background: var(--color-gray-100);

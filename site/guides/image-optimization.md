@@ -179,3 +179,13 @@ icon_search.svg         (언더스코어 금지)
 <img src="logo.svg" alt="인포마인드">
 <img src="divider.svg" alt="">  <!-- 장식 이미지 -->
 ```
+
+## 이미지 성능 규칙
+
+| 규칙 | 설명 |
+|------|------|
+| `width`/`height` 명시 | CLS(Cumulative Layout Shift) 방지. 모든 `<img>`에 필수 |
+| `loading="lazy"` | 뷰포트 밖 이미지에 적용 (스크롤 시 로드) |
+| `fetchpriority="high"` | 뷰포트 내 첫 이미지(히어로, LCP)에 적용 |
+| CDN preconnect | `<link rel="preconnect" href="https://cdn.example.com">` |
+| 폰트 preload | `<link rel="preload" as="font" href="..." crossorigin>` + `font-display: swap`

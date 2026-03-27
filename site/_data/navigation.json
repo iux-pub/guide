@@ -39,7 +39,8 @@
         { "title": "피그마 Variable", "url": "/figma/variables/" },
         { "title": "Auto Layout", "url": "/figma/auto-layout/" },
         { "title": "마이크로카피", "url": "/design/microcopy/" },
-        { "title": "인터랙션 타이밍", "url": "/design/interaction-timing/" }
+        { "title": "인터랙션 타이밍", "url": "/design/interaction-timing/" },
+        { "title": "인터랙션 규칙", "url": "/guides/interaction-rules/" }
       ]
     },
     {

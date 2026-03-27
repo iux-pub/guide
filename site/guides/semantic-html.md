@@ -193,3 +193,23 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 - [ ] main이 페이지당 1개인가
 - [ ] 본문 건너뛰기 링크가 있는가
 - [ ] 시맨틱 태그에 중복 role을 지정하지 않았는가
+- [ ] heading 앵커에 `scroll-margin-top` 설정했는가
+- [ ] `text-wrap: balance` 또는 `text-pretty`를 heading에 적용했는가
+- [ ] 텍스트 컨테이너가 긴 콘텐츠를 처리하는가 (truncate, line-clamp, break-words)
+- [ ] flex 자식에 `min-width: 0`을 설정하여 텍스트 말줄임이 동작하는가
+- [ ] 빈 상태(empty state)를 처리하는가 (빈 문자열/배열에 깨진 UI 없음)
+- [ ] 사용자 입력 콘텐츠의 짧은/보통/매우 긴 경우를 모두 대응하는가
+
+## 폼 마크업 규칙
+
+| 규칙 | 설명 |
+|------|------|
+| `autocomplete` 속성 | 로그인/결제 폼 input에 필수. 비인증 필드에는 `autocomplete="off"` |
+| `type` 속성 | `email`, `tel`, `url`, `number` 등 정확한 type 사용 (모바일 키보드 대응) |
+| `inputmode` 속성 | 숫자 입력 시 `inputmode="numeric"` 사용 |
+| `spellCheck={false}` | 이메일, 코드, 사용자명 필드에 맞춤법 검사 비활성화 |
+| paste 차단 금지 | `onPaste` + `preventDefault` 사용 금지 |
+| label 클릭 영역 | `for` 속성 또는 label이 input을 감싸서 클릭 가능하게 |
+| 에러 위치 | 필드 옆 인라인 표시, 제출 시 첫 에러에 focus |
+| placeholder | `…`으로 끝나게, 예시 패턴 표시 (레이블 대체 금지) |
+| 미저장 경고 | 변경 사항 있을 때 페이지 이탈 전 경고 (`beforeunload`)

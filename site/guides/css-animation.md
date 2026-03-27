@@ -483,3 +483,7 @@ order: 5
 - [ ] 순수 장식 목적의 과도한 애니메이션이 아닌가
 - [ ] `!important` 없이 트랜지션이 동작하는가 (reduced-motion 전역 리셋 예외)
 - [ ] 스태거드 애니메이션의 총 지연 시간이 0.6s를 넘지 않는가
+- [ ] `transition: all` 사용하지 않고 속성을 명시하는가 (예: `transition: opacity 0.3s, transform 0.3s`)
+- [ ] 애니메이션이 사용자 입력에 의해 중단 가능한가 (인터럽트 가능)
+- [ ] SVG 애니메이션에 `<g>` 래퍼 + `transform-box: fill-box; transform-origin: center` 사용하는가
+- [ ] `transform-origin`을 정확히 설정했는가

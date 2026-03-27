@@ -288,7 +288,10 @@
   3. btn, form, card, modal, tab, pagination, breadcrumb 7개 컴포넌트 SCSS에 `prefers-reduced-motion: reduce` 미디어 쿼리가 적용되어, 해당 설정 시 모든 transition/animation이 비활성화된다
   4. 7개 컴포넌트의 포커스 스타일이 `:focus-visible` + `outline: 2px solid` + `outline-offset: 2px`로 통일되어 있다
   5. `--transition-fast` 토큰 값이 SCSS 파일과 `interaction-timing.md` 문서에서 동일한 값으로 정합되어 있다
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 25-01-PLAN.md -- 토큰 값 정합 + 터치 타겟/간격 수정
+- [ ] 25-02-PLAN.md -- reduced-motion + 포커스 링 통일
 
 ### Phase 26: SCSS 현대화
 **Goal**: 8개 컴포넌트의 반응형 패딩, 인터랙션 애니메이션, 폰트/여백 사이즈가 현대적 수준으로 개선되어 실제 프로젝트 투입 시 바로 사용 가능한 품질을 갖춘다
@@ -300,7 +303,10 @@
   3. 카드에 hover 시 shadow가 확대되고 translateY -2px 효과가 적용된다
   4. 폼 라벨, 테이블 기본 폰트가 16px(var(--font-size-base)) 이상이며, 탭 버튼 패딩이 수직 12px/수평 20px 이상이다
   5. 카드/모달/테이블 등의 내부 여백이 이전보다 확대되어 시원시원한 느낌을 준다
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 25-01-PLAN.md -- 토큰 값 정합 + 터치 타겟/간격 수정
+- [ ] 25-02-PLAN.md -- reduced-motion + 포커스 링 통일
 **UI hint**: yes
 
 ### Phase 27: 문서/플레이그라운드 동기화
@@ -313,7 +319,10 @@
   3. prompts/ 디렉토리의 AI 프롬프트가 변경된 토큰 값/규칙을 반영하고 있다
   4. site/ 문서 페이지(컴포넌트, 접근성, 가이드)가 변경된 규칙을 반영하고 있다
   5. `npm test` (lint + a11y)가 통과한다
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 25-01-PLAN.md -- 토큰 값 정합 + 터치 타겟/간격 수정
+- [ ] 25-02-PLAN.md -- reduced-motion + 포커스 링 통일
 
 ## Progress
 
@@ -346,6 +355,6 @@ Phases execute in numeric order: 25 -> 26 -> 27
 | 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete | 2026-03-26 |
 | 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete | 2026-03-27 |
 | 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete | 2026-03-27 |
-| 25. 접근성 수정 + 토큰 정합 | v1.5 | 0/TBD | Not started | - |
+| 25. 접근성 수정 + 토큰 정합 | v1.5 | 0/2 | In progress | - |
 | 26. SCSS 현대화 | v1.5 | 0/TBD | Not started | - |
 | 27. 문서/플레이그라운드 동기화 | v1.5 | 0/TBD | Not started | - |

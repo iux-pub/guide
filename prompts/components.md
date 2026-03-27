@@ -67,25 +67,39 @@ Variant: `--horizontal`, `--image`, `--featured`
 </div>
 ```
 
+JS: `modal--active` 클래스 토글로 열림 애니메이션 제어
+
 ## 탭
 
 ```html
-<div class="tab" role="tablist" aria-label="탭 메뉴">
-  <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1">탭 1</button>
-  <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2">탭 2</button>
+<div class="tab">
+  <div class="tab__list" role="tablist" aria-label="탭 메뉴">
+    <button class="tab__button" role="tab" aria-selected="true" aria-controls="panel-1">탭 1</button>
+    <button class="tab__button" role="tab" aria-selected="false" aria-controls="panel-2">탭 2</button>
+  </div>
+  <div class="tab__panel" role="tabpanel" id="panel-1">내용 1</div>
+  <div class="tab__panel" role="tabpanel" id="panel-2" hidden>내용 2</div>
 </div>
-<div class="tab__panel" role="tabpanel" id="panel-1">내용 1</div>
-<div class="tab__panel" role="tabpanel" id="panel-2" hidden>내용 2</div>
 ```
 
 ## 페이지네이션
 
 ```html
 <nav class="pagination" aria-label="페이지 네비게이션">
-  <a class="pagination__prev" href="#">이전</a>
-  <a class="pagination__link" href="#">1</a>
-  <a class="pagination__link pagination__link--active" href="#" aria-current="page">2</a>
-  <a class="pagination__next" href="#">다음</a>
+  <ul class="pagination__list">
+    <li class="pagination__item">
+      <a class="pagination__link pagination__link--prev" href="#" aria-label="이전 페이지">&lt;</a>
+    </li>
+    <li class="pagination__item">
+      <a class="pagination__link" href="#" aria-label="페이지 1">1</a>
+    </li>
+    <li class="pagination__item">
+      <a class="pagination__link pagination__link--current" href="#" aria-current="page" aria-label="페이지 2">2</a>
+    </li>
+    <li class="pagination__item">
+      <a class="pagination__link pagination__link--next" href="#" aria-label="다음 페이지">&gt;</a>
+    </li>
+  </ul>
 </nav>
 ```
 

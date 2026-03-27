@@ -59,6 +59,8 @@
 - 키보드 네비게이션 지원
 - skip-to-content 링크: `<a href="#main-content" class="skip-to-content sr-only">`
 - `!important` 금지, 인라인 스타일 금지
+- `prefers-reduced-motion` 대응: 모든 컴포넌트 transition/animation 비활성화
+- 터치 타겟: 최소 44x44px, 인접 요소 간격 8px 이상
 
 ## 레이아웃 크기 기준
 

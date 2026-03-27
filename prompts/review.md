@@ -31,6 +31,7 @@
 - [ ] 인터랙티브 요소에 `aria-label` 또는 텍스트 레이블이 있는가
 - [ ] `focus-visible` 스타일이 있는가
 - [ ] 색상만으로 정보를 전달하지 않는가
+- [ ] `prefers-reduced-motion` 미디어 쿼리가 있는가
 
 ## 반응형
 

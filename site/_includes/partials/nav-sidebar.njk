@@ -6,8 +6,14 @@
     </a>
     {% include "partials/search.njk" %}
     {% for section in navigation.sections %}
-    <div class="docs-nav__section">
-      <span class="docs-nav__title">{{ section.title }}</span>
+    {% set sectionHasActive = false %}
+    {% for item in section.items %}
+      {% if page.url == item.url %}
+        {% set sectionHasActive = true %}
+      {% endif %}
+    {% endfor %}
+    <details class="docs-nav__section" {% if sectionHasActive %}open{% endif %}>
+      <summary class="docs-nav__title">{{ section.title }}</summary>
       <ul class="docs-nav__list">
         {% for item in section.items %}
         <li class="docs-nav__item">
@@ -17,7 +23,7 @@
         </li>
         {% endfor %}
       </ul>
-    </div>
+    </details>
     {% endfor %}
   </nav>
 </aside>

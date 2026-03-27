@@ -117,10 +117,18 @@
 
   &__section {
     margin-bottom: var(--spacing-lg);
+    border: 0;
+
+    // details 요소 기본 마커 제거
+    &[open] > .docs-nav__title::after {
+      transform: rotate(90deg);
+    }
   }
 
   &__title {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
@@ -128,6 +136,38 @@
     letter-spacing: 0.05em;
     padding: var(--spacing-xs) var(--spacing-sm);
     margin-bottom: var(--spacing-xs);
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+    user-select: none;
+
+    // 기본 details 마커 제거
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // 화살표 아이콘
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 0.6rem;
+      height: 0.6rem;
+      border-right: 2px solid var(--color-text-secondary);
+      border-bottom: 2px solid var(--color-text-secondary);
+      transform: rotate(-45deg);
+      transition: transform var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: var(--color-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
   }
 
   &__list {
@@ -230,6 +270,7 @@ pre[class*='language-'] {
   border-radius: var(--radius-base);
   margin: var(--spacing-md) 0;
   padding: var(--spacing-md);
+  padding-top: var(--spacing-xl);
   background: var(--color-gray-900);
   overflow-x: auto;
   font-size: var(--font-size-sm);
@@ -240,6 +281,29 @@ pre[class*='language-'] {
     background: none;
     padding: 0;
   }
+
+  // 스크롤바 스타일링
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-gray-800);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-gray-600);
+    border-radius: 3px;
+
+    &:hover {
+      background: var(--color-gray-500);
+    }
+  }
+
+  // Firefox 스크롤바
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-600) var(--color-gray-800);
 }
 
 .copy-btn {
@@ -274,8 +338,16 @@ pre[class*='language-'] {
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     line-height: var(--leading-tight);
-    margin-bottom: var(--spacing-lg);
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border-light);
     color: var(--color-text);
+
+    // 페이지 첫 h1은 상단 마진 제거
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
   h2 {
@@ -284,16 +356,18 @@ pre[class*='language-'] {
     line-height: var(--leading-tight);
     margin-top: var(--spacing-2xl);
     margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-sm);
+    border-left: 3px solid var(--color-primary);
     color: var(--color-text);
   }
 
   h3 {
     font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-bold);
     line-height: var(--leading-tight);
-    margin-top: var(--spacing-xl);
-    margin-bottom: var(--spacing-sm);
-    color: var(--color-text);
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-gray-800);
   }
 
   p {
@@ -344,9 +418,21 @@ pre[class*='language-'] {
 // ============================================
 .preview {
   margin: var(--spacing-md) 0;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-base);
   overflow: hidden;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    letter-spacing: 0.03em;
+  }
 
   &__frame {
     background: var(--color-white);
@@ -356,6 +442,7 @@ pre[class*='language-'] {
     display: block;
     width: 100%;
     border: 0;
+    background: var(--color-white);
   }
 }
 

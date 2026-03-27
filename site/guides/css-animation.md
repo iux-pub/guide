@@ -20,13 +20,13 @@ order: 5
 
 | 토큰 | 값 | 용도 |
 |------|-----|------|
-| `var(--transition-fast)` | 0.15s ease | 호버, 포커스, 작은 요소 변화 |
+| `var(--transition-fast)` | 0.1s ease | 호버, 포커스, 작은 요소 변화 |
 | `var(--transition-base)` | 0.3s ease | 일반적인 상태 변화 |
 | `var(--transition-slow)` | 0.5s ease | 모달, 페이드 인/아웃, 큰 요소 변화 |
 
 ### 토큰별 실제 적용 코드
 
-**`--transition-fast` (0.15s)** -- 호버, 포커스 등 즉각적 피드백
+**`--transition-fast` (0.1s)** -- 호버, 포커스 등 즉각적 피드백
 
 ```scss
 // 버튼 호버

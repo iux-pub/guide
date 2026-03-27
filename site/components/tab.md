@@ -42,7 +42,7 @@ preview_height: 500
 |---------|--------|------|
 | 컨테이너 | `.tab` | 탭 전체 래퍼 |
 | List | `.tab__list` | `role="tablist"`, 모바일 가로 스크롤 |
-| Button | `.tab__button` | `role="tab"`, 개별 탭 버튼 |
+| Button | `.tab__button` | `role="tab"`, 개별 탭 버튼. 패딩 12px/20px (모바일), 반응형 확대 |
 | Panel | `.tab__panel` | `role="tabpanel"`, 콘텐츠 영역 |
 
 ## 활성/비활성 상태
@@ -67,6 +67,8 @@ preview_height: 500
 - `aria-labelledby`: 패널이 참조하는 탭 버튼 id 연결
 - 비활성 탭은 `tabindex="-1"` (화살표로만 접근)
 - `tablist`에 `aria-label` 속성으로 탭 그룹 설명 제공
+- `focus-visible`: `outline: 2px solid` + `outline-offset: 2px`
+- `prefers-reduced-motion` 대응
 
 ## JS / SCSS 파일
 

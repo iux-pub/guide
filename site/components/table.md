@@ -72,6 +72,8 @@ preview_height: 500
 - 헤더 셀에 `scope="col"` 또는 `scope="row"` 필수 지정
 - 빈 상태 시 `<td colspan="">` 안내 텍스트 제공
 - 반응형 래퍼 `.table__wrapper`로 모바일 가로 스크롤 지원
+- 기본 폰트 16px
+- 반응형 패딩: th/td 모바일/태블릿/PC 차등
 
 ## SCSS 파일
 

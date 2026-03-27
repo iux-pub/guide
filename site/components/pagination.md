@@ -69,6 +69,9 @@ preview_height: 300
 - 각 숫자에 `aria-label="페이지 N"` 제공
 - 현재 페이지에 `aria-current="page"` 필수
 - 비활성 상태는 `<span>` + `aria-disabled="true"` 사용
+- 링크 최소 44x44px 터치 타겟
+- 링크 간 간격 8px (`--spacing-sm`)
+- `prefers-reduced-motion` 대응
 
 ## SCSS 파일
 

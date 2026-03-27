@@ -61,6 +61,9 @@ preview_height: 200
 - 현재 위치는 `<span>` 사용 (링크가 아닌 현재 페이지)
 - 구분자는 CSS `::before`로 처리 (스크린리더 자동 무시)
 - 모바일에서 `.breadcrumb__item--mobile-hidden`으로 상위 경로 숨김
+- 아이템 간 간격 8px (`--spacing-sm`)
+- `prefers-reduced-motion` 대응
+- 태블릿 이상 폰트 16px
 
 ## SCSS 파일
 

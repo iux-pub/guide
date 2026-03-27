@@ -65,6 +65,13 @@ preview_height: 600
 - 카드 제목은 적절한 heading 레벨 사용
 - 카드 전체가 링크인 경우 제목에 링크를 걸고 `::after`로 클릭 영역 확장 권장
 
+## 인터랙션
+
+- hover 시 `box-shadow: var(--shadow-lg)` + `transform: translateY(-0.2rem)` 효과
+- `transition: box-shadow, transform var(--transition-base)`
+- `prefers-reduced-motion: reduce` 시 transition 비활성화
+- 반응형 패딩: header/body/footer가 모바일/태블릿/PC에서 차등 적용
+
 ## SCSS 파일
 
 `src/scss/6-components/_card.scss`

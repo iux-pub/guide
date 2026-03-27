@@ -90,6 +90,10 @@ preview_height: 800
 - 에러 메시지에 `role="alert"` 추가
 - 필수 필드는 `required` 속성 + `.form__label--required` 동시 적용
 - 체크박스/라디오는 `<label>` 래퍼로 감싸 클릭 영역 확대
+- `:focus-visible` + `outline: 2px solid` + `outline-offset: 2px` 포커스 링 (고대비 모드 호환)
+- `prefers-reduced-motion` 대응
+- 반응형 패딩: 인풋 영역이 모바일/태블릿/PC에서 차등
+- 레이블 폰트 16px (`--font-size-base`)
 
 ## SCSS 파일
 

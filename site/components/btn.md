@@ -51,6 +51,8 @@ preview_height: 500
 - 비활성 버튼은 `disabled` 속성을 사용한다
 - 최소 터치 영역 44px x 44px 보장
 - `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary)`
+- `prefers-reduced-motion` 대응
+- 반응형 패딩 차등
 
 ## SCSS 파일
 

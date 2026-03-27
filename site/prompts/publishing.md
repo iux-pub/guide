@@ -159,7 +159,7 @@ src/scss/
 - **간격:** `var(--spacing-*)` -- xs(4)/sm(8)/md(16)/lg(24)/xl(32)/2xl(48)/3xl(64)
 - **반지름:** `var(--radius-*)` -- sm(4)/base(8)/lg(12)/xl(16)/full(9999)
 - **그림자:** `var(--shadow-*)` -- sm/base/lg
-- **트랜지션:** `var(--transition-*)` -- fast(0.15s)/base(0.3s)/slow(0.5s)
+- **트랜지션:** `var(--transition-*)` -- fast(0.1s)/base(0.3s)/slow(0.5s)
 - **z-index:** `var(--z-*)` -- dropdown(100)/sticky(200)/fixed(300)/modal-backdrop(400)/modal(500)/toast(600)
 
 ---

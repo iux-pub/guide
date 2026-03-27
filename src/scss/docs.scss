@@ -48,9 +48,10 @@
     display: none;
     width: 28rem;
     min-width: 28rem;
-    border-right: 1px solid var(--color-border-light);
-    background: var(--color-bg-secondary);
+    border-right: 1px solid var(--color-border);
+    background: var(--color-gray-50);
     padding: var(--spacing-lg) 0;
+    box-shadow: 1px 0 3px rgb(0 0 0 / 3%);
 
     @include resp.respond-to('tablet-up') {
       display: block;
@@ -75,11 +76,11 @@
   &__content {
     flex: 1;
     min-width: 0;
-    padding: var(--spacing-lg) var(--spacing-md);
+    padding: var(--spacing-xl) var(--spacing-md);
     max-width: 80rem;
 
     @include resp.respond-to('tablet-up') {
-      padding: var(--spacing-2xl) var(--spacing-xl);
+      padding: var(--spacing-3xl) var(--spacing-2xl);
     }
   }
 }
@@ -94,25 +95,32 @@
     display: flex;
     align-items: baseline;
     gap: var(--spacing-sm);
-    padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
     text-decoration: none;
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border);
     margin-bottom: var(--spacing-md);
+    transition: opacity var(--transition-fast);
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 
   &__brand-title {
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary);
+    color: var(--color-primary-dark);
+    letter-spacing: -0.02em;
   }
 
   &__brand-version {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    background-color: var(--color-bg-secondary);
-    padding: 0.1rem var(--spacing-xs);
-    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+    background: rgb(37 110 244 / 8%);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    line-height: 1;
   }
 
   &__section {
@@ -196,8 +204,10 @@
 
     &--active {
       color: var(--color-primary);
-      font-weight: var(--font-weight-medium);
-      background: var(--color-bg);
+      font-weight: var(--font-weight-semibold);
+      background: rgb(37 110 244 / 6%);
+      border-left: 2px solid var(--color-primary);
+      padding-left: calc(var(--spacing-sm) - 2px);
     }
   }
 }
@@ -393,23 +403,83 @@ pre[class*='language-'] {
     border-radius: var(--radius-sm);
   }
 
+  // 링크 스타일
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--transition-fast);
+
+    &:hover {
+      border-bottom-color: var(--color-primary);
+    }
+  }
+
+  // 인라인 코드 개선
+  code {
+    font-family: 'JetBrains Mono', SFMono-Regular, Consolas, monospace;
+    font-size: 0.88em;
+    background: var(--color-gray-100);
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-light);
+  }
+
+  // 테이블 개선
   table {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: var(--spacing-md);
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: var(--spacing-lg);
     font-size: var(--font-size-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-base);
+    overflow: hidden;
 
     th,
     td {
-      padding: var(--spacing-sm);
-      border: 1px solid var(--color-border);
+      padding: var(--spacing-sm) var(--spacing-md);
       text-align: left;
+      border-bottom: 1px solid var(--color-border-light);
     }
 
     th {
-      background: var(--color-bg-secondary);
+      background: var(--color-gray-50);
       font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-800);
+      font-size: var(--font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:hover {
+      background: var(--color-bg-secondary);
+    }
+  }
+
+  // 블록인용 스타일
+  blockquote {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-left: 4px solid var(--color-primary-light);
+    background: var(--color-bg-secondary);
+    border-radius: 0 var(--radius-base) var(--radius-base) 0;
+    color: var(--color-gray-700);
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // 수평선
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    margin: var(--spacing-2xl) 0;
   }
 }
 

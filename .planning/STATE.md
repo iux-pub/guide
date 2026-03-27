@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: 콘텐츠 정제 + 사이트 디자인 고도화
-status: Ready to plan
-stopped_at: v1.4 로드맵 생성 완료
-last_updated: "2026-03-27"
+status: planning
+stopped_at: v1.4 로드맵 생성 완료, Phase 23 계획 대기
+last_updated: "2026-03-27T00:38:53.383Z"
 last_activity: 2026-03-27
 progress:
   total_phases: 24
-  completed_phases: 22
-  total_plans: 25
+  completed_phases: 7
+  total_plans: 19
   completed_plans: 25
   percent: 92
 ---
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 
 ## Current Position
 
-Phase: 23 of 24 (콘텐츠 재작성)
+Phase: 24 of 24 (site design upgrade)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-03-27 -- v1.4 로드맵 생성
+Last activity: 2026-03-27
 
 Progress: [██████████████████░░] ~92% (v0.8-v1.3 complete, v1.4 Phase 23 대기)
 

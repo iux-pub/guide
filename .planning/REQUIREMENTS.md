@@ -253,19 +253,19 @@
 ### 반응형 개선 (RESP)
 
 - [ ] **RESP-01**: btn, form, card, table, modal, tab, pagination, breadcrumb에 모바일/태블릿/PC 반응형 패딩 차등 적용
-- [ ] **RESP-02**: 모달 반응형 전환 개선 — 모바일 풀스크린↔데스크탑 간 부드러운 전환(중간 태블릿 단계 추가)
+- [x] **RESP-02**: 모달 반응형 전환 개선 — 모바일 풀스크린↔데스크탑 간 부드러운 전환(중간 태블릿 단계 추가)
 - [ ] **RESP-03**: 브레드크럼 반응형 표시/숨김 부드러운 처리
 
 ### 인터랙션 구현 (MOTION)
 
-- [ ] **MOTION-01**: 모달 열림 애니메이션 구현 (scale 0.95→1 + opacity 0→1, 300ms spring)
-- [ ] **MOTION-02**: 인터랙티브 카드 hover 효과 구현 (shadow 확대 + translateY -2px)
+- [x] **MOTION-01**: 모달 열림 애니메이션 구현 (scale 0.95→1 + opacity 0→1, 300ms spring)
+- [x] **MOTION-02**: 인터랙티브 카드 hover 효과 구현 (shadow 확대 + translateY -2px)
 
 ### 사이즈 현대화 (SIZE)
 
 - [ ] **SIZE-01**: 폼 라벨, 테이블 기본 폰트 등 최소 기준을 16px(var(--font-size-base))로 상향
 - [ ] **SIZE-02**: 탭 버튼 패딩 확대 (수직 8px→12px, 수평 16px→20px)
-- [ ] **SIZE-03**: 카드/모달/테이블 등 내부 여백을 컴포넌트 특성에 맞게 확대 (시원시원한 현대적 느낌)
+- [x] **SIZE-03**: 카드/모달/테이블 등 내부 여백을 컴포넌트 특성에 맞게 확대 (시원시원한 현대적 느낌)
 - [ ] **SIZE-04**: 변경된 사이즈/여백을 playground HTML 미리보기에 반영
 
 ## v2 Requirements
@@ -451,13 +451,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | A11YFIX-06 | Phase 25 | Pending |
 | TOKFIX-01 | Phase 25 | Complete |
 | RESP-01 | Phase 26 | Pending |
-| RESP-02 | Phase 26 | Pending |
+| RESP-02 | Phase 26 | Complete |
 | RESP-03 | Phase 26 | Pending |
-| MOTION-01 | Phase 26 | Pending |
-| MOTION-02 | Phase 26 | Pending |
+| MOTION-01 | Phase 26 | Complete |
+| MOTION-02 | Phase 26 | Complete |
 | SIZE-01 | Phase 26 | Pending |
 | SIZE-02 | Phase 26 | Pending |
-| SIZE-03 | Phase 26 | Pending |
+| SIZE-03 | Phase 26 | Complete |
 | SIZE-04 | Phase 27 | Pending |
 | TOKFIX-02 | Phase 27 | Pending |
 

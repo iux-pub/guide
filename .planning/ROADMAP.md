@@ -306,7 +306,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [ ] 26-01-PLAN.md -- 6개 컴포넌트 반응형 패딩 + 폰트/탭 사이즈 상향
-- [ ] 26-02-PLAN.md -- 카드 hover + 모달 애니메이션 + 여백 확대
+- [x] 26-02-PLAN.md -- 카드 hover + 모달 애니메이션 + 여백 확대
 **UI hint**: yes
 
 ### Phase 27: 문서/플레이그라운드 동기화
@@ -356,5 +356,5 @@ Phases execute in numeric order: 25 -> 26 -> 27
 | 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete | 2026-03-27 |
 | 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete | 2026-03-27 |
 | 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | Complete    | 2026-03-27 |
-| 26. SCSS 현대화 | v1.5 | 0/2 | Not started | - |
+| 26. SCSS 현대화 | v1.5 | 1/2 | In Progress|  |
 | 27. 문서/플레이그라운드 동기화 | v1.5 | 0/TBD | Not started | - |

@@ -234,6 +234,40 @@
 - [ ] **UI-03**: docs.scss 코드 블록 — 파일명 표시 바, 줄번호 옵션, 복사 버튼 위치 개선
 - [ ] **UI-04**: docs.scss 컴포넌트 미리보기 — iframe 영역 테두리/배경 구분, "코드 보기/미리보기" 탭 전환
 
+## v1.5 Requirements
+
+### 접근성 준수 (A11YFIX)
+
+- [ ] **A11YFIX-01**: 모달 닫기 버튼 터치 타겟을 44x44px 이상으로 수정 (현재 40px)
+- [ ] **A11YFIX-02**: 페이지네이션 링크 터치 타겟을 44x44px 이상으로 수정 (현재 40px)
+- [ ] **A11YFIX-03**: 페이지네이션 링크 간 간격을 8px 이상으로 수정 (현재 4px)
+- [ ] **A11YFIX-04**: 브레드크럼 아이템 간 간격을 8px 이상으로 수정 (현재 4px)
+- [ ] **A11YFIX-05**: 전 컴포넌트(btn, form, card, modal, tab, pagination, breadcrumb)에 `prefers-reduced-motion` 미디어 쿼리 적용
+- [ ] **A11YFIX-06**: 포커스 링 스타일을 전 컴포넌트에서 `:focus-visible` + `outline: 2px solid` + `outline-offset: 2px`로 통일
+
+### 토큰 정합 (TOKFIX)
+
+- [ ] **TOKFIX-01**: `--transition-fast` 토큰 값과 문서(interaction-timing.md) 간 정합 — 하나의 값으로 통일
+- [ ] **TOKFIX-02**: 변경된 토큰/규칙을 문서(site/), 프롬프트(prompts/), 스니펫(src/snippets/) 전체에 역갱신
+
+### 반응형 개선 (RESP)
+
+- [ ] **RESP-01**: btn, form, card, table, modal, tab, pagination, breadcrumb에 모바일/태블릿/PC 반응형 패딩 차등 적용
+- [ ] **RESP-02**: 모달 반응형 전환 개선 — 모바일 풀스크린↔데스크탑 간 부드러운 전환(중간 태블릿 단계 추가)
+- [ ] **RESP-03**: 브레드크럼 반응형 표시/숨김 부드러운 처리
+
+### 인터랙션 구현 (MOTION)
+
+- [ ] **MOTION-01**: 모달 열림 애니메이션 구현 (scale 0.95→1 + opacity 0→1, 300ms spring)
+- [ ] **MOTION-02**: 인터랙티브 카드 hover 효과 구현 (shadow 확대 + translateY -2px)
+
+### 사이즈 현대화 (SIZE)
+
+- [ ] **SIZE-01**: 폼 라벨, 테이블 기본 폰트 등 최소 기준을 16px(var(--font-size-base))로 상향
+- [ ] **SIZE-02**: 탭 버튼 패딩 확대 (수직 8px→12px, 수평 16px→20px)
+- [ ] **SIZE-03**: 카드/모달/테이블 등 내부 여백을 컴포넌트 특성에 맞게 확대 (시원시원한 현대적 느낌)
+- [ ] **SIZE-04**: 변경된 사이즈/여백을 playground HTML 미리보기에 반영
+
 ## v2 Requirements
 
 ### 확장 기능

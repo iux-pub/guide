@@ -248,7 +248,7 @@
 ### 토큰 정합 (TOKFIX)
 
 - [x] **TOKFIX-01**: `--transition-fast` 토큰 값과 문서(interaction-timing.md) 간 정합 — 하나의 값으로 통일
-- [ ] **TOKFIX-02**: 변경된 토큰/규칙을 문서(site/), 프롬프트(prompts/), 스니펫(src/snippets/) 전체에 역갱신
+- [x] **TOKFIX-02**: 변경된 토큰/규칙을 문서(site/), 프롬프트(prompts/), 스니펫(src/snippets/) 전체에 역갱신
 
 ### 반응형 개선 (RESP)
 
@@ -459,7 +459,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SIZE-02 | Phase 26 | Complete |
 | SIZE-03 | Phase 26 | Complete |
 | SIZE-04 | Phase 27 | Pending |
-| TOKFIX-02 | Phase 27 | Pending |
+| TOKFIX-02 | Phase 27 | Complete |
 
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)

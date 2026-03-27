@@ -291,7 +291,7 @@
 **Plans**: 2 plans
 Plans:
 - [x] 25-01-PLAN.md -- 토큰 값 정합 + 터치 타겟/간격 수정
-- [ ] 27-02-PLAN.md -- site/ 문서 갱신 + CSS 빌드 + npm test
+- [x] 27-02-PLAN.md -- site/ 문서 갱신 + CSS 빌드 + npm test
 
 ### Phase 26: SCSS 현대화
 **Goal**: 8개 컴포넌트의 반응형 패딩, 인터랙션 애니메이션, 폰트/여백 사이즈가 현대적 수준으로 개선되어 실제 프로젝트 투입 시 바로 사용 가능한 품질을 갖춘다
@@ -321,7 +321,7 @@ Plans:
   5. `npm test` (lint + a11y)가 통과한다
 **Plans**: 2 plans
 Plans:
-- [ ] 27-01-PLAN.md -- 스니펫 + 프롬프트 + CLAUDE.md 역갱신
+- [x] 27-01-PLAN.md -- 스니펫 + 프롬프트 + CLAUDE.md 역갱신
 - [ ] 27-02-PLAN.md -- site/ 문서 갱신 + CSS 빌드 + npm test
 
 ## Progress
@@ -357,4 +357,4 @@ Phases execute in numeric order: 25 -> 26 -> 27
 | 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete | 2026-03-27 |
 | 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | Complete    | 2026-03-27 |
 | 26. SCSS 현대화 | v1.5 | 2/2 | Complete    | 2026-03-27 |
-| 27. 문서/플레이그라운드 동기화 | v1.5 | 0/TBD | Not started | - |
+| 27. 문서/플레이그라운드 동기화 | v1.5 | 2/2 | Complete   | 2026-03-27 |

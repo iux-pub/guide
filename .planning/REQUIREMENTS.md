@@ -219,6 +219,21 @@
 
 - [ ] **CONTENT-01**: 71페이지 중 100줄 미만 얇은 페이지 식별 + 보강 (최소 기준: 제목 + 개요 + 본문 내용 + 예제)
 
+## v1.4 Requirements
+
+### 콘텐츠 재작성 (REWRITE)
+
+- [ ] **REWRITE-01**: design/aesthetics.md 재작성 — 추상적 원칙 → 실제 프로젝트 사례(Before/After), INFOMIND 제품별 적용 예시로 교체
+- [ ] **REWRITE-02**: design/icon-system.md 보강 — Lucide 라이브러리 링크, 실제 사용 코드(`<svg>` 인라인 + aria-hidden), 컨텍스트별 크기 예제
+- [ ] **REWRITE-03**: guides/css-animation.md 보강 — 각 전환 토큰의 실제 CSS transition/animation 코드 예제 추가
+
+### 사이트 디자인 고도화 (UI)
+
+- [ ] **UI-01**: docs.scss 사이드바 아코디언 — 섹션별 펼침/닫힘, 현재 섹션 자동 열림
+- [ ] **UI-02**: docs.scss 콘텐츠 영역 — heading 스타일 개선(h1 밑줄, h2 좌측 포인트), 본문 줄간격/여백 최적화
+- [ ] **UI-03**: docs.scss 코드 블록 — 파일명 표시 바, 줄번호 옵션, 복사 버튼 위치 개선
+- [ ] **UI-04**: docs.scss 컴포넌트 미리보기 — iframe 영역 테두리/배경 구분, "코드 보기/미리보기" 탭 전환
+
 ## v2 Requirements
 
 ### 확장 기능

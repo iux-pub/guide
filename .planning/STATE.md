@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: 디자인 역량 강화
-status: planning
-stopped_at: v1.3 로드맵 생성 완료, Phase 21 계획 대기
+milestone: v1.4
+milestone_name: 콘텐츠 정제 + 사이트 디자인 고도화
+status: Defining requirements
+stopped_at: v1.4 마일스톤 시작
 last_updated: "2026-03-26T22:12:35.011Z"
 last_activity: 2026-03-26
 progress:

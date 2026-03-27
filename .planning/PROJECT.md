@@ -8,15 +8,13 @@
 
 신규 프로젝트 시작 시 디자인/퍼블리싱 규칙을 처음부터 다시 정하지 않고, 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
 
-## Current Milestone: v1.3 핵심 경화 (Hardening)
+## Current Milestone: v1.4 콘텐츠 정제 + 사이트 디자인 고도화
 
-**Goal:** 규모 확장 없이 기존 산출물의 신뢰성을 프로덕션 수준으로 끌어올림
+**Goal:** 감사에서 발견된 약한 콘텐츠 3건 재작성 + 가이드 웹사이트 자체의 시각적 품질을 프로페셔널 수준으로 끌어올림
 
 **Target features:**
-- 빌드 시스템 정비 (serve CSS 핫리로드, worktree 정리, .gitignore 강화)
-- starter kit 실증 (클린 clone → build → lint → a11y 전체 통과)
-- 콘텐츠 품질 감사 (얇은 페이지 식별 + 보강)
-- e2e 검증 자동화 (npm test 한 명령으로 전체 검증)
+- 콘텐츠 재작성: aesthetics.md(구체적 사례), icon-system.md(라이브러리+사용법), css-animation.md(코드 예제)
+- 사이트 디자인 고도화: 사이드바 아코디언, 콘텐츠 영역 타이포/여백 개선, 코드 블록 디자인, 컴포넌트 미리보기 영역 시각 개선
 - 기여 가이드 + 거버넌스 문서
 
 ## Requirements

@@ -223,16 +223,16 @@
 
 ### 콘텐츠 재작성 (REWRITE)
 
-- [ ] **REWRITE-01**: design/aesthetics.md 재작성 — 추상적 원칙 → 실제 프로젝트 사례(Before/After), INFOMIND 제품별 적용 예시로 교체
-- [ ] **REWRITE-02**: design/icon-system.md 보강 — Lucide 라이브러리 링크, 실제 사용 코드(`<svg>` 인라인 + aria-hidden), 컨텍스트별 크기 예제
-- [ ] **REWRITE-03**: guides/css-animation.md 보강 — 각 전환 토큰의 실제 CSS transition/animation 코드 예제 추가
+- [x] **REWRITE-01**: design/aesthetics.md 재작성 — 추상적 원칙 → 실제 프로젝트 사례(Before/After), INFOMIND 제품별 적용 예시로 교체
+- [x] **REWRITE-02**: design/icon-system.md 보강 — Lucide 라이브러리 링크, 실제 사용 코드(`<svg>` 인라인 + aria-hidden), 컨텍스트별 크기 예제
+- [x] **REWRITE-03**: guides/css-animation.md 보강 — 각 전환 토큰의 실제 CSS transition/animation 코드 예제 추가
 
 ### 사이트 디자인 고도화 (UI)
 
-- [ ] **UI-01**: docs.scss 사이드바 아코디언 — 섹션별 펼침/닫힘, 현재 섹션 자동 열림
-- [ ] **UI-02**: docs.scss 콘텐츠 영역 — heading 스타일 개선(h1 밑줄, h2 좌측 포인트), 본문 줄간격/여백 최적화
-- [ ] **UI-03**: docs.scss 코드 블록 — 파일명 표시 바, 줄번호 옵션, 복사 버튼 위치 개선
-- [ ] **UI-04**: docs.scss 컴포넌트 미리보기 — iframe 영역 테두리/배경 구분, "코드 보기/미리보기" 탭 전환
+- [x] **UI-01**: docs.scss 사이드바 아코디언 — 섹션별 펼침/닫힘, 현재 섹션 자동 열림
+- [x] **UI-02**: docs.scss 콘텐츠 영역 — heading 스타일 개선(h1 밑줄, h2 좌측 포인트), 본문 줄간격/여백 최적화
+- [x] **UI-03**: docs.scss 코드 블록 — 파일명 표시 바, 줄번호 옵션, 복사 버튼 위치 개선
+- [x] **UI-04**: docs.scss 컴포넌트 미리보기 — iframe 영역 테두리/배경 구분, "코드 보기/미리보기" 탭 전환
 
 ## v1.5 Requirements
 
@@ -427,17 +427,39 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STARTER-02 | Phase 21 | Complete |
 | CONTENT-01 | Phase 22 | Complete |
 
-### v1.4 (In Progress)
+### v1.4 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| REWRITE-01 | Phase 23 | Pending |
-| REWRITE-02 | Phase 23 | Pending |
-| REWRITE-03 | Phase 23 | Pending |
-| UI-01 | Phase 24 | Pending |
-| UI-02 | Phase 24 | Pending |
-| UI-03 | Phase 24 | Pending |
-| UI-04 | Phase 24 | Pending |
+| REWRITE-01 | Phase 23 | Complete |
+| REWRITE-02 | Phase 23 | Complete |
+| REWRITE-03 | Phase 23 | Complete |
+| UI-01 | Phase 24 | Complete |
+| UI-02 | Phase 24 | Complete |
+| UI-03 | Phase 24 | Complete |
+| UI-04 | Phase 24 | Complete |
+
+### v1.5 (In Progress)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| A11YFIX-01 | Phase 25 | Pending |
+| A11YFIX-02 | Phase 25 | Pending |
+| A11YFIX-03 | Phase 25 | Pending |
+| A11YFIX-04 | Phase 25 | Pending |
+| A11YFIX-05 | Phase 25 | Pending |
+| A11YFIX-06 | Phase 25 | Pending |
+| TOKFIX-01 | Phase 25 | Pending |
+| RESP-01 | Phase 26 | Pending |
+| RESP-02 | Phase 26 | Pending |
+| RESP-03 | Phase 26 | Pending |
+| MOTION-01 | Phase 26 | Pending |
+| MOTION-02 | Phase 26 | Pending |
+| SIZE-01 | Phase 26 | Pending |
+| SIZE-02 | Phase 26 | Pending |
+| SIZE-03 | Phase 26 | Pending |
+| SIZE-04 | Phase 27 | Pending |
+| TOKFIX-02 | Phase 27 | Pending |
 
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)
@@ -447,9 +469,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1.1 requirements: 7 total (all complete)
 - v1.2 requirements: 7 total (all complete)
 - v1.3 requirements: 7 total (all complete)
-- v1.4 requirements: 7 total (mapped: 7)
+- v1.4 requirements: 7 total (all complete)
+- v1.5 requirements: 16 total (mapped: 16)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-27 -- v1.4 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-27 -- v1.5 로드맵 생성, 트레이서빌리티 업데이트*

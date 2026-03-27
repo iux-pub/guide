@@ -9,7 +9,8 @@
 - [x] **v1.1 시스템 고도화** - Phases 16-18 (complete)
 - [x] **v1.2 디자인 역량 강화** - Phases 19-20 (complete)
 - [x] **v1.3 핵심 경화** - Phases 21-22 (complete)
-- [ ] **v1.4 콘텐츠 정제 + 사이트 디자인 고도화** - Phases 23-24 (in progress)
+- [x] **v1.4 콘텐츠 정제 + 사이트 디자인 고도화** - Phases 23-24 (complete)
+- [ ] **v1.5 컴포넌트 실질 품질 강화** - Phases 25-27 (in progress)
 
 ## Phases
 
@@ -77,10 +78,19 @@
 
 </details>
 
-### v1.4 콘텐츠 정제 + 사이트 디자인 고도화
+<details>
+<summary>v1.4 콘텐츠 정제 + 사이트 디자인 고도화 (Phases 23-24) - COMPLETE</summary>
 
-- [ ] **Phase 23: 콘텐츠 재작성** - 감사에서 발견된 약한 콘텐츠 3건(aesthetics, icon-system, css-animation) 재작성
-- [ ] **Phase 24: 사이트 디자인 고도화** - 사이드바 아코디언, 타이포/여백, 코드 블록, 컴포넌트 미리보기 시각 개선
+- [x] **Phase 23: 콘텐츠 재작성** - 감사에서 발견된 약한 콘텐츠 3건(aesthetics, icon-system, css-animation) 재작성
+- [x] **Phase 24: 사이트 디자인 고도화** - 사이드바 아코디언, 타이포/여백, 코드 블록, 컴포넌트 미리보기 시각 개선
+
+</details>
+
+### v1.5 컴포넌트 실질 품질 강화
+
+- [ ] **Phase 25: 접근성 수정 + 토큰 정합** - 터치 타겟/간격 수정, prefers-reduced-motion 적용, 포커스 링 통일, 토큰 값 정합
+- [ ] **Phase 26: SCSS 현대화** - 반응형 패딩 차등 적용, 인터랙션 애니메이션, 폰트/여백 사이즈 확대
+- [ ] **Phase 27: 문서/플레이그라운드 동기화** - playground HTML 반영 + 문서/프롬프트/스니펫 역갱신
 
 ## Phase Details
 
@@ -251,34 +261,64 @@
 
 </details>
 
+<details>
+<summary>v1.4 Phase Details (Complete)</summary>
+
 ### Phase 23: 콘텐츠 재작성
 **Goal**: 감사에서 발견된 약한 콘텐츠 3건이 구체적 사례, 코드 예제, 실무 활용법 중심으로 재작성되어 가이드로서의 실질적 가치를 갖춘다
 **Depends on**: Phase 22 (콘텐츠 감사에서 약한 페이지가 식별된 상태)
 **Requirements**: REWRITE-01, REWRITE-02, REWRITE-03
-**Success Criteria** (what must be TRUE):
-  1. `design/aesthetics.md`가 추상적 원칙 나열이 아닌 실제 프로젝트 Before/After 사례와 INFOMIND 제품별 적용 예시를 포함하고 있다
-  2. `design/icon-system.md`가 Lucide 라이브러리 링크, `<svg>` 인라인 + `aria-hidden` 실제 사용 코드, 컨텍스트별(버튼/네비/폼) 크기 예제를 제공한다
-  3. `guides/css-animation.md`가 각 전환 토큰(`--transition-fast`, `--transition-base`, `--transition-slow`)의 실제 CSS transition/animation 코드 예제를 포함하고 있다
-  4. 재작성된 3개 파일이 `npm test`(lint + a11y)를 통과한다
-**Plans**: TBD
+**Status**: Complete
 
 ### Phase 24: 사이트 디자인 고도화
 **Goal**: 가이드 웹사이트 자체의 시각적 품질이 프로페셔널 수준으로 향상되어, 사이드바 탐색/콘텐츠 가독성/코드 블록 사용성/컴포넌트 미리보기가 개선된다
 **Depends on**: Phase 23 (콘텐츠가 확정된 후 디자인 개선)
 **Requirements**: UI-01, UI-02, UI-03, UI-04
+**Status**: Complete
+
+</details>
+
+### Phase 25: 접근성 수정 + 토큰 정합
+**Goal**: 컴포넌트 SCSS의 접근성 미달 항목(터치 타겟, 간격, reduced-motion, 포커스 링)이 수정되고, 토큰 값과 문서 간 불일치가 해소된다
+**Depends on**: Phase 24 (v1.4 완료 기반)
+**Requirements**: A11YFIX-01, A11YFIX-02, A11YFIX-03, A11YFIX-04, A11YFIX-05, A11YFIX-06, TOKFIX-01
 **Success Criteria** (what must be TRUE):
-  1. 사이드바가 섹션별 아코디언으로 동작하며, 현재 보고 있는 페이지의 섹션이 자동으로 열려 있다
-  2. 콘텐츠 영역의 h1에 밑줄 장식이, h2에 좌측 컬러 포인트가 적용되어 있고, 본문 줄간격과 여백이 가독성에 최적화되어 있다
-  3. 코드 블록에 파일명 표시 바가 있고, 복사 버튼이 코드 블록 우측 상단에 위치하며, 줄번호 옵션이 지원된다
-  4. 컴포넌트 미리보기 영역이 테두리/배경으로 본문과 시각적으로 구분되며, "코드 보기/미리보기" 탭 전환이 동작한다
-  5. 디자인 개선 후 기존 KWCAG/WCAG AA 접근성 수준이 유지된다 (`npm test` 통과)
+  1. 모달 닫기 버튼, 페이지네이션 링크의 터치 타겟이 44x44px 이상이며, 페이지네이션 링크 간격이 8px 이상이다
+  2. 브레드크럼 아이템 간 간격이 8px 이상이다
+  3. btn, form, card, modal, tab, pagination, breadcrumb 7개 컴포넌트 SCSS에 `prefers-reduced-motion: reduce` 미디어 쿼리가 적용되어, 해당 설정 시 모든 transition/animation이 비활성화된다
+  4. 7개 컴포넌트의 포커스 스타일이 `:focus-visible` + `outline: 2px solid` + `outline-offset: 2px`로 통일되어 있다
+  5. `--transition-fast` 토큰 값이 SCSS 파일과 `interaction-timing.md` 문서에서 동일한 값으로 정합되어 있다
+**Plans**: TBD
+
+### Phase 26: SCSS 현대화
+**Goal**: 8개 컴포넌트의 반응형 패딩, 인터랙션 애니메이션, 폰트/여백 사이즈가 현대적 수준으로 개선되어 실제 프로젝트 투입 시 바로 사용 가능한 품질을 갖춘다
+**Depends on**: Phase 25 (접근성/토큰 기반이 정리된 상태)
+**Requirements**: RESP-01, RESP-02, RESP-03, MOTION-01, MOTION-02, SIZE-01, SIZE-02, SIZE-03
+**Success Criteria** (what must be TRUE):
+  1. btn, form, card, table, modal, tab, pagination, breadcrumb 8개 컴포넌트가 모바일/태블릿/PC 각각 다른 패딩을 가지며, respond-to 믹스인으로 작성되어 있다
+  2. 모달이 열릴 때 scale 0.95->1 + opacity 0->1 애니메이션이 300ms 동안 재생된다
+  3. 카드에 hover 시 shadow가 확대되고 translateY -2px 효과가 적용된다
+  4. 폼 라벨, 테이블 기본 폰트가 16px(var(--font-size-base)) 이상이며, 탭 버튼 패딩이 수직 12px/수평 20px 이상이다
+  5. 카드/모달/테이블 등의 내부 여백이 이전보다 확대되어 시원시원한 느낌을 준다
 **Plans**: TBD
 **UI hint**: yes
+
+### Phase 27: 문서/플레이그라운드 동기화
+**Goal**: Phase 25-26에서 변경된 SCSS가 playground HTML, 문서 사이트, 프롬프트, 스니펫에 모두 반영되어 코드와 문서가 100% 일치한다
+**Depends on**: Phase 26 (모든 SCSS 변경이 완료된 상태)
+**Requirements**: SIZE-04, TOKFIX-02
+**Success Criteria** (what must be TRUE):
+  1. playground HTML 미리보기에서 변경된 사이즈/여백이 시각적으로 반영되어 있다 (모달 애니메이션, 카드 hover, 확대된 패딩/폰트 확인 가능)
+  2. src/snippets/ 마크다운 파일의 코드 예제가 실제 SCSS 구현과 일치한다
+  3. prompts/ 디렉토리의 AI 프롬프트가 변경된 토큰 값/규칙을 반영하고 있다
+  4. site/ 문서 페이지(컴포넌트, 접근성, 가이드)가 변경된 규칙을 반영하고 있다
+  5. `npm test` (lint + a11y)가 통과한다
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 23 -> 24
+Phases execute in numeric order: 25 -> 26 -> 27
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -304,5 +344,8 @@ Phases execute in numeric order: 23 -> 24
 | 20. 문서 사이트 통합 | v1.2 | 0/TBD | Complete | 2026-03-26 |
 | 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Complete | 2026-03-26 |
 | 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete | 2026-03-26 |
-| 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete    | 2026-03-27 |
-| 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete    | 2026-03-27 |
+| 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete | 2026-03-27 |
+| 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete | 2026-03-27 |
+| 25. 접근성 수정 + 토큰 정합 | v1.5 | 0/TBD | Not started | - |
+| 26. SCSS 현대화 | v1.5 | 0/TBD | Not started | - |
+| 27. 문서/플레이그라운드 동기화 | v1.5 | 0/TBD | Not started | - |

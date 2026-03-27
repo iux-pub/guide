@@ -8,7 +8,7 @@ ITCSS + BEM + 디자인 토큰 기반 SCSS 프로젝트 시작 템플릿
 
 ```bash
 # 1. 스타터 킷 복사
-git clone <저장소 URL> 프로젝트명
+git clone https://github.com/iux-pub/guide.git 프로젝트명
 cd 프로젝트명
 
 # 2. 의존성 설치
@@ -139,4 +139,4 @@ src/scss/
 
 ## 참고 문서
 
-전체 가이드: [인포마인드 UX 가이드 사이트] 참조
+전체 가이드: https://github.com/iux-pub/guide 참조

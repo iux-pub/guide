@@ -238,16 +238,16 @@
 
 ### 접근성 준수 (A11YFIX)
 
-- [ ] **A11YFIX-01**: 모달 닫기 버튼 터치 타겟을 44x44px 이상으로 수정 (현재 40px)
-- [ ] **A11YFIX-02**: 페이지네이션 링크 터치 타겟을 44x44px 이상으로 수정 (현재 40px)
-- [ ] **A11YFIX-03**: 페이지네이션 링크 간 간격을 8px 이상으로 수정 (현재 4px)
-- [ ] **A11YFIX-04**: 브레드크럼 아이템 간 간격을 8px 이상으로 수정 (현재 4px)
+- [x] **A11YFIX-01**: 모달 닫기 버튼 터치 타겟을 44x44px 이상으로 수정 (현재 40px)
+- [x] **A11YFIX-02**: 페이지네이션 링크 터치 타겟을 44x44px 이상으로 수정 (현재 40px)
+- [x] **A11YFIX-03**: 페이지네이션 링크 간 간격을 8px 이상으로 수정 (현재 4px)
+- [x] **A11YFIX-04**: 브레드크럼 아이템 간 간격을 8px 이상으로 수정 (현재 4px)
 - [ ] **A11YFIX-05**: 전 컴포넌트(btn, form, card, modal, tab, pagination, breadcrumb)에 `prefers-reduced-motion` 미디어 쿼리 적용
 - [ ] **A11YFIX-06**: 포커스 링 스타일을 전 컴포넌트에서 `:focus-visible` + `outline: 2px solid` + `outline-offset: 2px`로 통일
 
 ### 토큰 정합 (TOKFIX)
 
-- [ ] **TOKFIX-01**: `--transition-fast` 토큰 값과 문서(interaction-timing.md) 간 정합 — 하나의 값으로 통일
+- [x] **TOKFIX-01**: `--transition-fast` 토큰 값과 문서(interaction-timing.md) 간 정합 — 하나의 값으로 통일
 - [ ] **TOKFIX-02**: 변경된 토큰/규칙을 문서(site/), 프롬프트(prompts/), 스니펫(src/snippets/) 전체에 역갱신
 
 ### 반응형 개선 (RESP)
@@ -443,13 +443,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| A11YFIX-01 | Phase 25 | Pending |
-| A11YFIX-02 | Phase 25 | Pending |
-| A11YFIX-03 | Phase 25 | Pending |
-| A11YFIX-04 | Phase 25 | Pending |
+| A11YFIX-01 | Phase 25 | Complete |
+| A11YFIX-02 | Phase 25 | Complete |
+| A11YFIX-03 | Phase 25 | Complete |
+| A11YFIX-04 | Phase 25 | Complete |
 | A11YFIX-05 | Phase 25 | Pending |
 | A11YFIX-06 | Phase 25 | Pending |
-| TOKFIX-01 | Phase 25 | Pending |
+| TOKFIX-01 | Phase 25 | Complete |
 | RESP-01 | Phase 26 | Pending |
 | RESP-02 | Phase 26 | Pending |
 | RESP-03 | Phase 26 | Pending |

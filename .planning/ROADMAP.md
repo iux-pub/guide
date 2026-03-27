@@ -290,7 +290,7 @@
   5. `--transition-fast` 토큰 값이 SCSS 파일과 `interaction-timing.md` 문서에서 동일한 값으로 정합되어 있다
 **Plans**: 2 plans
 Plans:
-- [ ] 25-01-PLAN.md -- 토큰 값 정합 + 터치 타겟/간격 수정
+- [x] 25-01-PLAN.md -- 토큰 값 정합 + 터치 타겟/간격 수정
 - [ ] 25-02-PLAN.md -- reduced-motion + 포커스 링 통일
 
 ### Phase 26: SCSS 현대화
@@ -355,6 +355,6 @@ Phases execute in numeric order: 25 -> 26 -> 27
 | 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete | 2026-03-26 |
 | 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete | 2026-03-27 |
 | 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete | 2026-03-27 |
-| 25. 접근성 수정 + 토큰 정합 | v1.5 | 0/2 | In progress | - |
+| 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | In Progress|  |
 | 26. SCSS 현대화 | v1.5 | 0/TBD | Not started | - |
 | 27. 문서/플레이그라운드 동기화 | v1.5 | 0/TBD | Not started | - |

@@ -4,7 +4,7 @@ milestone: v1.4
 milestone_name: 콘텐츠 정제 + 사이트 디자인 고도화
 status: planning
 stopped_at: v1.4 로드맵 생성 완료, Phase 23 계획 대기
-last_updated: "2026-03-27T00:38:53.383Z"
+last_updated: "2026-03-27T00:43:37.633Z"
 last_activity: 2026-03-27
 progress:
   total_phases: 24

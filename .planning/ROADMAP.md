@@ -305,4 +305,4 @@ Phases execute in numeric order: 23 -> 24
 | 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Complete | 2026-03-26 |
 | 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete | 2026-03-26 |
 | 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete    | 2026-03-27 |
-| 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Not started | - |
+| 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete    | 2026-03-27 |

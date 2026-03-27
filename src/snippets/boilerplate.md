@@ -47,6 +47,29 @@
 | Footer 랜드마크 | `<footer role="contentinfo">` | 페이지 푸터 영역 |
 | 콘텐츠 래퍼 | `.container` | 최대 너비 제한 + 중앙 정렬 |
 
+## 레이아웃 크기 기준
+
+| 영역 | 모바일 | 태블릿 | PC |
+|------|--------|--------|-----|
+| 헤더 높이 | 최소 56px | 최소 64px | **최소 100px** |
+| 푸터 높이 | 자동 | 자동 | 자동 |
+| 컨테이너 max-width | 100% | 100% | 1200px |
+| 컨테이너 좌우 패딩 | 16px | 24px | 40px |
+
+```scss
+.site-header {
+  min-height: 5.6rem; // 모바일 56px
+
+  @include resp.respond-to('tablet') {
+    min-height: 6.4rem; // 태블릿 64px
+  }
+
+  @include resp.respond-to('pc') {
+    min-height: 10rem; // PC 100px
+  }
+}
+```
+
 ## 접근성 주의사항
 
 - `skip-to-content` 링크: `<body>` 바로 뒤 첫 번째 요소로 배치. 평소 화면에서 숨겨지고 포커스 시 표시

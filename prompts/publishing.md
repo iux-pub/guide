@@ -60,6 +60,15 @@
 - skip-to-content 링크: `<a href="#main-content" class="skip-to-content sr-only">`
 - `!important` 금지, 인라인 스타일 금지
 
+## 레이아웃 크기 기준
+
+| 영역 | 모바일 | 태블릿 | PC |
+|------|--------|--------|-----|
+| 헤더 높이 | 최소 56px | 최소 64px | 최소 100px |
+| GNB 메뉴 폰트 | 14px | 16px | **18px 이상** |
+| 컨테이너 max-width | 100% | 100% | 1200px |
+| 컨테이너 패딩 | 16px | 24px | 40px |
+
 ## 코딩 스타일
 
 - 들여쓰기: 2 spaces

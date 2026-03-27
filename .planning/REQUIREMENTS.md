@@ -344,65 +344,78 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SITE-03 | Phase 13 | Complete |
 | ONBOARD-01 | Phase 13 | Complete |
 
-### v1.0 (In Progress)
+### v1.0 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PROMPT-D01 | Phase 14 | Pending |
-| PROMPT-D02 | Phase 14 | Pending |
-| PROMPT-P01 | Phase 14 | Pending |
-| PROMPT-P02 | Phase 14 | Pending |
-| PROMPT-C01 | Phase 14 | Pending |
-| PROMPT-C02 | Phase 14 | Pending |
-| PROMPT-SITE01 | Phase 15 | Pending |
-| PROMPT-SITE02 | Phase 15 | Pending |
+| PROMPT-D01 | Phase 14 | Complete |
+| PROMPT-D02 | Phase 14 | Complete |
+| PROMPT-P01 | Phase 14 | Complete |
+| PROMPT-P02 | Phase 14 | Complete |
+| PROMPT-C01 | Phase 14 | Complete |
+| PROMPT-C02 | Phase 14 | Complete |
+| PROMPT-SITE01 | Phase 15 | Complete |
+| PROMPT-SITE02 | Phase 15 | Complete |
 
-### v1.1 (Planned)
-
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| PIPE-01 | Phase 16 | Pending |
-| PIPE-02 | Phase 16 | Pending |
-| PIPE-03 | Phase 16 | Pending |
-| COMBO-01 | Phase 17 | Pending |
-| COMBO-02 | Phase 17 | Pending |
-| BUILD-01 | Phase 18 | Pending |
-| BUILD-02 | Phase 18 | Pending |
-
-### v1.2 (Planned)
+### v1.1 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MICRO-01 | Phase 19 | Pending |
-| INTER-01 | Phase 19 | Pending |
-| AUDIT-01 | Phase 19 | Pending |
-| STATE-01 | Phase 19 | Pending |
-| ICON-01 | Phase 19 | Pending |
-| AESTH-01 | Phase 19 | Pending |
-| DSSITE-01 | Phase 20 | Pending |
+| PIPE-01 | Phase 16 | Complete |
+| PIPE-02 | Phase 16 | Complete |
+| PIPE-03 | Phase 16 | Complete |
+| COMBO-01 | Phase 17 | Complete |
+| COMBO-02 | Phase 17 | Complete |
+| BUILD-01 | Phase 18 | Complete |
+| BUILD-02 | Phase 18 | Complete |
 
-### v1.3 (Planned)
+### v1.2 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BSYS-01 | Phase 21 | Pending |
-| BSYS-02 | Phase 21 | Pending |
-| BSYS-03 | Phase 21 | Pending |
-| BSYS-04 | Phase 21 | Pending |
-| STARTER-01 | Phase 21 | Pending |
-| STARTER-02 | Phase 21 | Pending |
-| CONTENT-01 | Phase 22 | Pending |
+| MICRO-01 | Phase 19 | Complete |
+| INTER-01 | Phase 19 | Complete |
+| AUDIT-01 | Phase 19 | Complete |
+| STATE-01 | Phase 19 | Complete |
+| ICON-01 | Phase 19 | Complete |
+| AESTH-01 | Phase 19 | Complete |
+| DSSITE-01 | Phase 20 | Complete |
+
+### v1.3 (Complete)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| BSYS-01 | Phase 21 | Complete |
+| BSYS-02 | Phase 21 | Complete |
+| BSYS-03 | Phase 21 | Complete |
+| BSYS-04 | Phase 21 | Complete |
+| STARTER-01 | Phase 21 | Complete |
+| STARTER-02 | Phase 21 | Complete |
+| CONTENT-01 | Phase 22 | Complete |
+
+### v1.4 (In Progress)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| REWRITE-01 | Phase 23 | Pending |
+| REWRITE-02 | Phase 23 | Pending |
+| REWRITE-03 | Phase 23 | Pending |
+| UI-01 | Phase 24 | Pending |
+| UI-02 | Phase 24 | Pending |
+| UI-03 | Phase 24 | Pending |
+| UI-04 | Phase 24 | Pending |
 
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)
 - v0.9 requirements: 17 total (all complete)
 - v0.9.5 requirements: 8 total (all complete)
-- v1.0 requirements: 8 total (mapped: 8)
-- v1.1 requirements: 7 total (mapped: 7)
-- v1.2 requirements: 7 total (mapped: 7)
-- v1.3 requirements: 7 total (mapped: 7)
+- v1.0 requirements: 8 total (all complete)
+- v1.1 requirements: 7 total (all complete)
+- v1.2 requirements: 7 total (all complete)
+- v1.3 requirements: 7 total (all complete)
+- v1.4 requirements: 7 total (mapped: 7)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-26 -- v1.3 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-27 -- v1.4 로드맵 생성, 트레이서빌리티 업데이트*

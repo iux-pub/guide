@@ -5,10 +5,11 @@
 - [x] **v0.8 Foundation** - Phases 1-6 (complete)
 - [x] **v0.9 디자인 컨벤션 + 프로세스 강화** - Phases 7-11 (complete)
 - [x] **v0.9.5 리뷰 기반 품질 강화** - Phases 12-13 (complete)
-- [ ] **v1.0 AI 범용 프롬프트 시스템** - Phases 14-15 (in progress)
-- [ ] **v1.1 시스템 고도화** - Phases 16-18
-- [ ] **v1.2 디자인 역량 강화** - Phases 19-20
-- [ ] **v1.3 핵심 경화** - Phases 21-22
+- [x] **v1.0 AI 범용 프롬프트 시스템** - Phases 14-15 (complete)
+- [x] **v1.1 시스템 고도화** - Phases 16-18 (complete)
+- [x] **v1.2 디자인 역량 강화** - Phases 19-20 (complete)
+- [x] **v1.3 핵심 경화** - Phases 21-22 (complete)
+- [ ] **v1.4 콘텐츠 정제 + 사이트 디자인 고도화** - Phases 23-24 (in progress)
 
 ## Phases
 
@@ -44,31 +45,42 @@
 </details>
 
 <details>
-<summary>v1.0 AI 범용 프롬프트 시스템 (Phases 14-15) - IN PROGRESS</summary>
+<summary>v1.0 AI 범용 프롬프트 시스템 (Phases 14-15) - COMPLETE</summary>
 
-- [ ] **Phase 14: 프롬프트 파일 생성** - 6개 AI 프롬프트 마크다운 파일 작성 (prompts/ 디렉토리)
-- [ ] **Phase 15: 문서 사이트 프롬프트 통합** - site/prompts/ 섹션, 사용 가이드, 복사 기능
+- [x] **Phase 14: 프롬프트 파일 생성** - 6개 AI 프롬프트 마크다운 파일 작성 (prompts/ 디렉토리)
+- [x] **Phase 15: 문서 사이트 프롬프트 통합** - site/prompts/ 섹션, 사용 가이드, 복사 기능
 
 </details>
 
 <details>
-<summary>v1.1 시스템 고도화 (Phases 16-18)</summary>
+<summary>v1.1 시스템 고도화 (Phases 16-18) - COMPLETE</summary>
 
-- [ ] **Phase 16: 토큰 파이프라인** - tokens.json 싱글 소스 + SCSS/프롬프트 자동 생성 스크립트
-- [ ] **Phase 17: 컴포넌트 조합 패턴** - 실전 레이아웃 예제 3종 + 문서 사이트 조합 패턴 페이지
-- [ ] **Phase 18: 빌드 통합** - npm run build 전체 파이프라인 + 프롬프트 자동 재생성
+- [x] **Phase 16: 토큰 파이프라인** - tokens.json 싱글 소스 + SCSS/프롬프트 자동 생성 스크립트
+- [x] **Phase 17: 컴포넌트 조합 패턴** - 실전 레이아웃 예제 3종 + 문서 사이트 조합 패턴 페이지
+- [x] **Phase 18: 빌드 통합** - npm run build 전체 파이프라인 + 프롬프트 자동 재생성
 
 </details>
 
-### v1.2 디자인 역량 강화
+<details>
+<summary>v1.2 디자인 역량 강화 (Phases 19-20) - COMPLETE</summary>
 
-- [ ] **Phase 19: 디자인 가이드 콘텐츠** - info-design 스킬 기반 6개 디자인 가이드 마크다운 문서 생성
-- [ ] **Phase 20: 문서 사이트 통합** - site/design/ 섹션 네비게이션, pa11yci, info-design 스킬 역갱신
+- [x] **Phase 19: 디자인 가이드 콘텐츠** - info-design 스킬 기반 6개 디자인 가이드 마크다운 문서 생성
+- [x] **Phase 20: 문서 사이트 통합** - site/design/ 섹션 네비게이션, pa11yci, info-design 스킬 역갱신
 
-### v1.3 핵심 경화
+</details>
 
-- [ ] **Phase 21: 빌드 + 인프라 경화** - .gitignore, worktree 정리, serve 핫리로드, npm test, starter 실증
-- [ ] **Phase 22: 콘텐츠 감사 + 보강** - 71페이지 스캔, 얇은 페이지 보강
+<details>
+<summary>v1.3 핵심 경화 (Phases 21-22) - COMPLETE</summary>
+
+- [x] **Phase 21: 빌드 + 인프라 경화** - .gitignore, worktree 정리, serve 핫리로드, npm test, starter 실증
+- [x] **Phase 22: 콘텐츠 감사 + 보강** - 71페이지 스캔, 얇은 페이지 보강
+
+</details>
+
+### v1.4 콘텐츠 정제 + 사이트 디자인 고도화
+
+- [ ] **Phase 23: 콘텐츠 재작성** - 감사에서 발견된 약한 콘텐츠 3건(aesthetics, icon-system, css-animation) 재작성
+- [ ] **Phase 24: 사이트 디자인 고도화** - 사이드바 아코디언, 타이포/여백, 코드 블록, 컴포넌트 미리보기 시각 개선
 
 ## Phase Details
 
@@ -166,127 +178,107 @@
 </details>
 
 <details>
-<summary>v1.0 Phase Details (In Progress)</summary>
+<summary>v1.0 Phase Details (Complete)</summary>
 
 ### Phase 14: 프롬프트 파일 생성
 **Goal**: 팀의 디자인/퍼블리싱 규칙이 6개 AI 프롬프트 파일로 체계화되어, 어떤 AI 도구에든 즉시 주입 가능하다
 **Depends on**: Phase 13 (기존 가이드 문서, 토큰, 컴포넌트, 접근성 규칙이 모두 완성된 상태)
 **Requirements**: PROMPT-D01, PROMPT-D02, PROMPT-P01, PROMPT-P02, PROMPT-C01, PROMPT-C02
-**Success Criteria** (what must be TRUE):
-  1. `prompts/design.md` 파일이 존재하며, 토큰(색상/타이포/간격), 컴포넌트 구조, 접근성 규칙을 특정 AI 도구 종속 문법 없이 담고 있다
-  2. `prompts/figma.md` 파일이 존재하며, 피그마 컴포넌트 네이밍, Variable 매핑, Auto Layout, 레이어 구조 규칙을 담고 있다
-  3. `prompts/publishing.md` 파일이 존재하며, BEM, ITCSS, 토큰 사용법, 반응형 브레이크포인트, 접근성 규칙을 AI가 코드 생성에 바로 활용할 수 있는 형태로 담고 있다
-  4. `prompts/components.md` 파일이 존재하며, 8개 컴포넌트(버튼, 폼, 카드, 테이블, 모달, 탭, 페이지네이션, 브레드크럼)의 HTML+CSS 패턴을 AI가 바로 참조 가능한 압축 형태로 제공한다
-  5. `prompts/context.md` 파일이 존재하며, 팀 규칙 전체를 대화형 AI에 붙여넣기 가능한 2000토큰 이내 요약으로 압축하고 있다
-  6. `prompts/review.md` 파일이 존재하며, BEM/토큰/접근성 체크리스트를 AI 코드 리뷰어에게 주입 가능한 형태로 제공한다
-**Plans**: TBD
+**Status**: Complete
 
 ### Phase 15: 문서 사이트 프롬프트 통합
 **Goal**: 사용자가 문서 사이트에서 프롬프트를 열람하고, 용도에 맞는 프롬프트를 복사하여 AI 도구에 바로 붙여넣을 수 있다
-**Depends on**: Phase 14 (프롬프트 파일이 존재해야 사이트에 통합 가능)
+**Depends on**: Phase 14
 **Requirements**: PROMPT-SITE01, PROMPT-SITE02
-**Success Criteria** (what must be TRUE):
-  1. 문서 사이트 네비게이션에 "AI 프롬프트" 섹션이 존재하며, 6개 프롬프트 페이지로 접근 가능하다
-  2. 각 프롬프트 페이지에 "복사" 버튼이 있어 클릭 시 프롬프트 전문이 클립보드에 복사된다
-  3. 프롬프트 사용 가이드 페이지가 존재하며, AI 도구 유형별(디자인 AI, 퍼블리싱 AI, 대화형 AI, 피그마 AI) 어떤 프롬프트를 사용하는지 매핑 테이블을 제공한다
-  4. 프롬프트 섹션 페이지가 기존 사이트와 동일한 KWCAG/WCAG AA 접근성 수준을 유지한다
-**Plans**: TBD
-**UI hint**: yes
+**Status**: Complete
 
 </details>
 
 <details>
-<summary>v1.1 Phase Details</summary>
+<summary>v1.1 Phase Details (Complete)</summary>
 
 ### Phase 16: 토큰 파이프라인
 **Goal**: 토큰이 tokens.json 하나에서 관리되고, SCSS 변수와 AI 프롬프트가 스크립트 한 번으로 자동 생성된다
-**Depends on**: Phase 15 (v1.0 완료 후 시작, 기존 토큰 SCSS와 프롬프트 파일이 존재하는 상태)
+**Depends on**: Phase 15
 **Requirements**: PIPE-01, PIPE-02, PIPE-03
-**Success Criteria** (what must be TRUE):
-  1. `tokens.json` 파일이 DTCG 포맷($value, $type)으로 존재하며, 현재 `_tokens-*.scss` 파일의 모든 토큰 값(색상, 타이포, 간격, 그리드, 기타)을 포함한다
-  2. 빌드 스크립트 실행 시 `tokens.json`에서 `_tokens-*.scss` 파일이 자동 생성되며, 생성된 CSS Custom Properties가 기존 수동 작성본과 동일한 결과를 낸다
-  3. 빌드 스크립트 실행 시 `tokens.json`에서 `prompts/design.md`의 토큰 섹션이 자동 갱신되어, 토큰 값 변경이 프롬프트에 즉시 반영된다
-  4. `tokens.json` 값을 변경한 뒤 스크립트를 재실행하면 SCSS와 프롬프트 양쪽 모두에 변경이 반영된다
-**Plans**: TBD
+**Status**: Complete
 
 ### Phase 17: 컴포넌트 조합 패턴
 **Goal**: 개별 컴포넌트를 조합한 실전 레이아웃 예제가 playground와 문서 사이트에서 확인 가능하다
-**Depends on**: Phase 15 (v1.0 완료 후 시작, 문서 사이트와 컴포넌트가 존재하는 상태)
+**Depends on**: Phase 15
 **Requirements**: COMBO-01, COMBO-02
-**Success Criteria** (what must be TRUE):
-  1. `src/playground/` 에 3종 조합 예제(모달+폼, 카드그리드+페이지네이션, 검색폼+테이블)의 HTML 파일이 존재하며 브라우저에서 렌더링된다
-  2. 각 조합 예제가 기존 컴포넌트 SCSS(`_modal.scss`, `_form.scss`, `_card.scss`, `_table.scss`, `_pagination.scss`)를 재사용하며, 추가 SCSS가 최소한이다
-  3. 문서 사이트 `site/components/` 하위에 조합 패턴 문서 페이지가 존재하며, iframe 또는 코드 예제로 각 조합을 미리볼 수 있다
-  4. 조합 예제의 HTML이 KWCAG/WCAG AA 접근성을 유지한다 (aria 속성, 키보드 네비게이션, 포커스 관리)
-**Plans**: TBD
-**UI hint**: yes
+**Status**: Complete
 
 ### Phase 18: 빌드 통합
 **Goal**: `npm run build` 한 명령으로 토큰 생성부터 SCSS 컴파일, 프롬프트 재생성, 문서 사이트 빌드까지 전체 파이프라인이 실행된다
-**Depends on**: Phase 16 (토큰 파이프라인 스크립트가 있어야 빌드에 통합 가능)
+**Depends on**: Phase 16
 **Requirements**: BUILD-01, BUILD-02
-**Success Criteria** (what must be TRUE):
-  1. `npm run build` 실행 시 tokens -> SCSS -> CSS -> prompts -> site 순서로 전체 빌드가 오류 없이 완료된다
-  2. `npm run build:prompts` 실행 시 `tokens.json`과 `src/snippets/`를 읽어 `prompts/*.md` 파일이 자동 재생성된다
-  3. 토큰 값 또는 스니펫 내용을 변경한 뒤 `npm run build`를 실행하면 최종 사이트와 프롬프트에 변경이 반영된다
-  4. `package.json`의 scripts 섹션에 build, build:tokens, build:prompts 명령이 정의되어 있고, 각각 독립 실행도 가능하다
-**Plans**: TBD
+**Status**: Complete
 
 </details>
 
+<details>
+<summary>v1.2 Phase Details (Complete)</summary>
+
 ### Phase 19: 디자인 가이드 콘텐츠
 **Goal**: info-design 스킬의 핵심 콘텐츠가 6개 마크다운 문서로 추출되어, 디자인 품질 기준이 "코딩 규칙"에서 "디자인 시스템" 수준으로 확장된다
-**Depends on**: Phase 18 (v1.1 완료 후 시작, 문서 사이트와 빌드 파이프라인이 존재하는 상태)
+**Depends on**: Phase 18
 **Requirements**: MICRO-01, INTER-01, AUDIT-01, STATE-01, ICON-01, AESTH-01
-**Success Criteria** (what must be TRUE):
-  1. `site/design/microcopy.md` 파일이 존재하며, 에러 메시지 3-part 공식(what/why/how), 버튼 텍스트 규칙(동사형 2~4단어), 톤 매핑(B2B/소비자/공공), 플레이스홀더 규칙, 숫자 포맷을 실무 예제와 함께 제공한다
-  2. `site/design/interaction-timing.md` 파일이 존재하며, 컴포넌트별 전환 시간(버튼 100ms, 모달 300ms 등), 이징 함수, prefers-reduced-motion 대응, Figma 프로토타입 설정 매핑을 담고 있다
-  3. `site/design/design-audit.md` 파일이 존재하며, 17점 체크리스트 + Quick 5 기본 점검 + 점수 체계(100점 만점, Critical/Warning/Tip 심각도)가 팀이 즉시 적용 가능한 형태로 제공된다
-  4. `site/design/ui-states.md` 파일이 존재하며, 로딩(Skeleton vs Spinner vs ProgressBar 의사결정 트리), 에러(3단계 심각도), 빈 상태(아이콘+제목+설명+CTA 템플릿), 폼 유효성 타이밍을 담고 있다
-  5. `site/design/icon-system.md` 파일이 존재하며, 8pt 그리드(허용 사이즈 12/16/20/24/32/40/48px), Lucide 표준, 금지 사이즈, 접근성(aria-hidden + 텍스트 라벨) 규격을 정의한다
-  6. `site/design/aesthetics.md` 파일이 존재하며, AI 슬롭 안티패턴, 5트랙 디자인 사고, 비대칭 레이아웃 원칙, INFOMIND 제품별 UI 스타일 매핑을 담고 있다
-**Plans**: TBD
+**Status**: Complete
 
 ### Phase 20: 문서 사이트 통합
 **Goal**: 6개 디자인 가이드가 문서 사이트의 "디자인" 섹션으로 통합되어 네비게이션에서 접근 가능하고, 접근성 테스트를 통과하며, info-design 스킬이 역갱신된다
-**Depends on**: Phase 19 (6개 마크다운 문서가 존재해야 사이트에 통합 가능)
+**Depends on**: Phase 19
 **Requirements**: DSSITE-01
-**Success Criteria** (what must be TRUE):
-  1. 문서 사이트 네비게이션에 "디자인" 섹션이 존재하며, 6개 디자인 가이드 페이지(마이크로카피, 인터랙션 타이밍, 디자인 감사, UI 상태, 아이콘 시스템, 미학 원칙)로 접근 가능하다
-  2. `.pa11yci.js`에 `site/design/` 하위 6개 페이지 URL이 추가되어 pa11y-ci 접근성 테스트를 통과한다
-  3. info-design 스킬의 references/ 파일에서 가이드 시스템 문서 링크가 역참조로 추가되어, 스킬과 가이드 사이트가 양방향으로 연결된다
-  4. 디자인 섹션 페이지가 기존 사이트와 동일한 레이아웃, 코드 하이라이팅, copy-to-clipboard 기능을 사용한다
-**Plans**: TBD
-**UI hint**: yes
+**Status**: Complete
+
+</details>
+
+<details>
+<summary>v1.3 Phase Details (Complete)</summary>
 
 ### Phase 21: 빌드 + 인프라 경화
 **Goal**: 빌드 시스템과 개발 인프라가 프로덕션 수준으로 정비되어, 클린 환경에서 빌드/린트/테스트가 한 번에 통과하고 개발 서버가 SCSS 변경을 즉시 반영한다
-**Depends on**: Phase 20 (v1.2 완료 후 시작, 기존 빌드 스크립트와 starter kit이 존재하는 상태)
+**Depends on**: Phase 20
 **Requirements**: BSYS-01, BSYS-02, BSYS-03, BSYS-04, STARTER-01, STARTER-02
-**Success Criteria** (what must be TRUE):
-  1. `.gitignore`에 `_site/`, `.claude/worktrees/`, `.DS_Store`, `*.log`, `dist/`가 명시적으로 제외되어 있고, `git status`에 빌드 산출물이 나타나지 않는다
-  2. 불필요한 worktree 브랜치가 삭제되고 `.claude/worktrees/` 디렉토리가 정리되어, `git worktree list`에 잔해가 없다
-  3. `npm run serve` 실행 중 SCSS 파일을 수정하면 `_site/dist/css/` 내 CSS가 자동 재컴파일되어 브라우저 새로고침 없이(또는 즉시 새로고침으로) 변경이 반영된다
-  4. `npm test` 한 명령으로 `lint:css`와 `test:a11y`가 순차 실행되어 전체 검증이 완료된다
-  5. 클린 디렉토리에서 `cp -r starter/ /tmp/test-project/ && cd /tmp/test-project && npm install && npm run build:css`가 오류 없이 성공한다
-  6. starter kit 내에서 `npm run lint:css` 실행 시 경고만 출력되고 에러 없이 통과하며, playground HTML이 브라우저에서 정상 렌더링된다
-**Plans**: TBD
+**Status**: Complete
 
 ### Phase 22: 콘텐츠 감사 + 보강
 **Goal**: 문서 사이트의 71페이지 중 얇은 페이지가 식별되고 보강되어, 모든 페이지가 최소 품질 기준(제목 + 개요 + 본문 내용 + 예제)을 충족한다
-**Depends on**: Phase 21 (인프라 정비 후 콘텐츠 작업이 안정적)
+**Depends on**: Phase 21
 **Requirements**: CONTENT-01
+**Status**: Complete
+
+</details>
+
+### Phase 23: 콘텐츠 재작성
+**Goal**: 감사에서 발견된 약한 콘텐츠 3건이 구체적 사례, 코드 예제, 실무 활용법 중심으로 재작성되어 가이드로서의 실질적 가치를 갖춘다
+**Depends on**: Phase 22 (콘텐츠 감사에서 약한 페이지가 식별된 상태)
+**Requirements**: REWRITE-01, REWRITE-02, REWRITE-03
 **Success Criteria** (what must be TRUE):
-  1. 71페이지 전체에 대한 감사 결과가 존재하며, 100줄 미만인 얇은 페이지 목록이 식별되어 있다
-  2. 식별된 얇은 페이지가 보강되어, 각 페이지에 제목, 개요(해당 주제가 왜 필요한지), 본문 내용, 실무 예제가 포함되어 있다
-  3. 보강된 페이지가 `npm test`(lint + a11y)를 통과한다
-  4. 보강 전/후의 페이지 줄 수 비교가 감사 결과에 기록되어 있다
+  1. `design/aesthetics.md`가 추상적 원칙 나열이 아닌 실제 프로젝트 Before/After 사례와 INFOMIND 제품별 적용 예시를 포함하고 있다
+  2. `design/icon-system.md`가 Lucide 라이브러리 링크, `<svg>` 인라인 + `aria-hidden` 실제 사용 코드, 컨텍스트별(버튼/네비/폼) 크기 예제를 제공한다
+  3. `guides/css-animation.md`가 각 전환 토큰(`--transition-fast`, `--transition-base`, `--transition-slow`)의 실제 CSS transition/animation 코드 예제를 포함하고 있다
+  4. 재작성된 3개 파일이 `npm test`(lint + a11y)를 통과한다
 **Plans**: TBD
+
+### Phase 24: 사이트 디자인 고도화
+**Goal**: 가이드 웹사이트 자체의 시각적 품질이 프로페셔널 수준으로 향상되어, 사이드바 탐색/콘텐츠 가독성/코드 블록 사용성/컴포넌트 미리보기가 개선된다
+**Depends on**: Phase 23 (콘텐츠가 확정된 후 디자인 개선)
+**Requirements**: UI-01, UI-02, UI-03, UI-04
+**Success Criteria** (what must be TRUE):
+  1. 사이드바가 섹션별 아코디언으로 동작하며, 현재 보고 있는 페이지의 섹션이 자동으로 열려 있다
+  2. 콘텐츠 영역의 h1에 밑줄 장식이, h2에 좌측 컬러 포인트가 적용되어 있고, 본문 줄간격과 여백이 가독성에 최적화되어 있다
+  3. 코드 블록에 파일명 표시 바가 있고, 복사 버튼이 코드 블록 우측 상단에 위치하며, 줄번호 옵션이 지원된다
+  4. 컴포넌트 미리보기 영역이 테두리/배경으로 본문과 시각적으로 구분되며, "코드 보기/미리보기" 탭 전환이 동작한다
+  5. 디자인 개선 후 기존 KWCAG/WCAG AA 접근성 수준이 유지된다 (`npm test` 통과)
+**Plans**: TBD
+**UI hint**: yes
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20 -> 21 -> 22
+Phases execute in numeric order: 23 -> 24
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -303,12 +295,14 @@ Phases execute in numeric order: 14 -> 15 -> 16 -> 17 -> 18 -> 19 -> 20 -> 21 ->
 | 11. 거버넌스 | v0.9 | 0/TBD | Complete | 2026-03-26 |
 | 12. 코드 품질 수정 | v0.9.5 | 0/TBD | Complete | 2026-03-26 |
 | 13. 사이트 UX + 온보딩 | v0.9.5 | 0/TBD | Complete | 2026-03-26 |
-| 14. 프롬프트 파일 생성 | v1.0 | 0/TBD | Not started | - |
+| 14. 프롬프트 파일 생성 | v1.0 | 0/TBD | Complete | 2026-03-26 |
 | 15. 문서 사이트 프롬프트 통합 | v1.0 | 0/TBD | Complete | 2026-03-26 |
-| 16. 토큰 파이프라인 | v1.1 | 0/TBD | Not started | - |
-| 17. 컴포넌트 조합 패턴 | v1.1 | 0/TBD | Not started | - |
+| 16. 토큰 파이프라인 | v1.1 | 0/TBD | Complete | 2026-03-26 |
+| 17. 컴포넌트 조합 패턴 | v1.1 | 0/TBD | Complete | 2026-03-26 |
 | 18. 빌드 통합 | v1.1 | 0/TBD | Complete | 2026-03-26 |
-| 19. 디자인 가이드 콘텐츠 | v1.2 | 0/TBD | Not started | - |
+| 19. 디자인 가이드 콘텐츠 | v1.2 | 0/TBD | Complete | 2026-03-26 |
 | 20. 문서 사이트 통합 | v1.2 | 0/TBD | Complete | 2026-03-26 |
-| 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Complete    | 2026-03-26 |
-| 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete    | 2026-03-26 |
+| 21. 빌드 + 인프라 경화 | v1.3 | 0/TBD | Complete | 2026-03-26 |
+| 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete | 2026-03-26 |
+| 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Not started | - |
+| 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Not started | - |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: 콘텐츠 정제 + 사이트 디자인 고도화
-status: Defining requirements
-stopped_at: v1.4 마일스톤 시작
-last_updated: "2026-03-26T22:12:35.011Z"
-last_activity: 2026-03-26
+status: Ready to plan
+stopped_at: v1.4 로드맵 생성 완료
+last_updated: "2026-03-27"
+last_activity: 2026-03-27
 progress:
-  total_phases: 16
-  completed_phases: 7
-  total_plans: 19
+  total_phases: 24
+  completed_phases: 22
+  total_plans: 25
   completed_plans: 25
-  percent: 83
+  percent: 92
 ---
 
 # Project State
@@ -21,24 +21,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** 신규 프로젝트 시작 시 검증된 팀 표준을 즉시 적용할 수 있어야 한다
-**Current focus:** v1.3 핵심 경화 - Phase 21 계획 대기
+**Current focus:** v1.4 콘텐츠 정제 + 사이트 디자인 고도화 - Phase 23 계획 대기
 
 ## Current Position
 
-Phase: 22 of 22 (content audit)
+Phase: 23 of 24 (콘텐츠 재작성)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-03-26
+Last activity: 2026-03-27 -- v1.4 로드맵 생성
 
-Progress: [████████████████░░░░] ~83% (v0.8-v1.2 complete, v1.3 Phase 21 대기)
+Progress: [██████████████████░░] ~92% (v0.8-v1.3 complete, v1.4 Phase 23 대기)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 25 (v0.8: 18, v0.9: 1, v0.9.5: 1, v1.0: 1, v1.1: 1, v1.2: 1, + 2 uncounted)
+- Total plans completed: 25 (v0.8: 18, v0.9: 1, v0.9.5: 1, v1.0: 1, v1.1: 1, v1.2: 1, v1.3: 2)
 - Average duration: ~6 min
-- Total execution time: ~2 hours
+- Total execution time: ~2.5 hours
 
 **Recent Trend:**
 
@@ -52,11 +52,8 @@ Progress: [████████████████░░░░] ~83% (v
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [v0.8]: ITCSS + BEM + Style Dictionary 없이 SCSS :root 직접 정의 방식
-- [v0.8]: Eleventy + Nunjucks 문서 사이트, site/ 디렉토리
-- [v1.1 P18]: SCSS 직접 파싱으로 토큰 추출, build:tokens 플레이스홀더 (Phase 16 대기)
-- [v1.2 P20]: 디자인 섹션을 피그마 컨벤션과 토큰 사이에 배치
-- [v1.3]: 규모 확장 없이 기존 산출물의 신뢰성을 프로덕션 수준으로 끌어올림
+- [v1.3 P22]: 콘텐츠 감사에서 aesthetics, icon-system, css-animation 3건 약한 콘텐츠 식별
+- [v1.4]: 콘텐츠 재작성(Phase 23) 후 사이트 디자인 고도화(Phase 24) 순서로 진행
 
 ### Pending Todos
 
@@ -64,11 +61,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 19는 info-design 스킬 references/ 파일 접근이 필요 -- 콘텐츠 소스
-- Phase 21 BSYS-02: worktree 20개 브랜치 삭제 시 주의 필요
+- Phase 24 UI 작업은 docs.scss + JS 수정이 필요하며, 기존 접근성 유지에 주의 필요
 
 ## Session Continuity
 
-Last session: 2026-03-26
-Stopped at: v1.3 로드맵 생성 완료, Phase 21 계획 대기
+Last session: 2026-03-27
+Stopped at: v1.4 로드맵 생성 완료, Phase 23 계획 대기
 Resume file: None

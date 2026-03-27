@@ -47,6 +47,8 @@
 - 최소 터치 영역 44px x 44px 보장 (`.btn--sm`도 `min-height: 4.4rem` 적용)
 - `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
 - 링크 역할이 필요한 경우에만 `<a class="btn btn--link" href="...">` 사용
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
 
 ## SCSS 파일
 

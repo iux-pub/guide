@@ -14,7 +14,7 @@
 | Element/Variant | 클래스 | 용도 |
 |-----------------|--------|------|
 | 폼 그룹 | `.form__group` | label + input 래퍼 |
-| 레이블 | `.form__label` | 입력 필드 레이블 |
+| 레이블 | `.form__label` | 입력 필드 레이블 (폰트 16px, `--font-size-base`) |
 | 필수 레이블 | `.form__label--required` | 필수 항목 표시 (* 추가) |
 | Input | `.form__input` | 텍스트, 이메일, 패스워드 등 |
 | Select | `.form__select` | 드롭다운 선택 |
@@ -129,6 +129,9 @@
 - 도움말 텍스트가 있으면 `aria-describedby`로 입력 필드와 연결
 - 체크박스/라디오는 `<label>` 래퍼로 감싸 클릭 영역 확대
 - 비활성 필드는 `disabled` 속성 사용
+- `focus-visible` 스타일 제공: `outline: 2px solid` + `outline-offset: 2px` (box-shadow가 아닌 outline 사용 -- 고대비 모드 호환)
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
 
 ## SCSS 파일
 

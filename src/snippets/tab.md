@@ -37,7 +37,7 @@
 |---------|--------|------|
 | 컨테이너 | `.tab` | 탭 전체 래퍼 |
 | List | `.tab__list` | `role="tablist"`, 탭 버튼 목록 (모바일: 가로 스크롤) |
-| Button | `.tab__button` | `role="tab"`, 개별 탭 버튼 |
+| Button | `.tab__button` | `role="tab"`, 패딩 12px/20px (모바일), 반응형 확대 |
 | Panel | `.tab__panel` | `role="tabpanel"`, 탭 콘텐츠 영역 |
 
 ### 활성/비활성 상태
@@ -55,6 +55,8 @@
 - 비활성 탭은 `tabindex="-1"` (키보드 탭 순서에서 제외, 화살표로만 접근)
 - 비활성 패널은 `hidden` 속성으로 숨김
 - `tablist`에 `aria-label` 속성으로 탭 그룹 설명 제공
+- `focus-visible` 스타일: `outline: 2px solid` + `outline-offset: 2px`
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
 
 ### 키보드 상호작용 (자동 활성화 패턴)
 

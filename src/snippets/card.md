@@ -79,6 +79,13 @@
 - 이미지에 반드시 `alt` 속성 제공 (장식용 이미지는 `alt=""`)
 - 카드 제목은 적절한 heading 레벨 사용 (문서 구조에 맞게 `h2`~`h4`)
 - 카드 전체가 링크인 경우 `<a>` 래퍼보다 제목에 링크를 걸고 `::after` pseudo-element로 클릭 영역 확장 권장
+- 반응형 패딩: header/body/footer 영역이 모바일/태블릿/PC에서 차등 패딩
+
+## 인터랙션
+
+- hover 시 `box-shadow`가 `shadow-lg`로 확대되고 `translateY(-0.2rem)` 효과 적용
+- `transition: box-shadow, transform var(--transition-base)`
+- `prefers-reduced-motion: reduce` 시 transition 비활성화
 
 ## SCSS 파일
 

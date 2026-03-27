@@ -41,7 +41,8 @@
 | Title | `.modal__title` | 모달 제목 (`aria-labelledby` 타겟) |
 | Body | `.modal__body` | 본문 콘텐츠 |
 | Footer | `.modal__footer` | 액션 버튼 영역 |
-| Close | `.modal__close` | 닫기 버튼 (`aria-label="닫기"`) |
+| Close | `.modal__close` | 닫기 버튼 (`aria-label="닫기"`) -- 44x44px 터치 타겟 보장 |
+| 활성 상태 | `.modal--active` | JS가 열 때 추가. 열림 애니메이션 트리거 |
 
 ## 접근성 주의사항
 
@@ -53,7 +54,8 @@
 - 모달 열릴 때 첫 번째 포커스 가능 요소에 포커스 이동
 - 모달 닫힐 때 트리거 버튼으로 포커스 복귀
 - `body overflow: hidden` 처리 (배경 스크롤 방지)
-- 닫기 버튼에 `aria-label="닫기"` 필수
+- 닫기 버튼에 `aria-label="닫기"` 필수 -- 44x44px 터치 타겟 보장
+- 반응형: 모바일: 전체화면 / 태블릿: max-width 56rem, max-height 90vh / PC: max-height 85vh
 
 ### 키보드 상호작용
 
@@ -67,6 +69,12 @@
 
 - 열기: `data-modal-open="모달id"` 속성을 트리거 버튼에 추가
 - 닫기: `data-modal-close` 속성을 닫기 버튼에 추가
+
+## 열림 애니메이션
+
+- JS에서 `modal--active` 클래스를 추가하면 `@keyframes modal-open`이 실행됨
+- `scale(0.95)` -> `scale(1)` + `opacity 0` -> `1`, 300ms ease
+- `prefers-reduced-motion: reduce` 설정 시 `animation: none`
 
 ## JS 파일
 

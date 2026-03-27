@@ -89,6 +89,8 @@
 - 반응형 래퍼 `.table__wrapper`로 모바일 가로 스크롤 지원
 - 복잡한 테이블은 `<th id="">` + `<td headers="">` 패턴 사용
 - 정렬 가능한 컬럼은 `aria-sort` 속성 추가 (`ascending` / `descending` / `none`)
+- 기본 폰트 16px(`--font-size-base`) 이상
+- 반응형 패딩: th/td가 모바일/태블릿/PC에서 차등 패딩
 
 ## SCSS 파일
 

@@ -42,7 +42,7 @@
 | List | `.pagination__list` | `<ul>` 목록 |
 | Item | `.pagination__item` | `<li>` 항목 |
 | Item (모바일 숨김) | `.pagination__item--mobile-hidden` | 모바일에서 숨김, tablet-up에서 표시 |
-| Link | `.pagination__link` | `<a>` 페이지 링크 |
+| Link | `.pagination__link` | `<a>` 페이지 링크 -- 최소 44x44px 터치 타겟 |
 | Current | `.pagination__link--current` | 현재 페이지 (primary 배경색) |
 | Prev | `.pagination__link--prev` | "이전" 버튼 |
 | Next | `.pagination__link--next` | "다음" 버튼 |
@@ -66,6 +66,8 @@
 - 이전/다음 버튼에 `aria-label="이전 페이지"` / `aria-label="다음 페이지"` 필수
 - 비활성 상태는 `<span>` + `aria-disabled="true"` 사용 (링크가 아닌 요소로 변경)
 - `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
+- 링크 간 간격 8px 이상 (`gap: --spacing-sm`)
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
 
 ## SCSS 파일
 

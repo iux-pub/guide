@@ -57,6 +57,9 @@
 - 구분자는 CSS `::before` pseudo-element로 처리 (스크린리더에서 자동 무시)
 - `<ol>` 목록이므로 스크린리더가 "N개 항목 중 M번째"로 읽어줌
 - 모바일에서 `.breadcrumb__item--mobile-hidden`으로 상위 경로 숨김 (마지막 2단계만 표시)
+- 아이템 간 간격 8px 이상 (`gap: --spacing-sm`)
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 태블릿 이상에서 폰트 사이즈 16px(`--font-size-base`)로 상향
 
 ## SCSS 파일
 

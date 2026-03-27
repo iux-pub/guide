@@ -22,6 +22,11 @@
     border-color var(--transition-fast),
     color var(--transition-fast);
 
+  // 접근성: 모션 감소 설정 대응
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
+  }
+
   // 비활성 상태
   &:disabled {
     opacity: 0.5;

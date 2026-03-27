@@ -26,6 +26,11 @@
     background-color: color-mix(in srgb, var(--color-black) 50%, transparent);
     z-index: var(--z-modal-backdrop);
     transition: opacity var(--transition-base);
+
+    // 접근성: 모션 감소 설정 대응
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0.01ms;
+    }
   }
 
   // 모달 컨테이너
@@ -80,6 +85,11 @@
     border-radius: var(--radius-base);
     color: var(--color-text-secondary);
     transition: background-color var(--transition-fast);
+
+    // 접근성: 모션 감소 설정 대응
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0.01ms;
+    }
 
     &:hover {
       background-color: var(--color-bg-secondary);

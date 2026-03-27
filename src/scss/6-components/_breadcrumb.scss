@@ -50,6 +50,11 @@
     font-weight: var(--font-weight-regular);
     transition: color var(--transition-fast);
 
+    // 접근성: 모션 감소 설정 대응
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0.01ms;
+    }
+
     &:hover {
       text-decoration: underline;
     }

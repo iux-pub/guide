@@ -6,6 +6,11 @@
 @use '../2-tools/responsive' as resp;
 
 .card {
+  // 접근성: 모션 감소 설정 대응 (Phase 26 hover transition 추가 시 자동 적용)
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
+  }
+
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
   background-color: var(--color-bg);

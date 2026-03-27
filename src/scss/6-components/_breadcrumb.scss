@@ -17,6 +17,10 @@
     padding: 0;
     margin: 0;
     gap: var(--spacing-sm);
+
+    @include resp.respond-to('pc') {
+      gap: var(--spacing-md);
+    }
   }
 
   // 항목
@@ -25,6 +29,10 @@
     align-items: center;
     font-size: var(--font-size-sm);
     line-height: var(--leading-base);
+
+    @include resp.respond-to('tablet-up') {
+      font-size: var(--font-size-base);
+    }
 
     // CSS pseudo-element 구분자
     &:not(:first-child)::before {

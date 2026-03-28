@@ -10,7 +10,8 @@
 - [x] **v1.2 디자인 역량 강화** - Phases 19-20 (complete)
 - [x] **v1.3 핵심 경화** - Phases 21-22 (complete)
 - [x] **v1.4 콘텐츠 정제 + 사이트 디자인 고도화** - Phases 23-24 (complete)
-- [ ] **v1.5 컴포넌트 실질 품질 강화** - Phases 25-27 (in progress)
+- [x] **v1.5 컴포넌트 실질 품질 강화** - Phases 25-27 (complete)
+- [ ] **v1.6 하네스 엔지니어링** - Phases 28-30 (in progress)
 
 ## Phases
 
@@ -86,11 +87,20 @@
 
 </details>
 
-### v1.5 컴포넌트 실질 품질 강화
+<details>
+<summary>v1.5 컴포넌트 실질 품질 강화 (Phases 25-27) - COMPLETE</summary>
 
-- [ ] **Phase 25: 접근성 수정 + 토큰 정합** - 터치 타겟/간격 수정, prefers-reduced-motion 적용, 포커스 링 통일, 토큰 값 정합
-- [ ] **Phase 26: SCSS 현대화** - 반응형 패딩 차등 적용, 인터랙션 애니메이션, 폰트/여백 사이즈 확대
-- [ ] **Phase 27: 문서/플레이그라운드 동기화** - playground HTML 반영 + 문서/프롬프트/스니펫 역갱신
+- [x] **Phase 25: 접근성 수정 + 토큰 정합** - 터치 타겟/간격 수정, prefers-reduced-motion 적용, 포커스 링 통일, 토큰 값 정합
+- [x] **Phase 26: SCSS 현대화** - 반응형 패딩 차등 적용, 인터랙션 애니메이션, 폰트/여백 사이즈 확대
+- [x] **Phase 27: 문서/플레이그라운드 동기화** - playground HTML 반영 + 문서/프롬프트/스니펫 역갱신
+
+</details>
+
+### v1.6 하네스 엔지니어링
+
+- [ ] **Phase 28: CLAUDE.md 경량화** - 토큰 값 나열 제거, 파일 참조로 대체, 규칙/판단 기준만 유지하여 컨텍스트 50% 절감
+- [ ] **Phase 29: Claude Code 훅 설정** - SCSS lint 자동 실행 훅 + 커밋 시 스타터킷 동기화 훅
+- [ ] **Phase 30: Claude Code 스킬 생성** - 컴포넌트 일괄 생성 스킬 + 프로젝트 CLAUDE.md 생성 스킬
 
 ## Phase Details
 
@@ -278,6 +288,9 @@
 
 </details>
 
+<details>
+<summary>v1.5 Phase Details (Complete)</summary>
+
 ### Phase 25: 접근성 수정 + 토큰 정합
 **Goal**: 컴포넌트 SCSS의 접근성 미달 항목(터치 타겟, 간격, reduced-motion, 포커스 링)이 수정되고, 토큰 값과 문서 간 불일치가 해소된다
 **Depends on**: Phase 24 (v1.4 완료 기반)
@@ -324,10 +337,45 @@ Plans:
 - [x] 27-01-PLAN.md -- 스니펫 + 프롬프트 + CLAUDE.md 역갱신
 - [x] 27-02-PLAN.md -- site/ 문서 갱신 + CSS 빌드 + npm test
 
+</details>
+
+### Phase 28: CLAUDE.md 경량화
+**Goal**: CLAUDE.md의 컨텍스트 사용량이 50% 이상 줄어들면서도 Claude가 프로젝트 규칙을 정확히 따를 수 있다
+**Depends on**: Phase 27 (v1.5 완료, 모든 코드/문서가 최신 상태)
+**Requirements**: SLIM-01, SLIM-02
+**Success Criteria** (what must be TRUE):
+  1. CLAUDE.md에서 토큰 값 나열(색상 팔레트, 타이포 스케일, 간격 스케일, 기타 토큰 전체)이 제거되고, 해당 SCSS 파일 경로 참조로 대체되어 있다
+  2. CLAUDE.md의 총 토큰 수가 경량화 전 대비 50% 이상 감소했다
+  3. BEM 패턴, 하드코딩 금지, ITCSS 레이어 규칙, 컴포넌트 스니펫 참조 등 판단 기준/규칙은 그대로 유지되어 있다
+  4. 중복 내용(글로벌 CLAUDE.md와 프로젝트 CLAUDE.md 간 겹치는 규칙)이 제거되고, 한쪽에만 존재한다
+**Plans**: TBD
+
+### Phase 29: Claude Code 훅 설정
+**Goal**: SCSS 파일 수정 시 린트가 자동 실행되고, 커밋 시 스타터킷이 자동 동기화되어 수동 실행을 잊을 일이 없다
+**Depends on**: Phase 28 (CLAUDE.md 정리 후 훅 설정 — 훅도 .claude/ 디렉토리 설정이므로 순서 유지)
+**Requirements**: HOOK-01, HOOK-02
+**Success Criteria** (what must be TRUE):
+  1. `.claude/settings.json`에 SCSS 파일 Edit/Write 후 `npm run lint:css` 자동 실행 훅이 등록되어 있다
+  2. `.claude/settings.json`에 커밋 후 `npm run sync:starter` 자동 실행 훅이 등록되어 있다
+  3. 실제 SCSS 파일을 수정하면 lint 훅이 트리거되어 결과가 출력된다
+  4. 실제 커밋을 하면 sync:starter 훅이 트리거되어 스타터킷 레포가 동기화된다
+**Plans**: TBD
+
+### Phase 30: Claude Code 스킬 생성
+**Goal**: 반복적인 컴포넌트 생성 작업과 프로젝트 초기 설정이 스킬 한 번 호출로 완료된다
+**Depends on**: Phase 29 (훅 설정 완료 후 스킬 추가 — 스킬이 훅과 연동될 수 있음)
+**Requirements**: SKILL-01, SKILL-02
+**Success Criteria** (what must be TRUE):
+  1. `.claude/skills/` 디렉토리에 컴포넌트 생성 스킬 파일이 존재하고, 컴포넌트명을 입력하면 SCSS 파일(`src/scss/6-components/`), 스니펫(`src/snippets/`), playground HTML(`src/playground/`), site 문서 페이지(`site/components/`)가 일괄 생성된다
+  2. 생성된 파일들이 기존 컴포넌트(btn, card 등)와 동일한 구조/패턴을 따른다 (BEM, 토큰 사용, 반응형, 접근성)
+  3. `.claude/skills/` 디렉토리에 프로젝트 CLAUDE.md 생성 스킬 파일이 존재하고, 프로젝트명/브랜드 색상/타겟 브라우저를 입력하면 스타터킷 기반 맞춤 CLAUDE.md가 생성된다
+  4. 생성된 프로젝트 CLAUDE.md에 토큰 오버라이드 값, 타겟 브라우저, 프로젝트별 예외 규칙이 반영되어 있다
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 25 -> 26 -> 27
+Phases execute in numeric order: 28 -> 29 -> 30
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -355,6 +403,9 @@ Phases execute in numeric order: 25 -> 26 -> 27
 | 22. 콘텐츠 감사 + 보강 | v1.3 | 0/TBD | Complete | 2026-03-26 |
 | 23. 콘텐츠 재작성 | v1.4 | 0/TBD | Complete | 2026-03-27 |
 | 24. 사이트 디자인 고도화 | v1.4 | 0/TBD | Complete | 2026-03-27 |
-| 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | Complete    | 2026-03-27 |
-| 26. SCSS 현대화 | v1.5 | 2/2 | Complete    | 2026-03-27 |
-| 27. 문서/플레이그라운드 동기화 | v1.5 | 2/2 | Complete    | 2026-03-27 |
+| 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | Complete | 2026-03-27 |
+| 26. SCSS 현대화 | v1.5 | 2/2 | Complete | 2026-03-27 |
+| 27. 문서/플레이그라운드 동기화 | v1.5 | 2/2 | Complete | 2026-03-27 |
+| 28. CLAUDE.md 경량화 | v1.6 | 0/TBD | Not started | - |
+| 29. Claude Code 훅 설정 | v1.6 | 0/TBD | Not started | - |
+| 30. Claude Code 스킬 생성 | v1.6 | 0/TBD | Not started | - |

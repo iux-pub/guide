@@ -456,7 +456,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-03 | Phase 24 | Complete |
 | UI-04 | Phase 24 | Complete |
 
-### v1.5 (In Progress)
+### v1.5 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
@@ -464,8 +464,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | A11YFIX-02 | Phase 25 | Complete |
 | A11YFIX-03 | Phase 25 | Complete |
 | A11YFIX-04 | Phase 25 | Complete |
-| A11YFIX-05 | Phase 25 | Pending |
-| A11YFIX-06 | Phase 25 | Pending |
+| A11YFIX-05 | Phase 25 | Complete |
+| A11YFIX-06 | Phase 25 | Complete |
 | TOKFIX-01 | Phase 25 | Complete |
 | RESP-01 | Phase 26 | Complete |
 | RESP-02 | Phase 26 | Complete |
@@ -478,6 +478,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SIZE-04 | Phase 27 | Complete |
 | TOKFIX-02 | Phase 27 | Complete |
 
+### v1.6 (In Progress)
+
+| Requirement | Phase | Status |
+|-------------|-------|---------|
+| SLIM-01 | Phase 28 | Pending |
+| SLIM-02 | Phase 28 | Pending |
+| HOOK-01 | Phase 29 | Pending |
+| HOOK-02 | Phase 29 | Pending |
+| SKILL-01 | Phase 30 | Pending |
+| SKILL-02 | Phase 30 | Pending |
+
 **Coverage:**
 - v0.8 requirements: 46 total (all complete)
 - v0.9 requirements: 17 total (all complete)
@@ -487,9 +498,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1.2 requirements: 7 total (all complete)
 - v1.3 requirements: 7 total (all complete)
 - v1.4 requirements: 7 total (all complete)
-- v1.5 requirements: 16 total (mapped: 16)
+- v1.5 requirements: 16 total (all complete)
+- v1.6 requirements: 6 total (mapped: 6)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-27 -- v1.5 로드맵 생성, 트레이서빌리티 업데이트*
+*Last updated: 2026-03-28 -- v1.6 로드맵 생성, 트레이서빌리티 업데이트*

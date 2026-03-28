@@ -268,6 +268,23 @@
 - [x] **SIZE-03**: 카드/모달/테이블 등 내부 여백을 컴포넌트 특성에 맞게 확대 (시원시원한 현대적 느낌)
 - [x] **SIZE-04**: 변경된 사이즈/여백을 playground HTML 미리보기에 반영
 
+## v1.6 Requirements
+
+### CLAUDE.md 경량화 (SLIM)
+
+- [ ] **SLIM-01**: CLAUDE.md에서 토큰 값 나열(색상/타이포/간격/기타 전체)을 파일 경로 참조로 대체하여 컨텍스트 사용량 50% 이상 절감
+- [ ] **SLIM-02**: 규칙/판단 기준(BEM 패턴, 하드코딩 금지 등)은 유지하되 중복 제거 및 구조 정리
+
+### 훅 설정 (HOOK)
+
+- [ ] **HOOK-01**: SCSS 파일 Edit/Write 후 `npm run lint:css` 자동 실행되는 Claude Code 훅 설정
+- [ ] **HOOK-02**: main 브랜치 커밋 후 `npm run sync:starter` 자동 실행되는 Claude Code 훅 설정
+
+### 스킬 (SKILL)
+
+- [ ] **SKILL-01**: 컴포넌트 생성 스킬 — 컴포넌트명 입력 시 SCSS + 스니펫 + playground HTML + site 문서 페이지를 일괄 생성
+- [ ] **SKILL-02**: 프로젝트 CLAUDE.md 생성 스킬 — 스타터킷 기반 새 프로젝트 시작 시 프로젝트명/브랜드 색상/타겟 브라우저 등을 반영한 맞춤 CLAUDE.md 생성
+
 ## v2 Requirements
 
 ### 확장 기능

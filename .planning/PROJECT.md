@@ -8,16 +8,16 @@
 
 신규 프로젝트 시작 시 디자인/퍼블리싱 규칙을 처음부터 다시 정하지 않고, 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
 
-## Current Milestone: v1.5 컴포넌트 실질 품질 강화
+## Current Milestone: v1.6 하네스 엔지니어링
 
-**Goal:** 규정(문서)과 실제 SCSS 구현 간 불일치를 해소하고, 컴포넌트 크기/여백/반응형을 현대적 수준으로 개선하여 실제 프로젝트 투입 시 바로 사용 가능한 품질을 확보한다
+**Goal:** Claude Code 하네스(CLAUDE.md, 훅, 스킬)를 최적화하여 AI 협업 효율을 극대화한다
 
 **Target features:**
-- 터치 타겟 44px 미달/간격 8px 미달 수정 (모달, 페이지네이션, 브레드크럼)
-- prefers-reduced-motion 전 컴포넌트 적용
-- 트랜지션 타이밍 토큰/문서 정합
-- 반응형 전환 개선 + 반응형 패딩 적용
-- 모달 열림 애니메이션, 포커스 링 통일, 카드 hover 효과
+- CLAUDE.md 경량화 — 토큰 값 나열 제거, 파일 참조로 대체, 규칙/판단 기준만 유지
+- lint 훅 — SCSS Edit/Write 후 npm run lint:css 자동 실행
+- 컴포넌트 생성 스킬 — SCSS + 스니펫 + playground + site 문서 일괄 생성
+- sync:starter 훅 — 커밋 시 스타터킷 레포 자동 동기화
+- 프로젝트 CLAUDE.md 생성 스킬 — 스타터킷 기반 새 프로젝트 맞춤 CLAUDE.md 생성
 - 전반적 폰트 크기/여백 확대 (현대적 시원한 느낌)
 - 문서/스니펫 역갱신 (코드와 문서 일치)
 
@@ -161,4 +161,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-27 — Milestone v1.5 started*
+*Last updated: 2026-03-28 — Milestone v1.6 started*

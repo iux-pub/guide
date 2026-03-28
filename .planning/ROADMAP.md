@@ -348,7 +348,9 @@ Plans:
   2. CLAUDE.md의 총 토큰 수가 경량화 전 대비 50% 이상 감소했다
   3. BEM 패턴, 하드코딩 금지, ITCSS 레이어 규칙, 컴포넌트 스니펫 참조 등 판단 기준/규칙은 그대로 유지되어 있다
   4. 중복 내용(글로벌 CLAUDE.md와 프로젝트 CLAUDE.md 간 겹치는 규칙)이 제거되고, 한쪽에만 존재한다
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 28-01-PLAN.md -- CLAUDE.md 경량화 (토큰 값 제거 + 중복 제거 + 스택 축약)
 
 ### Phase 29: Claude Code 훅 설정
 **Goal**: SCSS 파일 수정 시 린트가 자동 실행되고, 커밋 시 스타터킷이 자동 동기화되어 수동 실행을 잊을 일이 없다
@@ -359,7 +361,9 @@ Plans:
   2. `.claude/settings.json`에 커밋 후 `npm run sync:starter` 자동 실행 훅이 등록되어 있다
   3. 실제 SCSS 파일을 수정하면 lint 훅이 트리거되어 결과가 출력된다
   4. 실제 커밋을 하면 sync:starter 훅이 트리거되어 스타터킷 레포가 동기화된다
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 28-01-PLAN.md -- CLAUDE.md 경량화 (토큰 값 제거 + 중복 제거 + 스택 축약)
 
 ### Phase 30: Claude Code 스킬 생성
 **Goal**: 반복적인 컴포넌트 생성 작업과 프로젝트 초기 설정이 스킬 한 번 호출로 완료된다
@@ -370,7 +374,9 @@ Plans:
   2. 생성된 파일들이 기존 컴포넌트(btn, card 등)와 동일한 구조/패턴을 따른다 (BEM, 토큰 사용, 반응형, 접근성)
   3. `.claude/skills/` 디렉토리에 프로젝트 CLAUDE.md 생성 스킬 파일이 존재하고, 프로젝트명/브랜드 색상/타겟 브라우저를 입력하면 스타터킷 기반 맞춤 CLAUDE.md가 생성된다
   4. 생성된 프로젝트 CLAUDE.md에 토큰 오버라이드 값, 타겟 브라우저, 프로젝트별 예외 규칙이 반영되어 있다
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 28-01-PLAN.md -- CLAUDE.md 경량화 (토큰 값 제거 + 중복 제거 + 스택 축약)
 
 ## Progress
 
@@ -406,6 +412,6 @@ Phases execute in numeric order: 28 -> 29 -> 30
 | 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | Complete | 2026-03-27 |
 | 26. SCSS 현대화 | v1.5 | 2/2 | Complete | 2026-03-27 |
 | 27. 문서/플레이그라운드 동기화 | v1.5 | 2/2 | Complete | 2026-03-27 |
-| 28. CLAUDE.md 경량화 | v1.6 | 0/TBD | Not started | - |
+| 28. CLAUDE.md 경량화 | v1.6 | 0/1 | In progress | - |
 | 29. Claude Code 훅 설정 | v1.6 | 0/TBD | Not started | - |
 | 30. Claude Code 스킬 생성 | v1.6 | 0/TBD | Not started | - |

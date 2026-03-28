@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; echo \"$f\" | grep -qE '\\.scss$' && npm run lint:css 2>/dev/null || true; }",
+            "timeout": 30,
+            "statusMessage": "SCSS 린트 검사 중..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/johyeonchang/Documents/Work/프로젝트/infoUX && git log --oneline -1 --format=%H 2>/dev/null | { read -r h; [ -n \"$h\" ] && npm run sync:starter 2>/dev/null || true; }",
+            "timeout": 60,
+            "statusMessage": "스타터킷 동기화 중..."
+          }
+        ]
+      }
+    ]
+  }
+}

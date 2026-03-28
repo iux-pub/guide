@@ -414,4 +414,4 @@ Phases execute in numeric order: 28 -> 29 -> 30
 | 27. 문서/플레이그라운드 동기화 | v1.5 | 2/2 | Complete | 2026-03-27 |
 | 28. CLAUDE.md 경량화 | v1.6 | 1/1 | Complete    | 2026-03-28 |
 | 29. Claude Code 훅 설정 | v1.6 | 0/TBD | Complete    | 2026-03-28 |
-| 30. Claude Code 스킬 생성 | v1.6 | 0/TBD | Not started | - |
+| 30. Claude Code 스킬 생성 | v1.6 | 0/TBD | Complete    | 2026-03-28 |

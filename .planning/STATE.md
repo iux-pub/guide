@@ -4,7 +4,7 @@ milestone: v1.6
 milestone_name: 하네스 엔지니어링
 status: Ready to plan
 stopped_at: Completed 28-01-PLAN.md
-last_updated: "2026-03-28T01:29:40.698Z"
+last_updated: "2026-03-28T02:31:15.668Z"
 progress:
   total_phases: 30
   completed_phases: 11
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** 신규 프로젝트 시작 시 검증된 팀 표준을 즉시 적용할 수 있어야 한다
-**Current focus:** Phase 28 — CLAUDE.md 경량화
+**Current focus:** Phase 29 — Claude Code 훅 설정
 
 ## Current Position
 
-Phase: 29
+Phase: 30
 Plan: Not started
 
 ## Performance Metrics

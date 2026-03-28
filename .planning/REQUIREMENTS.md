@@ -272,8 +272,8 @@
 
 ### CLAUDE.md 경량화 (SLIM)
 
-- [ ] **SLIM-01**: CLAUDE.md에서 토큰 값 나열(색상/타이포/간격/기타 전체)을 파일 경로 참조로 대체하여 컨텍스트 사용량 50% 이상 절감
-- [ ] **SLIM-02**: 규칙/판단 기준(BEM 패턴, 하드코딩 금지 등)은 유지하되 중복 제거 및 구조 정리
+- [x] **SLIM-01**: CLAUDE.md에서 토큰 값 나열(색상/타이포/간격/기타 전체)을 파일 경로 참조로 대체하여 컨텍스트 사용량 50% 이상 절감
+- [x] **SLIM-02**: 규칙/판단 기준(BEM 패턴, 하드코딩 금지 등)은 유지하되 중복 제거 및 구조 정리
 
 ### 훅 설정 (HOOK)
 
@@ -482,8 +482,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|---------|
-| SLIM-01 | Phase 28 | Pending |
-| SLIM-02 | Phase 28 | Pending |
+| SLIM-01 | Phase 28 | Complete |
+| SLIM-02 | Phase 28 | Complete |
 | HOOK-01 | Phase 29 | Pending |
 | HOOK-02 | Phase 29 | Pending |
 | SKILL-01 | Phase 30 | Pending |

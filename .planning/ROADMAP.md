@@ -350,7 +350,7 @@ Plans:
   4. 중복 내용(글로벌 CLAUDE.md와 프로젝트 CLAUDE.md 간 겹치는 규칙)이 제거되고, 한쪽에만 존재한다
 **Plans**: 1 plan
 Plans:
-- [ ] 28-01-PLAN.md -- CLAUDE.md 경량화 (토큰 값 제거 + 중복 제거 + 스택 축약)
+- [x] 28-01-PLAN.md -- CLAUDE.md 경량화 (토큰 값 제거 + 중복 제거 + 스택 축약)
 
 ### Phase 29: Claude Code 훅 설정
 **Goal**: SCSS 파일 수정 시 린트가 자동 실행되고, 커밋 시 스타터킷이 자동 동기화되어 수동 실행을 잊을 일이 없다
@@ -412,6 +412,6 @@ Phases execute in numeric order: 28 -> 29 -> 30
 | 25. 접근성 수정 + 토큰 정합 | v1.5 | 1/2 | Complete | 2026-03-27 |
 | 26. SCSS 현대화 | v1.5 | 2/2 | Complete | 2026-03-27 |
 | 27. 문서/플레이그라운드 동기화 | v1.5 | 2/2 | Complete | 2026-03-27 |
-| 28. CLAUDE.md 경량화 | v1.6 | 0/1 | In progress | - |
+| 28. CLAUDE.md 경량화 | v1.6 | 1/1 | Complete   | 2026-03-28 |
 | 29. Claude Code 훅 설정 | v1.6 | 0/TBD | Not started | - |
 | 30. Claude Code 스킬 생성 | v1.6 | 0/TBD | Not started | - |

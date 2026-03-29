@@ -3,10 +3,12 @@
 // Elements: __wrapper, __head, __th, __body, __row, __td, __empty
 // Modifiers: --striped, --bordered
 
+@use '../2-tools/responsive' as resp;
+
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
 
   // 반응형 래퍼 (모바일 가로 스크롤)
   &__wrapper {
@@ -26,6 +28,14 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
     white-space: nowrap;
+
+    @include resp.respond-to('tablet') {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    @include resp.respond-to('pc') {
+      padding: var(--spacing-lg);
+    }
   }
 
   // 테이블 본문
@@ -43,6 +53,14 @@
     padding: var(--spacing-md);
     color: var(--color-text);
     font-weight: var(--font-weight-regular);
+
+    @include resp.respond-to('tablet') {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    @include resp.respond-to('pc') {
+      padding: var(--spacing-lg);
+    }
   }
 
   // 빈 상태 메시지
@@ -50,6 +68,10 @@
     text-align: center;
     padding: var(--spacing-2xl);
     color: var(--color-text-secondary);
+
+    @include resp.respond-to('pc') {
+      padding: var(--spacing-3xl);
+    }
   }
 
   // --- Variant modifiers ---

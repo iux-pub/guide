@@ -13,7 +13,12 @@
   &__list {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
+
+    @include resp.respond-to('pc') {
+      gap: var(--spacing-md);
+    }
+
     list-style: none;
     padding: 0;
     margin: 0;
@@ -36,9 +41,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 4rem;
-    height: 4rem;
+    min-width: 4.4rem;
+    height: 4.4rem;
     padding: var(--spacing-xs) var(--spacing-sm);
+
+    // 반응형 패딩 차등
+    @include resp.respond-to('tablet-up') {
+      padding: var(--spacing-sm) var(--spacing-md);
+    }
+
     border: 1px solid var(--color-border);
     border-radius: var(--radius-base);
     font-size: var(--font-size-sm);
@@ -47,6 +58,11 @@
     transition:
       background-color var(--transition-fast),
       border-color var(--transition-fast);
+
+    // 접근성: 모션 감소 설정 대응
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0.01ms;
+    }
 
     &:hover:not(.pagination__link--disabled, .pagination__link--current) {
       background-color: var(--color-bg-secondary);

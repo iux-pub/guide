@@ -3,6 +3,8 @@
 // WAI-ARIA: tabs 자동 활성화 패턴
 // 모바일: 가로 스크롤, tablet-up: 기본 표시
 
+@use '../2-tools/responsive' as resp;
+
 .tab {
   // 탭 리스트 (role="tablist")
   &__list {
@@ -16,7 +18,17 @@
 
   // 탭 버튼 (role="tab")
   &__button {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 1.2rem 2rem; // 12px 20px
+
+    // 반응형 패딩 차등
+    @include resp.respond-to('tablet') {
+      padding: 1.2rem 2.4rem; // 12px 24px
+    }
+
+    @include resp.respond-to('pc') {
+      padding: 1.6rem 2.4rem; // 16px 24px
+    }
+
     border: none;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
@@ -31,13 +43,18 @@
       color var(--transition-fast),
       border-color var(--transition-fast);
 
+    // 접근성: 모션 감소 설정 대응
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0.01ms;
+    }
+
     &:hover {
       color: var(--color-text);
     }
 
     &:focus-visible {
       outline: 2px solid var(--color-primary);
-      outline-offset: -2px;
+      outline-offset: 2px;
     }
 
     // 활성 탭
@@ -49,7 +66,15 @@
 
   // 탭 패널 (role="tabpanel")
   &__panel {
-    padding: var(--spacing-lg) 0;
+    padding: var(--spacing-md) 0;
+
+    @include resp.respond-to('tablet-up') {
+      padding: var(--spacing-lg) 0;
+    }
+
+    @include resp.respond-to('pc') {
+      padding: var(--spacing-xl) 0;
+    }
 
     &[hidden] {
       display: none;

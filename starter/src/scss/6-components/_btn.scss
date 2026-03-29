@@ -3,12 +3,24 @@
 // Variants: --primary, --secondary, --outline, --text, --ghost, --link
 // Sizes: --sm, --lg
 
+@use '../2-tools/responsive' as resp;
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-md);
+
+  // 반응형 패딩 차등
+  @include resp.respond-to('tablet') {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+
+  @include resp.respond-to('pc') {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
   border: 1px solid transparent;
   border-radius: var(--radius-base);
   font-family: var(--font-family-base);
@@ -21,6 +33,11 @@
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     color var(--transition-fast);
+
+  // 접근성: 모션 감소 설정 대응
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
+  }
 
   // 비활성 상태
   &:disabled {
@@ -108,11 +125,23 @@
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-sm);
     min-height: 4.4rem;
+
+    @include resp.respond-to('tablet') {
+      padding: var(--spacing-xs) var(--spacing-md);
+    }
   }
 
   // 큰 버튼
   &--lg {
     padding: var(--spacing-md) var(--spacing-lg);
     font-size: var(--font-size-md);
+
+    @include resp.respond-to('tablet') {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+
+    @include resp.respond-to('pc') {
+      padding: var(--spacing-lg) var(--spacing-xl);
+    }
   }
 }

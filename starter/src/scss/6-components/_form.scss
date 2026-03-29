@@ -2,19 +2,23 @@
 // BEM Block: .form
 // Elements: __group, __label, __input, __select, __textarea, __help, __message, __checkbox, __radio
 // Modifiers: __label--required, __input--error, __input--success, __message--error, __message--success
-// States: :focus, :disabled
+// States: :focus-visible, :disabled
 
 @use '../2-tools/responsive' as resp;
 
 .form {
   &__group {
     margin-bottom: var(--spacing-md);
+
+    @include resp.respond-to('pc') {
+      margin-bottom: var(--spacing-lg);
+    }
   }
 
   &__label {
     display: block;
     margin-bottom: var(--spacing-xs);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
 
@@ -31,6 +35,16 @@
     display: block;
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
+
+    // 반응형 패딩 차등
+    @include resp.respond-to('tablet') {
+      padding: var(--spacing-sm) var(--spacing-lg);
+    }
+
+    @include resp.respond-to('pc') {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
     border: 1px solid var(--color-border);
     border-radius: var(--radius-base);
     font-family: var(--font-family-base);
@@ -41,15 +55,19 @@
     background-color: var(--color-bg);
     transition: border-color var(--transition-fast);
 
+    // 접근성: 모션 감소 설정 대응
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0.01ms;
+    }
+
     &::placeholder {
       color: var(--color-gray-500);
     }
 
-    &:focus {
-      outline: none;
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px rgb(37 110 244 / 20%); // fallback: --color-primary 20%
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 20%, transparent);
     }
 
     &:disabled {
@@ -62,9 +80,9 @@
     &--error {
       border-color: var(--color-danger);
 
-      &:focus {
-        box-shadow: 0 0 0 2px rgb(222 52 18 / 20%); // fallback: --color-danger 20%
-        box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger) 20%, transparent);
+      &:focus-visible {
+        outline: 2px solid var(--color-danger);
+        outline-offset: 2px;
       }
     }
 
@@ -72,9 +90,9 @@
     &--success {
       border-color: var(--color-success);
 
-      &:focus {
-        box-shadow: 0 0 0 2px rgb(34 135 56 / 20%); // fallback: --color-success 20%
-        box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-success) 20%, transparent);
+      &:focus-visible {
+        outline: 2px solid var(--color-success);
+        outline-offset: 2px;
       }
     }
   }

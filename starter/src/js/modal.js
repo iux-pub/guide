@@ -7,6 +7,7 @@
   function openModal(modal, trigger) {
     modal.setAttribute('aria-hidden', 'false')
     modal.style.display = 'flex'
+    modal.classList.add('modal--active')
     document.body.style.overflow = 'hidden'
     var firstFocusable = modal.querySelector(FOCUSABLE)
     if (firstFocusable) firstFocusable.focus()
@@ -14,6 +15,7 @@
   }
 
   function closeModal(modal) {
+    modal.classList.remove('modal--active')
     modal.setAttribute('aria-hidden', 'true')
     modal.style.display = 'none'
     document.body.style.overflow = ''

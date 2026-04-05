@@ -1,4 +1,3 @@
-<!-- GSD:project-start source:PROJECT.md -->
 ## Project
 
 **INFOMIND UX 디자인/퍼블리싱 가이드 시스템**
@@ -15,9 +14,7 @@
 - **접근성**: KWCAG/WCAG 2.1 AA 이상 -- 공공기관 납품 요건
 - **코딩 스타일**: 2 spaces, single quote, 세미콜론 없음 -- 팀 합의
 - **주석 언어**: 한국어 -- 팀 내 소통 언어
-<!-- GSD:project-end -->
 
-<!-- GSD:stack-start source:research/STACK.md -->
 ## Technology Stack
 
 | Category | Technology | Version |
@@ -34,9 +31,7 @@
 | Libraries | sass-rem, Prism.js, clipboard.js | latest |
 
 > `sass`가 올바른 npm 패키지 (`dart-sass` 아님). `@use`/`@forward` 사용 (`@import` 금지).
-<!-- GSD:stack-end -->
 
-<!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
 ### 1. BEM 네이밍 규칙
@@ -141,9 +136,7 @@ npx stylelint "src/scss/6-components/**/*.scss"
 - SCSS 스타일 세부사항은 SCSS 파일을 직접 읽어 참조하라
 - 미리보기 페이지: `src/playground/{컴포넌트}.html`
 - 바닐라 JS (모달, 탭): `src/js/modal.js`, `src/js/tab.js`
-<!-- GSD:conventions-end -->
 
-<!-- GSD:architecture-start source:ARCHITECTURE.md -->
 ## Architecture
 
 ### 1. SCSS 구조 (ITCSS 7레이어)
@@ -240,7 +233,6 @@ src/scss/
 // placeholder 스타일
 @include mix.placeholder(var(--color-gray-500));
 ```
-<!-- GSD:architecture-end -->
 
 ### 접근성 가이드 참조 경로
 
@@ -256,23 +248,3 @@ src/scss/
 ### 문서 사이트
 
 문서 사이트: `npm run build:site`로 빌드 후 _site/ 에서 열람. `npm run serve`로 개발 서버 실행.
-
-<!-- GSD:workflow-start source:GSD defaults -->
-## GSD Workflow Enforcement
-
-Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
-
-Use these entry points:
-- `/gsd:quick` for small fixes, doc updates, and ad-hoc tasks
-- `/gsd:debug` for investigation and bug fixing
-- `/gsd:execute-phase` for planned phase work
-
-Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
-<!-- GSD:workflow-end -->
-
-<!-- GSD:profile-start -->
-## Developer Profile
-
-> Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
-> This section is managed by `generate-claude-profile` -- do not edit manually.
-<!-- GSD:profile-end -->

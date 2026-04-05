@@ -93,6 +93,13 @@ order: 3
 
 **핸드오프 시 반드시 명시**: 디자인 핸드오프 문서에 `prefers-reduced-motion` 대응이 필수임을 기재한다.
 
+## 애니메이션 성능 규칙
+
+- `transform`과 `opacity`만 애니메이션하라 (GPU 합성 레이어)
+- `top`, `left`, `width`, `height` 직접 애니메이션 금지 (레이아웃 리플로우 발생)
+- 스크롤 감지는 `IntersectionObserver` 사용. `window.addEventListener('scroll')` 직접 바인딩 금지
+- 전체 높이에 `height: 100vh` 금지 → `min-height: 100dvh` 사용 (iOS Safari 주소창 대응, `100vh` 폴백 병기)
+
 ## Do / Don't
 
 | Do | Don't |
@@ -102,6 +109,9 @@ order: 3
 | Spring easing으로 모달/토스트에 생동감 부여 | 500ms 이상 긴 Duration 사용 |
 | 터치 타겟 44px 이상 확보 (Mobile) | 작은 아이콘 버튼을 터치 영역 없이 배치 |
 | Prototype Flow로 주요 사용자 흐름 연결 | Prototype 없이 정적 화면만 납품 |
+| `transform`/`opacity`로 애니메이션 | `top`/`left`/`width`/`height` 애니메이션 |
+| `IntersectionObserver`로 스크롤 감지 | `scroll` 이벤트 직접 바인딩 |
+| `min-height: 100dvh` (폴백 병기) | `height: 100vh` 단독 사용 |
 
 ## 관련 문서
 

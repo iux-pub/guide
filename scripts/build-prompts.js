@@ -573,99 +573,182 @@ ${promptContent}
   return output
 }
 
-// ─── 디자인 가이드 생성 (root prompts/design.md) ───
+// ─── root prompts/ 파일 생성 (스킬에서 fetch) ───
+
+const DESIGN_DIR = path.join(ROOT, 'site/design')
+const FIGMA_DIR = path.join(ROOT, 'site/figma')
 
 /**
  * 마크다운 파일에서 frontmatter, 관련 문서 섹션, HTML 태그, 내부 링크를 제거한다.
- * @param {string} content
- * @returns {string}
  */
 function cleanMarkdown(content) {
-  // frontmatter 제거
   let cleaned = content.replace(/^---[\s\S]*?---\n/, '')
-
-  // 관련 문서 섹션 제거 (## 관련 문서 이후 끝까지 또는 다음 ## 전까지)
   cleaned = cleaned.replace(/^## 관련 문서[\s\S]*?(?=\n## |\n# |$)/m, '')
-
-  // HTML 태그 제거 (color-swatch 등)
   cleaned = cleaned.replace(/<[^>]+>/g, '')
-
-  // 내부 경로 링크 줄 제거 (- [text](/path/...) 패턴)
   cleaned = cleaned.replace(/^- \[.*?\]\(\/.*?\).*$/gm, '')
-
-  // 인라인 내부 링크 → 텍스트만 남기기 ([text](/path) → text)
   cleaned = cleaned.replace(/\[([^\]]+)\]\(\/[^)]+\)/g, '$1')
-
-  // 빈 줄 3개 이상 → 2개로 축소
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n')
-
   return cleaned.trim()
 }
 
 /**
- * site/design/*.md + site/figma/*.md 를 읽어 root prompts/design.md 를 생성한다.
+ * 코드 블록, 대형 테이블(8행 초과), 긴 설명문을 제거한다.
+ * 헤딩, 핵심 규칙 테이블(8행 이하), 불릿만 남긴다.
  */
-function buildDesignGuide() {
-  const DESIGN_DIR = path.join(ROOT, 'site/design')
-  const FIGMA_DIR = path.join(ROOT, 'site/figma')
+function compressContent(content) {
+  // 코드 블록 제거
+  let compressed = content.replace(/```[\s\S]*?```/g, '')
 
-  // order 필드 기준 정렬
-  function readSorted(dir) {
-    return fs.readdirSync(dir)
-      .filter(f => f.endsWith('.md') && f !== 'index.md')
-      .map(f => {
-        const content = fs.readFileSync(path.join(dir, f), 'utf-8')
-        const orderMatch = content.match(/^order:\s*(\d+)/m)
-        const titleMatch = content.match(/^title:\s*(.+)/m)
-        return {
-          file: f,
-          order: orderMatch ? parseInt(orderMatch[1]) : 99,
-          title: titleMatch ? titleMatch[1].trim() : f,
-          content
-        }
-      })
-      .sort((a, b) => a.order - b.order)
-  }
+  // 테이블 압축: 8행 초과 테이블은 헤더+구분선+첫 3행+...으로 축약
+  compressed = compressed.replace(/((?:\|[^\n]+\n){2})((?:\|[^\n]+\n)+)/g, (match, header, rows) => {
+    const rowLines = rows.trim().split('\n')
+    if (rowLines.length > 8) {
+      return header + rowLines.slice(0, 3).join('\n') + '\n| ... | (총 ' + rowLines.length + '행, 원본 참조) |\n'
+    }
+    return match
+  })
 
-  const figmaFiles = readSorted(FIGMA_DIR)
-  const designFiles = readSorted(DESIGN_DIR)
+  // 빈 줄 정리
+  compressed = compressed.replace(/\n{3,}/g, '\n\n')
+  return compressed
+}
 
-  // design-audit.md 는 Quick 5 + 카테고리 헤딩만 축약
-  function compressDesignAudit(content) {
-    const cleaned = cleanMarkdown(content)
-    // Quick 5 섹션만 추출
-    const quick5Match = cleaned.match(/## Quick 5[\s\S]*/)
-    const categoryHeadings = (cleaned.match(/^### \d+\. .+/gm) || []).join('\n')
-    return `## 디자인 감사 (17개 카테고리)\n\n${categoryHeadings}\n\n${quick5Match ? quick5Match[0] : ''}`
-  }
+/**
+ * 디렉토리 내 .md 파일을 order 필드 기준으로 정렬 반환한다.
+ */
+function readSorted(dir) {
+  return fs.readdirSync(dir)
+    .filter(f => f.endsWith('.md') && f !== 'index.md')
+    .map(f => {
+      const content = fs.readFileSync(path.join(dir, f), 'utf-8')
+      const orderMatch = content.match(/^order:\s*(\d+)/m)
+      const titleMatch = content.match(/^title:\s*(.+)/m)
+      return {
+        file: f,
+        order: orderMatch ? parseInt(orderMatch[1]) : 99,
+        title: titleMatch ? titleMatch[1].trim() : f,
+        content
+      }
+    })
+    .sort((a, b) => a.order - b.order)
+}
 
-  // 각 섹션 조립
-  const figmaSections = figmaFiles.map(f => cleanMarkdown(f.content)).join('\n\n---\n\n')
+/**
+ * prompts/design-rules.md — 디자인 규칙 극한 압축
+ * site/design/*.md (design-audit 제외)에서 Do/Don't + 핵심 테이블만 추출
+ */
+function buildDesignRules() {
+  const files = readSorted(DESIGN_DIR)
+    .filter(f => f.file !== 'design-audit.md')
 
-  const designSections = designFiles.map(f => {
-    if (f.file === 'design-audit.md') return compressDesignAudit(f.content)
-    return cleanMarkdown(f.content)
+  const sections = files.map(f => {
+    const cleaned = cleanMarkdown(f.content)
+
+    // 코드 블록 제거
+    let text = cleaned.replace(/```[\s\S]*?```/g, '')
+
+    // Do/Don't 테이블만 추출
+    const doDontMatch = text.match(/## Do \/ Don't[\s\S]*?(?=\n## |\n# |$)/m)
+
+    // 핵심 규칙 테이블만 추출 (8행 이하)
+    const smallTables = []
+    const tableRegex = /(\|[^\n]+\n\|[-| ]+\n(?:\|[^\n]+\n){1,8})/g
+    let match
+    while ((match = tableRegex.exec(text)) !== null) {
+      smallTables.push(match[1].trim())
+    }
+
+    // 불릿 규칙 추출 (금지, 필수, 원칙 키워드 포함 줄)
+    const ruleLines = text.split('\n').filter(l =>
+      /^- .*(금지|필수|않는다|안 된다|사용하지|제공한다|준수|확보)/.test(l)
+    )
+
+    let section = `## ${f.title}\n\n`
+
+    // 가장 핵심적인 규칙만 포함
+    if (ruleLines.length > 0) {
+      section += ruleLines.slice(0, 10).join('\n') + '\n\n'
+    }
+
+    if (doDontMatch) {
+      section += doDontMatch[0].trim() + '\n\n'
+    }
+
+    // Do/Don't가 없으면 첫 번째 작은 테이블만
+    if (!doDontMatch && smallTables.length > 0) {
+      section += smallTables[0] + '\n\n'
+    }
+
+    // 상세는 원본 경로 안내
+    section += `> 상세: site/design/${f.file}\n`
+
+    return section
   }).join('\n\n---\n\n')
 
-  const output = `# 인포마인드 UX 디자인 가이드
+  return `# 디자인 규칙
 
-> 디자인 작업(피그마 시안, 컴포넌트 설계) 시 참조하라.
-> 퍼블리싱 규칙은 prompts/publishing.md 를 참조하라.
+> 핵심 규칙만 압축. 상세 내용은 각 섹션의 원본 파일을 참조하라.
 
----
-
-# 피그마 컨벤션
-
-${figmaSections}
-
----
-
-# 디자인 가이드
-
-${designSections}
+${sections}
 `
+}
 
-  return output
+/**
+ * prompts/design-audit.md — 감사 체크리스트 (Quick 5 + 17개 헤딩 + 체크박스)
+ * site/design/design-audit.md
+ */
+function buildDesignAudit() {
+  const filePath = path.join(DESIGN_DIR, 'design-audit.md')
+  if (!fs.existsSync(filePath)) return ''
+
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const cleaned = cleanMarkdown(content)
+
+  // Quick 5 섹션 추출
+  const quick5Match = cleaned.match(/## Quick 5[\s\S]*/)
+
+  // 17개 카테고리 (### N. 제목 ~ 다음 ### 전까지의 체크박스만)
+  const categories = []
+  const lines = cleaned.split('\n')
+  let current = null
+
+  for (const line of lines) {
+    const heading = line.match(/^### (\d+)\. (.+)/)
+    if (heading) {
+      if (current) categories.push(current)
+      current = { title: `${heading[1]}. ${heading[2]}`, items: [] }
+      continue
+    }
+    if (current && line.startsWith('- [ ]')) {
+      current.items.push(line)
+    }
+    // Quick 5 시작 전까지만
+    if (line.startsWith('## Quick 5')) break
+  }
+  if (current) categories.push(current)
+
+  const categoryText = categories.map(c =>
+    `### ${c.title}\n\n${c.items.join('\n')}`
+  ).join('\n\n')
+
+  return `# 디자인 감사 체크리스트
+
+> 17개 카테고리 기반 디자인 품질 평가.
+> 100점 시작, Critical -8 / Warning -4 / Tip -1.
+
+## 점수 기준
+
+| 점수 | 판정 |
+|------|------|
+| 90~100 | 출시 가능 |
+| 70~89 | 소폭 수정 |
+| 50~69 | 보완 필요 |
+| 50 미만 | 재작업 |
+
+${categoryText}
+
+${quick5Match ? quick5Match[0] : ''}
+`
 }
 
 // ─── 메인 실행 ───
@@ -684,27 +767,31 @@ function main() {
     fs.mkdirSync(ROOT_PROMPTS_DIR, { recursive: true })
   }
 
-  // 1. site/prompts/design.md (토큰 레퍼런스 — 기존 유지)
+  // --- site/prompts/ (사람이 복붙하는 용도) ---
+
   const designContent = buildDesignPrompt()
   fs.writeFileSync(path.join(PROMPTS_DIR, 'design.md'), designContent, 'utf-8')
   console.log('[build-prompts] site/prompts/design.md 생성 완료')
 
-  // 2. components.md
   const componentsContent = buildComponentsPrompt()
   fs.writeFileSync(path.join(PROMPTS_DIR, 'components.md'), componentsContent, 'utf-8')
   console.log('[build-prompts] site/prompts/components.md 생성 완료')
 
-  // 3. context.md
   const contextContent = buildContextPrompt()
   fs.writeFileSync(path.join(PROMPTS_DIR, 'context.md'), contextContent, 'utf-8')
   console.log('[build-prompts] site/prompts/context.md 생성 완료')
 
-  // 4. root prompts/design.md (디자인+피그마 통합 — 신규)
-  const designGuideContent = buildDesignGuide()
-  fs.writeFileSync(path.join(ROOT_PROMPTS_DIR, 'design.md'), designGuideContent, 'utf-8')
-  console.log('[build-prompts] prompts/design.md 생성 완료')
+  // --- root prompts/ (스킬이 fetch하는 용도) ---
 
-  console.log('[build-prompts] 완료! (4개 파일 재생성)')
+  const designRules = buildDesignRules()
+  fs.writeFileSync(path.join(ROOT_PROMPTS_DIR, 'design-rules.md'), designRules, 'utf-8')
+  console.log('[build-prompts] prompts/design-rules.md 생성 완료')
+
+  const designAudit = buildDesignAudit()
+  fs.writeFileSync(path.join(ROOT_PROMPTS_DIR, 'design-audit.md'), designAudit, 'utf-8')
+  console.log('[build-prompts] prompts/design-audit.md 생성 완료')
+
+  console.log('[build-prompts] 완료!')
 }
 
 main()

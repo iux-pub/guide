@@ -200,7 +200,7 @@ Google Stitch, Galileo, Lovable, v0
 
 ```
 .form__group            -- label + input 래퍼
-.form__label            -- 입력 필드 레이블
+.form__label            -- 입력 필드 레이블 (폰트 16px, `--font-size-base`)
 .form__label--required  -- 필수 항목 표시 (* 추가)
 .form__input            -- 텍스트, 이메일, 패스워드 등
 .form__select           -- 드롭다운 선택
@@ -261,7 +261,8 @@ Google Stitch, Galileo, Lovable, v0
 .modal__title           -- 모달 제목 (`aria-labelledby` 타겟)
 .modal__body            -- 본문 콘텐츠
 .modal__footer          -- 액션 버튼 영역
-.modal__close           -- 닫기 버튼 (`aria-label="닫기"`)
+.modal__close           -- 닫기 버튼 (`aria-label="닫기"`) -- 44x44px 터치 타겟 보장
+.modal--active          -- JS가 열 때 추가. 열림 애니메이션 트리거
 ```
 
 ### 탭 (tab)
@@ -269,7 +270,7 @@ Google Stitch, Galileo, Lovable, v0
 ```
 .tab                    -- 탭 전체 래퍼
 .tab__list              -- `role="tablist"`, 탭 버튼 목록 (모바일: 가로 스크롤)
-.tab__button            -- `role="tab"`, 개별 탭 버튼
+.tab__button            -- `role="tab"`, 패딩 12px/20px (모바일), 반응형 확대
 .tab__panel             -- `role="tabpanel"`, 탭 콘텐츠 영역
 ```
 
@@ -280,7 +281,7 @@ Google Stitch, Galileo, Lovable, v0
 .pagination__list       -- `<ul>` 목록
 .pagination__item       -- `<li>` 항목
 .pagination__item--mobile-hidden-- 모바일에서 숨김, tablet-up에서 표시
-.pagination__link       -- `<a>` 페이지 링크
+.pagination__link       -- `<a>` 페이지 링크 -- 최소 44x44px 터치 타겟
 .pagination__link--current-- 현재 페이지 (primary 배경색)
 .pagination__link--prev -- "이전" 버튼
 .pagination__link--next -- "다음" 버튼

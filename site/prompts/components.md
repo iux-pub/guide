@@ -51,6 +51,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 최소 터치 영역 44px x 44px 보장 (`.btn--sm`도 `min-height: 4.4rem` 적용)
 - `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
 - 링크 역할이 필요한 경우에만 `<a class="btn btn--link" href="...">` 사용
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
 
 ---
 
@@ -70,7 +72,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 | 클래스 | 용도 |
 | -------- | ------ |
 | `.form__group` | label + input 래퍼 |
-| `.form__label` | 입력 필드 레이블 |
+| `.form__label` | 입력 필드 레이블 (폰트 16px, `--font-size-base`) |
 | `.form__label--required` | 필수 항목 표시 (* 추가) |
 | `.form__input` | 텍스트, 이메일, 패스워드 등 |
 | `.form__select` | 드롭다운 선택 |
@@ -111,6 +113,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 도움말 텍스트가 있으면 `aria-describedby`로 입력 필드와 연결
 - 체크박스/라디오는 `<label>` 래퍼로 감싸 클릭 영역 확대
 - 비활성 필드는 `disabled` 속성 사용
+- `focus-visible` 스타일 제공: `outline: 2px solid` + `outline-offset: 2px` (box-shadow가 아닌 outline 사용 -- 고대비 모드 호환)
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
 
 ---
 
@@ -154,6 +159,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 이미지에 반드시 `alt` 속성 제공 (장식용 이미지는 `alt=""`)
 - 카드 제목은 적절한 heading 레벨 사용 (문서 구조에 맞게 `h2`~`h4`)
 - 카드 전체가 링크인 경우 `<a>` 래퍼보다 제목에 링크를 걸고 `::after` pseudo-element로 클릭 영역 확장 권장
+- 반응형 패딩: header/body/footer 영역이 모바일/태블릿/PC에서 차등 패딩
 
 ---
 
@@ -211,6 +217,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 반응형 래퍼 `.table__wrapper`로 모바일 가로 스크롤 지원
 - 복잡한 테이블은 `<th id="">` + `<td headers="">` 패턴 사용
 - 정렬 가능한 컬럼은 `aria-sort` 속성 추가 (`ascending` / `descending` / `none`)
+- 기본 폰트 16px(`--font-size-base`) 이상
+- 반응형 패딩: th/td가 모바일/태블릿/PC에서 차등 패딩
 
 ---
 
@@ -257,7 +265,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 | `.modal__title` | 모달 제목 (`aria-labelledby` 타겟) |
 | `.modal__body` | 본문 콘텐츠 |
 | `.modal__footer` | 액션 버튼 영역 |
-| `.modal__close` | 닫기 버튼 (`aria-label="닫기"`) |
+| `.modal__close` | 닫기 버튼 (`aria-label="닫기"`) -- 44x44px 터치 타겟 보장 |
+| `.modal--active` | JS가 열 때 추가. 열림 애니메이션 트리거 |
 
 ### 접근성
 
@@ -269,7 +278,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 모달 열릴 때 첫 번째 포커스 가능 요소에 포커스 이동
 - 모달 닫힐 때 트리거 버튼으로 포커스 복귀
 - `body overflow: hidden` 처리 (배경 스크롤 방지)
-- 닫기 버튼에 `aria-label="닫기"` 필수
+- 닫기 버튼에 `aria-label="닫기"` 필수 -- 44x44px 터치 타겟 보장
+- 반응형: 모바일: 전체화면 / 태블릿: max-width 56rem, max-height 90vh / PC: max-height 85vh
 - 열기: `data-modal-open="모달id"` 속성을 트리거 버튼에 추가
 - 닫기: `data-modal-close` 속성을 닫기 버튼에 추가
 
@@ -314,7 +324,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 | -------- | ------ |
 | `.tab` | 탭 전체 래퍼 |
 | `.tab__list` | `role="tablist"`, 탭 버튼 목록 (모바일: 가로 스크롤) |
-| `.tab__button` | `role="tab"`, 개별 탭 버튼 |
+| `.tab__button` | `role="tab"`, 패딩 12px/20px (모바일), 반응형 확대 |
 | `.tab__panel` | `role="tabpanel"`, 탭 콘텐츠 영역 |
 
 ### 접근성
@@ -326,6 +336,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 비활성 탭은 `tabindex="-1"` (키보드 탭 순서에서 제외, 화살표로만 접근)
 - 비활성 패널은 `hidden` 속성으로 숨김
 - `tablist`에 `aria-label` 속성으로 탭 그룹 설명 제공
+- `focus-visible` 스타일: `outline: 2px solid` + `outline-offset: 2px`
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
 
 ---
 
@@ -373,7 +385,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 | `.pagination__list` | `<ul>` 목록 |
 | `.pagination__item` | `<li>` 항목 |
 | `.pagination__item--mobile-hidden` | 모바일에서 숨김, tablet-up에서 표시 |
-| `.pagination__link` | `<a>` 페이지 링크 |
+| `.pagination__link` | `<a>` 페이지 링크 -- 최소 44x44px 터치 타겟 |
 | `.pagination__link--current` | 현재 페이지 (primary 배경색) |
 | `.pagination__link--prev` | "이전" 버튼 |
 | `.pagination__link--next` | "다음" 버튼 |
@@ -387,6 +399,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 이전/다음 버튼에 `aria-label="이전 페이지"` / `aria-label="다음 페이지"` 필수
 - 비활성 상태는 `<span>` + `aria-disabled="true"` 사용 (링크가 아닌 요소로 변경)
 - `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
+- 링크 간 간격 8px 이상 (`gap: --spacing-sm`)
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
 
 ---
 
@@ -434,4 +448,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 구분자는 CSS `::before` pseudo-element로 처리 (스크린리더에서 자동 무시)
 - `<ol>` 목록이므로 스크린리더가 "N개 항목 중 M번째"로 읽어줌
 - 모바일에서 `.breadcrumb__item--mobile-hidden`으로 상위 경로 숨김 (마지막 2단계만 표시)
+- 아이템 간 간격 8px 이상 (`gap: --spacing-sm`)
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 태블릿 이상에서 폰트 사이즈 16px(`--font-size-base`)로 상향
 ````

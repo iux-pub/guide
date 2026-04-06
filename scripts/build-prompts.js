@@ -573,17 +573,118 @@ ${promptContent}
   return output
 }
 
+// ─── 디자인 가이드 생성 (root prompts/design.md) ───
+
+/**
+ * 마크다운 파일에서 frontmatter, 관련 문서 섹션, HTML 태그, 내부 링크를 제거한다.
+ * @param {string} content
+ * @returns {string}
+ */
+function cleanMarkdown(content) {
+  // frontmatter 제거
+  let cleaned = content.replace(/^---[\s\S]*?---\n/, '')
+
+  // 관련 문서 섹션 제거 (## 관련 문서 이후 끝까지 또는 다음 ## 전까지)
+  cleaned = cleaned.replace(/^## 관련 문서[\s\S]*?(?=\n## |\n# |$)/m, '')
+
+  // HTML 태그 제거 (color-swatch 등)
+  cleaned = cleaned.replace(/<[^>]+>/g, '')
+
+  // 내부 경로 링크 줄 제거 (- [text](/path/...) 패턴)
+  cleaned = cleaned.replace(/^- \[.*?\]\(\/.*?\).*$/gm, '')
+
+  // 인라인 내부 링크 → 텍스트만 남기기 ([text](/path) → text)
+  cleaned = cleaned.replace(/\[([^\]]+)\]\(\/[^)]+\)/g, '$1')
+
+  // 빈 줄 3개 이상 → 2개로 축소
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n')
+
+  return cleaned.trim()
+}
+
+/**
+ * site/design/*.md + site/figma/*.md 를 읽어 root prompts/design.md 를 생성한다.
+ */
+function buildDesignGuide() {
+  const DESIGN_DIR = path.join(ROOT, 'site/design')
+  const FIGMA_DIR = path.join(ROOT, 'site/figma')
+
+  // order 필드 기준 정렬
+  function readSorted(dir) {
+    return fs.readdirSync(dir)
+      .filter(f => f.endsWith('.md') && f !== 'index.md')
+      .map(f => {
+        const content = fs.readFileSync(path.join(dir, f), 'utf-8')
+        const orderMatch = content.match(/^order:\s*(\d+)/m)
+        const titleMatch = content.match(/^title:\s*(.+)/m)
+        return {
+          file: f,
+          order: orderMatch ? parseInt(orderMatch[1]) : 99,
+          title: titleMatch ? titleMatch[1].trim() : f,
+          content
+        }
+      })
+      .sort((a, b) => a.order - b.order)
+  }
+
+  const figmaFiles = readSorted(FIGMA_DIR)
+  const designFiles = readSorted(DESIGN_DIR)
+
+  // design-audit.md 는 Quick 5 + 카테고리 헤딩만 축약
+  function compressDesignAudit(content) {
+    const cleaned = cleanMarkdown(content)
+    // Quick 5 섹션만 추출
+    const quick5Match = cleaned.match(/## Quick 5[\s\S]*/)
+    const categoryHeadings = (cleaned.match(/^### \d+\. .+/gm) || []).join('\n')
+    return `## 디자인 감사 (17개 카테고리)\n\n${categoryHeadings}\n\n${quick5Match ? quick5Match[0] : ''}`
+  }
+
+  // 각 섹션 조립
+  const figmaSections = figmaFiles.map(f => cleanMarkdown(f.content)).join('\n\n---\n\n')
+
+  const designSections = designFiles.map(f => {
+    if (f.file === 'design-audit.md') return compressDesignAudit(f.content)
+    return cleanMarkdown(f.content)
+  }).join('\n\n---\n\n')
+
+  const output = `# 인포마인드 UX 디자인 가이드
+
+> 디자인 작업(피그마 시안, 컴포넌트 설계) 시 참조하라.
+> 퍼블리싱 규칙은 prompts/publishing.md 를 참조하라.
+
+---
+
+# 피그마 컨벤션
+
+${figmaSections}
+
+---
+
+# 디자인 가이드
+
+${designSections}
+`
+
+  return output
+}
+
 // ─── 메인 실행 ───
 
 function main() {
   console.log('[build-prompts] 프롬프트 파일 재생성 시작...')
 
-  // 출력 디렉토리 확인
+  // site/prompts/ 출력 디렉토리 확인
   if (!fs.existsSync(PROMPTS_DIR)) {
     fs.mkdirSync(PROMPTS_DIR, { recursive: true })
   }
 
-  // 1. design.md
+  // root prompts/ 출력 디렉토리 확인
+  const ROOT_PROMPTS_DIR = path.join(ROOT, 'prompts')
+  if (!fs.existsSync(ROOT_PROMPTS_DIR)) {
+    fs.mkdirSync(ROOT_PROMPTS_DIR, { recursive: true })
+  }
+
+  // 1. site/prompts/design.md (토큰 레퍼런스 — 기존 유지)
   const designContent = buildDesignPrompt()
   fs.writeFileSync(path.join(PROMPTS_DIR, 'design.md'), designContent, 'utf-8')
   console.log('[build-prompts] site/prompts/design.md 생성 완료')
@@ -598,7 +699,12 @@ function main() {
   fs.writeFileSync(path.join(PROMPTS_DIR, 'context.md'), contextContent, 'utf-8')
   console.log('[build-prompts] site/prompts/context.md 생성 완료')
 
-  console.log('[build-prompts] 완료! (3개 파일 재생성)')
+  // 4. root prompts/design.md (디자인+피그마 통합 — 신규)
+  const designGuideContent = buildDesignGuide()
+  fs.writeFileSync(path.join(ROOT_PROMPTS_DIR, 'design.md'), designGuideContent, 'utf-8')
+  console.log('[build-prompts] prompts/design.md 생성 완료')
+
+  console.log('[build-prompts] 완료! (4개 파일 재생성)')
 }
 
 main()

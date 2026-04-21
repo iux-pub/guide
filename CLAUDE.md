@@ -6,14 +6,70 @@
 
 **Core Value:** 신규 프로젝트 시작 시 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
 
-### Constraints
+---
 
-- **CSS 방법론**: BEM(Block__Element--Modifier) 필수
-- **전처리기**: SCSS(dart-sass), `@use`/`@forward` 사용 (`@import` 금지)
-- **패키지 매니저**: npm
-- **접근성**: KWCAG/WCAG 2.1 AA 이상
-- **코딩 스타일**: 2 spaces, single quote, 세미콜론 없음 (SCSS는 세미콜론 사용)
-- **주석 언어**: 한국어
+## 코딩 규칙
+
+> 소스: `rules.json` | 상세 문서: `/conventions/` | 갱신: `npm run build:rules`
+> 위반은 훅(check-violations.js + stylelint)이 자동 검출한다.
+
+<!-- RULES_START -->
+### SCSS 규칙
+- R-01 `error` — 모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지
+- R-02 `warn` — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
+
+### BEM 네이밍
+- R-04 `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
+- R-05 `error` — element 2단계 중첩 금지 — 평탄화
+- R-06 `error` — 시각적 modifier 금지 — 의미적 이름 사용
+
+### 모듈 시스템
+- R-03 `error` — @use/@forward만 사용 — @import 금지
+
+### HTML/마크업 규칙
+- R-07 `warn` — inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용
+- R-08 `warn` — HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)
+- R-09 `error` — img alt 속성 필수
+- R-10 `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
+
+### 접근성 규칙
+- R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
+- R-12 `error` — 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상
+- R-13 `error` — 터치/클릭 영역 최소 44×44px
+- R-14 `error` — 건너뛰기 링크 필수 — .skip-to-content
+<!-- RULES_END -->
+
+---
+
+## 작업 전 체크리스트
+
+### SCSS 파일 작성 시
+
+1. 토큰 파일 확인: `src/scss/1-settings/` — 사용할 토큰 이름을 먼저 확인
+2. 모든 색상/간격/크기는 `var(--token-name)` 사용
+3. `@use` 경로는 상대 경로로 (`../2-tools/responsive` 등)
+4. 새 컴포넌트: `6-components/_index.scss`에 `@forward '컴포넌트명'` 추가 필수
+5. 작성 후: `npm run lint:css` 실행 및 오류 수정 완료
+
+### 컴포넌트 마크업 작성 시
+
+1. 스니펫 확인: `src/snippets/{component}.md` — 기존 패턴 우선 적용
+2. BEM Block명은 `src/scss/6-components/_{component}.scss` 파일명과 일치
+3. 인터랙티브 요소: `role`, `aria-*`, `tabindex` 확인
+4. 폼 요소: `<label for>` + `id` 연결 필수
+
+### 신규 컴포넌트 생성 시
+
+`/create-component {컴포넌트명}` 스킬 사용 — 아래 파일 4개가 일괄 생성됨:
+
+| 파일 | 위치 |
+|------|------|
+| SCSS | `src/scss/6-components/_{name}.scss` |
+| 스니펫 | `src/snippets/{name}.md` |
+| 플레이그라운드 | `src/playground/{name}.html` |
+| 문서 페이지 | `site/components/{name}.md` |
+
+---
 
 ## Technology Stack
 
@@ -26,36 +82,68 @@
 | Linting | Stylelint + stylelint-selector-bem-pattern | ^17.5.0 |
 | A11y Testing | pa11y-ci + axe-core | latest |
 
-## Conventions
+---
 
-### BEM 네이밍
-
-- Element 2단계 중첩 금지: `.card__header__title` → `.card__title`
-- Modifier는 시각적 속성명 금지, 의미적 이름 사용: `.btn--gray` → `.btn--secondary`
-- 5-objects, 6-components 레이어에만 BEM 적용
-
-### 디자인 토큰
+## 디자인 토큰 위치
 
 모든 스타일 값은 CSS Custom Properties를 사용하라. 하드코딩 금지.
 
-- 색상: `src/scss/1-settings/_tokens-color.scss`
-- 타이포: `src/scss/1-settings/_tokens-typography.scss`
-- 간격: `src/scss/1-settings/_tokens-spacing.scss`
-- 기타 (radius, shadow, z-index): `src/scss/1-settings/_tokens-misc.scss`
-- 그리드: `src/scss/1-settings/_tokens-grid.scss`
+| 토큰 종류 | 파일 |
+|----------|------|
+| 색상 | `src/scss/1-settings/_tokens-color.scss` |
+| 타이포 | `src/scss/1-settings/_tokens-typography.scss` |
+| 간격 | `src/scss/1-settings/_tokens-spacing.scss` |
+| 기타 (radius, shadow, z-index) | `src/scss/1-settings/_tokens-misc.scss` |
+| 그리드 | `src/scss/1-settings/_tokens-grid.scss` |
 
-### 린트
+---
 
-코드 작성 후 반드시 실행하라.
+## SCSS 구조 (ITCSS 7레이어)
 
-```bash
-npm run lint:css        # 전체 검사
-npm run lint:css:fix    # 자동 수정
+```
+src/scss/
+  style.scss                  # 메인 진입점 — 직접 수정 금지
+  _project-overrides.scss     # 프로젝트별 토큰 오버라이드만
+  1-settings/                 # 토큰, 변수
+  2-tools/                    # 믹스인, 함수 (_responsive.scss, _mixins.scss)
+  3-generic/                  # 리셋
+  4-elements/                 # HTML 태그 기본 스타일
+  5-objects/                  # 레이아웃 패턴 — BEM 적용
+  6-components/               # UI 컴포넌트 — BEM 적용
+  7-utilities/                # 유틸리티
 ```
 
-### 컴포넌트 스니펫
+BEM은 **5-objects, 6-components 레이어에만** 적용한다.
 
-마크업 패턴과 접근성은 `src/snippets/` 참조.
+---
+
+## 반응형 믹스인
+
+```scss
+@use '../2-tools/responsive' as resp;  /* 파일명: _responsive.scss */
+
+.block {
+  /* 모바일 기본 (0~767px) */
+
+  @include resp.respond-to('tablet') {
+    /* 768px ~ 1279px */
+  }
+
+  @include resp.respond-to('tablet-up') {
+    /* 768px ~ */
+  }
+
+  @include resp.respond-to('pc') {
+    /* 1280px ~ */
+  }
+}
+```
+
+62.5% REM 트릭 적용 — `1rem = 10px`
+
+---
+
+## 컴포넌트 스니펫 참조
 
 | 컴포넌트 | 스니펫 | SCSS |
 |----------|--------|------|
@@ -69,48 +157,40 @@ npm run lint:css:fix    # 자동 수정
 | 브레드크럼 | `src/snippets/breadcrumb.md` | `src/scss/6-components/_breadcrumb.scss` |
 | 보일러플레이트 | `src/snippets/boilerplate.md` | — |
 
-## Architecture
+---
 
-### SCSS 구조 (ITCSS 7레이어)
+## AI 프롬프트 파일
 
+`prompts/` 폴더에는 토큰/스니펫에서 자동 생성된 AI 컨텍스트 파일이 있다.
+
+| 파일 | 용도 |
+|------|------|
+| `prompts/context.md` | 이 프로젝트에서 컴포넌트/SCSS 작업 시 주요 규칙 요약 |
+| `prompts/design-rules.md` | 디자인 감사 기준 (Figma 작업 등에 활용) |
+| `prompts/tokens.md` | 현재 토큰 전체 목록 |
+
+토큰이나 스니펫을 수정한 후 반드시 재생성하라: `npm run build:prompts`
+
+## 명령어
+
+```bash
+npm run check           # 위반 패턴 전체 스캔 (훅에서도 자동 실행)
+npm run lint:css        # SCSS 린트 전체 검사
+npm run lint:css:fix    # 자동 수정
+npm run build:css       # CSS 빌드
+npm run build:tokens    # 토큰 파일 재생성 (tokens.json → SCSS)
+npm run build:rules     # 규칙 페이지 재생성 (rules.json → site/conventions/ + CLAUDE.md)
+npm run build:prompts   # AI 프롬프트 파일 재생성
+npm run serve           # 개발 서버 (파일 감시 + 11ty)
+npm test                # 전체 CI (check → lint → build → a11y)
 ```
-src/scss/
-  style.scss              # 메인 진입점
-  _project-overrides.scss # 프로젝트별 토큰 오버라이드
-  1-settings/             # 토큰, 변수
-  2-tools/                # 믹스인, 함수 (responsive.scss, mixins.scss)
-  3-generic/              # 리셋
-  4-elements/             # HTML 태그 기본 스타일
-  5-objects/              # 레이아웃 패턴
-  6-components/           # UI 컴포넌트
-  7-utilities/            # 유틸리티
-```
 
-- 새 컴포넌트: `6-components/_컴포넌트.scss` 생성 후 `6-components/_index.scss`에 `@forward` 추가
+## 코딩 스타일
 
-### 반응형
-
-모바일 퍼스트. 믹스인: `src/scss/2-tools/responsive.scss`
-
-| 브레이크포인트 | 범위 |
-|--------------|------|
-| 모바일 (기본) | 0 ~ 767px |
-| tablet | 768px ~ 1279px |
-| pc | 1280px ~ |
-| tablet-up | 768px ~ |
-
-62.5% REM 트릭 적용 — 1rem = 10px
-
-### 공용 믹스인
-
-`src/scss/2-tools/mixins.scss` 참조 (flex-center, full, ellipsis, bg-cover 등)
-
-## 접근성
-
-- 퍼블리싱 체크리스트: `docs/accessibility/checklist.md`
-- 컴포넌트별 가이드: `docs/accessibility/{component}.md`
-- 본문 건너뛰기 링크 필수: `<a href="#main-content" class="skip-to-content">`
-- 스크린 리더 전용: `.sr-only` 클래스 사용
+- 들여쓰기: 2 spaces
+- 따옴표: single quote
+- 세미콜론: SCSS는 사용, JS/HTML은 사용하지 않음
+- 주석 언어: 한국어
 
 ## GSD Workflow
 

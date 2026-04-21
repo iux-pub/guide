@@ -1,0 +1,3 @@
+# 팀원용 문서 사이트 — LLM 접근 제외
+# rules.json/tokens.json에서 자동 생성됨. LLM은 소스만 보면 된다.
+site/

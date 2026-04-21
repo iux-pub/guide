@@ -1,0 +1,279 @@
+{
+  "meta": {
+    "version": "1.0",
+    "description": "인포마인드 UX팀 코딩 규칙 — 소스 진실. scripts/build-rules.js가 CLAUDE.md와 site/conventions/ 페이지를 여기서 생성한다."
+  },
+  "categories": [
+    {
+      "id": "scss",
+      "title": "SCSS 규칙",
+      "slug": "scss-rules",
+      "order": 2,
+      "description": "SCSS 파일 작성 시 적용되는 값·문법 규칙이다.",
+      "lang": "scss"
+    },
+    {
+      "id": "bem",
+      "title": "BEM 네이밍",
+      "slug": "bem",
+      "order": 3,
+      "description": "CSS 클래스 명명 규칙이다. Stylelint와 check-violations.js로 자동 검증한다.",
+      "lang": "scss"
+    },
+    {
+      "id": "modules",
+      "title": "모듈 시스템",
+      "slug": "modules",
+      "order": 4,
+      "description": "Dart Sass @use/@forward 모듈 시스템 규칙이다.",
+      "lang": "scss"
+    },
+    {
+      "id": "html",
+      "title": "HTML/마크업 규칙",
+      "slug": "html-rules",
+      "order": 5,
+      "description": "HTML 마크업 작성 규칙이다.",
+      "lang": "html"
+    },
+    {
+      "id": "a11y",
+      "title": "접근성 규칙",
+      "slug": "a11y-rules",
+      "order": 6,
+      "description": "WCAG 2.1 AA 기반 접근성 필수 규칙이다.",
+      "lang": "scss"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-01",
+      "category": "scss",
+      "summary": "모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지",
+      "severity": "error",
+      "enforcement": ["check-violations.js"],
+      "rationale": "디자인 토큰으로 일관성을 유지하고 프로젝트별 테마 오버라이드를 가능하게 한다. 하드코딩 값은 토큰 변경 시 일일이 찾아 고쳐야 하는 기술 부채다.",
+      "bad": [
+        { "code": "color: #256ef4;", "note": "하드코딩 색상" },
+        { "code": "background: #f8f8f8;", "note": "하드코딩 색상" },
+        { "code": "padding: 16px;", "note": "하드코딩 간격" },
+        { "code": "gap: 8px;", "note": "하드코딩 간격" }
+      ],
+      "good": [
+        { "code": "color: var(--color-primary);", "note": "색상 토큰" },
+        { "code": "background: var(--color-bg-secondary);", "note": "색상 토큰" },
+        { "code": "padding: var(--spacing-md);", "note": "간격 토큰" },
+        { "code": "gap: var(--spacing-sm);", "note": "간격 토큰" }
+      ],
+      "refs": ["tokens.json", "src/scss/1-settings/"]
+    },
+    {
+      "id": "R-02",
+      "category": "scss",
+      "summary": "!important 사용 금지 — 부득이한 경우 주석으로 사유 필수",
+      "severity": "warning",
+      "enforcement": ["check-violations.js"],
+      "rationale": "캐스케이드 우선순위를 강제 무력화하여 이후 오버라이드를 불가능하게 만든다. 외부 라이브러리 인라인 스타일을 덮어야 하는 등 불가피한 경우에만 허용하며 반드시 사유를 주석으로 명시한다.",
+      "bad": [
+        { "code": ".element { color: var(--color-primary) !important; }", "note": "사유 없는 !important" }
+      ],
+      "good": [
+        { "code": ".pagefind-ui__input { font-size: var(--font-size-sm) !important; /* pagefind 인라인 스타일 오버라이드 */ }", "note": "사유 주석 명시" }
+      ]
+    },
+    {
+      "id": "R-03",
+      "category": "modules",
+      "summary": "@use/@forward만 사용 — @import 금지",
+      "severity": "error",
+      "enforcement": ["check-violations.js"],
+      "rationale": "Dart Sass에서 @import는 deprecated. 전역 네임스페이스 오염과 다중 로드 문제를 유발한다. @use는 명시적 네임스페이스로 의존성을 관리하고 @forward로 공개 API를 제어한다.",
+      "bad": [
+        { "code": "@import 'variables';", "note": "밑줄 없는 @import" },
+        { "code": "@import '../settings/tokens';", "note": "경로 @import" }
+      ],
+      "good": [
+        { "code": "@use '../1-settings' as settings;", "note": "레이어 네임스페이스" },
+        { "code": "@use '../2-tools/responsive' as resp;", "note": "파일 네임스페이스" },
+        { "code": "@forward 'btn';", "note": "인덱스 파일에서 공개" }
+      ]
+    },
+    {
+      "id": "R-04",
+      "category": "bem",
+      "summary": "BEM 사용 (5-objects, 6-components 레이어에만 적용)",
+      "severity": "info",
+      "enforcement": ["stylelint"],
+      "rationale": "클래스명만으로 컴포넌트 역할과 관계를 파악할 수 있어 HTML과 SCSS를 별도 탐색 없이 이해할 수 있다. 1-settings~4-elements, 7-utilities 레이어는 BEM 미적용.",
+      "bad": [
+        { "code": ".btn-primary { }", "note": "modifier 구분자 누락" },
+        { "code": ".card-header { }", "note": "element 구분자 누락" },
+        { "code": ".inputBox { }", "note": "camelCase" }
+      ],
+      "good": [
+        { "code": ".btn--primary { }", "note": "modifier: 이중 하이픈" },
+        { "code": ".card__header { }", "note": "element: 이중 언더스코어" },
+        { "code": ".form__input { }", "note": "소문자 kebab" }
+      ]
+    },
+    {
+      "id": "R-05",
+      "category": "bem",
+      "summary": "element 2단계 중첩 금지 — 평탄화",
+      "severity": "error",
+      "enforcement": ["check-violations.js", "stylelint"],
+      "rationale": "HTML 구조가 바뀌면 클래스명이 함께 깨진다. Block 기준으로 element를 평탄화하면 HTML 리팩토링에 독립적이다.",
+      "bad": [
+        { "code": ".card__header__title { }", "note": "2단계 element" },
+        { "code": ".form__group__label { }", "note": "2단계 element" }
+      ],
+      "good": [
+        { "code": ".card__title { }", "note": "Block 기준 평탄화" },
+        { "code": ".form__label { }", "note": "Block 기준 평탄화" }
+      ]
+    },
+    {
+      "id": "R-06",
+      "category": "bem",
+      "summary": "시각적 modifier 금지 — 의미적 이름 사용",
+      "severity": "error",
+      "enforcement": ["check-violations.js"],
+      "rationale": "브랜드 색상이 바뀌거나 디자인이 개편되면 시각적 이름(.btn--blue)은 클래스를 전부 바꿔야 한다. 의미적 이름(.btn--primary)은 디자인 변경에 독립적이다.",
+      "bad": [
+        { "code": ".btn--gray { }", "note": "색상 이름 modifier" },
+        { "code": ".btn--blue { }", "note": "색상 이름 modifier" },
+        { "code": ".text--red { }", "note": "색상 이름 modifier" },
+        { "code": ".badge--large { }", "note": "크기 이름 modifier (single size는 제외)" }
+      ],
+      "good": [
+        { "code": ".btn--secondary { }", "note": "역할/의미" },
+        { "code": ".btn--primary { }", "note": "역할/의미" },
+        { "code": ".text--danger { }", "note": "시맨틱 상태" },
+        { "code": ".badge--new { }", "note": "의미" }
+      ]
+    },
+    {
+      "id": "R-07",
+      "category": "html",
+      "summary": "inline style 금지 — CSS 커스텀 프로퍼티 style=\"--var: val\"은 허용",
+      "severity": "warning",
+      "enforcement": ["check-violations.js"],
+      "lang": "html",
+      "rationale": "스타일은 SCSS 파일에서만 관리한다. 인라인 스타일은 특이도가 높아 오버라이드가 어렵고 토큰 시스템을 우회한다. CSS 커스텀 프로퍼티 주입(style=\"--width: 320px\")은 동적 값 전달 패턴이므로 허용한다.",
+      "bad": [
+        { "code": "<div style=\"padding: 16px; color: #333\">", "note": "일반 인라인 스타일" }
+      ],
+      "good": [
+        { "code": "<div style=\"--card-ratio: 16/9\">", "note": "CSS 커스텀 프로퍼티만" },
+        { "code": "<div class=\"card card--featured\">", "note": "클래스로 스타일 적용" }
+      ]
+    },
+    {
+      "id": "R-08",
+      "category": "html",
+      "summary": "HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)",
+      "severity": "warning",
+      "enforcement": ["check-violations.js"],
+      "lang": "html",
+      "rationale": "R-05와 동일 원칙. HTML 클래스가 SCSS에서 정의된 것과 일치해야 한다.",
+      "bad": [
+        { "code": "<div class=\"card__header__title\">", "note": "2단계 element" }
+      ],
+      "good": [
+        { "code": "<div class=\"card__title\">", "note": "평탄화" }
+      ]
+    },
+    {
+      "id": "R-09",
+      "category": "html",
+      "summary": "img alt 속성 필수",
+      "severity": "error",
+      "enforcement": ["check-violations.js"],
+      "lang": "html",
+      "rationale": "스크린 리더 사용자에게 이미지 정보를 전달한다. 장식용 이미지는 alt=\"\"로 빈 값을 명시해 스크린 리더가 건너뛰게 한다. WCAG 1.1.1 비텍스트 콘텐츠 (A등급).",
+      "bad": [
+        { "code": "<img src=\"photo.jpg\">", "note": "alt 없음" }
+      ],
+      "good": [
+        { "code": "<img src=\"photo.jpg\" alt=\"제품 상세 이미지\">", "note": "의미 있는 alt" },
+        { "code": "<img src=\"deco.svg\" alt=\"\">", "note": "장식용: 빈 alt 명시" }
+      ]
+    },
+    {
+      "id": "R-10",
+      "category": "html",
+      "summary": "인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지",
+      "severity": "error",
+      "enforcement": ["check-violations.js"],
+      "lang": "html",
+      "rationale": "div에 onclick을 붙이면 키보드 포커스가 안 되고 스크린 리더가 역할을 인식하지 못한다. 시맨틱 요소는 키보드·스크린 리더 지원이 내장되어 있다.",
+      "bad": [
+        { "code": "<div onclick=\"fn()\">클릭</div>", "note": "키보드 접근 불가" }
+      ],
+      "good": [
+        { "code": "<button type=\"button\" onclick=\"fn()\">클릭</button>", "note": "키보드·스크린 리더 지원" }
+      ]
+    },
+    {
+      "id": "R-11",
+      "category": "a11y",
+      "summary": "포커스 스타일 필수 — :focus { outline: none } 금지",
+      "severity": "error",
+      "enforcement": ["check-violations.js"],
+      "lang": "scss",
+      "rationale": "키보드만 사용하는 사용자가 현재 포커스 위치를 파악할 수 없다. WCAG 2.4.7 Focus Visible (AA).",
+      "bad": [
+        { "code": ":focus { outline: none; }", "note": "포커스 제거 — 절대 금지" },
+        { "code": "*:focus { outline: 0; }", "note": "전역 포커스 제거 — 절대 금지" }
+      ],
+      "good": [
+        { "code": ":focus-visible {\n  outline: 2px solid var(--color-primary);\n  outline-offset: 2px;\n}", "note": "마우스 클릭은 포커스 표시 안 함, 키보드는 표시" }
+      ]
+    },
+    {
+      "id": "R-12",
+      "category": "a11y",
+      "summary": "색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상",
+      "severity": "error",
+      "enforcement": ["pa11y-ci"],
+      "lang": "scss",
+      "rationale": "시력이 약한 사용자와 밝은 환경에서도 콘텐츠를 인식할 수 있어야 한다. WCAG 1.4.3 Contrast Minimum (AA). 큰 텍스트 기준: 24px 이상 또는 18.67px bold 이상.",
+      "bad": [
+        { "code": "color: var(--color-gray-400); /* #b1b8be — 흰 배경 대비 2.7:1 */", "note": "대비 부족" }
+      ],
+      "good": [
+        { "code": "color: var(--color-text-secondary); /* #666 — 흰 배경 대비 5.7:1 */", "note": "AA 기준 통과" }
+      ]
+    },
+    {
+      "id": "R-13",
+      "category": "a11y",
+      "summary": "터치/클릭 영역 최소 44×44px",
+      "severity": "error",
+      "enforcement": ["manual"],
+      "lang": "scss",
+      "rationale": "손가락으로 정확히 터치하기 어려운 작은 버튼은 오작동을 유발한다. 시각적 크기는 작더라도 padding으로 터치 영역을 확보한다. WCAG 2.5.5 Target Size (AAA) / iOS/Android HIG 권장.",
+      "bad": [
+        { "code": ".icon-btn {\n  width: 24px;\n  height: 24px;\n}", "note": "터치 영역 너무 작음" }
+      ],
+      "good": [
+        { "code": ".icon-btn {\n  width: 24px;\n  height: 24px;\n  padding: var(--spacing-sm); /* 터치 영역 40px+ */\n}", "note": "padding으로 터치 영역 확보" }
+      ]
+    },
+    {
+      "id": "R-14",
+      "category": "a11y",
+      "summary": "건너뛰기 링크 필수 — .skip-to-content",
+      "severity": "error",
+      "enforcement": ["manual"],
+      "lang": "html",
+      "rationale": "키보드 사용자가 반복 네비게이션을 건너뛰고 본문으로 바로 이동할 수 있어야 한다. WCAG 2.4.1 Bypass Blocks (A).",
+      "bad": [
+        { "code": "<!-- 건너뛰기 링크 없음 -->", "note": "키보드 사용자는 nav를 전부 탭해야 함" }
+      ],
+      "good": [
+        { "code": "<a href=\"#main-content\" class=\"skip-to-content\">본문 바로가기</a>", "note": "body 최상단에 배치" }
+      ]
+    }
+  ]
+}

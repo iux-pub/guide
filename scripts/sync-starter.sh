@@ -21,9 +21,11 @@ cp "$GUIDE_DIR/src/scss/style.scss" "$STARTER_DIR/src/scss/style.scss"
 echo "[2/4] JS 동기화..."
 cp "$GUIDE_DIR/src/js/"*.js "$STARTER_DIR/src/js/"
 
-# 3. .stylelintrc.json 동기화
-echo "[3/4] stylelintrc 동기화..."
+# 3. 설정 파일 동기화
+echo "[3/4] 설정 파일 동기화..."
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/.stylelintrc.json"
+cp "$GUIDE_DIR/CLAUDE.md" "$STARTER_DIR/CLAUDE.md"
+cp "$GUIDE_DIR/.claudeignore" "$STARTER_DIR/.claudeignore"
 
 # 4. starter 독립 저장소에도 푸시
 echo "[4/4] starter 저장소 동기화..."

@@ -44,4 +44,9 @@
   // White / Black
   --color-white: #fff;
   --color-black: #000;
+
+  // Alpha — 반투명 값 (color-mix 기반, CSS 변수 참조)
+  --color-primary-alpha-8: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --color-primary-alpha-6: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  --color-black-alpha-50: color-mix(in srgb, var(--color-black) 50%, transparent);
 }

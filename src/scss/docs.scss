@@ -117,7 +117,7 @@
     font-size: 1rem;
     font-weight: var(--font-weight-semibold);
     color: var(--color-primary);
-    background: rgb(37 110 244 / 8%);
+    background: var(--color-primary-alpha-8);
     padding: 0.2rem 0.6rem;
     border-radius: var(--radius-full);
     line-height: 1;
@@ -205,7 +205,7 @@
     &--active {
       color: var(--color-primary);
       font-weight: var(--font-weight-semibold);
-      background: rgb(37 110 244 / 6%);
+      background: var(--color-primary-alpha-6);
       border-left: 2px solid var(--color-primary);
       padding-left: calc(var(--spacing-sm) - 2px);
     }
@@ -523,7 +523,7 @@ pre[class*='language-'] {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgb(0 0 0 / 50%);
+  background: var(--color-black-alpha-50);
   z-index: var(--z-modal-backdrop);
 
   &--active {

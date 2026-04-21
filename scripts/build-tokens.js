@@ -49,7 +49,8 @@ function buildColor() {
     { comment: 'Text', keys: ['text', 'text-secondary', 'text-disabled'] },
     { comment: 'Background', keys: ['bg', 'bg-secondary'] },
     { comment: 'Border', keys: ['border', 'border-light'] },
-    { comment: 'White / Black', keys: ['white', 'black'] }
+    { comment: 'White / Black', keys: ['white', 'black'] },
+    { comment: 'Alpha — 반투명 값 (color-mix 기반, CSS 변수 참조)', keys: ['primary-alpha-8', 'primary-alpha-6', 'black-alpha-50'] }
   ]
 
   const lines = [

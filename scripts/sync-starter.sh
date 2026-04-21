@@ -37,8 +37,7 @@ cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/.stylelintrc.json"
 cp "$GUIDE_DIR/CLAUDE.md" "$STARTER_DIR/CLAUDE.md"
 mkdir -p "$STARTER_DIR/scripts"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/check-violations.js"
-mkdir -p "$STARTER_DIR/.claude"
-cp "$GUIDE_DIR/.claude/settings.json" "$STARTER_DIR/.claude/settings.json"
+# .claude/settings.json은 starter 전용으로 별도 관리 — guide 파일을 덮어쓰지 않음
 
 # 5. 원격 저장소 동기화 (전체 푸시)
 echo "[5/5] starter 저장소 동기화..."

@@ -159,18 +159,6 @@ BEM은 **5-objects, 6-components 레이어에만** 적용한다.
 
 ---
 
-## AI 프롬프트 파일
-
-`prompts/` 폴더에는 토큰/스니펫에서 자동 생성된 AI 컨텍스트 파일이 있다.
-
-| 파일 | 용도 |
-|------|------|
-| `prompts/context.md` | 이 프로젝트에서 컴포넌트/SCSS 작업 시 주요 규칙 요약 |
-| `prompts/design-rules.md` | 디자인 감사 기준 (Figma 작업 등에 활용) |
-| `prompts/tokens.md` | 현재 토큰 전체 목록 |
-
-토큰이나 스니펫을 수정한 후 반드시 재생성하라: `npm run build:prompts`
-
 ## 명령어
 
 ```bash

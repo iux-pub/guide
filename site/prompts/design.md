@@ -30,6 +30,8 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-primary` | #256ef4 | 기본 브랜드 색상 |
 | `--color-primary-light` | #6a9df7 | 밝은 브랜드 색상 |
 | `--color-primary-dark` | #083891 | 어두운 브랜드 색상 |
+| `--color-primary-alpha-8` | color-mix(in srgb, var(--color-primary) 8%, transparent) | 기본 브랜드 색상 |
+| `--color-primary-alpha-6` | color-mix(in srgb, var(--color-primary) 6%, transparent) | 기본 브랜드 색상 |
 
 ### Gray 스케일
 
@@ -156,9 +158,9 @@ Google Stitch, Galileo, Lovable, v0
 
 | 토큰 | 값 |
 |----|----|
-| `--shadow-sm` | 0 1px 2px rgba(0, 0, 0, 0.05) |
-| `--shadow-base` | 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06) |
-| `--shadow-lg` | 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) |
+| `--shadow-sm` | 0 1px 2px rgb(0 0 0 / 5%) |
+| `--shadow-base` | 0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 6%) |
+| `--shadow-lg` | 0 10px 15px rgb(0 0 0 / 10%), 0 4px 6px rgb(0 0 0 / 5%) |
 
 ---
 

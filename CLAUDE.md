@@ -159,6 +159,18 @@ BEM은 **5-objects, 6-components 레이어에만** 적용한다.
 
 ---
 
+## LLM 컨텍스트 파일
+
+`prompts/` 폴더에 작업 유형별 컨텍스트가 있다. 필요한 파일을 대화에 첨부하거나 읽어서 사용하라.
+
+| 파일 | 용도 |
+|------|------|
+| `prompts/context.md` | 컴포넌트/SCSS 작업 시 규칙 + 토큰 요약 |
+| `prompts/tokens.md` | 전체 토큰 목록 |
+| `prompts/components.md` | 컴포넌트 스니펫 마크업 |
+| `prompts/design-rules.md` | 디자인 품질 규칙 |
+| `prompts/publishing.md` | 퍼블리싱 체크리스트 |
+
 ## 명령어
 
 ```bash

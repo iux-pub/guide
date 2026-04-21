@@ -159,17 +159,17 @@ BEM은 **5-objects, 6-components 레이어에만** 적용한다.
 
 ---
 
-## AI 프롬프트 파일
+## LLM 컨텍스트 파일
 
-`prompts/` 폴더에는 토큰/스니펫에서 자동 생성된 AI 컨텍스트 파일이 있다.
+`prompts/` 폴더에 작업 유형별 컨텍스트가 있다. 필요한 파일을 대화에 첨부하거나 읽어서 사용하라.
 
 | 파일 | 용도 |
 |------|------|
-| `prompts/context.md` | 이 프로젝트에서 컴포넌트/SCSS 작업 시 주요 규칙 요약 |
-| `prompts/design-rules.md` | 디자인 감사 기준 (Figma 작업 등에 활용) |
-| `prompts/tokens.md` | 현재 토큰 전체 목록 |
-
-토큰이나 스니펫을 수정한 후 반드시 재생성하라: `npm run build:prompts`
+| `prompts/context.md` | 컴포넌트/SCSS 작업 시 규칙 + 토큰 요약 |
+| `prompts/tokens.md` | 전체 토큰 목록 |
+| `prompts/components.md` | 컴포넌트 스니펫 마크업 |
+| `prompts/design-rules.md` | 디자인 품질 규칙 |
+| `prompts/publishing.md` | 퍼블리싱 체크리스트 |
 
 ## 명령어
 
@@ -192,15 +192,3 @@ npm test                # 전체 CI (check → lint → build → a11y)
 - 세미콜론: SCSS는 사용, JS/HTML은 사용하지 않음
 - 주석 언어: 한국어
 
-## GSD Workflow
-
-파일 수정 전 GSD 명령어를 통해 작업하라:
-
-- `/gsd:quick` — 소규모 수정, 문서 작업
-- `/gsd:debug` — 버그 조사
-- `/gsd:execute-phase` — 계획된 페이즈 작업
-
-## Developer Profile
-
-> Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
-> This section is managed by `generate-claude-profile` -- do not edit manually.

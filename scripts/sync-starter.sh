@@ -35,7 +35,6 @@ cp "$GUIDE_DIR/prompts/"*.md "$STARTER_DIR/prompts/"
 echo "[5/6] 설정 파일 동기화..."
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/.stylelintrc.json"
 cp "$GUIDE_DIR/CLAUDE.md" "$STARTER_DIR/CLAUDE.md"
-cp "$GUIDE_DIR/.claudeignore" "$STARTER_DIR/.claudeignore"
 mkdir -p "$STARTER_DIR/scripts"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/check-violations.js"
 mkdir -p "$STARTER_DIR/.claude"
@@ -48,7 +47,6 @@ git clone https://github.com/iux-pub/starter.git "$STARTER_REPO" 2>/dev/null
 cp -r "$STARTER_DIR/"* "$STARTER_REPO/"
 cp "$STARTER_DIR/.gitignore" "$STARTER_REPO/" 2>/dev/null
 cp "$STARTER_DIR/.stylelintrc.json" "$STARTER_REPO/"
-cp "$STARTER_DIR/.claudeignore" "$STARTER_REPO/"
 cp -r "$STARTER_DIR/.claude" "$STARTER_REPO/"
 cd "$STARTER_REPO"
 git add -A

@@ -35,6 +35,24 @@ mkdir -p "$STARTER_DIR/prompts"
 cp "$GUIDE_DIR/prompts/"*.md "$STARTER_DIR/prompts/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/.stylelintrc.json"
 cp "$GUIDE_DIR/CLAUDE.md" "$STARTER_DIR/CLAUDE.md"
+# 명령어 섹션을 스타터용으로 치환 (가이드 전용 명령어 제거)
+python3 - "$STARTER_DIR/CLAUDE.md" <<'PYEOF'
+import sys, re
+path = sys.argv[1]
+text = open(path).read()
+starter_cmds = """## 명령어
+
+```bash
+npm run check           # 위반 패턴 전체 스캔 (훅에서도 자동 실행)
+npm run lint:css        # SCSS 린트 전체 검사
+npm run lint:css:fix    # 자동 수정
+npm run build:css       # CSS 빌드
+npm run watch:css       # CSS 감시 빌드
+```
+"""
+text = re.sub(r'## 명령어\n.*?(?=\n## |\Z)', starter_cmds, text, flags=re.DOTALL)
+open(path, 'w').write(text)
+PYEOF
 mkdir -p "$STARTER_DIR/scripts"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/check-violations.js"
 # .claude/settings.json은 starter 전용으로 별도 관리 — guide 파일을 덮어쓰지 않음

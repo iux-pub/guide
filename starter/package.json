@@ -7,7 +7,8 @@
     "build:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules",
     "watch:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch",
     "lint:css": "stylelint \"src/scss/**/*.scss\"",
-    "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix"
+    "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix",
+    "check": "node ./scripts/check-violations.js"
   },
   "dependencies": {
     "modern-normalize": "^3.0.1",

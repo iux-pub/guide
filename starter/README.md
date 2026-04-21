@@ -8,7 +8,7 @@ ITCSS + BEM + 디자인 토큰 기반 SCSS 프로젝트 시작 템플릿
 
 ```bash
 # 1. 스타터 킷 복사
-git clone https://github.com/iux-pub/guide.git 프로젝트명
+git clone https://github.com/iux-pub/starter.git 프로젝트명
 cd 프로젝트명
 
 # 2. 의존성 설치
@@ -117,6 +117,7 @@ npm run lint:css
 | `npm run watch:css` | SCSS 변경 감지 자동 빌드 |
 | `npm run lint:css` | Stylelint 검사 |
 | `npm run lint:css:fix` | Stylelint 자동 수정 |
+| `npm run check` | 위반 패턴 전체 스캔 |
 
 ## 포함된 컴포넌트
 

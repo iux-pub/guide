@@ -192,14 +192,6 @@ npm test                # 전체 CI (check → lint → build → a11y)
 - 세미콜론: SCSS는 사용, JS/HTML은 사용하지 않음
 - 주석 언어: 한국어
 
-## GSD Workflow
-
-파일 수정 전 GSD 명령어를 통해 작업하라:
-
-- `/gsd:quick` — 소규모 수정, 문서 작업
-- `/gsd:debug` — 버그 조사
-- `/gsd:execute-phase` — 계획된 페이즈 작업
-
 ## Developer Profile
 
 > Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.

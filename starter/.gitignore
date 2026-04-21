@@ -1,2 +1,10 @@
 node_modules/
 dist/
+
+# LLM 하네스 — 프로젝트 저장소에 포함하지 않음
+CLAUDE.md
+.claudeignore
+.claude/
+prompts/
+src/snippets/
+scripts/

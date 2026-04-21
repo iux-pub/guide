@@ -192,7 +192,3 @@ npm test                # 전체 CI (check → lint → build → a11y)
 - 세미콜론: SCSS는 사용, JS/HTML은 사용하지 않음
 - 주석 언어: 한국어
 
-## Developer Profile
-
-> Profile not yet configured. Run `/gsd:profile-user` to generate your developer profile.
-> This section is managed by `generate-claude-profile` -- do not edit manually.

@@ -4,24 +4,21 @@ ITCSS + BEM + 디자인 토큰 기반 SCSS 프로젝트 시작 템플릿
 
 ## 퀵스타트
 
-6단계로 프로젝트를 시작할 수 있습니다.
-
 ```bash
 # 1. 스타터 킷 복사
 git clone https://github.com/iux-pub/starter.git 프로젝트명
 cd 프로젝트명
 
-# 2. 의존성 설치
+# 2. 원격 저장소를 프로젝트 저장소로 변경
+git remote set-url origin https://github.com/YOUR_ORG/YOUR_REPO.git
+
+# 3. 의존성 설치
 npm install
 
-# 3. SCSS 빌드
+# 4. SCSS 빌드
 npm run build:css
 
-# 4. 빌드 결과 확인
-# dist/css/style.css 파일이 생성되면 성공!
-ls dist/css/style.css
-
-# 5. 프로젝트 커스터마이징 (아래 "커스터마이징" 섹션 참조)
+# 5. Primary 색상 변경 (아래 "커스터마이징" 섹션 참조)
 # src/scss/_project-overrides.scss 수정
 
 # 6. 린트 검사
@@ -45,7 +42,7 @@ npm run lint:css
 ```scss
 // src/scss/_project-overrides.scss
 :root {
-  --color-primary: #0a7b4f;       // 브랜드 메인 색상
+  --color-primary: #0a7b4f;        // 브랜드 메인 색상
   --color-primary-light: #3da87a;  // 밝은 변형
   --color-primary-dark: #065535;   // 어두운 변형
 }
@@ -65,8 +62,8 @@ npm run lint:css
 ```scss
 // src/scss/_project-overrides.scss
 :root {
-  --spacing-md: 2rem;   // 기본 16px → 20px으로 변경
-  --spacing-lg: 3.2rem; // 기본 24px → 32px으로 변경
+  --spacing-md: 2rem;   // 기본 1.6rem(16px) → 변경 예시
+  --spacing-lg: 3.2rem; // 기본 2.4rem(24px) → 변경 예시
 }
 ```
 
@@ -91,23 +88,6 @@ npm run lint:css
 1. `src/scss/6-components/_컴포넌트명.scss` 파일 생성
 2. `src/scss/6-components/_index.scss`에 `@forward '컴포넌트명'` 추가
 3. `npm run build:css`로 빌드
-
-## playground 미리보기
-
-`src/playground/` 디렉토리에 각 컴포넌트의 HTML 미리보기 파일이 있습니다. 브라우저에서 직접 열어 마크업과 스타일을 확인할 수 있습니다.
-
-| 파일 | 컴포넌트 |
-|------|----------|
-| `src/playground/btn.html` | 버튼 |
-| `src/playground/form.html` | 폼 |
-| `src/playground/card.html` | 카드 |
-| `src/playground/table.html` | 테이블 |
-| `src/playground/modal.html` | 모달 |
-| `src/playground/tab.html` | 탭 |
-| `src/playground/pagination.html` | 페이지네이션 |
-| `src/playground/breadcrumb.html` | 브레드크럼 |
-| `src/playground/boilerplate.html` | 보일러플레이트 |
-| `src/playground/a11y-checklist.html` | 접근성 체크리스트 |
 
 ## 사용 가능한 스크립트
 

@@ -1,123 +1,198 @@
 # 인포마인드 프로젝트 스타터 킷
 
-ITCSS + BEM + 디자인 토큰 기반 SCSS 프로젝트 시작 템플릿
+KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND UX팀 표준이 적용된 Tailwind v4 기반 프로젝트 시작 템플릿.
 
-## 퀵스타트
+---
+
+## 🚀 시작하기 (3단계)
+
+### 1. 클론 + 의존성 설치
 
 ```bash
-# 1. 스타터 킷 복사
-git clone https://github.com/iux-pub/starter.git 프로젝트명
-cd 프로젝트명
+git clone https://github.com/iux-pub/starter.git my-project
+cd my-project
 
-# 2. 원격 저장소를 프로젝트 저장소로 변경
-git remote set-url origin https://github.com/YOUR_ORG/YOUR_REPO.git
+# 새 프로젝트로 origin 변경
+rm -rf .git
+git init
+git remote add origin https://github.com/YOUR_ORG/YOUR_REPO.git
 
-# 3. 의존성 설치
-npm install
-
-# 4. SCSS 빌드
-npm run build:css
-
-# 5. Primary 색상 변경 (아래 "커스터마이징" 섹션 참조)
-# src/scss/_project-overrides.scss 수정
-
-# 6. 린트 검사
-npm run lint:css
+# 의존성 설치
+npm install --legacy-peer-deps
 ```
 
-## 빌드 출력 경로
+### 2. 빌드
 
-| 입력 | 출력 | 설명 |
-|------|------|------|
-| `src/scss/style.scss` | `dist/css/style.css` | 메인 CSS 번들 (모든 토큰 + 컴포넌트 포함) |
-
-`dist/css/style.css`를 HTML에서 `<link rel="stylesheet" href="path/to/style.css">`로 연결하면 됩니다.
-
-## 커스터마이징
-
-### Primary 색상 변경
-
-`src/scss/_project-overrides.scss` 파일에서 주석을 해제하고 브랜드 색상으로 변경합니다.
-
-```scss
-// src/scss/_project-overrides.scss
-:root {
-  --color-primary: #0a7b4f;        // 브랜드 메인 색상
-  --color-primary-light: #3da87a;  // 밝은 변형
-  --color-primary-dark: #065535;   // 어두운 변형
-}
+```bash
+npm run build       # 토큰 + CSS 한 번에
+npm run watch:css   # 개발 시 CSS 변경 감지
 ```
 
-### 폰트 변경
+### 3. AI 코드 생성 시 (Claude Code 사용 시)
 
-```scss
-// src/scss/_project-overrides.scss
-:root {
-  --font-family-base: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-}
+작업 시작 시 한 줄 발화:
+> **"info-design 스킬 기준으로 가자"**
+
+이 트리거 후 모든 CSS·HTML 코드 생성이 KRDS 토큰·INFOMIND 컴포넌트만 사용하도록 강제됩니다.
+스킬은 `.claude/skills/info-design/`에 동봉되어 있어 자동 인식됩니다.
+
+---
+
+## 📁 디렉토리 구조
+
+```
+my-project/
+├── .claude/skills/info-design/   ← AI 컨트랙트 (자동 인식)
+│   ├── SKILL.md
+│   └── references/
+├── tokens/
+│   ├── krds-base.json           ← KRDS 정본 (수정 금지)
+│   ├── infomind-overrides.json  ← 프로젝트 결정 (수정 가능)
+│   └── build/tokens.css         ← 자동 생성
+├── src/
+│   ├── styles/
+│   │   ├── style.css            ← 메인 진입점
+│   │   ├── 3-generic/reset.css  ← 1rem=10px 트릭 적용
+│   │   ├── 4-elements/          ← HTML 태그 베이스
+│   │   ├── 5-objects/           ← 레이아웃 (BEM)
+│   │   ├── 6-components/        ← KRDS UI 컴포넌트 22개 (BEM)
+│   │   └── 7-utilities/
+│   ├── snippets/                ← 컴포넌트 마크업 예시
+│   └── js/
+├── scripts/
+│   ├── build-tokens.js          ← KRDS 토큰 → CSS 변환
+│   └── check-violations.js      ← 컨트랙트 위반 검출
+└── dist/css/style.css           ← 빌드 산출물
 ```
 
-### 간격 스케일 조정
+---
 
-```scss
-// src/scss/_project-overrides.scss
-:root {
-  --spacing-md: 2rem;   // 기본 1.6rem(16px) → 변경 예시
-  --spacing-lg: 3.2rem; // 기본 2.4rem(24px) → 변경 예시
-}
-```
+## 🛠 명령어
 
-### 불필요한 컴포넌트 삭제
-
-사용하지 않는 컴포넌트는 `src/scss/6-components/_index.scss`에서 해당 `@forward` 줄을 삭제하면 빌드에서 제외됩니다.
-
-```scss
-// src/scss/6-components/_index.scss
-@forward 'btn';
-@forward 'form';
-@forward 'card';
-// @forward 'table';        // 사용하지 않으면 주석 처리 또는 삭제
-// @forward 'modal';        // 사용하지 않으면 주석 처리 또는 삭제
-@forward 'tab';
-@forward 'pagination';
-@forward 'breadcrumb';
-```
-
-### 새 컴포넌트 추가
-
-1. `src/scss/6-components/_컴포넌트명.scss` 파일 생성
-2. `src/scss/6-components/_index.scss`에 `@forward '컴포넌트명'` 추가
-3. `npm run build:css`로 빌드
-
-## 사용 가능한 스크립트
-
-| 명령어 | 설명 |
-|--------|------|
-| `npm run build:css` | SCSS 빌드 |
-| `npm run watch:css` | SCSS 변경 감지 자동 빌드 |
+| 명령 | 용도 |
+|------|------|
+| `npm run build:tokens` | KRDS + INFOMIND 토큰 → `tokens/build/tokens.css` |
+| `npm run build:css` | Tailwind v4 컴파일 → `dist/css/style.css` |
+| `npm run watch:css` | CSS 워치 모드 |
+| `npm run build` | 전체 빌드 (tokens + CSS) |
 | `npm run lint:css` | Stylelint 검사 |
-| `npm run lint:css:fix` | Stylelint 자동 수정 |
-| `npm run check` | 위반 패턴 전체 스캔 |
+| `npm run check` | info-design 컨트랙트 위반 검출 |
 
-## 포함된 컴포넌트
+---
 
-버튼, 폼, 카드, 테이블, 모달, 탭, 페이지네이션, 브레드크럼
+## 🎨 사용 예시
 
-## SCSS 구조 (ITCSS)
+### HTML
 
+```html
+<link rel="stylesheet" href="dist/css/style.css">
+
+<!-- 버튼 (KRDS 4 variant × 5 size) -->
+<button class="btn btn--primary">저장</button>
+<button class="btn btn--secondary btn--small">취소</button>
+
+<!-- 폼 -->
+<div class="form-field">
+  <label for="name" class="form-field__label">이름</label>
+  <input type="text" id="name" class="input">
+</div>
+
+<!-- 카드 -->
+<article class="card card--medium">
+  <header class="card__header">
+    <h3 class="card__title">제목</h3>
+  </header>
+  <div class="card__body">내용</div>
+</article>
 ```
-src/scss/
-  style.scss              # 메인 진입점
-  _project-overrides.scss # 프로젝트별 토큰 오버라이드
-  1-settings/             # 디자인 토큰 (색상, 타이포, 간격, 그리드)
-  2-tools/                # 믹스인, 함수 (반응형, flex-center 등)
-  3-generic/              # 리셋, 노멀라이즈
-  4-elements/             # HTML 태그 기본 스타일
-  5-objects/              # 레이아웃 패턴 (컨테이너, 그리드)
-  6-components/           # UI 컴포넌트 (BEM 필수)
-  7-utilities/            # 유틸리티 클래스 (sr-only, visibility)
+
+### Tailwind 유틸리티 (KRDS 토큰 기반)
+
+```html
+<div class="bg-primary text-text-inverse p-8 rounded-medium2 shadow-2">
+  bg-primary = KRDS primary-50
+  p-8        = KRDS spacing-8 (16px)
+  rounded-medium2 = KRDS radius-medium2 (6px)
+</div>
 ```
 
-## 참고 문서
+> ⚠ **`bg-red-500` `text-gray-700` 같은 raw 컬러 유틸리티 사용 금지.** KRDS 시맨틱 토큰만 허용됩니다.
 
-전체 가이드: https://github.com/iux-pub/guide 참조
+---
+
+## 🔧 프로젝트 커스터마이징
+
+### 브랜드 색상 추가
+
+`tokens/infomind-overrides.json` 편집:
+
+```json
+{
+  "infomind-brand": {
+    "primary":      { "value": "#FF5733", "type": "color" },
+    "primary-text": { "value": "#FFFFFF", "type": "color" }
+  }
+}
+```
+
+저장 후 `npm run build` 실행.
+
+### 새 컴포넌트 필요 시
+
+**임의 생성 금지.** UX팀에 신규 컴포넌트 제안 → 가이드 저장소에 추가 → starter sync.
+
+---
+
+## 🚫 절대 금지 (요약)
+
+전체 규정은 `.claude/skills/info-design/references/forbidden-patterns.md` 참조.
+
+- Raw hex/rgb/hsl 색상
+- Raw px (KRDS 스케일 외 — `p-[20px]` 같은 임의 값 금지)
+- Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700` 등)
+- 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`)
+- `:focus { outline: none }`
+- `<div onclick>` (시맨틱 HTML 사용)
+- 이미지 `alt` 누락, 폼 `<label>` 누락
+
+빌드 시 `npm run check`이 위반 자동 검출합니다.
+
+---
+
+## 📚 더 알아보기
+
+- **KRDS 공식**: https://www.krds.go.kr
+- **info-design 스킬**: `.claude/skills/info-design/SKILL.md` (전체 컨트랙트)
+- **토큰 카탈로그**: `.claude/skills/info-design/references/krds-tokens.md`
+- **컴포넌트 카탈로그**: `.claude/skills/info-design/references/krds-components.md`
+- **가이드 저장소**: https://github.com/iux-pub/guide
+
+---
+
+## 🔄 갱신
+
+KRDS가 새 버전을 내거나 INFOMIND 결정이 바뀌면 UX팀이 가이드 저장소를 갱신합니다.
+이 starter도 가이드 저장소에서 자동 sync됩니다.
+
+```bash
+# 새 버전 받기
+git pull upstream main  # upstream = iux-pub/starter
+npm install --legacy-peer-deps
+npm run build
+```
+
+---
+
+## 🆘 문제 해결
+
+**빌드 실패** → `rm -rf node_modules && npm install --legacy-peer-deps`
+
+**iCloud Drive에서 hang** → 프로젝트를 iCloud 외부 위치로 이동 (`~/Documents/`가 아닌 `~/projects/` 같은 곳)
+
+**스타일이 안 보임** → `npm run build` 실행 + HTML에서 `<link rel="stylesheet" href="dist/css/style.css">` 확인
+
+**컨트랙트 위반 검출** → 메시지가 안내하는 KRDS 토큰으로 교체
+
+---
+
+내부 사용 — INFOMIND UX Team

@@ -52,9 +52,16 @@ cp "$GUIDE_DIR/scripts/build-tokens.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
 
 # 6. config files
-echo "[6/6] config 동기화..."
+echo "[6/7] config 동기화..."
 cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
+
+# 6.5. info-design 스킬 (Claude Code가 자동 인식하도록 .claude/skills/에 포함)
+echo "[7/7] info-design 스킬 동봉..."
+mkdir -p "$STARTER_DIR/.claude/skills/info-design"
+rm -rf "$STARTER_DIR/.claude/skills/info-design/references"
+cp -r "$GUIDE_DIR/skill/SKILL.md" "$STARTER_DIR/.claude/skills/info-design/"
+cp -r "$GUIDE_DIR/skill/references" "$STARTER_DIR/.claude/skills/info-design/"
 
 echo ""
 echo "✓ 로컬 starter/ 동기화 완료"

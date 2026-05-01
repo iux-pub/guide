@@ -1,0 +1,55 @@
+/**
+ * Disclosure — KRDS Disclosure
+ *
+ * "더보기/접기" 단순 토글. Accordion과 달리 그룹화하지 않은 단일 토글에 사용.
+ *
+ * 구조:
+ *   <button class="disclosure" type="button" aria-expanded="false" aria-controls="panel-1">
+ *     <span class="disclosure__label">자세히 보기</span>
+ *   </button>
+ *   <div id="panel-1" class="disclosure__panel" hidden>...</div>
+ */
+
+@layer components {
+  .disclosure {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    background: transparent;
+    border: none;
+    color: var(--color-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    font-weight: 700;
+    line-height: 1.5;
+    cursor: pointer;
+    padding: var(--krds-padding-3) 0;
+    min-height: var(--touch-target-min);
+    transition: color var(--duration-fast) var(--easing-standard);
+  }
+
+  .disclosure:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .disclosure::after {
+    content: "";
+    width: 1.6rem;
+    height: 1.6rem;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M4 6L8 10L12 6' stroke='%23256EF4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / contain;
+    transition: transform var(--duration-base) var(--easing-standard);
+  }
+
+  .disclosure[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+  }
+
+  .disclosure__panel {
+    padding: var(--krds-padding-6) 0;
+    color: var(--color-text);
+    font-size: var(--text-body-medium);
+    line-height: 1.7;
+  }
+
+  .disclosure__panel[hidden] { display: none; }
+}

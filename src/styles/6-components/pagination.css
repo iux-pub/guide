@@ -1,0 +1,108 @@
+/**
+ * Pagination — KRDS Pagination
+ *
+ * 구조:
+ *   <nav class="pagination" aria-label="페이지 내비게이션">
+ *     <button class="pagination__nav" aria-label="이전 페이지">‹</button>
+ *     <ol class="pagination__list">
+ *       <li><a class="pagination__item" href="?p=1">1</a></li>
+ *       <li><a class="pagination__item pagination__item--current" aria-current="page">2</a></li>
+ *       <li><a class="pagination__item" href="?p=3">3</a></li>
+ *     </ol>
+ *     <button class="pagination__nav" aria-label="다음 페이지">›</button>
+ *   </nav>
+ */
+
+@layer components {
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--krds-gap-3);
+  }
+
+  .pagination__list {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 페이지 번호 — 정사각 */
+  .pagination__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--krds-size-height-7); /* 48px */
+    height: var(--krds-size-height-7);
+    padding-inline: var(--krds-padding-3);
+    border-radius: var(--krds-radius-medium3); /* 8px */
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      color var(--duration-fast) var(--easing-standard);
+  }
+
+  .pagination__item:hover {
+    background: var(--color-bg-subtler);
+  }
+
+  .pagination__item--current,
+  .pagination__item[aria-current="page"] {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+
+  .pagination__item:disabled,
+  .pagination__item[aria-disabled="true"] {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* 이전/다음 버튼 — 동일 사이즈, 화살표 아이콘 */
+  .pagination__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--krds-size-height-7);
+    height: var(--krds-size-height-7);
+    border: 1px solid var(--color-border);
+    border-radius: var(--krds-radius-medium3);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      border-color var(--duration-fast) var(--easing-standard);
+  }
+
+  .pagination__nav:hover:not(:disabled) {
+    background: var(--color-bg-subtler);
+    border-color: var(--color-border-dark);
+  }
+
+  .pagination__nav:disabled,
+  .pagination__nav[aria-disabled="true"] {
+    color: var(--color-text-disabled);
+    background: var(--color-bg-subtler);
+    cursor: not-allowed;
+  }
+
+  /* 사이즈 변형 */
+  .pagination--small .pagination__item,
+  .pagination--small .pagination__nav {
+    min-width: var(--krds-size-height-6); /* 40px */
+    height: var(--krds-size-height-6);
+    font-size: var(--text-body-small);
+  }
+}

@@ -1,0 +1,60 @@
+/**
+ * Breadcrumb — KRDS Breadcrumb
+ *
+ * 구조:
+ *   <nav class="breadcrumb" aria-label="페이지 경로">
+ *     <ol class="breadcrumb__list">
+ *       <li class="breadcrumb__item"><a href="/">홈</a></li>
+ *       <li class="breadcrumb__item"><a href="/section">섹션</a></li>
+ *       <li class="breadcrumb__item" aria-current="page">현재 페이지</li>
+ *     </ol>
+ *   </nav>
+ */
+
+@layer components {
+  .breadcrumb {
+    font-size: var(--text-body-small);
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--krds-gap-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-3);
+  }
+
+  /* 구분자 */
+  .breadcrumb__item:not(:first-child)::before {
+    content: "";
+    width: 1.2rem;
+    height: 1.2rem;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M4.5 2L8.5 6L4.5 10' stroke='%236D7882' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / contain;
+    flex-shrink: 0;
+  }
+
+  .breadcrumb__item a {
+    color: var(--color-text-subtle);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--easing-standard);
+  }
+  .breadcrumb__item a:hover {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .breadcrumb__item[aria-current="page"] {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+}

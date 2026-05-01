@@ -1,0 +1,95 @@
+/**
+ * Step Indicator — KRDS 단계 표시기
+ *
+ * 다단계 폼/프로세스의 현재 단계 표시.
+ *
+ * 구조:
+ *   <ol class="step-indicator" aria-label="진행 단계">
+ *     <li class="step-indicator__item step-indicator__item--done">
+ *       <span class="step-indicator__num" aria-hidden="true">1</span>
+ *       <span class="step-indicator__label">정보 입력</span>
+ *     </li>
+ *     <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+ *       <span class="step-indicator__num" aria-hidden="true">2</span>
+ *       <span class="step-indicator__label">확인</span>
+ *     </li>
+ *     <li class="step-indicator__item">
+ *       <span class="step-indicator__num" aria-hidden="true">3</span>
+ *       <span class="step-indicator__label">완료</span>
+ *     </li>
+ *   </ol>
+ */
+
+@layer components {
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    gap: 0;
+  }
+
+  .step-indicator__item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: var(--krds-gap-3);
+    color: var(--color-text-subtle);
+    font-size: var(--text-body-small);
+    position: relative;
+  }
+
+  /* 아이템 사이 연결선 */
+  .step-indicator__item:not(:last-child)::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: var(--color-border);
+    margin-inline: var(--krds-gap-3);
+  }
+
+  /* 단계 번호 원 */
+  .step-indicator__num {
+    flex-shrink: 0;
+    width: 3.2rem;
+    height: 3.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg);
+    color: var(--color-text-subtle);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .step-indicator__label {
+    font-weight: 700;
+  }
+
+  /* 완료된 단계 */
+  .step-indicator__item--done {
+    color: var(--color-text);
+  }
+  .step-indicator__item--done .step-indicator__num {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-inverse);
+  }
+  .step-indicator__item--done:not(:last-child)::after {
+    background: var(--color-primary);
+  }
+
+  /* 현재 단계 */
+  .step-indicator__item--current {
+    color: var(--color-primary);
+  }
+  .step-indicator__item--current .step-indicator__num {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--krds-light-color-surface-primary-subtler);
+  }
+}

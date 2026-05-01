@@ -1,0 +1,92 @@
+/**
+ * Tag — KRDS Tag
+ *
+ * 카테고리/필터/속성 라벨. 클릭 가능한 변형도 지원.
+ *
+ * Shape: radius-small3 (4px) — KRDS Small 그룹
+ */
+
+@layer components {
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    height: 2.4rem;
+    padding-inline: var(--krds-padding-4); /* 10px */
+    border: 1px solid var(--color-border);
+    border-radius: var(--krds-radius-small3); /* 4px */
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-xsmall);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      border-color var(--duration-fast) var(--easing-standard);
+  }
+
+  /* 클릭 가능 (button/a) 변형 */
+  a.tag,
+  button.tag,
+  .tag--clickable {
+    cursor: pointer;
+  }
+  a.tag:hover,
+  button.tag:hover,
+  .tag--clickable:hover {
+    background: var(--color-bg-subtler);
+    border-color: var(--color-border-dark);
+  }
+
+  /* 닫기 버튼 (제거 가능 태그) */
+  .tag__close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-subtle);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    margin-inline-start: 0.2rem;
+  }
+
+  /* Variants — 시맨틱 + outline 변형 */
+  .tag--primary {
+    background: var(--krds-light-color-surface-primary-subtler);
+    border-color: var(--krds-light-color-border-primary-light);
+    color: var(--color-primary);
+  }
+  .tag--info {
+    background: var(--krds-light-color-surface-information-subtler);
+    border-color: var(--krds-light-color-border-information-light);
+    color: var(--color-info-text);
+  }
+  .tag--success {
+    background: var(--krds-light-color-surface-success-subtler);
+    border-color: var(--krds-light-color-border-success-light);
+    color: var(--color-success-text);
+  }
+  .tag--warning {
+    background: var(--krds-light-color-surface-warning-subtler);
+    border-color: var(--krds-light-color-border-warning-light);
+    color: var(--color-warning-text);
+  }
+  .tag--danger {
+    background: var(--krds-light-color-surface-danger-subtler);
+    border-color: var(--krds-light-color-border-danger-light);
+    color: var(--color-danger-text);
+  }
+
+  /* 사이즈 변형 */
+  .tag--small {
+    height: 2.0rem;
+    padding-inline: 0.6rem;
+  }
+  .tag--large {
+    height: 3.2rem;
+    padding-inline: var(--krds-padding-5); /* 12px */
+    font-size: var(--text-body-small);
+  }
+}

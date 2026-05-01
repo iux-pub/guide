@@ -1,0 +1,142 @@
+/**
+ * Form — KRDS 텍스트 입력/Textarea 정본 명세
+ *
+ * 구성: 레이블 → 보조설명 → 입력박스 → 시스템메시지
+ *   요소 간 gap: gap-3 (8px)
+ *   입력박스 내부 padding: padding-6 (16px)
+ *
+ * 사이즈: small(40) / medium(48 — 기본) / large(56)
+ * 상태:   default / focus / disabled / readonly / error
+ */
+
+@layer components {
+  /* ─── Field group (레이블 + 입력 + 메시지 컨테이너) ─── */
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-3); /* 8px */
+  }
+
+  .form-field__label {
+    font-size: var(--text-body-medium);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  .form-field__hint {
+    font-size: var(--text-body-small);
+    color: var(--color-text-subtle);
+    line-height: 1.5;
+  }
+
+  .form-field__message {
+    font-size: var(--text-body-small);
+    color: var(--color-text-subtle);
+    line-height: 1.5;
+  }
+  .form-field__message--error {
+    color: var(--color-danger-text);
+  }
+  .form-field__message--success {
+    color: var(--color-success-text);
+  }
+
+  /* 필수 표시자 */
+  .form-field__required {
+    color: var(--color-danger);
+    margin-inline-start: 0.2rem;
+  }
+
+  /* ─── Input (text, email, password, number, tel, url, search, date, time) ─── */
+  .input {
+    width: 100%;
+    height: var(--krds-size-height-7); /* 48px (medium) */
+    padding-inline: var(--krds-padding-6); /* 16px */
+    border: 1px solid var(--krds-light-color-input-border);
+    border-radius: var(--krds-radius-medium2);
+    background: var(--krds-light-color-input-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    line-height: 1.5;
+    transition:
+      border-color var(--duration-fast) var(--easing-standard),
+      background-color var(--duration-fast) var(--easing-standard);
+  }
+
+  .input::placeholder {
+    color: var(--color-text-disabled);
+  }
+
+  .input:hover:not(:disabled):not(:read-only) {
+    border-color: var(--color-border-dark);
+  }
+
+  .input:focus,
+  .input:focus-visible {
+    border-color: var(--krds-light-color-input-border-active);
+    outline: none;
+  }
+
+  .input:disabled {
+    background: var(--krds-light-color-input-surface-disabled);
+    border-color: var(--krds-light-color-input-border-disabled);
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  .input:read-only {
+    background: var(--color-bg-subtler);
+  }
+
+  .input--error,
+  .input[aria-invalid="true"] {
+    border-color: var(--krds-light-color-input-border-error);
+  }
+
+  /* 사이즈 변형 */
+  .input--small {
+    height: var(--krds-size-height-6); /* 40px */
+    font-size: var(--text-body-small);
+  }
+  .input--large {
+    height: var(--krds-size-height-8); /* 56px */
+    font-size: var(--text-body-large);
+  }
+
+  /* ─── Textarea ─── */
+  .textarea {
+    width: 100%;
+    min-height: calc(var(--krds-size-height-7) * 2);
+    padding: var(--krds-padding-6);
+    border: 1px solid var(--krds-light-color-input-border);
+    border-radius: var(--krds-radius-medium2);
+    background: var(--krds-light-color-input-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    line-height: 1.5;
+    resize: vertical;
+    transition:
+      border-color var(--duration-fast) var(--easing-standard);
+  }
+  .textarea::placeholder { color: var(--color-text-disabled); }
+  .textarea:hover:not(:disabled):not(:read-only) {
+    border-color: var(--color-border-dark);
+  }
+  .textarea:focus,
+  .textarea:focus-visible {
+    border-color: var(--krds-light-color-input-border-active);
+    outline: none;
+  }
+  .textarea:disabled {
+    background: var(--krds-light-color-input-surface-disabled);
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+  .textarea--error,
+  .textarea[aria-invalid="true"] {
+    border-color: var(--krds-light-color-input-border-error);
+  }
+}

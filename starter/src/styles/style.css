@@ -1,0 +1,35 @@
+/**
+ * INFOMIND UX 가이드 — 메인 스타일
+ *
+ * Tailwind v4 + KRDS 토큰 + ITCSS 7-layer
+ * 출처: tokens/krds-base.json + tokens/infomind-overrides.json (build/tokens.css)
+ *
+ * 절대 직접 수정 금지: ../../tokens/build/tokens.css
+ * 토큰 변경은 tokens/krds-base.json (KRDS 갱신) 또는 tokens/infomind-overrides.json (UX팀 결정)
+ */
+
+@import "tailwindcss";
+
+/* ─── ITCSS 레이어 우선순위 ─── */
+@layer base, components, utilities;
+
+/* ─── 1-settings — KRDS 토큰 + INFOMIND 오버라이드 ─── */
+@import "../../tokens/build/tokens.css";
+
+/* ─── 3-generic — 리셋 (62.5% 트릭 포함) ─── */
+@import "./3-generic/reset.css";
+
+/* ─── 4-elements — HTML 태그 베이스 ─── */
+@import "./4-elements/base.css";
+
+/* ─── 5-objects — 레이아웃 패턴 ─── */
+@import "./5-objects/container.css";
+
+/* ─── 6-components — UI 컴포넌트 (KRDS BEM) ─── */
+@import "./6-components/index.css";
+
+/* ─── 7-utilities — 유틸리티 (Tailwind에 없는 것만) ─── */
+@import "./7-utilities/sr-only.css";
+
+/* ─── 프로젝트별 오버라이드 슬롯 (비어 있으면 KRDS 기본값) ─── */
+/* @import "./_project-overrides.css"; */

@@ -1,4 +1,4 @@
-# 버튼 (Button)
+# 버튼 (Button) — KRDS
 
 ## 기본 마크업
 
@@ -6,50 +6,57 @@
 <button type="button" class="btn btn--primary">버튼 텍스트</button>
 ```
 
-## Variant 목록
+## Variant (KRDS 정의 — 4종)
 
 | Variant | 클래스 | 용도 |
 |---------|--------|------|
-| Primary | `.btn--primary` | 주요 동작 (제출, 저장) |
-| Secondary | `.btn--secondary` | 보조 동작 |
-| Outline | `.btn--outline` | 테두리만, 덜 강조 |
-| Text | `.btn--text` | 배경/테두리 없음 |
-| Ghost | `.btn--ghost` | 투명, 호버 시 배경 표시 |
-| Link | `.btn--link` | 링크 스타일 (밑줄) |
-| Small | `.btn--sm` | 높이 32px (min-height: 4.4rem으로 터치 영역 44px 보장), `--font-size-sm` |
-| Large | `.btn--lg` | 높이 48px, `--font-size-md` |
-| Disabled | `:disabled` 속성 | `opacity: 0.5`, `cursor: not-allowed` |
+| Primary | `.btn--primary` | 메인 CTA (저장, 제출, 확인) |
+| Secondary | `.btn--secondary` | 보조 액션 (primary 톤 옅은 채움 + primary border) |
+| Tertiary | `.btn--tertiary` | 약한 액션 (투명 + gray border) |
+| Text | `.btn--text` | 텍스트 링크형 (배경/border 없음) |
 
-### Variant 조합 예시
+## Size (KRDS 정의 — 5종)
+
+| Size | 클래스 | 높이 | padding-x | 사용 권장 |
+|------|--------|------|-----------|----------|
+| xsmall | `.btn--xsmall` | 32px | 10px | 데스크탑 dense UI 한정 |
+| small | `.btn--small` | 40px | 12px | 데스크탑 보조 액션 |
+| medium | (기본 — 클래스 없음) | 48px | 16px | **모바일·기본 권장** |
+| large | `.btn--large` | 56px | 20px | 강조 CTA |
+| xlarge | `.btn--xlarge` | 64px | 24px | 히어로/랜딩 CTA |
+
+> **모바일 환경에선 medium(48px) 이상 사용.** xsmall(32) · small(40)은 WCAG 권장 터치 영역(44px)보다 작아 모바일 부적합.
+
+## 조합 예시
 
 ```html
-<!-- 기본 크기 -->
+<!-- 기본(medium) -->
 <button type="button" class="btn btn--primary">저장</button>
 <button type="button" class="btn btn--secondary">취소</button>
-<button type="button" class="btn btn--outline">더보기</button>
-<button type="button" class="btn btn--text">텍스트 버튼</button>
-<button type="button" class="btn btn--ghost">고스트</button>
-<button type="button" class="btn btn--link">링크 버튼</button>
+<button type="button" class="btn btn--tertiary">더보기</button>
+<button type="button" class="btn btn--text">자세히 보기</button>
 
-<!-- 크기 조합 -->
-<button type="button" class="btn btn--primary btn--sm">작은 버튼</button>
-<button type="button" class="btn btn--primary btn--lg">큰 버튼</button>
+<!-- 사이즈 조합 -->
+<button type="button" class="btn btn--primary btn--small">작게</button>
+<button type="button" class="btn btn--primary btn--large">크게</button>
 
 <!-- 비활성 -->
-<button type="button" class="btn btn--primary" disabled>비활성 버튼</button>
+<button type="button" class="btn btn--primary" disabled>비활성</button>
+
+<!-- Block (full width) -->
+<button type="button" class="btn btn--primary btn--block">제출</button>
 ```
 
-## 접근성 주의사항
+## 접근성 (KRDS + WCAG 2.1 AA)
 
-- `<button>` 태그 사용 필수. `<a>` 태그를 버튼 용도로 사용하지 않는다
-- 아이콘만 있는 버튼은 반드시 `aria-label` 속성을 추가한다: `<button type="button" class="btn btn--ghost" aria-label="메뉴 열기">...</button>`
-- 비활성 버튼은 `disabled` 속성을 사용한다 (`aria-disabled` 아님)
-- 최소 터치 영역 44px x 44px 보장 (`.btn--sm`도 `min-height: 4.4rem` 적용)
-- `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
-- 링크 역할이 필요한 경우에만 `<a class="btn btn--link" href="...">` 사용
-- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
-- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
+- `<button type="button">` 태그 사용 필수. `<a>` 태그를 버튼 용도로 쓰지 않는다
+- 아이콘만 있는 버튼은 `aria-label` 필수: `<button class="btn" aria-label="메뉴 열기">...</button>`
+- 비활성은 `disabled` 속성 (또는 `aria-disabled="true"`)
+- 포커스 outline은 `reset.css`에서 전역 관리 (4px primary 외곽선) — 컴포넌트에서 제거 금지
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 자동 비활성 (Phase 6에서 추가)
 
-## SCSS 파일
+## 출처
 
-`src/scss/6-components/_btn.scss`
+- KRDS 버튼 명세: https://www.krds.go.kr/html/site/component/component_summary.html
+- 토큰: `--krds-light-color-button-*`, `--krds-size-height-{5..9}`, `--krds-padding-{4..8}`, `--krds-radius-{small3,medium1..4}`
+- CSS: `src/styles/6-components/btn.css`

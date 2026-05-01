@@ -1,0 +1,97 @@
+/**
+ * Side Panel — KRDS Help panel 패턴 응용
+ *
+ * 우측에서 슬라이드 인. 모달과 달리 본문 스크롤 차단하지 않음.
+ *
+ * 구조:
+ *   <aside class="side-panel" role="dialog" aria-labelledby="panel-title">
+ *     <header class="side-panel__header">
+ *       <h2 id="panel-title" class="side-panel__title">상세 정보</h2>
+ *       <button class="side-panel__close" aria-label="닫기">×</button>
+ *     </header>
+ *     <div class="side-panel__body">...</div>
+ *     <footer class="side-panel__footer">
+ *       <button class="btn btn--primary">저장</button>
+ *     </footer>
+ *   </aside>
+ */
+
+@layer components {
+  .side-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 48rem; /* medium 기본 */
+    z-index: var(--z-modal);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-2); /* KRDS help-panel 그림자 패턴 */
+    transform: translateX(100%);
+    transition: transform var(--duration-base) var(--easing-standard);
+  }
+
+  .side-panel[aria-hidden="false"],
+  .side-panel--open {
+    transform: translateX(0);
+  }
+
+  .side-panel--small  { max-width: 36rem; }
+  .side-panel--medium { max-width: 48rem; }
+  .side-panel--large  { max-width: 64rem; }
+
+  .side-panel__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--krds-gap-5);
+    padding: var(--krds-padding-8);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .side-panel__title {
+    font-size: var(--text-heading-medium);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .side-panel__close {
+    flex-shrink: 0;
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--krds-radius-medium2);
+    color: var(--color-text-subtle);
+    font-size: 2.4rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .side-panel__close:hover {
+    background: var(--color-bg-subtler);
+    color: var(--color-text);
+  }
+
+  .side-panel__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--krds-padding-8);
+    color: var(--color-text);
+  }
+
+  .side-panel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--krds-gap-5);
+    padding: var(--krds-padding-6) var(--krds-padding-8) var(--krds-padding-8);
+    border-top: 1px solid var(--color-border-light);
+  }
+}

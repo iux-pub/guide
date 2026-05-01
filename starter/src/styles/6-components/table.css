@@ -1,0 +1,98 @@
+/**
+ * Table — KRDS Table
+ *
+ * 구조:
+ *   <div class="table-wrap">
+ *     <table class="table">
+ *       <caption class="table__caption">표 제목</caption>
+ *       <thead>
+ *         <tr>
+ *           <th scope="col">열1</th>
+ *           <th scope="col">열2</th>
+ *         </tr>
+ *       </thead>
+ *       <tbody>
+ *         <tr><td>값1</td><td>값2</td></tr>
+ *       </tbody>
+ *     </table>
+ *   </div>
+ */
+
+@layer components {
+  /* 가로 스크롤 래퍼 (모바일 대응) */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--krds-radius-medium2);
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: var(--text-body-medium);
+    color: var(--color-text);
+  }
+
+  .table__caption {
+    text-align: left;
+    padding: var(--krds-padding-6);
+    font-weight: 700;
+    color: var(--color-text-bolder);
+    background: var(--color-bg-subtler);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .table th,
+  .table td {
+    padding: var(--krds-padding-5) var(--krds-padding-6); /* 12px 16px */
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+  }
+
+  .table thead th {
+    background: var(--color-bg-subtler);
+    font-weight: 700;
+    color: var(--color-text-bolder);
+    font-size: var(--text-body-small);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  /* 호버 강조 */
+  .table--hover tbody tr {
+    transition: background-color var(--duration-fast) var(--easing-standard);
+  }
+  .table--hover tbody tr:hover {
+    background: var(--color-bg-subtler);
+  }
+
+  /* 줄무늬 */
+  .table--striped tbody tr:nth-child(even) {
+    background: var(--color-bg-subtler);
+  }
+
+  /* 선택된 행 */
+  .table tbody tr[aria-selected="true"] {
+    background: var(--krds-light-color-surface-primary-subtler);
+  }
+
+  /* 정렬 가능한 헤더 */
+  .table th[aria-sort] {
+    cursor: pointer;
+    user-select: none;
+  }
+  .table th[aria-sort="ascending"]::after  { content: " ▲"; font-size: 0.75em; color: var(--color-primary); }
+  .table th[aria-sort="descending"]::after { content: " ▼"; font-size: 0.75em; color: var(--color-primary); }
+
+  /* 사이즈 변형 */
+  .table--compact th,
+  .table--compact td { padding: var(--krds-padding-3) var(--krds-padding-5); /* 8px 12px */ }
+
+  .table--comfortable th,
+  .table--comfortable td { padding: var(--krds-padding-7) var(--krds-padding-7); /* 20px */ }
+}

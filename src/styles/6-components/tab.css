@@ -1,0 +1,94 @@
+/**
+ * Tab — KRDS Tab
+ *
+ * 구조 (WAI-ARIA tabs pattern):
+ *   <div class="tab">
+ *     <div class="tab__list" role="tablist">
+ *       <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">탭 1</button>
+ *       <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">탭 2</button>
+ *     </div>
+ *     <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">콘텐츠 1</div>
+ *     <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>콘텐츠 2</div>
+ *   </div>
+ */
+
+@layer components {
+  .tab {
+    width: 100%;
+  }
+
+  .tab__list {
+    display: flex;
+    gap: var(--krds-gap-1);
+    border-bottom: 2px solid var(--color-border);
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .tab__item {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--krds-gap-2);
+    height: var(--krds-size-height-7); /* 48px */
+    padding-inline: var(--krds-padding-6);
+    border: none;
+    background: transparent;
+    color: var(--color-text-subtle);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    transition:
+      color var(--duration-fast) var(--easing-standard);
+  }
+
+  .tab__item:hover {
+    color: var(--color-text);
+  }
+
+  .tab__item[aria-selected="true"] {
+    color: var(--color-primary);
+  }
+
+  /* 활성 탭 하단 인디케이터 */
+  .tab__item::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: transparent;
+    transition: background-color var(--duration-fast) var(--easing-standard);
+  }
+  .tab__item[aria-selected="true"]::after {
+    background: var(--color-primary);
+  }
+
+  .tab__item:disabled,
+  .tab__item[aria-disabled="true"] {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  .tab__panel {
+    padding: var(--krds-padding-8) 0;
+  }
+
+  .tab__panel[hidden] { display: none; }
+
+  /* 사이즈 변형 */
+  .tab__list--small .tab__item {
+    height: var(--krds-size-height-6); /* 40px */
+    font-size: var(--text-body-small);
+  }
+  .tab__list--large .tab__item {
+    height: var(--krds-size-height-8); /* 56px */
+    font-size: var(--text-body-large);
+  }
+}

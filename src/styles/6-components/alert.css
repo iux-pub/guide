@@ -1,0 +1,101 @@
+/**
+ * Alert / Critical alerts — KRDS
+ *
+ * 페이지에 고정되는 정보/경고/오류 메시지.
+ *
+ * 구조:
+ *   <div class="alert alert--info" role="alert">
+ *     <div class="alert__icon" aria-hidden="true">ℹ</div>
+ *     <div class="alert__body">
+ *       <p class="alert__title">알림 제목</p>
+ *       <p class="alert__message">상세 메시지</p>
+ *     </div>
+ *     <button class="alert__close" aria-label="닫기">×</button>
+ *   </div>
+ */
+
+@layer components {
+  .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--krds-gap-5);
+    padding: var(--krds-padding-6);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--krds-radius-medium2);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-1);
+  }
+
+  .alert__icon {
+    flex-shrink: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .alert__body { flex: 1; min-width: 0; }
+
+  .alert__title {
+    font-size: var(--text-body-medium);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-text);
+    margin: 0 0 var(--krds-gap-2) 0;
+  }
+
+  .alert__message {
+    font-size: var(--text-body-medium);
+    line-height: 1.5;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .alert__close {
+    flex-shrink: 0;
+    width: 3.2rem;
+    height: 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--krds-radius-small3);
+    color: var(--color-text-subtle);
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  .alert__close:hover {
+    background: var(--color-bg-subtler);
+  }
+
+  /* Variants — 시맨틱 색상 */
+  .alert--info {
+    border-color: var(--krds-light-color-border-information-light);
+    background: var(--krds-light-color-surface-information-subtler);
+  }
+  .alert--info .alert__icon { color: var(--color-info); }
+
+  .alert--success {
+    border-color: var(--krds-light-color-border-success-light);
+    background: var(--krds-light-color-surface-success-subtler);
+  }
+  .alert--success .alert__icon { color: var(--color-success); }
+
+  .alert--warning {
+    border-color: var(--krds-light-color-border-warning-light);
+    background: var(--krds-light-color-surface-warning-subtler);
+  }
+  .alert--warning .alert__icon { color: var(--color-warning); }
+
+  .alert--danger,
+  .alert--critical {
+    border-color: var(--krds-light-color-border-danger-light);
+    background: var(--krds-light-color-surface-danger-subtler);
+  }
+  .alert--danger .alert__icon,
+  .alert--critical .alert__icon { color: var(--color-danger); }
+}

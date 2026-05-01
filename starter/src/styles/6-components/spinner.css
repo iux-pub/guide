@@ -1,0 +1,41 @@
+/**
+ * Spinner — KRDS Spinner (로딩 표시)
+ *
+ * 구조:
+ *   <span class="spinner" role="status" aria-label="로딩 중"></span>
+ */
+
+@layer components {
+  .spinner {
+    display: inline-block;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 0.3rem solid var(--color-bg-subtle);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spinner-rotate 0.8s linear infinite;
+  }
+
+  @keyframes spinner-rotate {
+    to { transform: rotate(360deg); }
+  }
+
+  /* 사이즈 */
+  .spinner--small {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-width: 0.2rem;
+  }
+  .spinner--large {
+    width: 4.0rem;
+    height: 4.0rem;
+    border-width: 0.4rem;
+  }
+
+  /* prefers-reduced-motion 대응 */
+  @media (prefers-reduced-motion: reduce) {
+    .spinner {
+      animation-duration: 1.6s;
+    }
+  }
+}

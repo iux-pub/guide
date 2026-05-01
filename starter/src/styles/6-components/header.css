@@ -1,0 +1,119 @@
+/**
+ * Header — KRDS Header (정부 사이트 표준 헤더 패턴)
+ *
+ * 구조:
+ *   <header class="site-header">
+ *     <div class="container site-header__inner">
+ *       <a class="site-header__brand" href="/">
+ *         <img src="/logo.svg" alt="기관명">
+ *         <span class="site-header__brand-name">기관명</span>
+ *       </a>
+ *       <nav class="site-header__nav" aria-label="주 메뉴">
+ *         <ul class="site-header__menu">
+ *           <li><a href="/about">소개</a></li>
+ *           <li><a href="/services">서비스</a></li>
+ *         </ul>
+ *       </nav>
+ *       <div class="site-header__actions">
+ *         <button class="btn btn--text btn--small">로그인</button>
+ *       </div>
+ *     </div>
+ *   </header>
+ */
+
+@layer components {
+  .site-header {
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border-light);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-7); /* 24px */
+    height: 6.4rem; /* 64px (mobile) */
+  }
+
+  @media (min-width: 1024px) {
+    .site-header__inner {
+      height: 8.0rem; /* 80px (PC) */
+    }
+  }
+
+  /* 브랜드 영역 */
+  .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-5);
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: var(--text-body-large);
+    font-weight: 700;
+  }
+
+  .site-header__brand img {
+    height: 3.2rem;
+    width: auto;
+  }
+
+  /* 주 메뉴 (PC) */
+  .site-header__nav {
+    display: none;
+    flex: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .site-header__nav { display: block; }
+  }
+
+  .site-header__menu {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-5);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-header__menu a {
+    display: inline-flex;
+    align-items: center;
+    height: var(--krds-size-height-7); /* 48px 터치 영역 */
+    padding-inline: var(--krds-padding-5);
+    color: var(--color-text);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--easing-standard);
+  }
+
+  .site-header__menu a:hover { color: var(--color-primary); }
+  .site-header__menu a[aria-current="page"] { color: var(--color-primary); }
+
+  /* 우측 액션 영역 */
+  .site-header__actions {
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-3);
+  }
+
+  /* 모바일 햄버거 토글 */
+  .site-header__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--krds-radius-medium2);
+    cursor: pointer;
+  }
+
+  @media (min-width: 1024px) {
+    .site-header__toggle { display: none; }
+  }
+}

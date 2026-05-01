@@ -1,0 +1,94 @@
+/**
+ * Toast — KRDS Toast (모바일) + 데스크탑 사용
+ *
+ * 일시적 피드백 메시지. 화면 우측 상단/하단에 잠시 노출 후 자동 사라짐.
+ *
+ * 구조:
+ *   <div class="toast-stack">
+ *     <div class="toast toast--success" role="status">
+ *       <span class="toast__icon" aria-hidden="true">✓</span>
+ *       <p class="toast__message">저장되었습니다</p>
+ *       <button class="toast__close" aria-label="닫기">×</button>
+ *     </div>
+ *   </div>
+ */
+
+@layer components {
+  /* 토스트 컨테이너 — 화면 우측 상단 또는 하단에 고정 */
+  .toast-stack {
+    position: fixed;
+    top: var(--krds-padding-8);
+    right: var(--krds-padding-8);
+    z-index: var(--z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--krds-gap-5);
+    pointer-events: none;
+    max-width: calc(100vw - var(--krds-padding-8) * 2);
+    width: 36rem;
+  }
+
+  .toast-stack--bottom {
+    top: auto;
+    bottom: var(--krds-padding-8);
+  }
+
+  /* 개별 토스트 */
+  .toast {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--krds-gap-5);
+    padding: var(--krds-padding-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--krds-radius-medium2);
+    box-shadow: var(--shadow-2);
+    pointer-events: auto;
+    animation: toast-slide-in var(--duration-base) var(--easing-decelerate);
+  }
+
+  @keyframes toast-slide-in {
+    from { opacity: 0; transform: translateX(2rem); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .toast__icon {
+    flex-shrink: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .toast__message {
+    flex: 1;
+    margin: 0;
+    color: var(--color-text);
+    font-size: var(--text-body-medium);
+    line-height: 1.5;
+  }
+
+  .toast__close {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: var(--color-text-subtle);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Variants */
+  .toast--info    .toast__icon { color: var(--color-info); }
+  .toast--success .toast__icon { color: var(--color-success); }
+  .toast--warning .toast__icon { color: var(--color-warning); }
+  .toast--danger  .toast__icon { color: var(--color-danger); }
+}

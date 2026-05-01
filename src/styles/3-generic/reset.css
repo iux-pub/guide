@@ -1,0 +1,45 @@
+/**
+ * Reset — modern-normalize + KRDS 1rem=10px 트릭 + box-sizing
+ *
+ * KRDS는 font-size: 62.5%를 명시 채택한다.
+ * 이 트릭이 있어야 KRDS의 모든 0.1rem 단위 토큰이 의도한 픽셀 값으로 렌더링된다.
+ */
+
+@import "modern-normalize";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* KRDS 표준: 1rem = 10px */
+html {
+  font-size: 62.5%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  /* KRDS body-medium = 1.7rem = 17px (기본 본문) */
+  font-size: var(--text-body-medium);
+  font-weight: 400;
+  /* KRDS 접근성 권장: 최소 150% */
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* KRDS 접근성 — :focus { outline: none } 금지. focus-visible만 outline 노출 */
+:focus-visible {
+  outline: 0.4rem solid var(--color-border-primary);
+  outline-offset: 2px;
+}
+
+/* 마우스 클릭 시 outline 제거 (focus-visible 미지원 브라우저용 fallback 없음 — 모던 브라우저 가정) */
+:focus:not(:focus-visible) {
+  outline: none;
+}

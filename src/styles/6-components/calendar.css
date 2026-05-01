@@ -1,0 +1,143 @@
+/**
+ * Calendar — KRDS 달력
+ *
+ * 구조:
+ *   <div class="calendar" role="application" aria-label="날짜 선택">
+ *     <div class="calendar__head">
+ *       <button class="calendar__nav" aria-label="이전 달">‹</button>
+ *       <h2 class="calendar__title" aria-live="polite">2026년 4월</h2>
+ *       <button class="calendar__nav" aria-label="다음 달">›</button>
+ *     </div>
+ *     <table class="calendar__grid" role="grid">
+ *       <thead>
+ *         <tr>
+ *           <th scope="col" abbr="일요일">일</th>
+ *           <th scope="col" abbr="월요일">월</th>
+ *           ...
+ *         </tr>
+ *       </thead>
+ *       <tbody>
+ *         <tr role="row">
+ *           <td role="gridcell">
+ *             <button class="calendar__day" aria-label="2026년 4월 1일">1</button>
+ *           </td>
+ *           <td role="gridcell">
+ *             <button class="calendar__day calendar__day--selected" aria-selected="true" aria-label="2026년 4월 2일 (선택됨)">2</button>
+ *           </td>
+ *         </tr>
+ *       </tbody>
+ *     </table>
+ *   </div>
+ */
+
+@layer components {
+  .calendar {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--krds-radius-medium3);
+    padding: var(--krds-padding-6);
+    box-shadow: var(--shadow-1); /* KRDS calendar drop-down shadow */
+    display: inline-block;
+  }
+
+  .calendar__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--krds-gap-3);
+    margin-bottom: var(--krds-gap-5);
+  }
+
+  .calendar__nav {
+    width: 3.2rem;
+    height: 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--krds-radius-small3);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 1.6rem;
+  }
+  .calendar__nav:hover {
+    background: var(--color-bg-subtler);
+  }
+
+  .calendar__title {
+    font-size: var(--text-body-large);
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .calendar__grid {
+    border-collapse: separate;
+    border-spacing: var(--krds-gap-1);
+  }
+
+  .calendar__grid th {
+    width: 4rem;
+    padding: var(--krds-padding-3) 0;
+    font-size: var(--text-body-small);
+    font-weight: 700;
+    color: var(--color-text-subtle);
+    text-align: center;
+  }
+
+  .calendar__grid td {
+    padding: 0;
+    text-align: center;
+  }
+
+  /* 일자 버튼 — 4×4 정사각 */
+  .calendar__day {
+    width: 4rem;
+    height: 4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      color var(--duration-fast) var(--easing-standard);
+  }
+
+  .calendar__day:hover:not(:disabled):not([aria-selected="true"]) {
+    background: var(--color-bg-subtler);
+  }
+
+  /* 오늘 */
+  .calendar__day--today {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  /* 선택됨 */
+  .calendar__day--selected,
+  .calendar__day[aria-selected="true"] {
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+  }
+
+  /* 다른 달의 날짜 (희미하게) */
+  .calendar__day--other-month {
+    color: var(--color-text-disabled);
+  }
+
+  .calendar__day:disabled {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+}

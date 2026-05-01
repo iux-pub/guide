@@ -1,0 +1,41 @@
+/**
+ * Badge — KRDS Badge
+ *
+ * 작은 알림 표시기. 새 항목 카운트, 상태 표시.
+ *
+ * Shape: radius-xsmall1~3 (2px) — KRDS Xsmall 그룹
+ */
+
+@layer components {
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.6rem;
+    height: 1.6rem;
+    padding-inline: 0.4rem;
+    border-radius: var(--krds-radius-xsmall1); /* 2px */
+    background: var(--color-danger);
+    color: var(--color-text-inverse);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-xsmall);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Dot 변형 — 숫자 없는 단순 점 */
+  .badge--dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    min-width: 0;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  /* Variants */
+  .badge--primary { background: var(--color-primary); }
+  .badge--info    { background: var(--color-info); }
+  .badge--success { background: var(--color-success); }
+  .badge--warning { background: var(--color-warning); color: var(--color-text); }
+  .badge--gray    { background: var(--krds-light-color-gray-60); }
+}

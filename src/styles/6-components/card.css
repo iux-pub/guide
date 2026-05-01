@@ -1,0 +1,82 @@
+/**
+ * Card — KRDS 카드
+ *
+ * 사이즈: xsmall / small / medium (기본) / large
+ *   각 사이즈는 PC/Mobile 패딩이 다름 (KRDS 정의)
+ *   Mobile (< 1024px) → padding-card-* 모바일 값
+ *   PC    (≥ 1024px) → padding-card-* PC 값
+ *
+ * Shape: radius-large1 (10px) — KRDS Large 그룹
+ * Surface: gray.0 (white)
+ * Border: gray-light (1px)
+ */
+
+@layer components {
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--krds-radius-large1); /* 10px */
+    padding: var(--krds-pc-padding-card-medium);
+  }
+
+  .card--xsmall { padding: var(--krds-pc-padding-card-xsmall); }
+  .card--small  { padding: var(--krds-pc-padding-card-small); }
+  .card--medium { padding: var(--krds-pc-padding-card-medium); }
+  .card--large  { padding: var(--krds-pc-padding-card-large); }
+
+  /* 헤더/본문/푸터 분리 — KRDS 카드 패턴 */
+  .card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--krds-gap-5);
+    margin-bottom: var(--krds-gap-7); /* 24px */
+  }
+
+  .card__title {
+    font-size: var(--text-heading-medium);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .card__body { color: var(--color-text); }
+
+  .card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--krds-gap-5);
+    margin-top: var(--krds-gap-7);
+  }
+
+  /* Variants */
+  .card--inverse {
+    background: var(--color-bg-inverse);
+    border-color: transparent;
+    color: var(--color-text-inverse);
+  }
+  .card--inverse .card__title { color: var(--color-text-inverse); }
+
+  .card--elevated {
+    border: none;
+    box-shadow: var(--shadow-2);
+  }
+
+  /* 링크형 카드 — 호버 시 elevation up */
+  a.card,
+  .card--link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      box-shadow var(--duration-fast) var(--easing-standard),
+      transform var(--duration-fast) var(--easing-standard);
+  }
+  a.card:hover,
+  .card--link:hover {
+    box-shadow: var(--shadow-2);
+    transform: translateY(-2px);
+  }
+}

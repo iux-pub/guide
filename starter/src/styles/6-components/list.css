@@ -1,0 +1,65 @@
+/**
+ * List — KRDS Structured list / Text list
+ *
+ * 두 가지 변형:
+ *   .list--text       텍스트 목록 (bullet/number)
+ *   .list--structured 구조화 목록 (label-value 정의 목록 — KRDS 형식)
+ */
+
+@layer components {
+  /* ─── Text list (ul/ol) ─── */
+  .list--text {
+    list-style: disc inside;
+    padding-left: 0;
+    margin: 0;
+    color: var(--color-text);
+    line-height: 1.7;
+  }
+  .list--text.list--ordered { list-style: decimal inside; }
+
+  .list--text > li {
+    padding-block: var(--krds-padding-2); /* 4px */
+  }
+
+  .list--text > li > ul,
+  .list--text > li > ol {
+    list-style: circle inside;
+    padding-left: var(--krds-padding-7); /* 20px */
+    margin-top: var(--krds-gap-2);
+  }
+
+  /* ─── Structured list (dl) — KRDS 정의 목록 ─── */
+  .list--structured {
+    margin: 0;
+    border-top: 2px solid var(--color-border-dark);
+  }
+
+  .list--structured > div,
+  .list--structured > .list__row {
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    gap: var(--krds-gap-5);
+    padding: var(--krds-padding-6) 0;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  @media (max-width: 767px) {
+    .list--structured > div,
+    .list--structured > .list__row {
+      grid-template-columns: 1fr;
+      gap: var(--krds-gap-3);
+    }
+  }
+
+  .list--structured dt,
+  .list--structured .list__label {
+    font-weight: 700;
+    color: var(--color-text-bolder);
+  }
+
+  .list--structured dd,
+  .list--structured .list__value {
+    color: var(--color-text);
+    margin: 0;
+  }
+}

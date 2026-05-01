@@ -1,0 +1,64 @@
+/**
+ * Select — KRDS 셀렉트
+ *
+ * native <select> 기반. 내부 패딩·높이·테두리는 input과 동일 토큰 사용.
+ * 화살표 아이콘은 SVG 배경으로 우측 표시.
+ */
+
+@layer components {
+  .select {
+    width: 100%;
+    height: var(--krds-size-height-7); /* 48px */
+    padding-inline-start: var(--krds-padding-6); /* 16px */
+    padding-inline-end: calc(var(--krds-padding-6) + 2.4rem); /* 화살표 공간 */
+    border: 1px solid var(--krds-light-color-input-border);
+    border-radius: var(--krds-radius-medium2);
+    background: var(--krds-light-color-input-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    line-height: 1.5;
+    cursor: pointer;
+    appearance: none;
+
+    /* KRDS 화살표 — gray.80 stroke */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M4 6L8 10L12 6' stroke='%2333363D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1.6rem center;
+    background-size: 1.6rem 1.6rem;
+
+    transition:
+      border-color var(--duration-fast) var(--easing-standard);
+  }
+
+  .select:hover:not(:disabled) {
+    border-color: var(--color-border-dark);
+  }
+
+  .select:focus,
+  .select:focus-visible {
+    border-color: var(--krds-light-color-input-border-active);
+    outline: none;
+  }
+
+  .select:disabled {
+    background-color: var(--krds-light-color-input-surface-disabled);
+    border-color: var(--krds-light-color-input-border-disabled);
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  .select--error,
+  .select[aria-invalid="true"] {
+    border-color: var(--krds-light-color-input-border-error);
+  }
+
+  .select--small {
+    height: var(--krds-size-height-6);
+    font-size: var(--text-body-small);
+  }
+  .select--large {
+    height: var(--krds-size-height-8);
+    font-size: var(--text-body-large);
+  }
+}

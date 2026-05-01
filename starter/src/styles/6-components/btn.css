@@ -1,0 +1,149 @@
+/**
+ * Button — KRDS 정본 명세
+ *   Variants: primary / secondary / tertiary / text
+ *   Sizes:    xsmall / small / medium / large / xlarge
+ *   States:   default / hover / pressed / disabled (focus-visible은 reset.css 전역)
+ *
+ * 터치 영역: KRDS xsmall(32) · small(40)은 44px 이하. 모바일 컨텍스트에서는
+ *   medium(48) 이상 사용을 권장. 데스크탑 dense UI에선 xsmall/small 허용.
+ */
+
+@layer components {
+  /* ─── Base ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      border-color var(--duration-fast) var(--easing-standard),
+      color var(--duration-fast) var(--easing-standard);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* ─── Sizes (KRDS button size table) ─── */
+  .btn--xsmall {
+    height: var(--krds-size-height-5);   /* 32px */
+    padding-inline: var(--krds-padding-4);  /* 10px */
+    gap: var(--krds-gap-1);                 /* 2px */
+    border-radius: var(--krds-radius-small3); /* 4px */
+    font-size: var(--text-body-xsmall);  /* 13px */
+  }
+
+  .btn--small {
+    height: var(--krds-size-height-6);   /* 40px */
+    padding-inline: var(--krds-padding-5);  /* 12px */
+    gap: var(--krds-gap-1);                 /* 2px */
+    border-radius: var(--krds-radius-medium1); /* 6px */
+    font-size: var(--text-body-small);   /* 15px */
+  }
+
+  /* medium = 기본값. .btn에 별도 size 클래스 없을 때 적용 */
+  .btn,
+  .btn--medium {
+    height: var(--krds-size-height-7);   /* 48px */
+    padding-inline: var(--krds-padding-6);  /* 16px */
+    gap: var(--krds-gap-2);                 /* 4px */
+    border-radius: var(--krds-radius-medium2); /* 6px */
+    font-size: var(--text-body-medium);  /* 17px */
+  }
+
+  .btn--large {
+    height: var(--krds-size-height-8);   /* 56px */
+    padding-inline: var(--krds-padding-7);  /* 20px */
+    gap: var(--krds-gap-2);                 /* 4px */
+    border-radius: var(--krds-radius-medium3); /* 8px */
+    font-size: var(--text-body-large);   /* 19px */
+  }
+
+  .btn--xlarge {
+    height: var(--krds-size-height-9);   /* 64px */
+    padding-inline: var(--krds-padding-8);  /* 24px */
+    gap: var(--krds-gap-2);                 /* 4px */
+    border-radius: var(--krds-radius-medium4); /* 8px */
+    font-size: var(--text-body-large);
+  }
+
+  /* ─── Variant: primary (KRDS button.primary-fill) ─── */
+  .btn--primary {
+    background: var(--krds-light-color-button-primary-fill);
+    color: var(--color-text-inverse);
+    border-color: var(--krds-light-color-button-primary-fill);
+  }
+  .btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-primary-fill-hover);
+    border-color: var(--krds-light-color-button-primary-fill-hover);
+  }
+  .btn--primary:active:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-primary-fill-pressed);
+    border-color: var(--krds-light-color-button-primary-fill-pressed);
+  }
+
+  /* ─── Variant: secondary (KRDS button.secondary-*) ─── */
+  .btn--secondary {
+    background: var(--krds-light-color-button-secondary-fill);
+    color: var(--color-primary);
+    border-color: var(--krds-light-color-button-secondary-border);
+  }
+  .btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-secondary-fill-hover);
+  }
+  .btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-secondary-fill-pressed);
+  }
+
+  /* ─── Variant: tertiary (KRDS button.tertiary-*) ─── */
+  .btn--tertiary {
+    background: var(--krds-light-color-button-tertiary-fill);
+    color: var(--color-text);
+    border-color: var(--krds-light-color-button-tertiary-border);
+  }
+  .btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-tertiary-fill-hover);
+  }
+  .btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-tertiary-fill-pressed);
+  }
+
+  /* ─── Variant: text (KRDS button.text-*) ─── */
+  .btn--text {
+    background: var(--krds-light-color-button-text-fill);
+    color: var(--color-text);
+    border-color: var(--krds-light-color-button-text-border);
+  }
+  .btn--text:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-text-fill-hover);
+  }
+  .btn--text:active:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--krds-light-color-button-text-fill-pressed);
+  }
+
+  /* ─── Disabled (모든 variant 공통 — KRDS 명시) ─── */
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    background: var(--krds-light-color-button-disabled-fill);
+    color: var(--color-text-disabled);
+    border-color: var(--krds-light-color-button-disabled-border);
+  }
+
+  /* ─── Block (full width) ─── */
+  .btn--block {
+    display: flex;
+    width: 100%;
+  }
+}

@@ -1,0 +1,18 @@
+/**
+ * Container — KRDS 콘텐츠 영역
+ *   - max-width 1200px (KRDS contents-size)
+ *   - 좌우 padding: mobile 16px / pc 24px (KRDS contents-padding-x)
+ */
+
+.container {
+  width: 100%;
+  max-width: 120rem; /* 1200px */
+  margin-inline: auto;
+  padding-inline: 1.6rem; /* 16px (mobile) */
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: 2.4rem; /* 24px (pc) */
+  }
+}

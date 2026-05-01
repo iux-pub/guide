@@ -1,0 +1,80 @@
+{
+  "$meta": {
+    "name": "INFOMIND UX Overrides",
+    "purpose": "KRDS 베이스에 없거나 KRDS와 다르게 결정한 항목. 이 파일의 값이 krds-base보다 우선 적용된다.",
+    "version": "1.0.0",
+    "owner": "INFOMIND UX Team",
+    "krds-base": "tokens/krds-base.json (KRDS-uiux/krds-uiux v1.0.0)",
+    "policy": [
+      "KRDS 정본을 수정하고 싶을 때는 이 파일에 같은 경로로 덮어쓴다",
+      "KRDS에 없는 항목은 infomind-* 네임스페이스로 추가한다",
+      "삭제하려는 KRDS 토큰은 이 파일에 null로 표기한다"
+    ]
+  },
+
+  "infomind-grid": {
+    "$comment": "KRDS는 컬럼 수를 강제하지 않으므로 UX팀이 12-col 기본 명시. 인포마인드 표준.",
+    "columns": {
+      "mobile": { "value": 4,  "type": "number" },
+      "tablet": { "value": 8,  "type": "number" },
+      "pc":     { "value": 12, "type": "number" }
+    }
+  },
+
+  "infomind-z-index": {
+    "$comment": "KRDS는 z-index 추상 토큰 없이 raw 값(901/1000/1010/1020 등)을 직접 사용. UX팀 표준화.",
+    "dropdown":       { "value": 1000, "type": "number" },
+    "sticky":         { "value": 1020, "type": "number" },
+    "fixed":          { "value": 1030, "type": "number" },
+    "modal-backdrop": { "value": 1040, "type": "number" },
+    "modal":          { "value": 1050, "type": "number" },
+    "popover":        { "value": 1060, "type": "number" },
+    "toast":          { "value": 1070, "type": "number" },
+    "tooltip":        { "value": 1080, "type": "number" }
+  },
+
+  "infomind-motion": {
+    "$comment": "KRDS는 transition-base 0.4s 단일값과 컴포넌트별 보조값(0.15s/0.2s/0.3s)만 정의. UX팀이 fast/base/slow 3단계 표준 정의.",
+    "duration": {
+      "fast": { "value": "0.15s", "type": "duration" },
+      "base": { "value": "0.4s",  "type": "duration", "$comment": "KRDS 표준" },
+      "slow": { "value": "0.6s",  "type": "duration" }
+    },
+    "easing": {
+      "standard":   { "value": "ease-in-out", "type": "easing", "$comment": "KRDS 표준" },
+      "decelerate": { "value": "cubic-bezier(0.0, 0.0, 0.2, 1)", "type": "easing" },
+      "accelerate": { "value": "cubic-bezier(0.4, 0.0, 1, 1)",   "type": "easing" },
+      "linear":     { "value": "linear", "type": "easing" }
+    }
+  },
+
+  "infomind-touch-target": {
+    "$comment": "KRDS는 터치 영역 최소값을 명시하지 않음. WCAG 권장 44×44px 강제.",
+    "minimum": { "value": "4.4rem", "type": "dimension" }
+  },
+
+  "infomind-elevation": {
+    "$comment": "KRDS는 컴포넌트별 그림자(modal/popover/banner)만 정의. UX팀이 shadow-1/2/3 추상 elevation 정의.",
+    "shadow-1": {
+      "value": "0 0 0.2rem 0 var(--krds-light-color-alpha-shadow1), 0 0.4rem 0.8rem 0 var(--krds-light-color-alpha-shadow2)",
+      "type": "shadow",
+      "$usage": "alert, banner, dropdown — subtle"
+    },
+    "shadow-2": {
+      "value": "0 0 0.2rem 0 var(--krds-light-color-alpha-shadow2), 0 0.8rem 1.6rem 0 var(--krds-light-color-alpha-shadow3)",
+      "type": "shadow",
+      "$usage": "popover, help-panel, tooltip — medium"
+    },
+    "shadow-3": {
+      "value": "0 0 0.2rem 0 var(--krds-light-color-alpha-shadow2), 0 1.6rem 2.4rem 0 var(--krds-light-color-alpha-shadow3)",
+      "type": "shadow",
+      "$usage": "modal, dialog — deep"
+    }
+  },
+
+  "infomind-brand": {
+    "$comment": "프로젝트별 브랜드 색상 슬롯. _project-overrides.css에서 :root override로 채움. 비어 있으면 KRDS primary가 기본값으로 사용된다.",
+    "primary":      { "value": null, "type": "color" },
+    "primary-text": { "value": null, "type": "color" }
+  }
+}

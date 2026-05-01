@@ -1,0 +1,103 @@
+/**
+ * Main Menu — KRDS Main menu (드롭다운형 주 메뉴)
+ *
+ * 구조 (헤더 안에서 사용):
+ *   <nav class="main-menu" aria-label="주 메뉴">
+ *     <ul class="main-menu__list">
+ *       <li class="main-menu__item">
+ *         <a class="main-menu__link" href="/about" aria-haspopup="true" aria-expanded="false">소개</a>
+ *         <ul class="main-menu__submenu" hidden>
+ *           <li><a href="/about/intro">개요</a></li>
+ *           <li><a href="/about/history">연혁</a></li>
+ *         </ul>
+ *       </li>
+ *     </ul>
+ *   </nav>
+ */
+
+@layer components {
+  .main-menu {
+    width: 100%;
+  }
+
+  .main-menu__list {
+    display: flex;
+    align-items: center;
+    gap: var(--krds-gap-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-menu__item {
+    position: relative;
+  }
+
+  .main-menu__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--krds-gap-2);
+    height: var(--krds-size-height-7); /* 48px */
+    padding-inline: var(--krds-padding-5);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-medium);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--easing-standard);
+  }
+
+  .main-menu__link[aria-haspopup="true"]::after {
+    content: "";
+    width: 1.2rem;
+    height: 1.2rem;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'><path d='M3 4.5L6 7.5L9 4.5' stroke='%231E2124' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / contain;
+    transition: transform var(--duration-fast) var(--easing-standard);
+  }
+  .main-menu__link[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+  }
+
+  .main-menu__link:hover { color: var(--color-primary); }
+  .main-menu__link[aria-current="page"] { color: var(--color-primary); }
+
+  /* 서브메뉴 (드롭다운) */
+  .main-menu__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 20rem;
+    margin: 0;
+    padding: var(--krds-padding-3) 0;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--krds-radius-medium2);
+    box-shadow: var(--shadow-2);
+    z-index: var(--z-dropdown);
+  }
+
+  .main-menu__submenu[hidden] { display: none; }
+
+  .main-menu__submenu a {
+    display: block;
+    padding: var(--krds-padding-4) var(--krds-padding-6);
+    color: var(--color-text);
+    font-size: var(--text-body-medium);
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--easing-standard);
+  }
+
+  .main-menu__submenu a:hover {
+    background: var(--color-bg-subtler);
+  }
+
+  .main-menu__submenu a[aria-current="page"] {
+    color: var(--color-primary);
+    background: var(--krds-light-color-surface-primary-subtler);
+  }
+}

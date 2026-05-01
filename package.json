@@ -4,41 +4,43 @@
   "description": "인포마인드 UX 디자인/퍼블리싱 가이드 시스템",
   "private": true,
   "scripts": {
-    "build:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules",
-    "watch:css": "sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch",
-    "lint:css": "stylelint \"src/scss/**/*.scss\"",
-    "lint:css:fix": "stylelint \"src/scss/**/*.scss\" --fix",
+    "build:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css",
+    "build:docs-css": "tailwindcss -i src/styles/docs.css -o dist/css/docs.css",
+    "watch:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css --watch",
+    "lint:css": "stylelint \"src/styles/**/*.css\"",
+    "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
     "test:a11y": "npm run build:css && pa11y-ci --config .pa11yci.js",
     "test:a11y:single": "axe",
-    "build:docs-css": "sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules",
-    "build:site": "npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
+    "build:site": "npm run build:tokens && npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
     "build:tokens": "node scripts/build-tokens.js",
     "build:rules": "node scripts/build-rules.js",
     "build:prompts": "node scripts/build-prompts.js",
-    "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:site",
-    "test": "npm run check && npm run lint:css && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
+    "build:skill": "node scripts/build-skill.js",
+    "deploy:skill": "rsync -av --delete skill/ ~/.claude/skills/info-design/",
+    "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npx @11ty/eleventy",
+    "test": "npm run check && npm run build:tokens && npm run lint:css && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
     "check": "node scripts/check-violations.js",
     "sync:starter": "bash scripts/sync-starter.sh",
-    "serve": "concurrently \"sass src/scss/style.scss dist/css/style.css --load-path=node_modules --watch\" \"sass src/scss/docs.scss dist/css/docs.css --load-path=node_modules --watch\" \"npx @11ty/eleventy --serve\""
+    "serve": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "clipboard": "^2.0.11",
-    "modern-normalize": "^3.0.1",
-    "sass": "^1.98.0",
-    "sass-rem": "^4.0.1"
+    "modern-normalize": "^3.0.1"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.1.5",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "@axe-core/cli": "^4.11.1",
+    "@tailwindcss/cli": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0",
     "concurrently": "^9.2.1",
     "pa11y-ci": "^4.1.0",
     "pagefind": "^1.4.0",
     "stylelint": "^17.5.0",
-    "stylelint-config-standard-scss": "^17.0.0",
-    "stylelint-selector-bem-pattern": "^4.0.1"
+    "stylelint-config-standard": "^39.0.0",
+    "tailwindcss": "^4.0.0"
   }
 }

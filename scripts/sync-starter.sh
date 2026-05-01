@@ -1,73 +1,65 @@
 #!/bin/bash
-# guide → starter 동기화 스크립트
+# guide → starter 동기화 (KRDS + Tailwind v4 시스템)
 # 사용법: npm run sync:starter
 #
-# 원격 starter 저장소에는 모든 파일을 포함한다 (LLM 하네스 포함).
-# 팀원이 clone 후 자신의 프로젝트 저장소에 커밋할 때만 .gitignore가 LLM 파일을 제외한다.
+# 동기화 대상:
+#   - src/styles/             → starter/src/styles/
+#   - src/snippets/           → starter/src/snippets/
+#   - src/js/                 → starter/src/js/
+#   - tokens/                 → starter/tokens/ (krds-base + overrides — build/ 제외)
+#   - scripts/build-tokens.js → starter/scripts/
+#   - scripts/check-violations.js → starter/scripts/
+#   - postcss.config.mjs      → starter/
+#   - .stylelintrc.json       → starter/
+#
+# starter/CLAUDE.md, starter/package.json, starter/README.md는 starter 전용으로 별도 관리.
 
 set -e
 
 GUIDE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STARTER_DIR="$GUIDE_DIR/starter"
-STARTER_REPO="/tmp/starter-sync"
 
-echo "=== guide → starter 동기화 ==="
+echo "=== guide → starter 동기화 (KRDS + Tailwind v4) ==="
 
-# 1. SCSS 동기화
-echo "[1/5] SCSS 동기화..."
-for dir in 1-settings 2-tools 3-generic 4-elements 5-objects 6-components 7-utilities; do
-  cp -r "$GUIDE_DIR/src/scss/$dir/"* "$STARTER_DIR/src/scss/$dir/"
-done
-cp "$GUIDE_DIR/src/scss/style.scss" "$STARTER_DIR/src/scss/style.scss"
+# 1. styles
+echo "[1/6] src/styles/ 동기화..."
+rm -rf "$STARTER_DIR/src/styles"
+cp -r "$GUIDE_DIR/src/styles" "$STARTER_DIR/src/styles"
 
-# 2. JS 동기화
-echo "[2/5] JS 동기화..."
-cp "$GUIDE_DIR/src/js/"*.js "$STARTER_DIR/src/js/"
+# 2. snippets
+echo "[2/6] src/snippets/ 동기화..."
+rm -rf "$STARTER_DIR/src/snippets"
+cp -r "$GUIDE_DIR/src/snippets" "$STARTER_DIR/src/snippets"
 
-# 3. 스니펫 동기화 (LLM 참조용)
-echo "[3/5] 스니펫 동기화..."
-mkdir -p "$STARTER_DIR/src/snippets"
-cp "$GUIDE_DIR/src/snippets/"*.md "$STARTER_DIR/src/snippets/"
-
-# 4. LLM 하네스 동기화
-echo "[4/5] LLM 하네스 동기화..."
-mkdir -p "$STARTER_DIR/prompts"
-cp "$GUIDE_DIR/prompts/"*.md "$STARTER_DIR/prompts/"
-cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/.stylelintrc.json"
-# CLAUDE.md는 starter 전용으로 별도 관리 — guide에서 RULES 블록만 주입
-python3 - "$GUIDE_DIR/CLAUDE.md" "$STARTER_DIR/CLAUDE.md" <<'PYEOF'
-import sys, re
-guide_text = open(sys.argv[1]).read()
-starter_text = open(sys.argv[2]).read()
-m = re.search(r'<!-- RULES_START -->.*?<!-- RULES_END -->', guide_text, re.DOTALL)
-if m:
-    rules_block = m.group(0)
-    starter_text = re.sub(r'<!-- RULES_START -->.*?<!-- RULES_END -->', rules_block, starter_text, flags=re.DOTALL)
-    open(sys.argv[2], 'w').write(starter_text)
-PYEOF
-mkdir -p "$STARTER_DIR/scripts"
-cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/check-violations.js"
-# .claude/settings.json은 starter 전용으로 별도 관리 — guide 파일을 덮어쓰지 않음
-
-# 5. 원격 저장소 동기화 (전체 푸시)
-echo "[5/5] starter 저장소 동기화..."
-rm -rf "$STARTER_REPO"
-git clone https://github.com/iux-pub/starter.git "$STARTER_REPO" 2>/dev/null
-cp -r "$STARTER_DIR/"* "$STARTER_REPO/"
-cp "$STARTER_DIR/.gitignore" "$STARTER_REPO/" 2>/dev/null
-cp "$STARTER_DIR/.stylelintrc.json" "$STARTER_REPO/"
-cp -r "$STARTER_DIR/.claude" "$STARTER_REPO/"
-cd "$STARTER_REPO"
-git add -A
-# .gitignore가 LLM 파일을 제외하므로 강제 추가 (팀원 프로젝트에서는 .gitignore가 보호)
-git add -f CLAUDE.md .claude/ prompts/ scripts/ src/snippets/ 2>/dev/null || true
-if git diff --cached --quiet; then
-  echo "변경 없음 — 이미 최신"
-else
-  git commit -m "sync: guide 저장소에서 동기화"
-  git push
-  echo "✓ iux-pub/starter 푸시 완료"
+# 3. js
+echo "[3/6] src/js/ 동기화..."
+if [ -d "$GUIDE_DIR/src/js" ]; then
+  mkdir -p "$STARTER_DIR/src/js"
+  cp "$GUIDE_DIR/src/js/"*.js "$STARTER_DIR/src/js/" 2>/dev/null || true
 fi
 
-rm -rf "$STARTER_REPO"
-echo "=== 동기화 완료 ==="
+# 4. tokens (build/ 제외 — starter에서 자체 빌드)
+echo "[4/6] tokens/ 동기화..."
+mkdir -p "$STARTER_DIR/tokens"
+cp "$GUIDE_DIR/tokens/krds-base.json" "$STARTER_DIR/tokens/"
+cp "$GUIDE_DIR/tokens/infomind-overrides.json" "$STARTER_DIR/tokens/"
+cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
+
+# 5. scripts (build-tokens, check-violations)
+echo "[5/6] scripts 동기화..."
+mkdir -p "$STARTER_DIR/scripts"
+cp "$GUIDE_DIR/scripts/build-tokens.js" "$STARTER_DIR/scripts/"
+cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
+
+# 6. config files
+echo "[6/6] config 동기화..."
+cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
+cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
+
+echo ""
+echo "✓ 동기화 완료. starter/ 검토 후 npm 패키지 또는 git 저장소에 배포하세요."
+echo ""
+echo "starter 단독 빌드 검증:"
+echo "  cd $STARTER_DIR"
+echo "  npm install --legacy-peer-deps"
+echo "  npm run build"

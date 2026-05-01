@@ -57,9 +57,34 @@ cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
 
 echo ""
-echo "✓ 동기화 완료. starter/ 검토 후 npm 패키지 또는 git 저장소에 배포하세요."
+echo "✓ 로컬 starter/ 동기화 완료"
 echo ""
-echo "starter 단독 빌드 검증:"
-echo "  cd $STARTER_DIR"
-echo "  npm install --legacy-peer-deps"
-echo "  npm run build"
+
+# 7. iux-pub/starter 원격 저장소로 push (개발팀 clone 대상)
+STARTER_REPO="/tmp/starter-sync"
+echo "[7/7] iux-pub/starter 원격 저장소 동기화..."
+rm -rf "$STARTER_REPO"
+git clone https://github.com/iux-pub/starter.git "$STARTER_REPO" 2>&1 | tail -3
+
+# 기존 내용 모두 제거 후 새로 복사 (.git 제외)
+find "$STARTER_REPO" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} + 2>/dev/null
+cp -R "$STARTER_DIR/." "$STARTER_REPO/"
+
+cd "$STARTER_REPO"
+git add -A 2>&1 | tail -3
+if git diff --cached --quiet; then
+  echo "  변경 없음 — 이미 최신"
+else
+  git commit -m "sync: KRDS + Tailwind v4 시스템 동기화 (guide repo에서)" 2>&1 | tail -3
+  git push 2>&1 | tail -3
+  echo "  ✓ iux-pub/starter 푸시 완료"
+fi
+
+cd "$GUIDE_DIR"
+rm -rf "$STARTER_REPO"
+
+echo ""
+echo "=== 완료 ==="
+echo "개발팀이 시작할 때:"
+echo "  git clone https://github.com/iux-pub/starter.git my-project"
+echo "  cd my-project && npm install --legacy-peer-deps && npm run build"

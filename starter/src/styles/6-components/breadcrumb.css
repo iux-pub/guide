@@ -47,6 +47,7 @@
     text-decoration: none;
     transition: color var(--duration-fast) var(--easing-standard);
   }
+
   .breadcrumb__item a:hover {
     color: var(--color-text);
     text-decoration: underline;

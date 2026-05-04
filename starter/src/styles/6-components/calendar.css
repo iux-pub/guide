@@ -61,6 +61,7 @@
     cursor: pointer;
     font-size: 1.6rem;
   }
+
   .calendar__nav:hover {
     background: var(--color-bg-subtler);
   }

@@ -45,11 +45,13 @@
     position: relative;
     display: inline-flex;
   }
+
   .tooltip-wrap > .tooltip {
     bottom: calc(100% + 0.4rem);
     left: 50%;
     transform: translateX(-50%);
   }
+
   .tooltip-wrap:hover > .tooltip,
   .tooltip-wrap:focus-within > .tooltip {
     opacity: 1;

@@ -16,15 +16,17 @@
 /* KRDS 표준: 1rem = 10px */
 html {
   font-size: 62.5%;
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-sans);
+
   /* KRDS body-medium = 1.7rem = 17px (기본 본문) */
   font-size: var(--text-body-medium);
   font-weight: 400;
+
   /* KRDS 접근성 권장: 최소 150% */
   line-height: 1.5;
   color: var(--color-text);

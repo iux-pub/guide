@@ -67,6 +67,7 @@
   .table--hover tbody tr {
     transition: background-color var(--duration-fast) var(--easing-standard);
   }
+
   .table--hover tbody tr:hover {
     background: var(--color-bg-subtler);
   }

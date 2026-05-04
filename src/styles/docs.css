@@ -95,7 +95,7 @@
 .docs-nav__brand-version {
   font-size: var(--text-body-xsmall);
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-primary-pressed); /* primary-70 — primary subtler 배경 위 AA 통과 */
   background: var(--krds-light-color-surface-primary-subtler);
   padding: 0.2rem 0.6rem;
   border-radius: var(--radius-max);
@@ -237,10 +237,12 @@ pre[class*='language-'] {
   margin: var(--spacing-8) 0;
   padding: var(--spacing-8);
   padding-top: var(--spacing-12);
-  background: var(--color-gray-90);
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
   overflow-x: auto;
   font-size: var(--text-body-small);
   line-height: 1.5;
+  border: 1px solid var(--color-border-light);
 }
 
 pre[class*='language-'] code {
@@ -250,9 +252,13 @@ pre[class*='language-'] code {
 }
 
 pre[class*='language-']::-webkit-scrollbar { height: 0.6rem; }
-pre[class*='language-']::-webkit-scrollbar-track { background: var(--color-gray-80); border-radius: 3px; }
-pre[class*='language-']::-webkit-scrollbar-thumb { background: var(--color-gray-60); border-radius: 3px; }
-pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color-gray-50); }
+pre[class*='language-']::-webkit-scrollbar-track { background: var(--color-bg-secondary); border-radius: 3px; }
+pre[class*='language-']::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color-text-secondary); }
+
+/* Prism token 색상은 prism.min.css 기본 라이트 테마 사용. 광범위 R-12 정정은
+   별개 작업으로 분리(.pa11yci.js IGNORE_RULES 참조) — 라이트 테마 전환만으로도
+   다크 테마 대비 색상 대비가 크게 개선됨. */
 
 .copy-btn {
   position: absolute;
@@ -455,15 +461,19 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color
   font-weight: 700;
   font-family: 'JetBrains Mono', SFMono-Regular, Consolas, monospace;
   font-size: var(--text-body-xsmall);
+
+  /* 부모 .color-swatch의 inline style color를 inherit. opacity 적용 안 함 — AA 통과 */
 }
 
 .color-swatch__value {
   font-family: 'JetBrains Mono', SFMono-Regular, Consolas, monospace;
-  opacity: 0.85;
+
+  /* opacity 0.85 → 1.0: 옅어지면 swatch 배경과 대비 부족 */
 }
 
 .color-swatch__desc {
   margin-top: var(--spacing-3);
   font-size: var(--text-body-xsmall);
-  opacity: 0.75;
+
+  /* opacity 0.75 → 1.0: 옅어지면 swatch 배경과 대비 부족 (R-12 위반) */
 }

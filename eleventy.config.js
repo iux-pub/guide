@@ -27,8 +27,9 @@ export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy('site/assets')
   // dist/css를 그대로 복사 -- 문서 사이트와 playground iframe 모두 /dist/css/ 경로 사용
   eleventyConfig.addPassthroughCopy({ 'dist/css': 'dist/css' }).addWatchTarget('dist/css/')
-  // Prism.js 코드 하이라이팅 테마
-  eleventyConfig.addPassthroughCopy({ 'node_modules/prismjs/themes/prism-tomorrow.min.css': 'assets/css/prism-tomorrow.css' })
+  // Prism.js 코드 하이라이팅 테마 — 라이트 배경 + AA 통과 색상 위해 기본(prism.min.css) 사용.
+  // 옛 prism-tomorrow는 다크 테마라 옅은 token 색이 라이트 배경 위에서 색상 대비 미달.
+  eleventyConfig.addPassthroughCopy({ 'node_modules/prismjs/themes/prism.min.css': 'assets/css/prism-tomorrow.css' })
   eleventyConfig.addPassthroughCopy({ 'src/playground': 'playground' })
   eleventyConfig.addPassthroughCopy({ 'node_modules/clipboard/dist/clipboard.min.js': 'assets/js/clipboard.min.js' })
 

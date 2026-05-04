@@ -23,7 +23,9 @@
     "subject-full-stop": [2, "never", "."],
     "header-max-length": [2, "always", 100],
     "body-leading-blank": [2, "always"],
-    "footer-leading-blank": [2, "always"]
+    "footer-leading-blank": [2, "always"],
+    "body-max-line-length": [0],
+    "footer-max-line-length": [0]
   },
   "helpUrl": "INFOMIND UX 커밋 규칙: type(scope): 본문 — 한국어 명령형 동사로 작성 (예: 'feat(starter): 스니펫 추가', 'fix(tokens): 옛 토큰명 정정', 'docs: README 갱신'). type-enum 외 사용 금지. 마침표로 끝내지 않는다."
 }

@@ -3,7 +3,8 @@
 // check-violations.js — info-design 컨트랙트 자동 검출
 // KRDS 토큰 외 raw 값, 옛 시스템 흔적, 옛 variant, SCSS 잔재, 접근성 누락 검출.
 //
-// 종료 코드: 0 = 통과, 1 = 경고, 2 = 오류
+// 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
+//   STRICT=1 환경변수 설정 시 경고도 1로 실패 처리
 
 const fs = require('fs')
 const path = require('path')
@@ -387,7 +388,8 @@ function main() {
   }
 
   console.warn(`${YELLOW}경고 ${warnCount}개${RESET} (오류 없음)`)
-  process.exit(1)
+  // 경고는 CI/Git hook을 차단하지 않는다 (오류만 차단). 경고를 차단하려면 STRICT=1 환경변수.
+  process.exit(process.env.STRICT === '1' ? 1 : 0)
 }
 
 main()

@@ -9,10 +9,9 @@ order: 1
 
 | 페이지 | 설명 |
 |--------|------|
+| [CSS 규칙](/conventions/css-rules/) | 토큰 사용, !important, SCSS 사용 금지 |
 | [BEM 네이밍](/conventions/bem/) | CSS 클래스 명명 규칙 |
-| [SCSS 규칙](/conventions/scss-rules/) | 토큰 사용, !important 등 |
-| [모듈 시스템](/conventions/modules/) | @use/@forward/@import |
-| [SCSS 구조](/conventions/scss-structure/) | ITCSS 7레이어 아키텍처 |
+| [CSS 구조](/conventions/css-structure/) | ITCSS 5레이어 + Tailwind v4 + 토큰 분리 |
 | [HTML/마크업 규칙](/conventions/html-rules/) | inline style, alt, 시맨틱 HTML |
 | [접근성 규칙](/conventions/a11y-rules/) | 포커스, 대비, 터치 영역 |
 
@@ -21,9 +20,9 @@ order: 1
 <!-- RULES_TABLE_START -->
 | ID | 규칙 | 심각도 | 카테고리 |
 |----|------|--------|----------|
-| R-01 | 모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지 | error | [SCSS 규칙](/conventions/scss-rules/) |
-| R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | [SCSS 규칙](/conventions/scss-rules/) |
-| R-03 | @use/@forward만 사용 — @import 금지 | error | [모듈 시스템](/conventions/modules/) |
+| R-01 | 모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지 | error | [CSS 규칙](/conventions/css-rules/) |
+| R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | [CSS 규칙](/conventions/css-rules/) |
+| R-03 | SCSS 사용 금지 — Tailwind v4 + CSS Custom Properties만 허용 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-04 | BEM 사용 (5-objects, 6-components 레이어에만 적용) | info | [BEM 네이밍](/conventions/bem/) |
 | R-05 | element 2단계 중첩 금지 — 평탄화 | error | [BEM 네이밍](/conventions/bem/) |
 | R-06 | 시각적 modifier 금지 — 의미적 이름 사용 | error | [BEM 네이밍](/conventions/bem/) |
@@ -41,9 +40,9 @@ order: 1
 
 ```bash
 npm run check           # 위반 패턴 전체 스캔 (check-violations.js)
-npm run lint:css        # Stylelint BEM + SCSS 구문 검사
+npm run lint:css        # Stylelint (src/styles/**/*.css)
 npm run lint:css:fix    # 자동 수정 가능한 항목 처리
 npm run build:rules     # rules.json → 이 페이지들 재생성
 ```
 
-파일 저장 시 훅이 자동으로 `check-violations.js`와 Stylelint를 실행한다.
+저장소에 Husky pre-commit 훅이 깔리면 커밋 시 `check-violations.js` + Stylelint가 자동 실행된다(예정).

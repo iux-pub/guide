@@ -24,7 +24,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 **Before -- AI 슬롭 카드 (generic)**
 
-```scss
+```css
 // 문제: 토큰 미사용, 하드코딩, 개성 없음
 .card {
   background: #fff;
@@ -56,34 +56,34 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 **After -- 의도적 카드 (inCMS 대시보드용)**
 
-```scss
+```css
 // inCMS 대시보드: Flat + Minimalism, 토큰 기반
 .card {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-base);
-  padding: var(--spacing-lg);
-  transition: box-shadow var(--transition-fast);
+  border-radius: var(--krds-radius-medium2);
+  padding: var(--spacing-6);
+  transition: box-shadow var(--duration-fast);
 
   &:hover {
-    box-shadow: var(--shadow-base);
+    box-shadow: var(--shadow-2);
   }
 
   &__title {
-    font-size: var(--font-size-md);
+    font-size: var(--text-body-large);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-2);
   }
 
   &__description {
-    font-size: var(--font-size-sm);
+    font-size: var(--text-body-small);
     color: var(--color-text-secondary);
     line-height: var(--leading-base);
   }
 
   &__action {
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-4);
   }
 }
 ```
@@ -93,7 +93,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 | 항목 | AI 슬롭 | 의도적 설계 |
 |------|---------|------------|
 | 색상 | 하드코딩 `#333`, `#666` | 토큰 `var(--color-text)` |
-| 레이아웃 | 매직넘버 `24px`, `12px` | 토큰 `var(--spacing-lg)`, `var(--spacing-sm)` |
+| 레이아웃 | 매직넘버 `24px`, `12px` | 토큰 `var(--spacing-6)`, `var(--spacing-2)` |
 | 네이밍 | `.btn`, `h3`, `p` | BEM `.card__title`, `.card__action` |
 | 버튼 | 보라색 그라디언트 | 제품 토큰 기반 Primary |
 | 폰트 | `Inter` 기본값 | 시스템 `PretendardGOV` |
@@ -123,26 +123,26 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 </section>
 ```
 
-```scss
+```css
 .hero {
   &--biophilic {
     background-color: #f0f7f0;           // 자연 감성 확장 색상
     background-image:
       radial-gradient(ellipse at 20% 50%, rgba(34, 135, 56, 0.08) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 20%, rgba(37, 110, 244, 0.05) 0%, transparent 50%);
-    padding: var(--spacing-3xl) 0;
+    padding: var(--spacing-16) 0;
   }
 
   &__title {
-    font-size: var(--font-size-2xl);
+    font-size: var(--text-heading-xlarge);
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
   }
 
   &__subtitle {
-    font-size: var(--font-size-md);
+    font-size: var(--text-body-large);
     color: var(--color-text-secondary);
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-2);
   }
 }
 ```
@@ -267,7 +267,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 ### 제품별 SCSS 오버라이드 예시
 
-```scss
+```css
 // _project-overrides.scss -- BigData 플랫폼
 :root {
   --color-primary: #00b4d8;

@@ -81,7 +81,7 @@ Table / Striped
 |------------|----------|----------|
 | `Button` | 카테고리 = Block | `.btn` |
 | `Button / Primary` | Variant = Modifier | `.btn--primary` |
-| `Button / Primary / Small` | 복합 Variant = 복합 Modifier | `.btn--primary.btn--sm` |
+| `Button / Primary / Small` | 복합 Variant = 복합 Modifier | `.btn--primary.btn--small` |
 | `Card` | 카테고리 = Block | `.card` |
 | `Card / Featured` | Variant = Modifier | `.card--featured` |
 | `Form / Input` | 하위 구조 = Element | `.form__input` |

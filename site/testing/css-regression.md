@@ -22,10 +22,10 @@ CSS는 전역 스코프(global scope)를 가진다. 클래스명이 충돌하거
 npm run lint:css
 
 # 변경한 파일만 검사 (빠른 확인)
-npx stylelint "src/scss/6-components/_btn.scss"
+npx stylelint "src/styles/6-components/_btn.scss"
 
 # 특정 폴더만 검사
-npx stylelint "src/scss/6-components/**/*.scss"
+npx stylelint "src/styles/6-components/**/*.scss"
 
 # 자동 수정 가능한 항목 처리
 npm run lint:css:fix
@@ -92,8 +92,8 @@ SCSS 파일을 수정한 후 아래 항목을 순서대로 확인한다.
 - [ ] `_project-overrides.scss`에 오버라이드가 있다면 충돌 없는가
 
 ```bash
-# 토큰 사용처 검색 (예: --spacing-md 변경 시)
-grep -r "spacing-md" src/scss/
+# 토큰 사용처 검색 (예: --spacing-4 변경 시)
+grep -r "spacing-md" src/styles/
 ```
 
 ### 전역 스타일 변경 시 추가 확인
@@ -110,15 +110,15 @@ grep -r "spacing-md" src/scss/
 
 BEM은 컴포넌트별로 고유한 네임스페이스를 제공한다. `.card__title`은 `.card` 블록 내에서만 의미를 가지므로 다른 컴포넌트에 영향을 주지 않는다.
 
-```scss
+```css
 // 안전: BEM 스코핑
 .card__title {
-  font-size: var(--font-size-lg);
+  font-size: var(--text-heading-medium);
 }
 
 // 위험: 범용 클래스
 .title {
-  font-size: var(--font-size-lg); // 어디에서든 영향
+  font-size: var(--text-heading-medium); // 어디에서든 영향
 }
 ```
 
@@ -126,7 +126,7 @@ BEM은 컴포넌트별로 고유한 네임스페이스를 제공한다. `.card__
 
 레이어 순서를 바꾸면 특이성(specificity) 계산이 달라져 기존 스타일이 깨질 수 있다. `style.scss`의 `@use` 순서를 임의로 변경하지 않는다.
 
-```scss
+```css
 // style.scss -- 순서 변경 금지
 @use '1-settings' as settings;
 @use '2-tools' as tools;

@@ -115,6 +115,6 @@ order: 3
 
 ## 관련 문서
 
-- [디자인 토큰 - Transition](/tokens/) -- `--transition-fast`, `--transition-base`, `--transition-slow`
+- [디자인 토큰 - Transition](/tokens/) -- `--duration-fast`, `--duration-base`, `--duration-slow`
 - [디자인 감사 - 모션](/design/design-audit/) -- 감사 체크리스트 8번 (모션 & 애니메이션)
 - [접근성](/accessibility/) -- KWCAG/WCAG AA 요구사항

@@ -106,7 +106,7 @@ Frame (최상위)
 | Tablet | 768px | 100% (padding 24px) | iPad 세로 기준 |
 | Mobile | 360px | 100% (padding 16px) | 안드로이드 기본 |
 
-이 값은 퍼블리싱 [브레이크포인트](/conventions/scss-structure/)와 연결된다.
+이 값은 퍼블리싱 [브레이크포인트](/conventions/css-structure/)와 연결된다.
 
 ## 파일 정리 체크리스트
 

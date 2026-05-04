@@ -61,7 +61,7 @@ order: 5
 - BEM 네이밍 컨벤션을 준수한다
 - 디자인 토큰(CSS Custom Properties)을 사용한다
 - `src/snippets/`에 마크다운 스니펫 문서를 작성한다
-- `src/scss/6-components/`에 SCSS 파일을 추가한다
+- `src/styles/6-components/`에 SCSS 파일을 추가한다
 
 ### 4. QA
 

@@ -86,12 +86,12 @@ order: 6
 </span>
 ```
 
-```scss
+```css
 .status {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
+  gap: var(--spacing-1);
+  font-size: var(--text-body-small);
 
   &__icon {
     flex-shrink: 0;
@@ -165,7 +165,7 @@ order: 6
 
 아이콘 자체가 24px이라도 인터랙티브할 경우 **44x44px** 터치 타겟을 필수로 확보한다.
 
-```scss
+```css
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -176,8 +176,8 @@ order: 6
   border: none;
   background: transparent;
   cursor: pointer;
-  border-radius: var(--radius-base);
-  transition: background-color var(--transition-fast);
+  border-radius: var(--krds-radius-medium2);
+  transition: background-color var(--duration-fast);
 
   &:hover {
     background-color: var(--color-bg-secondary);
@@ -200,12 +200,12 @@ order: 6
 
 아이콘과 텍스트를 함께 쓸 때 Flexbox로 정렬한다.
 
-```scss
+```css
 // 아이콘 + 텍스트 정렬 (Flexbox)
 .icon-label {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-1);
 
   &__icon {
     flex-shrink: 0;

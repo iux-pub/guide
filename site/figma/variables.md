@@ -3,7 +3,21 @@ title: Variable 네이밍
 order: 4
 ---
 
-피그마 Variable의 네이밍 규칙과 CSS Custom Property와의 매핑을 정의한다. Variable을 일관되게 관리하면 디자인 토큰과 코드 토큰이 1:1로 연결되어 디자인-퍼블리싱 간 오차가 줄어든다.
+피그마 Variable의 네이밍 규칙과 KRDS+INFOMIND CSS Custom Property와의 매핑을 정의한다. Variable을 일관되게 관리하면 디자인 토큰과 코드 토큰이 1:1로 연결되어 디자인-퍼블리싱 간 오차가 줄어든다.
+
+## Variable Collection 구성
+
+KRDS 정본과 INFOMIND 시맨틱 별칭을 별도 Collection으로 관리한다.
+
+| Collection 이름 | 포함 Variable | Mode |
+|----------------|--------------|------|
+| `KRDS Color` | KRDS 정본 색상 (Primary/Secondary/Gray/Semantic/Button) | Light, Dark |
+| `KRDS Padding` | `--krds-padding-1` ~ `--krds-padding-8` | Default |
+| `KRDS Gap` | `--krds-gap-1` ~ `--krds-gap-6` | Default |
+| `KRDS Size` | `--krds-size-height-1` ~ `--krds-size-height-9` | Default |
+| `KRDS Radius` | `--krds-radius-{small1~3, medium1~4, large1~3}` | Default |
+| `KRDS Font` | `--krds-font-size-1` ~ `--krds-font-size-15` | Default |
+| `INFOMIND Semantic` | 시맨틱 별칭 (`--color-text`, `--spacing-N`, `--text-body-medium` 등) | Default |
 
 ## Variable 네이밍 규칙
 
@@ -12,171 +26,151 @@ order: 4
 슬래시(`/`)를 구분자로 사용하여 계층을 표현한다.
 
 ```
-카테고리 / 그룹 / 이름
+KRDS / 카테고리 / 그룹 / 인덱스   (KRDS 정본)
+INFOMIND / 카테고리 / 의미        (시맨틱 별칭)
 ```
 
 ### 대소문자 규칙
 
 | 대상 | 규칙 | 예시 |
 |------|------|------|
-| 카테고리 | PascalCase | `Color`, `Spacing`, `Typography` |
-| 그룹 | PascalCase | `Primary`, `Gray`, `Font` |
-| 이름 | camelCase 또는 숫자 | `900`, `base`, `light`, `dark` |
+| Collection prefix | 대문자 | `KRDS`, `INFOMIND` |
+| 카테고리 | PascalCase | `Color`, `Padding`, `Font` |
+| 그룹 | PascalCase | `Primary`, `Gray`, `Button` |
+| 인덱스/이름 | camelCase 또는 숫자 | `5`, `50`, `text`, `medium2` |
 
-## 색상 Variable 매핑
+## KRDS Color Variable 매핑
 
-### Primary 색상
+KRDS는 primary/secondary/gray/success/warning/danger/info 모두 5/10/20/30/40/50/60/70/80/90/95의 11단계 스케일을 발행한다.
 
-| 피그마 Variable | CSS Custom Property | 값 | 용도 |
-|----------------|---------------------|----|----|
-| `Color / Primary` | `--color-primary` | #256ef4 | 기본 브랜드 색상 |
-| `Color / Primary / Light` | `--color-primary-light` | #6a9df7 | 밝은 브랜드 색상 |
-| `Color / Primary / Dark` | `--color-primary-dark` | #083891 | 어두운 브랜드 색상 |
+### Primary 11단계
 
-### Gray 스케일
+| 피그마 Variable | CSS Custom Property |
+|----------------|---------------------|
+| `KRDS / Color / Primary / 5` | `--krds-light-color-primary-5` |
+| `KRDS / Color / Primary / 30` | `--krds-light-color-primary-30` |
+| `KRDS / Color / Primary / 50` | `--krds-light-color-primary-50` (기본 강조) |
+| `KRDS / Color / Primary / 70` | `--krds-light-color-primary-70` |
+| `KRDS / Color / Primary / 90` | `--krds-light-color-primary-90` |
 
-| 피그마 Variable | CSS Custom Property | 값 | 용도 |
-|----------------|---------------------|----|----|
-| `Color / Gray / 900` | `--color-gray-900` | #222 | 가장 어두운 회색 |
-| `Color / Gray / 800` | `--color-gray-800` | #333 | |
-| `Color / Gray / 700` | `--color-gray-700` | #555 | |
-| `Color / Gray / 600` | `--color-gray-600` | #666 | |
-| `Color / Gray / 500` | `--color-gray-500` | #999 | |
-| `Color / Gray / 400` | `--color-gray-400` | #b1b8be | |
-| `Color / Gray / 300` | `--color-gray-300` | #ccc | |
-| `Color / Gray / 200` | `--color-gray-200` | #ddd | |
-| `Color / Gray / 100` | `--color-gray-100` | #efefef | |
-| `Color / Gray / 50` | `--color-gray-50` | #f8f8f8 | 가장 밝은 회색 |
+### Gray 11단계
 
-### Semantic 색상
+| 피그마 Variable | CSS Custom Property | 권장 용도 |
+|----------------|---------------------|----------|
+| `KRDS / Color / Gray / 0` | `--krds-light-color-gray-0` | 흰색 근접 (배경) |
+| `KRDS / Color / Gray / 30` | `--krds-light-color-gray-30` | 테두리·구분선 |
+| `KRDS / Color / Gray / 50` | `--krds-light-color-gray-50` | 비활성 텍스트 |
+| `KRDS / Color / Gray / 70` | `--krds-light-color-gray-70` | 보조 텍스트 |
+| `KRDS / Color / Gray / 90` | `--krds-light-color-gray-90` | 본문 텍스트 |
+| `KRDS / Color / Gray / 100` | `--krds-light-color-gray-100` | 검정 근접 |
 
-| 피그마 Variable | CSS Custom Property | 값 | 용도 |
-|----------------|---------------------|----|----|
-| `Color / Danger` | `--color-danger` | #de3412 | 에러, 삭제 |
-| `Color / Warning` | `--color-warning` | #c78500 | 경고 |
-| `Color / Success` | `--color-success` | #228738 | 성공, 완료 |
-| `Color / Info` | `--color-info` | #0b78cb | 정보 |
+### Semantic (Success/Warning/Danger/Info)
 
-### 기능별 색상
+각각 11단계. 기본은 50.
 
-| 피그마 Variable | CSS Custom Property | 값 | 용도 |
-|----------------|---------------------|----|----|
-| `Color / Text` | `--color-text` | #1e2124 | 본문 텍스트 |
-| `Color / Text / Secondary` | `--color-text-secondary` | #666 | 보조 텍스트 |
-| `Color / Text / Disabled` | `--color-text-disabled` | #999 | 비활성 텍스트 |
-| `Color / Bg` | `--color-bg` | #fff | 기본 배경 |
-| `Color / Bg / Secondary` | `--color-bg-secondary` | #f8f8f8 | 보조 배경 |
-| `Color / Border` | `--color-border` | #ccc | 기본 테두리 |
-| `Color / Border / Light` | `--color-border-light` | #efefef | 밝은 테두리 |
-| `Color / White` | `--color-white` | #fff | 흰색 |
-| `Color / Black` | `--color-black` | #000 | 검정 |
+| 피그마 Variable | CSS Custom Property |
+|----------------|---------------------|
+| `KRDS / Color / Success / 50` | `--krds-light-color-success-50` |
+| `KRDS / Color / Warning / 50` | `--krds-light-color-warning-50` |
+| `KRDS / Color / Danger / 50` | `--krds-light-color-danger-50` |
+| `KRDS / Color / Info / 50` | `--krds-light-color-info-50` |
 
-## 타이포그래피 Variable 매핑
+### Button 컴포넌트 토큰
 
-### 폰트 크기
+| 피그마 Variable | CSS Custom Property |
+|----------------|---------------------|
+| `KRDS / Color / Button / Primary / Fill` | `--krds-light-color-button-primary-fill` |
+| `KRDS / Color / Button / Primary / Fill-Hover` | `--krds-light-color-button-primary-fill-hover` |
+| `KRDS / Color / Button / Primary / Fill-Pressed` | `--krds-light-color-button-primary-fill-pressed` |
+| `KRDS / Color / Button / Secondary / Fill` | `--krds-light-color-button-secondary-fill` |
+| `KRDS / Color / Button / Secondary / Border` | `--krds-light-color-button-secondary-border` |
 
-| 피그마 Variable | CSS Custom Property | 값 | px 환산 |
-|----------------|---------------------|----|----|
-| `Typography / Font Size / 2xl` | `--font-size-2xl` | 3.2rem | 32px |
-| `Typography / Font Size / xl` | `--font-size-xl` | 2.8rem | 28px |
-| `Typography / Font Size / lg` | `--font-size-lg` | 2.4rem | 24px |
-| `Typography / Font Size / md` | `--font-size-md` | 2rem | 20px |
-| `Typography / Font Size / base` | `--font-size-base` | 1.6rem | 16px |
-| `Typography / Font Size / sm` | `--font-size-sm` | 1.4rem | 14px |
-| `Typography / Font Size / xs` | `--font-size-xs` | 1.2rem | 12px |
+## INFOMIND 시맨틱 별칭 매핑
 
-**피그마에서의 값:** 피그마에서는 px 단위로 입력한다 (32, 28, 24, 20, 16, 14, 12). 퍼블리싱에서 62.5% REM 트릭에 의해 rem으로 변환된다.
+KRDS 토큰을 가리키는 의미 기반 alias. 컴포넌트 작성 시 우선 권장.
 
-### 폰트 굵기
+### Color
 
-| 피그마 Variable | CSS Custom Property | 값 |
-|----------------|---------------------|-------|
-| `Typography / Font Weight / regular` | `--font-weight-regular` | 400 |
-| `Typography / Font Weight / medium` | `--font-weight-medium` | 500 |
-| `Typography / Font Weight / semibold` | `--font-weight-semibold` | 600 |
-| `Typography / Font Weight / bold` | `--font-weight-bold` | 700 |
+| 피그마 Variable | CSS Custom Property | KRDS 매핑 (예시) |
+|----------------|---------------------|------------------|
+| `INFOMIND / Color / Primary` | `--color-primary` | `--krds-light-color-primary-50` |
+| `INFOMIND / Color / Text` | `--color-text` | `--krds-light-color-gray-90` |
+| `INFOMIND / Color / Text / Secondary` | `--color-text-secondary` | `--krds-light-color-gray-70` |
+| `INFOMIND / Color / Text / Disabled` | `--color-text-disabled` | `--krds-light-color-gray-50` |
+| `INFOMIND / Color / Text / Inverse` | `--color-text-inverse` | `--krds-light-color-gray-0` |
+| `INFOMIND / Color / Bg` | `--color-bg` | `--krds-light-color-gray-0` |
+| `INFOMIND / Color / Bg / Secondary` | `--color-bg-secondary` | `--krds-light-color-gray-5` |
+| `INFOMIND / Color / Border` | `--color-border` | `--krds-light-color-gray-30` |
+| `INFOMIND / Color / Border / Light` | `--color-border-light` | `--krds-light-color-gray-10` |
 
-### 줄 간격
+## KRDS Padding/Gap/Size Variable 매핑
 
-| 피그마 Variable | CSS Custom Property | 값 |
-|----------------|---------------------|-------|
-| `Typography / Leading / tight` | `--leading-tight` | 1.2 (120%) |
-| `Typography / Leading / base` | `--leading-base` | 1.6 (160%) |
-| `Typography / Leading / loose` | `--leading-loose` | 1.8 (180%) |
+| 피그마 Variable | CSS Custom Property | 권장 용도 |
+|----------------|---------------------|----------|
+| `KRDS / Padding / 1` ~ `8` | `--krds-padding-1` ~ `--krds-padding-8` | 컨테이너·컴포넌트 패딩 |
+| `KRDS / Gap / 1` ~ `6` | `--krds-gap-1` ~ `--krds-gap-6` | flex/grid gap |
+| `KRDS / Size / Height / 5` (32px) | `--krds-size-height-5` | 버튼 xsmall |
+| `KRDS / Size / Height / 6` (40px) | `--krds-size-height-6` | 버튼 small |
+| `KRDS / Size / Height / 7` (48px) | `--krds-size-height-7` | **버튼 medium = 모바일 권장** |
+| `KRDS / Size / Height / 8` (56px) | `--krds-size-height-8` | 버튼 large |
+| `KRDS / Size / Height / 9` (64px) | `--krds-size-height-9` | 버튼 xlarge |
 
-**피그마에서의 값:** Line Height를 퍼센트(%)로 설정한다 (120%, 160%, 180%).
+INFOMIND 시맨틱 별칭(`--spacing-N`)은 정수 N=4px 단위 (예: `--spacing-4` = 16px).
 
-## 간격 Variable 매핑
-
-| 피그마 Variable | CSS Custom Property | 값 | px 환산 |
-|----------------|---------------------|----|----|
-| `Spacing / xs` | `--spacing-xs` | 0.4rem | 4px |
-| `Spacing / sm` | `--spacing-sm` | 0.8rem | 8px |
-| `Spacing / md` | `--spacing-md` | 1.6rem | 16px |
-| `Spacing / lg` | `--spacing-lg` | 2.4rem | 24px |
-| `Spacing / xl` | `--spacing-xl` | 3.2rem | 32px |
-| `Spacing / 2xl` | `--spacing-2xl` | 4.8rem | 48px |
-| `Spacing / 3xl` | `--spacing-3xl` | 6.4rem | 64px |
-
-**피그마에서의 값:** 피그마에서는 px 단위로 입력한다 (4, 8, 16, 24, 32, 48, 64).
-
-## 기타 Variable 매핑
-
-### Border Radius
+## KRDS Radius Variable 매핑
 
 | 피그마 Variable | CSS Custom Property | 값 |
-|----------------|---------------------|-------|
-| `Radius / sm` | `--radius-sm` | 4px |
-| `Radius / base` | `--radius-base` | 8px |
-| `Radius / lg` | `--radius-lg` | 12px |
-| `Radius / xl` | `--radius-xl` | 16px |
-| `Radius / full` | `--radius-full` | 9999px |
+|----------------|---------------------|-----|
+| `KRDS / Radius / Small / 1` ~ `3` | `--krds-radius-small1` ~ `--krds-radius-small3` | 2~4px |
+| `KRDS / Radius / Medium / 1` ~ `4` | `--krds-radius-medium1` ~ `--krds-radius-medium4` | 6~10px |
+| `KRDS / Radius / Large / 1` ~ `3` | `--krds-radius-large1` ~ `--krds-radius-large3` | 12~16px |
+| `KRDS / Radius / Full` | `--krds-radius-full` | 9999px |
 
-### Box Shadow
+## KRDS Font Size Variable 매핑
 
-| 피그마 Variable | CSS Custom Property | 피그마 설정 |
-|----------------|---------------------|------------|
-| `Shadow / sm` | `--shadow-sm` | Y: 1, Blur: 2, Opacity: 5% |
-| `Shadow / base` | `--shadow-base` | Y: 1, Blur: 3, Opacity: 10% |
-| `Shadow / lg` | `--shadow-lg` | Y: 10, Blur: 15, Opacity: 10% |
+| 피그마 Variable | CSS Custom Property | 권장 용도 |
+|----------------|---------------------|----------|
+| `KRDS / Font / Size / 3` (13px) | `--krds-font-size-3` | 캡션·라벨 |
+| `KRDS / Font / Size / 5` (15px) | `--krds-font-size-5` | 보조 본문 |
+| `KRDS / Font / Size / 7` (17px) | `--krds-font-size-7` | **본문** |
+| `KRDS / Font / Size / 9` (19px) | `--krds-font-size-9` | 큰 본문·소제목 |
+| `KRDS / Font / Size / 11` (24px) | `--krds-font-size-11` | 제목 |
+| `KRDS / Font / Size / 13` (32px) | `--krds-font-size-13` | 섹션 제목 |
+| `KRDS / Font / Size / 15` (48px) | `--krds-font-size-15` | 디스플레이 |
 
-## Variable Collection 구성
+INFOMIND 시맨틱 별칭(`--text-body-{xsmall,small,medium,large}` / `--text-heading-{small,medium,large,xlarge}`)도 발행됨.
 
-피그마 Variable Collection을 다음과 같이 구성한다.
+## 변환 패턴 요약
 
-| Collection 이름 | 포함 Variable | Mode |
-|----------------|--------------|------|
-| `Color` | 색상 전체 (Primary, Gray, Semantic, 기능별) | Default (Light) |
-| `Typography` | 폰트 크기, 굵기, 줄 간격 | Default |
-| `Spacing` | 간격 스케일 | Default |
-| `Misc` | Radius, Shadow | Default |
+1. KRDS 토큰: 슬래시(`/`)를 하이픈(`-`)으로, PascalCase를 소문자로, 그룹/인덱스 결합 (예: `KRDS / Color / Primary / 50` → `--krds-light-color-primary-50`)
+2. INFOMIND 시맨틱: 슬래시(`/`)를 하이픈(`-`)으로 (예: `INFOMIND / Color / Text / Secondary` → `--color-text-secondary`)
+3. `--` 접두사 필수
+4. 모드 전환은 `data-theme="dark"` 또는 `prefers-color-scheme`으로 KRDS dark 토큰 자동 활성
 
-**Collection 네이밍 규칙:**
+## 다크 모드
 
-- 영문 PascalCase를 사용한다
-- 역할 기반으로 구분한다 (시각적 속성이 아닌 기능적 분류)
+KRDS는 light/dark 양쪽 토큰을 발행한다. 피그마에서도 KRDS Color Collection을 Light/Dark Mode로 분리해 관리한다.
 
-## 변환 규칙 요약
+```css
+:root {
+  /* light tokens — 자동 적용 */
+}
 
-| 피그마 표기 | CSS 변환 규칙 |
-|------------|-------------|
-| `Color / Primary` | `--color-primary` (슬래시 → 하이픈, 소문자) |
-| `Color / Gray / 900` | `--color-gray-900` |
-| `Spacing / md` | `--spacing-md` |
-| `Typography / Font Size / base` | `--font-size-base` (카테고리 생략 가능) |
-| `Radius / base` | `--radius-base` |
+[data-theme="dark"] {
+  /* --krds-dark-color-* 자동 적용 */
+}
+```
 
-**변환 패턴:**
+## 절대 금지
 
-1. 슬래시(`/`)를 하이픈(`-`)으로 변환한다
-2. PascalCase를 소문자(kebab-case)로 변환한다
-3. `--` 접두사를 붙인다
-4. 중간 카테고리가 불필요하면 생략한다 (`Typography / Font Size / base` → `--font-size-base`)
+- 옛 시맨틱 토큰 (`--color-primary-light`, `--font-size-2xl`, `--spacing-md`, `--radius-base` 등) — KRDS 마이그레이션에서 폐기
+- raw hex (피그마 Variable이 아닌 직접 hex 입력) — KRDS 또는 INFOMIND Variable만
+- KRDS 카탈로그 외 임의 색상·간격 추가 — UX팀 결정 후 `tokens/infomind-overrides.json` 갱신
 
 ## 관련 문서
 
-- [색상 토큰](/tokens/color/) -- CSS Custom Properties 색상 정의
-- [타이포그래피 토큰](/tokens/typography/) -- 폰트 크기, 굵기, 줄 간격 정의
-- [간격 토큰](/tokens/spacing/) -- 간격 스케일 정의
-- [그리드 토큰](/tokens/grid/) -- 그리드 시스템과 컨테이너 규격
-- [Auto Layout 규칙](/figma/auto-layout/) -- 피그마 Auto Layout과 토큰 매핑
+- [색상 토큰](/tokens/color/) — KRDS 정본 + INFOMIND 시맨틱 별칭
+- [타이포그래피 토큰](/tokens/typography/) — KRDS font-size + INFOMIND text 시맨틱
+- [간격 토큰](/tokens/spacing/) — KRDS padding/gap/size-height 스케일
+- [그리드 토큰](/tokens/grid/) — KRDS 표준 그리드와 컨테이너 규격
+- [Auto Layout 규칙](/figma/auto-layout/) — 피그마 Auto Layout과 KRDS 토큰 매핑

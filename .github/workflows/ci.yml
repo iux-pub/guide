@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: 검증 (check + lint + build + a11y)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 20 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci --legacy-peer-deps
+
+      - name: 컨트랙트 위반 검사 (R-01~R-14)
+        run: npm run check
+
+      - name: KRDS+INFOMIND 토큰 빌드
+        run: npm run build:tokens
+
+      - name: Stylelint
+        run: npm run lint:css
+
+      - name: 규칙 자동 생성 검증 (rules.json → CLAUDE.md/conventions/)
+        run: npm run build:rules
+
+      - name: AI 프롬프트 자동 생성 검증
+        run: npm run build:prompts
+
+      - name: info-design 스킬 빌드 검증
+        run: npm run build:skill
+
+      - name: Tailwind v4 CSS 빌드
+        run: |
+          npm run build:css
+          npm run build:docs-css
+
+      - name: Eleventy 사이트 빌드
+        run: npx @11ty/eleventy
+
+      - name: 접근성 검증 (pa11y-ci, KWCAG/WCAG 2.1 AA)
+        run: npx pa11y-ci --config .pa11yci.js

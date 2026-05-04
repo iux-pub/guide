@@ -1,0 +1,24 @@
+# INFOMIND UX Guide — 편집기 표준
+# https://editorconfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Markdown은 두 칸 띄어쓰기로 줄바꿈을 표현하므로 trailing whitespace 보존
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON은 IDE 기본을 따른다 (들여쓰기 차이 허용)
+[*.json]
+insert_final_newline = false
+
+# Makefile은 탭 필수
+[Makefile]
+indent_style = tab

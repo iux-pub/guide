@@ -18,6 +18,36 @@
         "revert"
       ]
     ],
+    "scope-enum": [
+      2,
+      "always",
+      [
+        "starter",
+        "tokens",
+        "components",
+        "snippets",
+        "skill",
+        "prompts",
+        "conventions",
+        "onboarding",
+        "design",
+        "figma",
+        "governance",
+        "testing",
+        "accessibility",
+        "guides",
+        "playground",
+        "rules",
+        "ci",
+        "harness",
+        "deps",
+        "11ty",
+        "css",
+        "a11y",
+        "deps-dev"
+      ]
+    ],
+    "scope-empty": [0],
     "subject-case": [0],
     "subject-empty": [2, "never"],
     "subject-full-stop": [2, "never", "."],

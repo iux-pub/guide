@@ -61,23 +61,16 @@ const docPages = [
 // production 환경의 시각 a11y는 dev 서버(npm run serve) + axe로 별도 검증 권장.
 const ENABLE_PLAYGROUND = false  // 향후 dev 서버 셋업 시 활성화
 
-// 색상 대비 검증은 별도 광범위 정정 작업으로 분리. Eleventy HtmlBasePlugin +
-// transformer로 CSS 로드는 정상화됐지만 KRDS 토큰 외 영역(Prism 코드 하이라이팅,
-// 일부 텍스트 토큰 매핑 등) 색상 대비가 R-12 미달인 경우가 다수 존재.
-// 현재 단계에서는 시맨틱 마크업·랜드마크·alt·label 등 마크업 a11y만 검증.
-const IGNORE_RULES = [
-  'WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail',
-  'WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Abs.Fail',
-  'WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.Fail',
-  'WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.Abs.Fail'
-]
-
+// 색상 대비(WCAG 1_4_3 G18/G145) 포함 모든 AA 룰 강제. R-12 광범위 정정 완료
+// (.token.* 카테고리 KRDS 토큰 매핑, .docs-nav__link--active 색상 격상,
+// .color-swatch 자식 텍스트 흰 박스 처리, 본문 링크 primary-pressed 격상).
 module.exports = {
   defaults: {
     standard: 'WCAG2AA',
     timeout: 30000,
     viewport: { width: 1280, height: 800 },
-    ignore: IGNORE_RULES,
+    // axe-core 추가 검증은 Pagefind UI 같은 외부 라이브러리 위반이 다수 검출되어
+    // ROI가 낮음. 향후 외부 라이브러리 영역 axe 룰셋 ignore 정책 합의 후 활성화 가능.
     reporters: [
       'cli',
       ['json', { fileName: 'reports/a11y-report.json' }]

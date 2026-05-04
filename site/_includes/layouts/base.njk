@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }} | {{ site.title }}</title>
-  <link rel="stylesheet" href="/dist/css/style.css">
-  <link rel="stylesheet" href="/dist/css/docs.css">
-  <link rel="stylesheet" href="/assets/css/prism-tomorrow.css">
-  <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/dist/css/style.css' | url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/prism-tomorrow.css' | url }}">
+  <link rel="stylesheet" href="{{ '/dist/css/docs.css' | url }}">
+  <link href="{{ '/pagefind/pagefind-ui.css' | url }}" rel="stylesheet">
 </head>
 <body>
   <a href="#main-content" class="skip-to-content sr-only">본문 바로가기</a>
@@ -23,10 +23,10 @@
 
   <div class="docs-overlay" id="docs-overlay"></div>
 
-  <script src="/pagefind/pagefind-ui.js"></script>
-  <script src="/assets/js/nav-mobile.js"></script>
-  <script src="/assets/js/clipboard.min.js"></script>
-  <script src="/assets/js/clipboard-init.js"></script>
+  <script src="{{ '/pagefind/pagefind-ui.js' | url }}"></script>
+  <script src="{{ '/assets/js/nav-mobile.js' | url }}"></script>
+  <script src="{{ '/assets/js/clipboard.min.js' | url }}"></script>
+  <script src="{{ '/assets/js/clipboard-init.js' | url }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

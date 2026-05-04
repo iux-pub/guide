@@ -170,11 +170,26 @@
 }
 
 .docs-nav__link--active {
-  color: var(--color-primary);
+  color: var(--color-primary-pressed); /* primary-70 — primary subtler 배경 위 AA 통과 */
   font-weight: 700;
   background: var(--krds-light-color-surface-primary-subtler);
   border-left: 2px solid var(--color-primary);
   padding-left: calc(var(--spacing-5) - 2px);
+}
+
+/* 본문 링크 — primary-50은 흰 배경 위 4.17:1로 AA 미달.
+ * primary-pressed(primary-70)로 텍스트 링크 색상 격상해 R-12 통과. */
+main a:not([class]),
+main a.docs-link,
+.docs-layout__content a:not([class]) {
+  color: var(--color-primary-pressed);
+  text-decoration: underline;
+}
+
+main a:not([class]):hover,
+main a.docs-link:hover,
+.docs-layout__content a:not([class]):hover {
+  color: var(--krds-light-color-primary-80);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -256,9 +271,64 @@ pre[class*='language-']::-webkit-scrollbar-track { background: var(--color-bg-se
 pre[class*='language-']::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
 pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color-text-secondary); }
 
-/* Prism token 색상은 prism.min.css 기본 라이트 테마 사용. 광범위 R-12 정정은
-   별개 작업으로 분리(.pa11yci.js IGNORE_RULES 참조) — 라이트 테마 전환만으로도
-   다크 테마 대비 색상 대비가 크게 개선됨. */
+/* Prism token 색상 — KRDS 토큰 기반 AA 통과 색상 매핑.
+ * prism.min.css 기본 색상은 일부 카테고리(punctuation, operator, function 등)가
+ * 흰 배경 위에서 4.5:1 미달이라 KRDS-70~80 시맨틱 색상으로 override한다. */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--color-text-secondary);
+}
+
+.token.punctuation {
+  color: var(--color-text);
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: var(--krds-light-color-danger-70);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: var(--krds-light-color-success-70);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: var(--krds-light-color-info-70);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword,
+.token.rule {
+  color: var(--krds-light-color-primary-70);
+}
+
+.token.function,
+.token.class-name {
+  color: var(--krds-light-color-primary-80);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: var(--krds-light-color-danger-80);
+}
 
 .copy-btn {
   position: absolute;
@@ -457,23 +527,33 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color
   line-height: 1.5;
 }
 
+/* swatch 내부 텍스트는 자체 흰 박스로 감싸 항상 AA 통과 보장.
+ * 부모 .color-swatch의 inline color(swatch 색상에 매칭된 #000/#fff)는
+ * mid-tone 색(gray-50, primary-50 등)에서 텍스트 대비 부족 발생.
+ * 자체 background+color 명시로 inline inherit를 우회한다. */
+.color-swatch__name,
+.color-swatch__value,
+.color-swatch__desc {
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-radius: var(--radius-small1);
+}
+
 .color-swatch__name {
   font-weight: 700;
   font-family: 'JetBrains Mono', SFMono-Regular, Consolas, monospace;
   font-size: var(--text-body-xsmall);
-
-  /* 부모 .color-swatch의 inline style color를 inherit. opacity 적용 안 함 — AA 통과 */
+  margin-bottom: 0.2rem;
 }
 
 .color-swatch__value {
   font-family: 'JetBrains Mono', SFMono-Regular, Consolas, monospace;
-
-  /* opacity 0.85 → 1.0: 옅어지면 swatch 배경과 대비 부족 */
+  margin-bottom: 0.2rem;
 }
 
 .color-swatch__desc {
   margin-top: var(--spacing-3);
   font-size: var(--text-body-xsmall);
-
-  /* opacity 0.75 → 1.0: 옅어지면 swatch 배경과 대비 부족 (R-12 위반) */
 }

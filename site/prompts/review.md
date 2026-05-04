@@ -9,102 +9,86 @@ ChatGPT, Gemini, Claude (모든 AI 리뷰 용도)
 
 ## 사용법
 
-아래 내용을 복사하여 AI 도구의 시스템 프롬프트에 붙여넣고, 리뷰할 코드를 입력한다.
+아래 내용을 복사하여 AI 도구의 시스템 프롬프트(또는 첫 메시지)에 붙여넣는다.
 
 ## 프롬프트
 
 ````markdown
-# 코드 리뷰 체크리스트 프롬프트
+# 코드 리뷰 체크리스트 프롬프트 — KRDS+Tailwind v4
 
-> **목적:** AI 리뷰어에게 인포마인드 UX팀 규칙 기반으로 코드 리뷰를 요청하기 위한 프롬프트
-> **대상 AI:** ChatGPT, Gemini, Claude
-> **사용법:** 이 프롬프트를 시스템 프롬프트에 붙여넣고, 리뷰할 코드를 입력하라
+대상: 모든 AI (코드 리뷰 용도)
 
----
+아래 체크리스트로 이 코드를 리뷰하라. 위반 항목을 구체적으로 지적하라.
 
-아래 규칙으로 제출된 SCSS/HTML 코드를 리뷰하라. 각 항목을 점검하고 위반 사항이 있으면 파일명, 라인, 위반 내용, 수정 방법을 구체적으로 제시하라.
+## CSS 시스템 (R-03)
 
----
+- [ ] **SCSS 사용 없음** — `.scss` 파일, `@use`, `@forward`, `$variable` 모두 0건
+- [ ] CSS는 표준 CSS만 사용 (`.css` 파일, `@import "tailwindcss"`, CSS Custom Property)
+- [ ] Tailwind v4 raw 컬러 유틸 없음 (`bg-red-500`, `text-gray-700` 등)
+- [ ] Tailwind 비활성 스케일 없음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등)
 
-## BEM 네이밍
+## BEM (R-04, R-05, R-06)
 
-- [ ] 모든 클래스명이 BEM(Block__Element--Modifier) 패턴을 따르는가
-- [ ] Element가 `&__element-name`으로 중첩 작성되었는가
-- [ ] Modifier가 `&--modifier-name`으로 중첩 작성되었는가
-- [ ] Element 2단계 중첩이 없는가 (`.card__header__title` -> `.card__title`로 평탄화)
-- [ ] 시각적 속성 이름 대신 의미적 이름을 사용하는가 (`.btn-gray` -> `.btn--secondary`)
-- [ ] 요소 선택자 의존이 없는가 (`.card-header h4` -> `.card__title`)
+- [ ] 클래스명이 Block__Element--Modifier 패턴
+- [ ] Element 2단계 중첩 0건 (`.card__header__title` 금지)
+- [ ] Modifier에 `--` 사용 (`.btn-primary` 금지 → `.btn--primary`)
+- [ ] 요소 선택자 의존 없음 (`.card h4` 금지 → `.card__title`)
+- [ ] 시각적 modifier 없음 (`--blue`, `--gray`, `--large`(badge용 제외) 금지 → 의미적 이름)
+- [ ] 옛 버튼 variant 없음 (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`, `btn--hero`)
 
-## 디자인 토큰
+## 토큰 (R-01)
 
-- [ ] 하드코딩 색상값(#fff, #333, rgb 등)이 없는가 -- `var(--color-*)` 사용 필수
-- [ ] 하드코딩 간격값(16px, 24px 등)이 없는가 -- `var(--spacing-*)` 사용 필수
-- [ ] 하드코딩 폰트 크기가 없는가 -- `var(--font-size-*)` 사용 필수
-- [ ] 하드코딩 border-radius가 없는가 -- `var(--radius-*)` 사용 필수
-- [ ] 하드코딩 box-shadow가 없는가 -- `var(--shadow-*)` 사용 필수
-- [ ] 하드코딩 z-index가 없는가 -- `var(--z-*)` 사용 필수
+- [ ] 하드코딩 색상 0건 (`#222`, `rgb(...)` 금지 → `var(--krds-*)` 또는 `var(--color-*)`)
+- [ ] 하드코딩 간격 0건 (`16px` 금지 → `var(--krds-padding-*)` 또는 `var(--spacing-*)`)
+- [ ] 하드코딩 폰트 사이즈 0건 (`14px` 금지 → `var(--krds-font-size-*)` 또는 `var(--text-*)`)
+- [ ] 하드코딩 그림자/반경 0건 (토큰 사용)
+- [ ] 옛 시맨틱 토큰 0건 (`--color-primary-light`, `--font-size-2xl`, `--spacing-xs` 등 — KRDS 마이그레이션에서 제거)
 
-## CSS 금지 패턴
+## CSS 규칙 (R-02, R-07)
 
-- [ ] `!important`를 사용하지 않았는가 (부득이한 경우 주석 사유 필수)
-- [ ] 인라인 스타일(`style=""`)을 사용하지 않았는가
-- [ ] `@import`를 사용하지 않았는가 -- `@use`/`@forward` 필수
+- [ ] `!important` 사용 시 사유 주석 명시
+- [ ] 인라인 `style="..."` 0건 (CSS 변수 주입 `style="--var: val"`은 허용)
+- [ ] 선택자 깊이 3단계 이하
 
-## ITCSS 레이어 배치
+## ITCSS 5레이어
 
-- [ ] 컴포넌트 스타일이 `src/scss/6-components/`에 위치하는가
-- [ ] 유틸리티 클래스가 `src/scss/7-utilities/`에 위치하는가
-- [ ] 레이아웃 패턴이 `src/scss/5-objects/`에 위치하는가
-- [ ] 토큰/변수가 `src/scss/1-settings/`에 위치하는가
-- [ ] 믹스인/함수가 `src/scss/2-tools/`에 위치하는가
+- [ ] 파일이 올바른 레이어에 위치 (컴포넌트 → `src/styles/6-components/`)
+- [ ] `src/styles/6-components/index.css`에 `@import "./{name}.css"` 등록
+- [ ] BEM은 5-objects, 6-components 레이어에만 적용
 
-## 모듈 시스템
+## HTML/마크업 (R-07~R-10)
 
-- [ ] `@use`/`@forward`를 사용하는가 (`@import` 금지)
-- [ ] 숫자 접두사 폴더에 `as` 별칭이 있는가 (`@use '1-settings' as settings`)
-- [ ] 새 파일을 해당 레이어의 `_index.scss`에 `@forward`로 등록했는가
+- [ ] `<img>`에 `alt` 속성 (장식용은 `alt=""`)
+- [ ] 인터랙티브 요소에 `aria-label` 또는 텍스트 레이블
+- [ ] `<div onclick>` 없음 — `<button>`/`<a>` 시맨틱 HTML 사용
+- [ ] 폼 요소에 `<label for>` + `id` 연결
+
+## 접근성 (R-11~R-14)
+
+- [ ] `:focus-visible` 스타일 (또는 reset.css 전역 4px primary 외곽선 유지)
+- [ ] `:focus { outline: none }` 0건
+- [ ] 색상만으로 정보 전달하지 않음 (아이콘 또는 텍스트 병행)
+- [ ] 색상 대비 4.5:1 이상 (큰 텍스트 24px/18.67px bold 3:1)
+- [ ] `prefers-reduced-motion` 대응
+- [ ] 터치 타겟 ≥ 44×44px (모바일 medium=48px 권장)
+- [ ] `<a href="#main-content" class="skip-to-content">본문 바로가기</a>` 존재
 
 ## 반응형
 
-- [ ] 모바일 퍼스트로 작성되었는가 (기본 스타일 = 모바일, min-width로 확장)
-- [ ] `respond-to` 믹스인을 사용하는가 (직접 `@media` 작성 대신)
-- [ ] 브레이크포인트가 올바른가 (tablet: 768px, pc: 1280px)
+- [ ] 모바일 퍼스트 작성 (기본 → tablet 768+ → pc 1280+)
+- [ ] CSS `@media` 또는 Tailwind v4 variant 사용 (SCSS `respond-to` 믹스인 폐기 — 사용 시 위반)
+- [ ] 62.5% REM 트릭 — 1rem = 10px
 
-## 접근성 (HTML)
+## 컴포넌트 카탈로그
 
-- [ ] 이미지에 `alt` 속성이 있는가 (장식용은 `alt=""`)
-- [ ] 인터랙티브 요소에 `aria-label` 또는 텍스트 레이블이 있는가
-- [ ] 폼 입력 필드에 `<label for="">`가 연결되어 있는가
-- [ ] 에러 상태에 `aria-invalid="true"` + `aria-describedby`가 있는가
-- [ ] 모달에 `role="dialog"` + `aria-modal="true"` + `aria-labelledby`가 있는가
-- [ ] 탭에 `role="tablist/tab/tabpanel"` + `aria-selected` + `aria-controls`가 있는가
-- [ ] 현재 페이지 표시에 `aria-current="page"`가 있는가 (페이지네이션, 브레드크럼)
-- [ ] `<nav>` 랜드마크에 `aria-label`이 있는가
-- [ ] 본문 건너뛰기 링크가 있는가 (`<a href="#main-content" class="skip-to-content">`)
-- [ ] `focus-visible` 스타일이 제공되는가
-- [ ] 키보드 네비게이션이 지원되는가 (Tab, Enter, Space, Escape, Arrow keys)
+- [ ] KRDS 28종 카탈로그 안에 있는 컴포넌트만 사용
+- [ ] 카탈로그 외 임의 신설 0건 (`skill/references/krds-components.md` 참조)
+- [ ] 버튼은 KRDS 정의 4 variant (`--primary` `--secondary` `--tertiary` `--text`) × 5 size (`--xsmall` `--small` medium `--large` `--xlarge`) 안에 있음
 
 ## 코딩 스타일
 
-- [ ] 들여쓰기가 2 spaces인가 (탭 금지)
-- [ ] single quote를 사용하는가
-- [ ] 주석이 한국어로 작성되었는가
-
----
-
-## 리뷰 출력 형식
-
-위반 사항 발견 시 다음 형식으로 보고하라:
-
-```
-### [카테고리] 위반 항목명
-
-- **파일:** 파일 경로
-- **라인:** 해당 라인 번호
-- **현재 코드:** 위반 코드
-- **수정 제안:** 올바른 코드
-- **이유:** 위반 사유
-```
-
-위반 사항이 없으면 "모든 항목 통과"로 보고하라.
+- [ ] 들여쓰기 2 spaces
+- [ ] 따옴표 single quote
+- [ ] 세미콜론 — CSS 사용, JS/HTML 미사용
+- [ ] 주석 한국어
 ````

@@ -62,23 +62,21 @@ hover는 마우스 사용자에게 추가 피드백을 제공하는 **보조 효
 hover를 지원하는 기기에서만 hover 스타일을 적용한다. 터치 전용 기기에서는 무시된다.
 
 ```css
-@use '../2-tools/responsive' as resp;
-
 .btn {
-  // 기본 스타일 (모든 기기)
-  background-color: var(--color-primary);
+  /* 기본 스타일 (모든 기기) */
+  background-color: var(--krds-light-color-button-primary-fill);
+}
 
-  // hover 지원 기기에서만 적용
-  @media (hover: hover) {
-    &:hover {
-      background-color: var(--color-primary-dark);
-    }
+/* hover 지원 기기에서만 적용 */
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--krds-light-color-button-primary-fill-hover);
   }
+}
 
-  // 터치/클릭 피드백은 :active로
-  &:active {
-    background-color: var(--color-primary-dark);
-  }
+/* 터치/클릭 피드백은 :active로 */
+.btn:active {
+  background-color: var(--krds-light-color-button-primary-fill-pressed);
 }
 ```
 

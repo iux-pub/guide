@@ -37,7 +37,7 @@ MAJOR.MINOR.PATCH
 | 새 토큰 추가 | `--spacing-4xl` 추가 |
 | 새 유틸리티 클래스 추가 | `.text-center`, `.flex-wrap` 등 |
 | 새 믹스인 추가 | `@mixin grid-auto-fit` 등 |
-| 컴포넌트 변형 추가 | `.btn--outline` 등 |
+| 컴포넌트 변형 추가 | `.btn--tertiary` 등 |
 
 ### PATCH (패치)
 

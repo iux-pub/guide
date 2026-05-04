@@ -5,7 +5,7 @@ order: 3
 
 # 색상 대비 가이드
 
-> 토큰값 기준: `src/scss/1-settings/_tokens-color.scss`
+> 토큰값 기준: `tokens/krds-base.json + tokens/infomind-overrides.json`
 
 ## WCAG 2.1 AA 대비 기준
 
@@ -16,9 +16,9 @@ order: 3
 | 비텍스트 UI (보더, 아이콘 등) | 3:1 이상 | 인접 배경과의 대비 |
 
 **대형 텍스트 기준 (이 프로젝트 토큰):**
-- `var(--font-size-md)` (2rem = 20px) 이상이면 대형 텍스트
-- `var(--font-size-sm)` (1.4rem = 14px) + `var(--font-weight-bold)` (700) 이상이면 대형 텍스트
-- `var(--font-size-base)` (1.6rem = 16px) 일반 두께는 일반 텍스트 기준 적용
+- `var(--text-body-large)` (2rem = 20px) 이상이면 대형 텍스트
+- `var(--text-body-small)` (1.4rem = 14px) + `var(--font-weight-bold)` (700) 이상이면 대형 텍스트
+- `var(--text-body-medium)` (1.6rem = 16px) 일반 두께는 일반 텍스트 기준 적용
 
 ## 프로젝트 토큰 대비 표
 

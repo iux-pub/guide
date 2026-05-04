@@ -118,7 +118,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
   <div class="container">
     <h1 class="hero__title">스마트팜 통합 모니터링</h1>
     <p class="hero__subtitle">온실 환경부터 생육 데이터까지, 한 화면에서 확인하세요</p>
-    <a href="#demo" class="btn btn--primary btn--lg">데모 체험하기</a>
+    <a href="#demo" class="btn btn--primary btn--xlarge">데모 체험하기</a>
   </div>
 </section>
 ```
@@ -265,14 +265,14 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 | **랜딩/마케팅** | Aurora UI + Hero-Centric + Storytelling | 프로젝트별 자유, 그라디언트 적극 활용 | 풀스크린 섹션, 스크롤 스토리텔링 | (제약 없음, 맥락 우선) |
 | **WEB/SI** | Flat + Minimalism | 기관 CI 색상 기반, 토큰 오버라이드 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 (클라이언트 확인 후) |
 
-### 제품별 SCSS 오버라이드 예시
+### 제품별 토큰 오버라이드 예시
+
+`tokens/infomind-overrides.json` 또는 별도 CSS 파일에서 INFOMIND 시맨틱 별칭을 프로젝트별 색상으로 재정의한다.
 
 ```css
-// _project-overrides.scss -- BigData 플랫폼
+/* BigData 플랫폼 — :root 오버라이드 */
 :root {
-  --color-primary: #00b4d8;
-  --color-primary-light: #48cae4;
-  --color-primary-dark: #0077b6;
+  --color-primary: #00b4d8;          /* 또는 KRDS 토큰 가리키기 */
   --color-bg: #0d1117;
   --color-bg-secondary: #161b22;
   --color-text: #e6edf3;
@@ -281,15 +281,15 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
   --color-border-light: #21262d;
 }
 
-// _project-overrides.scss -- SmartFarm
+/* SmartFarm */
 :root {
   --color-primary: #228738;
-  --color-primary-light: #4caf50;
-  --color-primary-dark: #1b5e20;
   --color-bg: #fafdf7;
   --color-bg-secondary: #f0f7f0;
 }
 ```
+
+> 가능하면 raw hex 대신 KRDS primary 11단계(`--krds-light-color-primary-{5..95}`)를 가리키도록 한다 — 라이트/다크 모드 전환에서 자동 정합 유지.
 
 ### 주요 스타일 설명
 

@@ -37,7 +37,7 @@
 
 ```html
 <!-- 아이콘 버튼에 aria-label 제공 -->
-<button type="button" class="btn btn--ghost" aria-label="검색">
+<button type="button" class="btn btn--text" aria-label="검색">
   <svg>...</svg>
 </button>
 
@@ -59,7 +59,7 @@
 <a href="#" class="btn" onclick="deleteItem()">삭제</a>
 
 <!-- 아이콘 버튼에 대체 텍스트 없음 -->
-<button type="button" class="btn btn--ghost">
+<button type="button" class="btn btn--text">
   <svg>...</svg>
 </button>
 ```

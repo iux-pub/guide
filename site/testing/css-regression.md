@@ -3,7 +3,7 @@ title: CSS 회귀 테스트
 order: 4
 ---
 
-CSS 회귀(regression)란 스타일 변경 시 의도하지 않은 다른 컴포넌트나 페이지에 영향이 발생하는 것이다. SCSS 파일 하나를 수정했는데 전혀 다른 페이지의 레이아웃이 깨지는 상황을 방지하기 위한 검증 프로세스를 정리한다.
+CSS 회귀(regression)란 스타일 변경 시 의도하지 않은 다른 컴포넌트나 페이지에 영향이 발생하는 것이다. CSS 파일 하나를 수정했는데 전혀 다른 페이지의 레이아웃이 깨지는 상황을 방지하기 위한 검증 프로세스를 정리한다.
 
 ## 회귀 테스트란
 
@@ -18,14 +18,14 @@ CSS는 전역 스코프(global scope)를 가진다. 클래스명이 충돌하거
 코드 품질과 컨벤션 준수를 자동 검사한다. 문법 오류, 중복 선택자, BEM 위반 등을 잡아낸다.
 
 ```bash
-# 전체 SCSS 린트 검사
+# 전체 CSS 린트 검사
 npm run lint:css
 
 # 변경한 파일만 검사 (빠른 확인)
-npx stylelint "src/styles/6-components/_btn.scss"
+npx stylelint "src/styles/6-components/btn.css"
 
 # 특정 폴더만 검사
-npx stylelint "src/styles/6-components/**/*.scss"
+npx stylelint "src/styles/6-components/**/*.css"
 
 # 자동 수정 가능한 항목 처리
 npm run lint:css:fix
@@ -43,7 +43,7 @@ ls -la dist/css/style.css
 # 또는 바이트 단위로
 wc -c dist/css/style.css
 
-# SCSS 수정 후 빌드
+# CSS 수정 후 빌드
 npm run build:css
 
 # 변경 후 크기 확인
@@ -73,13 +73,13 @@ wc -c dist/css/style.css
 
 ## 컴포넌트 변경 시 체크리스트
 
-SCSS 파일을 수정한 후 아래 항목을 순서대로 확인한다.
+CSS 파일을 수정한 후 아래 항목을 순서대로 확인한다.
 
 ### 필수 확인
 
 - [ ] 변경한 컴포넌트 자체가 정상 렌더링되는가
 - [ ] 해당 컴포넌트를 사용하는 다른 페이지에서 깨짐이 없는가
-- [ ] 모든 modifier/variant가 정상인가 (예: `.btn--primary`, `.btn--secondary`, `.btn--outline` 전부)
+- [ ] 모든 modifier/variant가 정상인가 (예: `.btn--primary`, `.btn--secondary`, `.btn--tertiary`, `.btn--text` 전부)
 - [ ] 반응형 3개 뷰포트(360px / 768px / 1280px)에서 정상인가
 - [ ] Stylelint 검사를 통과하는가 (`npm run lint:css`)
 
@@ -89,7 +89,7 @@ SCSS 파일을 수정한 후 아래 항목을 순서대로 확인한다.
 
 - [ ] 변경한 토큰을 사용하는 파일을 전체 검색했는가
 - [ ] 검색된 모든 컴포넌트에서 의도대로 반영되었는가
-- [ ] `_project-overrides.scss`에 오버라이드가 있다면 충돌 없는가
+- [ ] `tokens/infomind-overrides.json`에 오버라이드가 있다면 충돌 없는가
 
 ```bash
 # 토큰 사용처 검색 (예: --spacing-4 변경 시)
@@ -124,17 +124,17 @@ BEM은 컴포넌트별로 고유한 네임스페이스를 제공한다. `.card__
 
 ### ITCSS 레이어 순서 준수
 
-레이어 순서를 바꾸면 특이성(specificity) 계산이 달라져 기존 스타일이 깨질 수 있다. `style.scss`의 `@use` 순서를 임의로 변경하지 않는다.
+레이어 순서를 바꾸면 특이성(specificity) 계산이 달라져 기존 스타일이 깨질 수 있다. `src/styles/style.css`의 `@import` 순서를 임의로 변경하지 않는다.
 
 ```css
-// style.scss -- 순서 변경 금지
-@use '1-settings' as settings;
-@use '2-tools' as tools;
-@use '3-generic';
-@use '4-elements';
-@use '5-objects';
-@use '6-components';
-@use '7-utilities';
+/* src/styles/style.css -- 순서 변경 금지 */
+@import "tailwindcss";
+@import "../../tokens/build/tokens.css";
+@import "./3-generic/reset.css";
+@import "./4-elements/base.css";
+@import "./5-objects/container.css";
+@import "./6-components/index.css";
+@import "./7-utilities/sr-only.css";
 ```
 
 ### 전역 스타일 변경 시 전체 회귀 테스트 필수
@@ -143,11 +143,11 @@ BEM은 컴포넌트별로 고유한 네임스페이스를 제공한다. `.card__
 
 | 파일 | 영향 범위 | 회귀 테스트 수준 |
 |------|----------|----------------|
-| `1-settings/_tokens-*.scss` | 토큰 사용처 전체 | 토큰 사용처 검색 + 해당 컴포넌트 점검 |
-| `3-generic/_normalize.scss` | 모든 HTML 요소 | 전체 페이지 점검 필수 |
-| `4-elements/_base.scss` | body, html 등 기본 요소 | 전체 페이지 점검 필수 |
-| `4-elements/_headings.scss` | 모든 제목 요소 | 제목이 있는 주요 페이지 점검 |
-| `5-objects/_grid.scss` | 그리드 레이아웃 전체 | 모든 레이아웃 유형 점검 |
-| `6-components/_btn.scss` | 버튼 컴포넌트만 | 버튼 사용 페이지 점검 |
+| `tokens/build/tokens.css` | 토큰 사용처 전체 | 토큰 사용처 검색 + 해당 컴포넌트 점검 |
+| `3-generic/reset.css` | 모든 HTML 요소 | 전체 페이지 점검 필수 |
+| `4-elements/base.css` | body, html 등 기본 요소 | 전체 페이지 점검 필수 |
+| `4-elements/base.css` | 모든 제목 요소 | 제목이 있는 주요 페이지 점검 |
+| `5-objects/container.css` | 그리드 레이아웃 전체 | 모든 레이아웃 유형 점검 |
+| `6-components/btn.css` | 버튼 컴포넌트만 | 버튼 사용 페이지 점검 |
 
 **핵심 원칙:** 수정 범위가 넓을수록(레이어 번호가 낮을수록) 회귀 테스트 범위도 넓어진다.

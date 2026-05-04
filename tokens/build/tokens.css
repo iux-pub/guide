@@ -244,9 +244,9 @@
   --krds-light-color-link-hover: var(--krds-light-color-primary-60);
   --krds-light-color-link-pressed: var(--krds-light-color-primary-70);
   --krds-light-color-link-visited: #5917b8;
-  --krds-light-color-button-primary-fill: var(--krds-light-color-primary-50);
-  --krds-light-color-button-primary-fill-hover: var(--krds-light-color-primary-60);
-  --krds-light-color-button-primary-fill-pressed: var(--krds-light-color-primary-70);
+  --krds-light-color-button-primary-fill: var(--krds-light-color-primary-60);
+  --krds-light-color-button-primary-fill-hover: var(--krds-light-color-primary-70);
+  --krds-light-color-button-primary-fill-pressed: var(--krds-light-color-primary-80);
   --krds-light-color-button-secondary-fill: var(--krds-light-color-primary-5);
   --krds-light-color-button-secondary-fill-hover: var(--krds-light-color-primary-10);
   --krds-light-color-button-secondary-fill-pressed: var(--krds-light-color-primary-20);
@@ -739,9 +739,9 @@
   --krds-light-color-link-hover: var(--krds-high-contrast-color-primary-20);
   --krds-light-color-link-pressed: var(--krds-high-contrast-color-primary-10);
   --krds-light-color-link-visited: #c49ff9;
-  --krds-light-color-button-primary-fill: var(--krds-high-contrast-color-primary-50);
-  --krds-light-color-button-primary-fill-hover: var(--krds-high-contrast-color-primary-60);
-  --krds-light-color-button-primary-fill-pressed: var(--krds-high-contrast-color-primary-70);
+  --krds-light-color-button-primary-fill: var(--krds-high-contrast-color-primary-60);
+  --krds-light-color-button-primary-fill-hover: var(--krds-high-contrast-color-primary-70);
+  --krds-light-color-button-primary-fill-pressed: var(--krds-high-contrast-color-primary-80);
   --krds-light-color-button-secondary-fill: var(--krds-high-contrast-color-primary-95);
   --krds-light-color-button-secondary-fill-hover: var(--krds-high-contrast-color-primary-90);
   --krds-light-color-button-secondary-fill-pressed: var(--krds-high-contrast-color-primary-80);

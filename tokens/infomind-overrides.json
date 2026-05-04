@@ -76,5 +76,27 @@
     "$comment": "프로젝트별 브랜드 색상 슬롯. _project-overrides.css에서 :root override로 채움. 비어 있으면 KRDS primary가 기본값으로 사용된다.",
     "primary":      { "value": null, "type": "color" },
     "primary-text": { "value": null, "type": "color" }
+  },
+
+  "mode-light": {
+    "$comment": "KRDS 정본 button.primary-fill = primary-50(#256ef4). 흰 텍스트 위 대비가 약 4.0:1로 WCAG 2.1 AA(4.5:1) 미달이라 INFOMIND가 한 단계 진한 톤으로 오버라이드. fill→60, hover→70, pressed→80. 디자인 톤 유지하면서 AA 통과.",
+    "color": {
+      "button": {
+        "primary-fill":         { "value": "{primitive.color.light.primary.60}", "type": "color" },
+        "primary-fill-hover":   { "value": "{primitive.color.light.primary.70}", "type": "color" },
+        "primary-fill-pressed": { "value": "{primitive.color.light.primary.80}", "type": "color" }
+      }
+    }
+  },
+
+  "mode-high-contrast": {
+    "$comment": "고대비 모드도 같은 정책 적용 — 한 단계 진한 톤으로 시프트.",
+    "color": {
+      "button": {
+        "primary-fill":         { "value": "{primitive.color.high-contrast.primary.60}", "type": "color" },
+        "primary-fill-hover":   { "value": "{primitive.color.high-contrast.primary.70}", "type": "color" },
+        "primary-fill-pressed": { "value": "{primitive.color.high-contrast.primary.80}", "type": "color" }
+      }
+    }
   }
 }

@@ -63,6 +63,28 @@
       font-family: 'Consolas', 'Monaco', monospace;
       white-space: pre;
     }
+
+    .pg__search-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-end;
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+
+    .pg__search-form .form__group {
+      margin-bottom: 0;
+    }
+
+    .pg__search-form .form__group--keyword {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .pg__search-form .form__group--category {
+      min-width: 150px;
+    }
   </style>
 </head>
 <body>
@@ -91,12 +113,12 @@
         </nav>
 
         <!-- 검색 폼 -->
-        <form role="search" aria-label="사용자 검색" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; margin-top: 24px; margin-bottom: 24px">
-          <div class="form__group" style="flex: 1; min-width: 200px; margin-bottom: 0">
+        <form role="search" aria-label="사용자 검색" class="pg__search-form">
+          <div class="form__group form__group--keyword">
             <label class="form__label" for="search-keyword">검색어</label>
             <input type="text" id="search-keyword" class="form__input" placeholder="이름 또는 이메일 검색">
           </div>
-          <div class="form__group" style="min-width: 150px; margin-bottom: 0">
+          <div class="form__group form__group--category">
             <label class="form__label" for="search-category">카테고리</label>
             <select id="search-category" class="form__select">
               <option value="">전체</option>

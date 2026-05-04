@@ -60,6 +60,12 @@
       font-family: 'Consolas', 'Monaco', monospace;
       white-space: pre;
     }
+
+    /* 데모 전용: 위험 액션 버튼 (KRDS는 별도 danger variant 미정의 — 데모 페이지 한정) */
+    .pg__btn-danger {
+      background-color: var(--krds-light-color-danger-50);
+      border-color: var(--krds-light-color-danger-50);
+    }
   </style>
 </head>
 <body>
@@ -117,7 +123,7 @@
     &lt;/div&gt;
     &lt;div class="modal__footer"&gt;
       &lt;button type="button" class="btn btn--secondary" data-modal-close&gt;작성 취소&lt;/button&gt;
-      &lt;button type="button" class="btn btn--primary" style="background-color: var(--color-danger)"&gt;항목 삭제&lt;/button&gt;
+      &lt;button type="button" class="btn btn--primary pg__btn-danger"&gt;항목 삭제&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
@@ -158,7 +164,7 @@
       </div>
       <div class="modal__footer">
         <button type="button" class="btn btn--secondary" data-modal-close>작성 취소</button>
-        <button type="button" class="btn btn--primary" style="background-color: var(--color-danger)">항목 삭제</button>
+        <button type="button" class="btn btn--primary pg__btn-danger">항목 삭제</button>
       </div>
     </div>
   </div>

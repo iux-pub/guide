@@ -38,6 +38,10 @@
       line-height: 1.6;
     }
 
+    .pagination--top-spaced {
+      margin-top: var(--krds-number-10);
+    }
+
     .pg__preview {
       padding: 24px;
       border: 1px solid #ddd;
@@ -144,7 +148,7 @@
         </div>
 
         <!-- 페이지네이션 -->
-        <nav class="pagination" aria-label="프로젝트 목록 페이지 탐색" style="margin-top: var(--krds-number-10);">
+        <nav class="pagination pagination--top-spaced" aria-label="프로젝트 목록 페이지 탐색">
           <ul class="pagination__list">
             <li class="pagination__item">
               <span class="pagination__link pagination__link--prev pagination__link--disabled" aria-disabled="true">이전</span>

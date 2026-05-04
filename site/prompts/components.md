@@ -14,14 +14,129 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ## 프롬프트
 
 ````markdown
-# 컴포넌트 스니펫 프롬프트
+# KRDS 컴포넌트 스니펫 프롬프트
 
-> **목적:** AI 도구에 인포마인드 UX팀 컴포넌트 HTML 마크업과 접근성 패턴을 제공하기 위한 프롬프트
+> **목적:** AI 도구에 KRDS+INFOMIND 28컴포넌트 HTML 마크업과 접근성 패턴을 제공하기 위한 프롬프트
 > **대상 AI:** Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
+
+> **카탈로그 외 컴포넌트 임의 생성 금지.** 신설 필요 시 UX팀 결정 → `skill/references/krds-components.md` 등재 후 사용.
 
 ---
 
-## 1. 버튼 (Button)
+## 1. 아코디언 (Accordion) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="accordion">
+  <details class="accordion__item">
+    <summary class="accordion__summary">자주 묻는 질문 1</summary>
+    <div class="accordion__panel">
+      <p>답변 1 내용</p>
+    </div>
+  </details>
+  <details class="accordion__item">
+    <summary class="accordion__summary">자주 묻는 질문 2</summary>
+    <div class="accordion__panel">
+      <p>답변 2 내용</p>
+    </div>
+  </details>
+  <details class="accordion__item" open>
+    <summary class="accordion__summary">기본 열린 항목</summary>
+    <div class="accordion__panel">
+      <p><code>open</code> 속성으로 초기 열림 상태</p>
+    </div>
+  </details>
+</div>
+```
+
+### 접근성
+
+- native `<details>`/`<summary>` 사용 시 키보드/스크린리더 자동 지원
+- `<summary>`는 자동으로 button role + aria-expanded 처리됨 — 별도 ARIA 불필요
+- 최소 터치 영역 보장: `--touch-target-min` (44px)
+
+---
+
+## 2. 알림 (Alert / Critical Alerts) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="alert alert--info" role="alert">
+  <div class="alert__icon" aria-hidden="true">ℹ</div>
+  <div class="alert__body">
+    <p class="alert__title">신청 기간 안내</p>
+    <p class="alert__message">2026년 5월 1일부터 31일까지 신청 가능합니다.</p>
+  </div>
+  <button type="button" class="alert__close" aria-label="닫기">×</button>
+</div>
+```
+
+### Variant / Size
+
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| Info | `.alert--info` | 일반 정보 |
+| Success | `.alert--success` | 성공 알림 |
+| Warning | `.alert--warning` | 주의 |
+| Danger / Critical | `.alert--danger` 또는 `.alert--critical` | 오류·긴급 |
+
+### 접근성
+
+- 일반 알림: `role="alert"` (즉시 안내) 또는 `role="status"` (정중한 안내)
+- 긴급(Critical)은 `role="alert"` + `aria-live="assertive"`
+- 일반 정보성은 `role="status"` + `aria-live="polite"` 권장
+- 아이콘은 장식용 — `aria-hidden="true"` (텍스트가 의미 전달)
+- 닫기 버튼 `aria-label="닫기"` 필수
+
+---
+
+## 3. 배지 (Badge) — KRDS
+
+### 기본 마크업
+
+```html
+<!-- 숫자 배지 -->
+<button class="btn btn--text">
+  알림 <span class="badge">3</span>
+</button>
+
+<!-- 점만 (dot 변형) -->
+<span class="badge badge--dot" aria-label="새 알림 있음"></span>
+```
+
+### 접근성
+
+- 숫자 배지: 텍스트로 의미 전달됨 (별도 ARIA 불필요)
+- Dot 배지: 시각만 — `aria-label="새 알림 있음"` 필수
+
+---
+
+## 4. 브레드크럼 (Breadcrumb) — KRDS
+
+### 기본 마크업
+
+```html
+<nav class="breadcrumb" aria-label="페이지 경로">
+  <ol class="breadcrumb__list">
+    <li class="breadcrumb__item"><a href="/">홈</a></li>
+    <li class="breadcrumb__item"><a href="/services">서비스</a></li>
+    <li class="breadcrumb__item" aria-current="page">신청하기</li>
+  </ol>
+</nav>
+```
+
+### 접근성
+
+- `<nav aria-label="페이지 경로">` 필수 (스크린리더용 식별자)
+- `<ol>` 사용 — 순서가 의미를 가짐
+- 현재 페이지: `aria-current="page"` + `<a>` 없이 텍스트만 (링크 아님)
+- 구분자(`›`)는 CSS `::before`로 그려서 스크린리더에 노출 안 됨 (불필요한 읽기 방지)
+
+---
+
+## 5. 버튼 (Button) — KRDS
 
 ### 기본 마크업
 
@@ -29,426 +144,684 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 <button type="button" class="btn btn--primary">버튼 텍스트</button>
 ```
 
-### Variant
+### Variant / Size
 
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.btn--primary` | 주요 동작 (제출, 저장) |
-| `.btn--secondary` | 보조 동작 |
-| `.btn--outline` | 테두리만, 덜 강조 |
-| `.btn--text` | 배경/테두리 없음 |
-| `.btn--ghost` | 투명, 호버 시 배경 표시 |
-| `.btn--link` | 링크 스타일 (밑줄) |
-| `.btn--sm` | 높이 32px (min-height: 4.4rem으로 터치 영역 44px 보장), `--font-size-sm` |
-| `.btn--lg` | 높이 48px, `--font-size-md` |
-| `:disabled` 속성 | `opacity: 0.5`, `cursor: not-allowed` |
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| Primary | `.btn--primary` | 메인 CTA (저장, 제출, 확인) |
+| Secondary | `.btn--secondary` | 보조 액션 (primary 톤 옅은 채움 + primary border) |
+| Tertiary | `.btn--tertiary` | 약한 액션 (투명 + gray border) |
+| Text | `.btn--text` | 텍스트 링크형 (배경/border 없음) |
 
 ### 접근성
 
-- `<button>` 태그 사용 필수. `<a>` 태그를 버튼 용도로 사용하지 않는다
-- 아이콘만 있는 버튼은 반드시 `aria-label` 속성을 추가한다: `<button type="button" class="btn btn--ghost" aria-label="메뉴 열기">...</button>`
-- 비활성 버튼은 `disabled` 속성을 사용한다 (`aria-disabled` 아님)
-- 최소 터치 영역 44px x 44px 보장 (`.btn--sm`도 `min-height: 4.4rem` 적용)
-- `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
-- 링크 역할이 필요한 경우에만 `<a class="btn btn--link" href="...">` 사용
-- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
-- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
+- `<button type="button">` 태그 사용 필수. `<a>` 태그를 버튼 용도로 쓰지 않는다
+- 아이콘만 있는 버튼은 `aria-label` 필수: `<button class="btn" aria-label="메뉴 열기">...</button>`
+- 비활성은 `disabled` 속성 (또는 `aria-disabled="true"`)
+- 포커스 outline은 `reset.css`에서 전역 관리 (4px primary 외곽선) — 컴포넌트에서 제거 금지
+- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 자동 비활성 (Phase 6에서 추가)
 
 ---
 
-## 2. 폼 (Form)
+## 6. 달력 (Calendar) — KRDS
 
 ### 기본 마크업
 
 ```html
-<div class="form__group">
-  <label for="username" class="form__label">이름</label>
-  <input type="text" id="username" class="form__input" placeholder="이름을 입력하세요">
-</div>
-```
-
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.form__group` | label + input 래퍼 |
-| `.form__label` | 입력 필드 레이블 (폰트 16px, `--font-size-base`) |
-| `.form__label--required` | 필수 항목 표시 (* 추가) |
-| `.form__input` | 텍스트, 이메일, 패스워드 등 |
-| `.form__select` | 드롭다운 선택 |
-| `.form__textarea` | 여러 줄 입력 |
-| `.form__checkbox` | 체크박스 + 레이블 래퍼 |
-| `.form__checkbox-input` | 체크박스 입력 |
-| `.form__checkbox-label` | 체크박스 텍스트 |
-| `.form__radio` | 라디오 + 레이블 래퍼 |
-| `.form__radio-input` | 라디오 입력 |
-| `.form__radio-label` | 라디오 텍스트 |
-| `.form__help` | 입력 안내 텍스트 |
-| `.form__input--error` | 빨간 테두리 |
-| `.form__message--error` | 빨간 에러 텍스트 |
-| `.form__input--success` | 초록 테두리 |
-| `.form__message--success` | 초록 성공 텍스트 |
-| `:disabled` 속성 | 비활성 스타일 |
-| `.form--inline` | tablet-up에서 가로 배치 |
-
-### 에러 상태 마크업
-
-```html
-<div class="form__group">
-  <label for="password" class="form__label form__label--required">비밀번호</label>
-  <input type="password" id="password" class="form__input form__input--error"
-         aria-invalid="true" aria-describedby="password-error" required>
-  <span id="password-error" class="form__message form__message--error" role="alert">
-    비밀번호는 8자 이상이어야 합니다.
-  </span>
-</div>
-```
-
-### 접근성
-
-- `<label for="">` 필수 연결: 모든 입력 필드에 `id`와 매칭되는 `for` 속성 필수
-- 에러 상태 시 `aria-invalid="true"` + `aria-describedby="에러메시지-id"` 필수
-- 에러 메시지에 `role="alert"` 추가하여 스크린리더가 즉시 읽도록 처리
-- 필수 필드는 `required` 속성 + `.form__label--required` 클래스 동시 적용
-- 도움말 텍스트가 있으면 `aria-describedby`로 입력 필드와 연결
-- 체크박스/라디오는 `<label>` 래퍼로 감싸 클릭 영역 확대
-- 비활성 필드는 `disabled` 속성 사용
-- `focus-visible` 스타일 제공: `outline: 2px solid` + `outline-offset: 2px` (box-shadow가 아닌 outline 사용 -- 고대비 모드 호환)
-- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
-- 반응형 패딩: 모바일/태블릿/PC에서 패딩이 차등 적용됨
-
----
-
-## 3. 카드 (Card)
-
-### 기본 마크업
-
-```html
-<article class="card">
-  <div class="card__header">
-    <h3 class="card__title">카드 제목</h3>
+<div class="calendar" role="application" aria-label="날짜 선택">
+  <div class="calendar__head">
+    <button type="button" class="calendar__nav" aria-label="이전 달">‹</button>
+    <h2 class="calendar__title" aria-live="polite">2026년 4월</h2>
+    <button type="button" class="calendar__nav" aria-label="다음 달">›</button>
   </div>
-  <div class="card__body">
-    <p class="card__text">카드 본문 텍스트입니다.</p>
-  </div>
-  <div class="card__footer">
-    <button type="button" class="btn btn--primary">확인</button>
-  </div>
-</article>
-```
 
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.card` | 세로 레이아웃 (header/body/footer) |
-| `.card--horizontal` | tablet-up에서 이미지 좌측 + 콘텐츠 우측 |
-| `.card--image` | 상단 이미지 + 콘텐츠 |
-| `.card--featured` | accent 테두리 강조 (2px primary) |
-| `.card__header` | 상단 영역 |
-| `.card__title` | 제목 |
-| `.card__body` | 본문 영역 |
-| `.card__text` | 본문 텍스트 |
-| `.card__footer` | 하단 영역 (액션 버튼 등) |
-| `.card__media` | 미디어(이미지) 래퍼 |
-| `.card__image` | 이미지 요소 |
-
-### 접근성
-
-- `<article>` 시맨틱 태그 사용 (독립적인 콘텐츠 단위)
-- 이미지에 반드시 `alt` 속성 제공 (장식용 이미지는 `alt=""`)
-- 카드 제목은 적절한 heading 레벨 사용 (문서 구조에 맞게 `h2`~`h4`)
-- 카드 전체가 링크인 경우 `<a>` 래퍼보다 제목에 링크를 걸고 `::after` pseudo-element로 클릭 영역 확장 권장
-- 반응형 패딩: header/body/footer 영역이 모바일/태블릿/PC에서 차등 패딩
-
----
-
-## 4. 테이블 (Table)
-
-### 기본 마크업
-
-```html
-<div class="table__wrapper">
-  <table class="table">
-    <caption class="sr-only">회원 목록</caption>
-    <thead class="table__head">
+  <table class="calendar__grid" role="grid">
+    <thead>
       <tr>
-        <th class="table__th" scope="col">이름</th>
-        <th class="table__th" scope="col">이메일</th>
-        <th class="table__th" scope="col">가입일</th>
+        <th scope="col" abbr="일요일">일</th>
+        <th scope="col" abbr="월요일">월</th>
+        <th scope="col" abbr="화요일">화</th>
+        <th scope="col" abbr="수요일">수</th>
+        <th scope="col" abbr="목요일">목</th>
+        <th scope="col" abbr="금요일">금</th>
+        <th scope="col" abbr="토요일">토</th>
       </tr>
     </thead>
-    <tbody class="table__body">
-      <tr class="table__row">
-        <td class="table__td">홍길동</td>
-        <td class="table__td">hong@example.com</td>
-        <td class="table__td">2026-01-15</td>
-      </tr>
-      <tr class="table__row">
-        <td class="table__td">김영희</td>
-        <td class="table__td">kim@example.com</td>
-        <td class="table__td">2026-02-20</td>
+    <tbody>
+      <tr role="row">
+        <td role="gridcell">
+          <button type="button" class="calendar__day calendar__day--other-month" aria-label="2026년 3월 30일">30</button>
+        </td>
+        <td role="gridcell">
+          <button type="button" class="calendar__day" aria-label="2026년 4월 1일">1</button>
+        </td>
+        <td role="gridcell">
+          <button type="button" class="calendar__day calendar__day--today" aria-label="2026년 4월 2일 (오늘)">2</button>
+        </td>
+        <td role="gridcell">
+          <button type="button" class="calendar__day calendar__day--selected" aria-selected="true" aria-label="2026년 4월 3일 (선택됨)">3</button>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
 ```
 
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.table` | 시맨틱 테이블 (caption + thead + tbody) |
-| `.table--striped` | 짝수 행 배경색 (가독성 향상) |
-| `.table--bordered` | 모든 셀 테두리 |
-| `.table__wrapper` | 모바일 가로 스크롤 |
-| `.table__head` | thead 스타일 |
-| `.table__th` | th 스타일 (bold, nowrap) |
-| `.table__body` | tbody 스타일 |
-| `.table__row` | tr 스타일 |
-| `.table__td` | td 스타일 |
-| `.table__empty` | 데이터 없음 안내 |
-
 ### 접근성
 
-- `<caption>` 필수 제공 (시각적으로 숨길 경우 `.sr-only` 클래스 사용)
-- 헤더 셀에 `scope="col"` 또는 `scope="row"` 필수 지정
-- 빈 상태 시 `<td colspan="전체컬럼수">` 안내 텍스트 제공
-- 반응형 래퍼 `.table__wrapper`로 모바일 가로 스크롤 지원
-- 복잡한 테이블은 `<th id="">` + `<td headers="">` 패턴 사용
-- 정렬 가능한 컬럼은 `aria-sort` 속성 추가 (`ascending` / `descending` / `none`)
-- 기본 폰트 16px(`--font-size-base`) 이상
-- 반응형 패딩: th/td가 모바일/태블릿/PC에서 차등 패딩
+- 컨테이너 `role="application"` + `aria-label`
+- `<table role="grid">` 그리드 ARIA
+- 일자 버튼은 전체 날짜 컨텍스트로 `aria-label="YYYY년 M월 D일"` (그래야 스크린리더가 "1"이 아닌 "4월 1일"로 읽음)
+- 선택 상태: `aria-selected="true"`
+- 키보드: 화살표(일 단위), Page Up/Down(월), Home/End(주 시작/끝)
 
 ---
 
-## 5. 모달 (Modal)
+## 7. 카드 (Card) — KRDS
 
 ### 기본 마크업
 
 ```html
-<!-- 트리거 버튼 -->
-<button type="button" class="btn btn--primary" data-modal-open="modal-example">
-  모달 열기
+<article class="card">
+  <header class="card__header">
+    <h3 class="card__title">카드 제목</h3>
+  </header>
+  <div class="card__body">
+    <p>카드 본문 내용</p>
+  </div>
+  <footer class="card__footer">
+    <button type="button" class="btn btn--text btn--small">자세히</button>
+  </footer>
+</article>
+```
+
+### 접근성
+
+- 시맨틱 컨테이너: `<article>` (독립 콘텐츠) / `<section>` (관련 섹션) / `<div>` (장식)
+- 카드 전체가 링크면 `<a class="card">` 또는 카드 내부 `<a>`만 링크 (이중 링크 금지)
+- 카드 내 인터랙티브 요소는 `aria-label`로 컨텍스트 명시 권장
+
+---
+
+## 8. 캐러셀 (Carousel) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">
+  <div class="carousel__viewport">
+    <ol class="carousel__track">
+      <li class="carousel__slide" aria-roledescription="slide" aria-label="1 / 3">
+        <img src="/img1.jpg" alt="설명">
+      </li>
+      <li class="carousel__slide" aria-roledescription="slide" aria-label="2 / 3">
+        <img src="/img2.jpg" alt="설명">
+      </li>
+      <li class="carousel__slide" aria-roledescription="slide" aria-label="3 / 3">
+        <img src="/img3.jpg" alt="설명">
+      </li>
+    </ol>
+  </div>
+
+  <button type="button" class="carousel__nav carousel__nav--prev" aria-label="이전 슬라이드">‹</button>
+  <button type="button" class="carousel__nav carousel__nav--next" aria-label="다음 슬라이드">›</button>
+
+  <div class="carousel__indicators" role="tablist">
+    <button type="button" class="carousel__dot" role="tab" aria-selected="true" aria-label="1번 슬라이드"></button>
+    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="2번 슬라이드"></button>
+    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="3번 슬라이드"></button>
+  </div>
+</div>
+```
+
+### 접근성
+
+- 자동 재생은 **기본 OFF** 권장 — 사용자 통제권 (WCAG 2.2.2)
+- 자동 재생 시: 일시정지 버튼 필수 + `prefers-reduced-motion: reduce` 시 자동 비활성
+- 인디케이터는 키보드 작동 가능
+- 슬라이드별 `aria-label="N / 총수"`로 위치 안내
+
+---
+
+## 9. 체크박스 & 라디오 — KRDS Form check
+
+### 기본 마크업
+
+```html
+<label class="check">
+  <input type="checkbox" name="agree" value="true">
+  <span class="check__box" aria-hidden="true"></span>
+  <span class="check__label">개인정보 수집·이용에 동의합니다</span>
+</label>
+```
+
+### 접근성
+
+- `<label>`로 input + box + 텍스트를 묶어 클릭 영역 전체 확보
+- 라디오 그룹은 `<fieldset><legend>`로 묶기
+- 시각 박스(`__box`)는 `aria-hidden="true"` (스크린리더는 native input만 인식)
+
+---
+
+## 10. 디스클로저 (Disclosure) — KRDS
+
+### 기본 마크업
+
+```html
+<button type="button" class="disclosure" aria-expanded="false" aria-controls="more-info">
+  자세히 보기
 </button>
+<div id="more-info" class="disclosure__panel" hidden>
+  <p>접혀 있던 추가 정보</p>
+</div>
+```
 
-<!-- 모달 -->
-<div class="modal" id="modal-example" role="dialog" aria-modal="true"
-     aria-labelledby="modal-example-title" aria-hidden="true">
-  <div class="modal__overlay"></div>
-  <div class="modal__container">
-    <div class="modal__header">
-      <h2 class="modal__title" id="modal-example-title">모달 제목</h2>
-      <button type="button" class="modal__close" data-modal-close aria-label="닫기">
-        &times;
+### 접근성
+
+- `aria-expanded` 상태값 필수 (열림/닫힘)
+- `aria-controls`로 패널 id 연결
+- 패널 `hidden` 속성 또는 CSS `display: none` 사용 (레이아웃에서 완전 제거)
+
+---
+
+## 11. 파일 업로드 (File Upload) — KRDS
+
+### 기본 마크업
+
+```html
+<label class="file-upload">
+  <input type="file" id="file" accept="image/*">
+  <span class="file-upload__trigger">파일 선택</span>
+  <span class="file-upload__filename" aria-live="polite">선택된 파일 없음</span>
+</label>
+```
+
+### 접근성
+
+- `<label>`로 input과 트리거를 묶어 키보드 포커스 시 트리거 외곽선 노출
+- `aria-live="polite"`로 파일명 변경을 스크린리더에 안내
+- `accept` 속성으로 허용 파일 타입 명시 (브라우저 필터링 + 사용자 안내)
+- 업로드 진행률은 별도 `<progress>` 또는 토스트로 표시
+
+---
+
+## 12. 폼 필드 (Form Field) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="form-field">
+  <label for="name" class="form-field__label">
+    이름<span class="form-field__required" aria-label="필수">*</span>
+  </label>
+  <p class="form-field__hint">사업자등록증에 기재된 대표자명</p>
+  <input type="text" id="name" class="input" placeholder="홍길동" required>
+  <p class="form-field__message">최대 20자까지 입력 가능합니다</p>
+</div>
+```
+
+### 접근성
+
+- `<label for="id">` + `<input id="id">` 연결 필수
+- 필수 항목은 `required` 속성 + 시각 표시(`*`)
+- 에러는 `aria-invalid="true"` + `aria-describedby="에러메시지id"`
+- 보조설명은 `aria-describedby`로 연결 권장
+- placeholder만으로 레이블 대체 금지
+
+---
+
+## 13. 사이트 헤더 (Site Header) — KRDS
+
+### 기본 마크업
+
+```html
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__brand" href="/">
+      <img src="/logo.svg" alt="기관명">
+      <span class="site-header__brand-name">기관명</span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="주 메뉴">
+      <ul class="site-header__menu">
+        <li><a href="/about">소개</a></li>
+        <li><a href="/services" aria-current="page">서비스</a></li>
+        <li><a href="/notice">공지</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <button type="button" class="btn btn--text btn--small">로그인</button>
+      <button type="button" class="site-header__toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+```
+
+### 접근성
+
+- `<header>` 시맨틱 태그 사용 (페이지당 하나)
+- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 현재 페이지 메뉴: `aria-current="page"`
+- 모바일 토글: `aria-label="메뉴 열기/닫기"` + `aria-expanded` 상태 토글
+- 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
+
+---
+
+## 14. 목록 (List) — KRDS Text list / Structured list
+
+### 기본 마크업
+
+```html
+<!-- 글머리표 -->
+<ul class="list--text">
+  <li>첫 번째 항목</li>
+  <li>두 번째 항목
+    <ul>
+      <li>중첩 항목</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- 번호 -->
+<ol class="list--text list--ordered">
+  <li>1단계</li>
+  <li>2단계</li>
+</ol>
+```
+
+### 접근성
+
+- 순서 의미 — `<ol>` (있음) / `<ul>` (없음)
+- 정의 목록 — `<dl>/<dt>/<dd>` 시맨틱 사용
+- 모바일에선 정의 목록이 자동으로 1열로 변환
+
+---
+
+## 15. 주 메뉴 (Main Menu) — KRDS
+
+### 기본 마크업
+
+```html
+<nav class="main-menu" aria-label="주 메뉴">
+  <ul class="main-menu__list">
+    <li class="main-menu__item">
+      <a class="main-menu__link" href="/about">소개</a>
+    </li>
+
+    <li class="main-menu__item">
+      <button type="button" class="main-menu__link" aria-haspopup="true" aria-expanded="false" aria-controls="submenu-services">
+        서비스
       </button>
-    </div>
-    <div class="modal__body">
-      <p>모달 본문 콘텐츠입니다.</p>
-    </div>
-    <div class="modal__footer">
-      <button type="button" class="btn btn--secondary" data-modal-close>취소</button>
-      <button type="button" class="btn btn--primary">확인</button>
-    </div>
-  </div>
-</div>
-```
-
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.modal` | `role="dialog"`, `aria-modal="true"`, `aria-labelledby` |
-| `.modal__overlay` | 반투명 배경 (클릭 시 닫기) |
-| `.modal__container` | 실제 대화상자 (모바일: 전체화면, tablet-up: max-width 56rem) |
-| `.modal__header` | 제목 + 닫기 버튼 |
-| `.modal__title` | 모달 제목 (`aria-labelledby` 타겟) |
-| `.modal__body` | 본문 콘텐츠 |
-| `.modal__footer` | 액션 버튼 영역 |
-| `.modal__close` | 닫기 버튼 (`aria-label="닫기"`) -- 44x44px 터치 타겟 보장 |
-| `.modal--active` | JS가 열 때 추가. 열림 애니메이션 트리거 |
-
-### 접근성
-
-- `role="dialog"` + `aria-modal="true"` 필수 지정
-- `aria-labelledby`로 모달 제목 요소 연결 필수
-- `aria-hidden="true"` 기본 상태, JS가 열릴 때 `"false"`로 변경
-- **포커스 트랩**: 모달이 열리면 Tab/Shift+Tab이 모달 내부에서만 순환
-- **ESC 닫기**: Escape 키로 모달 닫기 지원
-- 모달 열릴 때 첫 번째 포커스 가능 요소에 포커스 이동
-- 모달 닫힐 때 트리거 버튼으로 포커스 복귀
-- `body overflow: hidden` 처리 (배경 스크롤 방지)
-- 닫기 버튼에 `aria-label="닫기"` 필수 -- 44x44px 터치 타겟 보장
-- 반응형: 모바일: 전체화면 / 태블릿: max-width 56rem, max-height 90vh / PC: max-height 85vh
-- 열기: `data-modal-open="모달id"` 속성을 트리거 버튼에 추가
-- 닫기: `data-modal-close` 속성을 닫기 버튼에 추가
-
----
-
-## 6. 탭 (Tab)
-
-### 기본 마크업
-
-```html
-<div class="tab">
-  <div class="tab__list" role="tablist" aria-label="콘텐츠 탭">
-    <button type="button" class="tab__button" role="tab"
-            id="tab-1" aria-controls="panel-1" aria-selected="true" tabindex="0">
-      탭 1
-    </button>
-    <button type="button" class="tab__button" role="tab"
-            id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">
-      탭 2
-    </button>
-    <button type="button" class="tab__button" role="tab"
-            id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">
-      탭 3
-    </button>
-  </div>
-
-  <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
-    <p>탭 1 콘텐츠입니다.</p>
-  </div>
-  <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
-    <p>탭 2 콘텐츠입니다.</p>
-  </div>
-  <div class="tab__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
-    <p>탭 3 콘텐츠입니다.</p>
-  </div>
-</div>
-```
-
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.tab` | 탭 전체 래퍼 |
-| `.tab__list` | `role="tablist"`, 탭 버튼 목록 (모바일: 가로 스크롤) |
-| `.tab__button` | `role="tab"`, 패딩 12px/20px (모바일), 반응형 확대 |
-| `.tab__panel` | `role="tabpanel"`, 탭 콘텐츠 영역 |
-
-### 접근성
-
-- `role="tablist"` + `role="tab"` + `role="tabpanel"` WAI-ARIA 패턴 필수
-- `aria-selected="true"` / `"false"`: 현재 활성 탭 표시
-- `aria-controls`: 탭 버튼이 제어하는 패널 id 연결
-- `aria-labelledby`: 패널이 참조하는 탭 버튼 id 연결
-- 비활성 탭은 `tabindex="-1"` (키보드 탭 순서에서 제외, 화살표로만 접근)
-- 비활성 패널은 `hidden` 속성으로 숨김
-- `tablist`에 `aria-label` 속성으로 탭 그룹 설명 제공
-- `focus-visible` 스타일: `outline: 2px solid` + `outline-offset: 2px`
-- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
-
----
-
-## 7. 페이지네이션 (Pagination)
-
-### 기본 마크업
-
-```html
-<nav class="pagination" aria-label="페이지 네비게이션">
-  <ul class="pagination__list">
-    <li class="pagination__item">
-      <a href="#" class="pagination__link pagination__link--prev" aria-label="이전 페이지">
-        &lt;
-      </a>
+      <ul id="submenu-services" class="main-menu__submenu" hidden>
+        <li><a href="/services/a">서비스 A</a></li>
+        <li><a href="/services/b">서비스 B</a></li>
+        <li><a href="/services/c" aria-current="page">서비스 C</a></li>
+      </ul>
     </li>
-    <li class="pagination__item">
-      <a href="#" class="pagination__link" aria-label="페이지 1">1</a>
-    </li>
-    <li class="pagination__item pagination__item--mobile-hidden">
-      <a href="#" class="pagination__link" aria-label="페이지 2">2</a>
-    </li>
-    <li class="pagination__item pagination__item--mobile-hidden">
-      <a href="#" class="pagination__link pagination__link--current" aria-current="page" aria-label="페이지 3">3</a>
-    </li>
-    <li class="pagination__item pagination__item--mobile-hidden">
-      <a href="#" class="pagination__link" aria-label="페이지 4">4</a>
-    </li>
-    <li class="pagination__item">
-      <a href="#" class="pagination__link" aria-label="페이지 5">5</a>
-    </li>
-    <li class="pagination__item">
-      <a href="#" class="pagination__link pagination__link--next" aria-label="다음 페이지">
-        &gt;
-      </a>
+
+    <li class="main-menu__item">
+      <a class="main-menu__link" href="/contact">문의</a>
     </li>
   </ul>
 </nav>
 ```
 
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.pagination` | `<nav aria-label="페이지 네비게이션">` |
-| `.pagination__list` | `<ul>` 목록 |
-| `.pagination__item` | `<li>` 항목 |
-| `.pagination__item--mobile-hidden` | 모바일에서 숨김, tablet-up에서 표시 |
-| `.pagination__link` | `<a>` 페이지 링크 -- 최소 44x44px 터치 타겟 |
-| `.pagination__link--current` | 현재 페이지 (primary 배경색) |
-| `.pagination__link--prev` | "이전" 버튼 |
-| `.pagination__link--next` | "다음" 버튼 |
-| `.pagination__link--disabled` | 첫/마지막 페이지에서 비활성 |
-
 ### 접근성
 
-- `<nav>` 태그 + `aria-label="페이지 네비게이션"` 필수
-- 각 숫자에 `aria-label="페이지 N"` 제공
-- 현재 페이지에 `aria-current="page"` 필수 지정
-- 이전/다음 버튼에 `aria-label="이전 페이지"` / `aria-label="다음 페이지"` 필수
-- 비활성 상태는 `<span>` + `aria-disabled="true"` 사용 (링크가 아닌 요소로 변경)
-- `focus-visible` 스타일 제공: `outline: 2px solid var(--color-primary); outline-offset: 2px`
-- 링크 간 간격 8px 이상 (`gap: --spacing-sm`)
-- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
+- 서브메뉴 트리거는 `<button>` 권장 (`<a>` 아님 — 링크가 아니므로)
+- `aria-haspopup="true"` + `aria-expanded` 상태값
+- `aria-controls`로 서브메뉴 id 연결
+- 서브메뉴 `<ul>`은 `hidden` 속성으로 노출 제어
+- 현재 페이지: `aria-current="page"`
 
 ---
 
-## 8. 브레드크럼 (Breadcrumb)
+## 16. 모달 (Modal / Dialog) — KRDS
 
 ### 기본 마크업
 
 ```html
-<nav class="breadcrumb" aria-label="현재 위치">
-  <ol class="breadcrumb__list">
-    <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
-      <a href="/" class="breadcrumb__link">홈</a>
-    </li>
-    <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
-      <a href="/category" class="breadcrumb__link">카테고리</a>
-    </li>
-    <li class="breadcrumb__item">
-      <a href="/category/sub" class="breadcrumb__link">하위 카테고리</a>
-    </li>
-    <li class="breadcrumb__item">
-      <span class="breadcrumb__current" aria-current="page">현재 페이지</span>
-    </li>
-  </ol>
-</nav>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+  <div class="modal__overlay"></div>
+  <div class="modal__content modal__content--medium">
+    <header class="modal__header">
+      <h2 id="modal-title" class="modal__title">제목</h2>
+      <button type="button" class="modal__close" aria-label="닫기">×</button>
+    </header>
+    <div class="modal__body">
+      <p>모달 본문 내용</p>
+    </div>
+    <footer class="modal__footer">
+      <button type="button" class="btn btn--tertiary">취소</button>
+      <button type="button" class="btn btn--primary">확인</button>
+    </footer>
+  </div>
+</div>
 ```
-
-### Variant
-
-| 클래스 | 용도 |
-| -------- | ------ |
-| `.breadcrumb` | `<nav aria-label="현재 위치">` |
-| `.breadcrumb__list` | `<ol>` 순서 있는 목록 |
-| `.breadcrumb__item` | `<li>` 항목 |
-| `.breadcrumb__item--mobile-hidden` | 모바일에서 숨김, tablet-up에서 표시 |
-| `.breadcrumb__link` | 이전 페이지 링크 |
-| `.breadcrumb__current` | 현재 위치 (링크 아님, 텍스트) |
-| CSS `::before` | `/` 구분자 (스크린리더 자동 무시) |
 
 ### 접근성
 
-- `<nav>` 태그 + `aria-label="현재 위치"` 필수
-- `<ol>` 순서 목록 사용 (경로의 계층 구조를 의미적으로 표현)
-- 현재 위치 항목에 `aria-current="page"` 필수 지정
-- 현재 위치는 링크가 아닌 `<span>` 사용 (이동할 수 없는 현재 페이지)
-- 구분자는 CSS `::before` pseudo-element로 처리 (스크린리더에서 자동 무시)
-- `<ol>` 목록이므로 스크린리더가 "N개 항목 중 M번째"로 읽어줌
-- 모바일에서 `.breadcrumb__item--mobile-hidden`으로 상위 경로 숨김 (마지막 2단계만 표시)
-- 아이템 간 간격 8px 이상 (`gap: --spacing-sm`)
-- `prefers-reduced-motion` 대응: 모션 감소 설정 시 transition 비활성화
-- 태블릿 이상에서 폰트 사이즈 16px(`--font-size-base`)로 상향
+- `role="dialog"` + `aria-modal="true"` 필수
+- `aria-labelledby="제목id"`로 모달 제목 연결 (또는 `aria-label`)
+- 본문 설명이 길면 `aria-describedby`도 추가
+- 닫기 버튼은 `aria-label="닫기"` 필수
+- 첫 포커스는 모달 내부 첫 인터랙티브 요소 (또는 닫기 버튼)
+- ESC 키로 닫기 가능
+- 백드롭은 `--krds-light-color-background-dim` (KRDS dim 토큰)
+
+---
+
+## 17. 페이지네이션 (Pagination) — KRDS
+
+### 기본 마크업
+
+```html
+<nav class="pagination" aria-label="페이지 내비게이션">
+  <button type="button" class="pagination__nav" aria-label="이전 페이지">‹</button>
+  <ol class="pagination__list">
+    <li><a class="pagination__item" href="?p=1">1</a></li>
+    <li><a class="pagination__item pagination__item--current" href="?p=2" aria-current="page">2</a></li>
+    <li><a class="pagination__item" href="?p=3">3</a></li>
+    <li><a class="pagination__item" href="?p=4">4</a></li>
+    <li><a class="pagination__item" href="?p=5">5</a></li>
+  </ol>
+  <button type="button" class="pagination__nav" aria-label="다음 페이지">›</button>
+</nav>
+```
+
+### 접근성
+
+- `<nav aria-label="페이지 내비게이션">` 필수
+- 현재 페이지: `aria-current="page"`
+- 이전/다음 버튼: `aria-label="이전 페이지"` / `aria-label="다음 페이지"` 필수
+- `aria-disabled="true"` + `disabled` 같이 사용 (첫/마지막 페이지)
+
+---
+
+## 18. 진행률 (Progress) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="progress">
+  <div class="progress__label">
+    <span>업로드 중</span>
+    <span>60%</span>
+  </div>
+  <progress class="progress__bar" value="60" max="100" aria-label="업로드 진행률 60%">60%</progress>
+</div>
+```
+
+### 접근성
+
+- native `<progress>` 사용 — 자동 ARIA 처리
+- `aria-label` 또는 `aria-labelledby`로 진행 항목 명시
+- 무한 로딩(불확정 시간)은 `<progress>` 대신 `.spinner` 사용
+
+---
+
+## 19. 셀렉트 (Select) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="form-field">
+  <label for="category" class="form-field__label">카테고리</label>
+  <select id="category" class="select">
+    <option value="">선택하세요</option>
+    <option value="a">옵션 A</option>
+    <option value="b">옵션 B</option>
+  </select>
+</div>
+```
+
+### 접근성
+
+- 첫 옵션은 `<option value="">선택하세요</option>` 같은 placeholder 권장
+- `<label for>` + `<select id>` 연결 필수
+- 옵션 텍스트는 명확하고 간결하게
+
+---
+
+## 20. 사이드 패널 (Side Panel) — KRDS Help panel 응용
+
+### 기본 마크업
+
+```html
+<aside class="side-panel" role="dialog" aria-labelledby="panel-title" aria-hidden="true">
+  <header class="side-panel__header">
+    <h2 id="panel-title" class="side-panel__title">상세 정보</h2>
+    <button type="button" class="side-panel__close" aria-label="닫기">×</button>
+  </header>
+  <div class="side-panel__body">
+    <p>패널 본문 내용</p>
+  </div>
+  <footer class="side-panel__footer">
+    <button type="button" class="btn btn--tertiary">닫기</button>
+    <button type="button" class="btn btn--primary">저장</button>
+  </footer>
+</aside>
+```
+
+### 접근성
+
+- `role="dialog"` + `aria-labelledby`
+- 닫기 버튼 `aria-label="닫기"` 필수
+- ESC 키 닫기 권장
+- 포커스 트랩은 선택 (모달과 달리 본문 인터랙션 허용)
+- `aria-hidden` 토글로 스크린리더 노출 제어
+
+---
+
+## 21. 스피너 (Spinner) — KRDS
+
+### 기본 마크업
+
+```html
+<span class="spinner" role="status" aria-label="로딩 중"></span>
+```
+
+### 접근성
+
+- `role="status"` + `aria-label="로딩 중"` 필수
+- `prefers-reduced-motion: reduce` 자동 대응 (회전 속도 절반으로)
+
+---
+
+## 22. 단계 표시기 (Step Indicator) — KRDS
+
+### 기본 마크업
+
+```html
+<ol class="step-indicator" aria-label="진행 단계">
+  <li class="step-indicator__item step-indicator__item--done">
+    <span class="step-indicator__num" aria-hidden="true">1</span>
+    <span class="step-indicator__label">정보 입력</span>
+  </li>
+  <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+    <span class="step-indicator__num" aria-hidden="true">2</span>
+    <span class="step-indicator__label">확인</span>
+  </li>
+  <li class="step-indicator__item">
+    <span class="step-indicator__num" aria-hidden="true">3</span>
+    <span class="step-indicator__label">완료</span>
+  </li>
+</ol>
+```
+
+### 접근성
+
+- `<ol>` 사용 — 순서 의미 보존
+- 현재 단계: `aria-current="step"`
+- 번호는 시각만 — `aria-hidden="true"` (레이블이 텍스트로 의미 전달)
+
+---
+
+## 23. 토글 스위치 (Switch) — KRDS
+
+### 기본 마크업
+
+```html
+<label class="switch">
+  <input type="checkbox" name="notify" role="switch">
+  <span class="switch__track" aria-hidden="true"></span>
+  <span class="switch__label">알림 받기</span>
+</label>
+```
+
+### 접근성
+
+- `role="switch"` 권장 — 스크린리더가 "스위치"로 안내
+- 시각 트랙(`__track`)은 `aria-hidden="true"`
+- 상태 변경은 native `:checked`만으로 충분 (별도 aria-checked 불필요)
+
+---
+
+## 24. 탭 (Tab) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="tab">
+  <div class="tab__list" role="tablist" aria-label="섹션">
+    <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
+      개요
+    </button>
+    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" tabindex="-1">
+      상세
+    </button>
+    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" tabindex="-1">
+      후기
+    </button>
+  </div>
+  <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
+    개요 내용
+  </div>
+  <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
+    상세 내용
+  </div>
+  <div class="tab__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
+    후기 내용
+  </div>
+</div>
+```
+
+### 접근성
+
+- `role="tablist"` + 각 탭에 `role="tab"`, 패널에 `role="tabpanel"`
+- 탭 ↔ 패널 연결: `aria-controls` (탭 → 패널 id), `aria-labelledby` (패널 → 탭 id)
+- 활성 표시는 `aria-selected="true"` (시각 인디케이터는 CSS가 자동 처리)
+- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적 명시 권장
+
+---
+
+## 25. 표 (Table) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="table-wrap">
+  <table class="table">
+    <caption class="table__caption">2026년 1분기 신청 현황</caption>
+    <thead>
+      <tr>
+        <th scope="col">번호</th>
+        <th scope="col">신청자</th>
+        <th scope="col">신청일</th>
+        <th scope="col">상태</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>홍길동</td>
+        <td>2026-04-01</td>
+        <td><span class="tag tag--success">완료</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### 접근성
+
+- `<th scope="col">` 또는 `scope="row">` 필수
+- `<caption>`으로 표 제목 명시 (시각 표시는 `--krds-light-color-bg-subtler` 헤더와 동일)
+- 정렬 헤더는 `aria-sort="ascending|descending|none"`
+- 선택 행은 `aria-selected="true"`
+- 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기
+
+---
+
+## 26. 태그 (Tag) — KRDS
+
+### 기본 마크업
+
+```html
+<!-- 정적 태그 -->
+<span class="tag">기본</span>
+
+<!-- 클릭 가능 (필터 등) -->
+<button type="button" class="tag tag--primary">선택됨</button>
+
+<!-- 제거 가능 (선택된 필터) -->
+<span class="tag tag--info">
+  카테고리: 디자인
+  <button type="button" class="tag__close" aria-label="카테고리: 디자인 제거">×</button>
+</span>
+
+<!-- 링크형 -->
+<a class="tag tag--success" href="?category=ui">UI</a>
+```
+
+### 접근성
+
+- 제거 버튼은 `aria-label="태그명 제거"` 형식으로 컨텍스트 명시
+- 클릭 가능 태그는 `<button>` 또는 `<a>` 사용 (div onclick 금지)
+
+---
+
+## 27. 토스트 (Toast) — KRDS
+
+### 기본 마크업
+
+```html
+<div class="toast-stack">
+  <div class="toast toast--success" role="status">
+    <span class="toast__icon" aria-hidden="true">✓</span>
+    <p class="toast__message">저장되었습니다</p>
+    <button type="button" class="toast__close" aria-label="닫기">×</button>
+  </div>
+</div>
+```
+
+### 접근성
+
+- `role="status"` + `aria-live="polite"` (스크린리더 정중 안내)
+- 위급 시에만 `role="alert"` + `aria-live="assertive"`
+- 자동 닫힘 토스트도 사용자 옵션으로 일시정지/지속 가능해야 함 (WCAG 2.2.1)
+
+---
+
+## 28. 툴팁 (Tooltip) — KRDS
+
+### 기본 마크업
+
+```html
+<button type="button" class="tooltip-trigger" aria-describedby="tip-1">
+  도움말
+</button>
+<div id="tip-1" class="tooltip" role="tooltip" hidden>
+  도움말 설명 텍스트
+</div>
+```
+
+### 접근성
+
+- 트리거에 `aria-describedby="툴팁id"` 연결
+- 툴팁에 `role="tooltip"` 필수
+- ESC로 닫기 가능 (JS 처리)
+- 툴팁은 hover/focus 양쪽으로 트리거 가능해야 함 (WCAG 1.4.13)
+
 ````

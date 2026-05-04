@@ -22,7 +22,7 @@ tags: component
   <iframe
     src="/playground/combo-modal-form.html"
     title="모달 + 폼 조합 패턴 미리보기"
-    style="width: 100%; height: 400px; border: 1px solid var(--color-border-light); border-radius: var(--radius-base)"
+    style="width: 100%; height: 400px; border: 1px solid var(--color-border-light); border-radius: var(--krds-radius-medium2)"
     loading="lazy"
   ></iframe>
 </div>
@@ -60,7 +60,7 @@ tags: component
       </form>
     </div>
     <div class="modal__footer">
-      <button type="button" class="btn btn--outline" data-modal-close>취소</button>
+      <button type="button" class="btn btn--secondary" data-modal-close>취소</button>
       <button type="submit" class="btn btn--primary">가입하기</button>
     </div>
   </div>
@@ -90,7 +90,7 @@ tags: component
   <iframe
     src="/playground/combo-card-grid.html"
     title="카드 그리드 + 페이지네이션 조합 패턴 미리보기"
-    style="width: 100%; height: 700px; border: 1px solid var(--color-border-light); border-radius: var(--radius-base)"
+    style="width: 100%; height: 700px; border: 1px solid var(--color-border-light); border-radius: var(--krds-radius-medium2)"
     loading="lazy"
   ></iframe>
 </div>
@@ -108,7 +108,7 @@ tags: component
       <p class="card__text">프로젝트 설명 텍스트</p>
     </div>
     <div class="card__footer">
-      <button type="button" class="btn btn--outline">상세보기</button>
+      <button type="button" class="btn btn--secondary">상세보기</button>
     </div>
   </article>
   <!-- 카드 반복... -->
@@ -156,7 +156,7 @@ tags: component
   <iframe
     src="/playground/combo-search-table.html"
     title="검색 폼 + 테이블 + 브레드크럼 조합 패턴 미리보기"
-    style="width: 100%; height: 600px; border: 1px solid var(--color-border-light); border-radius: var(--radius-base)"
+    style="width: 100%; height: 600px; border: 1px solid var(--color-border-light); border-radius: var(--krds-radius-medium2)"
     loading="lazy"
   ></iframe>
 </div>

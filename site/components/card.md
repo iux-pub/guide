@@ -1,82 +1,36 @@
 ---
 title: 카드
-order: 3
+order: 8
 playground_src: /playground/card.html
-preview_height: 600
+preview_height: 500
 ---
+
+KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/card.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#card)에 있다.
 
 ## 기본 마크업
 
 ```html
 <article class="card">
-  <div class="card__header">
+  <header class="card__header">
     <h3 class="card__title">카드 제목</h3>
-  </div>
+  </header>
   <div class="card__body">
-    <p class="card__text">카드 본문 텍스트입니다.</p>
+    <p>카드 본문 내용</p>
   </div>
-  <div class="card__footer">
-    <button type="button" class="btn btn--primary">확인</button>
-  </div>
+  <footer class="card__footer">
+    <button type="button" class="btn btn--text btn--small">자세히</button>
+  </footer>
 </article>
 ```
 
-## Variant 목록
+## 접근성 핵심
 
-| Variant | 클래스 | 용도 |
-|---------|--------|------|
-| 기본 | `.card` | 세로 레이아웃 (header/body/footer) |
-| 가로형 | `.card--horizontal` | tablet-up에서 이미지 좌측 + 콘텐츠 우측 |
-| 이미지형 | `.card--image` | 상단 이미지 + 콘텐츠 |
-| Featured | `.card--featured` | accent 테두리 강조 |
+- 시맨틱 컨테이너: `<article>` (독립 콘텐츠) / `<section>` (관련 섹션) / `<div>` (장식)
+- 카드 전체가 링크면 `<a class="card">` 또는 카드 내부 `<a>`만 링크 (이중 링크 금지)
+- 카드 내 인터랙티브 요소는 `aria-label`로 컨텍스트 명시 권장
 
-## 이미지형 카드
+## 파일
 
-```html
-<article class="card card--image">
-  <div class="card__media">
-    <img class="card__image" src="image.jpg" alt="이미지 설명">
-  </div>
-  <div class="card__body">
-    <h3 class="card__title">이미지 카드</h3>
-    <p class="card__text">이미지가 상단에 위치하는 카드입니다.</p>
-  </div>
-</article>
-```
-
-## 가로형 카드
-
-```html
-<article class="card card--horizontal">
-  <div class="card__media">
-    <img class="card__image" src="image.jpg" alt="이미지 설명">
-  </div>
-  <div class="card__body">
-    <h3 class="card__title">가로형 카드</h3>
-    <p class="card__text">tablet-up에서 이미지가 좌측에 위치합니다.</p>
-  </div>
-</article>
-```
-
-## 접근성 주의사항
-
-- `<article>` 시맨틱 태그 사용
-- 이미지에 반드시 `alt` 속성 제공
-- 카드 제목은 적절한 heading 레벨 사용
-- 카드 전체가 링크인 경우 제목에 링크를 걸고 `::after`로 클릭 영역 확장 권장
-
-## 인터랙션
-
-- hover 시 `box-shadow: var(--shadow-lg)` + `transform: translateY(-0.2rem)` 효과
-- `transition: box-shadow, transform var(--transition-base)`
-- `prefers-reduced-motion: reduce` 시 transition 비활성화
-- 반응형 패딩: header/body/footer가 모바일/태블릿/PC에서 차등 적용
-
-## SCSS 파일
-
-`src/scss/6-components/_card.scss`
-
-## 관련 문서
-
-- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 카드 네이밍 규칙과 BEM 매핑
-- [접근성: 카드](/accessibility/card/) -- 카드 접근성 가이드
+- 마크업: `src/snippets/card.md`
+- CSS: `src/styles/6-components/card.css`
+- 카탈로그: [krds-components.md#card](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#card)

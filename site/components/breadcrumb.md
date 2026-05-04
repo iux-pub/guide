@@ -1,75 +1,33 @@
 ---
 title: 브레드크럼
-order: 8
+order: 13
 playground_src: /playground/breadcrumb.html
-preview_height: 200
+preview_height: 500
 ---
+
+KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/breadcrumb.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#breadcrumb)에 있다.
 
 ## 기본 마크업
 
 ```html
-<nav class="breadcrumb" aria-label="현재 위치">
+<nav class="breadcrumb" aria-label="페이지 경로">
   <ol class="breadcrumb__list">
-    <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
-      <a href="/" class="breadcrumb__link">홈</a>
-    </li>
-    <li class="breadcrumb__item breadcrumb__item--mobile-hidden">
-      <a href="/category" class="breadcrumb__link">카테고리</a>
-    </li>
-    <li class="breadcrumb__item">
-      <a href="/category/sub" class="breadcrumb__link">하위 카테고리</a>
-    </li>
-    <li class="breadcrumb__item">
-      <span class="breadcrumb__current" aria-current="page">현재 페이지</span>
-    </li>
+    <li class="breadcrumb__item"><a href="/">홈</a></li>
+    <li class="breadcrumb__item"><a href="/services">서비스</a></li>
+    <li class="breadcrumb__item" aria-current="page">신청하기</li>
   </ol>
 </nav>
 ```
 
-## 구성 요소
+## 접근성 핵심
 
-| Element | 클래스 | 용도 |
-|---------|--------|------|
-| Nav | `.breadcrumb` | `<nav aria-label="현재 위치">` |
-| List | `.breadcrumb__list` | `<ol>` 순서 있는 목록 |
-| Item | `.breadcrumb__item` | 개별 항목 |
-| Item 모바일 숨김 | `.breadcrumb__item--mobile-hidden` | 모바일에서 숨김 |
-| Link | `.breadcrumb__link` | 이전 페이지 링크 |
-| Current | `.breadcrumb__current` | 현재 위치 (링크 아님) |
-| Separator | CSS `::before` | `/` 구분자 |
+- `<nav aria-label="페이지 경로">` 필수 (스크린리더용 식별자)
+- `<ol>` 사용 — 순서가 의미를 가짐
+- 현재 페이지: `aria-current="page"` + `<a>` 없이 텍스트만 (링크 아님)
+- 구분자(`›`)는 CSS `::before`로 그려서 스크린리더에 노출 안 됨 (불필요한 읽기 방지)
 
-## 간단한 2단계 브레드크럼
+## 파일
 
-```html
-<nav class="breadcrumb" aria-label="현재 위치">
-  <ol class="breadcrumb__list">
-    <li class="breadcrumb__item">
-      <a href="/" class="breadcrumb__link">홈</a>
-    </li>
-    <li class="breadcrumb__item">
-      <span class="breadcrumb__current" aria-current="page">현재 페이지</span>
-    </li>
-  </ol>
-</nav>
-```
-
-## 접근성 주의사항
-
-- `<nav>` 태그 + `aria-label="현재 위치"` 필수
-- `<ol>` 순서 목록 사용 (계층 구조 의미 표현)
-- 현재 위치에 `aria-current="page"` 필수
-- 현재 위치는 `<span>` 사용 (링크가 아닌 현재 페이지)
-- 구분자는 CSS `::before`로 처리 (스크린리더 자동 무시)
-- 모바일에서 `.breadcrumb__item--mobile-hidden`으로 상위 경로 숨김
-- 아이템 간 간격 8px (`--spacing-sm`)
-- `prefers-reduced-motion` 대응
-- 태블릿 이상 폰트 16px
-
-## SCSS 파일
-
-`src/scss/6-components/_breadcrumb.scss`
-
-## 관련 문서
-
-- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 브레드크럼 네이밍 규칙과 BEM 매핑
-- [접근성: 브레드크럼](/accessibility/breadcrumb/) -- 브레드크럼 접근성 가이드
+- 마크업: `src/snippets/breadcrumb.md`
+- CSS: `src/styles/6-components/breadcrumb.css`
+- 카탈로그: [krds-components.md#breadcrumb](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#breadcrumb)

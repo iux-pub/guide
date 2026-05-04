@@ -1,81 +1,48 @@
 ---
 title: 탭
-order: 6
+order: 12
 playground_src: /playground/tab.html
 preview_height: 500
 ---
+
+KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/tab.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#tab)에 있다.
 
 ## 기본 마크업
 
 ```html
 <div class="tab">
-  <div class="tab__list" role="tablist" aria-label="콘텐츠 탭">
-    <button type="button" class="tab__button" role="tab"
-            id="tab-1" aria-controls="panel-1" aria-selected="true" tabindex="0">
-      탭 1
+  <div class="tab__list" role="tablist" aria-label="섹션">
+    <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
+      개요
     </button>
-    <button type="button" class="tab__button" role="tab"
-            id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">
-      탭 2
+    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" tabindex="-1">
+      상세
     </button>
-    <button type="button" class="tab__button" role="tab"
-            id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1">
-      탭 3
+    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" tabindex="-1">
+      후기
     </button>
   </div>
-
   <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
-    <p>탭 1 콘텐츠입니다.</p>
+    개요 내용
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
-    <p>탭 2 콘텐츠입니다.</p>
+    상세 내용
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
-    <p>탭 3 콘텐츠입니다.</p>
+    후기 내용
   </div>
 </div>
 ```
 
-## 구성 요소
+## 접근성 핵심
 
-| Element | 클래스 | 용도 |
-|---------|--------|------|
-| 컨테이너 | `.tab` | 탭 전체 래퍼 |
-| List | `.tab__list` | `role="tablist"`, 모바일 가로 스크롤 |
-| Button | `.tab__button` | `role="tab"`, 개별 탭 버튼. 패딩 12px/20px (모바일), 반응형 확대 |
-| Panel | `.tab__panel` | `role="tabpanel"`, 콘텐츠 영역 |
+- `role="tablist"` + 각 탭에 `role="tab"`, 패널에 `role="tabpanel"`
+- 탭 ↔ 패널 연결: `aria-controls` (탭 → 패널 id), `aria-labelledby` (패널 → 탭 id)
+- 활성 표시는 `aria-selected="true"` (시각 인디케이터는 CSS가 자동 처리)
+- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적 명시 권장
 
-## 활성/비활성 상태
+## 파일
 
-- 활성 탭: `aria-selected="true"`, `tabindex="0"`
-- 비활성 탭: `aria-selected="false"`, `tabindex="-1"`
-- 비활성 패널: `hidden` 속성 추가
-
-## 키보드 상호작용 (자동 활성화 패턴)
-
-| 키 | 동작 |
-|----|------|
-| `ArrowRight` | 다음 탭으로 이동 + 활성화 |
-| `ArrowLeft` | 이전 탭으로 이동 + 활성화 |
-| `Home` | 첫 번째 탭으로 이동 + 활성화 |
-| `End` | 마지막 탭으로 이동 + 활성화 |
-
-## 접근성 주의사항
-
-- `role="tablist"` + `role="tab"` + `role="tabpanel"` WAI-ARIA 패턴 필수
-- `aria-controls`: 탭 버튼이 제어하는 패널 id 연결
-- `aria-labelledby`: 패널이 참조하는 탭 버튼 id 연결
-- 비활성 탭은 `tabindex="-1"` (화살표로만 접근)
-- `tablist`에 `aria-label` 속성으로 탭 그룹 설명 제공
-- `focus-visible`: `outline: 2px solid` + `outline-offset: 2px`
-- `prefers-reduced-motion` 대응
-
-## JS / SCSS 파일
-
-- JS: `src/js/tab.js`
-- SCSS: `src/scss/6-components/_tab.scss`
-
-## 관련 문서
-
-- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 탭 네이밍 규칙과 BEM 매핑
-- [접근성: 탭](/accessibility/tab/) -- 탭 접근성 가이드
+- 마크업: `src/snippets/tab.md`
+- CSS: `src/styles/6-components/tab.css`
+- 카탈로그: [krds-components.md#tab](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#tab)

@@ -1,85 +1,48 @@
 ---
-title: 테이블
-order: 4
+title: 표
+order: 28
 playground_src: /playground/table.html
 preview_height: 500
 ---
 
+KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/table.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#table)에 있다.
+
 ## 기본 마크업
 
 ```html
-<div class="table__wrapper">
+<div class="table-wrap">
   <table class="table">
-    <caption class="sr-only">회원 목록</caption>
-    <thead class="table__head">
+    <caption class="table__caption">2026년 1분기 신청 현황</caption>
+    <thead>
       <tr>
-        <th class="table__th" scope="col">이름</th>
-        <th class="table__th" scope="col">이메일</th>
-        <th class="table__th" scope="col">가입일</th>
+        <th scope="col">번호</th>
+        <th scope="col">신청자</th>
+        <th scope="col">신청일</th>
+        <th scope="col">상태</th>
       </tr>
     </thead>
-    <tbody class="table__body">
-      <tr class="table__row">
-        <td class="table__td">홍길동</td>
-        <td class="table__td">hong@example.com</td>
-        <td class="table__td">2026-01-15</td>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>홍길동</td>
+        <td>2026-04-01</td>
+        <td><span class="tag tag--success">완료</span></td>
       </tr>
     </tbody>
   </table>
 </div>
 ```
 
-## Variant 목록
+## 접근성 핵심
 
-| Variant | 클래스 | 용도 |
-|---------|--------|------|
-| 기본 | `.table` | 시맨틱 테이블 |
-| Striped | `.table--striped` | 짝수 행 배경색 |
-| Bordered | `.table--bordered` | 모든 셀 테두리 |
-| Responsive | `.table__wrapper` | 모바일 가로 스크롤 |
+- `<th scope="col">` 또는 `scope="row">` 필수
+- `<caption>`으로 표 제목 명시 (시각 표시는 `--krds-light-color-bg-subtler` 헤더와 동일)
+- 정렬 헤더는 `aria-sort="ascending|descending|none"`
+- 선택 행은 `aria-selected="true"`
+- 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기
 
-## Striped 테이블
+## 파일
 
-```html
-<table class="table table--striped">
-  <caption class="sr-only">주문 내역</caption>
-  <!-- thead, tbody 동일 구조 -->
-</table>
-```
-
-## 빈 상태
-
-```html
-<table class="table">
-  <caption class="sr-only">검색 결과</caption>
-  <thead class="table__head">
-    <tr>
-      <th class="table__th" scope="col">제목</th>
-      <th class="table__th" scope="col">날짜</th>
-    </tr>
-  </thead>
-  <tbody class="table__body">
-    <tr class="table__row">
-      <td class="table__empty" colspan="2">검색 결과가 없습니다.</td>
-    </tr>
-  </tbody>
-</table>
-```
-
-## 접근성 주의사항
-
-- `<caption>` 필수 제공 (시각적으로 숨길 경우 `.sr-only`)
-- 헤더 셀에 `scope="col"` 또는 `scope="row"` 필수 지정
-- 빈 상태 시 `<td colspan="">` 안내 텍스트 제공
-- 반응형 래퍼 `.table__wrapper`로 모바일 가로 스크롤 지원
-- 기본 폰트 16px
-- 반응형 패딩: th/td 모바일/태블릿/PC 차등
-
-## SCSS 파일
-
-`src/scss/6-components/_table.scss`
-
-## 관련 문서
-
-- [피그마 컴포넌트 네이밍](/figma/component-naming/) -- 피그마에서의 테이블 네이밍 규칙과 BEM 매핑
-- [접근성: 테이블](/accessibility/table/) -- 테이블 접근성 가이드
+- 마크업: `src/snippets/table.md`
+- CSS: `src/styles/6-components/table.css`
+- 카탈로그: [krds-components.md#table](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#table)

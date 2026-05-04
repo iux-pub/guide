@@ -116,11 +116,13 @@
     cursor: not-allowed;
     color: var(--color-text-disabled);
   }
+
   .check input:disabled ~ .check__box,
   .radio input:disabled ~ .radio__box {
     background: var(--krds-light-color-input-surface-disabled);
     border-color: var(--krds-light-color-input-border-disabled);
   }
+
   .check input:disabled:checked ~ .check__box {
     background: var(--color-text-disabled);
     border-color: var(--color-text-disabled);

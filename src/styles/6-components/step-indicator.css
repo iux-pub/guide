@@ -74,11 +74,13 @@
   .step-indicator__item--done {
     color: var(--color-text);
   }
+
   .step-indicator__item--done .step-indicator__num {
     background: var(--color-primary);
     border-color: var(--color-primary);
     color: var(--color-text-inverse);
   }
+
   .step-indicator__item--done:not(:last-child)::after {
     background: var(--color-primary);
   }
@@ -87,6 +89,7 @@
   .step-indicator__item--current {
     color: var(--color-primary);
   }
+
   .step-indicator__item--current .step-indicator__num {
     border-color: var(--color-primary);
     color: var(--color-primary);

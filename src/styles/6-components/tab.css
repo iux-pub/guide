@@ -66,6 +66,7 @@
     background: transparent;
     transition: background-color var(--duration-fast) var(--easing-standard);
   }
+
   .tab__item[aria-selected="true"]::after {
     background: var(--color-primary);
   }
@@ -87,6 +88,7 @@
     height: var(--krds-size-height-6); /* 40px */
     font-size: var(--text-body-small);
   }
+
   .tab__list--large .tab__item {
     height: var(--krds-size-height-8); /* 56px */
     font-size: var(--text-body-large);

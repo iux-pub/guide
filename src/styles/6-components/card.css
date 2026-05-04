@@ -74,6 +74,7 @@
       box-shadow var(--duration-fast) var(--easing-standard),
       transform var(--duration-fast) var(--easing-standard);
   }
+
   a.card:hover,
   .card--link:hover {
     box-shadow: var(--shadow-2);

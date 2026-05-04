@@ -56,6 +56,7 @@
   .switch input:checked ~ .switch__track {
     background: var(--color-primary);
   }
+
   .switch input:checked ~ .switch__track::after {
     transform: translateX(2.0rem);
   }
@@ -69,6 +70,7 @@
     cursor: not-allowed;
     color: var(--color-text-disabled);
   }
+
   .switch input:disabled ~ .switch__track {
     background: var(--krds-light-color-gray-20);
   }

@@ -33,6 +33,7 @@
   .tag--clickable {
     cursor: pointer;
   }
+
   a.tag:hover,
   button.tag:hover,
   .tag--clickable:hover {
@@ -58,21 +59,25 @@
     border-color: var(--krds-light-color-border-primary-light);
     color: var(--color-primary);
   }
+
   .tag--info {
     background: var(--krds-light-color-surface-information-subtler);
     border-color: var(--krds-light-color-border-information-light);
     color: var(--color-info-text);
   }
+
   .tag--success {
     background: var(--krds-light-color-surface-success-subtler);
     border-color: var(--krds-light-color-border-success-light);
     color: var(--color-success-text);
   }
+
   .tag--warning {
     background: var(--krds-light-color-surface-warning-subtler);
     border-color: var(--krds-light-color-border-warning-light);
     color: var(--color-warning-text);
   }
+
   .tag--danger {
     background: var(--krds-light-color-surface-danger-subtler);
     border-color: var(--krds-light-color-border-danger-light);
@@ -84,6 +89,7 @@
     height: 2.0rem;
     padding-inline: 0.6rem;
   }
+
   .tag--large {
     height: 3.2rem;
     padding-inline: var(--krds-padding-5); /* 12px */

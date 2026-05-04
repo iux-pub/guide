@@ -30,8 +30,12 @@
       color var(--duration-fast) var(--easing-standard);
   }
 
+  /* ─── Disabled (모든 variant 공통 — KRDS 명시) ─── */
   .btn:disabled,
   .btn[aria-disabled="true"] {
+    background: var(--krds-light-color-button-disabled-fill);
+    color: var(--color-text-disabled);
+    border-color: var(--krds-light-color-button-disabled-border);
     cursor: not-allowed;
     pointer-events: none;
   }
@@ -85,10 +89,12 @@
     color: var(--color-text-inverse);
     border-color: var(--krds-light-color-button-primary-fill);
   }
+
   .btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-primary-fill-hover);
     border-color: var(--krds-light-color-button-primary-fill-hover);
   }
+
   .btn--primary:active:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-primary-fill-pressed);
     border-color: var(--krds-light-color-button-primary-fill-pressed);
@@ -100,9 +106,11 @@
     color: var(--color-primary);
     border-color: var(--krds-light-color-button-secondary-border);
   }
+
   .btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-secondary-fill-hover);
   }
+
   .btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-secondary-fill-pressed);
   }
@@ -113,9 +121,11 @@
     color: var(--color-text);
     border-color: var(--krds-light-color-button-tertiary-border);
   }
+
   .btn--tertiary:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-tertiary-fill-hover);
   }
+
   .btn--tertiary:active:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-tertiary-fill-pressed);
   }
@@ -126,19 +136,13 @@
     color: var(--color-text);
     border-color: var(--krds-light-color-button-text-border);
   }
+
   .btn--text:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-text-fill-hover);
   }
+
   .btn--text:active:not(:disabled):not([aria-disabled="true"]) {
     background: var(--krds-light-color-button-text-fill-pressed);
-  }
-
-  /* ─── Disabled (모든 variant 공통 — KRDS 명시) ─── */
-  .btn:disabled,
-  .btn[aria-disabled="true"] {
-    background: var(--krds-light-color-button-disabled-fill);
-    color: var(--color-text-disabled);
-    border-color: var(--krds-light-color-button-disabled-border);
   }
 
   /* ─── Block (full width) ─── */

@@ -68,6 +68,7 @@
     font-size: 2rem;
     cursor: pointer;
   }
+
   .alert__close:hover {
     background: var(--color-bg-subtler);
   }
@@ -96,6 +97,7 @@
     border-color: var(--krds-light-color-border-danger-light);
     background: var(--krds-light-color-surface-danger-subtler);
   }
+
   .alert--danger .alert__icon,
   .alert--critical .alert__icon { color: var(--color-danger); }
 }

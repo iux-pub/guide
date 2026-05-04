@@ -14,7 +14,7 @@ const SNIPPETS_DIR = path.join(ROOT, 'src/snippets')
 const SITE_DIR = path.join(ROOT, 'site')
 const TOKENS_DIR = path.join(ROOT, 'tokens')
 
-const TARGET_FILE = process.argv[2] || null
+const TARGET_FILES = process.argv.slice(2)
 
 // ─── 출력 헬퍼 ─────────────────────────────────────────
 
@@ -345,14 +345,16 @@ function collectFiles(dir, ext, excludes = []) {
 function main() {
   console.log(`${CYAN}[check-violations]${RESET} info-design 컨트랙트 검사 시작...\n`)
 
-  if (TARGET_FILE) {
-    const abs = path.resolve(TARGET_FILE)
-    if (!fs.existsSync(abs)) {
-      console.error(`파일을 찾을 수 없음: ${TARGET_FILE}`)
-      process.exit(1)
+  if (TARGET_FILES.length > 0) {
+    for (const target of TARGET_FILES) {
+      const abs = path.resolve(target)
+      if (!fs.existsSync(abs)) {
+        console.error(`파일을 찾을 수 없음: ${target}`)
+        process.exit(1)
+      }
+      if (abs.endsWith('.css')) checkCssFile(abs)
+      if (abs.endsWith('.html') || abs.endsWith('.njk') || abs.endsWith('.md')) checkHtmlFile(abs)
     }
-    if (abs.endsWith('.css')) checkCssFile(abs)
-    if (abs.endsWith('.html') || abs.endsWith('.njk') || abs.endsWith('.md')) checkHtmlFile(abs)
   } else {
     const cssFiles = collectFiles(STYLES_DIR, '.css', ['node_modules'])
     cssFiles.forEach(checkCssFile)

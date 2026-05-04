@@ -28,7 +28,8 @@ const ROOT = path.resolve(__dirname, '..')
 const KRDS_PATH = path.join(ROOT, 'tokens', 'krds-base.json')
 const OVERRIDES_PATH = path.join(ROOT, 'tokens', 'infomind-overrides.json')
 const SNIPPETS_DIR = path.join(ROOT, 'src', 'snippets')
-const COMPONENTS_DIR = path.join(ROOT, 'src', 'styles', '6-components')
+// eslint-disable-next-line no-unused-vars
+const _COMPONENTS_DIR = path.join(ROOT, 'src', 'styles', '6-components')
 const SKILL_REFS_DIR = path.join(ROOT, 'skill', 'references')
 
 if (!fs.existsSync(SKILL_REFS_DIR)) fs.mkdirSync(SKILL_REFS_DIR, { recursive: true })

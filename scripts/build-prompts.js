@@ -70,7 +70,7 @@ function parseSnippet(filePath) {
   // 첫 ```html 코드 블록
   let markup = ''
   let inCode = false
-  let codeLines = []
+  const codeLines = []
   for (const line of lines) {
     if (!inCode && line.startsWith('```html')) { inCode = true; continue }
     if (inCode && line.startsWith('```')) { markup = codeLines.join('\n'); break }
@@ -483,7 +483,7 @@ function buildDesignRules() {
 
   const sections = files.map(f => {
     const cleaned = cleanMarkdown(f.content)
-    let text = cleaned.replace(/```[\s\S]*?```/g, '')
+    const text = cleaned.replace(/```[\s\S]*?```/g, '')
     const doDontMatch = text.match(/## Do \/ Don't[\s\S]*?(?=\n## |\n# |$)/m)
 
     const smallTables = []

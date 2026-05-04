@@ -123,8 +123,7 @@ function krdsVar(path) {
   // primitive.typo.font.default → --krds-typo-font-default
 
   const [root, ...rest] = path
-  let prefix = []
-
+  let prefix
   if (root === 'primitive') {
     const [cat, ...tail] = rest
     if (cat === 'color') {

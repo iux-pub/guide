@@ -1,9 +1,27 @@
 // Eleventy ESM 설정 -- INFOMIND UX 가이드 문서 사이트
 import syntaxHighlight from '@11ty/eleventy-plugin-syntaxhighlight'
+import { HtmlBasePlugin } from '@11ty/eleventy'
 
 export default function(eleventyConfig) {
   // 코드 하이라이팅 플러그인
   eleventyConfig.addPlugin(syntaxHighlight)
+
+  // HTML Base 플러그인 — 절대 URL(/dist/css/...)을 페이지 깊이별 상대 경로로 자동 변환.
+  // file:// 프로토콜에서도 CSS/JS가 정상 로드되어 빌드된 _site/를 직접 열거나
+  // pa11y-ci로 시각 a11y 검증할 수 있다.
+  eleventyConfig.addPlugin(HtmlBasePlugin)
+
+  // 자체 transformer: 절대 경로 href/src 를 페이지 깊이별 상대 경로로 변환.
+  // (HtmlBasePlugin은 pathPrefix가 명시된 경우만 동작 — file:// 검증을 위해 직접 처리)
+  eleventyConfig.addTransform('relativeAssets', function(content) {
+    if (!this.page.outputPath || !this.page.outputPath.endsWith('.html')) return content
+    // _site/ 기준 페이지 깊이 계산. 예: _site/components/btn/index.html → depth 2
+    const rel = this.page.outputPath.replace(/^.*?_site\//, '')
+    const depth = rel.split('/').length - 1
+    const prefix = depth === 0 ? './' : '../'.repeat(depth)
+    return content
+      .replace(/(href|src)="\/(?!\/)([^"]*)"/g, (_, attr, path) => `${attr}="${prefix}${path}"`)
+  })
 
   // 정적 자원 passthrough copy
   eleventyConfig.addPassthroughCopy('site/assets')

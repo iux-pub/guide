@@ -1,10 +1,27 @@
+## ⚠ UI/스타일 작업 시 — `info-design` 스킬 필수 활성화
+
+**모든 CSS·HTML·UI 코드 작성 시 다음 트리거를 먼저 발화한다:**
+
+> "info-design 스킬 기준으로 가자"
+
+이 트리거 후에는 LLM이 컨트랙트(`skill/SKILL.md` 또는 `~/.claude/skills/info-design/SKILL.md`)에 따라
+**KRDS 토큰·INFOMIND 컴포넌트만 사용**하며, 임의 생성을 일절 거부한다.
+
+위반 발견 시 LLM은 즉시 작업을 중단하고 사용자에게 보고한다.
+
+> 스킬 본체 소스는 이 저장소의 `skill/`. `npm run build:skill` → `npm run deploy:skill`로 로컬 Claude Code에 배포된다.
+
+---
+
 ## Project
 
 **INFOMIND UX 디자인/퍼블리싱 가이드 시스템**
 
-인포마인드 UX팀의 디자인 및 퍼블리싱 기본 규칙과 템플릿을 체계화한 가이드 시스템.
+KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 합쳐 신규 프로젝트가 즉시 적용 가능한 토큰·컴포넌트·스니펫·스킬을 한 저장소에서 발행한다.
 
-**Core Value:** 신규 프로젝트 시작 시 검증된 팀 표준을 즉시 적용할 수 있어야 한다.
+**Core Value:** 검증된 팀 표준을 일관되게 유지하며, 토큰부터 컴포넌트·스니펫·LLM 컨트랙트까지 단일 소스에서 발행한다.
+
+발행 채널 — `starter/`(KRDS+Tailwind v4 스타터 키트), `skill/`(info-design 스킬), `prompts/`(LLM 컨텍스트 묶음).
 
 ---
 
@@ -39,35 +56,39 @@
 - R-14 `error` — 건너뛰기 링크 필수 — .skip-to-content
 <!-- RULES_END -->
 
+> 위 규칙은 KRDS+Tailwind v4 전환 이후에도 그대로 유효하다. 카테고리명("SCSS 규칙", "모듈 시스템")은 자동 생성 결과로, 실제 적용 대상은 `src/styles/**/*.css`다.
+
 ---
 
 ## 작업 전 체크리스트
 
-### SCSS 파일 작성 시
+### CSS 파일 작성 시
 
-1. 토큰 파일 확인: `src/scss/1-settings/` — 사용할 토큰 이름을 먼저 확인
-2. 모든 색상/간격/크기는 `var(--token-name)` 사용
-3. `@use` 경로는 상대 경로로 (`../2-tools/responsive` 등)
-4. 새 컴포넌트: `6-components/_index.scss`에 `@forward '컴포넌트명'` 추가 필수
-5. 작성 후: `npm run lint:css` 실행 및 오류 수정 완료
+1. ✅ 사용할 토큰 확인: `tokens/krds-base.json`(KRDS 정본) 또는 `tokens/infomind-overrides.json`(INFOMIND 결정)
+2. ✅ 모든 색상/간격/크기/폰트 = `var(--krds-*)` 또는 `var(--color-*)` 시맨틱 토큰
+3. ✅ 새 컴포넌트는 `src/styles/6-components/{name}.css` 추가 + `6-components/index.css`에 `@import` 등록
+4. ✅ 작성 후: `npm run lint:css` 통과 + `npm run check` 위반 0건
 
 ### 컴포넌트 마크업 작성 시
 
-1. 스니펫 확인: `src/snippets/{component}.md` — 기존 패턴 우선 적용
-2. BEM Block명은 `src/scss/6-components/_{component}.scss` 파일명과 일치
+1. 스니펫 확인: `src/snippets/{component}.md` — 기존 패턴 우선 적용 (KRDS 28종 보유)
+2. BEM Block명은 `src/styles/6-components/{component}.css` 파일명과 일치
 3. 인터랙티브 요소: `role`, `aria-*`, `tabindex` 확인
 4. 폼 요소: `<label for>` + `id` 연결 필수
+5. 모바일 터치 영역 ≥ 44×44px (R-13)
 
 ### 신규 컴포넌트 생성 시
 
-`/create-component {컴포넌트명}` 스킬 사용 — 아래 파일 4개가 일괄 생성됨:
+`/create-component {컴포넌트명}` 스킬 사용 — 아래 파일이 일괄 생성된다:
 
 | 파일 | 위치 |
 |------|------|
-| SCSS | `src/scss/6-components/_{name}.scss` |
+| CSS | `src/styles/6-components/{name}.css` |
 | 스니펫 | `src/snippets/{name}.md` |
 | 플레이그라운드 | `src/playground/{name}.html` |
 | 문서 페이지 | `site/components/{name}.md` |
+
+> KRDS 28컴포넌트 카탈로그(`skill/references/krds-components.md`) **외 임의 신설은 금지**. 신설 필요 시 UX팀 결정 후 카탈로그에 먼저 등재한다.
 
 ---
 
@@ -76,86 +97,84 @@
 | Category | Technology | Version |
 |----------|-----------|---------|
 | Site Generator | Eleventy (11ty) | ^3.1.5 |
-| CSS Preprocessor | sass (Dart Sass) | ^1.98.0 |
-| SCSS Pattern | ITCSS | - |
-| Tokens | Style Dictionary | ^5.4.0 |
-| Linting | Stylelint + stylelint-selector-bem-pattern | ^17.5.0 |
+| CSS Framework | Tailwind v4 | ^4.0.0 |
+| 1rem 트릭 | 62.5% (1rem = 10px) | KRDS 명시 채택 |
+| Tokens | KRDS-uiux + INFOMIND overrides | 단일 소스: `tokens/` (자체 build-tokens.js) |
+| ITCSS Pattern | 5-layer (3-generic ~ 7-utilities) | — |
+| BEM | Block__Element--Modifier | 5-objects · 6-components 한정 |
+| Linting | Stylelint + check-violations.js | ^17.5.0 |
 | A11y Testing | pa11y-ci + axe-core | latest |
 
 ---
 
 ## 디자인 토큰 위치
 
-모든 스타일 값은 CSS Custom Properties를 사용하라. 하드코딩 금지.
+모든 스타일 값은 CSS Custom Properties(`var(--*)`)를 사용하라. 하드코딩 금지(R-01).
 
-| 토큰 종류 | 파일 |
-|----------|------|
-| 색상 | `src/scss/1-settings/_tokens-color.scss` |
-| 타이포 | `src/scss/1-settings/_tokens-typography.scss` |
-| 간격 | `src/scss/1-settings/_tokens-spacing.scss` |
-| 기타 (radius, shadow, z-index) | `src/scss/1-settings/_tokens-misc.scss` |
-| 그리드 | `src/scss/1-settings/_tokens-grid.scss` |
+| 단계 | 파일 | 갱신 정책 |
+|------|------|----------|
+| KRDS 정본 | `tokens/krds-base.json` | KRDS-uiux 정본 — **수정 금지**, 외부 갱신만 동기화 |
+| INFOMIND 오버라이드 | `tokens/infomind-overrides.json` | UX팀 결정 — KRDS 공백 채우기 + `infomind-*` 네임스페이스 추가 |
+| 빌드 산출물 | `tokens/build/tokens.css` | `npm run build:tokens` 자동 생성 — 직접 수정 금지 |
+| 디버그 머지 | `tokens/build/merged.json` | 빌드 결과 검증용 |
 
----
-
-## SCSS 구조 (ITCSS 7레이어)
-
-```
-src/scss/
-  style.scss                  # 메인 진입점 — 직접 수정 금지
-  _project-overrides.scss     # 프로젝트별 토큰 오버라이드만
-  1-settings/                 # 토큰, 변수
-  2-tools/                    # 믹스인, 함수 (_responsive.scss, _mixins.scss)
-  3-generic/                  # 리셋
-  4-elements/                 # HTML 태그 기본 스타일
-  5-objects/                  # 레이아웃 패턴 — BEM 적용
-  6-components/               # UI 컴포넌트 — BEM 적용
-  7-utilities/                # 유틸리티
-```
-
-BEM은 **5-objects, 6-components 레이어에만** 적용한다.
+빌드 흐름: `krds-base.json` + `infomind-overrides.json` → `build-tokens.js` → Tailwind v4 `@theme` 형태의 `tokens.css`.
 
 ---
 
-## 반응형 믹스인
+## CSS 구조 (ITCSS 5레이어)
 
-```scss
-@use '../2-tools/responsive' as resp;  /* 파일명: _responsive.scss */
+```
+src/styles/
+  style.css                  # 메인 진입점 — Tailwind v4 + tokens.css + ITCSS 레이어 import
+  docs.css                   # 문서 사이트 전용 진입점
+  3-generic/                 # 리셋 (62.5% 트릭 포함)
+  4-elements/                # HTML 태그 베이스
+  5-objects/                 # 레이아웃 패턴 — BEM 적용
+  6-components/              # KRDS UI 컴포넌트 (28종, BEM)
+  7-utilities/               # 유틸리티
+```
 
+> 1-settings(토큰)는 `tokens/`로 분리, 2-tools(SCSS 믹스인)는 Tailwind v4 utilities로 대체됐다. BEM은 **5-objects, 6-components 레이어에만** 적용한다.
+
+---
+
+## 반응형 가이드
+
+CSS `@media` 또는 Tailwind v4 반응형 variant를 직접 사용한다 (SCSS 믹스인 폐지).
+
+```css
 .block {
   /* 모바일 기본 (0~767px) */
+}
 
-  @include resp.respond-to('tablet') {
-    /* 768px ~ 1279px */
-  }
+@media (min-width: 768px) {
+  .block { /* 태블릿 ~ */ }
+}
 
-  @include resp.respond-to('tablet-up') {
-    /* 768px ~ */
-  }
-
-  @include resp.respond-to('pc') {
-    /* 1280px ~ */
-  }
+@media (min-width: 1280px) {
+  .block { /* PC ~ */ }
 }
 ```
 
-62.5% REM 트릭 적용 — `1rem = 10px`
+- 브레이크포인트 — 모바일 0~767, 태블릿 768~1279, PC 1280~ (KRDS 표준)
+- 62.5% REM 트릭 적용 — `1rem = 10px`
 
 ---
 
-## 컴포넌트 스니펫 참조
+## 컴포넌트 카탈로그 (KRDS 28종)
 
-| 컴포넌트 | 스니펫 | SCSS |
-|----------|--------|------|
-| 버튼 | `src/snippets/btn.md` | `src/scss/6-components/_btn.scss` |
-| 폼 | `src/snippets/form.md` | `src/scss/6-components/_form.scss` |
-| 카드 | `src/snippets/card.md` | `src/scss/6-components/_card.scss` |
-| 테이블 | `src/snippets/table.md` | `src/scss/6-components/_table.scss` |
-| 모달 | `src/snippets/modal.md` | `src/scss/6-components/_modal.scss` |
-| 탭 | `src/snippets/tab.md` | `src/scss/6-components/_tab.scss` |
-| 페이지네이션 | `src/snippets/pagination.md` | `src/scss/6-components/_pagination.scss` |
-| 브레드크럼 | `src/snippets/breadcrumb.md` | `src/scss/6-components/_breadcrumb.scss` |
-| 보일러플레이트 | `src/snippets/boilerplate.md` | — |
+| 그룹 | 컴포넌트 |
+|------|---------|
+| A — 폼/액션 | `btn` · `check-radio` · `file-upload` · `form` · `select` · `switch` |
+| B — 컨테이너/레이아웃 | `accordion` · `card` · `disclosure` · `modal` · `side-panel` · `tab` |
+| C — 내비게이션 | `breadcrumb` · `header` · `main-menu` · `pagination` |
+| D — 피드백 | `alert` · `badge` · `progress` · `spinner` · `step-indicator` · `tag` · `toast` · `tooltip` |
+| E — 콘텐츠/표현 | `calendar` · `carousel` · `list` · `table` |
+
+각 컴포넌트는 다음 4종 자료가 동일한 BEM Block명으로 정렬되어 있다 — CSS(`src/styles/6-components/{name}.css`) · 스니펫(`src/snippets/{name}.md`) · 플레이그라운드(`src/playground/{name}.html`) · 문서(`site/components/{name}.md`).
+
+> 상세 카탈로그(BEM·접근성·토큰 매핑) — `skill/references/krds-components.md`
 
 ---
 
@@ -165,30 +184,66 @@ BEM은 **5-objects, 6-components 레이어에만** 적용한다.
 
 | 파일 | 용도 |
 |------|------|
-| `prompts/context.md` | 컴포넌트/SCSS 작업 시 규칙 + 토큰 요약 |
+| `prompts/context.md` | 컴포넌트/CSS 작업 시 규칙 + 토큰 요약 |
 | `prompts/tokens.md` | 전체 토큰 목록 |
 | `prompts/components.md` | 컴포넌트 스니펫 마크업 |
 | `prompts/design-rules.md` | 디자인 품질 규칙 |
 | `prompts/publishing.md` | 퍼블리싱 체크리스트 |
 
+`skill/` — info-design 스킬 본체. SKILL.md + references/(krds-tokens, krds-components, tailwind-mapping, accessibility, forbidden-patterns, guide-import). `npm run build:skill` → `npm run deploy:skill`로 로컬 `~/.claude/skills/info-design/`에 배포.
+
+---
+
+## 절대 금지 (요약 — 상세는 스킬 `references/forbidden-patterns.md`)
+
+- Raw hex/rgb/hsl 색상
+- Raw px/rem (KRDS 스케일 외)
+- Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700` 등)
+- Tailwind 기본(비활성) 스케일 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:`)
+- 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
+- `!important` (사유 주석 없을 시)
+- 인라인 `style="..."` (CSS 변수 주입 외)
+- 카탈로그 외 컴포넌트 임의 생성
+- BEM element 2단계 중첩 (`.card__body__title`)
+- `:focus { outline: none }`
+- `<div onclick>`
+- 이미지 `alt` 누락, 폼 `<label>` 누락
+- 모바일 터치 영역 44px 미만
+
+---
+
 ## 명령어
 
 ```bash
+# 검사
 npm run check           # 위반 패턴 전체 스캔 (훅에서도 자동 실행)
-npm run lint:css        # SCSS 린트 전체 검사
-npm run lint:css:fix    # 자동 수정
-npm run build:css       # CSS 빌드
-npm run build:tokens    # 토큰 파일 재생성 (tokens.json → SCSS)
-npm run build:rules     # 규칙 페이지 재생성 (rules.json → site/conventions/ + CLAUDE.md)
-npm run build:prompts   # AI 프롬프트 파일 재생성
-npm run serve           # 개발 서버 (파일 감시 + 11ty)
-npm test                # 전체 CI (check → lint → build → a11y)
+npm run lint:css        # Stylelint (src/styles/**/*.css)
+npm run lint:css:fix    # Stylelint 자동 수정
+
+# 빌드
+npm run build:tokens    # tokens/krds-base.json + infomind-overrides.json → tokens/build/tokens.css
+npm run build:css       # Tailwind v4 → dist/css/style.css
+npm run build:docs-css  # 문서 사이트 CSS → dist/css/docs.css
+npm run build:rules     # rules.json → site/conventions/ + CLAUDE.md 자동 주입
+npm run build:prompts   # prompts/*.md 재생성
+npm run build:skill     # skill/ 빌드
+npm run build           # 위 전부 + Eleventy 사이트 빌드
+
+# 발행
+npm run deploy:skill    # 로컬 ~/.claude/skills/info-design/ 동기화
+npm run sync:starter    # iux-pub/starter 저장소로 동기화
+
+# 개발 / 검증
+npm run serve           # Tailwind 워치 + 11ty 서브 (concurrently)
+npm run test:a11y       # pa11y-ci 접근성 검증
+npm test                # 전체 CI (check → tokens → lint → build → a11y)
 ```
+
+---
 
 ## 코딩 스타일
 
 - 들여쓰기: 2 spaces
 - 따옴표: single quote
-- 세미콜론: SCSS는 사용, JS/HTML은 사용하지 않음
+- 세미콜론: CSS 사용, JS/HTML 미사용
 - 주석 언어: 한국어
-

@@ -3,77 +3,84 @@ title: 그리드 토큰
 order: 5
 ---
 
-그리드 토큰은 `src/scss/1-settings/_tokens-grid.scss`에 정의되어 있다. KRDS 표준형 기반의 3단계 반응형 그리드이다.
+KRDS 표준형 기반 3단계 반응형 그리드. 모바일 4컬럼 / 태블릿·PC 12컬럼 시스템이다.
 
-## 그리드 토큰
+## 그리드 사양
 
-| 토큰 | 모바일 (0~767px) | 태블릿 (768~1279px) | PC (1280px~) |
+| 항목 | 모바일 (0~767px) | 태블릿 (768~1279px) | PC (1280px~) |
 |------|-----------------|-------------------|-------------|
-| `--grid-columns` | 4 | 12 | 12 |
-| `--grid-gutter` | 16px | 24px | 24px |
-| `--grid-margin` | 16px | 24px | 40px |
-| `--container-max-width` | 100% | 100% | 1200px |
+| 컬럼 수 | 4 | 12 | 12 |
+| 거터(gutter) | 16px | 24px | 24px |
+| 좌우 마진 | 16px | 24px | 40px |
+| 컨테이너 max-width | 100% | 100% | **1200px** |
 
 ## 브레이크포인트
 
-`src/scss/1-settings/_breakpoints.scss`에 정의된 브레이크포인트이다.
+KRDS 표준 브레이크포인트.
 
 | 이름 | 값 | 범위 |
 |------|-----|------|
 | 모바일 | 기본 | 0 ~ 767px |
 | 태블릿 | `768px` | 768px ~ 1279px |
 | PC | `1280px` | 1280px ~ |
-| `tablet-up` | `768px` | 768px ~ (태블릿+PC 공통) |
+
+CSS `@media` 또는 Tailwind v4 변종으로 직접 사용 (SCSS `respond-to` 믹스인 폐기).
 
 ## Container 오브젝트
 
-`.container` 클래스는 `src/scss/5-objects/_container.scss`에 정의되어 있다.
+`.container` 클래스는 `src/styles/5-objects/container.css`에 정의되어 있다.
 
-```scss
-// container 사용
+```html
 <div class="container">
   <!-- 콘텐츠 -->
 </div>
 ```
 
-- 모바일: 좌우 마진 16px, 전체 너비
-- 태블릿: 좌우 마진 24px, 전체 너비
-- PC: 최대 너비 1200px, 좌우 자동 마진으로 중앙 정렬
+- 모바일: 좌우 패딩 16px, 전체 너비
+- 태블릿: 좌우 패딩 24px, 전체 너비
+- PC: 최대 너비 1200px, 좌우 자동 마진으로 중앙 정렬, 좌우 패딩 40px
 
-## Grid 오브젝트
+## 반응형 작성 패턴
 
-`.grid` 클래스는 `src/scss/5-objects/_grid.scss`에 정의되어 있다.
+CSS `@media` 직접 사용 — 모바일 퍼스트.
 
-```html
-<div class="grid">
-  <div class="grid__col-6">왼쪽 절반</div>
-  <div class="grid__col-6">오른쪽 절반</div>
-</div>
-```
-
-- 12컬럼 기반 (`--grid-columns`)
-- 거터(gap)는 `--grid-gutter` 토큰 사용
-- `grid__col-{n}` 클래스로 컬럼 너비 지정 (1~12)
-
-## 반응형 믹스인
-
-```scss
-@use '../2-tools/responsive' as resp;
-
+```css
 .layout {
-  // 모바일: 1컬럼 (기본)
+  /* 모바일: 1컬럼 (기본) */
   display: block;
+}
 
-  @include resp.respond-to('tablet') {
-    // 태블릿: 2컬럼
+@media (min-width: 768px) {
+  .layout {
+    /* 태블릿: 2컬럼 */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--grid-gutter);
+    gap: var(--krds-gap-5);
   }
+}
 
-  @include resp.respond-to('pc') {
-    // PC: 3컬럼
+@media (min-width: 1280px) {
+  .layout {
+    /* PC: 3컬럼 */
     grid-template-columns: repeat(3, 1fr);
   }
 }
 ```
+
+## Tailwind v4 반응형 variant
+
+Tailwind v4의 `md:` (768+) / `lg:` (1280+) 같은 variant도 KRDS 브레이크포인트와 정합한다 (Tailwind 기본 sm:는 비활성, KRDS는 768/1280 2단계만 사용).
+
+```html
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[var(--krds-gap-5)]">
+  <!-- 콘텐츠 -->
+</div>
+```
+
+> Tailwind raw 컬러(`bg-red-500`)/비활성 스케일(`text-base`/`rounded-lg`/`sm:`)은 사용 금지(R-01, R-06). 토큰 직접 참조(`bg-[var(--color-bg)]`) 또는 KRDS 매핑 클래스 사용.
+
+## 절대 금지
+
+- 옛 SCSS 믹스인 (`@include resp.respond-to('tablet')`) — SCSS 폐기 (R-03)
+- 임의 브레이크포인트 (예: 1024px·1440px) — KRDS 표준만
+- raw px 거터 (`gap: 16px`) — `var(--krds-gap-5)` 등 토큰 사용

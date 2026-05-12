@@ -4,9 +4,31 @@
   "description": "인포마인드 UX 디자인/퍼블리싱 가이드 시스템",
   "private": true,
   "scripts": {
+    "//-public": "── 일상 명령 (README 노출) ─────────────────",
+    "dev": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\"",
+    "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npx @11ty/eleventy",
+    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js",
+    "lint": "npm run lint:css && npm run lint:js",
+    "lint:fix": "npm run lint:css:fix && npm run lint:js:fix",
+    "test": "npm run check && npm run lint && npm run test:unit && npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
+    "deploy:skill": "rsync -av --delete skill/ ~/.claude/skills/info-design/",
+    "sync:starter": "bash scripts/sync-starter.sh",
+
+    "//-aliases": "── 별칭 (이전 이름 유지 — 점진 마이그레이션) ──",
+    "serve": "npm run dev",
+
+    "//-internal-build": "── 빌드 하위 단계 (build가 호출) ─────────",
+    "build:tokens": "node scripts/build-tokens.js",
+    "build:rules": "node scripts/build-rules.js",
+    "build:prompts": "node scripts/build-prompts.js",
+    "build:skill": "node scripts/build-skill.js",
     "build:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css",
     "build:docs-css": "tailwindcss -i src/styles/docs.css -o dist/css/docs.css",
+    "build:site": "npm run build:tokens && npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
     "watch:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css --watch",
+
+    "//-internal-check": "── 검사 하위 (check가 호출) ────────────",
+    "check:html": "node scripts/check-html-structure.js",
     "lint:css": "stylelint \"src/styles/**/*.css\"",
     "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
     "lint:js": "eslint scripts/ eleventy.config.js",
@@ -14,18 +36,8 @@
     "test:unit": "node --test scripts/__tests__/*.test.js",
     "test:a11y": "npm run build:css && pa11y-ci --config .pa11yci.js",
     "test:a11y:single": "axe",
-    "build:site": "npm run build:tokens && npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
-    "build:tokens": "node scripts/build-tokens.js",
-    "build:rules": "node scripts/build-rules.js",
-    "build:prompts": "node scripts/build-prompts.js",
-    "build:skill": "node scripts/build-skill.js",
-    "deploy:skill": "rsync -av --delete skill/ ~/.claude/skills/info-design/",
-    "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npx @11ty/eleventy",
-    "test": "npm run check && npm run lint:js && npm run test:unit && npm run build:tokens && npm run lint:css && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
-    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js",
-    "check:html": "node scripts/check-html-structure.js",
-    "sync:starter": "bash scripts/sync-starter.sh",
-    "serve": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\"",
+
+    "//-hooks": "── git hooks ─────────────────────────────",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -46,6 +58,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "clipboard": "^2.0.11",
     "modern-normalize": "^3.0.1"

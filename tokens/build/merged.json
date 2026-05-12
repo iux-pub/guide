@@ -3513,7 +3513,6 @@
     }
   },
   "$meta": {
-    "generated": "2026-05-04T05:57:47.864Z",
     "source": {
       "krds": "tokens/krds-base.json (KRDS-uiux/krds-uiux v1.0.0)",
       "overrides": "tokens/infomind-overrides.json"

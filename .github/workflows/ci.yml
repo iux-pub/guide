@@ -50,6 +50,18 @@ jobs:
       - name: info-design 스킬 빌드 검증
         run: npm run build:skill
 
+      - name: 자동 생성물 drift 검사
+        run: |
+          if ! git diff --exit-code -- CLAUDE.md site/conventions/ site/prompts/ prompts/ skill/references/krds-tokens.md skill/references/krds-components.md tokens/build/; then
+            echo ""
+            echo "❌ 자동 생성물이 최신이 아닙니다."
+            echo "   다음 명령을 실행하고 결과를 커밋하세요:"
+            echo ""
+            echo "   npm run build:tokens && npm run build:rules && npm run build:prompts && npm run build:skill"
+            echo ""
+            exit 1
+          fi
+
       - name: Tailwind v4 CSS 빌드
         run: |
           npm run build:css

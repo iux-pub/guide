@@ -252,7 +252,7 @@ pre[class*='language-'] {
   margin: var(--spacing-8) 0;
   padding: var(--spacing-8);
   padding-top: var(--spacing-12);
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-subtle);
   color: var(--color-text);
   overflow-x: auto;
   font-size: var(--text-body-small);
@@ -267,9 +267,9 @@ pre[class*='language-'] code {
 }
 
 pre[class*='language-']::-webkit-scrollbar { height: 0.6rem; }
-pre[class*='language-']::-webkit-scrollbar-track { background: var(--color-bg-secondary); border-radius: 3px; }
+pre[class*='language-']::-webkit-scrollbar-track { background: var(--color-bg-subtle); border-radius: 3px; }
 pre[class*='language-']::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
-pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color-text-secondary); }
+pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color-text-subtle); }
 
 /* Prism token 색상 — KRDS 토큰 기반 AA 통과 색상 매핑.
  * prism.min.css 기본 색상은 일부 카테고리(punctuation, operator, function 등)가
@@ -278,7 +278,7 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { background: var(--color
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: var(--color-text-secondary);
+  color: var(--color-text-subtle);
 }
 
 .token.punctuation {

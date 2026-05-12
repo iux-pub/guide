@@ -2,6 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `tokens/krds-base.json` (KRDS-uiux v1.0.0) + `tokens/infomind-overrides.json`
+> 빌드: 3f26029-dirty
 
 이 문서의 토큰만 사용해야 한다. 임의 hex/px/rem 작성은 금지.
 

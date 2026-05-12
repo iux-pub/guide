@@ -3513,6 +3513,7 @@
     }
   },
   "$meta": {
+    "sha": "3f26029-dirty",
     "source": {
       "krds": "tokens/krds-base.json (KRDS-uiux/krds-uiux v1.0.0)",
       "overrides": "tokens/infomind-overrides.json"

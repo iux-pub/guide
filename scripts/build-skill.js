@@ -23,6 +23,17 @@
 
 const fs = require('fs')
 const path = require('path')
+const { execSync } = require('child_process')
+
+// 빌드 버전 — git commit hash (같은 SHA = 같은 빌드 결과 보장)
+// dirty 작업 트리는 -dirty 접미사. CI에선 깨끗한 체크아웃이라 SHA만 출력.
+function buildVersion() {
+  try {
+    return execSync('git describe --always --dirty', { cwd: __dirname + '/..' }).toString().trim()
+  } catch {
+    return 'unknown'
+  }
+}
 
 const ROOT = path.resolve(__dirname, '..')
 const KRDS_PATH = path.join(ROOT, 'tokens', 'krds-base.json')
@@ -49,6 +60,7 @@ function buildKrdsTokensMd() {
   w('')
   w('> 자동 생성됨. 직접 수정 금지.')
   w('> 출처: `tokens/krds-base.json` (KRDS-uiux v1.0.0) + `tokens/infomind-overrides.json`')
+  w('> 빌드: ' + buildVersion())
   w('')
   w('이 문서의 토큰만 사용해야 한다. 임의 hex/px/rem 작성은 금지.')
   w('')
@@ -382,6 +394,7 @@ function buildKrdsComponentsMd() {
   w('')
   w('> 자동 생성됨. 직접 수정 금지.')
   w('> 출처: `src/snippets/*.md`')
+  w('> 빌드: ' + buildVersion())
   w('')
   w('아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.')
   w('')

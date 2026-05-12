@@ -14,10 +14,20 @@
 
 const fs = require('fs')
 const path = require('path')
+const { execSync } = require('child_process')
 
 const ROOT = path.resolve(__dirname, '..')
 const KRDS_PATH = path.join(ROOT, 'tokens', 'krds-base.json')
 const OVERRIDES_PATH = path.join(ROOT, 'tokens', 'infomind-overrides.json')
+
+// 빌드 버전 — git commit hash (같은 SHA = 같은 빌드 결과 보장)
+function buildVersion() {
+  try {
+    return execSync('git describe --always --dirty', { cwd: ROOT }).toString().trim()
+  } catch {
+    return 'unknown'
+  }
+}
 const BUILD_DIR = path.join(ROOT, 'tokens', 'build')
 const MERGED_PATH = path.join(BUILD_DIR, 'merged.json')
 const CSS_PATH = path.join(BUILD_DIR, 'tokens.css')
@@ -59,6 +69,7 @@ for (const [k, v] of Object.entries(overrides)) {
 }
 
 merged.$meta = {
+  sha: buildVersion(),
   source: {
     krds: 'tokens/krds-base.json (KRDS-uiux/krds-uiux v1.0.0)',
     overrides: 'tokens/infomind-overrides.json'

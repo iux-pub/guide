@@ -14,7 +14,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-11 | 포커스 스타일 필수 — :focus { outline: none } 금지 | error | check-violations.js |
 | R-12 | 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상 | error | pa11y-ci |
 | R-13 | 터치/클릭 영역 최소 44×44px | error | manual |
-| R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | manual |
+| R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | check-violations.js |
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
 
 ---
@@ -92,7 +92,7 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 
 ## R-14 — 건너뛰기 링크 필수 — .skip-to-content
 
-**심각도:** 🔴 error &nbsp; **검증:** manual
+**심각도:** 🔴 error &nbsp; **검증:** check-violations.js
 
 > 키보드 사용자가 반복 네비게이션을 건너뛰고 본문으로 바로 이동할 수 있어야 한다. WCAG 2.4.1 Bypass Blocks (A).
 

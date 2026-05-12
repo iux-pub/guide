@@ -4,7 +4,7 @@
 
 ---
 
-## 1. 색상 — Raw 사용 금지
+## 1. 색상 — Raw 사용 금지 (R-01)
 
 ### ❌ 금지
 
@@ -64,7 +64,7 @@
 
 ---
 
-## 2. 간격/크기 — Raw 사용 금지
+## 2. 간격/크기 — Raw 사용 금지 (R-01)
 
 ### ❌ 금지
 
@@ -109,7 +109,7 @@
 
 ---
 
-## 3. 폰트 — Raw 사이즈 금지
+## 3. 폰트 — Raw 사이즈 금지 (R-01)
 
 ### ❌ 금지
 
@@ -148,7 +148,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 4. 버튼 — 옛 variant 사용 금지
+## 4. 버튼 — 옛 variant 사용 금지 (R-06)
 
 ### ❌ 금지
 
@@ -189,7 +189,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 5. CSS 작성 — 시스템 우회 금지
+## 5. CSS 작성 — 시스템 우회 금지 (R-02 · R-05 · R-07 · R-08)
 
 ### ❌ 금지
 
@@ -229,7 +229,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 6. HTML 시맨틱 — div onclick 금지
+## 6. HTML 시맨틱 — div onclick 금지 (R-10)
 
 ### ❌ 금지
 
@@ -248,7 +248,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 7. 접근성 — 누락 금지
+## 7. 접근성 — 누락 금지 (R-09 · R-11 · R-12 · R-13 · R-14)
 
 ### ❌ 금지
 
@@ -271,7 +271,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 8. 컴포넌트 — 카탈로그 외 임의 생성 금지
+## 8. 컴포넌트 — 카탈로그 외 임의 생성 금지 (R-15 카탈로그 정합)
 
 `references/krds-components.md`에 없는 컴포넌트가 필요해 보이면:
 
@@ -293,7 +293,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 9. 빌드 시스템 — SCSS 사용 금지
+## 9. 빌드 시스템 — SCSS 사용 금지 (R-03)
 
 이 가이드는 **Tailwind v4 + 순수 CSS** 기반이다. SCSS는 폐기됨.
 

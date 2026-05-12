@@ -17,6 +17,27 @@
 
 ---
 
+## 0.5. 컴포넌트 카테고리 ↔ BEM Block 매핑
+
+본 문서의 컴포넌트 섹션 이름(예: `check-radio`)은 **KRDS 카테고리** 기준이다. 실제 CSS BEM Block 클래스명은 다를 수 있다. `scripts/check-html-structure.js`의 `COMPONENT_ROOT_MAPPING`은 BEM Block 기준이다.
+
+다음은 두 식별자가 다른 28개 케이스 매핑:
+
+| 카테고리 (이 문서 섹션) | BEM Block(s) (실제 클래스) | 비고 |
+|--------------------------|---------------------------|------|
+| `check-radio` | `.check`, `.radio` | 두 변형이 같은 카테고리, 각자 BEM Block |
+| `form` | `.form-field` | 폼 필드 한 단위가 BEM Block |
+| `header` | `.site-header` | 사이트 헤더 — semantic의 `<header>`와 구분 |
+| `tooltip` | `.tooltip` (요소), `.tooltip-trigger` (트리거), `.tooltip-wrap` (래퍼) | 세 BEM Block의 협업 |
+| `toast` | `.toast` (개별), `.toast-stack` (컨테이너) | 두 BEM Block |
+| `table` | `.table` (요소), `.table-wrap` (반응형 래퍼) | 두 BEM Block |
+
+위에 안 적힌 22개 컴포넌트는 **카테고리 = BEM Block** (예: `card` ↔ `.card`, `modal` ↔ `.modal`, `btn` ↔ `.btn` 등).
+
+> 새 컴포넌트 추가 시: 본 매핑 표 + 컴포넌트 섹션(§ 1~5) + `check-html-structure.js`의 `COMPONENT_ROOT_MAPPING` 세 곳을 같이 갱신.
+
+---
+
 ## 1. 그룹 A — 폼/액션 (6종)
 
 ### `btn` — 버튼

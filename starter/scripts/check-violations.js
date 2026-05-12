@@ -13,7 +13,6 @@ const ROOT = path.resolve(__dirname, '..')
 const STYLES_DIR = path.join(ROOT, 'src/styles')
 const SNIPPETS_DIR = path.join(ROOT, 'src/snippets')
 const SITE_DIR = path.join(ROOT, 'site')
-const TOKENS_DIR = path.join(ROOT, 'tokens')
 
 const TARGET_FILES = process.argv.slice(2)
 
@@ -46,7 +45,6 @@ const rel = (p) => path.relative(ROOT, p)
 // ─── 패턴 정의 ────────────────────────────────────────
 
 // 1. SCSS 잔재 — info-design은 Tailwind v4 + CSS만 허용
-const SCSS_FILE_EXT = /\.scss$/
 const SCSS_USE = /@use\s+['"]/
 const SCSS_FORWARD = /@forward\s+['"]/
 const SCSS_VAR = /^\s*\$[\w-]+\s*:/
@@ -368,7 +366,7 @@ function main() {
       ...collectFiles(SNIPPETS_DIR, '.md'),
       ...collectFiles(SITE_DIR, '.html', ['_site', 'node_modules']),
       ...collectFiles(SITE_DIR, '.njk', ['_site', 'node_modules']),
-      ...collectFiles(path.join(ROOT, 'src/playground'), '.html'),
+      ...collectFiles(path.join(ROOT, 'src/playground'), '.html')
     ]
     htmlFiles.forEach(checkHtmlFile)
 

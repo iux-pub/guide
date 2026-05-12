@@ -3,51 +3,71 @@ layout: layouts/page.njk
 title: 홈
 ---
 
-인포마인드 UX팀의 디자인·퍼블리싱 가이드 시스템 — KRDS(범정부 UI/UX 디자인 시스템) 베이스 + Tailwind v4 + INFOMIND 표준.
+# INFOMIND UX Guide
 
-## 나는 누구인가?
+KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND 표준의 단일 소스.
 
-| 역할 | 먼저 읽을 것 | 그 다음 |
-|------|------------|---------|
-| **디자이너** | [피그마 네이밍](/figma/component-naming/) → [Variable](/figma/variables/) | [디자인 QA](/design-qa/checklist/) → [핸드오프](/onboarding/handoff/) |
-| **퍼블리셔** | [BEM](/conventions/bem/) → [토큰 색상](/tokens/color/) | [컴포넌트](/components/btn/) → [접근성](/accessibility/checklist/) |
-| **리뷰어** | [접근성 체크리스트](/accessibility/checklist/) | [AI 리뷰 프롬프트](/prompts/) |
-| **신규 팀원** | [시작 가이드](/onboarding/getting-started/) | 위 역할별 경로 따라가기 |
+**AI가 디자인 시스템을 강제 준수합니다. 당신은 의도만 결정하면 됩니다.**
 
-## 새 프로젝트 시작
+---
+
+## AI에게 작업을 맡길 때
+
+작업 시작할 때 이 한 줄만 발화하세요:
+
+> ### "info-design 스킬 기준으로 가자"
+
+그 다음 AI는:
+- ✓ KRDS 토큰만 사용 (raw hex/px 금지)
+- ✓ KRDS 28종 컴포넌트만 — 새 컴포넌트 임의 생성 거부
+- ✓ BEM·접근성·ARIA 자동 준수
+- ✓ 위반 발견 시 작업 중단 후 사용자에게 보고
+
+Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 인식합니다.
+
+---
+
+## 자주 보는 자료
+
+- [**컴포넌트 카탈로그**](/components/) — KRDS 28종의 마크업·CSS·접근성
+- [**토큰 카탈로그**](/tokens/color/) — 색상·간격·타이포 토큰 전체
+- [**접근성 체크리스트**](/accessibility/checklist/) — WCAG 2.1 AA + KWCAG
+- [**디자인 규칙**](/conventions/) — 18개 규칙 (R-01 ~ R-18)
+
+---
+
+## 역할별 시작
+
+**디자이너**
+[피그마 네이밍](/figma/component-naming/) → [Variable 사용](/figma/variables/) → [디자인 QA](/design-qa/checklist/) → [개발 핸드오프](/onboarding/handoff/)
+
+**퍼블리셔**
+[컴포넌트 카탈로그](/components/)에서 마크업을 그대로 복사해서 사용. AI에게 "info-design 기준으로 가자"라고만 하면 룰 자동 준수.
+
+**리뷰어**
+[접근성 체크리스트](/accessibility/checklist/)로 시각·키보드 검증. 18개 규칙은 CI가 자동 검출 — 사람은 비즈니스 의도와 사용성만 보면 됩니다.
+
+**신규 팀원**
+[시작 가이드](/onboarding/getting-started/)부터.
+
+---
+
+## 사람이 알아야 할 것 — 단 5가지
+
+규칙은 18개지만 AI가 다 외웁니다. 사람이 기억할 건 이게 전부:
+
+1. **AI 발화 한 줄** — `"info-design 스킬 기준으로 가자"`
+2. **CI 빨강** — AI에게 메시지 보여주고 `"고쳐줘"`
+3. **새 컴포넌트 필요** — UX팀에 슬랙 (28종 외 임의 생성 금지)
+4. **토큰/색상 변경 필요** — UX팀에 슬랙
+5. **PR 리뷰** — R-XX 외우지 말고 **사용성·의도**만 확인. 룰 위반은 CI가 차단
+
+---
+
+## 새 프로젝트 시작 (개발자)
 
 ```bash
-git clone https://github.com/iux-pub/starter.git my-project
-cd my-project
-rm -rf .git && git init
-npm install --legacy-peer-deps
-npm run build           # tokens + Tailwind v4 CSS
+npx create-infomind-ux my-project
 ```
 
-`tokens/infomind-overrides.json`에서 브랜드 색상 정의 후 `npm run build` 재실행.
-
-> 스타터 킷: [github.com/iux-pub/starter](https://github.com/iux-pub/starter)
-> Claude Code 사용 시: `"info-design 스킬 기준으로 가자"` 발화로 KRDS 컨트랙트 활성화
-
-## 주요 명령어
-
-| 명령어 | 용도 |
-|--------|------|
-| `npm run build` | 전체 빌드 (tokens → rules → CSS → prompts → skill → site) |
-| `npm run build:tokens` | KRDS+INFOMIND 토큰 → `tokens/build/tokens.css` |
-| `npm run build:css` | Tailwind v4 컴파일 → `dist/css/style.css` |
-| `npm run check` | 컨트랙트 위반(R-01~R-14) 전체 스캔 |
-| `npm run lint:css` | Stylelint (`src/styles/**/*.css`) |
-| `npm run test:a11y` | pa11y-ci 접근성 테스트 |
-| `npm run serve` | 문서 사이트 개발 서버 (Tailwind 워치 + 11ty) |
-
-## 시스템 구성
-
-- **토큰**: `tokens/krds-base.json` + `tokens/infomind-overrides.json` → `tokens/build/tokens.css` (자동 생성)
-- **CSS**: ITCSS 5레이어 + Tailwind v4 + KRDS 28컴포넌트 (`src/styles/`)
-- **마크업**: 28컴포넌트 스니펫 (`src/snippets/`)
-- **AI 컨트랙트**: info-design 스킬 (`skill/`) — Claude Code용
-- **LLM 컨텍스트**: 7개 프롬프트 묶음 (`prompts/`)
-- **검증**: `check-violations.js` + Stylelint + pa11y-ci
-
-상세는 [README](https://github.com/iux-pub/guide#readme) 또는 [CLAUDE.md](https://github.com/iux-pub/guide/blob/main/CLAUDE.md) 참조.
+자세한 흐름은 [GitHub 저장소](https://github.com/iux-pub/guide) 또는 [시작 가이드](/onboarding/getting-started/) 참조.

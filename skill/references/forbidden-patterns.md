@@ -315,6 +315,138 @@ body { font-family: var(--font-sans); }
 
 ---
 
+## 10. HTML 구조 위반 (R-15 / R-16 / R-17 / R-18)
+
+> 단일 소스: `references/html-semantics.md` (28개 컴포넌트의 Root 태그·자식 시맨틱·필수 ARIA·키보드 매핑)
+
+### 10.1 컴포넌트 root 태그 불일치 (R-15)
+
+KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스를 다른 root 태그에 붙이면 검색·접근성·SEO 일관성이 깨진다.
+
+#### ❌ 금지
+
+```html
+<div class="card">...</div>
+<div class="modal">...</div>
+<div class="breadcrumb">...</div>
+<div class="main-menu">...</div>
+<div class="pagination">...</div>
+```
+
+#### ✅ 허용
+
+```html
+<article class="card">...</article>
+<dialog class="modal">...</dialog>
+<nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>
+<nav class="main-menu" aria-label="주 메뉴"><ul>...</ul></nav>
+<nav class="pagination" aria-label="페이지 내비게이션"><ol>...</ol></nav>
+```
+
+전체 28종 매핑은 `references/html-semantics.md` 참조.
+
+---
+
+### 10.2 인터랙티브 위젯 ARIA 누락 (R-16)
+
+modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없이 작동하지 않는다.
+
+#### ❌ 금지
+
+```html
+<!-- modal: aria-modal, aria-labelledby 누락 -->
+<div role="dialog" class="modal">...</div>
+
+<!-- disclosure: aria-expanded, aria-controls 누락 -->
+<button class="disclosure">자세히</button>
+<div class="disclosure__panel">...</div>
+
+<!-- tab: role/aria-selected/aria-controls 누락 -->
+<button class="tab__item">탭1</button>
+<div class="tab__panel">...</div>
+
+<!-- tooltip: aria-describedby 누락 -->
+<button class="tooltip-trigger">?</button>
+<div class="tooltip">설명</div>
+```
+
+#### ✅ 허용
+
+```html
+<div role="dialog" aria-modal="true" aria-labelledby="modal-title" class="modal">
+  <h2 id="modal-title">제목</h2>
+</div>
+
+<button class="disclosure" aria-expanded="false" aria-controls="more">자세히</button>
+<div id="more" class="disclosure__panel" hidden>...</div>
+
+<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" class="tab__item">탭1</button>
+<div id="panel-1" role="tabpanel" aria-labelledby="tab-1" class="tab__panel">...</div>
+
+<button class="tooltip-trigger" aria-describedby="tip-1">?</button>
+<div id="tip-1" role="tooltip" class="tooltip">설명</div>
+```
+
+---
+
+### 10.3 비-BEM 상태 클래스 (R-17)
+
+상태는 BEM modifier(시각) + ARIA 속성(의미)으로만 표현한다. `.is-*`, `.has-*` 같은 비-BEM 상태 클래스는 어느 컴포넌트의 상태인지 모호하다.
+
+#### ❌ 금지
+
+```html
+<button class="btn is-disabled">
+<div class="modal is-open">
+<input class="input has-error">
+<li class="tab__item is-active">
+```
+
+#### ✅ 허용
+
+```html
+<button class="btn" disabled aria-disabled="true">
+<div class="modal modal--open" aria-modal="true">
+<input class="input input--error" aria-invalid="true">
+<li role="tab" class="tab__item tab__item--selected" aria-selected="true">
+```
+
+---
+
+### 10.4 시각적 단어 modifier (R-18)
+
+modifier 이름은 의미를 담아야 한다. 색·크기를 직접 명시한 이름은 디자인 변경 시 클래스명도 같이 바꿔야 하는 부채를 만든다.
+
+#### ❌ 금지 — 시각적 단어 사전
+
+`--big` · `--small` · `--large` · `--xl` · `--xxl` · `--red` · `--blue` · `--green` · `--yellow` · `--rounded` · `--shadow` · `--bold` · `--italic`
+
+```html
+<button class="btn btn--blue">
+<div class="card card--big">
+<span class="tag tag--rounded">
+<button class="btn btn--red">
+```
+
+#### ✅ 허용 — KRDS 정의 어휘만
+
+| 카테고리 | 허용 단어 |
+|---------|---------|
+| Variant | `--primary`, `--secondary`, `--tertiary`, `--text`, `--ghost` |
+| 사이즈 (KRDS 스케일) | `--xsmall`, `--small`, `--medium`, `--large`, `--xlarge` |
+| 상태 | `--selected`, `--disabled`, `--expanded`, `--loading`, `--error`, `--success`, `--current`, `--done`, `--todo` |
+| 톤 | `--info`, `--success`, `--warning`, `--danger`, `--inverse` |
+| 레이아웃 | `--horizontal`, `--vertical`, `--block`, `--inline` |
+
+```html
+<button class="btn btn--primary">
+<div class="card card--large">
+<span class="tag tag--info">
+<button class="btn btn--danger">
+```
+
+---
+
 ## 위반 발견 시 보고 형식
 
 ```

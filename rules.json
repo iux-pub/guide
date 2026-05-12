@@ -270,6 +270,97 @@
       "good": [
         { "code": "<a href=\"#main-content\" class=\"skip-to-content\">본문 바로가기</a>", "note": "body 최상단에 배치" }
       ]
+    },
+    {
+      "id": "R-15",
+      "category": "html",
+      "summary": "컴포넌트 root 태그는 html-semantics.md 매핑을 따른다",
+      "severity": "error",
+      "enforcement": ["check-html-structure.js"],
+      "lang": "html",
+      "rationale": "KRDS 28종 컴포넌트는 시맨틱 의미가 정해져 있다. 같은 BEM Block을 다른 root 태그로 쓰면 검색/스크린리더/SEO 일관성이 깨진다. 단일 매핑 표(`skill/references/html-semantics.md`)가 정답을 정의하고, 임의 변경은 UX팀 결정 절차를 거친다. WAI-ARIA 1st rule: 네이티브 시맨틱이 가능하면 그것을 쓴다.",
+      "refs": [
+        "skill/references/html-semantics.md",
+        "skill/references/krds-components.md"
+      ],
+      "bad": [
+        { "code": "<div class=\"card\">...</div>", "note": "card는 <article> 또는 <section>이어야 함" },
+        { "code": "<div class=\"modal\">...</div>", "note": "modal은 <dialog> 또는 <div role=\"dialog\" aria-modal=\"true\">" },
+        { "code": "<div class=\"breadcrumb\">...</div>", "note": "breadcrumb는 <nav aria-label=\"페이지 경로\">" }
+      ],
+      "good": [
+        { "code": "<article class=\"card\">...</article>", "note": "독립 콘텐츠" },
+        { "code": "<dialog class=\"modal\">...</dialog>", "note": "네이티브 dialog (Safari 15.4+)" },
+        { "code": "<nav class=\"breadcrumb\" aria-label=\"페이지 경로\"><ol>...</ol></nav>", "note": "nav + ol" }
+      ]
+    },
+    {
+      "id": "R-16",
+      "category": "a11y",
+      "summary": "인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다",
+      "severity": "error",
+      "enforcement": ["check-html-structure.js"],
+      "lang": "html",
+      "rationale": "modal/tab/accordion/tooltip/disclosure/carousel/calendar 등 위젯 컴포넌트는 스크린리더가 의미를 파악할 수 있도록 ARIA로 상태·관계·역할을 명시해야 한다. 네이티브 시맨틱만으로 부족한 영역이며, KRDS와 WAI-ARIA 1.2 APG가 정의한 패턴을 따른다. KWCAG 1.3.1 / 4.1.2.",
+      "refs": [
+        "skill/references/html-semantics.md",
+        "skill/references/accessibility.md"
+      ],
+      "bad": [
+        { "code": "<button class=\"disclosure\">자세히</button>\n<div class=\"disclosure__panel\">...</div>", "note": "aria-expanded, aria-controls 누락" },
+        { "code": "<div role=\"dialog\" class=\"modal\">...</div>", "note": "aria-modal과 aria-labelledby 누락" },
+        { "code": "<button class=\"tab__item\">탭1</button>", "note": "role=\"tab\", aria-selected, aria-controls 누락" }
+      ],
+      "good": [
+        { "code": "<button class=\"disclosure\" aria-expanded=\"false\" aria-controls=\"more\">자세히</button>\n<div id=\"more\" class=\"disclosure__panel\" hidden>...</div>", "note": "트리거-패널 ARIA 연결" },
+        { "code": "<div role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\">...</div>", "note": "다이얼로그 3종 세트" },
+        { "code": "<button role=\"tab\" id=\"tab-1\" aria-selected=\"true\" aria-controls=\"panel-1\">탭1</button>", "note": "탭 ARIA 4종 세트" }
+      ]
+    },
+    {
+      "id": "R-17",
+      "category": "bem",
+      "summary": "상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지",
+      "severity": "warning",
+      "enforcement": ["check-html-structure.js"],
+      "lang": "html",
+      "rationale": "BEM의 modifier가 상태 표현의 표준이며, `.is-active` 같은 비-BEM 클래스는 어느 컴포넌트의 상태인지 모호하다. ARIA 속성(`aria-selected`, `aria-expanded`)이 의미 표현을 담당하고, 시각 변화는 BEM modifier(`.tab__item--selected`)가 담당한다. 1개월 운영 후 error로 승급 예정 (deprecation period).",
+      "refs": [
+        "skill/references/html-semantics.md#62-상태-표현-r-17"
+      ],
+      "bad": [
+        { "code": "<button class=\"btn is-disabled\">", "note": ".is-disabled — 비-BEM 상태 클래스" },
+        { "code": "<div class=\"modal is-open\">", "note": ".is-open — 비-BEM 상태 클래스" },
+        { "code": "<input class=\"input has-error\">", "note": ".has-error — 비-BEM 상태 클래스" }
+      ],
+      "good": [
+        { "code": "<button class=\"btn\" disabled aria-disabled=\"true\">", "note": "네이티브 속성 + ARIA" },
+        { "code": "<div class=\"modal modal--open\" aria-modal=\"true\">", "note": "BEM modifier + ARIA" },
+        { "code": "<input class=\"input input--error\" aria-invalid=\"true\">", "note": "BEM modifier + ARIA" }
+      ]
+    },
+    {
+      "id": "R-18",
+      "category": "bem",
+      "summary": "modifier 이름은 의미적이어야 함 — 시각적 단어 금지",
+      "severity": "error",
+      "enforcement": ["check-violations.js", "check-html-structure.js"],
+      "lang": "html",
+      "rationale": "`.btn--blue`나 `.card--big` 같은 시각적 modifier는 의미가 시각 표현과 묶여 디자인 변경 시 클래스명도 같이 바꿔야 한다. 의미적 이름(`--primary`, `--large`)을 쓰면 색상·크기가 바뀌어도 클래스는 그대로 유지된다. KRDS 정의 variant/size 어휘만 허용. R-06의 자동화 버전.",
+      "refs": [
+        "skill/references/html-semantics.md#63-modifier-의미성-r-06-r-18",
+        "skill/references/krds-components.md"
+      ],
+      "bad": [
+        { "code": "<button class=\"btn btn--blue\">", "note": "색을 직접 명시한 modifier" },
+        { "code": "<div class=\"card card--big\">", "note": "크기를 시각 단어로" },
+        { "code": "<span class=\"tag tag--rounded\">", "note": "장식 속성을 modifier로" }
+      ],
+      "good": [
+        { "code": "<button class=\"btn btn--primary\">", "note": "KRDS variant — 의미 기반" },
+        { "code": "<div class=\"card card--large\">", "note": "KRDS 사이즈 스케일" },
+        { "code": "<span class=\"tag tag--info\">", "note": "톤 — 의미 기반" }
+      ]
     }
   ]
 }

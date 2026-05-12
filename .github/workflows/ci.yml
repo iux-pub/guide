@@ -29,8 +29,11 @@ jobs:
       - name: 의존성 설치
         run: npm ci --legacy-peer-deps
 
-      - name: 컨트랙트 위반 검사 (R-01~R-14)
-        run: npm run check
+      - name: 컨트랙트 위반 검사 (R-01~R-14) — 토큰/BEM/접근성
+        run: node scripts/check-violations.js
+
+      - name: HTML 구조 검사 (R-15~R-18) — root 태그/ARIA/상태 클래스/modifier
+        run: node scripts/check-html-structure.js
 
       - name: KRDS+INFOMIND 토큰 빌드
         run: npm run build:tokens

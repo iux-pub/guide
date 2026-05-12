@@ -22,7 +22,8 @@
     "deploy:skill": "rsync -av --delete skill/ ~/.claude/skills/info-design/",
     "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npx @11ty/eleventy",
     "test": "npm run check && npm run lint:js && npm run test:unit && npm run build:tokens && npm run lint:css && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
-    "check": "node scripts/check-violations.js",
+    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js",
+    "check:html": "node scripts/check-html-structure.js",
     "sync:starter": "bash scripts/sync-starter.sh",
     "serve": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\"",
     "prepare": "husky"

@@ -15,6 +15,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-12 | 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상 | error | pa11y-ci |
 | R-13 | 터치/클릭 영역 최소 44×44px | error | manual |
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | manual |
+| R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
 
 ---
 
@@ -106,5 +107,33 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 ```html
 <a href="#main-content" class="skip-to-content">본문 바로가기</a>   // body 최상단에 배치
 ```
+
+---
+
+## R-16 — 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다
+
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
+
+> modal/tab/accordion/tooltip/disclosure/carousel/calendar 등 위젯 컴포넌트는 스크린리더가 의미를 파악할 수 있도록 ARIA로 상태·관계·역할을 명시해야 한다. 네이티브 시맨틱만으로 부족한 영역이며, KRDS와 WAI-ARIA 1.2 APG가 정의한 패턴을 따른다. KWCAG 1.3.1 / 4.1.2.
+
+**❌ 금지**
+
+```html
+<button class="disclosure">자세히</button>
+<div class="disclosure__panel">...</div>   // aria-expanded, aria-controls 누락
+<div role="dialog" class="modal">...</div>   // aria-modal과 aria-labelledby 누락
+<button class="tab__item">탭1</button>   // role="tab", aria-selected, aria-controls 누락
+```
+
+**✅ 올바른 형식**
+
+```html
+<button class="disclosure" aria-expanded="false" aria-controls="more">자세히</button>
+<div id="more" class="disclosure__panel" hidden>...</div>   // 트리거-패널 ARIA 연결
+<div role="dialog" aria-modal="true" aria-labelledby="modal-title">...</div>   // 다이얼로그 3종 세트
+<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">탭1</button>   // 탭 ARIA 4종 세트
+```
+
+**참고:** skill/references/html-semantics.md, skill/references/accessibility.md
 
 ---

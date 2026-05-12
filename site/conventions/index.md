@@ -34,6 +34,10 @@ order: 1
 | R-12 | 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-13 | 터치/클릭 영역 최소 44×44px | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | [접근성 규칙](/conventions/a11y-rules/) |
+| R-15 | 컴포넌트 root 태그는 html-semantics.md 매핑을 따른다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | [접근성 규칙](/conventions/a11y-rules/) |
+| R-17 | 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지 | warning | [BEM 네이밍](/conventions/bem/) |
+| R-18 | modifier 이름은 의미적이어야 함 — 시각적 단어 금지 | error | [BEM 네이밍](/conventions/bem/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

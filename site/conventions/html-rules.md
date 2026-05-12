@@ -15,6 +15,7 @@ HTML 마크업 작성 규칙이다.
 | R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warning | check-violations.js |
 | R-09 | img alt 속성 필수 | error | check-violations.js |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | check-violations.js |
+| R-15 | 컴포넌트 root 태그는 html-semantics.md 매핑을 따른다 | error | check-html-structure.js |
 
 ---
 
@@ -97,5 +98,31 @@ HTML 마크업 작성 규칙이다.
 ```html
 <button type="button" onclick="fn()">클릭</button>   // 키보드·스크린 리더 지원
 ```
+
+---
+
+## R-15 — 컴포넌트 root 태그는 html-semantics.md 매핑을 따른다
+
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
+
+> KRDS 28종 컴포넌트는 시맨틱 의미가 정해져 있다. 같은 BEM Block을 다른 root 태그로 쓰면 검색/스크린리더/SEO 일관성이 깨진다. 단일 매핑 표(`skill/references/html-semantics.md`)가 정답을 정의하고, 임의 변경은 UX팀 결정 절차를 거친다. WAI-ARIA 1st rule: 네이티브 시맨틱이 가능하면 그것을 쓴다.
+
+**❌ 금지**
+
+```html
+<div class="card">...</div>   // card는 <article> 또는 <section>이어야 함
+<div class="modal">...</div>   // modal은 <dialog> 또는 <div role="dialog" aria-modal="true">
+<div class="breadcrumb">...</div>   // breadcrumb는 <nav aria-label="페이지 경로">
+```
+
+**✅ 올바른 형식**
+
+```html
+<article class="card">...</article>   // 독립 콘텐츠
+<dialog class="modal">...</dialog>   // 네이티브 dialog (Safari 15.4+)
+<nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>   // nav + ol
+```
+
+**참고:** skill/references/html-semantics.md, skill/references/krds-components.md
 
 ---

@@ -1,6 +1,8 @@
 # 체크박스 & 라디오 — KRDS Form check
 
-## 체크박스
+## 기본 마크업
+
+### 체크박스
 
 ```html
 <label class="check">
@@ -10,7 +12,7 @@
 </label>
 ```
 
-## 라디오
+### 라디오
 
 ```html
 <fieldset>
@@ -27,6 +29,14 @@
   </label>
 </fieldset>
 ```
+
+## 시맨틱 구조
+
+- **Root 태그**: `<label class="check">` 또는 `<label class="radio">` (input을 감쌈)
+- **자식**: `<input type="checkbox|radio">` → `<span __box aria-hidden="true">` (시각 박스) → `<span __label>` (텍스트)
+- **그룹**: 라디오는 `<fieldset>` + `<legend>` 필수
+- **필수 ARIA**: 시각 박스에 `aria-hidden="true"` — native input이 정보를 담당
+- 상세: `skill/references/html-semantics.md#check-radio`
 
 ## 사양
 

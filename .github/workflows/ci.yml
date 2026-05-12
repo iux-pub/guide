@@ -52,7 +52,9 @@ jobs:
 
       - name: 자동 생성물 drift 검사
         run: |
-          if ! git diff --exit-code -- CLAUDE.md AGENTS.md site/conventions/ site/prompts/ prompts/ skill/references/krds-tokens.md skill/references/krds-components.md tokens/build/; then
+          # 빌드 sha 라인은 매 커밋마다 다르므로 검사에서 제외 (정보성 메타이며 콘텐츠 결정성과 무관)
+          # -I <regex>: 매칭 라인 변경만 있는 hunk는 diff에서 무시 (git 2.30+)
+          if ! git diff --exit-code -I '^> 빌드: ' -I '"sha":' -- CLAUDE.md AGENTS.md site/conventions/ site/prompts/ prompts/ skill/references/krds-tokens.md skill/references/krds-components.md tokens/build/; then
             echo ""
             echo "❌ 자동 생성물이 최신이 아닙니다."
             echo "   다음 명령을 실행하고 결과를 커밋하세요:"

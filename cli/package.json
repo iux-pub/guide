@@ -1,0 +1,31 @@
+{
+  "name": "create-infomind-ux",
+  "version": "0.1.0",
+  "description": "INFOMIND UX 스타터 키트로 새 프로젝트 생성",
+  "bin": {
+    "create-infomind-ux": "bin/create.js"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "infomind",
+    "ux",
+    "krds",
+    "design-system",
+    "starter",
+    "tailwind",
+    "eleventy"
+  ],
+  "homepage": "https://github.com/iux-pub/guide",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iux-pub/guide.git",
+    "directory": "cli"
+  },
+  "license": "ISC"
+}

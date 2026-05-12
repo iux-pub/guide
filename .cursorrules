@@ -1,0 +1,12 @@
+본 저장소는 INFOMIND UX Guide System이다. 작업 시작 시 프로젝트 루트의 `AGENTS.md`를 읽고 그 컨트랙트를 따른다.
+
+핵심:
+- KRDS(범정부 UI/UX 디자인 시스템) 토큰만 사용. raw hex/px/rem 금지.
+- BEM 명명 (`.block__element--modifier`), 5-objects · 6-components 한정.
+- 컴포넌트 root 태그는 `skill/references/html-semantics.md` 매핑 준수.
+- 인터랙티브 위젯은 WAI-ARIA 1.2 패턴 필수.
+- 28종 카탈로그 외 컴포넌트 임의 생성 금지.
+- 작업 후 `npm run check` 통과 필수.
+
+상세 룰은 `AGENTS.md`, `CLAUDE.md`, `skill/SKILL.md`, `skill/references/` 참조.
+위반 발견 시 즉시 작업 중단 + 사용자에게 보고.

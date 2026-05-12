@@ -19,24 +19,33 @@
 ## 🆕 신규 프로젝트 시작 (개발자)
 
 ```bash
-git clone https://github.com/iux-pub/starter.git my-project
+npx create-infomind-ux my-project
 cd my-project
-rm -rf .git && git init
-
-nvm use              # Node 20 LTS 자동 선택
-npm install          # legacy-peer-deps 자동 적용
-npm run build        # 토큰 + CSS + 사이트 빌드
 npm run dev          # 개발 서버 (http://localhost:8080)
 ```
 
+자동으로:
+- ✅ starter 키트 다운로드 + 압축 해제
+- ✅ `package.json` 이름 갱신
+- ✅ `git init` + 초기 커밋
+- ✅ `npm install` 실행
+
+수동 clone 방식도 가능:
+```bash
+git clone https://github.com/iux-pub/starter.git my-project
+cd my-project && rm -rf .git && git init && npm install && npm run build
+```
+
 자동 동봉되는 것:
-- ✅ `tokens/` — KRDS + INFOMIND 토큰 (그대로 사용)
-- ✅ `src/styles/` — KRDS 28종 컴포넌트 CSS
-- ✅ `.claude/skills/info-design/` — Claude/Cursor 자동 인식
+- ✅ KRDS + INFOMIND 토큰
+- ✅ KRDS 28종 컴포넌트 CSS
+- ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
+- ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 
-브랜드 색상 변경은 `tokens/infomind-overrides.json` 편집 → `npm run build`.
+브랜드 색상 변경: `tokens/infomind-overrides.json` 편집 → `npm run build`.
 
-> 스타터 키트 저장소: https://github.com/iux-pub/starter
+> 스타터 저장소: https://github.com/iux-pub/starter
+> CLI 저장소: [`cli/`](cli/README.md) (`create-infomind-ux` npm 패키지)
 
 ---
 
@@ -60,11 +69,13 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 ---
 
-## 🤖 Claude / AI와 함께 쓰기
+## 🤖 AI 코딩 에이전트와 함께 쓰기 (다중 LLM 호환)
 
-UI/CSS/HTML 작업 시작 시 한 줄 발화로 KRDS 컨트랙트 발효:
+본 저장소는 **모든 AI 코딩 에이전트**가 KRDS 컨트랙트를 자동으로 따르도록 설계됐다. 모델/도구 무관.
 
-> **"info-design 스킬 기준으로 가자"**
+### 작업 시작 시 — 한 줄 발화
+
+> **"info-design 스킬 기준으로 가자"** (또는 "infomind 디자인 기준으로", "ux 가이드대로")
 
 이후 AI는:
 - ✅ KRDS 토큰만 사용 (raw hex/px 금지)
@@ -72,7 +83,23 @@ UI/CSS/HTML 작업 시작 시 한 줄 발화로 KRDS 컨트랙트 발효:
 - ✅ R-01~R-18 규칙 자동 준수
 - ✅ 위반 발견 시 작업 중단 + 사용자에게 보고
 
-스킬은 **두 경로**로 인식된다:
+### 도구별 인식 방식
+
+| 도구 | 자동 인식 | 비고 |
+|------|-----------|------|
+| **Claude Code** | `CLAUDE.md` + `.claude/skills/info-design/` | 트리거 발화로 스킬 활성 |
+| **Cursor** | `AGENTS.md` + `.cursorrules` | 자동 |
+| **Aider** | `AGENTS.md` | 자동 |
+| **OpenAI Codex CLI** | `AGENTS.md` | 자동 |
+| **Continue.dev** | `AGENTS.md` | 자동 |
+| **GitHub Copilot Chat** | 사용자가 `prompts/context.md` 첨부 | 수동 첨부 |
+| **Hermes Agent** | 사용자가 시스템 프롬프트로 `AGENTS.md` 또는 `prompts/` 주입 | 수동 |
+
+자동 인식 못 하는 LLM은 `prompts/context.md` 또는 `AGENTS.md`를 대화에 첨부.
+
+### Claude Code 스킬 (가장 정밀)
+
+스킬은 두 경로로 인식된다:
 - 사용자 글로벌: `~/.claude/skills/info-design/` (수동 `deploy:skill`)
 - 프로젝트 동봉: 스타터에 자동 포함 (별도 설치 불필요)
 
@@ -186,6 +213,10 @@ npm run deploy:skill   → 로컬 ~/.claude/skills/info-design/ 갱신
 
 | 자료 | 위치 |
 |------|------|
+| **상세 시작 가이드** (트러블슈팅 · FAQ · AI 에이전트 셋업) | [`docs/getting-started.md`](docs/getting-started.md) |
+| **컨트리뷰터 가이드** | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| **다중 LLM 컨트랙트** (Cursor · Aider · Codex · Hermes 등) | [`AGENTS.md`](AGENTS.md) |
+| **Claude Code 자동 컨텍스트** | [`CLAUDE.md`](CLAUDE.md) |
 | 신규 컴포넌트 작성 가이드 | `skill/references/snippet-template.md` |
 | HTML 구조 매핑 (28종 × Root/ARIA/키보드) | `skill/references/html-semantics.md` |
 | 토큰 카탈로그 | `skill/references/krds-tokens.md` |
@@ -193,8 +224,6 @@ npm run deploy:skill   → 로컬 ~/.claude/skills/info-design/ 갱신
 | Tailwind v4 매핑 | `skill/references/tailwind-mapping.md` |
 | 접근성 컨트랙트 | `skill/references/accessibility.md` |
 | 금지 패턴 | `skill/references/forbidden-patterns.md` |
-| 컨트리뷰터 가이드 | `CONTRIBUTING.md` |
-| LLM 작업 컨트랙트 | `CLAUDE.md` |
 | KRDS 원본 정리 | `references/krds-source.md` |
 | KRDS 공식 | https://www.krds.go.kr |
 

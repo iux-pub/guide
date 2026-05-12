@@ -11,6 +11,7 @@ const path = require('path')
 const ROOT = path.resolve(__dirname, '..')
 const RULES_PATH = path.join(ROOT, 'rules.json')
 const CLAUDE_PATH = path.join(ROOT, 'CLAUDE.md')
+const AGENTS_PATH = path.join(ROOT, 'AGENTS.md')
 const CONVENTIONS_DIR = path.join(ROOT, 'site', 'conventions')
 
 const { categories, rules } = JSON.parse(fs.readFileSync(RULES_PATH, 'utf-8'))
@@ -18,6 +19,8 @@ const { categories, rules } = JSON.parse(fs.readFileSync(RULES_PATH, 'utf-8'))
 const SEVERITY_LABEL = { error: '`error`', warning: '`warn`', info: '`info`' }
 const START = '<!-- RULES_START -->'
 const END = '<!-- RULES_END -->'
+const AGENTS_START = '<!-- AGENTS_RULES_START -->'
+const AGENTS_END = '<!-- AGENTS_RULES_END -->'
 
 // ── 헬퍼 ──────────────────────────────────────────────────────────────
 
@@ -72,6 +75,52 @@ function updateClaudeMd() {
 
   fs.writeFileSync(CLAUDE_PATH, updated)
   console.log('  CLAUDE.md 규칙 섹션 갱신 완료')
+}
+
+// ── 1b. AGENTS.md 규칙 섹션 생성 — 다중 LLM 호환 ──────────────────
+
+function buildAgentsSection() {
+  // CLAUDE.md와 동일한 카테고리·규칙 구조. 시작 줄에 빌드 정보 코멘트.
+  const lines = []
+  lines.push('')
+  lines.push('> 본 섹션은 `rules.json`에서 자동 생성. `npm run build:rules`로 갱신.')
+  lines.push('')
+
+  for (const cat of categories) {
+    const catRules = rulesByCategory(cat.id)
+    if (catRules.length === 0) continue
+    lines.push(`### ${cat.title}`)
+    for (const r of catRules) {
+      lines.push(`- **${r.id}** ${severityBadge(r.severity)} — ${r.summary}`)
+    }
+    lines.push('')
+  }
+
+  return lines.join('\n').trimEnd()
+}
+
+function updateAgentsMd() {
+  if (!fs.existsSync(AGENTS_PATH)) {
+    console.log('  AGENTS.md 없음 — 건너뜀')
+    return
+  }
+  const content = fs.readFileSync(AGENTS_PATH, 'utf-8')
+  const si = content.indexOf(AGENTS_START)
+  const ei = content.indexOf(AGENTS_END)
+
+  if (si === -1 || ei === -1) {
+    console.log('  AGENTS.md: AGENTS_RULES_START/END 마커 없음 — 건너뜀')
+    return
+  }
+
+  const section = buildAgentsSection()
+  const updated =
+    content.substring(0, si + AGENTS_START.length) +
+    '\n' + section + '\n' +
+    content.substring(ei)
+
+  fs.writeFileSync(AGENTS_PATH, updated)
+  console.log('  AGENTS.md 규칙 섹션 갱신 완료')
 }
 
 // ── 2. 컨벤션 페이지 생성 ──────────────────────────────────────────
@@ -190,6 +239,7 @@ function updateConventionsIndex() {
 console.log('규칙 빌드 시작...')
 
 updateClaudeMd()
+updateAgentsMd()
 
 for (const cat of categories) {
   buildConventionPage(cat)

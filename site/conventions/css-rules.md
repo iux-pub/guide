@@ -38,7 +38,7 @@ color: rgb(37, 110, 244);   // 하드코딩 색상
 color: var(--color-primary);   // INFOUX 공개 토큰
 color: var(--color-primary);   // INFOMIND 시맨틱 별칭 (INFOUX 토큰을 가리킴)
 padding: 16px;   // 프로젝트 맥락상 명확한 간격값은 허용
-gap: var(--spacing-4);   // 반복 패턴에는 INFOMIND 간격 별칭 권장
+gap: 1.6rem;   // 반복 패턴에는 INFOMIND 간격 별칭 권장
 ```
 
 **참고:** tokens/foundation.json, tokens/foundation.json, tokens/build/tokens.css

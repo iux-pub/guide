@@ -34,13 +34,13 @@ npm run build        # 토큰 + CSS + 사이트 빌드
 npm run dev          # http://localhost:8080
 ```
 
-브랜드 색상 변경:
-1. `tokens/infomind-overrides.json` 편집
+토큰 변경:
+1. `tokens/foundation.json` 편집
 2. `npm run build` 재실행
 
 스타터에 동봉된 것:
 - ✅ KRDS 기반 컴포넌트 CSS
-- ✅ KRDS + INFOMIND 색상/상태 토큰
+- ✅ INFOUX 색상/기본 폰트 토큰
 - ✅ `.claude/skills/info-design/` — Claude/Cursor 자동 인식
 - ✅ ITCSS 5-layer 구조
 
@@ -155,15 +155,13 @@ echo "see AGENTS.md" > CONVENTIONS.md
 
 ## 4. 개발 워크플로우
 
-### 4-A. 토큰 변경 (색상, 간격 등)
+### 4-A. 토큰 변경 (색상/기본 폰트)
 
-`tokens/krds-base.json`은 **KRDS 정본 — 수정 금지**. 외부에서 동기화만.
-
-INFOMIND 추가/오버라이드는 `tokens/infomind-overrides.json`:
+공개 토큰은 `tokens/foundation.json` 하나만 관리한다. 범위는 색상(`--color-*`)과 기본 폰트(`--font-*`)로 제한한다.
 
 ```bash
 # 1. 편집
-vi tokens/infomind-overrides.json
+vi tokens/foundation.json
 
 # 2. 빌드
 npm run build:tokens   # tokens/build/tokens.css 재생성
@@ -274,7 +272,7 @@ npx @11ty/eleventy --serve --port=8081
 A. 이 저장소는 **단일 소스**(SoT). `iux-pub/starter`는 발행 결과물. `npm run sync:starter`로 한 방향 동기화.
 
 **Q. KRDS 새 버전 출시 시?**
-A. `tokens/krds-base.json`을 외부에서 다시 동기화 → `npm run build` → `npm run sync:starter` + `deploy:skill`. 다운스트림은 starter 갱신을 따라잡아야 함(현재는 수동).
+A. KRDS 변경사항을 검토한 뒤 필요한 색상/폰트만 `tokens/foundation.json`에 반영한다. 간격·크기·컴포넌트 치수는 그대로 복제하지 않고, 가이드 원칙과 패턴 준수 여부를 기준으로 판단한다.
 
 **Q. 다운스트림 프로젝트가 토큰 변경을 자동으로 받을 방법?**
 A. 현재는 없음. starter는 1회 클론 모델. 후속에 `npx infomind-ux upgrade` 같은 명령 도입 예정.

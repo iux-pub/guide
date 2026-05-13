@@ -90,7 +90,7 @@ order: 6
 .status {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: 0.4rem;
   font-size: var(--text-body-small);
 
   &__icon {
@@ -205,7 +205,7 @@ order: 6
 .icon-label {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: 0.4rem;
 
   &__icon {
     flex-shrink: 0;

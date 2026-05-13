@@ -29,7 +29,7 @@ order: 3
 ### 간격 검증 방법
 
 1. 브라우저 개발자 도구(DevTools)에서 computed 값 확인
-2. CSS에서 `var(--spacing-*)` 토큰 사용 여부 확인
+2. CSS에서 간격 값이 화면 맥락에 맞는지 확인
 3. 동일 패턴 반복 시 모든 인스턴스가 같은 간격인지 일괄 확인
 
 ---
@@ -49,7 +49,7 @@ order: 3
 ### 폰트 검증 방법
 
 1. DevTools에서 computed font-size, font-weight, line-height 확인
-2. CSS에서 `var(--font-size-*)`, `var(--font-weight-*)`, `var(--leading-*)` 토큰 사용 여부 확인
+2. CSS에서 타이포 크기와 행간이 화면 맥락에 맞는지 확인
 3. 특히 heading 계층(h1~h6)이 토큰 스케일에 맞는지 확인
 
 ### 주의 사항

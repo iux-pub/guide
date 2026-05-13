@@ -27,9 +27,9 @@ HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section 
 
 버튼 KRDS variant(4종): `--primary` `--secondary` `--tertiary` `--text`. KRDS size(5종): `--xsmall`(32) `--small`(40) medium(48, 기본) `--large`(56) `--xlarge`(64). 모바일은 medium 이상 권장.
 
-접근성 (KWCAG/WCAG 2.1 AA): 대비 4.5:1 (큰 텍스트 3:1), 터치 ≥44×44px (모바일 medium=48px 권장), `:focus-visible` (reset.css 전역 4px primary 외곽선 — 컴포넌트에서 제거 금지), skip-to-content 필수, `<img alt>` 필수, `<label for>+id` 필수, `<div onclick>` 금지.
+접근성 (KWCAG/WCAG 2.1 AA): 대비 4.5:1 (큰 텍스트 3:1), 터치 ≥44×44px (모바일 medium=48px 권장), `:focus-visible` (reset.css 전역 4px primary 외곽선 — 컴포넌트에서 제거 금지), skip-to-content 필수, `<img alt>` 필수, `<label for>+id` 필수, `div/span 클릭 핸들러 패턴` 금지.
 
-절대 금지: SCSS 파일/`@use`/`@forward`/SCSS 변수, raw hex/rgb/hsl 색상, Tailwind raw 컬러(`bg-red-500` 등), 옛 버튼 variant(`--ghost`/`--outline`/`--link`/`--sm`/`--lg`), `!important` (사유 주석 없을 시), 인라인 `style="..."` (CSS 변수 주입 외), BEM element 2단계 중첩(`.card__body__title`), 기존 인포마인드 HTML 골격을 무시한 임의 구조.
+절대 금지: SCSS 파일/`@use`/`@forward`/SCSS 변수, raw hex/rgb/hsl 색상, Tailwind 기본 팔레트 raw 컬러, 옛 버튼 variant(`--ghost`/`--outline`/`--link`/`--sm`/`--lg`), `!important` (사유 주석 없을 시), 인라인 `style="..."` (CSS 변수 주입 외), BEM element 2단계 중첩(`.card__body__title`), 기존 인포마인드 HTML 골격을 무시한 임의 구조.
 
 코딩: 2 spaces, single quote, 한국어 주석. 세미콜론 — CSS 사용, JS/HTML 미사용.
 

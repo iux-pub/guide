@@ -25,7 +25,7 @@ npx create-infomind-ux <project-name> [옵션]
 ## 자동 동봉되는 것
 
 - ✅ KRDS 기반 컴포넌트 CSS (BEM + ITCSS 5-layer)
-- ✅ KRDS + INFOMIND 색상/상태 토큰
+- ✅ INFOUX 색상/기본 폰트 토큰
 - ✅ Tailwind v4 + CSS nesting + `@apply`
 - ✅ Eleventy 문서 사이트
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
@@ -35,7 +35,7 @@ npx create-infomind-ux <project-name> [옵션]
 
 ## 다음 단계
 
-1. 브랜드 색상 정의: `tokens/infomind-overrides.json` 편집 → `npm run build`
+1. 브랜드 색상 정의: `tokens/foundation.json` 편집 → `npm run build`
 2. AI 코딩 에이전트 사용 시: "info-design 스킬 기준으로 가자" 발화
 3. 자세한 가이드: `docs/getting-started.md`
 

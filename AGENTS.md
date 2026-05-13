@@ -51,11 +51,11 @@
 다음을 **위반하면 코드를 작성하지 않고 작업을 중단**한다:
 
 - 색상 raw `hex`/`rgb`/`hsl` 직접 작성 (`#fff`, `rgb(0,0,0)`)
-- Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700`, `bg-white`)
+- Tailwind 기본 팔레트 raw 컬러 유틸
 - 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open`) — R-17
 - 시각적 단어 modifier (`--blue`, `--big`, `--rounded`, `--shadow`) — R-18
 - 인터랙티브 위젯(modal/tab/accordion/tooltip/disclosure/carousel/calendar)에서 필수 ARIA 누락 — R-16
-- `<div onclick>` (시맨틱 HTML 의무) — R-10
+- `div/span 클릭 핸들러 패턴` (시맨틱 HTML 의무) — R-10
 - 이미지 `alt` 누락 — R-09
 - `:focus { outline: none }` (포커스 가시성) — R-11
 

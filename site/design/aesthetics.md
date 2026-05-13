@@ -62,7 +62,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
   background-color: var(--color-bg);
   border: 1px solid var(--color-border-light);
   border-radius: 0.6rem;
-  padding: var(--spacing-6);
+  padding: 2.4rem;
   transition: box-shadow var(--duration-fast);
 
   &:hover {
@@ -73,17 +73,17 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
     font-size: var(--text-body-large);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
-    margin-bottom: var(--spacing-2);
+    margin-bottom: 0.8rem;
   }
 
   &__description {
     font-size: var(--text-body-small);
     color: var(--color-text-secondary);
-    line-height: var(--leading-base);
+    line-height: 1.6;
   }
 
   &__action {
-    margin-top: var(--spacing-4);
+    margin-top: 1.6rem;
   }
 }
 ```
@@ -93,7 +93,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 | 항목 | AI 슬롭 | 의도적 설계 |
 |------|---------|------------|
 | 색상 | 하드코딩 `#333`, `#666` | 토큰 `var(--color-text)` |
-| 레이아웃 | 매직넘버 `24px`, `12px` | 토큰 `var(--spacing-6)`, `var(--spacing-2)` |
+| 레이아웃 | 매직넘버 `24px`, `12px` | 토큰 `2.4rem`, `0.8rem` |
 | 네이밍 | `.btn`, `h3`, `p` | BEM `.card__title`, `.card__action` |
 | 버튼 | 보라색 그라디언트 | 제품 토큰 기반 Primary |
 | 폰트 | `Inter` 기본값 | 시스템 `PretendardGOV` |
@@ -130,7 +130,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
     background-image:
       radial-gradient(ellipse at 20% 50%, rgba(34, 135, 56, 0.08) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 20%, rgba(37, 110, 244, 0.05) 0%, transparent 50%);
-    padding: var(--spacing-16) 0;
+    padding: 6.4rem 0;
   }
 
   &__title {
@@ -142,7 +142,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
   &__subtitle {
     font-size: var(--text-body-large);
     color: var(--color-text-secondary);
-    margin-top: var(--spacing-2);
+    margin-top: 0.8rem;
   }
 }
 ```
@@ -221,7 +221,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 - 디스플레이 + 본문 페어링: 개성 있는 디스플레이 폰트와 가독성 높은 본문 폰트를 조합한다
 - **인포마인드 제품 UI**: `PretendardGOV` + `JetBrains Mono`는 제품 UI의 표준이다. 랜딩/마케팅 페이지에서는 맥락에 맞는 디스플레이 폰트를 추가할 수 있다
 - **한국어 줄바꿈**: 모든 한국어 텍스트 블록에 `word-break: keep-all; overflow-wrap: break-word;` 적용하라. 단어 중간 줄바꿈은 가독성을 크게 해친다
-- **한국어 행간**: `line-height: 1`(leading-none) 사용 금지. 한국어는 라틴보다 글자 높이가 커서 최소 `--leading-tight`(1.2) 이상이 필요하다
+- **한국어 행간**: `line-height: 1`(leading-none) 사용 금지. 한국어는 라틴보다 글자 높이가 커서 최소 `line-height: 1.2` 이상이 필요하다
 
 ### 2. 색상 의도성
 

@@ -16,9 +16,9 @@
 ```
 
 ```html
-<!-- Tailwind raw 컬러 유틸리티 -->
-<div class="bg-red-500 text-gray-700 border-blue-300">...</div>
-<div class="bg-white">...</div>
+<!-- Tailwind 기본 팔레트 raw 컬러 유틸리티 금지 -->
+<div class="bg-[red] text-[gray] border-[blue]">...</div>
+<div class="bg-[white]">...</div>
 ```
 
 ```jsx
@@ -52,7 +52,7 @@
 | `text-black` | `text-text-bolder` |
 | `border-gray-200/300` | `border-border-light` |
 | `border-gray-400+` | `border-border` 또는 `border-border-dark` |
-| `text-red-*` / `bg-red-500+` | `text-danger` / `bg-danger` |
+| red 계열 텍스트/배경 유틸 | `text-danger` / `bg-danger` |
 | `bg-red-50/100` | `bg-danger-surface` |
 | `text-blue-*` (브랜드) | `text-primary` |
 | `bg-blue-500+` | `bg-primary` |
@@ -64,87 +64,63 @@
 
 ---
 
-## 2. 간격/크기 — Raw 사용 금지 (R-01)
+## 2. 간격/크기 — 과잉 토큰화 금지
+
+간격, 크기, 반경, 그림자, 모션, z-index는 공개 토큰으로 만들지 않는다. 화면 밀도와 컴포넌트 맥락에 맞춰 Tailwind v4 `@apply` 또는 명확한 CSS 직접값을 사용한다.
 
 ### ❌ 금지
 
 ```css
-.card { padding: 16px; margin-top: 24px; }
-.btn { height: 48px; gap: 8px; }
-```
+:root {
+  --custom-spacing-token: 1.6rem;
+  --custom-radius-token: 0.8rem;
+}
 
-```html
-<div class="p-[16px] mt-[24px] h-[48px]">...</div>
+.card {
+  padding: var(--custom-spacing-token);
+  border-radius: var(--custom-radius-token);
+}
 ```
 
 ### ✅ 허용
 
 ```css
-/* KRDS number primitive 기반 */
-.card { padding: 2.4rem; margin-top: 4rem; }
-.btn { height: 4.8rem; gap: 0.8rem; }
+.card {
+  @apply rounded-lg;
+  padding: 2.4rem;
+  margin-top: 4rem;
+}
+
+.btn {
+  @apply inline-flex min-h-12 items-center gap-2 px-[2.4rem];
+}
 ```
 
 ```html
-<!-- Tailwind 유틸 (KRDS spacing 매핑) -->
-<div class="p-8 mt-10 h-size-height-7">...</div>
+<div class="p-[2.4rem] mt-10 min-h-12">...</div>
 ```
-
-### Spacing 토큰 표 (1rem = 10px)
-
-| 토큰 | 값 | px |
-|------|-----|-----|
-| `--spacing-0` | 0 | 0 |
-| `--spacing-1` | 0.1rem | 1 |
-| `--spacing-2` | 0.2rem | 2 |
-| `--spacing-3` | 0.4rem | **4** |
-| `--spacing-5` | 0.8rem | **8** |
-| `--spacing-7` | 1.2rem | **12** |
-| `--spacing-8` | 1.6rem | **16** |
-| `--spacing-10` | 2.4rem | **24** |
-| `--spacing-12` | 3.2rem | **32** |
-| `--spacing-14` | 4.0rem | **40** |
-| `--spacing-16` | 4.8rem | **48** |
-| `--spacing-18` | 6.4rem | **64** |
 
 ---
 
-## 3. 폰트 — Raw 사이즈 금지 (R-01)
+## 3. 폰트 — 패밀리 토큰만 고정
 
 ### ❌ 금지
 
 ```css
-h1 { font-size: 32px; }
-.title { font-size: 1.5rem; }
 .body { font-family: "Pretendard"; }
-```
-
-```html
-<h1 class="text-2xl font-bold">제목</h1>
-<p class="text-base text-sm">본문</p>
 ```
 
 ### ✅ 허용
 
 ```css
-h1 { font-size: var(--text-heading-large); }
-.title { font-size: var(--text-heading-medium); }
 body { font-family: var(--font-sans); }
+
+.page-title {
+  @apply text-3xl font-bold leading-tight;
+}
 ```
 
-```html
-<h1 class="text-heading-large">제목</h1>
-<p class="text-body-medium">본문</p>
-<small class="text-body-small">보조 텍스트</small>
-```
-
-### 폰트 사이즈 토큰
-
-- **Display**: `text-display-{large|medium|small}` (60/44/36 px)
-- **Heading**: `text-heading-{xlarge|large|medium|small|xsmall|xxsmall}` (40/32/24/19/17/15)
-- **Body**: `text-body-{large|large-bold|medium|medium-bold|small|small-bold|xsmall|xsmall-bold}`
-- **Label**: `text-label-{large|medium|small|xsmall}`
-- **Navigation**: `text-navigation-*`
+폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 Tailwind/CSS 값으로 작성한다.
 
 ---
 

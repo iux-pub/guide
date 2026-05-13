@@ -133,7 +133,7 @@ tokens (분리)  → @theme + CSS Custom Property (출력 있음, 변수)
 
 ### 3. 유틸리티 레이어 최소화
 
-7-utilities는 꼭 필요한 유틸리티만 포함한다. Tailwind v4의 raw 유틸 클래스(`bg-red-500`, `text-base` 등)는 사용 금지(R-01, R-06).
+7-utilities는 꼭 필요한 유틸리티만 포함한다. Tailwind v4의 raw 유틸 클래스(기본 팔레트 색상 유틸, 무분별한 타입 유틸 등)는 사용 금지(R-01, R-06).
 
 ## 성능 체크리스트
 

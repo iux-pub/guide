@@ -1,12 +1,12 @@
 #!/bin/bash
-# guide → starter 동기화 (KRDS + Tailwind v4 시스템)
+# guide → starter 동기화 (INFOUX + Tailwind v4 시스템)
 # 사용법: npm run sync:starter
 #
 # 동기화 대상:
 #   - src/styles/             → starter/src/styles/
 #   - src/snippets/           → starter/src/snippets/
 #   - src/js/                 → starter/src/js/
-#   - tokens/                 → starter/tokens/ (krds-base + overrides — build/ 제외)
+#   - tokens/                 → starter/tokens/ (foundation + README — build/ 제외)
 #   - scripts/build-tokens.js → starter/scripts/
 #   - scripts/check-violations.js → starter/scripts/
 #   - postcss.config.mjs      → starter/
@@ -19,7 +19,7 @@ set -e
 GUIDE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STARTER_DIR="$GUIDE_DIR/starter"
 
-echo "=== guide → starter 동기화 (KRDS + Tailwind v4) ==="
+echo "=== guide → starter 동기화 (INFOUX + Tailwind v4) ==="
 
 # 1. styles
 echo "[1/6] src/styles/ 동기화..."
@@ -41,8 +41,7 @@ fi
 # 4. tokens (build/ 제외 — starter에서 자체 빌드)
 echo "[4/6] tokens/ 동기화..."
 mkdir -p "$STARTER_DIR/tokens"
-cp "$GUIDE_DIR/tokens/krds-base.json" "$STARTER_DIR/tokens/"
-cp "$GUIDE_DIR/tokens/infomind-overrides.json" "$STARTER_DIR/tokens/"
+cp "$GUIDE_DIR/tokens/foundation.json" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
 
 # 5. scripts (build-tokens, check-violations)

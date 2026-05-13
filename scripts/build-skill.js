@@ -26,10 +26,10 @@ const path = require('path')
 const { execSync } = require('child_process')
 
 // 빌드 버전 — git commit hash (같은 SHA = 같은 빌드 결과 보장)
-// dirty 작업 트리는 -dirty 접미사. CI에선 깨끗한 체크아웃이라 SHA만 출력.
+// 작업 중 생성물을 커밋할 때 불필요한 -dirty diff가 남지 않도록 HEAD만 기록한다.
 function buildVersion() {
   try {
-    return execSync('git describe --always --dirty', { cwd: __dirname + '/..' }).toString().trim()
+    return execSync('git rev-parse --short HEAD', { cwd: __dirname + '/..' }).toString().trim()
   } catch {
     return 'unknown'
   }

@@ -75,7 +75,7 @@
           "note": "프로젝트 맥락상 명확한 간격값은 허용"
         },
         {
-          "code": "gap: var(--spacing-4);",
+          "code": "gap: 1.6rem;",
           "note": "반복 패턴에는 INFOMIND 간격 별칭 권장"
         }
       ],

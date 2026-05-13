@@ -22,7 +22,7 @@ MAJOR.MINOR.PATCH
 | 변경 유형 | 예시 |
 |-----------|------|
 | 토큰 체계 변경 | 기존 토큰 이름 변경 (`--color-primary` -> `--color-brand`) |
-| 토큰 삭제 | `--spacing-1` 삭제 |
+| 토큰 삭제 | 색상 토큰 삭제 |
 | 컴포넌트 삭제 | deprecated 컴포넌트의 최종 삭제 |
 | 브레이크포인트 변경 | 태블릿 기준 768px -> 800px 변경 |
 | BEM 네이밍 규칙 변경 | 구분자 규칙 변경 |
@@ -34,7 +34,7 @@ MAJOR.MINOR.PATCH
 | 변경 유형 | 예시 |
 |-----------|------|
 | 새 컴포넌트 추가 | accordion, tooltip 등 |
-| 새 토큰 추가 | `--spacing-4xl` 추가 |
+| 새 토큰 추가 | 색상 토큰 추가 |
 | 새 유틸리티 클래스 추가 | `.text-center`, `.flex-wrap` 등 |
 | 새 믹스인 추가 | `@mixin grid-auto-fit` 등 |
 | 컴포넌트 변형 추가 | `.btn--tertiary` 등 |

@@ -48,7 +48,7 @@
 | 필수 속성 | `type` (button 한정) / `href` (a 한정) |
 | 필수 ARIA | 토글 시 `aria-pressed="true|false"` / 메뉴 트리거 시 `aria-haspopup` + `aria-expanded` / 텍스트 없는 아이콘 버튼은 `aria-label` |
 | 키보드 | `Tab` 포커스 → `Enter`/`Space` 실행 (네이티브) |
-| 금지 | `<div onclick>` (R-10) · `<button>` 안 `<a>` 중첩 · disabled 상태 표현으로 `.btn--disabled` 클래스만 (속성 `disabled` 또는 `aria-disabled` 같이 사용) |
+| 금지 | `div/span 클릭 핸들러 패턴` (R-10) · `<button>` 안 `<a>` 중첩 · disabled 상태 표현으로 `.btn--disabled` 클래스만 (속성 `disabled` 또는 `aria-disabled` 같이 사용) |
 
 ### `check-radio` — 체크박스/라디오
 

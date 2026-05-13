@@ -115,7 +115,7 @@ my-project/
 </div>
 ```
 
-> ⚠ **`bg-red-500` `text-gray-700` 같은 raw 컬러 유틸리티 사용 금지.** `--color-*` 기반 색상만 허용됩니다.
+> ⚠ **Tailwind 기본 팔레트 raw 컬러 유틸리티 사용 금지.** `--color-*` 기반 색상만 허용됩니다.
 
 ---
 
@@ -149,10 +149,10 @@ my-project/
 
 - Raw hex/rgb/hsl 색상
 - Raw px/rem은 반복 패턴이면 토큰화 권장. 프로젝트 고유 레이아웃 값은 허용
-- Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700` 등)
+- Tailwind 기본 팔레트 raw 컬러 유틸
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`)
 - `:focus { outline: none }`
-- `<div onclick>` (시맨틱 HTML 사용)
+- `div/span 클릭 핸들러 패턴` (시맨틱 HTML 사용)
 - 이미지 `alt` 누락, 폼 `<label>` 누락
 
 빌드 시 `npm run check`이 위반 자동 검출합니다.

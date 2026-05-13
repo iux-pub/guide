@@ -32,7 +32,7 @@ http://localhost:8080 에서 문서 사이트 확인.
 
 | 변경 대상 | 파일 | 영향 범위 |
 |----------|------|----------|
-| 디자인 토큰 (색/크기/타이포 등) | `tokens/krds-base.json` (KRDS 정본 — **수정 금지**) / `tokens/infomind-overrides.json` (UX팀 결정) | CSS · 스킬 · 사이트 · 스타터 |
+| 디자인 토큰 (색상/기본 폰트) | `tokens/foundation.json` | CSS · 스킬 · 사이트 · 스타터 |
 | CSS 컴포넌트 | `src/styles/6-components/{name}.css` | 사이트 · 스타터 |
 | 마크업 스니펫 | `src/snippets/{name}.md` | 스킬 자동 생성 · 사이트 |
 | 코딩 규칙 | `rules.json` | CLAUDE.md · site/conventions/ |
@@ -88,7 +88,7 @@ http://localhost:8080 에서 문서 사이트 확인.
 
 | scope | 영역 |
 |-------|------|
-| `tokens` | 디자인 토큰 (krds-base, overrides, build-tokens.js) |
+| `tokens` | 디자인 토큰 (foundation, build-tokens.js) |
 | `components` | CSS 컴포넌트 (`src/styles/6-components/`) |
 | `snippets` | 마크업 스니펫 (`src/snippets/`) |
 | `skill` | info-design 스킬 (`skill/`) |
@@ -173,9 +173,9 @@ UX팀 결정 완료 후:
 
 ### 7.3 토큰 변경
 
-`tokens/krds-base.json`은 **KRDS 정본 — 수정 금지.** KRDS 새 버전 출시 시 외부에서 다시 동기화만 한다.
+공개 토큰은 `tokens/foundation.json` 하나만 관리한다. 범위는 색상(`--color-*`)과 기본 폰트(`--font-*`)로 제한한다.
 
-INFOMIND 추가/오버라이드는 `tokens/infomind-overrides.json`에만 한다. 새 토큰명은 `infomind-` prefix.
+간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰으로 추가하지 않는다. 컴포넌트 CSS에서 Tailwind v4 `@apply` 또는 명확한 CSS 직접값으로 작성한다.
 
 ---
 

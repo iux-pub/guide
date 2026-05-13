@@ -92,7 +92,7 @@ CSS 파일을 수정한 후 아래 항목을 순서대로 확인한다.
 - [ ] `tokens/foundation.json`에 오버라이드가 있다면 충돌 없는가
 
 ```bash
-# 토큰 사용처 검색 (예: --spacing-4 변경 시)
+# 공통 간격 값 사용처 검색
 grep -r "spacing-md" src/styles/
 ```
 

@@ -90,7 +90,7 @@ npm run check          # info-design 컨트랙트 위반 검출
 
 - Raw hex/rgb/hsl 색상
 - 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
-- Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700` 등)
+- Tailwind 기본 팔레트 raw 컬러 유틸
 - Tailwind 기본 스케일은 프로젝트 기준과 충돌하지 않는지 확인
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
 - `!important` (사유 주석 없을 시)
@@ -98,7 +98,7 @@ npm run check          # info-design 컨트랙트 위반 검출
 - 카탈로그 밖 컴포넌트는 UX팀 판단 후 프로젝트 패턴 또는 공통 컴포넌트로 확장
 - BEM element 2단계 중첩 (`.card__body__title`)
 - `:focus { outline: none }`
-- `<div onclick>`
+- `div`/`span` 클릭 핸들러 패턴
 - 이미지 `alt` 누락, 폼 `<label>` 누락
 - 모바일 터치 영역 44px 미만
 

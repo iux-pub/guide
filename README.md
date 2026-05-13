@@ -37,7 +37,7 @@ cd my-project && rm -rf .git && git init && npm install && npm run build
 ```
 
 자동 동봉되는 것:
-- ✅ KRDS + INFOMIND 색상/상태 토큰
+- ✅ INFOUX 색상/기본 폰트 토큰
 - ✅ KRDS 기반 컴포넌트 CSS
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
@@ -184,7 +184,7 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 | R-01 | css | 색상은 `var(--token)` 강제, 간격/크기/타이포 스케일은 권장 |
 | R-05 / R-08 | bem | element 2단계 중첩 금지 (`.card__body__title` ❌) |
 | R-06 / R-18 | bem | modifier는 의미적 — `--blue`/`--big` 등 시각 단어 금지 |
-| R-09 / R-10 | html | `<img alt>` 필수 · `<div onclick>` 금지 |
+| R-09 / R-10 | html | `<img alt>` 필수 · `div/span 클릭 핸들러 패턴` 금지 |
 | R-11 ~ R-13 | a11y | 포커스 스타일 · 색상 대비 4.5:1 · 터치 영역 44×44px |
 | R-14 | a11y | `.skip-to-content` 필수 |
 | R-15 | html | HTML 기본 구조는 기존 인포마인드 사이트 패턴 우선 |

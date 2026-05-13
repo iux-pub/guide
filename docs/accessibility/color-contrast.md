@@ -1,6 +1,6 @@
 # 색상 대비 가이드
 
-> 토큰값 기준: `tokens/krds-base.json + tokens/infomind-overrides.json`
+> 토큰값 기준: `tokens/foundation.json + tokens/foundation.json`
 
 ## WCAG 2.1 AA 대비 기준
 
@@ -24,7 +24,7 @@
 | 3 | `--color-text-disabled` | #999 | `--color-bg` | #fff | 2.8:1 | FAIL | FAIL |
 | 4 | `--color-white` | #fff | `--color-primary` | #256ef4 | 4.6:1 | PASS | PASS |
 | 5 | `--color-white` | #fff | `--color-primary-dark` | #083891 | 10.6:1 | PASS | PASS |
-| 6 | `--color-white` | #fff | `--krds-light-color-primary-30` | #6a9df7 | 2.7:1 | FAIL | FAIL |
+| 6 | `--color-white` | #fff | 옅은 primary 단계 색상 | #6a9df7 | 2.7:1 | FAIL | FAIL |
 | 7 | `--color-danger` | #de3412 | `--color-bg` | #fff | 4.6:1 | PASS | PASS |
 | 8 | `--color-warning` | #c78500 | `--color-bg` | #fff | 3.1:1 | FAIL | PASS |
 | 9 | `--color-success` | #228738 | `--color-bg` | #fff | 4.6:1 | PASS | PASS |
@@ -44,7 +44,7 @@
 | 조합 | 대비 비율 | 허용 범위 | 대안 |
 |------|-----------|----------|------|
 | `--color-text-disabled` (#999) / `--color-bg` (#fff) | 2.8:1 | disabled 상태 전용 (WCAG 예외: 비활성 UI는 대비 요건 면제) | 없음 (의도된 비활성 표현) |
-| `--color-white` (#fff) / `--krds-light-color-primary-30` (#6a9df7) | 2.7:1 | 장식적 배경만 허용, 텍스트 배치 금지 | `--color-primary` (#256ef4) 배경 사용 |
+| `--color-bg` / 옅은 primary 단계 색상 | 2.7:1 | 장식적 배경만 허용, 텍스트 배치 금지 | `--color-primary` (#256ef4) 배경 사용 |
 | `--color-warning` (#c78500) / `--color-bg` (#fff) | 3.1:1 | 대형 텍스트(18px+, 14px bold+)만 허용 | 아이콘 + 텍스트 조합 권장, 또는 더 어두운 경고색 사용 |
 | `--color-gray-400` (#b1b8be) / `--color-bg` (#fff) | 2.0:1 | 장식용 보더만 허용, 텍스트 불가 | 텍스트에는 `--color-gray-700` (#555) 이상 사용 |
 | `--color-gray-300` (#ccc) / `--color-bg` (#fff) | 1.6:1 | 구분선(divider)만 허용, 텍스트 불가 | 텍스트에는 `--color-gray-700` (#555) 이상 사용 |

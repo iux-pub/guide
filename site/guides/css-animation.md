@@ -241,7 +241,7 @@ order: 5
   height: 24px;
   border: 2px solid var(--color-border);
   border-top-color: var(--color-primary);
-  border-radius: var(--radius-full);
+  border-radius: 9999px;
   animation: spin 0.8s linear infinite;
 }
 ```
@@ -476,7 +476,7 @@ order: 5
 
 ## 체크리스트
 
-- [ ] 트랜지션 시간에 디자인 토큰(`--transition-*`)을 사용하는가
+- [ ] 트랜지션 시간에 일관된 transition 값을 사용하는가
 - [ ] `transform`, `opacity` 위주로 애니메이션하는가
 - [ ] `width`, `height`, `margin`, `padding`을 애니메이션하지 않는가
 - [ ] `top`, `left` 대신 `transform: translate()`를 사용하는가

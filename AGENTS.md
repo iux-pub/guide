@@ -65,6 +65,7 @@
 
 | 항목 | 규정 |
 |------|------|
+| 프로젝트 유형 판정 | 코드 생성 전 민간/사내/CMS/공공기관/정부 상징 사용 여부를 먼저 판정 |
 | 색상 | `var(--color-*)` 시맨틱 토큰 |
 | 간격/크기 | CSS/Tailwind 직접값. CMS·관리자 화면은 정보 밀도에 맞게 조정 |
 | 폰트 | `var(--font-sans)` |
@@ -74,6 +75,7 @@
 | BEM | `.block__element--modifier` (5-objects · 6-components 한정) |
 | HTML 기본 구조 | 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조 |
 | HTML 컴포넌트화 | 페이지 전체가 아니라 `main` 내부의 section 단위로 분리 |
+| 조건부 정부/공공 요소 | 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 적용 대상이 확인된 경우에만 생성. 민간·사내·일반 CMS에서는 N/A |
 | 컴포넌트 root 태그 | `skill/references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 |
 | 상태 표현 | BEM modifier (시각) + ARIA 속성 (의미) 동시 |
@@ -123,16 +125,18 @@
 
 코드 한 줄 작성 전:
 
-1. 사용 색상이 `--color-*`인가?
-2. 기본 폰트는 `--font-sans`/`--font-mono` 기준을 따르는가?
-3. CSS nesting과 `@apply`를 쓰더라도 결과 CSS가 읽기 쉬운가?
-4. 기존 컴포넌트/패턴으로 해결 가능한가?
-5. `main` 내부 요소는 section 단위이고 각 section 안에 `.container`가 있는가?
-6. 인터랙티브 요소는 `<button>`/`<a>`/시맨틱 HTML인가?
-7. 이미지 `alt`, 폼 `<label>`, focus 처리 충족?
-8. 모바일 터치 영역 44px 이상?
+1. 사이트 유형을 민간/사내/CMS/공공기관/정부 상징 사용 서비스 중 하나로 판정했는가?
+2. 공식 배너, 정부 상징, 운영기관 식별자는 적용 대상이 확인된 경우에만 생성하는가?
+3. 사용 색상이 `--color-*`인가?
+4. 기본 폰트는 `--font-sans`/`--font-mono` 기준을 따르는가?
+5. CSS nesting과 `@apply`를 쓰더라도 결과 CSS가 읽기 쉬운가?
+6. 기존 컴포넌트/패턴으로 해결 가능한가?
+7. `main` 내부 요소는 section 단위이고 각 section 안에 `.container`가 있는가?
+8. 인터랙티브 요소는 `<button>`/`<a>`/시맨틱 HTML인가?
+9. 이미지 `alt`, 폼 `<label>`, focus 처리 충족?
+10. 모바일 터치 영역 44px 이상?
 
-위 8개 중 하나라도 No면 **작성 중단 → 사용자에게 어느 항목이 막히는지 보고** + 옵션 제시.
+위 10개 중 하나라도 No면 **작성 중단 → 사용자에게 어느 항목이 막히는지 보고** + 옵션 제시.
 
 ---
 
@@ -140,6 +144,7 @@
 
 | 작업 맥락 | 파일 |
 |----------|------|
+| 코드 생성 전 프로젝트 유형 판정 | `skill/references/project-profiles.md` |
 | 컴포넌트 마크업 작성 (시각/스타일) | `skill/references/krds-components.md` |
 | 컴포넌트 마크업 작성 (root/ARIA/키보드) | `skill/references/html-semantics.md` |
 | 토큰 결정 (색상·기본 폰트) | `skill/references/krds-tokens.md` |

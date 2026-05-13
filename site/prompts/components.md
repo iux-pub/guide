@@ -370,7 +370,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 13. 사이트 헤더 (Site Header) — KRDS
+## 13. 사이트 헤더 (Site Header)
 
 ### 기본 마크업
 

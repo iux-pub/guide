@@ -23,6 +23,7 @@ Google Stitch, Galileo, Lovable, v0
 
 ## 핵심 원칙
 
+- **코드 생성 전 사이트 유형을 먼저 판정한다.** 민간/사내/CMS/공공기관/정부 상징 사용 여부를 구분하고, 정부 아이덴티티 요소는 적용 대상이 확인된 경우에만 생성
 - **색상은 CSS Custom Property(`var(--token)`) 사용.** 하드코딩 hex/rgb/hsl 금지
 - **간격·크기·타이포 스케일은 CSS/Tailwind 직접값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
 - **CSS는 표준 nesting + Tailwind v4 `@apply` 사용 가능**
@@ -231,6 +232,17 @@ KRDS 표준 브레이크포인트.
 ```
 
 HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 분리한다.
+
+## 프로젝트 유형 판정
+
+코드 생성 전에 프로젝트를 `private-corporate`, `admin-cms`, `public-affiliated`, `public-government`, `ecommerce` 중 하나로 판정한다.
+
+- 민간/브랜드/사내/CMS 프로젝트: 공식 배너, 정부 상징, 운영기관 식별자 생성 금지. 체크리스트에서는 N/A
+- 공공 산하기관: 기관 정책 또는 과업 요구가 확인된 경우에만 공공 아이덴티티 요소 생성
+- 정부 상징 사용 서비스: 공식 배너, 정부 상징 로고, 운영기관 식별자, 공공 푸터 필수 링크를 조건부 생성
+- 유형이 불명확하면 정부 아이덴티티 요소를 제외하고 공통 접근성/구조 규칙만 적용
+
+상세 기준: `skill/references/project-profiles.md`
 
 ---
 

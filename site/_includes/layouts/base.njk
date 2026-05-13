@@ -5,18 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }} | {{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/dist/css/style.css' | url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/prism-tomorrow.css' | url }}">
   <link rel="stylesheet" href="{{ '/dist/css/docs.css' | url }}">
   <link href="{{ '/pagefind/pagefind-ui.css' | url }}" rel="stylesheet">
 </head>
 <body>
-  <a href="#main-content" class="skip-to-content sr-only">본문 바로가기</a>
+  <a href="#main" class="skip-to-content sr-only">본문 바로가기</a>
 
   {% include "partials/nav-mobile.njk" %}
 
   <div class="docs-layout">
     {% include "partials/nav-sidebar.njk" %}
-    <main id="main-content" class="docs-layout__content" data-pagefind-body>
+    <main id="main" class="docs-layout__content" data-pagefind-body>
       {% block content %}{% endblock %}
     </main>
   </div>

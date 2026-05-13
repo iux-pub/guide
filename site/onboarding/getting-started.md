@@ -174,7 +174,7 @@ npm run test:a11y
 - 키보드 네비게이션 지원 (탭 순서, 포커스 표시)
 - `:focus-visible` 4px primary 외곽선 (reset.css 전역 — 컴포넌트에서 제거 금지)
 - 색상 대비 4.5:1 이상 (큰 텍스트 24px/18.67px bold 3:1)
-- 본문 건너뛰기 링크 — `<a href="#main-content" class="skip-to-content">본문 바로가기</a>`
+- 본문 건너뛰기 링크 — `<a href="#main" class="skip-to-content">본문 바로가기</a>`
 - 터치 영역 최소 44×44px (모바일 medium=48px 권장)
 
 심화: [접근성 개요](/accessibility/)

@@ -38,7 +38,6 @@ function buildVersion() {
 const ROOT = path.resolve(__dirname, '..')
 const FOUNDATION_PATH = path.join(ROOT, 'tokens', 'foundation.json')
 const SNIPPETS_DIR = path.join(ROOT, 'src', 'snippets')
-// eslint-disable-next-line no-unused-vars
 const _COMPONENTS_DIR = path.join(ROOT, 'src', 'styles', '6-components')
 const SKILL_REFS_DIR = path.join(ROOT, 'skill', 'references')
 

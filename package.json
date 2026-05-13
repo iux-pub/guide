@@ -6,11 +6,11 @@
   "scripts": {
     "//-public": "── 일상 명령 (README 노출) ─────────────────",
     "dev": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\"",
-    "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npx @11ty/eleventy",
+    "build": "npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npm run clean:site && npx @11ty/eleventy",
     "check": "node scripts/check-violations.js && node scripts/check-html-structure.js",
     "lint": "npm run lint:css && npm run lint:js",
     "lint:fix": "npm run lint:css:fix && npm run lint:js:fix",
-    "test": "npm run check && npm run lint && npm run test:unit && npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
+    "test": "npm run check && npm run lint && npm run test:unit && npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npm run clean:site && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
     "deploy:skill": "rsync -av --delete skill/ ~/.claude/skills/info-design/",
     "sync:starter": "bash scripts/sync-starter.sh",
 
@@ -24,7 +24,8 @@
     "build:skill": "node scripts/build-skill.js",
     "build:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css",
     "build:docs-css": "tailwindcss -i src/styles/docs.css -o dist/css/docs.css",
-    "build:site": "npm run build:tokens && npm run build:css && npm run build:docs-css && npx @11ty/eleventy",
+    "build:site": "npm run build:tokens && npm run build:css && npm run build:docs-css && npm run clean:site && npx @11ty/eleventy",
+    "clean:site": "node scripts/clean-site.js",
     "watch:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css --watch",
 
     "//-internal-check": "── 검사 하위 (check가 호출) ────────────",
@@ -34,7 +35,7 @@
     "lint:js": "eslint scripts/ eleventy.config.js",
     "lint:js:fix": "eslint scripts/ eleventy.config.js --fix",
     "test:unit": "node --test scripts/__tests__/*.test.js",
-    "test:a11y": "npm run build:css && pa11y-ci --config .pa11yci.js",
+    "test:a11y": "npm run build && pa11y-ci --config .pa11yci.js",
     "test:a11y:single": "axe",
 
     "//-hooks": "── git hooks ─────────────────────────────",

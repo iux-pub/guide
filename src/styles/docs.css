@@ -62,11 +62,11 @@
 .docs-nav__brand:hover { @apply [opacity:0.8]; }
 
 .docs-nav__brand-title {
-  @apply text-[1.7rem] font-bold text-[var(--color-primary-pressed)] [letter-spacing:-0.02em];
+  @apply text-[1.7rem] font-bold text-[var(--color-primary-pressed)];
 }
 
 .docs-nav__brand-version {
-  @apply text-[1.3rem] font-bold text-[var(--color-primary)] bg-[var(--color-surface-primary-subtler)] py-[0.2rem] px-[0.6rem] rounded-[100rem] leading-none;
+  @apply text-[1.3rem] font-bold text-[var(--color-primary-pressed)] bg-[var(--color-surface-primary-subtler)] py-[0.2rem] px-[0.6rem] rounded-[100rem] leading-none;
 }
 
 .docs-nav__section {
@@ -106,7 +106,7 @@
 }
 
 .docs-nav__link--active {
-  @apply text-[var(--color-primary)] font-bold bg-[var(--color-surface-primary-subtler)] ps-[calc(0.8rem_-_2px)] [border-left:2px_solid_var(--color-primary)];
+  @apply text-[var(--color-primary-pressed)] font-bold bg-[var(--color-surface-primary-subtler)] ps-[calc(0.8rem_-_2px)] [border-left:2px_solid_var(--color-primary-pressed)];
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -145,15 +145,46 @@
  * ═══════════════════════════════════════════════════════ */
 
 pre[class*='language-'] {
-  @apply relative rounded-[0.6rem] my-[1.6rem] mx-0 p-[1.6rem] bg-[var(--color-gray-90)] overflow-x-auto text-[1.5rem] leading-[1.5] pt-[3.2rem];
+  @apply relative rounded-[0.6rem] my-[1.6rem] mx-0 p-[1.6rem] bg-[var(--color-gray-95)] text-[var(--color-gray-0)] overflow-x-auto text-[1.5rem] leading-[1.5] pt-[3.2rem];
 
 
 
 }
 
 pre[class*='language-'] code {
-  @apply p-0 text-[inherit] bg-none;
+  @apply p-0 text-[var(--color-gray-0)] bg-none;
 
+}
+
+pre[class*='language-'] .token,
+pre[class*='language-'] .token * {
+  @apply text-[var(--color-gray-0)] bg-[var(--color-gray-95)];
+}
+
+pre[class*='language-'] .token.comment,
+pre[class*='language-'] .token.prolog,
+pre[class*='language-'] .token.doctype,
+pre[class*='language-'] .token.cdata {
+  @apply text-[var(--color-gray-20)];
+}
+
+pre[class*='language-'] .token.keyword,
+pre[class*='language-'] .token.atrule,
+pre[class*='language-'] .token.rule,
+pre[class*='language-'] .token.selector {
+  @apply text-[var(--color-primary-10)];
+}
+
+pre[class*='language-'] .token.string,
+pre[class*='language-'] .token.attr-value {
+  @apply text-[var(--color-success-10)];
+}
+
+pre[class*='language-'] .token.property,
+pre[class*='language-'] .token.tag,
+pre[class*='language-'] .token.attr-name,
+pre[class*='language-'] .token.function {
+  @apply text-[var(--color-warning-10)];
 }
 
 pre[class*='language-']::-webkit-scrollbar { @apply [height:0.6rem]; }

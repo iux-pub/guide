@@ -96,7 +96,7 @@ const COMPONENT_ROOT_MAPPING = {
   'carousel': { allowedTags: ['div'], requireAriaRoledescription: true, note: 'aria-roledescription="carousel" aria-label' },
   'list': { allowedTags: ['ul', 'ol', 'dl'], note: '의미에 따라 ul/ol/dl' },
   'table-wrap': { allowedTags: ['div'], note: '반응형 스크롤 래퍼' },
-  'table': { allowedTags: ['table'], note: 'caption 또는 aria-label 필수' },
+  'table': { allowedTags: ['table'], note: 'caption 또는 aria-label 필수' }
 }
 
 // ─── R-16: 인터랙티브 위젯의 필수 ARIA 속성 ───────────────────────────
@@ -107,47 +107,47 @@ const COMPONENT_ROOT_MAPPING = {
 const REQUIRED_ARIA = {
   'modal': {
     requireAny: [
-      { attrs: ['role="dialog"', 'aria-modal="true"', /aria-labelledby=|aria-label=/] },
+      { attrs: ['role="dialog"', 'aria-modal="true"', /aria-labelledby=|aria-label=/] }
     ],
     desc: 'role="dialog" + aria-modal="true" + aria-labelledby/aria-label (또는 네이티브 <dialog>)',
-    nativeDialogOk: true,  // <dialog> 태그는 자체적으로 role=dialog 동등
+    nativeDialogOk: true // <dialog> 태그는 자체적으로 role=dialog 동등
   },
   'side-panel': {
     requireAll: ['role="dialog"', /aria-labelledby=|aria-label=/],
-    desc: 'role="dialog" + aria-labelledby/aria-label',
+    desc: 'role="dialog" + aria-labelledby/aria-label'
   },
   'tooltip': {
     requireAll: ['role="tooltip"'],
-    desc: 'role="tooltip"',
+    desc: 'role="tooltip"'
   },
   'disclosure': {
     requireAll: [/aria-expanded=/, /aria-controls=/],
-    desc: 'aria-expanded + aria-controls',
+    desc: 'aria-expanded + aria-controls'
   },
   'breadcrumb': {
     requireAll: [/aria-label=/],
-    desc: 'aria-label (페이지 경로 설명)',
+    desc: 'aria-label (페이지 경로 설명)'
   },
   'main-menu': {
     requireAll: [/aria-label=/],
-    desc: 'aria-label (메뉴 설명)',
+    desc: 'aria-label (메뉴 설명)'
   },
   'pagination': {
     requireAll: [/aria-label=/],
-    desc: 'aria-label (페이지 내비게이션 설명)',
+    desc: 'aria-label (페이지 내비게이션 설명)'
   },
   'carousel': {
     requireAll: [/aria-roledescription="carousel"/],
-    desc: 'aria-roledescription="carousel"',
+    desc: 'aria-roledescription="carousel"'
   },
   'calendar': {
     requireAll: [/role="application"/, /aria-label=/],
-    desc: 'role="application" + aria-label',
+    desc: 'role="application" + aria-label'
   },
   'step-indicator': {
     requireAll: [/aria-label=/],
-    desc: 'aria-label (진행 단계 설명)',
-  },
+    desc: 'aria-label (진행 단계 설명)'
+  }
 }
 
 // ─── R-17: 비-BEM 상태 클래스 ───────────────────────────────────
@@ -170,7 +170,7 @@ const FORBIDDEN_MODIFIER_WORDS = [
   'rounded', 'circle', 'square', 'shadow', 'glow', 'flat',
   'bold', 'italic', 'underline',
   // 기타
-  'wide', 'narrow', 'thick', 'thin',
+  'wide', 'narrow', 'thick', 'thin'
 ]
 // 주의: --xl, --xxl은 KRDS 정의가 아님 (KRDS는 xsmall/small/medium/large/xlarge 표준)
 // 단, --xl/--xxl 이미 사용 중이면 별도 정리 필요. 일단 미검출(false negative 허용).
@@ -205,7 +205,7 @@ function findClassUsage(html, className) {
     matches.push({
       tag: m[1],
       fullMatch: m[0],
-      index: m.index,
+      index: m.index
     })
   }
   return matches
@@ -321,9 +321,9 @@ function checkHtml(html, filePath, baseLineNum = 1) {
 
 // 의도적으로 잘못된 예시를 포함하는 파일/경로 — 검사 제외
 const SKIP_PATTERNS = [
-  /\/site\/conventions\//,           // 규칙 문서 — ❌ 금지 예시 포함
-  /\/site\/accessibility\//,         // 접근성 가이드 — "Don't" 예시 포함
-  /\/src\/playground\/index\.html$/, // 색상/토큰 스케일 데모 — pg__swatch-color--gray-* 의도적 사용
+  /\/site\/conventions\//, // 규칙 문서 — ❌ 금지 예시 포함
+  /\/site\/accessibility\//, // 접근성 가이드 — "Don't" 예시 포함
+  /\/src\/playground\/index\.html$/ // 색상/토큰 스케일 데모 — pg__swatch-color--gray-* 의도적 사용
 ]
 
 function isSkipped(filePath) {

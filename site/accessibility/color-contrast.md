@@ -108,12 +108,11 @@ WebAIM Contrast Checker에서 조절한 색상과 배경색을 입력하여 4.5:
 
 **3단계: 토큰 변수로 적용**
 
-확인된 색상을 프로젝트 오버라이드 파일(`프로젝트별 CSS 확장`)에서 토큰을 재정의한다.
+확인된 색상은 `tokens/foundation.json`에서 조정하고 `npm run build:tokens`로 반영한다.
 
-```scss
-// 프로젝트별 CSS 확장
+```css
 :root {
-  // warning 색상 대비 보강 (기본 #c78500 -> #a86e00)
+  /* warning 색상 대비 보강 예시 */
   --color-warning: #a86e00;
 }
 ```

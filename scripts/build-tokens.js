@@ -12,20 +12,11 @@
 
 const fs = require('fs')
 const path = require('path')
-const { execSync } = require('child_process')
 
 const ROOT = path.resolve(__dirname, '..')
 const SOURCE_PATH = path.join(ROOT, 'tokens', 'foundation.json')
 const BUILD_DIR = path.join(ROOT, 'tokens', 'build')
 const CSS_PATH = path.join(BUILD_DIR, 'tokens.css')
-
-function buildVersion() {
-  try {
-    return execSync('git describe --always --dirty', { cwd: ROOT }).toString().trim()
-  } catch {
-    return 'unknown'
-  }
-}
 
 if (!fs.existsSync(BUILD_DIR)) fs.mkdirSync(BUILD_DIR, { recursive: true })
 

@@ -205,8 +205,8 @@ function checkCssFile(filePath) {
 
 // 의도적으로 잘못된 예시(❌ 금지)를 포함하는 자동 생성 문서 — 검사 제외
 const HTML_SKIP_PATTERNS = [
-  /\/site\/conventions\//,    // rules.json → build:rules가 생성한 규칙 문서
-  /\/site\/accessibility\//,  // 접근성 가이드 — "Don't" 예시 포함
+  /\/site\/conventions\//, // rules.json → build:rules가 생성한 규칙 문서
+  /\/site\/accessibility\// // 접근성 가이드 — "Don't" 예시 포함
 ]
 
 function shouldSkipHtmlFile(filePath) {

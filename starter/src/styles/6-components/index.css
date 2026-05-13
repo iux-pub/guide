@@ -1,5 +1,5 @@
 /**
- * 6-components — KRDS UI 컴포넌트 (BEM)
+ * 6-components — KRDS 기반 UI 컴포넌트 (BEM)
  *
  * 그룹별 import. 새 컴포넌트 추가 시 알파벳 순으로 추가.
  *
@@ -9,7 +9,7 @@
  * 그룹 D — 피드백 ✓
  * 그룹 E — 콘텐츠/표현 ✓
  *
- * KRDS 정의 컴포넌트 ~30종 커버. 추가 컴포넌트(footer, side-navigation, in-page-navigation,
+ * KRDS 주요 컴포넌트 28종을 우선 제공한다. 추가 컴포넌트(footer, side-navigation, in-page-navigation,
  * masthead, identifier, language-switcher, resize, coach-mark, contextual-help, tts,
  * help-panel, range-slider, back-button, bottom-sheet, snackbar, quantity-toggle, splash-screen,
  * tab-bar, fab)는 프로젝트 필요에 따라 별도 추가.

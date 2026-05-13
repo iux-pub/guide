@@ -5,43 +5,43 @@ order: 2
 
 <!-- 자동 생성 — rules.json에서 생성됨. 직접 수정 금지. npm run build:rules로 갱신. -->
 
-CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + KRDS 토큰 기반.
+CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOUX 토큰 기반.
 
 ## 규칙 요약
 
 | ID | 규칙 | 심각도 | 검증 |
 |----|------|--------|------|
-| R-01 | 모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지 | error | check-violations.js |
+| R-01 | 색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장 | error | check-violations.js |
 | R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | check-violations.js |
-| R-03 | SCSS 사용 금지 — Tailwind v4 + CSS Custom Properties만 허용 | error | check-violations.js |
+| R-03 | SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용 | error | check-violations.js |
+| R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | check-violations.js |
 
 ---
 
-## R-01 — 모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지
+## R-01 — 색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장
 
 **심각도:** 🔴 error &nbsp; **검증:** check-violations.js
 
-> 디자인 토큰으로 일관성을 유지하고 프로젝트별 테마 오버라이드를 가능하게 한다. 하드코딩 값은 토큰 변경 시 일일이 찾아 고쳐야 하는 기술 부채다. KRDS 토큰(`--krds-*`)과 INFOMIND 시맨틱 별칭(`--color-*`/`--spacing-*` 등) 양쪽을 사용할 수 있다.
+> 색상은 브랜드·상태·접근성·테마 변경의 영향이 크므로 반드시 토큰으로 관리한다. 반면 간격·크기·타이포 스케일은 KRDS 값을 참고하되 프로젝트 성격에 맞게 조정할 수 있다. 특히 CMS/관리자 화면은 정보 밀도와 반복 작업 효율이 중요하므로 KRDS 수치 체계를 그대로 강제하지 않는다.
 
 **❌ 금지**
 
 ```css
 color: #256ef4;   // 하드코딩 색상
 background: #f8f8f8;   // 하드코딩 색상
-padding: 16px;   // 하드코딩 간격
-gap: 8px;   // 하드코딩 간격
+color: rgb(37, 110, 244);   // 하드코딩 색상
 ```
 
 **✅ 올바른 형식**
 
 ```css
-color: var(--krds-light-color-primary);   // KRDS 정본 토큰
-color: var(--color-primary);   // INFOMIND 시맨틱 별칭 (KRDS 토큰을 가리킴)
-padding: var(--krds-padding-5);   // KRDS spacing 스케일
-gap: var(--spacing-4);   // INFOMIND 시맨틱 별칭
+color: var(--color-primary);   // INFOUX 공개 토큰
+color: var(--color-primary);   // INFOMIND 시맨틱 별칭 (INFOUX 토큰을 가리킴)
+padding: 16px;   // 프로젝트 맥락상 명확한 간격값은 허용
+gap: var(--spacing-4);   // 반복 패턴에는 INFOMIND 간격 별칭 권장
 ```
 
-**참고:** tokens/krds-base.json, tokens/infomind-overrides.json, tokens/build/tokens.css
+**참고:** tokens/foundation.json, tokens/foundation.json, tokens/build/tokens.css
 
 ---
 
@@ -60,16 +60,16 @@ gap: var(--spacing-4);   // INFOMIND 시맨틱 별칭
 **✅ 올바른 형식**
 
 ```css
-.pagefind-ui__input { font-size: var(--krds-font-size-7) !important; /* pagefind 인라인 스타일 오버라이드 */ }   // 사유 주석 명시
+.pagefind-ui__input { font-size: 1.7rem !important; /* pagefind 인라인 스타일 오버라이드 */ }   // 사유 주석 명시
 ```
 
 ---
 
-## R-03 — SCSS 사용 금지 — Tailwind v4 + CSS Custom Properties만 허용
+## R-03 — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 
 **심각도:** 🔴 error &nbsp; **검증:** check-violations.js
 
-> 프로젝트는 KRDS+Tailwind v4 마이그레이션으로 SCSS 빌드 파이프라인을 폐기했다. .scss 확장자, @use/@forward, SCSS 변수($var), SCSS 전용 함수/믹스인 사용을 금지한다. 토큰은 tokens/build/tokens.css(`@theme` + CSS Custom Properties)로 발행되며 모든 스타일은 표준 CSS만 사용한다.
+> 프로젝트는 SCSS 빌드 파이프라인을 사용하지 않는다. .scss 확장자, @use/@forward, SCSS 변수($var), SCSS 전용 함수/믹스인 사용을 금지한다. 단, 표준 CSS nesting과 Tailwind v4의 @theme/@apply/@utility 등 CSS 기반 문법은 허용한다.
 
 **❌ 금지**
 
@@ -84,11 +84,44 @@ $primary: #256ef4;   // SCSS 변수
 
 ```css
 /* style.css */   // .css 확장자만
+.card { &__title { color: var(--color-text); } }   // 표준 CSS nesting
+.btn { @apply inline-flex items-center; }   // Tailwind @apply
 @import "tailwindcss";   // Tailwind v4 import
-@import "../../tokens/build/tokens.css";   // 토큰 import
-:root { --color-primary: var(--krds-light-color-primary); }   // CSS Custom Property
 ```
 
 **참고:** src/styles/style.css, tokens/build/tokens.css
+
+---
+
+## R-19 — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
+
+**심각도:** 🔴 error &nbsp; **검증:** check-violations.js
+
+> 반복되는 레이아웃, 정렬, 표시 상태, 커서, overflow 같은 유틸리티 성격의 선언은 Tailwind v4 @apply로 작성해 CSS 구조를 간결하게 유지한다. 색상, 간격, 크기, radius, shadow, typography처럼 KRDS/INFOMIND 토큰 의미가 중요한 값은 Tailwind 기본 유틸로 억지 변환하지 않고 var(--token)을 유지한다.
+
+**❌ 금지**
+
+```css
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}   // @apply로 표현 가능한 raw utility 선언
+```
+
+**✅ 올바른 형식**
+
+```css
+.btn {
+  @apply inline-flex items-center justify-center;
+  color: var(--color-text);
+}   // 유틸은 @apply, 토큰 값은 var() 유지
+.card {
+  @apply relative overflow-hidden;
+  border-radius: 0.6rem;
+}   // 구조 유틸과 INFOUX 토큰 병행
+```
+
+**참고:** src/styles/**/*.css, starter/src/styles/**/*.css
 
 ---

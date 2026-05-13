@@ -14,136 +14,173 @@ Google Stitch, Galileo, Lovable, v0
 ## 프롬프트
 
 ````markdown
-# KRDS+INFOMIND 디자인 AI 프롬프트
+# KRDS 원칙 + INFOMIND 디자인 AI 프롬프트
 
-> **목적:** 디자인 AI 도구에서 KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND UX 표준을 적용하기 위한 프롬프트
+> **목적:** 디자인 AI 도구에서 KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙과 INFOMIND UX 실무 표준을 적용하기 위한 프롬프트
 > **대상 AI:** Google Stitch, Galileo, Lovable, v0
 
 ---
 
 ## 핵심 원칙
 
-- **모든 색상·간격·크기는 CSS Custom Property(`var(--token)`) 사용.** 하드코딩 hex/rgb/px 일체 금지
-- **62.5% REM 트릭 적용 — `1rem = 10px`** (KRDS 명시 채택)
+- **색상은 CSS Custom Property(`var(--token)`) 사용.** 하드코딩 hex/rgb/hsl 금지
+- **간격·크기·타이포 스케일은 CSS/Tailwind 직접값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
+- **CSS는 표준 nesting + Tailwind v4 `@apply` 사용 가능**
 - **모바일 터치 영역 ≥ 44×44px**
 - **시맨틱 HTML + WCAG 2.1 AA 준수**
-- **카탈로그(KRDS 28컴포넌트) 외 임의 컴포넌트 신설 금지**
+- **HTML 기본 골격은 `header/main/footer`, `main > section > .container` 패턴 유지**
 
 ---
 
-## 색상 토큰 (KRDS 정본)
+## 색상 토큰 (INFOUX)
 
 ### Primary
 
 | 토큰 | 값 |
 |----|----|
-| `--krds-light-color-primary-5` | #ecf2fe |
-| `--krds-light-color-primary-20` | #b1cefb |
-| `--krds-light-color-primary-40` | #4c87f6 |
-| `--krds-light-color-primary-60` | #0b50d0 |
-| `--krds-light-color-primary-80` | #052561 |
-| `--krds-light-color-primary-95` | #020f27 |
+| `--color-primary-5` | #ecf2fe |
+| `--color-primary-20` | #b1cefb |
+| `--color-primary-40` | #4c87f6 |
+| `--color-primary-60` | #0b50d0 |
+| `--color-primary-80` | #052561 |
+| `--color-primary-95` | #020f27 |
+| `--color-primary-5` | var(--color-primary-5) |
+| `--color-primary-20` | var(--color-primary-20) |
+| `--color-primary-40` | var(--color-primary-40) |
+| `--color-primary-60` | var(--color-primary-60) |
+| `--color-primary-80` | var(--color-primary-80) |
+| `--color-primary-95` | var(--color-primary-95) |
 
 ### Secondary
 
 | 토큰 | 값 |
 |----|----|
-| `--krds-light-color-secondary-10` | #d6e0eb |
-| `--krds-light-color-secondary-30` | #90b0d5 |
-| `--krds-light-color-secondary-50` | #346fb2 |
-| `--krds-light-color-secondary-70` | #063a74 |
-| `--krds-light-color-secondary-90` | #031f3f |
+| `--color-secondary-10` | #d6e0eb |
+| `--color-secondary-30` | #90b0d5 |
+| `--color-secondary-50` | #346fb2 |
+| `--color-secondary-70` | #063a74 |
+| `--color-secondary-90` | #031f3f |
+| `--color-secondary-10` | var(--color-secondary-10) |
+| `--color-secondary-30` | var(--color-secondary-30) |
+| `--color-secondary-50` | var(--color-secondary-50) |
+| `--color-secondary-70` | var(--color-secondary-70) |
+| `--color-secondary-90` | var(--color-secondary-90) |
 
 ### Gray
 
 | 토큰 | 값 |
 |----|----|
-| `--krds-light-color-gray-0` | #ffffff |
-| `--krds-light-color-gray-10` | #e6e8ea |
-| `--krds-light-color-gray-30` | #b1b8be |
-| `--krds-light-color-gray-50` | #6d7882 |
-| `--krds-light-color-gray-70` | #464c53 |
-| `--krds-light-color-gray-90` | #1e2124 |
-| `--krds-light-color-gray-100` | #000000 |
+| `--color-gray-0` | #ffffff |
+| `--color-gray-10` | #e6e8ea |
+| `--color-gray-30` | #b1b8be |
+| `--color-gray-50` | #6d7882 |
+| `--color-gray-70` | #464c53 |
+| `--color-gray-90` | #1e2124 |
+| `--color-gray-100` | #000000 |
+| `--color-gray-0` | var(--color-gray-0) |
+| `--color-gray-10` | var(--color-gray-10) |
+| `--color-gray-30` | var(--color-gray-30) |
+| `--color-gray-50` | var(--color-gray-50) |
+| `--color-gray-70` | var(--color-gray-70) |
+| ... | (총 14개, tokens/build/tokens.css 참조) |
 
 ### Semantic (success/warning/danger/info)
 
 | 토큰 | 값 |
 |----|----|
-| `--krds-light-color-danger-10` | #fcdfd9 |
-| `--krds-light-color-danger-30` | #f48771 |
-| `--krds-light-color-danger-50` | #de3412 |
-| `--krds-light-color-danger-70` | #8a240f |
-| `--krds-light-color-danger-90` | #390d05 |
-| `--krds-light-color-warning-10` | #ffe0a3 |
-| `--krds-light-color-warning-30` | #ffb114 |
-| `--krds-light-color-warning-50` | #9e6a00 |
-| `--krds-light-color-warning-70` | #614100 |
-| `--krds-light-color-warning-90` | #2e1f00 |
-| `--krds-light-color-success-5` | #eaf6ec |
-| `--krds-light-color-success-20` | #a9dab4 |
-| `--krds-light-color-success-40` | #3fa654 |
-| `--krds-light-color-success-60` | #267337 |
-| `--krds-light-color-success-80` | #1f4727 |
-| `--krds-light-color-success-95` | #0e2012 |
+| `--color-danger-text` | #bd2c0f |
+| `--color-warning-surface` | #fff3db |
+| `--color-success-text` | #267337 |
+| `--color-info-surface` | #e7f4fe |
+| `--color-danger-10` | #fcdfd9 |
+| `--color-danger-30` | #f48771 |
+| `--color-danger-50` | #de3412 |
+| `--color-danger-70` | #8a240f |
+| `--color-danger-90` | #390d05 |
+| `--color-warning-5` | #fff3db |
+| `--color-warning-20` | #ffc95c |
+| `--color-warning-40` | #c78500 |
+| `--color-warning-60` | #8a5c00 |
+| `--color-warning-80` | #422c00 |
+| `--color-warning-95` | #241800 |
+| `--color-success-10` | #d8eedd |
+| `--color-success-30` | #7ec88e |
+| `--color-success-50` | #228738 |
+| `--color-success-70` | #285d33 |
+| `--color-success-90` | #122b18 |
+| `--color-danger-text` | var(--color-danger-text) |
+| `--color-warning-surface` | var(--color-warning-surface) |
+| `--color-success-text` | var(--color-success-text) |
+| `--color-info-surface` | var(--color-info-surface) |
+| `--color-danger-10` | var(--color-danger-10) |
+| `--color-danger-30` | var(--color-danger-30) |
+| `--color-danger-50` | var(--color-danger-50) |
+| `--color-danger-70` | var(--color-danger-70) |
+| `--color-danger-90` | var(--color-danger-90) |
+| `--color-warning-5` | var(--color-warning-5) |
+| ... | (총 40개, tokens/build/tokens.css 참조) |
 
 ---
 
-## 시맨틱 별칭 (INFOMIND)
+## 시맨틱 토큰
 
-KRDS 토큰을 가리키는 의미 기반 alias. 컴포넌트 작성 시 이쪽을 우선 권장.
+컴포넌트 작성 시 의미 기반 `--color-*` 토큰을 우선 사용한다.
 
 ### Text
 
 | 토큰 | 값 |
 |----|----|
-| `--color-text` | var(--krds-light-color-text-basic) |
-| `--color-text-subtle` | var(--krds-light-color-text-subtle) |
-| `--color-text-inverse` | var(--krds-light-color-text-basic-inverse) |
+| `--color-text` | #1e2124 |
+| `--color-text-subtle` | #464c53 |
+| `--color-text-inverse` | #ffffff |
+| `--color-text-bolder` | #e6e8ea |
+| `--color-text-disabled` | #58616a |
+| `--color-text` | var(--color-text) |
+| `--color-text-subtle` | var(--color-text-subtle) |
+| `--color-text-inverse` | var(--color-text-inverse) |
 
 ### Background
 
 | 토큰 | 값 |
 |----|----|
-| `--color-bg-subtler` | var(--krds-light-color-background-gray-subtler) |
-| `--color-bg-inverse` | var(--krds-light-color-background-inverse) |
+| `--color-bg-subtler` | #f4f5f6 |
+| `--color-bg-inverse` | #1e2124 |
+| `--color-bg` | #000000 |
+| `--color-bg-subtle` | #1e2124 |
+| `--color-bg-dim` | #000000bf |
+| `--color-bg-subtler` | var(--color-bg-subtler) |
+| `--color-bg-inverse` | var(--color-bg-inverse) |
 
 ### Border
 
 | 토큰 | 값 |
 |----|----|
-| `--color-border-light` | var(--krds-light-color-border-gray-light) |
-| `--color-border-primary` | var(--krds-light-color-border-primary) |
+| `--color-border` | #b1b8be |
+| `--color-border-dark` | #58616a |
+| `--color-border-primary-light` | #d8e5fd |
+| `--color-border-success-light` | #d8eedd |
+| `--color-border-danger-light` | #fcdfd9 |
+| `--color-border` | #464c53 |
+| `--color-border-dark` | #8a949e |
+| `--color-border-disabled` | #464c53 |
+| `--color-border` | var(--color-border) |
+| `--color-border-dark` | var(--color-border-dark) |
+| `--color-border-primary-light` | var(--color-border-primary-light) |
+| `--color-border-success-light` | var(--color-border-success-light) |
+| `--color-border-danger-light` | var(--color-border-danger-light) |
 
 ---
 
-## 간격·크기 토큰
-
-### Padding (KRDS 스케일)
+## 기본 폰트 토큰
 
 | 토큰 | 값 |
 |----|----|
-| `--krds-padding-1` | var(--krds-number-2) |
-| `--krds-padding-3` | var(--krds-number-5) |
-| `--krds-padding-5` | var(--krds-number-7) |
-| `--krds-padding-7` | var(--krds-number-9) |
-| `--krds-padding-9` | var(--krds-number-12) |
+| `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
 
-### Border Radius
+## 직접값 사용 범위
 
-| 토큰 | 값 |
-|----|----|
-| `--krds-radius-xsmall2` | var(--krds-number-2) |
-| `--krds-radius-small1` | var(--krds-number-3) |
-| `--krds-radius-small3` | var(--krds-number-3) |
-| `--krds-radius-medium2` | var(--krds-number-4) |
-| `--krds-radius-medium4` | var(--krds-number-5) |
-| `--krds-radius-large2` | var(--krds-number-6) |
-| `--krds-radius-xlarge2` | var(--krds-number-7) |
-
-### Font Size
-
-_(토큰 없음 — npm run build:tokens 실행 필요)_
+간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다. Tailwind v4 `@apply`와 명확한 CSS 직접값으로 작성한다.
 
 > 전체 토큰 카탈로그(상세 + 시맨틱 매핑) — `skill/references/krds-tokens.md`
 > Tailwind v4 @theme 매핑 — `skill/references/tailwind-mapping.md`
@@ -162,7 +199,7 @@ KRDS 표준 브레이크포인트.
 
 ---
 
-## 컴포넌트 카탈로그 (KRDS 28종, 5그룹)
+## 컴포넌트 카탈로그 (KRDS 기반)
 
 | 그룹 | 컴포넌트 |
 |------|---------|
@@ -175,6 +212,26 @@ KRDS 표준 브레이크포인트.
 > 각 컴포넌트의 BEM·접근성·토큰 매핑 — `skill/references/krds-components.md`
 > 마크업 스니펫 — `src/snippets/{name}.md`
 
+## HTML 기본 골격
+
+```html
+<header id="header">
+  <div class="container">...</div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">...</div>
+  </section>
+</main>
+
+<footer id="footer">
+  <div class="container">...</div>
+</footer>
+```
+
+HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 분리한다.
+
 ---
 
 ## 접근성 핵심 규칙 (KWCAG/WCAG 2.1 AA)
@@ -186,21 +243,20 @@ KRDS 표준 브레이크포인트.
 5. **이미지** — `alt` 필수. 장식용은 `alt=""`
 6. **폼** — `<label for>` + `id` 연결 필수
 7. **모달** — `role="dialog"` + 포커스 트랩 + `aria-labelledby`
-8. **시맨틱 HTML** — `<button>`/`<a>` 사용. `<div onclick>` 금지
+8. **시맨틱 HTML** — `<button>`/`<a>` 사용. `div`/ `span`에 직접 클릭 핸들러를 붙이는 패턴 금지
 
 ---
 
 ## 절대 금지
 
 - Raw hex/rgb/hsl 색상
-- Raw px (KRDS 스케일 외 — `p-[20px]` 같은 임의 값 금지)
-- Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700` 등)
-- 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
+- Tailwind 기본 팔레트 raw 컬러 유틸
+- 옛 버튼 variant 이름
 - `!important` (사유 주석 없을 시)
 - 인라인 `style="..."` (CSS 변수 주입 외)
-- 카탈로그 외 컴포넌트 임의 생성
+- 기존 인포마인드 HTML 골격을 무시한 임의 구조
 - `:focus { outline: none }`
-- `<div onclick>`
+- `div`/ `span` 클릭 핸들러 패턴
 - 이미지 `alt` 누락, 폼 `<label>` 누락
 
 ````

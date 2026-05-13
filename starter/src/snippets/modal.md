@@ -45,10 +45,10 @@
 - 닫기 버튼은 `aria-label="닫기"` 필수
 - 첫 포커스는 모달 내부 첫 인터랙티브 요소 (또는 닫기 버튼)
 - ESC 키로 닫기 가능
-- 백드롭은 `--krds-light-color-background-dim` (KRDS dim 토큰)
+- 백드롭은 `--color-bg-dim`
 
 ## 출처
 
-- Shape: `--krds-radius-xlarge1` (12px) — KRDS XLarge 그룹
+- Shape 값은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
 - Shadow: `--shadow-3` (KRDS modal-wrap-shadow 추상화)
 - CSS: `src/styles/6-components/modal.css`

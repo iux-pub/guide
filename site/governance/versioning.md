@@ -73,7 +73,7 @@ MAJOR.MINOR.PATCH
 ## [1.1.0] - 2026-04-15
 
 ### Added
-- accordion 컴포넌트 추가 (HTML+SCSS 스니펫, 접근성 가이드)
+- accordion 컴포넌트 추가 (HTML+CSS 스니펫, 접근성 가이드)
 
 ### Changed
 - btn 컴포넌트 호버 스타일 개선

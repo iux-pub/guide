@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.9.0] - 2026-03-26
 
 ### Added
-- 피그마 컨벤션 가이드 (컴포넌트 네이밍, 레이어 구조, Variable 네이밍, Auto Layout 규칙)
 - 거버넌스 문서 (컴포넌트 라이프사이클, 버전 정책, 변경 승인 프로세스)
 
 ## [0.8.0] - 2026-03-25

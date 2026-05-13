@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // check-violations.js — info-design 컨트랙트 자동 검출
-// KRDS 토큰 외 raw 값, 옛 시스템 흔적, 옛 variant, SCSS 잔재, 접근성 누락 검출.
+// raw 색상, 옛 시스템 흔적, 옛 variant, SCSS 잔재, 접근성 누락 검출.
 //
 // 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
 //   STRICT=1 환경변수 설정 시 경고도 1로 실패 처리
@@ -75,7 +75,7 @@ const OLD_BTN_VARIANTS = ['btn--ghost', 'btn--outline', 'btn--link', 'btn--sm', 
 // gray/slate/red/blue/green/amber/yellow + bg/text/border/ring/divide
 const TW_RAW_COLOR = /\b(?:bg|text|border|ring|divide|hover:bg|hover:text|hover:border)-(?:gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d+\b/
 
-// 5. Tailwind 기본 (KRDS에서 비활성화한) 폰트/사이즈/그림자/z-index/반경
+// 5. Tailwind 기본 폰트/사이즈/그림자/z-index/반경
 const TW_DEFAULT_TEXT_SIZE = /\btext-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\b/
 const TW_DEFAULT_FONT_WEIGHT = /\bfont-(?:thin|extralight|light|medium|semibold|extrabold|black)\b/
 const TW_DEFAULT_RADIUS = /\brounded(?:-(?:sm|md|lg|xl|2xl|3xl|none|full))?\b/
@@ -117,165 +117,196 @@ function checkCssFile(filePath) {
   // 자동 생성 파일 제외
   if (lines[0] && (lines[0].includes('AUTO-GENERATED') || lines[0].includes('자동 생성'))) return
 
-  // 토큰 정의 파일 / project-overrides는 raw hex 허용 (정의 자체가 raw임)
+  // 토큰 정의 파일 / 프로젝트 스타일 확장 파일은 raw hex 허용 (정의 자체가 raw임)
   const isTokenFile = filePath.includes('1-settings') ||
-                       filePath.includes('_project-overrides') ||
+                       filePath.includes('_project-style') ||
                        filePath.includes('tokens/build')
+
+  const isEntryFile = /\/src\/styles\/(?:style|docs)\.css$/.test(filePath) ||
+                      /\/src\/styles\/6-components\/index\.css$/.test(filePath) ||
+                      /\/src\/styles\/3-generic\/reset\.css$/.test(filePath)
+
+  if (!isTokenFile && !isEntryFile && !content.includes('@apply')) {
+    error(relPath, null, '[R-19] 스타일 CSS는 Tailwind v4 @apply를 우선 사용해야 한다. 토큰이 필요한 값은 var(--token)으로 유지하되 레이아웃/상태 유틸은 @apply로 작성.')
+  }
 
   lines.forEach((line, i) => {
     const lineNum = i + 1
     const trimmed = line.replace(/\/\*.*?\*\//g, '').trim()
     if (!trimmed) return
 
-    // SCSS 문법 — 폐기됨
+    // SCSS 문법 — 폐기됨 (R-03)
     if (SCSS_USE.test(trimmed)) {
-      error(relPath, lineNum, 'SCSS @use 사용 금지. CSS @import 또는 Tailwind v4 @theme 사용.', trimmed)
+      error(relPath, lineNum, '[R-03] SCSS @use 사용 금지. CSS @import 또는 Tailwind v4 @theme 사용.', trimmed)
     }
     if (SCSS_FORWARD.test(trimmed)) {
-      error(relPath, lineNum, 'SCSS @forward 사용 금지.', trimmed)
+      error(relPath, lineNum, '[R-03] SCSS @forward 사용 금지.', trimmed)
     }
     if (SCSS_VAR.test(trimmed)) {
-      error(relPath, lineNum, 'SCSS 변수 ($var) 금지. CSS 커스텀 프로퍼티 사용.', trimmed)
+      error(relPath, lineNum, '[R-03] SCSS 변수 ($var) 금지. CSS 커스텀 프로퍼티 사용.', trimmed)
     }
 
-    // 옛 토큰명 — info-design 컨트랙트 위반
+    // 옛 토큰명 — info-design 컨트랙트 점검 (R-01: 토큰 시스템)
     for (const oldName of OLD_TOKEN_NAMES) {
       if (trimmed.includes(`var(${oldName})`)) {
-        warn(relPath, lineNum, `옛 토큰명 \`${oldName}\` 사용. KRDS 토큰으로 교체 필요.`, trimmed)
+        warn(relPath, lineNum, `[R-01] 옛 토큰명 \`${oldName}\` 사용. 현행 토큰으로 교체 권장.`, trimmed)
       }
     }
 
-    // 옛 btn variant
+    // 옛 btn variant — 카탈로그 위반 (R-06: 시각적 modifier 금지와 같은 맥락)
     for (const oldVar of OLD_BTN_VARIANTS) {
       if (trimmed.match(new RegExp(`\\.${oldVar.replace(/--/g, '\\-\\-')}\\b`))) {
-        warn(relPath, lineNum, `옛 버튼 variant \`.${oldVar}\` 사용. KRDS 4 variant(--primary/--secondary/--tertiary/--text) + 5 size(--xsmall..--xlarge)로 교체.`, trimmed)
+        warn(relPath, lineNum, `[R-06] 옛 버튼 variant \`.${oldVar}\` 사용. KRDS 4 variant(--primary/--secondary/--tertiary/--text) + 5 size(--xsmall..--xlarge)로 교체.`, trimmed)
       }
     }
 
     if (!isTokenFile) {
-      // raw hex
+      // raw hex (R-01)
       if (HARDCODED_HEX.test(trimmed)) {
-        error(relPath, lineNum, 'Raw hex 색상 금지. KRDS 토큰 var(--color-*) 또는 var(--krds-*) 사용.', trimmed)
+        error(relPath, lineNum, '[R-01] Raw hex 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
-      // raw rgb/hsl
+      // raw rgb/hsl (R-01)
       if (HARDCODED_RGB.test(trimmed)) {
-        error(relPath, lineNum, 'Raw rgb/rgba 색상 금지. KRDS 토큰 사용.', trimmed)
+        error(relPath, lineNum, '[R-01] Raw rgb/rgba 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
       if (HARDCODED_HSL.test(trimmed)) {
-        error(relPath, lineNum, 'Raw hsl/hsla 색상 금지. KRDS 토큰 사용.', trimmed)
+        error(relPath, lineNum, '[R-01] Raw hsl/hsla 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
-      // hardcoded px
+      // hardcoded px (R-01) — 간격/크기는 프로젝트 맥락에 따라 허용하되 반복 패턴은 토큰 권장
       const pxMatch = trimmed.match(HARDCODED_PX)
       if (pxMatch && !ALLOWED_PX.test(pxMatch[1])) {
-        warn(relPath, lineNum, `하드코딩 \`${pxMatch[1]}\`. KRDS spacing 토큰 사용 권장.`, trimmed)
+        warn(relPath, lineNum, `[R-01] 하드코딩 \`${pxMatch[1]}\`. 반복되는 간격/크기라면 토큰화 권장.`, trimmed)
       }
     }
 
-    // !important — components/utilities 외 금지
+    // !important (R-02) — components/utilities 외 금지
     if (IMPORTANT_USED.test(trimmed) && !filePath.includes('7-utilities')) {
       // 외부 라이브러리 오버라이드 사유 주석이 있으면 허용
       const hasJustification = trimmed.includes('/* ') || (lines[i - 1] || '').includes('/*')
       if (!hasJustification) {
-        warn(relPath, lineNum, '!important 사용 시 사유 주석 필수.', trimmed)
+        warn(relPath, lineNum, '[R-02] !important 사용 시 사유 주석 필수.', trimmed)
       }
     }
 
-    // BEM 2단계 element
+    // BEM 2단계 element (R-05)
     const bemMatch = trimmed.match(BEM_DOUBLE_ELEMENT)
     if (bemMatch) {
-      error(relPath, lineNum, `BEM 2단계 element 중첩 금지: .${bemMatch[1]}__${bemMatch[2]}__${bemMatch[3]}`, trimmed)
+      error(relPath, lineNum, `[R-05] BEM 2단계 element 중첩 금지: .${bemMatch[1]}__${bemMatch[2]}__${bemMatch[3]}`, trimmed)
     }
   })
 
-  // focus outline none 패턴 — 멀티라인 스캔 (블록 코멘트 제거 후 검사)
+  // focus outline none 패턴 (R-11) — 멀티라인 스캔
   const contentNoComments = content.replace(/\/\*[\s\S]*?\*\//g, '')
   if (FOCUS_OUTLINE_NONE.test(contentNoComments)) {
     const matchLine = lines.findIndex(l => l.match(/:focus(?![-:\w])\s*\{/))
-    error(relPath, matchLine + 1, ':focus { outline: none } 금지. KRDS 4px primary outline 유지.', '')
+    error(relPath, matchLine + 1, '[R-11] :focus { outline: none } 금지. KRDS 4px primary outline 유지.', '')
   }
 }
 
+// 의도적으로 잘못된 예시(❌ 금지)를 포함하는 자동 생성 문서 — 검사 제외
+const HTML_SKIP_PATTERNS = [
+  /\/site\/conventions\//,    // rules.json → build:rules가 생성한 규칙 문서
+  /\/site\/accessibility\//,  // 접근성 가이드 — "Don't" 예시 포함
+]
+
+function shouldSkipHtmlFile(filePath) {
+  return HTML_SKIP_PATTERNS.some(re => re.test(filePath))
+}
+
 function checkHtmlFile(filePath) {
+  if (shouldSkipHtmlFile(filePath)) return
+
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.split('\n')
   const relPath = rel(filePath)
+
+  // R-14: 페이지 진입점(<body> 포함)에 skip-to-content 필수
+  // 면제: partial(_includes), playground(내부 데모), snippet(컴포넌트 마크업 조각)
+  const hasBody = /<body\b/.test(content)
+  const isPartial = /\/_includes\/partials\//.test(filePath) || /\/_includes\/components\//.test(filePath)
+  const isPlayground = /\/src\/playground\//.test(filePath)
+  const isSnippet = /\/src\/snippets\//.test(filePath)
+  if (hasBody && !isPartial && !isPlayground && !isSnippet) {
+    if (!/skip-to-content/.test(content)) {
+      error(relPath, null, '[R-14] 건너뛰기 링크 누락. <body> 진입 직후 <a href="#main" class="skip-to-content"> 추가 필요.')
+    }
+  }
 
   lines.forEach((line, i) => {
     const lineNum = i + 1
     const trimmed = line.trim()
     if (!trimmed) return
 
-    // 인라인 스타일 (CSS 변수 주입은 허용)
+    // 인라인 스타일 (R-07) — CSS 변수 주입은 허용
     if (INLINE_STYLE.test(trimmed) && !INLINE_STYLE_CUSTOM_PROP.test(trimmed)) {
-      warn(relPath, lineNum, '인라인 style 금지. BEM 클래스 또는 Tailwind 유틸 사용.', trimmed.slice(0, 100))
+      warn(relPath, lineNum, '[R-07] 인라인 style 금지. BEM 클래스 또는 Tailwind 유틸 사용.', trimmed.slice(0, 100))
     }
 
-    // BEM 2단계
+    // BEM 2단계 HTML (R-08)
     const bemMatch = trimmed.match(BEM_DOUBLE_ELEMENT)
     if (bemMatch) {
-      warn(relPath, lineNum, 'BEM 2단계 element 중첩 클래스 금지.', trimmed.slice(0, 100))
+      warn(relPath, lineNum, '[R-08] BEM 2단계 element 중첩 클래스 금지.', trimmed.slice(0, 100))
     }
 
-    // alt 누락
+    // alt 누락 (R-09)
     if (MISSING_ALT.test(trimmed)) {
-      error(relPath, lineNum, '<img> alt 속성 누락. 장식이면 alt="".', trimmed.slice(0, 100))
+      error(relPath, lineNum, '[R-09] <img> alt 속성 누락. 장식이면 alt="".', trimmed.slice(0, 100))
     }
 
-    // div onclick
+    // div onclick (R-10)
     if (CLICK_ON_DIV.test(trimmed)) {
-      error(relPath, lineNum, '<div>/<span> onclick 금지. <button> 또는 <a> 사용.', trimmed.slice(0, 100))
+      error(relPath, lineNum, '[R-10] <div>/<span> onclick 금지. <button> 또는 <a> 사용.', trimmed.slice(0, 100))
     }
 
-    // Tailwind raw 컬러 유틸
+    // Tailwind raw 컬러 유틸 (R-01: 토큰 시스템 우회)
     if (TW_RAW_COLOR.test(trimmed)) {
       const match = trimmed.match(TW_RAW_COLOR)
-      error(relPath, lineNum, `Tailwind raw 컬러 유틸 \`${match[0]}\` 금지. KRDS 시맨틱(bg-primary/text-text/bg-danger 등) 사용.`, trimmed.slice(0, 100))
+      error(relPath, lineNum, `[R-01] Tailwind raw 컬러 유틸 \`${match[0]}\` 금지. KRDS 시맨틱(bg-primary/text-text/bg-danger 등) 사용.`, trimmed.slice(0, 100))
     }
 
-    // Tailwind 기본 텍스트 사이즈
+    // Tailwind 기본 텍스트 사이즈 (R-01: 권장 스케일 점검)
     if (TW_DEFAULT_TEXT_SIZE.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_TEXT_SIZE)
-      warn(relPath, lineNum, `Tailwind 기본 \`${match[0]}\` 비활성화됨. KRDS 스케일(text-body-medium 등) 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 타입 계층이면 프로젝트/INFOMIND 스케일 사용 권장.`, trimmed.slice(0, 100))
     }
 
-    // Tailwind 기본 폰트 두께
+    // Tailwind 기본 폰트 두께 (R-01)
     if (TW_DEFAULT_FONT_WEIGHT.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_FONT_WEIGHT)
-      warn(relPath, lineNum, `KRDS는 400/700만 정의. \`${match[0]}\` 사용 시 적절한 두께로 교체.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] \`${match[0]}\` 사용. 제품 내 타입 위계와 일관되는지 확인 필요.`, trimmed.slice(0, 100))
     }
 
-    // Tailwind 기본 반경
+    // Tailwind 기본 반경 (R-01)
     if (TW_DEFAULT_RADIUS.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_RADIUS)
       // rounded-full은 rounded-max로 교체
       if (match[0] !== 'rounded-none') {
-        warn(relPath, lineNum, `Tailwind 기본 \`${match[0]}\` 비활성화됨. KRDS rounded-{xsmall1|small1|medium2|large1|xlarge1|max} 사용.`, trimmed.slice(0, 100))
+        warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 컴포넌트 반경이면 공통 토큰 사용 권장.`, trimmed.slice(0, 100))
       }
     }
 
-    // Tailwind 기본 그림자
+    // Tailwind 기본 그림자 (R-01)
     if (TW_DEFAULT_SHADOW.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_SHADOW)
-      warn(relPath, lineNum, `Tailwind 기본 \`${match[0]}\` 비활성화됨. INFOMIND shadow-{1|2|3} 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 elevation이면 INFOMIND shadow 토큰 사용 권장.`, trimmed.slice(0, 100))
     }
 
-    // Tailwind 기본 z-index
+    // Tailwind 기본 z-index (R-01)
     if (TW_DEFAULT_ZINDEX.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_ZINDEX)
-      warn(relPath, lineNum, `Tailwind 기본 \`${match[0]}\` 사용 지양. INFOMIND z-{dropdown|modal|toast 등} 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용 지양. INFOMIND z-{dropdown|modal|toast 등} 사용.`, trimmed.slice(0, 100))
     }
 
-    // Tailwind 기본 브레이크포인트
+    // Tailwind 기본 브레이크포인트 (R-01)
     if (TW_DEFAULT_BREAKPOINT.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_BREAKPOINT)
-      // sm: md: lg: xl: 2xl: 모두 비활성. KRDS는 small/medium/large/xlarge/xxlarge
-      warn(relPath, lineNum, `Tailwind 기본 \`${match[0]}\` 비활성화됨. KRDS small:/medium:/large:/xlarge:/xxlarge: 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 프로젝트 브레이크포인트와 충돌하지 않는지 확인.`, trimmed.slice(0, 100))
     }
 
-    // 옛 btn variant
+    // 옛 btn variant (R-06: 시각적/구형 modifier)
     for (const oldVar of OLD_BTN_VARIANTS) {
       if (trimmed.match(new RegExp(`\\b${oldVar.replace(/--/g, '\\-\\-')}\\b`))) {
-        warn(relPath, lineNum, `옛 버튼 variant \`${oldVar}\` 사용. KRDS variant로 교체.`, trimmed.slice(0, 100))
+        warn(relPath, lineNum, `[R-06] 옛 버튼 variant \`${oldVar}\` 사용. KRDS variant로 교체.`, trimmed.slice(0, 100))
       }
     }
   })
@@ -289,7 +320,7 @@ function checkScssRemnants() {
     if (!fs.existsSync(dir)) continue
     const found = collectFiles(dir, '.scss', ['node_modules'])
     for (const f of found) {
-      error(rel(f), null, 'SCSS 파일 잔재. info-design은 CSS만 허용. 파일 삭제 또는 마이그레이션 필요.')
+      error(rel(f), null, '[R-03] SCSS 파일 잔재. info-design은 CSS만 허용. 파일 삭제 또는 마이그레이션 필요.')
     }
   }
 }

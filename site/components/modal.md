@@ -36,7 +36,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/modal.md`이며,
 - 닫기 버튼은 `aria-label="닫기"` 필수
 - 첫 포커스는 모달 내부 첫 인터랙티브 요소 (또는 닫기 버튼)
 - ESC 키로 닫기 가능
-- 백드롭은 `--krds-light-color-background-dim` (KRDS dim 토큰)
+- 백드롭은 `--color-bg-dim`
 
 ## 파일
 

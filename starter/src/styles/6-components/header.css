@@ -23,97 +23,60 @@
 
 @layer components {
   .site-header {
-    background: var(--color-bg);
-    border-bottom: 1px solid var(--color-border-light);
-    position: sticky;
-    top: 0;
-    z-index: var(--z-sticky);
+    @apply bg-[var(--color-bg)] border-b border-[var(--color-border-light)] sticky top-0 z-[1020];
   }
 
   .site-header__inner {
-    display: flex;
-    align-items: center;
-    gap: var(--krds-gap-7); /* 24px */
-    height: 6.4rem; /* 64px (mobile) */
+    @apply flex items-center gap-[2.4rem] h-[6.4rem];
   }
 
   @media (min-width: 1024px) {
     .site-header__inner {
-      height: 8.0rem; /* 80px (PC) */
+      @apply h-[8.0rem];
     }
   }
 
   /* 브랜드 영역 */
   .site-header__brand {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--krds-gap-5);
-    text-decoration: none;
-    color: var(--color-text);
-    font-size: var(--text-body-large);
-    font-weight: 700;
+    @apply inline-flex items-center gap-[1.6rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
   }
 
   .site-header__brand img {
-    height: 3.2rem;
-    width: auto;
+    @apply h-[3.2rem] w-auto;
   }
 
   /* 주 메뉴 (PC) */
   .site-header__nav {
-    display: none;
-    flex: 1;
+    @apply hidden flex-1;
   }
 
   @media (min-width: 1024px) {
-    .site-header__nav { display: block; }
+    .site-header__nav { @apply [display:block]; }
   }
 
   .site-header__menu {
-    display: flex;
-    align-items: center;
-    gap: var(--krds-gap-5);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @apply flex items-center gap-[1.6rem] list-none m-0 p-0;
   }
 
   .site-header__menu a {
-    display: inline-flex;
-    align-items: center;
-    height: var(--krds-size-height-7); /* 48px 터치 영역 */
-    padding-inline: var(--krds-padding-5);
-    color: var(--color-text);
-    font-weight: 700;
-    text-decoration: none;
-    transition: color var(--duration-fast) var(--easing-standard);
+    @apply inline-flex items-center h-[4.8rem] px-[1.2rem] text-[var(--color-text)] font-bold no-underline [transition:color_0.15s_ease-in-out];
   }
 
-  .site-header__menu a:hover { color: var(--color-primary); }
-  .site-header__menu a[aria-current="page"] { color: var(--color-primary); }
+  .site-header__menu a:hover { @apply [color:var(--color-primary)]; }
+  .site-header__menu a[aria-current="page"] { @apply [color:var(--color-primary)]; }
 
   /* 우측 액션 영역 */
   .site-header__actions {
-    margin-inline-start: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--krds-gap-3);
+    @apply inline-flex items-center gap-[0.8rem] ms-auto;
+
   }
 
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--touch-target-min);
-    height: var(--touch-target-min);
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: var(--krds-radius-medium2);
-    cursor: pointer;
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border)] rounded-[0.6rem] cursor-pointer;
   }
 
   @media (min-width: 1024px) {
-    .site-header__toggle { display: none; }
+    .site-header__toggle { @apply [display:none]; }
   }
 }

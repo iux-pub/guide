@@ -10,8 +10,8 @@
 
 ## 1. 이 저장소가 무엇인가
 
-**KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND 표준**의 단일 소스(SoT) 저장소다.
-디자인 토큰 · CSS 컴포넌트(28종) · 마크업 스니펫 · AI 컨트랙트(`info-design` 스킬)를 한 곳에서 발행한다.
+**KRDS(범정부 UI/UX 디자인 시스템)의 품질 원칙 + INFOMIND 실무 표준**의 단일 소스(SoT) 저장소다.
+색상/상태 토큰 · CSS 컴포넌트 패턴 · 마크업 스니펫 · AI 컨트랙트(`info-design` 스킬)를 한 곳에서 발행한다.
 
 발행 채널 4개:
 - 스타터 키트 → `iux-pub/starter`
@@ -51,15 +51,10 @@
 다음을 **위반하면 코드를 작성하지 않고 작업을 중단**한다:
 
 - 색상 raw `hex`/`rgb`/`hsl` 직접 작성 (`#fff`, `rgb(0,0,0)`)
-- 간격/크기 `px`/`rem` 직접 작성 (`padding: 16px`)
-- 폰트 크기 직접 작성 (`font-size: 16px`)
 - Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700`, `bg-white`)
-- Tailwind raw 폰트 사이즈 (`text-xs`, `text-base`, `text-lg`)
 - 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open`) — R-17
 - 시각적 단어 modifier (`--blue`, `--big`, `--rounded`, `--shadow`) — R-18
-- 컴포넌트 root 태그가 `skill/references/html-semantics.md` 매핑과 다름 — R-15
 - 인터랙티브 위젯(modal/tab/accordion/tooltip/disclosure/carousel/calendar)에서 필수 ARIA 누락 — R-16
-- 카탈로그 외 컴포넌트 임의 생성 (KRDS 28종 외)
 - `<div onclick>` (시맨틱 HTML 의무) — R-10
 - 이미지 `alt` 누락 — R-09
 - `:focus { outline: none }` (포커스 가시성) — R-11
@@ -70,14 +65,16 @@
 
 | 항목 | 규정 |
 |------|------|
-| 색상 | `var(--krds-light-color-*)` 또는 `var(--color-*)` (시맨틱 별칭) |
-| 간격/크기 | `var(--krds-number-N)` / `var(--krds-gap-N)` / `var(--krds-padding-N)` 또는 `--spacing-N` |
-| 폰트 | `Pretendard GOV` (`var(--font-sans)`) |
-| 폰트 사이즈 | KRDS 스케일만 (`display-*`, `heading-*`, `body-*`, `label-*`, `navigation-*`) |
-| 1rem | **62.5% (1rem = 10px)** — KRDS 트릭 |
+| 색상 | `var(--color-*)` 시맨틱 토큰 |
+| 간격/크기 | CSS/Tailwind 직접값. CMS·관리자 화면은 정보 밀도에 맞게 조정 |
+| 폰트 | `var(--font-sans)` |
+| 폰트 사이즈 | 프로젝트 타입 계층을 우선. 토큰화하지 않음 |
+| CSS 작성 | 표준 CSS nesting 허용, Tailwind v4 `@apply`/`@theme`/`@utility` 허용 |
 | 터치 영역 | 모바일 인터랙티브 ≥ 44×44px |
 | BEM | `.block__element--modifier` (5-objects · 6-components 한정) |
-| 컴포넌트 root 태그 | `skill/references/html-semantics.md` 매핑 따름 |
+| HTML 기본 구조 | 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조 |
+| HTML 컴포넌트화 | 페이지 전체가 아니라 `main` 내부의 section 단위로 분리 |
+| 컴포넌트 root 태그 | `skill/references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 |
 | 상태 표현 | BEM modifier (시각) + ARIA 속성 (의미) 동시 |
 | 색상 대비 | 일반 텍스트 4.5:1, 큰 텍스트 3:1 (WCAG 2.1 AA) |
@@ -93,9 +90,10 @@
 > 본 섹션은 `rules.json`에서 자동 생성. `npm run build:rules`로 갱신.
 
 ### CSS 규칙
-- **R-01** `error` — 모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지
+- **R-01** `error` — 색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장
 - **R-02** `warn` — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
-- **R-03** `error` — SCSS 사용 금지 — Tailwind v4 + CSS Custom Properties만 허용
+- **R-03** `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
+- **R-19** `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 
 ### BEM 네이밍
 - **R-04** `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
@@ -109,7 +107,7 @@
 - **R-08** `warn` — HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)
 - **R-09** `error` — img alt 속성 필수
 - **R-10** `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
-- **R-15** `error` — 컴포넌트 root 태그는 html-semantics.md 매핑을 따른다
+- **R-15** `warn` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
 
 ### 접근성 규칙
 - **R-11** `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -125,11 +123,11 @@
 
 코드 한 줄 작성 전:
 
-1. 사용 색상이 `--color-*` 또는 `--krds-light-color-*`인가?
-2. 간격은 `var(--krds-number-N)` / `--spacing-N`인가?
-3. 폰트 사이즈는 KRDS 스케일 토큰인가?
-4. 컴포넌트 BEM이 `skill/references/krds-components.md` 카탈로그에 있는가?
-5. Root 태그가 `skill/references/html-semantics.md` 매핑과 일치하는가?
+1. 사용 색상이 `--color-*`인가?
+2. 기본 폰트는 `--font-sans`/`--font-mono` 기준을 따르는가?
+3. CSS nesting과 `@apply`를 쓰더라도 결과 CSS가 읽기 쉬운가?
+4. 기존 컴포넌트/패턴으로 해결 가능한가?
+5. `main` 내부 요소는 section 단위이고 각 section 안에 `.container`가 있는가?
 6. 인터랙티브 요소는 `<button>`/`<a>`/시맨틱 HTML인가?
 7. 이미지 `alt`, 폼 `<label>`, focus 처리 충족?
 8. 모바일 터치 영역 44px 이상?
@@ -144,7 +142,7 @@
 |----------|------|
 | 컴포넌트 마크업 작성 (시각/스타일) | `skill/references/krds-components.md` |
 | 컴포넌트 마크업 작성 (root/ARIA/키보드) | `skill/references/html-semantics.md` |
-| 토큰 결정 (색·타이포·간격) | `skill/references/krds-tokens.md` |
+| 토큰 결정 (색상·기본 폰트) | `skill/references/krds-tokens.md` |
 | Tailwind 유틸리티 사용 | `skill/references/tailwind-mapping.md` |
 | 접근성 검증 | `skill/references/accessibility.md` |
 | 금지 패턴 검토 | `skill/references/forbidden-patterns.md` |
@@ -173,16 +171,16 @@ npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)
 
 ## 9. 신규 컴포넌트가 필요해 보일 때
 
-**KRDS 28종 카탈로그 외 컴포넌트는 임의 생성 금지.** 카탈로그 확인: `skill/references/krds-components.md`.
+기존 컴포넌트 카탈로그를 먼저 확인하되, 프로젝트에 필요한 컴포넌트는 UX팀 판단으로 확장할 수 있다. 카탈로그 확인: `skill/references/krds-components.md`.
 
 신규 필요 시:
-1. 즉시 작성 중단
-2. 사용자에게 보고 — "카탈로그에 없는 컴포넌트가 필요합니다"
+1. 기존 컴포넌트 조합으로 해결 가능한지 확인
+2. 새 컴포넌트가 더 적절하면 사용자에게 근거 보고
 3. 옵션 제시:
-   - (a) 기존 컴포넌트 조합으로 구현 (가능하면 우선)
-   - (b) UX팀에 신규 제안 (GitHub 이슈)
+   - (a) 일회성 프로젝트 패턴으로 구현
+   - (b) 공통 컴포넌트 후보로 등록
 
-사용자가 (b)를 택하고 일회성 구현이 필요하면 코드 주석에 `/* TODO: UX팀 정식 컴포넌트화 필요 */` 명시.
+공통화 가치가 있으면 코드 주석이나 문서에 `/* TODO: UX팀 정식 컴포넌트화 검토 */`를 남긴다.
 
 ---
 
@@ -191,10 +189,11 @@ npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)
 규정 충돌 시 다음 순서:
 
 1. **접근성 (WCAG/KWCAG AA)** — 양보 불가
-2. **KRDS 정본** — `tokens/krds-base.json`
-3. **INFOMIND 오버라이드** — `tokens/infomind-overrides.json`
-4. **프로젝트 오버라이드** — `_project-overrides.css` (있을 경우)
-5. **사용자 명시 지시** — 단, 위 1~3을 깨면 사용자에게 확인
+2. **프로젝트 목적과 사용성** — CMS/관리자 화면은 업무 밀도와 반복 효율 우선
+3. **INFOUX 파운데이션** — `tokens/foundation.json`의 색상·기본 폰트 기준
+4. **KRDS 정본** — 접근성·컴포넌트 원칙·색상 참고 기준
+5. **프로젝트 스타일** — 프로젝트별 CSS 확장
+6. **사용자 명시 지시** — 단, 접근성을 깨면 사용자에게 확인
 
 ---
 

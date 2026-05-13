@@ -14,9 +14,9 @@ ChatGPT, Gemini, Claude 웹
 ## 프롬프트
 
 ````markdown
-# KRDS+INFOMIND UX 디자인 시스템 컨텍스트
+# KRDS 원칙 + INFOMIND UX 디자인 시스템 컨텍스트
 
-> **목적:** 대화형 AI에 KRDS+INFOMIND 디자인/퍼블리싱 규칙을 극한 압축하여 제공
+> **목적:** 대화형 AI에 KRDS 접근성·구조 원칙과 INFOMIND 디자인/퍼블리싱 규칙을 압축 제공
 > **대상 AI:** ChatGPT, Gemini, Claude 웹
 
 ---
@@ -24,22 +24,22 @@ ChatGPT, Gemini, Claude 웹
 ## 기술 스택
 
 - **CSS Framework:** Tailwind v4 (`^4.0.0`) — `@import "tailwindcss"`
-- **Tokens:** KRDS-uiux 정본 + INFOMIND 오버라이드 — 출력은 `tokens/build/tokens.css` (`@theme` + CSS Custom Properties)
+- **Tokens:** INFOUX foundation — 출력은 `tokens/build/tokens.css` (`@theme` + CSS Custom Properties)
 - **방법론:** ITCSS 5-layer + BEM (5-objects · 6-components 한정)
-- **REM 트릭:** 62.5% (1rem = 10px) — KRDS 명시 채택
+- **CSS 작성:** 표준 CSS nesting + Tailwind v4 `@apply` 허용
 
-> SCSS는 사용 금지(R-03). 표준 CSS만 사용.
+> SCSS는 사용 금지(R-03). 표준 CSS nesting과 Tailwind v4 문법을 사용한다.
 
 ## 디자인 토큰
 
-모든 값은 CSS Custom Properties(`var(--token)`)를 사용하라. 하드코딩 금지.
+색상과 기본 폰트는 CSS Custom Properties(`var(--token)`)를 사용하라. 간격·크기·타이포 스케일은 CSS/Tailwind 직접값을 사용한다.
 
-- **KRDS 정본** (`--krds-light-color-*`, `--krds-padding-*`, `--krds-radius-*`, `--krds-font-size-*` 등) — 5/10/20/.../95 스텝
-- **INFOMIND 시맨틱 별칭** (`--color-text-*`, `--color-bg-*`, `--color-border-*` 등) — 의미 기반 alias
+- **색상** (`--color-*`) — 의미 기반 토큰
+- **폰트** (`--font-sans`, `--font-mono`) — 전역 기본 폰트
 
 > 전체 토큰 카탈로그 — `skill/references/krds-tokens.md`
 
-## 컴포넌트 (KRDS 28종)
+## 컴포넌트 (KRDS 기반)
 
 - **폼/액션** — btn, check-radio, file-upload, form, select, switch
 - **컨테이너** — accordion, card, disclosure, modal, side-panel, tab
@@ -48,6 +48,26 @@ ChatGPT, Gemini, Claude 웹
 - **콘텐츠** — calendar, carousel, list, table
 
 > 각 컴포넌트의 BEM·접근성·토큰 매핑 — `skill/references/krds-components.md`
+
+## HTML 기본 골격
+
+```html
+<header id="header">
+  <div class="container">...</div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">...</div>
+  </section>
+</main>
+
+<footer id="footer">
+  <div class="container">...</div>
+</footer>
+```
+
+HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 분리한다.
 
 ## 접근성 (KWCAG/WCAG 2.1 AA)
 
@@ -61,18 +81,17 @@ ChatGPT, Gemini, Claude 웹
 ## 반응형
 
 - **모바일 퍼스트** 접근
-- KRDS 표준 브레이크포인트: 모바일 0~767, 태블릿 768~1279, PC 1280~
 - CSS `@media` 또는 Tailwind v4 반응형 variant 직접 사용 (SCSS 믹스인 폐지)
 
 ## 절대 금지
 
 - SCSS 파일/`@use`/`@forward`/SCSS 변수
-- Raw hex/rgb/hsl 색상, raw px (KRDS 스케일 외)
-- Tailwind raw 컬러 유틸(`bg-red-500` 등), 비활성 스케일(`text-base`, `rounded-lg` 등)
-- 옛 버튼 variant(`btn--ghost`/`--outline`/`--link`/`--sm`/`--lg`)
-- 카탈로그 외 컴포넌트 임의 생성
-- BEM element 2단계 중첩 (`.card__body__title`)
-- `:focus { outline: none }`, `<div onclick>`
+- Raw hex/rgb/hsl 색상
+- Tailwind 기본 팔레트 raw 컬러 유틸
+- 옛 버튼 variant 이름
+- 기존 인포마인드 HTML 골격을 무시한 임의 구조
+- BEM element 2단계 중첩
+- 포커스 외곽선 제거, `div`/ `span` 클릭 핸들러 패턴
 - 이미지 `alt` 누락, 폼 `<label>` 누락
 
 ## 코딩 스타일

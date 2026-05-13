@@ -146,8 +146,7 @@ KRDS 토큰 / 컴포넌트 / 외부 표준 참조.
 ```markdown
 ## 출처
 
-- KRDS card padding: `--krds-pc-padding-card-{xsmall|small|medium|large}`
-- Shape: `--krds-radius-large1` (10px)
+- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
 - WAI-ARIA: dialog pattern (https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
 ```
 
@@ -157,8 +156,8 @@ KRDS 토큰 / 컴포넌트 / 외부 표준 참조.
 
 코드 한 줄 작성 전:
 
-- [ ] 컴포넌트가 KRDS 28종 카탈로그(`krds-components.md`)에 있는가?
-- [ ] Root 태그가 `html-semantics.md` 매핑과 일치하는가? (R-15)
+- [ ] 기존 컴포넌트 카탈로그(`krds-components.md`)를 먼저 확인했는가?
+- [ ] HTML 기본 골격이 `header/main/footer`, `main > section > .container` 구조와 충돌하지 않는가? (R-15)
 - [ ] 인터랙티브 컴포넌트면 필수 ARIA가 들어갔는가? (R-16)
 - [ ] modifier가 KRDS 의미적 어휘인가? (R-18 — `--blue`, `--big` 같은 시각 단어 금지)
 - [ ] 상태 클래스는 BEM modifier로만 했는가? (R-17 — `.is-*` 금지)
@@ -167,9 +166,9 @@ KRDS 토큰 / 컴포넌트 / 외부 표준 참조.
 
 ## 신규 컴포넌트 생성 시 권장 순서
 
-1. UX팀 결정 → `krds-components.md` 카탈로그에 등재
+1. 기존 카탈로그로 해결 가능한지 확인하고, 필요 시 UX팀 결정 → 프로젝트 패턴 또는 공통 컴포넌트 후보로 정리
 2. `src/snippets/{name}.md` 본 템플릿 복사해 채움
-3. `src/styles/6-components/{name}.css` 작성 (BEM + KRDS 토큰)
+3. `src/styles/6-components/{name}.css` 작성 (BEM + 색상 토큰, 필요 시 CSS nesting + `@apply`)
 4. `src/playground/{name}.html` 미리보기 추가
 5. `site/components/{name}.md` 문서 페이지
 6. `html-semantics.md`에 매핑 추가 + `check-html-structure.js` 매핑 갱신

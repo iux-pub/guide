@@ -32,113 +32,66 @@
 
 @layer components {
   .calendar {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--krds-radius-medium3);
-    padding: var(--krds-padding-6);
-    box-shadow: var(--shadow-1); /* KRDS calendar drop-down shadow */
-    display: inline-block;
+    @apply bg-[var(--color-surface)] border border-[var(--color-border-light)] rounded-[0.8rem] p-[1.6rem] shadow-[0_0_0.2rem_0_#0000000d,_0_0.4rem_0.8rem_0_#00000014] inline-block;
   }
 
   .calendar__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--krds-gap-3);
-    margin-bottom: var(--krds-gap-5);
+    @apply flex items-center justify-between gap-[0.8rem] mb-[1.6rem];
   }
 
   .calendar__nav {
-    width: 3.2rem;
-    height: 3.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: var(--krds-radius-small3);
-    color: var(--color-text);
-    cursor: pointer;
-    font-size: 1.6rem;
+    @apply w-[3.2rem] h-[3.2rem] flex items-center justify-center bg-transparent rounded-[0.4rem] text-[var(--color-text)] cursor-pointer text-[1.6rem] border border-transparent;
+
+
   }
 
   .calendar__nav:hover {
-    background: var(--color-bg-subtler);
+    @apply bg-[var(--color-bg-subtler)];
   }
 
   .calendar__title {
-    font-size: var(--text-body-large);
-    font-weight: 700;
-    line-height: 1;
-    margin: 0;
-    color: var(--color-text);
+    @apply text-[1.9rem] font-bold leading-none m-0 text-[var(--color-text)];
+
   }
 
   .calendar__grid {
-    border-collapse: separate;
-    border-spacing: var(--krds-gap-1);
+    @apply border-separate [border-spacing:0.2rem];
   }
 
   .calendar__grid th {
-    width: 4rem;
-    padding: var(--krds-padding-3) 0;
-    font-size: var(--text-body-small);
-    font-weight: 700;
-    color: var(--color-text-subtle);
-    text-align: center;
+    @apply w-[4rem] py-[0.8rem] px-0 text-[1.5rem] font-bold text-[var(--color-text-subtle)] text-center;
   }
 
   .calendar__grid td {
-    padding: 0;
-    text-align: center;
+    @apply p-0 text-center;
   }
 
   /* 일자 버튼 — 4×4 정사각 */
   .calendar__day {
-    width: 4rem;
-    height: 4rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 50%;
-    color: var(--color-text);
-    font-family: var(--font-sans);
-    font-size: var(--text-body-medium);
-    line-height: 1;
-    cursor: pointer;
-    transition:
-      background-color var(--duration-fast) var(--easing-standard),
-      color var(--duration-fast) var(--easing-standard);
+    @apply w-[4rem] h-[4rem] inline-flex items-center justify-center bg-transparent rounded-full text-[var(--color-text)] text-[1.7rem] leading-none cursor-pointer border border-transparent [transition:background-color_0.15s_ease-in-out,_color_0.15s_ease-in-out];
   }
 
   .calendar__day:hover:not(:disabled):not([aria-selected="true"]) {
-    background: var(--color-bg-subtler);
+    @apply bg-[var(--color-bg-subtler)];
   }
 
   /* 오늘 */
   .calendar__day--today {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    font-weight: 700;
+    @apply border-[var(--color-primary)] text-[var(--color-primary)] font-bold;
   }
 
   /* 선택됨 */
   .calendar__day--selected,
   .calendar__day[aria-selected="true"] {
-    background: var(--color-primary);
-    color: var(--color-text-inverse);
-    border-color: var(--color-primary);
+    @apply bg-[var(--color-primary)] text-[var(--color-text-inverse)] border-[var(--color-primary)];
   }
 
   /* 다른 달의 날짜 (희미하게) */
   .calendar__day--other-month {
-    color: var(--color-text-disabled);
+    @apply text-[var(--color-text-disabled)];
   }
 
   .calendar__day:disabled {
-    color: var(--color-text-disabled);
-    cursor: not-allowed;
+    @apply text-[var(--color-text-disabled)] cursor-not-allowed;
   }
 }

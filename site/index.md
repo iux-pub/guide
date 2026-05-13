@@ -5,7 +5,7 @@ title: 홈
 
 # INFOMIND UX Guide
 
-KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND 표준의 단일 소스.
+KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙 + INFOMIND 실무 표준의 단일 소스.
 
 **AI가 디자인 시스템을 강제 준수합니다. 당신은 의도만 결정하면 됩니다.**
 
@@ -18,8 +18,9 @@ KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND 표준의 단일 소스.
 > ### "info-design 스킬 기준으로 가자"
 
 그 다음 AI는:
-- ✓ KRDS 토큰만 사용 (raw hex/px 금지)
-- ✓ KRDS 28종 컴포넌트만 — 새 컴포넌트 임의 생성 거부
+- ✓ 색상 토큰만 사용 (raw hex/rgb/hsl 금지)
+- ✓ 기존 컴포넌트 패턴 우선, 필요 시 프로젝트 패턴 또는 공통 컴포넌트로 확장
+- ✓ HTML은 `header/main/footer`, `main > section > .container` 골격 유지
 - ✓ BEM·접근성·ARIA 자동 준수
 - ✓ 위반 발견 시 작업 중단 후 사용자에게 보고
 
@@ -29,7 +30,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 
 ## 자주 보는 자료
 
-- [**컴포넌트 카탈로그**](/components/) — KRDS 28종의 마크업·CSS·접근성
+- [**컴포넌트 카탈로그**](/components/) — KRDS 기반 패턴의 마크업·CSS·접근성
 - [**토큰 카탈로그**](/tokens/color/) — 색상·간격·타이포 토큰 전체
 - [**접근성 체크리스트**](/accessibility/checklist/) — WCAG 2.1 AA + KWCAG
 - [**디자인 규칙**](/conventions/) — 18개 규칙 (R-01 ~ R-18)
@@ -38,8 +39,8 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 
 ## 역할별 시작
 
-**디자이너**
-[피그마 네이밍](/figma/component-naming/) → [Variable 사용](/figma/variables/) → [디자인 QA](/design-qa/checklist/) → [개발 핸드오프](/onboarding/handoff/)
+**디자인/기획 전달**
+[디자인 QA](/design-qa/checklist/) → [디자인 전달 체크리스트](/onboarding/handoff/) → [접근성 체크리스트](/accessibility/checklist/)
 
 **퍼블리셔**
 [컴포넌트 카탈로그](/components/)에서 마크업을 그대로 복사해서 사용. AI에게 "info-design 기준으로 가자"라고만 하면 룰 자동 준수.
@@ -58,7 +59,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 
 1. **AI 발화 한 줄** — `"info-design 스킬 기준으로 가자"`
 2. **CI 빨강** — AI에게 메시지 보여주고 `"고쳐줘"`
-3. **새 컴포넌트 필요** — UX팀에 슬랙 (28종 외 임의 생성 금지)
+3. **새 컴포넌트 필요** — 기존 패턴으로 해결할지, 프로젝트 패턴/공통 컴포넌트로 확장할지 UX팀 판단
 4. **토큰/색상 변경 필요** — UX팀에 슬랙
 5. **PR 리뷰** — R-XX 외우지 말고 **사용성·의도**만 확인. 룰 위반은 CI가 차단
 

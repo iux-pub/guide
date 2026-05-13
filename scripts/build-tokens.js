@@ -1,13 +1,11 @@
 /**
- * 토큰 빌드 스크립트 — KRDS 베이스 + INFOMIND 오버라이드 → Tailwind v4 CSS
+ * 파운데이션 토큰 빌드 스크립트
  *
  * 입력:
- *   tokens/krds-base.json          (KRDS-uiux/krds-uiux 정본 — 수정 금지)
- *   tokens/infomind-overrides.json (UX팀 결정 — KRDS 공백 채우기 + 인포마인드 추가)
+ *   tokens/foundation.json          (색상 + 기본 폰트 단일 소스)
  *
  * 출력:
- *   tokens/build/merged.json       (병합 결과 — 디버그용)
- *   tokens/build/tokens.css        (Tailwind v4 @theme + KRDS 변수 + 모드/반응형)
+ *   tokens/build/tokens.css         (공개 CSS 변수 + Tailwind v4 theme)
  *
  * 사용법: node scripts/build-tokens.js
  */
@@ -17,10 +15,10 @@ const path = require('path')
 const { execSync } = require('child_process')
 
 const ROOT = path.resolve(__dirname, '..')
-const KRDS_PATH = path.join(ROOT, 'tokens', 'krds-base.json')
-const OVERRIDES_PATH = path.join(ROOT, 'tokens', 'infomind-overrides.json')
+const SOURCE_PATH = path.join(ROOT, 'tokens', 'foundation.json')
+const BUILD_DIR = path.join(ROOT, 'tokens', 'build')
+const CSS_PATH = path.join(BUILD_DIR, 'tokens.css')
 
-// 빌드 버전 — git commit hash (같은 SHA = 같은 빌드 결과 보장)
 function buildVersion() {
   try {
     return execSync('git describe --always --dirty', { cwd: ROOT }).toString().trim()
@@ -28,436 +26,212 @@ function buildVersion() {
     return 'unknown'
   }
 }
-const BUILD_DIR = path.join(ROOT, 'tokens', 'build')
-const MERGED_PATH = path.join(BUILD_DIR, 'merged.json')
-const CSS_PATH = path.join(BUILD_DIR, 'tokens.css')
-
-// ── 0. 준비 ─────────────────────────────────────────────────
 
 if (!fs.existsSync(BUILD_DIR)) fs.mkdirSync(BUILD_DIR, { recursive: true })
 
-const krds = JSON.parse(fs.readFileSync(KRDS_PATH, 'utf-8'))
-const overrides = JSON.parse(fs.readFileSync(OVERRIDES_PATH, 'utf-8'))
+const source = JSON.parse(fs.readFileSync(SOURCE_PATH, 'utf-8'))
 
-// ── 1. 병합 — overrides가 같은 경로면 덮어쓰고, infomind-* 네임스페이스는 추가 ──
+function getByPath(tokenPath) {
+  return tokenPath.split('.').reduce((acc, key) => acc?.[key], source)
+}
 
-function deepMerge(base, over) {
-  if (over === null) return null // 명시적 삭제 (정책)
-  if (typeof over !== 'object' || over === null) return over
-  if (typeof base !== 'object' || base === null) return over
-  if (Array.isArray(over)) return over
-  const out = { ...base }
-  for (const k of Object.keys(over)) {
-    if (k === '$meta' || k === '$comment' || k === '$usage') continue // 메타는 보존만
-    if (k in base) {
-      out[k] = deepMerge(base[k], over[k])
-    } else {
-      out[k] = over[k]
+function resolveValue(value) {
+  if (typeof value !== 'string') return value
+
+  return value.replace(/\{([^}]+)\}/g, (_, ref) => {
+    const token = getByPath(ref)
+    if (!token || !('value' in token)) {
+      throw new Error(`토큰 참조를 찾을 수 없음: ${ref}`)
     }
-  }
-  return out
+    return resolveValue(token.value)
+  })
 }
 
-const merged = { ...krds }
-for (const [k, v] of Object.entries(overrides)) {
-  if (k === '$meta') continue
-  if (k.startsWith('infomind-')) {
-    merged[k] = v // 새 네임스페이스 추가
-  } else {
-    merged[k] = deepMerge(krds[k], v) // KRDS 같은 경로 덮어쓰기
+function readToken(tokenPath) {
+  const token = getByPath(tokenPath)
+  if (!token || !('value' in token)) {
+    throw new Error(`토큰을 찾을 수 없음: ${tokenPath}`)
   }
+  return resolveValue(token.value)
 }
 
-merged.$meta = {
-  sha: buildVersion(),
-  source: {
-    krds: 'tokens/krds-base.json (KRDS-uiux/krds-uiux v1.0.0)',
-    overrides: 'tokens/infomind-overrides.json'
-  }
+function cssLine(name, tokenPath) {
+  return `  ${name}: ${readToken(tokenPath)};`
 }
-
-fs.writeFileSync(MERGED_PATH, JSON.stringify(merged, null, 2))
-console.log(`✓ merged.json (${(fs.statSync(MERGED_PATH).size / 1024).toFixed(1)}KB)`)
-
-// ── 2. CSS 출력 ──────────────────────────────────────────────
 
 const lines = []
-const indent = '  '
+const w = (s) => lines.push(s)
 
-function w(s) { lines.push(s) }
-
-// 헤더
 w('/**')
 w(' * AUTO-GENERATED — tokens/build/tokens.css')
-w(' * 출처: tokens/krds-base.json (KRDS v1.0.0) + tokens/infomind-overrides.json')
-w(' * 직접 수정 금지. 토큰 변경은 위 두 파일에서 한다.')
+w(' * 출처: tokens/foundation.json')
+w(' * 직접 수정 금지. 변경은 tokens/foundation.json에서 한다.')
 w(' *')
-w(' * KRDS는 1rem = 10px 트릭을 명시 채택 (62.5%). 이 시스템도 그대로 따른다.')
-w(' *   → reset.css에서 html { font-size: 62.5% } 적용 필수')
+w(' * 공개 토큰은 색상과 기본 폰트만 발행한다.')
+w(' * 간격·크기·타이포 스케일·반경·모션·그림자·z-index는 CSS/Tailwind 직접값으로 작성한다.')
 w(' */')
 w('')
-
-// ── 2.1 KRDS 변수 평탄화 — 헬퍼 ──
-
-/**
- * 객체 트리를 순회하며 '값 토큰'(value 필드 보유)을 수집
- * @returns {Array<{path: string[], value: any, type: string}>}
- */
-function flatten(obj, path = []) {
-  const out = []
-  if (obj === null || obj === undefined) return out
-  if (typeof obj !== 'object') return out
-
-  // value 필드가 있으면 단일 토큰
-  if ('value' in obj && (typeof obj.value !== 'object' || obj.value === null)) {
-    if (obj.value === null) return out // 명시적 삭제
-    out.push({ path, value: obj.value, type: obj.type || 'unknown' })
-    return out
-  }
-
-  // 그 외 — 자식 순회
-  for (const [k, v] of Object.entries(obj)) {
-    if (k.startsWith('$')) continue
-    out.push(...flatten(v, [...path, k]))
-  }
-  return out
-}
-
-/** 토큰 경로 → CSS 변수명 (--krds-{...}) */
-function krdsVar(path) {
-  // primitive.color.light.primary.50 → --krds-light-color-primary-50
-  // mode-light.color.text.basic → --krds-light-color-text-basic
-  // responsive-pc.font-size.body.medium → --krds-pc-font-size-body-medium
-  // semantic.gap.5 → --krds-gap-5
-  // primitive.number.8 → --krds-number-8
-  // primitive.typo.font.default → --krds-typo-font-default
-
-  const [root, ...rest] = path
-  let prefix
-  if (root === 'primitive') {
-    const [cat, ...tail] = rest
-    if (cat === 'color') {
-      const [mode, ...colorTail] = tail
-      prefix = [mode, 'color', ...colorTail]
-    } else {
-      // typo, number, etc.
-      prefix = [cat, ...tail]
-    }
-  } else if (root === 'mode-light') {
-    prefix = ['light', ...rest]
-  } else if (root === 'mode-high-contrast') {
-    prefix = ['high-contrast', ...rest]
-  } else if (root === 'responsive-pc') {
-    prefix = ['pc', ...rest]
-  } else if (root === 'responsive-mobile') {
-    prefix = ['mobile', ...rest]
-  } else if (root === 'semantic') {
-    prefix = rest
-  } else if (root.startsWith('infomind-')) {
-    prefix = [root, ...rest] // infomind-grid.columns.mobile → --infomind-grid-columns-mobile
-  } else {
-    prefix = [root, ...rest]
-  }
-
-  return '--krds-' + prefix.join('-').toLowerCase()
-}
-
-/** 값에 KRDS 토큰 참조 `{path.to.token}`가 있으면 `var(--krds-...)`로 변환 */
-function resolveValue(v) {
-  if (typeof v !== 'string') return v
-  if (v.includes('var(--')) return v
-  return v.replace(/\{([^}]+)\}/g, (_, ref) => {
-    const refPath = ref.split('.')
-    return `var(${krdsVar(refPath)})`
-  })
-}
-
-// ── 2.2 :root — light 모드 기본값 ──
-
-w('/* ═══════════════════════════════════════════════════════')
-w(' * KRDS 변수 — Light 모드 (기본)')
-w(' * ═══════════════════════════════════════════════════════ */')
 w(':root {')
-
-// primitive.color.light
-w('  /* primitive.color.light */')
-flatten(merged.primitive.color.light, ['primitive', 'color', 'light']).forEach(t => {
-  w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-})
-
-// primitive.typo
-if (merged.primitive.typo) {
-  w('')
-  w('  /* primitive.typo */')
-  flatten(merged.primitive.typo, ['primitive', 'typo']).forEach(t => {
-    w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-  })
-}
-
-// primitive.number — 1rem=10px 스케일
-if (merged.primitive.number) {
-  w('')
-  w('  /* primitive.number — 1rem=10px 스케일 */')
-  flatten(merged.primitive.number, ['primitive', 'number']).forEach(t => {
-    w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-  })
-}
-
-// mode-light.color.* (시맨틱)
+w('  /* Font families */')
+w(cssLine('  --font-sans'.trim(), 'font.family.sans'))
+w(cssLine('  --font-mono'.trim(), 'font.family.mono'))
 w('')
-w('  /* mode-light.color.* — 시맨틱 색상 */')
-flatten(merged['mode-light'].color, ['mode-light', 'color']).forEach(t => {
-  w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-})
-
-// mode-light.border-width
-if (merged['mode-light']['border-width']) {
-  w('')
-  w('  /* mode-light.border-width */')
-  flatten(merged['mode-light']['border-width'], ['mode-light', 'border-width']).forEach(t => {
-    w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-  })
-}
-
-// responsive-pc.* (PC 기본 — 모바일은 미디어쿼리에서 덮어씀)
+w('  /* Semantic colors */')
+w(cssLine('--color-primary', 'primitive.color.light.primary.50'))
+w(cssLine('--color-primary-hover', 'primitive.color.light.primary.60'))
+w(cssLine('--color-primary-pressed', 'primitive.color.light.primary.70'))
+w(cssLine('--color-secondary', 'primitive.color.light.secondary.50'))
+w(cssLine('--color-text', 'mode-light.color.text.basic'))
+w(cssLine('--color-text-bolder', 'mode-light.color.text.bolder'))
+w(cssLine('--color-text-subtle', 'mode-light.color.text.subtle'))
+w(cssLine('--color-text-disabled', 'mode-light.color.text.disabled'))
+w(cssLine('--color-text-inverse', 'mode-light.color.text.basic-inverse'))
+w(cssLine('--color-bg', 'mode-light.color.background.white'))
+w(cssLine('--color-bg-subtler', 'mode-light.color.background.gray-subtler'))
+w(cssLine('--color-bg-subtle', 'mode-light.color.background.gray-subtle'))
+w(cssLine('--color-bg-inverse', 'mode-light.color.background.inverse'))
+w(cssLine('--color-bg-dim', 'mode-light.color.background.dim'))
+w(cssLine('--color-surface', 'mode-light.color.surface.white'))
+w(cssLine('--color-surface-subtler', 'mode-light.color.surface.gray-subtler'))
+w(cssLine('--color-surface-disabled', 'mode-light.color.surface.disabled'))
+w(cssLine('--color-surface-primary-subtler', 'mode-light.color.surface.primary-subtler'))
+w(cssLine('--color-surface-information-subtler', 'mode-light.color.surface.information-subtler'))
+w(cssLine('--color-surface-success-subtler', 'mode-light.color.surface.success-subtler'))
+w(cssLine('--color-surface-warning-subtler', 'mode-light.color.surface.warning-subtler'))
+w(cssLine('--color-surface-danger-subtler', 'mode-light.color.surface.danger-subtler'))
+w(cssLine('--color-border', 'mode-light.color.border.gray'))
+w(cssLine('--color-border-light', 'mode-light.color.border.gray-light'))
+w(cssLine('--color-border-dark', 'mode-light.color.border.gray-dark'))
+w(cssLine('--color-border-primary', 'mode-light.color.border.primary'))
+w(cssLine('--color-border-primary-light', 'mode-light.color.border.primary-light'))
+w(cssLine('--color-border-information-light', 'mode-light.color.border.information-light'))
+w(cssLine('--color-border-success-light', 'mode-light.color.border.success-light'))
+w(cssLine('--color-border-warning-light', 'mode-light.color.border.warning-light'))
+w(cssLine('--color-border-danger-light', 'mode-light.color.border.danger-light'))
+w(cssLine('--color-border-disabled', 'mode-light.color.border.disabled'))
+w(cssLine('--color-link', 'mode-light.color.link.default'))
+w(cssLine('--color-link-hover', 'mode-light.color.link.hover'))
+w(cssLine('--color-link-pressed', 'mode-light.color.link.pressed'))
+w(cssLine('--color-link-visited', 'mode-light.color.link.visited'))
+w(cssLine('--color-button-primary-fill', 'mode-light.color.button.primary-fill'))
+w(cssLine('--color-button-primary-fill-hover', 'mode-light.color.button.primary-fill-hover'))
+w(cssLine('--color-button-primary-fill-pressed', 'mode-light.color.button.primary-fill-pressed'))
+w(cssLine('--color-button-secondary-fill', 'mode-light.color.button.secondary-fill'))
+w(cssLine('--color-button-secondary-fill-hover', 'mode-light.color.button.secondary-fill-hover'))
+w(cssLine('--color-button-secondary-fill-pressed', 'mode-light.color.button.secondary-fill-pressed'))
+w(cssLine('--color-button-secondary-border', 'mode-light.color.button.secondary-border'))
+w(cssLine('--color-button-tertiary-fill', 'mode-light.color.button.tertiary-fill'))
+w(cssLine('--color-button-tertiary-fill-hover', 'mode-light.color.button.tertiary-fill-hover'))
+w(cssLine('--color-button-tertiary-fill-pressed', 'mode-light.color.button.tertiary-fill-pressed'))
+w(cssLine('--color-button-tertiary-border', 'mode-light.color.button.tertiary-border'))
+w(cssLine('--color-button-text-fill', 'mode-light.color.button.text-fill'))
+w(cssLine('--color-button-text-fill-hover', 'mode-light.color.button.text-fill-hover'))
+w(cssLine('--color-button-text-fill-pressed', 'mode-light.color.button.text-fill-pressed'))
+w(cssLine('--color-button-text-border', 'mode-light.color.button.text-border'))
+w(cssLine('--color-button-disabled-fill', 'mode-light.color.button.disabled-fill'))
+w(cssLine('--color-button-disabled-border', 'mode-light.color.button.disabled-border'))
+w(cssLine('--color-input-surface', 'mode-light.color.input.surface'))
+w(cssLine('--color-input-surface-disabled', 'mode-light.color.input.surface-disabled'))
+w(cssLine('--color-input-border', 'mode-light.color.input.border'))
+w(cssLine('--color-input-border-active', 'mode-light.color.input.border-active'))
+w(cssLine('--color-input-border-disabled', 'mode-light.color.input.border-disabled'))
+w(cssLine('--color-input-border-error', 'mode-light.color.input.border-error'))
+w(cssLine('--color-danger', 'primitive.color.light.danger.50'))
+w(cssLine('--color-danger-text', 'mode-light.color.text.danger'))
+w(cssLine('--color-danger-surface', 'mode-light.color.surface.danger-subtler'))
+w(cssLine('--color-warning', 'primitive.color.light.warning.50'))
+w(cssLine('--color-warning-text', 'mode-light.color.text.warning'))
+w(cssLine('--color-warning-surface', 'mode-light.color.surface.warning-subtler'))
+w(cssLine('--color-success', 'primitive.color.light.success.50'))
+w(cssLine('--color-success-text', 'mode-light.color.text.success'))
+w(cssLine('--color-success-surface', 'mode-light.color.surface.success-subtler'))
+w(cssLine('--color-info', 'primitive.color.light.information.50'))
+w(cssLine('--color-info-text', 'mode-light.color.text.information'))
+w(cssLine('--color-info-surface', 'mode-light.color.surface.information-subtler'))
+w(cssLine('--color-point', 'primitive.color.light.point.50'))
 w('')
-w('  /* responsive-pc.* — PC 폰트/레이아웃 (1024px 이상 기본) */')
-flatten(merged['responsive-pc'], ['responsive-pc']).forEach(t => {
-  w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-})
-
-// semantic.* (gap, padding, size-height, radius)
-w('')
-w('  /* semantic.* — 시맨틱 단위 */')
-flatten(merged.semantic, ['semantic']).forEach(t => {
-  w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-})
-
-// infomind-* 추가 토큰
-w('')
-w('  /* infomind-* — UX팀 표준 추가 (KRDS 공백 보완) */')
-for (const ns of Object.keys(merged).filter(k => k.startsWith('infomind-'))) {
-  w(`${indent}/* ${ns} */`)
-  flatten(merged[ns], [ns]).forEach(t => {
-    w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-  })
-}
-
-w('}')
-w('')
-
-// ── 2.3 모바일 미디어쿼리 — responsive-mobile.* 덮어쓰기 ──
-
-w('/* ═══════════════════════════════════════════════════════')
-w(' * Mobile 모드 (< 1024px)')
-w(' * ═══════════════════════════════════════════════════════ */')
-w('@media (max-width: 1023px) {')
-w('  :root {')
-flatten(merged['responsive-mobile'], ['responsive-mobile']).forEach(t => {
-  // pc 토큰명을 그대로 두고 모바일 값으로 덮어씀 — 같은 변수명 사용
-  // responsive-mobile.font-size.body.medium → --krds-pc-font-size-body-medium 으로 매핑
-  // (KRDS는 PC 기본명을 쓰고 모바일에서 같은 이름을 덮어씀)
-  const pcPath = ['responsive-pc', ...t.path.slice(1)]
-  w(`${indent}${indent}${krdsVar(pcPath)}: ${resolveValue(t.value)};`)
-})
-w('  }')
-w('}')
-w('')
-
-// ── 2.4 High-Contrast 모드 ──
-
-w('/* ═══════════════════════════════════════════════════════')
-w(' * High-Contrast 모드')
-w(' * ═══════════════════════════════════════════════════════ */')
-w('[data-color-mode="high-contrast"] {')
-flatten(merged.primitive.color['high-contrast'], ['primitive', 'color', 'high-contrast']).forEach(t => {
-  // primary/gray/danger/warning/success/information/point는 light와 동일 hex이므로 secondary와 alpha-shadow만 다름
-  // 여기서는 모든 hc 변수를 덮어씀 (안전)
-  w(`${indent}${krdsVar(t.path)}: ${resolveValue(t.value)};`)
-})
-w('')
-w('  /* mode-high-contrast.color.* */')
-flatten(merged['mode-high-contrast'].color, ['mode-high-contrast', 'color']).forEach(t => {
-  // light 변수명을 덮어씀
-  const lightPath = ['mode-light', ...t.path.slice(1)]
-  w(`${indent}${krdsVar(lightPath)}: ${resolveValue(t.value)};`)
-})
-w('}')
-w('')
-
-// ── 2.5 Tailwind v4 @theme — 시맨틱 별칭 ──
-
-w('/* ═══════════════════════════════════════════════════════')
-w(' * Tailwind v4 @theme — 시맨틱 별칭 (유틸리티 노출)')
-w(' * ─── Tailwind 기본 토큰 전면 무효화 ───')
-w(' *   KRDS가 베이스이므로 Tailwind 기본 색상(oklch)·spacing(0.25rem)·')
-w(' *   text-*·shadow-*·radius-*·font-weight-* 모두 비활성화하고 KRDS만 노출.')
-w(' * ═══════════════════════════════════════════════════════ */')
-w('@theme {')
-w('  /* === Tailwind 기본 토큰 무효화 — KRDS 단일 시스템 === */')
-w('  --*: initial;')
-w('')
-w('  /* === Color: Semantic 별칭 === */')
-w('  --color-primary: var(--krds-light-color-primary-50);')
-w('  --color-primary-hover: var(--krds-light-color-primary-60);')
-w('  --color-primary-pressed: var(--krds-light-color-primary-70);')
-w('  --color-secondary: var(--krds-light-color-secondary-50);')
-w('  --color-text: var(--krds-light-color-text-basic);')
-w('  --color-text-bolder: var(--krds-light-color-text-bolder);')
-w('  --color-text-subtle: var(--krds-light-color-text-subtle);')
-w('  --color-text-disabled: var(--krds-light-color-text-disabled);')
-w('  --color-text-inverse: var(--krds-light-color-text-basic-inverse);')
-w('  --color-bg: var(--krds-light-color-background-white);')
-w('  --color-bg-subtler: var(--krds-light-color-background-gray-subtler);')
-w('  --color-bg-subtle: var(--krds-light-color-background-gray-subtle);')
-w('  --color-bg-inverse: var(--krds-light-color-background-inverse);')
-w('  --color-bg-dim: var(--krds-light-color-background-dim);')
-w('  --color-surface: var(--krds-light-color-surface-white);')
-w('  --color-surface-subtler: var(--krds-light-color-surface-gray-subtler);')
-w('  --color-surface-disabled: var(--krds-light-color-surface-disabled);')
-w('  --color-border: var(--krds-light-color-border-gray);')
-w('  --color-border-light: var(--krds-light-color-border-gray-light);')
-w('  --color-border-dark: var(--krds-light-color-border-gray-dark);')
-w('  --color-border-primary: var(--krds-light-color-border-primary);')
-w('  --color-border-disabled: var(--krds-light-color-border-disabled);')
-w('  --color-danger: var(--krds-light-color-danger-50);')
-w('  --color-danger-text: var(--krds-light-color-text-danger);')
-w('  --color-danger-surface: var(--krds-light-color-surface-danger-subtler);')
-w('  --color-warning: var(--krds-light-color-warning-50);')
-w('  --color-warning-text: var(--krds-light-color-text-warning);')
-w('  --color-warning-surface: var(--krds-light-color-surface-warning-subtler);')
-w('  --color-success: var(--krds-light-color-success-50);')
-w('  --color-success-text: var(--krds-light-color-text-success);')
-w('  --color-success-surface: var(--krds-light-color-surface-success-subtler);')
-w('  --color-info: var(--krds-light-color-information-50);')
-w('  --color-info-text: var(--krds-light-color-text-information);')
-w('  --color-info-surface: var(--krds-light-color-surface-information-subtler);')
-w('  --color-point: var(--krds-light-color-point-50);')
-w('')
-
-// Color primitive 단계별 escape hatch — KRDS 5/10/20/30/40/50/60/70/80/90/95
-w('  /* === Color: Primitive 단계별 (escape hatch) === */')
+w('  /* 단계 색상: 필요한 경우에만 제한적으로 사용 */')
 const colorGroups = ['primary', 'secondary', 'gray', 'danger', 'warning', 'success', 'information', 'point']
 const stages = ['5', '10', '20', '30', '40', '50', '60', '70', '80', '90', '95']
-for (const g of colorGroups) {
-  // gray는 0과 100도 포함
-  const stagesForGroup = (g === 'gray') ? ['0', ...stages, '100'] : stages
-  for (const s of stagesForGroup) {
-    if (merged.primitive.color.light[g] && merged.primitive.color.light[g][s]) {
-      w(`  --color-${g}-${s}: var(--krds-light-color-${g}-${s});`)
+colorGroups.forEach(group => {
+  const stageList = group === 'gray' ? ['0', ...stages, '100'] : stages
+  stageList.forEach(stage => {
+    if (source.primitive.color.light[group]?.[stage]) {
+      w(cssLine(`--color-${group}-${stage}`, `primitive.color.light.${group}.${stage}`))
     }
-  }
-}
-// graphic은 10/30/50/70/90만
-if (merged.primitive.color.light.graphic) {
-  for (const s of ['10', '30', '50', '70', '90']) {
-    if (merged.primitive.color.light.graphic[s]) {
-      w(`  --color-graphic-${s}: var(--krds-light-color-graphic-${s});`)
+  })
+})
+w(cssLine('--color-alpha-black-50', 'primitive.color.light.alpha.black50'))
+w(cssLine('--color-alpha-black-75', 'primitive.color.light.alpha.black75'))
+w('}')
+w('')
+w('[data-color-mode="high-contrast"] {')
+w(cssLine('--color-primary', 'primitive.color.high-contrast.primary.50'))
+w(cssLine('--color-primary-hover', 'primitive.color.high-contrast.primary.60'))
+w(cssLine('--color-primary-pressed', 'primitive.color.high-contrast.primary.70'))
+w(cssLine('--color-text', 'mode-high-contrast.color.text.basic'))
+w(cssLine('--color-text-bolder', 'mode-high-contrast.color.text.bolder'))
+w(cssLine('--color-text-subtle', 'mode-high-contrast.color.text.subtle'))
+w(cssLine('--color-text-disabled', 'mode-high-contrast.color.text.disabled'))
+w(cssLine('--color-text-inverse', 'mode-high-contrast.color.text.basic-inverse'))
+w(cssLine('--color-bg', 'mode-high-contrast.color.background.white'))
+w(cssLine('--color-bg-subtler', 'mode-high-contrast.color.background.gray-subtler'))
+w(cssLine('--color-bg-subtle', 'mode-high-contrast.color.background.gray-subtle'))
+w(cssLine('--color-bg-inverse', 'mode-high-contrast.color.background.inverse'))
+w(cssLine('--color-bg-dim', 'mode-high-contrast.color.background.dim'))
+w(cssLine('--color-surface', 'mode-high-contrast.color.surface.white'))
+w(cssLine('--color-surface-subtler', 'mode-high-contrast.color.surface.gray-subtler'))
+w(cssLine('--color-surface-disabled', 'mode-high-contrast.color.surface.disabled'))
+w(cssLine('--color-border', 'mode-high-contrast.color.border.gray'))
+w(cssLine('--color-border-light', 'mode-high-contrast.color.border.gray-light'))
+w(cssLine('--color-border-dark', 'mode-high-contrast.color.border.gray-dark'))
+w(cssLine('--color-border-primary', 'mode-high-contrast.color.border.primary'))
+w(cssLine('--color-border-disabled', 'mode-high-contrast.color.border.disabled'))
+w('}')
+w('')
+w('@theme {')
+w('  /* Tailwind 기본 색상 팔레트 비활성화 — INFOUX 색상만 노출 */')
+w('  --color-*: initial;')
+w('')
+w(`  --font-sans: ${readToken('font.family.sans')};`)
+w(`  --font-mono: ${readToken('font.family.mono')};`)
+w('')
+;[
+  'primary', 'primary-hover', 'primary-pressed', 'secondary',
+  'text', 'text-bolder', 'text-subtle', 'text-disabled', 'text-inverse',
+  'bg', 'bg-subtler', 'bg-subtle', 'bg-inverse', 'bg-dim',
+  'surface', 'surface-subtler', 'surface-disabled', 'surface-primary-subtler',
+  'surface-information-subtler', 'surface-success-subtler', 'surface-warning-subtler', 'surface-danger-subtler',
+  'border', 'border-light', 'border-dark', 'border-primary', 'border-primary-light',
+  'border-information-light', 'border-success-light', 'border-warning-light', 'border-danger-light', 'border-disabled',
+  'link', 'link-hover', 'link-pressed', 'link-visited',
+  'button-primary-fill', 'button-primary-fill-hover', 'button-primary-fill-pressed',
+  'button-secondary-fill', 'button-secondary-fill-hover', 'button-secondary-fill-pressed', 'button-secondary-border',
+  'button-tertiary-fill', 'button-tertiary-fill-hover', 'button-tertiary-fill-pressed', 'button-tertiary-border',
+  'button-text-fill', 'button-text-fill-hover', 'button-text-fill-pressed', 'button-text-border',
+  'button-disabled-fill', 'button-disabled-border',
+  'input-surface', 'input-surface-disabled', 'input-border', 'input-border-active', 'input-border-disabled', 'input-border-error',
+  'danger', 'danger-text', 'danger-surface',
+  'warning', 'warning-text', 'warning-surface',
+  'success', 'success-text', 'success-surface',
+  'info', 'info-text', 'info-surface', 'point',
+  'alpha-black-50', 'alpha-black-75'
+].forEach(name => {
+  w(`  --color-${name}: var(--color-${name});`)
+})
+
+colorGroups.forEach(group => {
+  const stageList = group === 'gray' ? ['0', ...stages, '100'] : stages
+  stageList.forEach(stage => {
+    if (source.primitive.color.light[group]?.[stage]) {
+      w(`  --color-${group}-${stage}: var(--color-${group}-${stage});`)
     }
-  }
-}
-w('')
-
-// Spacing — KRDS number primitive (Tailwind 기본 스케일을 KRDS로 전면 재정의)
-w('  /* === Spacing: KRDS number primitive (1rem=10px) === */')
-w('  /* Tailwind 기본 --spacing 베이스(0.25rem)는 사용하지 않는다 — KRDS 토큰만 노출 */')
-const numberKeys = Object.keys(merged.primitive.number)
-for (const k of numberKeys) {
-  const v = merged.primitive.number[k].value
-  w(`  --spacing-${k}: ${v};`)
-}
-w('')
-
-// Semantic spacing — gap, padding, size-height
-w('  /* === Spacing: Semantic gap/padding/size-height === */')
-for (const cat of ['gap', 'padding', 'size-height']) {
-  if (!merged.semantic[cat]) continue
-  for (const [k, t] of Object.entries(merged.semantic[cat])) {
-    if (typeof t === 'object' && 'value' in t) {
-      w(`  --${cat}-${k}: var(--krds-${cat}-${k});`)
-    }
-  }
-}
-w('')
-
-// Typography
-w('  /* === Typography === */')
-w('  --font-sans: var(--krds-typo-font-default);')
-w('  --font-weight-regular: 400;')
-w('  --font-weight-bold: 700;')
-w('')
-// Tailwind text-* 유틸리티 → KRDS 폰트 사이즈 직접 노출
-w('  /* text-* utilities — KRDS PC 기본값. Mobile 미디어쿼리에서 같은 변수가 덮어써짐 */')
-const fontCats = { display: ['large', 'medium', 'small'],
-                   heading: ['xlarge', 'large', 'medium', 'small', 'xsmall', 'xxsmall'],
-                   body: ['large', 'large-bold', 'medium', 'medium-bold', 'small', 'small-bold', 'xsmall', 'xsmall-bold'],
-                   label: ['large', 'medium', 'small', 'xsmall'],
-                   navigation: ['title-medium', 'title-small', 'depth-medium', 'depth-medium-bold', 'depth-small', 'depth-small-bold'] }
-for (const [cat, sizes] of Object.entries(fontCats)) {
-  for (const s of sizes) {
-    if (merged['responsive-pc']['font-size'][cat] && merged['responsive-pc']['font-size'][cat][s]) {
-      w(`  --text-${cat}-${s}: var(--krds-pc-font-size-${cat}-${s});`)
-    }
-  }
-}
-w('')
-
-// Breakpoints
-w('  /* === Breakpoints === */')
-w('  --breakpoint-small: 360px;')
-w('  --breakpoint-medium: 768px;')
-w('  --breakpoint-large: 1024px;')
-w('  --breakpoint-xlarge: 1280px;')
-w('  --breakpoint-xxlarge: 1440px;')
-w('')
-
-// Radius — KRDS semantic
-w('  /* === Radius: KRDS semantic === */')
-if (merged.semantic.radius) {
-  for (const k of Object.keys(merged.semantic.radius)) {
-    if (typeof merged.semantic.radius[k] === 'object' && 'value' in merged.semantic.radius[k]) {
-      w(`  --radius-${k}: var(--krds-radius-${k});`)
-    }
-  }
-}
-w('')
-
-// Shadow — INFOMIND 추상 elevation
-w('  /* === Shadow: INFOMIND 추상 elevation === */')
-w('  --shadow-1: var(--krds-infomind-elevation-shadow-1);')
-w('  --shadow-2: var(--krds-infomind-elevation-shadow-2);')
-w('  --shadow-3: var(--krds-infomind-elevation-shadow-3);')
-w('')
-
-// Z-index — INFOMIND
-w('  /* === Z-index: INFOMIND 표준 === */')
-for (const k of Object.keys(merged['infomind-z-index'])) {
-  if (typeof merged['infomind-z-index'][k] === 'object' && 'value' in merged['infomind-z-index'][k]) {
-    w(`  --z-${k}: ${merged['infomind-z-index'][k].value};`)
-  }
-}
-w('')
-
-// Motion — INFOMIND
-w('  /* === Motion: INFOMIND 표준 === */')
-w('  --duration-fast: 0.15s;')
-w('  --duration-base: 0.4s;')
-w('  --duration-slow: 0.6s;')
-w('  --easing-standard: ease-in-out;')
-w('  --easing-decelerate: cubic-bezier(0.0, 0.0, 0.2, 1);')
-w('  --easing-accelerate: cubic-bezier(0.4, 0.0, 1, 1);')
-w('  --easing-linear: linear;')
-w('')
-
-// Touch target
-w('  /* === Touch Target: WCAG 권장 (INFOMIND 강제) === */')
-w('  --touch-target-min: 4.4rem; /* 44px */')
-
+  })
+})
 w('}')
 
 fs.writeFileSync(CSS_PATH, lines.join('\n') + '\n')
 console.log(`✓ tokens.css (${(fs.statSync(CSS_PATH).size / 1024).toFixed(1)}KB, ${lines.length}줄)`)
 console.log('')
 console.log('완료. 출력:')
-console.log(`  - ${path.relative(ROOT, MERGED_PATH)}`)
 console.log(`  - ${path.relative(ROOT, CSS_PATH)}`)

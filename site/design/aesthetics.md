@@ -61,7 +61,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 .card {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border-light);
-  border-radius: var(--krds-radius-medium2);
+  border-radius: 0.6rem;
   padding: var(--spacing-6);
   transition: box-shadow var(--duration-fast);
 
@@ -181,7 +181,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 #### Color Track
 
 - [ ] 토큰 시스템의 Primary 색상을 프로젝트에 맞게 오버라이드했는가
-- [ ] `_project-overrides.scss`에 프로젝트 색상을 정의했는가
+- [ ] `프로젝트별 CSS 확장`에 프로젝트 색상을 정의했는가
 - [ ] 색상 대비 4.5:1 (WCAG AA)을 검증했는가
 - [ ] 시맨틱 컬러(danger/warning/success/info)를 그대로 사용하는가, 조정이 필요한가
 - [ ] Dark Mode가 필요한 제품인가 (BigData, inPOS 등)
@@ -267,7 +267,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 ### 제품별 토큰 오버라이드 예시
 
-`tokens/infomind-overrides.json` 또는 별도 CSS 파일에서 INFOMIND 시맨틱 별칭을 프로젝트별 색상으로 재정의한다.
+`tokens/foundation.json` 또는 별도 CSS 파일에서 INFOMIND 시맨틱 별칭을 프로젝트별 색상으로 재정의한다.
 
 ```css
 /* BigData 플랫폼 — :root 오버라이드 */
@@ -289,7 +289,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 }
 ```
 
-> 가능하면 raw hex 대신 KRDS primary 11단계(`--krds-light-color-primary-{5..95}`)를 가리키도록 한다 — 라이트/다크 모드 전환에서 자동 정합 유지.
+> 가능하면 raw hex 대신 `--color-primary-*` 단계 색상을 사용한다.
 
 ### 주요 스타일 설명
 

@@ -36,7 +36,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 
 ```css
 :focus-visible {
-  outline: 4px solid var(--krds-light-color-primary);
+  outline: 4px solid var(--color-primary);
   outline-offset: 2px;
 }   // 마우스 클릭은 포커스 표시 안 함, 키보드는 표시
 ```
@@ -47,7 +47,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 
 **심각도:** 🔴 error &nbsp; **검증:** pa11y-ci
 
-> 시력이 약한 사용자와 밝은 환경에서도 콘텐츠를 인식할 수 있어야 한다. WCAG 1.4.3 Contrast Minimum (AA). 큰 텍스트 기준: 24px 이상 또는 18.67px bold 이상. KRDS 토큰은 AA 통과 조합으로 설계되어 있으므로 임의 색상 대신 시맨틱 토큰을 사용한다.
+> 시력이 약한 사용자와 밝은 환경에서도 콘텐츠를 인식할 수 있어야 한다. WCAG 1.4.3 Contrast Minimum (AA). 큰 텍스트 기준: 24px 이상 또는 18.67px bold 이상. INFOUX 토큰은 AA 통과 조합으로 설계되어 있으므로 임의 색상 대신 시맨틱 토큰을 사용한다.
 
 **❌ 금지**
 
@@ -84,7 +84,7 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 .icon-btn {
   width: 24px;
   height: 24px;
-  padding: var(--krds-padding-4); /* 터치 영역 ≥ 44px */
+  padding: 1.6rem; /* 터치 영역 ≥ 44px */
 }   // padding으로 터치 영역 확보
 ```
 

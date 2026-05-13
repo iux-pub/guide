@@ -19,7 +19,7 @@ order: 5
 
 ### Skeleton vs Spinner vs ProgressBar
 
-| 컴포넌트 | 특징 | 피그마 구성 |
+| 컴포넌트 | 특징 | 구성 기준 |
 |----------|------|------------|
 | **Skeleton** | 실제 콘텐츠 레이아웃과 동일한 형태의 회색 플레이스홀더 | `neutral/100` Fill, 좌 → 우 반짝임 효과 |
 | **Spinner** | 회전 인디케이터, 크기별 sm(16px)/md(24px)/lg(40px) | `brand/500` Active, `neutral/200` Track |
@@ -77,7 +77,7 @@ Fill & 색상 매핑:
 
 아이콘 + 제목 + 설명 + CTA 템플릿을 따른다.
 
-### 피그마 구성
+### 구성 기준
 
 ```
 Empty State [Frame, Auto Layout 세로, Align: Center, Gap: 16px]
@@ -123,4 +123,4 @@ Padding: 64px 상하
 - [마이크로카피](/design/microcopy/) -- 에러 메시지, 빈 상태 카피 작성 기준
 - [인터랙션 타이밍](/design/interaction-timing/) -- 상태 전환 모션 명세
 - [디자인 감사 - 상태](/design/design-audit/) -- 감사 체크리스트 11번
-- [폼 컴포넌트](/components/form/) -- 폼 HTML/SCSS 스니펫
+- [폼 컴포넌트](/components/form/) -- 폼 HTML/CSS 스니펫

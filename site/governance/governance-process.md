@@ -49,7 +49,7 @@ order: 5
 
 ### 2. 디자인 리뷰
 
-- 피그마 컨벤션 준수 여부를 확인한다
+- 디자인 전달 기준 준수 여부를 확인한다
   - 컴포넌트 네이밍 규칙
   - Variable(토큰) 사용
   - Auto Layout 규칙
@@ -57,11 +57,11 @@ order: 5
 
 ### 3. 구현
 
-- HTML 마크업 + SCSS 스타일 스니펫을 작성한다
+- HTML 마크업 + CSS 스타일 스니펫을 작성한다
 - BEM 네이밍 컨벤션을 준수한다
 - 디자인 토큰(CSS Custom Properties)을 사용한다
 - `src/snippets/`에 마크다운 스니펫 문서를 작성한다
-- `src/styles/6-components/`에 SCSS 파일을 추가한다
+- `src/styles/6-components/`에 CSS 파일을 추가한다
 
 ### 4. QA
 

@@ -18,81 +18,42 @@
 
 @layer components {
   .side-panel {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    max-width: 48rem; /* medium 기본 */
-    z-index: var(--z-modal);
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface);
-    box-shadow: var(--shadow-2); /* KRDS help-panel 그림자 패턴 */
-    transform: translateX(100%);
-    transition: transform var(--duration-base) var(--easing-standard);
+    @apply fixed top-0 right-0 bottom-0 w-full max-w-[48rem] z-[1050] flex flex-col bg-[var(--color-surface)] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] [transform:translateX(100%)] [transition:transform_0.4s_ease-in-out];
   }
 
   .side-panel[aria-hidden="false"],
   .side-panel--open {
-    transform: translateX(0);
+    @apply [transform:translateX(0)];
   }
 
-  .side-panel--small  { max-width: 36rem; }
-  .side-panel--medium { max-width: 48rem; }
-  .side-panel--large  { max-width: 64rem; }
+  .side-panel--small  { @apply [max-width:36rem]; }
+  .side-panel--medium { @apply [max-width:48rem]; }
+  .side-panel--large  { @apply [max-width:64rem]; }
 
   .side-panel__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--krds-gap-5);
-    padding: var(--krds-padding-8);
-    border-bottom: 1px solid var(--color-border-light);
+    @apply flex items-start justify-between gap-[1.6rem] p-[2.4rem] border-b border-[var(--color-border-light)];
   }
 
   .side-panel__title {
-    font-size: var(--text-heading-medium);
-    font-weight: 700;
-    line-height: 1.5;
-    color: var(--color-text);
-    margin: 0;
+    @apply text-[2.4rem] font-bold leading-[1.5] text-[var(--color-text)] m-0;
   }
 
   .side-panel__close {
-    flex-shrink: 0;
-    width: var(--touch-target-min);
-    height: var(--touch-target-min);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    border-radius: var(--krds-radius-medium2);
-    color: var(--color-text-subtle);
-    font-size: 2.4rem;
-    line-height: 1;
-    cursor: pointer;
+    @apply shrink-0 w-[4.4rem] h-[4.4rem] flex items-center justify-center bg-transparent border-0 rounded-[0.6rem] text-[var(--color-text-subtle)] text-[2.4rem] leading-none cursor-pointer;
+
+
+
   }
 
   .side-panel__close:hover {
-    background: var(--color-bg-subtler);
-    color: var(--color-text);
+    @apply bg-[var(--color-bg-subtler)] text-[var(--color-text)];
   }
 
   .side-panel__body {
-    flex: 1;
-    overflow-y: auto;
-    padding: var(--krds-padding-8);
-    color: var(--color-text);
+    @apply flex-1 overflow-y-auto p-[2.4rem] text-[var(--color-text)];
   }
 
   .side-panel__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--krds-gap-5);
-    padding: var(--krds-padding-6) var(--krds-padding-8) var(--krds-padding-8);
-    border-top: 1px solid var(--color-border-light);
+    @apply flex items-center justify-end gap-[1.6rem] p-[1.6rem_2.4rem_2.4rem] border-t border-[var(--color-border-light)];
   }
 }

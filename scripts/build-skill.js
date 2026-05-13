@@ -2,7 +2,7 @@
  * info-design 스킬 빌더
  *
  * 입력:
- *   tokens/krds-base.json + tokens/infomind-overrides.json
+ *   tokens/foundation.json
  *   tokens/build/tokens.css (이미 빌드되어 있어야 함)
  *   src/styles/6-components/*.css
  *   src/snippets/*.md
@@ -36,8 +36,7 @@ function buildVersion() {
 }
 
 const ROOT = path.resolve(__dirname, '..')
-const KRDS_PATH = path.join(ROOT, 'tokens', 'krds-base.json')
-const OVERRIDES_PATH = path.join(ROOT, 'tokens', 'infomind-overrides.json')
+const FOUNDATION_PATH = path.join(ROOT, 'tokens', 'foundation.json')
 const SNIPPETS_DIR = path.join(ROOT, 'src', 'snippets')
 // eslint-disable-next-line no-unused-vars
 const _COMPONENTS_DIR = path.join(ROOT, 'src', 'styles', '6-components')
@@ -45,8 +44,7 @@ const SKILL_REFS_DIR = path.join(ROOT, 'skill', 'references')
 
 if (!fs.existsSync(SKILL_REFS_DIR)) fs.mkdirSync(SKILL_REFS_DIR, { recursive: true })
 
-const krds = JSON.parse(fs.readFileSync(KRDS_PATH, 'utf-8'))
-const overrides = JSON.parse(fs.readFileSync(OVERRIDES_PATH, 'utf-8'))
+const foundation = JSON.parse(fs.readFileSync(FOUNDATION_PATH, 'utf-8'))
 
 // ─────────────────────────────────────────────────────
 // 1. krds-tokens.md — 토큰 카탈로그
@@ -56,56 +54,53 @@ function buildKrdsTokensMd() {
   const lines = []
   const w = (s) => lines.push(s)
 
-  w('# KRDS 토큰 카탈로그')
+  w('# INFOUX 파운데이션 토큰 카탈로그')
   w('')
   w('> 자동 생성됨. 직접 수정 금지.')
-  w('> 출처: `tokens/krds-base.json` (KRDS-uiux v1.0.0) + `tokens/infomind-overrides.json`')
+  w('> 출처: `tokens/foundation.json`')
   w('> 빌드: ' + buildVersion())
   w('')
-  w('이 문서의 토큰만 사용해야 한다. 임의 hex/px/rem 작성은 금지.')
+  w('색상과 기본 폰트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.')
   w('')
   w('---')
   w('')
 
-  // 색상 — Primary
   w('## 색상')
   w('')
   w('### Primary (브랜드 / 액션 강조)')
   w('')
   w('| 단계 | 토큰 | hex |')
   w('|------|------|-----|')
-  for (const [stage, t] of Object.entries(krds.primitive.color.light.primary)) {
-    w(`| ${stage} | \`--krds-light-color-primary-${stage}\` | \`${t.value}\` |`)
+  for (const [stage, t] of Object.entries(foundation.primitive.color.light.primary)) {
+    w(`| ${stage} | \`--color-primary-${stage}\` | \`${t.value}\` |`)
   }
   w('')
   w('**시맨틱 별칭**: `--color-primary` = primary-50 / `--color-primary-hover` = 60 / `--color-primary-pressed` = 70')
   w('')
 
-  // Gray
   w('### Gray (무채색 — 텍스트/배경/보더)')
   w('')
   w('| 단계 | 토큰 | hex |')
   w('|------|------|-----|')
-  for (const [stage, t] of Object.entries(krds.primitive.color.light.gray)) {
-    w(`| ${stage} | \`--krds-light-color-gray-${stage}\` | \`${t.value}\` |`)
+  for (const [stage, t] of Object.entries(foundation.primitive.color.light.gray)) {
+    w(`| ${stage} | \`--color-gray-${stage}\` | \`${t.value}\` |`)
   }
   w('')
 
-  // Semantic colors
   for (const cat of ['danger', 'warning', 'success', 'information', 'point']) {
-    if (!krds.primitive.color.light[cat]) continue
+    if (!foundation.primitive.color.light[cat]) continue
     const labelMap = { danger: 'Danger (오류/삭제)', warning: 'Warning (경고)', success: 'Success (성공)', information: 'Information (정보)', point: 'Point (강조 — 빨강)' }
     w(`### ${labelMap[cat]}`)
     w('')
     w('| 단계 | 토큰 | hex |')
     w('|------|------|-----|')
-    for (const [stage, t] of Object.entries(krds.primitive.color.light[cat])) {
-      w(`| ${stage} | \`--krds-light-color-${cat}-${stage}\` | \`${t.value}\` |`)
+    const tokenGroup = cat === 'information' ? 'info' : cat
+    for (const [stage, t] of Object.entries(foundation.primitive.color.light[cat])) {
+      w(`| ${stage} | \`--color-${tokenGroup}-${stage}\` | \`${t.value}\` |`)
     }
     w('')
   }
 
-  // 시맨틱 텍스트/배경/보더
   w('### 시맨틱 — 텍스트')
   w('')
   w('| 토큰 (시맨틱 별칭) | 참조 | 용도 |')
@@ -149,233 +144,23 @@ function buildKrdsTokensMd() {
   w('| `--color-border-primary` | primary-50 (focus) |')
   w('| `--color-border-disabled` | gray-30 |')
   w('')
-
-  // 타이포그래피
-  w('---')
-  w('')
-  w('## 타이포그래피')
-  w('')
-  w('### 폰트 패밀리')
-  w('')
-  w('- **`--font-sans`** = `\'Pretendard GOV\', \'Malgun Gothic\', \'apple sd gothic neo\', sans-serif`')
-  w('- 직접 `font-family: ...` 작성 금지')
-  w('')
-
-  w('### 1rem = 10px 트릭 (KRDS 명시 채택)')
-  w('')
-  w('- `html { font-size: 62.5% }` 적용 → 1rem = 10px')
-  w('- 모든 KRDS 토큰이 0.1rem 단위로 정의됨 (예: 1.6rem = 16px)')
-  w('- `reset.css`에서 자동 처리. 제거하면 시스템 깨짐')
-  w('')
-
-  w('### 폰트 사이즈 — KRDS 스케일 (PC 기준, Mobile 자동 분기)')
-  w('')
-  // PC 폰트
-  if (krds['responsive-pc'] && krds['responsive-pc']['font-size']) {
-    w('| 카테고리 | 토큰 | PC | Mobile (자동) |')
-    w('|---------|------|-----|---------------|')
-    for (const [cat, sizes] of Object.entries(krds['responsive-pc']['font-size'])) {
-      for (const [sz, t] of Object.entries(sizes)) {
-        if (typeof t !== 'object' || !('value' in t)) continue
-        const pcVal = t.value
-        const mobVal = krds['responsive-mobile']?.['font-size']?.[cat]?.[sz]?.value || pcVal
-        w(`| ${cat}-${sz} | \`--text-${cat}-${sz}\` | ${pcVal} | ${mobVal} |`)
-      }
-    }
-  }
-  w('')
-
-  w('### 폰트 두께')
-  w('')
-  w('- `--font-weight-regular` (400) — 본문')
-  w('- `--font-weight-bold` (700) — 강조/제목')
-  w('- KRDS는 medium/semibold를 정의하지 않는다. 사용 시 가독성·접근성 위해 두께 선택은 위 둘로 한정.')
-  w('')
-
-  w('### line-height')
-  w('')
-  w('- 기본: 1.5 (150%) — KRDS 접근성 강제 최소값')
-  w('- 모든 KRDS 텍스트 토큰이 1.5로 통일')
-  w('')
-
-  // 간격
-  w('---')
-  w('')
-  w('## 간격 (Spacing)')
-  w('')
-  w('### Number primitive (1rem = 10px 베이스)')
-  w('')
-  w('| 토큰 | rem | px |')
-  w('|------|-----|-----|')
-  if (krds.primitive.number) {
-    for (const [k, t] of Object.entries(krds.primitive.number)) {
-      const px = t.value === '0' || t.value === '0rem' ? '0' : (parseFloat(t.value) * 10).toFixed(0)
-      w(`| \`--krds-number-${k}\` (= \`--spacing-${k}\`) | ${t.value} | ${px} |`)
-    }
-  }
-  w('')
-
-  w('### Semantic — gap (요소 간 간격)')
-  w('')
-  if (krds.semantic.gap) {
-    w('| 토큰 | 참조 | px |')
-    w('|------|------|-----|')
-    for (const [k, t] of Object.entries(krds.semantic.gap)) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      const ref = t.value.match(/\{primitive\.number\.(\w+)\}/)
-      const refKey = ref ? ref[1] : '?'
-      const refToken = krds.primitive.number[refKey]
-      const px = refToken ? (parseFloat(refToken.value) * 10).toFixed(0) : '?'
-      w(`| \`--krds-gap-${k}\` | number-${refKey} | ${px} |`)
-    }
-  }
-  w('')
-
-  w('### Semantic — padding (입력박스 안 패딩 등)')
-  w('')
-  if (krds.semantic.padding) {
-    w('| 토큰 | 참조 | px |')
-    w('|------|------|-----|')
-    for (const [k, t] of Object.entries(krds.semantic.padding)) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      const ref = t.value.match(/\{primitive\.number\.(\w+)\}/)
-      const refKey = ref ? ref[1] : '?'
-      const refToken = krds.primitive.number[refKey]
-      const px = refToken ? (parseFloat(refToken.value) * 10).toFixed(0) : '?'
-      w(`| \`--krds-padding-${k}\` | number-${refKey} | ${px} |`)
-    }
-  }
-  w('')
-
-  w('### Semantic — size-height (버튼/입력 등 컴포넌트 높이)')
-  w('')
-  if (krds.semantic['size-height']) {
-    w('| 토큰 | 참조 | px |')
-    w('|------|------|-----|')
-    for (const [k, t] of Object.entries(krds.semantic['size-height'])) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      const ref = t.value.match(/\{primitive\.number\.(\w+)\}/)
-      const refKey = ref ? ref[1] : '?'
-      const refToken = krds.primitive.number[refKey]
-      const px = refToken ? (parseFloat(refToken.value) * 10).toFixed(0) : '?'
-      w(`| \`--krds-size-height-${k}\` | number-${refKey} | ${px} |`)
-    }
-  }
-  w('')
-
-  // Radius
-  w('---')
-  w('')
-  w('## 반경 (Border Radius)')
-  w('')
-  if (krds.semantic.radius) {
-    w('| 토큰 | 참조 | px | KRDS Shape 그룹 |')
-    w('|------|------|-----|-------------------|')
-    const shapeGroup = (k) => {
-      if (k.startsWith('xsmall')) return 'Xsmall (인디케이터/배지)'
-      if (k.startsWith('small')) return 'Small (체크박스/태그)'
-      if (k.startsWith('medium')) return 'Medium (버튼/입력)'
-      if (k.startsWith('large')) return 'Large (카드)'
-      if (k.startsWith('xlarge')) return 'XLarge (모달)'
-      if (k === 'max') return 'Max (pill)'
-      return ''
-    }
-    for (const [k, t] of Object.entries(krds.semantic.radius)) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      const ref = t.value.match(/\{primitive\.number\.(\w+)\}/)
-      const refKey = ref ? ref[1] : '?'
-      const refToken = krds.primitive.number[refKey]
-      const px = refToken ? (parseFloat(refToken.value) * 10).toFixed(0) : '?'
-      w(`| \`--krds-radius-${k}\` | number-${refKey} | ${px} | ${shapeGroup(k)} |`)
-    }
-  }
-  w('')
-
-  // 그림자
-  w('---')
-  w('')
-  w('## 그림자 (Elevation) — INFOMIND 추상 토큰')
-  w('')
-  w('| 토큰 | 용도 |')
-  w('|------|------|')
-  w('| `--shadow-1` | alert, banner, dropdown — subtle |')
-  w('| `--shadow-2` | popover, help-panel, side-panel, tooltip — medium |')
-  w('| `--shadow-3` | modal, dialog — deep |')
-  w('')
-
-  // z-index
-  w('---')
-  w('')
-  w('## Z-index — INFOMIND 표준')
+  w('### 기본 폰트')
   w('')
   w('| 토큰 | 값 | 용도 |')
-  w('|------|-----|------|')
-  if (overrides['infomind-z-index']) {
-    for (const [k, t] of Object.entries(overrides['infomind-z-index'])) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      w(`| \`--z-${k}\` | ${t.value} | ${k} |`)
-    }
-  }
+  w('|------|----|------|')
+  w(`| \`--font-sans\` | \`${foundation.font.family.sans.value}\` | 본문/컴포넌트 기본 폰트 |`)
+  w(`| \`--font-mono\` | \`${foundation.font.family.mono.value}\` | 코드/고정폭 텍스트 |`)
   w('')
-
-  // 모션
   w('---')
   w('')
-  w('## 모션 — INFOMIND 표준')
+  w('## 사용 원칙')
   w('')
-  w('### Duration')
-  w('')
-  if (overrides['infomind-motion']?.duration) {
-    for (const [k, t] of Object.entries(overrides['infomind-motion'].duration)) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      w(`- \`--duration-${k}\` = ${t.value}${t.$comment ? ` (${t.$comment})` : ''}`)
-    }
-  }
-  w('')
-  w('### Easing')
-  w('')
-  if (overrides['infomind-motion']?.easing) {
-    for (const [k, t] of Object.entries(overrides['infomind-motion'].easing)) {
-      if (typeof t !== 'object' || !('value' in t)) continue
-      w(`- \`--easing-${k}\` = \`${t.value}\`${t.$comment ? ` (${t.$comment})` : ''}`)
-    }
-  }
-  w('')
-
-  // 터치 영역
-  w('---')
-  w('')
-  w('## 터치 영역 — INFOMIND 강제')
-  w('')
-  w('- **`--touch-target-min`** = 4.4rem (44px)')
-  w('- 모바일 컨텍스트에서 모든 인터랙티브 요소의 최소 크기')
-  w('- WCAG 2.1 AA 권장 충족')
-  w('')
-
-  // 브레이크포인트
-  w('---')
-  w('')
-  w('## 반응형 브레이크포인트 (KRDS 정의 — 5단계)')
-  w('')
-  w('| 토큰 | 값 | 디바이스 |')
-  w('|------|-----|----------|')
-  w('| `--breakpoint-small` | 360px | 작은 모바일 |')
-  w('| `--breakpoint-medium` | 768px | 태블릿 |')
-  w('| `--breakpoint-large` | 1024px | 데스크탑 |')
-  w('| `--breakpoint-xlarge` | 1280px | 큰 데스크탑 |')
-  w('| `--breakpoint-xxlarge` | 1440px | 와이드 |')
-  w('')
-  w('Tailwind prefix: `small:` / `medium:` / `large:` / `xlarge:` / `xxlarge:`')
-  w('')
-
-  // 그리드
-  w('---')
-  w('')
-  w('## 그리드 / 컨테이너')
-  w('')
-  w('- **콘텐츠 max-width**: 1200px (KRDS contents-size)')
-  w('- **컨테이너 좌우 padding**: Mobile 16px / PC 24px')
-  w('- **컬럼 (INFOMIND 결정)**: Mobile 4 / Tablet 8 / PC 12')
+  w('- 색상은 `--color-*` 시맨틱 토큰을 우선 사용한다.')
+  w('- 단계 색상은 예외적으로 명도가 필요한 경우에만 `--color-{group}-{step}`을 사용한다.')
+  w('- 폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다.')
+  w('- 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다.')
+  w('- 해당 값들은 `@apply`의 Tailwind 유틸리티 또는 명확한 CSS 직접값으로 작성한다.')
+  w('- `tokens/build/tokens.css`는 자동 생성물이므로 직접 수정하지 않는다.')
   w('')
 
   fs.writeFileSync(path.join(SKILL_REFS_DIR, 'krds-tokens.md'), lines.join('\n') + '\n')

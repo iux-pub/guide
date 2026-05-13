@@ -46,6 +46,5 @@
 
 ## 출처
 
-- KRDS card padding: `--krds-pc-padding-card-{xsmall|small|medium|large}`
-- Shape: `--krds-radius-large1` (10px) — KRDS Large 그룹
+- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
 - CSS: `src/styles/6-components/card.css`

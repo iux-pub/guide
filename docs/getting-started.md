@@ -39,8 +39,8 @@ npm run dev          # http://localhost:8080
 2. `npm run build` 재실행
 
 스타터에 동봉된 것:
-- ✅ KRDS 28종 컴포넌트 CSS
-- ✅ KRDS + INFOMIND 토큰
+- ✅ KRDS 기반 컴포넌트 CSS
+- ✅ KRDS + INFOMIND 색상/상태 토큰
 - ✅ `.claude/skills/info-design/` — Claude/Cursor 자동 인식
 - ✅ ITCSS 5-layer 구조
 
@@ -179,12 +179,12 @@ npm run deploy:skill
 
 ### 4-B. 새 컴포넌트 추가
 
-> KRDS 28종 카탈로그 외 컴포넌트는 **UX팀 결정 필요**. 임의 추가 금지.
+> 기존 컴포넌트 카탈로그를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
 
 UX팀 결정 후:
 
 1. `src/snippets/{name}.md` — `skill/references/snippet-template.md` 복사
-2. `src/styles/6-components/{name}.css` 작성 (BEM + KRDS 토큰만)
+2. `src/styles/6-components/{name}.css` 작성 (BEM + 색상 토큰, 필요 시 CSS nesting + `@apply`)
 3. `src/styles/6-components/index.css`에 `@import`
 4. `src/playground/{name}.html` 미리보기
 5. `site/components/{name}.md` 문서

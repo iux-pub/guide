@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // check-html-structure.js — info-design HTML 구조 컨트랙트 자동 검출
-// R-15: 컴포넌트 root 태그가 html-semantics.md 매핑과 일치하는지
+// R-15: 기존 인포마인드 HTML 패턴을 우선 유지하되 시맨틱 보강이 필요한지 점검
 // R-16: 인터랙티브 컴포넌트의 필수 ARIA 속성 누락
 // R-17: 비-BEM 상태 클래스 (.is-*, .has-*)
 // R-18: 시각적 단어 modifier (--blue, --big, --rounded 등)
@@ -45,7 +45,7 @@ function warn(file, line, msg, code, rule) {
 
 const rel = (p) => path.relative(ROOT, p)
 
-// ─── R-15: 컴포넌트 root 태그 매핑 (html-semantics.md 기준) ──────────────────────
+// ─── R-15: 컴포넌트 root 태그 매핑 참고 (html-semantics.md 기준) ──────────────────────
 //
 // allowedTags: 허용 태그(또는 태그 + 필수 속성)
 //   - 문자열: 해당 태그
@@ -259,16 +259,16 @@ function checkHtml(html, filePath, baseLineNum = 1) {
       const isBlockRoot = new RegExp(`class\\s*=\\s*["'][^"']*\\b${blockName.replace(/-/g, '\\-')}(?![_-])`).test(match.fullMatch)
       if (!isBlockRoot) continue
 
-      // R-15: root 태그 검증
+      // R-15: root 태그 점검
       const allowed = mapping.allowedTags
       if (!allowed.includes(match.tag)) {
         // 라인 번호 추정
         const beforeMatch = html.slice(0, match.index)
         const lineNum = baseLineNum + beforeMatch.split('\n').length - 1
-        error(
+        warn(
           rel(filePath),
           lineNum,
-          `[R-15] "${blockName}" root 태그 위반: <${match.tag}> 사용. 허용 태그: ${allowed.map(t => `<${t}>`).join(', ')}. ${mapping.note || ''}`,
+          `[R-15] "${blockName}" root 태그 확인: <${match.tag}> 사용. 기존 인포마인드 패턴을 우선하되, 시맨틱 보강이 필요하면 참고 태그(${allowed.map(t => `<${t}>`).join(', ')})를 검토. ${mapping.note || ''}`,
           match.fullMatch.slice(0, 120),
           'R-15'
         )

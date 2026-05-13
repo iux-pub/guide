@@ -5,7 +5,7 @@ order: 3
 
 # 색상 대비 가이드
 
-> 토큰값 기준: `tokens/krds-base.json + tokens/infomind-overrides.json`
+> 토큰값 기준: `tokens/foundation.json`
 
 ## WCAG 2.1 AA 대비 기준
 
@@ -87,7 +87,6 @@ order: 3
 | WebAIM Contrast Checker | https://webaim.org/resources/contrastchecker/ | 가장 널리 사용. 전경/배경 색상 입력 시 즉시 PASS/FAIL 판정 |
 | APCA Contrast Calculator | https://www.myndex.com/APCA/ | WCAG 3.0 초안 기준 (APCA 알고리즘). 글자 크기별 세밀한 판정 |
 | Chrome DevTools 접근성 패널 | 브라우저 내장 | 요소 검사 시 색상 대비 비율 표시. 가장 빠른 확인 방법 |
-| Figma Contrast Plugin | 피그마 플러그인 | 디자인 단계에서 대비 확인. "Stark" 또는 "A11y - Color Contrast Checker" |
 | axe DevTools 확장 | 브라우저 확장 | 페이지 전체 대비 문제를 자동 스캔 |
 
 ## 대비 실패 시 대안 색상 찾기
@@ -109,10 +108,10 @@ WebAIM Contrast Checker에서 조절한 색상과 배경색을 입력하여 4.5:
 
 **3단계: 토큰 변수로 적용**
 
-확인된 색상을 프로젝트 오버라이드 파일(`_project-overrides.scss`)에서 토큰을 재정의한다.
+확인된 색상을 프로젝트 오버라이드 파일(`프로젝트별 CSS 확장`)에서 토큰을 재정의한다.
 
 ```scss
-// _project-overrides.scss
+// 프로젝트별 CSS 확장
 :root {
   // warning 색상 대비 보강 (기본 #c78500 -> #a86e00)
   --color-warning: #a86e00;

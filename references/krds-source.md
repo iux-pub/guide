@@ -13,7 +13,6 @@
 - **시스템명**: KRDS (Korea Government Design System) — 한국명 "범정부 UI/UX 디자인 시스템"
 - **현재 버전**: v1.0.0 (이전 버전 v0.4는 https://v04.krds.go.kr 에서 보존)
 - **GitHub**: https://github.com/KRDS-uiux/krds-uiux (공식 저장소)
-- **Figma 라이브러리**: KRDS_v1.0.0 (Figma Community)
 - **CSS 변수 prefix**: `--krds-`
 - **모드 구분**: `light`(기본) / `high-contrast`(고대비)
 - **반응형 모드**: `mobile` / `pc`
@@ -387,7 +386,6 @@
   - SCSS 정의: `$font-family-base: "Pretendard GOV", sans-serif`
   - 출처: `resources/scss/common/_variables_for_code.scss` line 15
   - Pretendard 기반으로 공공기관 접근성·가독성에 최적화
-  - 별도 다운로드 필요 (Figma 시작 1단계)
 - **확장형 권장**: Noto Sans, Nanum Gothic, Spoqa Han Sans
 - **베이스 사이즈**: 17px (Pretendard GOV 상대적으로 작은 자형 보정)
 
@@ -634,7 +632,7 @@
 
 ### 4.4 컬럼 수
 > KRDS 공식 페이지에서 명시된 정확한 컬럼 수치는 확인되지 않음. 일반 8-point grid 기반 12-column이 통상이지만, **KRDS는 컴포넌트 간 gap·padding을 모두 토큰화한 "토큰 기반 레이아웃" 방식이라 12/8/4 컬럼을 강제하지 않음** (관찰).
-> ⚠ **공백 — UX팀 결정 필요 또는 Figma 라이브러리 직접 확인 필요**
+> ⚠ **공백 — UX팀 결정 필요**
 
 ---
 
@@ -995,7 +993,7 @@ CSS 출력 (`common.css`):
 ### 13.3 계층 (KRDS 공식 분류)
 1. **Primitive tokens** — 기초 디자인 속성 (직접 사용 X)
    - 예: `--krds-light-color-primary-50`
-2. **Semantic tokens** — 의미·맥락 정의 (Figma에서 정의)
+2. **Semantic tokens** — 의미·맥락 정의
    - 예: `--krds-light-color-text-primary`
 3. **Component tokens** — 컴포넌트 전용 (코드에서 정의)
    - 예: `--krds-button--primary-fill`
@@ -1059,7 +1057,7 @@ CSS 출력 (`common.css`):
 
 ### 14.3 출처 미확인 항목
 - KRDS 사이트의 "이미지" 컴포넌트 상세 명세
-- 그리드 정확한 컬럼 수 (Figma 라이브러리 직접 확인 필요)
+- 그리드 정확한 컬럼 수
 - 모션 duration 추상 스케일 (없음 — 사실상 단일 값)
 
 ### 14.4 KRDS 자체의 한계
@@ -1090,7 +1088,6 @@ CSS 출력 (`common.css`):
 - 메인 저장소: https://github.com/KRDS-uiux/krds-uiux
 - **토큰 JSON (이 문서의 hex/rem 값 원본 출처)**:
   - https://raw.githubusercontent.com/KRDS-uiux/krds-uiux/main/tokens/transformed_tokens.json
-  - https://raw.githubusercontent.com/KRDS-uiux/krds-uiux/main/tokens/figma_token.json
 - SCSS 변수 원본: https://raw.githubusercontent.com/KRDS-uiux/krds-uiux/main/resources/scss/common/_variables_for_code.scss
 - 브레이크포인트 mixin: https://raw.githubusercontent.com/KRDS-uiux/krds-uiux/main/resources/scss/common/mixins/_breakpoints.scss
 - 컴파일된 토큰 CSS: https://raw.githubusercontent.com/KRDS-uiux/krds-uiux/main/resources/css/token/krds_tokens.css
@@ -1100,9 +1097,6 @@ CSS 출력 (`common.css`):
 ### 전자정부 UI/UX 가이드 (KRDS와 동일 콘텐츠)
 - 메인: https://uiux.egovframe.go.kr/
 - 가이드: https://uiux.egovframe.go.kr/guide/index.html
-
-### KRDS Figma 라이브러리
-- KRDS_v1.0.0 Community: https://www.figma.com/community/file/1452915208095182951/krds-v1-0-0
 
 ### 외부 분석 자료 (보조)
 - 디자인 나침반 — KRDS 분석: https://designcompass.org/2024/04/17/krds/

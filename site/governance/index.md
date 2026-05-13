@@ -22,7 +22,7 @@ order: 1
 
 ## 관련 가이드
 
-- [SCSS 구조](/conventions/css-structure/) -- ITCSS 7레이어 아키텍처
+- [CSS 구조](/conventions/css-structure/) -- ITCSS 레이어 구조
 - [BEM 네이밍](/conventions/bem/) -- CSS 클래스명 컨벤션
 - [접근성 체크리스트](/accessibility/checklist/) -- KWCAG/WCAG AA 검증 기준
 - [온보딩](/onboarding/) -- 신규 팀원 시작 가이드

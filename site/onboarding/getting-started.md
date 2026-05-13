@@ -23,7 +23,7 @@ npm run build           # 토큰 + Tailwind v4 CSS 한 번에
 
 빌드 성공 시 `dist/css/style.css`가 생성된다. `index.html`을 브라우저에서 열어 확인한다.
 
-커스터마이징은 `tokens/infomind-overrides.json`에서 브랜드 색상을 정의하고 `npm run build`로 재빌드한다.
+커스터마이징은 `tokens/foundation.json`에서 브랜드 색상을 정의하고 `npm run build`로 재빌드한다.
 
 > **가이드 문서 열람:** [https://github.com/iux-pub/guide](https://github.com/iux-pub/guide) 저장소의 문서 사이트 참조
 
@@ -47,20 +47,19 @@ npm run serve           # 문서 사이트 개발 서버 (http://localhost:8080)
 
 ## Step 2: CSS 구조 이해 (ITCSS 5레이어)
 
-이 프로젝트는 **ITCSS(Inverted Triangle CSS) 5레이어** 구조 + Tailwind v4 + KRDS 토큰을 사용한다. 토큰은 별도 디렉토리(`tokens/`)로 분리되어 있다.
+이 프로젝트는 **ITCSS(Inverted Triangle CSS) 5레이어** 구조 + Tailwind v4 + INFOUX 파운데이션 토큰을 사용한다. 토큰은 별도 디렉토리(`tokens/`)로 분리되어 있다.
 
 ```
 tokens/
-  krds-base.json              # KRDS 정본 (수정 금지)
-  infomind-overrides.json     # UX팀 결정
+  foundation.json             # 색상 + 기본 폰트 단일 소스
   build/tokens.css            # 자동 생성 (@theme + CSS Custom Properties)
 
 src/styles/
   style.css                   # 메인 진입점 (@import "tailwindcss" + 토큰 + 레이어)
-  3-generic/                  # 리셋 (62.5% 트릭)
+  3-generic/                  # 리셋
   4-elements/                 # HTML 태그 베이스
   5-objects/                  # 레이아웃 (BEM 필수)
-  6-components/               # KRDS UI 컴포넌트 28종 (BEM 필수)
+  6-components/               # KRDS 기반 UI 컴포넌트 (BEM 필수)
   7-utilities/                # 유틸리티
 ```
 
@@ -72,7 +71,7 @@ src/styles/
 
 ## Step 3: 디자인 토큰 사용
 
-모든 스타일 값은 CSS Custom Properties(토큰)를 사용한다. 하드코딩 색상, 크기, 간격을 금지한다(R-01).
+색상과 기본 폰트는 CSS Custom Properties(토큰)를 사용한다. 하드코딩 색상은 금지하고, 크기/간격은 직접값을 사용한다(R-01).
 
 ```css
 /* 잘못된 예 (하드코딩 금지) */
@@ -81,35 +80,30 @@ src/styles/
   padding: 16px;
 }
 
-/* 올바른 예 — KRDS 정본 */
-.card {
-  color: var(--krds-light-color-gray-90);
-  padding: var(--krds-padding-6);
-}
-
-/* 올바른 예 — INFOMIND 시맨틱 별칭 */
+/* 올바른 예 */
 .card {
   color: var(--color-text);
-  padding: var(--spacing-4);
+  padding: 2.4rem;
 }
+
 ```
 
-토큰은 `tokens/build/tokens.css` (자동 생성)에서 발행되며, 소스는 `tokens/krds-base.json` + `tokens/infomind-overrides.json`이다.
+토큰은 `tokens/build/tokens.css` (자동 생성)에서 발행되며, 소스는 `tokens/foundation.json`이다.
 
 | 카테고리 | 권장 prefix | 예시 |
 |----------|-----------|------|
-| 색상 (KRDS 정본) | `--krds-light-color-*` | `var(--krds-light-color-primary-50)`, `var(--krds-light-color-gray-70)` |
-| 색상 (시맨틱 별칭) | `--color-*` | `var(--color-text)`, `var(--color-bg-secondary)` |
-| 패딩·간격 | `--krds-padding-*` | `var(--krds-padding-5)`, `var(--krds-gap-2)` |
-| 반경 | `--krds-radius-*` | `var(--krds-radius-medium2)` |
-| 폰트 사이즈 | `--krds-font-size-*` 또는 `--text-*` | `var(--krds-font-size-7)`, `var(--text-body-medium)` |
-| 사이즈 (높이) | `--krds-size-height-*` | `var(--krds-size-height-7)` (=48px=KRDS medium) |
+| 색상 | `--color-*` | `var(--color-primary)`, `var(--color-text-subtle)` |
+| 기본 폰트 | `--font-*` | `var(--font-sans)`, `var(--font-mono)` |
+| 패딩·간격 | 직접값 | `2rem`, `2.4rem` |
+| 반경 | 직접값 | `0.6rem` |
+| 폰트 사이즈 | 직접값 | `1.7rem` |
+| 사이즈 (높이) | 직접값 | `4.8rem` |
 
 심화: [토큰 개요](/tokens/)
 
-## Step 4: 컴포넌트 활용 (KRDS 28종)
+## Step 4: 컴포넌트 활용 (KRDS 기반)
 
-기존 컴포넌트를 활용할 때는 스니펫을 복사하여 사용한다. **카탈로그 외 임의 신설은 금지** — UX팀에 신설 제안 → 카탈로그 등재 후 사용.
+기존 컴포넌트를 활용할 때는 스니펫을 복사하여 사용한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
 1. `src/snippets/{name}.md`에서 필요한 컴포넌트의 마크다운 파일을 연다
 2. HTML 마크업 예제를 복사한다
@@ -176,7 +170,7 @@ npm run test:a11y
 **필수 체크 항목 (R-09~R-14):**
 - 이미지에 `alt` 속성 제공 (장식용은 `alt=""`)
 - 인터랙티브 요소에 `aria-label` 또는 텍스트 레이블 제공
-- 시맨틱 HTML 사용 — `<button>`/`<a>` (R-10, `<div onclick>` 금지)
+- 시맨틱 HTML 사용 — `<button>`/`<a>` (R-10, `div`/`span` 클릭 핸들러 패턴 금지)
 - 키보드 네비게이션 지원 (탭 순서, 포커스 표시)
 - `:focus-visible` 4px primary 외곽선 (reset.css 전역 — 컴포넌트에서 제거 금지)
 - 색상 대비 4.5:1 이상 (큰 텍스트 24px/18.67px bold 3:1)
@@ -187,6 +181,6 @@ npm run test:a11y
 
 ## 다음 단계
 
-- [피그마→코드 핸드오프](/onboarding/handoff/) — 디자이너-퍼블리셔 간 전달 규칙 (KRDS Variable ↔ CSS Custom Property 매핑)
+- [디자인 전달 체크리스트](/onboarding/handoff/) — 구조, 토큰, 컴포넌트, 접근성 전달 규칙
 - [컨벤션 개요](/conventions/) — CSS 규칙·BEM·ITCSS 구조 상세
-- [컴포넌트 개요](/components/) — KRDS 28종 카탈로그
+- [컴포넌트 개요](/components/) — KRDS 기반 컴포넌트 카탈로그

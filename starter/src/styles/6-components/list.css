@@ -9,57 +9,43 @@
 @layer components {
   /* ─── Text list (ul/ol) ─── */
   .list--text {
-    list-style: disc inside;
-    padding-left: 0;
-    margin: 0;
-    color: var(--color-text);
-    line-height: 1.7;
+    @apply m-0 text-[var(--color-text)] leading-[1.7] ps-[0] [list-style:disc_inside];
   }
-  .list--text.list--ordered { list-style: decimal inside; }
+  .list--text.list--ordered { @apply [list-style:decimal_inside]; }
 
   .list--text > li {
-    padding-block: var(--krds-padding-2); /* 4px */
+  @apply py-[0.4rem];
   }
 
   .list--text > li > ul,
   .list--text > li > ol {
-    list-style: circle inside;
-    padding-left: var(--krds-padding-7); /* 20px */
-    margin-top: var(--krds-gap-2);
+    @apply mt-[0.4rem] ps-[2rem] [list-style:circle_inside];
   }
 
   /* ─── Structured list (dl) — KRDS 정의 목록 ─── */
   .list--structured {
-    margin: 0;
-    border-top: 2px solid var(--color-border-dark);
+    @apply m-0 [border-top:2px_solid_var(--color-border-dark)];
   }
 
   .list--structured > div,
   .list--structured > .list__row {
-    display: grid;
-    grid-template-columns: 16rem 1fr;
-    gap: var(--krds-gap-5);
-    padding: var(--krds-padding-6) 0;
-    border-bottom: 1px solid var(--color-border-light);
+    @apply grid gap-[1.6rem] py-[1.6rem] px-0 border-b border-[var(--color-border-light)] [grid-template-columns:16rem_1fr];
   }
 
   @media (max-width: 767px) {
     .list--structured > div,
     .list--structured > .list__row {
-      grid-template-columns: 1fr;
-      gap: var(--krds-gap-3);
+      @apply gap-[0.8rem] [grid-template-columns:1fr];
     }
   }
 
   .list--structured dt,
   .list--structured .list__label {
-    font-weight: 700;
-    color: var(--color-text-bolder);
+    @apply font-bold text-[var(--color-text-bolder)];
   }
 
   .list--structured dd,
   .list--structured .list__value {
-    color: var(--color-text);
-    margin: 0;
+    @apply text-[var(--color-text)] m-0;
   }
 }

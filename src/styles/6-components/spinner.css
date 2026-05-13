@@ -7,13 +7,7 @@
 
 @layer components {
   .spinner {
-    display: inline-block;
-    width: 2.4rem;
-    height: 2.4rem;
-    border: 0.3rem solid var(--color-bg-subtle);
-    border-top-color: var(--color-primary);
-    border-radius: 50%;
-    animation: spinner-rotate 0.8s linear infinite;
+    @apply inline-block w-[2.4rem] h-[2.4rem] rounded-full [border:0.3rem_solid_var(--color-bg-subtle)] [border-top-color:var(--color-primary)] [animation:spinner-rotate_0.8s_linear_infinite];
   }
 
   @keyframes spinner-rotate {
@@ -22,21 +16,19 @@
 
   /* 사이즈 */
   .spinner--small {
-    width: 1.6rem;
-    height: 1.6rem;
-    border-width: 0.2rem;
+    @apply w-[1.6rem] h-[1.6rem] border-[0.2rem];
+
   }
 
   .spinner--large {
-    width: 4.0rem;
-    height: 4.0rem;
-    border-width: 0.4rem;
+    @apply w-[4.0rem] h-[4.0rem] border-[0.4rem];
+
   }
 
   /* prefers-reduced-motion 대응 */
   @media (prefers-reduced-motion: reduce) {
     .spinner {
-      animation-duration: 1.6s;
+      @apply [animation-duration:1.6s];
     }
   }
 }

@@ -1,4 +1,4 @@
-# 퍼블리싱 규칙 프롬프트 — KRDS+Tailwind v4
+# 퍼블리싱 규칙 프롬프트 — KRDS 원칙 + Tailwind v4
 
 대상: Cursor, Copilot, Windsurf, Claude Code
 
@@ -17,17 +17,17 @@
 
 금지: `.btn-primary`(→ `.btn--primary`), `.card-header`(→ `.card__header`), element 2단계 중첩(`.card__header__title` → `.card__title`).
 
-**SCSS 사용 금지.** Tailwind v4 + 표준 CSS만 허용 (R-03).
+**SCSS 사용 금지.** 표준 CSS nesting과 Tailwind v4 `@apply`/`@theme`/`@utility`는 허용한다 (R-03).
 
 ## CSS 구조: ITCSS 5레이어
 
 ```
 src/styles/
   style.css                # @import "tailwindcss" + 토큰 + 레이어
-  3-generic/               # 리셋 (62.5% 트릭 포함)
+  3-generic/               # 리셋
   4-elements/              # HTML 태그 베이스
   5-objects/               # 레이아웃 (BEM)
-  6-components/            # KRDS UI 컴포넌트 28종 (BEM)
+  6-components/            # KRDS 기반 UI 컴포넌트 (BEM)
   7-utilities/             # 유틸리티
 ```
 
@@ -35,20 +35,18 @@ src/styles/
 
 ## 토큰 사용
 
-하드코딩 금지. CSS Custom Properties 사용:
+색상은 하드코딩 금지. CSS Custom Properties 사용:
 
-- **KRDS 정본** (권장 prefix `--krds-*`):
-  - 색상: `var(--krds-light-color-primary-50)`, `--krds-light-color-secondary-50`, `--krds-light-color-gray-{0..100}` 등
-  - 패딩/간격: `var(--krds-padding-{1..8})` (KRDS 스케일)
-  - 반경: `var(--krds-radius-{small1~3, medium1~4, large1~3})`
-  - 사이즈: `var(--krds-size-height-{1..9})`
-  - 폰트: `var(--krds-font-size-{1..15})`
+- **INFOUX 공개 토큰**:
+  - 색상: `var(--color-primary)`, `var(--color-text)`, `var(--color-bg)`, `var(--color-border)`
+  - 폰트: `var(--font-sans)`, `var(--font-mono)`
+  - 간격/크기/타이포 스케일/반경은 직접값 사용
 
-- **INFOMIND 시맨틱 별칭**:
+- **시맨틱 색상 토큰**:
   - 색상: `var(--color-text)`, `--color-text-secondary`, `--color-text-disabled`, `--color-bg`, `--color-bg-secondary`, `--color-border`, `--color-primary` (KRDS 토큰을 가리킴)
   - 의미 기반 작성 시 권장
 
-토큰 출처: `tokens/krds-base.json` + `tokens/infomind-overrides.json` → `tokens/build/tokens.css`.
+토큰 출처: `tokens/foundation.json` → `tokens/build/tokens.css`.
 
 ## 반응형: 모바일 퍼스트
 
@@ -60,23 +58,43 @@ CSS `@media` 또는 Tailwind v4 변종 직접 사용 (SCSS 믹스인 폐기).
 
 ```css
 .card {
-  padding: var(--krds-padding-3); /* 모바일 기본 */
+  padding: 1.2rem; /* 모바일 기본 */
 }
 
 @media (min-width: 768px) {
-  .card { padding: var(--krds-padding-5); }
+  .card { padding: 2rem; }
 }
 
 @media (min-width: 1280px) {
-  .card { padding: var(--krds-padding-7); }
+  .card { padding: 3.2rem; }
 }
 ```
 
-62.5% REM 트릭 — 1rem = 10px (KRDS 명시 채택).
+rem 기준은 기존 프로젝트 기준을 따른다. 기존 62.5% 기준 프로젝트는 유지하고, 신규 프로젝트는 팀/프로젝트 기준에 맞춰 결정한다.
 
-## 컴포넌트 (KRDS 28종)
+## HTML 기본 골격
 
-카탈로그 외 임의 신설 금지. 신설 필요 시 UX팀 결정 → `skill/references/krds-components.md` 등재 후 사용.
+큰 영역은 단순하게 잡고, `main` 안은 `section > .container` 구조로 둔다. HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부 section 단위로 분리한다.
+
+```html
+<header id="header">
+  <div class="container">...</div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">...</div>
+  </section>
+</main>
+
+<footer id="footer">
+  <div class="container">...</div>
+</footer>
+```
+
+## 컴포넌트 (KRDS 기반)
+
+기존 카탈로그 패턴을 우선 사용한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
 - A (폼/액션): btn, check-radio, file-upload, form, select, switch
 - B (컨테이너): accordion, card, disclosure, modal, side-panel, tab
@@ -112,7 +130,7 @@ CSS `@media` 또는 Tailwind v4 변종 직접 사용 (SCSS 믹스인 폐기).
 | 헤더 높이 | 최소 56px | 최소 64px | 최소 100px |
 | GNB 메뉴 폰트 | 14px | 16px | **18px 이상** |
 | 컨테이너 max-width | 100% | 100% | 1200px |
-| 컨테이너 패딩 | `var(--krds-padding-5)` | `var(--krds-padding-7)` | `var(--krds-padding-8)` |
+| 컨테이너 패딩 | `2rem` | `3.2rem` | `4rem` |
 
 ## 코딩 스타일
 

@@ -9,7 +9,7 @@
       "title": "CSS 규칙",
       "slug": "css-rules",
       "order": 2,
-      "description": "CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + KRDS 토큰 기반.",
+      "description": "CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOUX 토큰 기반.",
       "lang": "css"
     },
     {
@@ -41,12 +41,12 @@
     {
       "id": "R-01",
       "category": "css",
-      "summary": "모든 색상/간격/크기는 var(--token) 사용 — 하드코딩 금지",
+      "summary": "색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장",
       "severity": "error",
       "enforcement": [
         "check-violations.js"
       ],
-      "rationale": "디자인 토큰으로 일관성을 유지하고 프로젝트별 테마 오버라이드를 가능하게 한다. 하드코딩 값은 토큰 변경 시 일일이 찾아 고쳐야 하는 기술 부채다. KRDS 토큰(`--krds-*`)과 INFOMIND 시맨틱 별칭(`--color-*`/`--spacing-*` 등) 양쪽을 사용할 수 있다.",
+      "rationale": "색상은 브랜드·상태·접근성·테마 변경의 영향이 크므로 반드시 토큰으로 관리한다. 반면 간격·크기·타이포 스케일은 KRDS 값을 참고하되 프로젝트 성격에 맞게 조정할 수 있다. 특히 CMS/관리자 화면은 정보 밀도와 반복 작업 효율이 중요하므로 KRDS 수치 체계를 그대로 강제하지 않는다.",
       "bad": [
         {
           "code": "color: #256ef4;",
@@ -57,35 +57,31 @@
           "note": "하드코딩 색상"
         },
         {
-          "code": "padding: 16px;",
-          "note": "하드코딩 간격"
-        },
-        {
-          "code": "gap: 8px;",
-          "note": "하드코딩 간격"
+          "code": "color: rgb(37, 110, 244);",
+          "note": "하드코딩 색상"
         }
       ],
       "good": [
         {
-          "code": "color: var(--krds-light-color-primary);",
-          "note": "KRDS 정본 토큰"
+          "code": "color: var(--color-primary);",
+          "note": "INFOUX 공개 토큰"
         },
         {
           "code": "color: var(--color-primary);",
-          "note": "INFOMIND 시맨틱 별칭 (KRDS 토큰을 가리킴)"
+          "note": "INFOMIND 시맨틱 별칭 (INFOUX 토큰을 가리킴)"
         },
         {
-          "code": "padding: var(--krds-padding-5);",
-          "note": "KRDS spacing 스케일"
+          "code": "padding: 16px;",
+          "note": "프로젝트 맥락상 명확한 간격값은 허용"
         },
         {
           "code": "gap: var(--spacing-4);",
-          "note": "INFOMIND 시맨틱 별칭"
+          "note": "반복 패턴에는 INFOMIND 간격 별칭 권장"
         }
       ],
       "refs": [
-        "tokens/krds-base.json",
-        "tokens/infomind-overrides.json",
+        "tokens/foundation.json",
+        "tokens/foundation.json",
         "tokens/build/tokens.css"
       ]
     },
@@ -106,7 +102,7 @@
       ],
       "good": [
         {
-          "code": ".pagefind-ui__input { font-size: var(--krds-font-size-7) !important; /* pagefind 인라인 스타일 오버라이드 */ }",
+          "code": ".pagefind-ui__input { font-size: 1.7rem !important; /* pagefind 인라인 스타일 오버라이드 */ }",
           "note": "사유 주석 명시"
         }
       ]
@@ -114,12 +110,12 @@
     {
       "id": "R-03",
       "category": "css",
-      "summary": "SCSS 사용 금지 — Tailwind v4 + CSS Custom Properties만 허용",
+      "summary": "SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용",
       "severity": "error",
       "enforcement": [
         "check-violations.js"
       ],
-      "rationale": "프로젝트는 KRDS+Tailwind v4 마이그레이션으로 SCSS 빌드 파이프라인을 폐기했다. .scss 확장자, @use/@forward, SCSS 변수($var), SCSS 전용 함수/믹스인 사용을 금지한다. 토큰은 tokens/build/tokens.css(`@theme` + CSS Custom Properties)로 발행되며 모든 스타일은 표준 CSS만 사용한다.",
+      "rationale": "프로젝트는 SCSS 빌드 파이프라인을 사용하지 않는다. .scss 확장자, @use/@forward, SCSS 변수($var), SCSS 전용 함수/믹스인 사용을 금지한다. 단, 표준 CSS nesting과 Tailwind v4의 @theme/@apply/@utility 등 CSS 기반 문법은 허용한다.",
       "bad": [
         {
           "code": "/* style.scss */",
@@ -144,21 +140,51 @@
           "note": ".css 확장자만"
         },
         {
+          "code": ".card { &__title { color: var(--color-text); } }",
+          "note": "표준 CSS nesting"
+        },
+        {
+          "code": ".btn { @apply inline-flex items-center; }",
+          "note": "Tailwind @apply"
+        },
+        {
           "code": "@import \"tailwindcss\";",
           "note": "Tailwind v4 import"
-        },
-        {
-          "code": "@import \"../../tokens/build/tokens.css\";",
-          "note": "토큰 import"
-        },
-        {
-          "code": ":root { --color-primary: var(--krds-light-color-primary); }",
-          "note": "CSS Custom Property"
         }
       ],
       "refs": [
         "src/styles/style.css",
         "tokens/build/tokens.css"
+      ]
+    },
+    {
+      "id": "R-19",
+      "category": "css",
+      "summary": "스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "반복되는 레이아웃, 정렬, 표시 상태, 커서, overflow 같은 유틸리티 성격의 선언은 Tailwind v4 @apply로 작성해 CSS 구조를 간결하게 유지한다. 색상, 간격, 크기, radius, shadow, typography처럼 KRDS/INFOMIND 토큰 의미가 중요한 값은 Tailwind 기본 유틸로 억지 변환하지 않고 var(--token)을 유지한다.",
+      "bad": [
+        {
+          "code": ".btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}",
+          "note": "@apply로 표현 가능한 raw utility 선언"
+        }
+      ],
+      "good": [
+        {
+          "code": ".btn {\n  @apply inline-flex items-center justify-center;\n  color: var(--color-text);\n}",
+          "note": "유틸은 @apply, 토큰 값은 var() 유지"
+        },
+        {
+          "code": ".card {\n  @apply relative overflow-hidden;\n  border-radius: 0.6rem;\n}",
+          "note": "구조 유틸과 INFOUX 토큰 병행"
+        }
+      ],
+      "refs": [
+        "src/styles/**/*.css",
+        "starter/src/styles/**/*.css"
       ]
     },
     {
@@ -409,7 +435,7 @@
       ],
       "good": [
         {
-          "code": ":focus-visible {\n  outline: 4px solid var(--krds-light-color-primary);\n  outline-offset: 2px;\n}",
+          "code": ":focus-visible {\n  outline: 4px solid var(--color-primary);\n  outline-offset: 2px;\n}",
           "note": "마우스 클릭은 포커스 표시 안 함, 키보드는 표시"
         }
       ]
@@ -422,7 +448,7 @@
       "enforcement": [
         "pa11y-ci"
       ],
-      "rationale": "시력이 약한 사용자와 밝은 환경에서도 콘텐츠를 인식할 수 있어야 한다. WCAG 1.4.3 Contrast Minimum (AA). 큰 텍스트 기준: 24px 이상 또는 18.67px bold 이상. KRDS 토큰은 AA 통과 조합으로 설계되어 있으므로 임의 색상 대신 시맨틱 토큰을 사용한다.",
+      "rationale": "시력이 약한 사용자와 밝은 환경에서도 콘텐츠를 인식할 수 있어야 한다. WCAG 1.4.3 Contrast Minimum (AA). 큰 텍스트 기준: 24px 이상 또는 18.67px bold 이상. INFOUX 토큰은 AA 통과 조합으로 설계되어 있으므로 임의 색상 대신 시맨틱 토큰을 사용한다.",
       "bad": [
         {
           "code": "color: #b1b8be; /* 흰 배경 대비 2.7:1 */",
@@ -453,7 +479,7 @@
       ],
       "good": [
         {
-          "code": ".icon-btn {\n  width: 24px;\n  height: 24px;\n  padding: var(--krds-padding-4); /* 터치 영역 ≥ 44px */\n}",
+          "code": ".icon-btn {\n  width: 24px;\n  height: 24px;\n  padding: 1.6rem; /* 터치 영역 ≥ 44px */\n}",
           "note": "padding으로 터치 영역 확보"
         }
       ]
@@ -484,43 +510,44 @@
     {
       "id": "R-15",
       "category": "html",
-      "summary": "컴포넌트 root 태그는 html-semantics.md 매핑을 따른다",
-      "severity": "error",
+      "summary": "HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다",
+      "severity": "warning",
       "enforcement": [
         "check-html-structure.js"
       ],
       "lang": "html",
-      "rationale": "KRDS 28종 컴포넌트는 시맨틱 의미가 정해져 있다. 같은 BEM Block을 다른 root 태그로 쓰면 검색/스크린리더/SEO 일관성이 깨진다. 단일 매핑 표(`skill/references/html-semantics.md`)가 정답을 정의하고, 임의 변경은 UX팀 결정 절차를 거친다. WAI-ARIA 1st rule: 네이티브 시맨틱이 가능하면 그것을 쓴다.",
+      "rationale": "인포마인드가 기존에 구축·유지보수한 사이트들은 공통 HTML 골격, 영역 네이밍, 헤더/푸터/본문 구성 패턴을 갖고 있다. 신규 작업도 이 패턴을 우선 유지해 유지보수성과 팀 내 이해도를 확보한다. 페이지 전체 골격은 공통 레이아웃에 두고, HTML 컴포넌트화는 main 안의 section 단위로 분리한다. KRDS는 root 태그 강제가 아니라 시맨틱 HTML, 접근성 속성, 키보드 동작을 보강하는 기준으로 적용한다.",
       "refs": [
+        "기존 인포마인드 구축 사이트 HTML",
         "skill/references/html-semantics.md",
         "skill/references/krds-components.md"
       ],
       "bad": [
         {
-          "code": "<div class=\"card\">...</div>",
-          "note": "card는 <article> 또는 <section>이어야 함"
+          "code": "<div onclick=\"goPage()\">이동</div>",
+          "note": "기존 골격 유지와 무관하게 인터랙션을 div에 직접 부여하는 것은 금지"
         },
         {
           "code": "<div class=\"modal\">...</div>",
-          "note": "modal은 <dialog> 또는 <div role=\"dialog\" aria-modal=\"true\">"
+          "note": "dialog 역할/상태 속성 없이 모달을 구성"
         },
         {
-          "code": "<div class=\"breadcrumb\">...</div>",
-          "note": "breadcrumb는 <nav aria-label=\"페이지 경로\">"
+          "code": "<div id=\"content\"><div class=\"header\">...</div><div class=\"footer\">...</div></div>",
+          "note": "기존 사이트 골격과 다른 임의 구조"
         }
       ],
       "good": [
         {
-          "code": "<article class=\"card\">...</article>",
-          "note": "독립 콘텐츠"
+          "code": "<header id=\"header\"><div class=\"container\">...</div></header>\n<main id=\"main\">\n  <section class=\"section\">\n    <div class=\"container\">...</div>\n  </section>\n</main>\n<footer id=\"footer\"><div class=\"container\">...</div></footer>",
+          "note": "큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container가 폭과 정렬 담당"
         },
         {
-          "code": "<dialog class=\"modal\">...</dialog>",
-          "note": "네이티브 dialog (Safari 15.4+)"
+          "code": "<div class=\"modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\">...</div>",
+          "note": "기존 마크업 패턴 위에 접근성 속성 보강"
         },
         {
           "code": "<nav class=\"breadcrumb\" aria-label=\"페이지 경로\"><ol>...</ol></nav>",
-          "note": "nav + ol"
+          "note": "기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용"
         }
       ]
     },

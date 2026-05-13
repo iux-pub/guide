@@ -1,65 +1,44 @@
-// build-tokens.js의 deepMerge 동작 검증 — KRDS 정본 + INFOMIND 오버라이드 합병 정합성
+// foundation 토큰 정책 검증
 // node:test 빌트인 (Node 20+) — 외부 테스트 프레임워크 불필요
 
+const fs = require('node:fs')
+const path = require('node:path')
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
 
-// build-tokens.js의 deepMerge를 재현 — 실제 함수 추출이 아닌 동일 로직 검증
-function deepMerge(base, over) {
-  if (over === null) return null
-  if (typeof over !== 'object' || over === null) return over
-  if (typeof base !== 'object' || base === null) return over
-  if (Array.isArray(over)) return over
-  const out = { ...base }
-  for (const k of Object.keys(over)) {
-    if (k === '$meta' || k === '$comment' || k === '$usage') continue
-    if (k in base) {
-      out[k] = deepMerge(base[k], over[k])
-    } else {
-      out[k] = over[k]
-    }
+const ROOT = path.resolve(__dirname, '..', '..')
+const source = JSON.parse(fs.readFileSync(path.join(ROOT, 'tokens', 'foundation.json'), 'utf8'))
+
+function collectValues(obj, out = []) {
+  if (!obj || typeof obj !== 'object') return out
+  if ('value' in obj) {
+    out.push(obj.value)
+    return out
+  }
+  for (const [key, value] of Object.entries(obj)) {
+    if (!key.startsWith('$')) collectValues(value, out)
   }
   return out
 }
 
-test('deepMerge — KRDS 같은 경로 덮어쓰기', () => {
-  const base = { color: { primary: { 50: '#256ef4' } } }
-  const over = { color: { primary: { 50: '#0b50d0' } } }
-  const merged = deepMerge(base, over)
-  assert.equal(merged.color.primary[50], '#0b50d0')
+test('foundation은 색상과 폰트만 토큰 소스로 갖는다', () => {
+  const publicKeys = Object.keys(source).filter(key => !key.startsWith('$')).sort()
+  assert.deepEqual(publicKeys, ['font', 'mode-high-contrast', 'mode-light', 'primitive'])
+  assert.ok(source.primitive.color)
+  assert.ok(source.font.family.sans.value.includes('Pretendard GOV'))
 })
 
-test('deepMerge — KRDS 없는 경로 추가', () => {
-  const base = { color: { primary: { 50: '#256ef4' } } }
-  const over = { color: { primary: { 60: '#0b50d0' } } }
-  const merged = deepMerge(base, over)
-  assert.equal(merged.color.primary[50], '#256ef4')
-  assert.equal(merged.color.primary[60], '#0b50d0')
-})
-
-test('deepMerge — null 명시 삭제 정책', () => {
-  const base = { color: { primary: { 50: '#256ef4' } } }
-  const over = { color: { primary: null } }
-  const merged = deepMerge(base, over)
-  assert.equal(merged.color.primary, null)
-})
-
-test('deepMerge — $meta/$comment/$usage 키 보존', () => {
-  const base = { color: { primary: { 50: '#256ef4' } } }
-  const over = {
-    $meta: { version: '2.0' },
-    $comment: 'INFOMIND override',
-    color: { primary: { 50: '#0b50d0' } }
+test('foundation에는 과한 비색상 스케일 토큰이 없다', () => {
+  for (const banned of ['spacing', 'radius', 'motion', 'z-index', 'shadow', 'elevation', 'touch-target']) {
+    assert.equal(JSON.stringify(source).includes(`"${banned}"`), false)
   }
-  const merged = deepMerge(base, over)
-  assert.equal(merged.color.primary[50], '#0b50d0')
-  // $meta/$comment 같은 메타 키는 머지 결과에 포함되지 않음 (정책)
-  assert.equal('$meta' in merged, false)
 })
 
-test('deepMerge — 배열은 통째로 교체 (병합 안 함)', () => {
-  const base = { breakpoints: ['mobile', 'tablet', 'pc'] }
-  const over = { breakpoints: ['mobile', 'desktop'] }
-  const merged = deepMerge(base, over)
-  assert.deepEqual(merged.breakpoints, ['mobile', 'desktop'])
+test('font 토큰 외 값에는 font-family 문자열이 섞이지 않는다', () => {
+  const values = collectValues({
+    primitive: source.primitive,
+    'mode-light': source['mode-light'],
+    'mode-high-contrast': source['mode-high-contrast']
+  })
+  assert.equal(values.some(value => typeof value === 'string' && value.includes('Pretendard')), false)
 })

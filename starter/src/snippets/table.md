@@ -53,7 +53,7 @@
 ## 접근성
 
 - `<th scope="col">` 또는 `scope="row">` 필수
-- `<caption>`으로 표 제목 명시 (시각 표시는 `--krds-light-color-bg-subtler` 헤더와 동일)
+- `<caption>`으로 표 제목 명시
 - 정렬 헤더는 `aria-sort="ascending|descending|none"`
 - 선택 행은 `aria-selected="true"`
 - 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기

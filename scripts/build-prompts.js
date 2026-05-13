@@ -124,17 +124,15 @@ function buildDesignPrompt() {
   const tokens = parseTokensCss()
   const components = getComponentList()
 
-  // KRDS 정본 토큰 카테고리
-  const primary = tokens.filter(t => /^--krds-light-color-primary-\d+$/.test(t.name))
-  const secondary = tokens.filter(t => /^--krds-light-color-secondary-\d+$/.test(t.name))
-  const gray = tokens.filter(t => /^--krds-light-color-gray-\d+$/.test(t.name))
-  const semantic = tokens.filter(t => /^--krds-light-color-(success|warning|danger|info)-/.test(t.name))
+  // INFOUX 공개 토큰 카테고리
+  const primary = tokens.filter(t => /^--color-primary-\d+$/.test(t.name))
+  const secondary = tokens.filter(t => /^--color-secondary-\d+$/.test(t.name))
+  const gray = tokens.filter(t => /^--color-gray-\d+$/.test(t.name))
+  const semantic = tokens.filter(t => /^--color-(success|warning|danger|info)-/.test(t.name))
   const text = tokens.filter(t => /^--color-text/.test(t.name))
   const bg = tokens.filter(t => /^--color-bg/.test(t.name))
   const border = tokens.filter(t => /^--color-border/.test(t.name))
-  const padding = tokens.filter(t => /^--krds-padding-\d+$/.test(t.name))
-  const radius = tokens.filter(t => /^--krds-radius-/.test(t.name))
-  const fontSize = tokens.filter(t => /^--krds-font-size-\d+$/.test(t.name))
+  const font = tokens.filter(t => /^--font-/.test(t.name))
 
   // 컴포넌트 카탈로그 (KRDS 5그룹)
   const groups = {
@@ -152,24 +150,25 @@ function buildDesignPrompt() {
     return `| ${k} — ${groupLabels[k]} | ${valid.map(n => `\`${n}\``).join(' · ')} |`
   }).join('\n')
 
-  const promptContent = `# KRDS+INFOMIND 디자인 AI 프롬프트
+  const promptContent = `# KRDS 원칙 + INFOMIND 디자인 AI 프롬프트
 
-> **목적:** 디자인 AI 도구에서 KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND UX 표준을 적용하기 위한 프롬프트
+> **목적:** 디자인 AI 도구에서 KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙과 INFOMIND UX 실무 표준을 적용하기 위한 프롬프트
 > **대상 AI:** Google Stitch, Galileo, Lovable, v0
 
 ---
 
 ## 핵심 원칙
 
-- **모든 색상·간격·크기는 CSS Custom Property(\`var(--token)\`) 사용.** 하드코딩 hex/rgb/px 일체 금지
-- **62.5% REM 트릭 적용 — \`1rem = 10px\`** (KRDS 명시 채택)
+- **색상은 CSS Custom Property(\`var(--token)\`) 사용.** 하드코딩 hex/rgb/hsl 금지
+- **간격·크기·타이포 스케일은 CSS/Tailwind 직접값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
+- **CSS는 표준 nesting + Tailwind v4 \`@apply\` 사용 가능**
 - **모바일 터치 영역 ≥ 44×44px**
 - **시맨틱 HTML + WCAG 2.1 AA 준수**
-- **카탈로그(KRDS 28컴포넌트) 외 임의 컴포넌트 신설 금지**
+- **HTML 기본 골격은 \`header/main/footer\`, \`main > section > .container\` 패턴 유지**
 
 ---
 
-## 색상 토큰 (KRDS 정본)
+## 색상 토큰 (INFOUX)
 
 ### Primary
 
@@ -189,9 +188,9 @@ ${tokensToTable(semantic, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 30
 
 ---
 
-## 시맨틱 별칭 (INFOMIND)
+## 시맨틱 토큰
 
-KRDS 토큰을 가리키는 의미 기반 alias. 컴포넌트 작성 시 이쪽을 우선 권장.
+컴포넌트 작성 시 의미 기반 \`--color-*\` 토큰을 우선 사용한다.
 
 ### Text
 
@@ -207,19 +206,13 @@ ${tokensToTable(border, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 20)}
 
 ---
 
-## 간격·크기 토큰
+## 기본 폰트 토큰
 
-### Padding (KRDS 스케일)
+${tokensToTable(font, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 10)}
 
-${tokensToTable(padding, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 20)}
+## 직접값 사용 범위
 
-### Border Radius
-
-${tokensToTable(radius, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 20)}
-
-### Font Size
-
-${tokensToTable(fontSize, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 20)}
+간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다. Tailwind v4 \`@apply\`와 명확한 CSS 직접값으로 작성한다.
 
 > 전체 토큰 카탈로그(상세 + 시맨틱 매핑) — \`skill/references/krds-tokens.md\`
 > Tailwind v4 @theme 매핑 — \`skill/references/tailwind-mapping.md\`
@@ -238,7 +231,7 @@ KRDS 표준 브레이크포인트.
 
 ---
 
-## 컴포넌트 카탈로그 (KRDS 28종, 5그룹)
+## 컴포넌트 카탈로그 (KRDS 기반)
 
 | 그룹 | 컴포넌트 |
 |------|---------|
@@ -246,6 +239,26 @@ ${componentTable}
 
 > 각 컴포넌트의 BEM·접근성·토큰 매핑 — \`skill/references/krds-components.md\`
 > 마크업 스니펫 — \`src/snippets/{name}.md\`
+
+## HTML 기본 골격
+
+\`\`\`html
+<header id="header">
+  <div class="container">...</div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">...</div>
+  </section>
+</main>
+
+<footer id="footer">
+  <div class="container">...</div>
+</footer>
+\`\`\`
+
+HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section 단위로 분리한다.
 
 ---
 
@@ -258,21 +271,20 @@ ${componentTable}
 5. **이미지** — \`alt\` 필수. 장식용은 \`alt=""\`
 6. **폼** — \`<label for>\` + \`id\` 연결 필수
 7. **모달** — \`role="dialog"\` + 포커스 트랩 + \`aria-labelledby\`
-8. **시맨틱 HTML** — \`<button>\`/\`<a>\` 사용. \`<div onclick>\` 금지
+8. **시맨틱 HTML** — \`<button>\`/\`<a>\` 사용. \`div\`/ \`span\`에 직접 클릭 핸들러를 붙이는 패턴 금지
 
 ---
 
 ## 절대 금지
 
 - Raw hex/rgb/hsl 색상
-- Raw px (KRDS 스케일 외 — \`p-[20px]\` 같은 임의 값 금지)
-- Tailwind raw 컬러 유틸 (\`bg-red-500\`, \`text-gray-700\` 등)
-- 옛 버튼 variant (\`btn--ghost\`, \`btn--outline\`, \`btn--link\`, \`btn--sm\`, \`btn--lg\`)
+- Tailwind 기본 팔레트 raw 컬러 유틸
+- 옛 버튼 variant 이름
 - \`!important\` (사유 주석 없을 시)
 - 인라인 \`style="..."\` (CSS 변수 주입 외)
-- 카탈로그 외 컴포넌트 임의 생성
+- 기존 인포마인드 HTML 골격을 무시한 임의 구조
 - \`:focus { outline: none }\`
-- \`<div onclick>\`
+- \`div\`/ \`span\` 클릭 핸들러 패턴
 - 이미지 \`alt\` 누락, 폼 \`<label>\` 누락
 `
 
@@ -314,12 +326,12 @@ function buildComponentsPrompt() {
     return section
   })
 
-  const promptContent = `# KRDS 컴포넌트 스니펫 프롬프트
+  const promptContent = `# INFOMIND 컴포넌트 스니펫 프롬프트
 
-> **목적:** AI 도구에 KRDS+INFOMIND 28컴포넌트 HTML 마크업과 접근성 패턴을 제공하기 위한 프롬프트
+> **목적:** AI 도구에 INFOMIND 컴포넌트 HTML 마크업과 접근성 패턴을 제공하기 위한 프롬프트
 > **대상 AI:** Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
-> **카탈로그 외 컴포넌트 임의 생성 금지.** 신설 필요 시 UX팀 결정 → \`skill/references/krds-components.md\` 등재 후 사용.
+> 기존 카탈로그 패턴을 우선 사용한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
 ---
 
@@ -364,9 +376,9 @@ function buildContextPrompt() {
     return `- **${groupLabel}** — ${valid.join(', ')}`
   }).join('\n')
 
-  const promptContent = `# KRDS+INFOMIND UX 디자인 시스템 컨텍스트
+  const promptContent = `# KRDS 원칙 + INFOMIND UX 디자인 시스템 컨텍스트
 
-> **목적:** 대화형 AI에 KRDS+INFOMIND 디자인/퍼블리싱 규칙을 극한 압축하여 제공
+> **목적:** 대화형 AI에 KRDS 접근성·구조 원칙과 INFOMIND 디자인/퍼블리싱 규칙을 압축 제공
 > **대상 AI:** ChatGPT, Gemini, Claude 웹
 
 ---
@@ -374,26 +386,46 @@ function buildContextPrompt() {
 ## 기술 스택
 
 - **CSS Framework:** Tailwind v4 (\`^4.0.0\`) — \`@import "tailwindcss"\`
-- **Tokens:** KRDS-uiux 정본 + INFOMIND 오버라이드 — 출력은 \`tokens/build/tokens.css\` (\`@theme\` + CSS Custom Properties)
+- **Tokens:** INFOUX foundation — 출력은 \`tokens/build/tokens.css\` (\`@theme\` + CSS Custom Properties)
 - **방법론:** ITCSS 5-layer + BEM (5-objects · 6-components 한정)
-- **REM 트릭:** 62.5% (1rem = 10px) — KRDS 명시 채택
+- **CSS 작성:** 표준 CSS nesting + Tailwind v4 \`@apply\` 허용
 
-> SCSS는 사용 금지(R-03). 표준 CSS만 사용.
+> SCSS는 사용 금지(R-03). 표준 CSS nesting과 Tailwind v4 문법을 사용한다.
 
 ## 디자인 토큰
 
-모든 값은 CSS Custom Properties(\`var(--token)\`)를 사용하라. 하드코딩 금지.
+색상과 기본 폰트는 CSS Custom Properties(\`var(--token)\`)를 사용하라. 간격·크기·타이포 스케일은 CSS/Tailwind 직접값을 사용한다.
 
-- **KRDS 정본** (\`--krds-light-color-*\`, \`--krds-padding-*\`, \`--krds-radius-*\`, \`--krds-font-size-*\` 등) — 5/10/20/.../95 스텝
-- **INFOMIND 시맨틱 별칭** (\`--color-text-*\`, \`--color-bg-*\`, \`--color-border-*\` 등) — 의미 기반 alias
+- **색상** (\`--color-*\`) — 의미 기반 토큰
+- **폰트** (\`--font-sans\`, \`--font-mono\`) — 전역 기본 폰트
 
 > 전체 토큰 카탈로그 — \`skill/references/krds-tokens.md\`
 
-## 컴포넌트 (KRDS 28종)
+## 컴포넌트 (KRDS 기반)
 
 ${componentLines}
 
 > 각 컴포넌트의 BEM·접근성·토큰 매핑 — \`skill/references/krds-components.md\`
+
+## HTML 기본 골격
+
+\`\`\`html
+<header id="header">
+  <div class="container">...</div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">...</div>
+  </section>
+</main>
+
+<footer id="footer">
+  <div class="container">...</div>
+</footer>
+\`\`\`
+
+HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section 단위로 분리한다.
 
 ## 접근성 (KWCAG/WCAG 2.1 AA)
 
@@ -407,18 +439,17 @@ ${componentLines}
 ## 반응형
 
 - **모바일 퍼스트** 접근
-- KRDS 표준 브레이크포인트: 모바일 0~767, 태블릿 768~1279, PC 1280~
 - CSS \`@media\` 또는 Tailwind v4 반응형 variant 직접 사용 (SCSS 믹스인 폐지)
 
 ## 절대 금지
 
 - SCSS 파일/\`@use\`/\`@forward\`/SCSS 변수
-- Raw hex/rgb/hsl 색상, raw px (KRDS 스케일 외)
-- Tailwind raw 컬러 유틸(\`bg-red-500\` 등), 비활성 스케일(\`text-base\`, \`rounded-lg\` 등)
-- 옛 버튼 variant(\`btn--ghost\`/\`--outline\`/\`--link\`/\`--sm\`/\`--lg\`)
-- 카탈로그 외 컴포넌트 임의 생성
-- BEM element 2단계 중첩 (\`.card__body__title\`)
-- \`:focus { outline: none }\`, \`<div onclick>\`
+- Raw hex/rgb/hsl 색상
+- Tailwind 기본 팔레트 raw 컬러 유틸
+- 옛 버튼 variant 이름
+- 기존 인포마인드 HTML 골격을 무시한 임의 구조
+- BEM element 2단계 중첩
+- 포커스 외곽선 제거, \`div\`/ \`span\` 클릭 핸들러 패턴
 - 이미지 \`alt\` 누락, 폼 \`<label>\` 누락
 
 ## 코딩 스타일

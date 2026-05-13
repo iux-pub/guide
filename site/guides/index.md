@@ -23,6 +23,6 @@ order: 1
 ## 관련 가이드
 
 - [BEM 네이밍 컨벤션](/conventions/bem/) -- 클래스 네이밍 규칙
-- [SCSS 구조](/conventions/css-structure/) -- ITCSS 레이어 구조
+- [CSS 구조](/conventions/css-structure/) -- ITCSS 레이어 구조
 - [접근성 체크리스트](/accessibility/checklist/) -- KWCAG/WCAG AA 준수
 - [디자인 토큰](/tokens/) -- 색상, 타이포, 간격, 그리드 토큰

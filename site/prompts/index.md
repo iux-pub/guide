@@ -14,7 +14,6 @@ order: 1
 | AI 도구 유형 | 프롬프트 | 대상 도구 |
 |-------------|---------|----------|
 | 디자인 AI | [디자인 AI 프롬프트](/prompts/design/) | Google Stitch, Galileo, Lovable, v0 |
-| 피그마 AI | [피그마 AI 프롬프트](/prompts/figma/) | Figma AI, Figma Make |
 | 퍼블리싱 AI | [퍼블리싱 AI 프롬프트](/prompts/publishing/) | Cursor, Copilot, Windsurf, Claude Code |
 | 컴포넌트 참조 | [컴포넌트 스니펫](/prompts/components/) | 모든 코드 생성 AI |
 | 대화형 AI | [대화형 AI 컨텍스트](/prompts/context/) | ChatGPT, Gemini, Claude 웹 |
@@ -23,7 +22,6 @@ order: 1
 ## 프롬프트 선택 가이드
 
 - **디자인 단계:** 디자인 AI 프롬프트로 토큰과 컴포넌트 구조를 AI에 전달한다
-- **피그마 작업:** 피그마 AI 프롬프트로 네이밍 컨벤션과 Variable 규칙을 적용한다
 - **퍼블리싱 단계:** 퍼블리싱 AI 프롬프트로 BEM, ITCSS, 토큰 사용 규칙을 적용한다
 - **컴포넌트 생성:** 컴포넌트 스니펫 프롬프트로 정확한 HTML 마크업과 접근성 패턴을 제공한다
 - **일반 질의:** 대화형 AI 컨텍스트로 디자인 시스템 전체 규칙을 압축 전달한다

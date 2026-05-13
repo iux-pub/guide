@@ -1,7 +1,7 @@
 # INFOMIND UX Guide System
 
-> KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND 표준의 **단일 소스**.
-> 디자인 토큰 · 컴포넌트 · 마크업 스니펫 · AI 컨트랙트(스킬)를 한 저장소에서 발행한다.
+> KRDS(범정부 UI/UX 디자인 시스템)의 품질 원칙 + INFOMIND 실무 표준의 **단일 소스**.
+> 색상 토큰 · 컴포넌트 패턴 · 마크업 스니펫 · AI 컨트랙트(스킬)를 한 저장소에서 발행한다.
 
 ---
 
@@ -37,12 +37,12 @@ cd my-project && rm -rf .git && git init && npm install && npm run build
 ```
 
 자동 동봉되는 것:
-- ✅ KRDS + INFOMIND 토큰
-- ✅ KRDS 28종 컴포넌트 CSS
+- ✅ KRDS + INFOMIND 색상/상태 토큰
+- ✅ KRDS 기반 컴포넌트 CSS
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 
-브랜드 색상 변경: `tokens/infomind-overrides.json` 편집 → `npm run build`.
+브랜드 색상 또는 기본 폰트 변경: `tokens/foundation.json` 편집 → `npm run build`.
 
 > 스타터 저장소: https://github.com/iux-pub/starter
 > CLI 저장소: [`cli/`](cli/README.md) (`create-infomind-ux` npm 패키지)
@@ -71,15 +71,16 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 ## 🤖 AI 코딩 에이전트와 함께 쓰기 (다중 LLM 호환)
 
-본 저장소는 **모든 AI 코딩 에이전트**가 KRDS 컨트랙트를 자동으로 따르도록 설계됐다. 모델/도구 무관.
+본 저장소는 **모든 AI 코딩 에이전트**가 INFOMIND UX Core Rules를 따르도록 설계됐다. KRDS는 원칙과 접근성 기준으로 적용하고, 수치 체계는 프로젝트 맥락에 맞게 조정한다.
 
 ### 작업 시작 시 — 한 줄 발화
 
 > **"info-design 스킬 기준으로 가자"** (또는 "infomind 디자인 기준으로", "ux 가이드대로")
 
 이후 AI는:
-- ✅ KRDS 토큰만 사용 (raw hex/px 금지)
-- ✅ 28종 컴포넌트 카탈로그 외 임의 생성 거부
+- ✅ 색상은 토큰만 사용 (raw hex/rgb/hsl 금지)
+- ✅ 간격/크기/타이포는 KRDS를 참고하되 프로젝트 밀도에 맞게 조정
+- ✅ 기존 컴포넌트 패턴 우선 사용, 필요한 컴포넌트는 UX팀 판단으로 확장
 - ✅ R-01~R-18 규칙 자동 준수
 - ✅ 위반 발견 시 작업 중단 + 사용자에게 보고
 
@@ -136,13 +137,12 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 ```
 tokens/                   디자인 토큰 단일 소스
-  krds-base.json          KRDS 정본 (수정 금지)
-  infomind-overrides.json UX팀 결정 + infomind-* 추가
+  foundation.json         색상 + 기본 폰트 단일 소스
   build/tokens.css        자동 생성 — 직접 수정 금지
 
 src/styles/               CSS 소스 (ITCSS 5레이어 + Tailwind v4)
-  6-components/           KRDS UI 컴포넌트 28종 (BEM)
-src/snippets/             마크업 스니펫 28종 (LLM 참조)
+  6-components/           KRDS 기반 UI 컴포넌트 (BEM)
+src/snippets/             마크업 스니펫 (LLM 참조)
 src/playground/           컴포넌트 미리보기 HTML
 
 skill/                    info-design 스킬 (Claude 컨트랙트)
@@ -165,8 +165,9 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 
 - **CSS Framework**: Tailwind v4
 - **방법론**: ITCSS 5-layer + BEM (5-objects · 6-components 한정)
-- **1rem 트릭**: 62.5% (1rem = 10px) — KRDS 채택
-- **토큰**: KRDS-uiux 정본 + INFOMIND 오버라이드
+- **CSS 작성**: 표준 CSS nesting + Tailwind v4 문법(`@apply`, `@theme`, `@utility`) 허용
+- **토큰**: 색상/상태 + 기본 폰트 토큰은 강제, 간격/크기/타이포 스케일은 직접값
+- **HTML 골격**: 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조. 컴포넌트화는 section 단위
 - **문서 사이트**: Eleventy 3.x + Nunjucks + Pagefind
 - **린팅**: Stylelint + 자체 검사기 (`check-violations.js` + `check-html-structure.js`)
 - **접근성**: pa11y-ci + axe-core (KWCAG/WCAG 2.1 AA)
@@ -180,13 +181,13 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 
 | 규칙 | 영역 | 내용 |
 |------|------|------|
-| R-01 | css | 색상/간격/크기는 `var(--token)` — 하드코딩 금지 |
+| R-01 | css | 색상은 `var(--token)` 강제, 간격/크기/타이포 스케일은 권장 |
 | R-05 / R-08 | bem | element 2단계 중첩 금지 (`.card__body__title` ❌) |
 | R-06 / R-18 | bem | modifier는 의미적 — `--blue`/`--big` 등 시각 단어 금지 |
 | R-09 / R-10 | html | `<img alt>` 필수 · `<div onclick>` 금지 |
 | R-11 ~ R-13 | a11y | 포커스 스타일 · 색상 대비 4.5:1 · 터치 영역 44×44px |
 | R-14 | a11y | `.skip-to-content` 필수 |
-| R-15 | html | 컴포넌트 root 태그가 `html-semantics.md` 매핑과 일치 |
+| R-15 | html | HTML 기본 구조는 기존 인포마인드 사이트 패턴 우선 |
 | R-16 | a11y | 인터랙티브 위젯 필수 ARIA 누락 금지 |
 | R-17 | bem | 상태는 BEM modifier만 — `.is-*`/`.has-*` 금지 |
 
@@ -195,11 +196,9 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 ## 🔄 갱신 흐름
 
 ```
-KRDS 새 버전 출시
+KRDS 새 버전 또는 UX팀 기준 변경
    ↓
-tokens/krds-base.json 갱신 (UX팀)
-   ↓
-INFOMIND 결정 변경 시 tokens/infomind-overrides.json 편집
+tokens/foundation.json 갱신
    ↓
 npm run build  ← 토큰·규칙·CSS·프롬프트·스킬·사이트 전체 재빌드
    ↓

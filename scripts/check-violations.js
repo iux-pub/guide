@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // check-violations.js — info-design 컨트랙트 자동 검출
-// KRDS 토큰 외 raw 값, 옛 시스템 흔적, 옛 variant, SCSS 잔재, 접근성 누락 검출.
+// raw 색상, 옛 시스템 흔적, 옛 variant, SCSS 잔재, 접근성 누락 검출.
 //
 // 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
 //   STRICT=1 환경변수 설정 시 경고도 1로 실패 처리
@@ -75,7 +75,7 @@ const OLD_BTN_VARIANTS = ['btn--ghost', 'btn--outline', 'btn--link', 'btn--sm', 
 // gray/slate/red/blue/green/amber/yellow + bg/text/border/ring/divide
 const TW_RAW_COLOR = /\b(?:bg|text|border|ring|divide|hover:bg|hover:text|hover:border)-(?:gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d+\b/
 
-// 5. Tailwind 기본 (KRDS에서 비활성화한) 폰트/사이즈/그림자/z-index/반경
+// 5. Tailwind 기본 폰트/사이즈/그림자/z-index/반경
 const TW_DEFAULT_TEXT_SIZE = /\btext-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\b/
 const TW_DEFAULT_FONT_WEIGHT = /\bfont-(?:thin|extralight|light|medium|semibold|extrabold|black)\b/
 const TW_DEFAULT_RADIUS = /\brounded(?:-(?:sm|md|lg|xl|2xl|3xl|none|full))?\b/
@@ -117,10 +117,18 @@ function checkCssFile(filePath) {
   // 자동 생성 파일 제외
   if (lines[0] && (lines[0].includes('AUTO-GENERATED') || lines[0].includes('자동 생성'))) return
 
-  // 토큰 정의 파일 / project-overrides는 raw hex 허용 (정의 자체가 raw임)
+  // 토큰 정의 파일 / 프로젝트 스타일 확장 파일은 raw hex 허용 (정의 자체가 raw임)
   const isTokenFile = filePath.includes('1-settings') ||
-                       filePath.includes('_project-overrides') ||
+                       filePath.includes('_project-style') ||
                        filePath.includes('tokens/build')
+
+  const isEntryFile = /\/src\/styles\/(?:style|docs)\.css$/.test(filePath) ||
+                      /\/src\/styles\/6-components\/index\.css$/.test(filePath) ||
+                      /\/src\/styles\/3-generic\/reset\.css$/.test(filePath)
+
+  if (!isTokenFile && !isEntryFile && !content.includes('@apply')) {
+    error(relPath, null, '[R-19] 스타일 CSS는 Tailwind v4 @apply를 우선 사용해야 한다. 토큰이 필요한 값은 var(--token)으로 유지하되 레이아웃/상태 유틸은 @apply로 작성.')
+  }
 
   lines.forEach((line, i) => {
     const lineNum = i + 1
@@ -138,10 +146,10 @@ function checkCssFile(filePath) {
       error(relPath, lineNum, '[R-03] SCSS 변수 ($var) 금지. CSS 커스텀 프로퍼티 사용.', trimmed)
     }
 
-    // 옛 토큰명 — info-design 컨트랙트 위반 (R-01: 토큰 시스템)
+    // 옛 토큰명 — info-design 컨트랙트 점검 (R-01: 토큰 시스템)
     for (const oldName of OLD_TOKEN_NAMES) {
       if (trimmed.includes(`var(${oldName})`)) {
-        warn(relPath, lineNum, `[R-01] 옛 토큰명 \`${oldName}\` 사용. KRDS 토큰으로 교체 필요.`, trimmed)
+        warn(relPath, lineNum, `[R-01] 옛 토큰명 \`${oldName}\` 사용. 현행 토큰으로 교체 권장.`, trimmed)
       }
     }
 
@@ -155,19 +163,19 @@ function checkCssFile(filePath) {
     if (!isTokenFile) {
       // raw hex (R-01)
       if (HARDCODED_HEX.test(trimmed)) {
-        error(relPath, lineNum, '[R-01] Raw hex 색상 금지. KRDS 토큰 var(--color-*) 또는 var(--krds-*) 사용.', trimmed)
+        error(relPath, lineNum, '[R-01] Raw hex 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
       // raw rgb/hsl (R-01)
       if (HARDCODED_RGB.test(trimmed)) {
-        error(relPath, lineNum, '[R-01] Raw rgb/rgba 색상 금지. KRDS 토큰 사용.', trimmed)
+        error(relPath, lineNum, '[R-01] Raw rgb/rgba 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
       if (HARDCODED_HSL.test(trimmed)) {
-        error(relPath, lineNum, '[R-01] Raw hsl/hsla 색상 금지. KRDS 토큰 사용.', trimmed)
+        error(relPath, lineNum, '[R-01] Raw hsl/hsla 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
-      // hardcoded px (R-01)
+      // hardcoded px (R-01) — 간격/크기는 프로젝트 맥락에 따라 허용하되 반복 패턴은 토큰 권장
       const pxMatch = trimmed.match(HARDCODED_PX)
       if (pxMatch && !ALLOWED_PX.test(pxMatch[1])) {
-        warn(relPath, lineNum, `[R-01] 하드코딩 \`${pxMatch[1]}\`. KRDS spacing 토큰 사용 권장.`, trimmed)
+        warn(relPath, lineNum, `[R-01] 하드코딩 \`${pxMatch[1]}\`. 반복되는 간격/크기라면 토큰화 권장.`, trimmed)
       }
     }
 
@@ -256,16 +264,16 @@ function checkHtmlFile(filePath) {
       error(relPath, lineNum, `[R-01] Tailwind raw 컬러 유틸 \`${match[0]}\` 금지. KRDS 시맨틱(bg-primary/text-text/bg-danger 등) 사용.`, trimmed.slice(0, 100))
     }
 
-    // Tailwind 기본 텍스트 사이즈 (R-01: 토큰 시스템 우회)
+    // Tailwind 기본 텍스트 사이즈 (R-01: 권장 스케일 점검)
     if (TW_DEFAULT_TEXT_SIZE.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_TEXT_SIZE)
-      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 비활성화됨. KRDS 스케일(text-body-medium 등) 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 타입 계층이면 프로젝트/INFOMIND 스케일 사용 권장.`, trimmed.slice(0, 100))
     }
 
     // Tailwind 기본 폰트 두께 (R-01)
     if (TW_DEFAULT_FONT_WEIGHT.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_FONT_WEIGHT)
-      warn(relPath, lineNum, `[R-01] KRDS는 400/700만 정의. \`${match[0]}\` 사용 시 적절한 두께로 교체.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] \`${match[0]}\` 사용. 제품 내 타입 위계와 일관되는지 확인 필요.`, trimmed.slice(0, 100))
     }
 
     // Tailwind 기본 반경 (R-01)
@@ -273,14 +281,14 @@ function checkHtmlFile(filePath) {
       const match = trimmed.match(TW_DEFAULT_RADIUS)
       // rounded-full은 rounded-max로 교체
       if (match[0] !== 'rounded-none') {
-        warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 비활성화됨. KRDS rounded-{xsmall1|small1|medium2|large1|xlarge1|max} 사용.`, trimmed.slice(0, 100))
+        warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 컴포넌트 반경이면 공통 토큰 사용 권장.`, trimmed.slice(0, 100))
       }
     }
 
     // Tailwind 기본 그림자 (R-01)
     if (TW_DEFAULT_SHADOW.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_SHADOW)
-      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 비활성화됨. INFOMIND shadow-{1|2|3} 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 elevation이면 INFOMIND shadow 토큰 사용 권장.`, trimmed.slice(0, 100))
     }
 
     // Tailwind 기본 z-index (R-01)
@@ -292,7 +300,7 @@ function checkHtmlFile(filePath) {
     // Tailwind 기본 브레이크포인트 (R-01)
     if (TW_DEFAULT_BREAKPOINT.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_BREAKPOINT)
-      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 비활성화됨. KRDS small:/medium:/large:/xlarge:/xxlarge: 사용.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 프로젝트 브레이크포인트와 충돌하지 않는지 확인.`, trimmed.slice(0, 100))
     }
 
     // 옛 btn variant (R-06: 시각적/구형 modifier)

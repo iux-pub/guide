@@ -98,7 +98,6 @@ http://localhost:8080 에서 문서 사이트 확인.
 | `starter` | 스타터 키트 (`starter/`) |
 | `accessibility` | 접근성 컨트랙트 (`skill/references/accessibility.md`) |
 | `playground` | 컴포넌트 플레이그라운드 (`src/playground/`) |
-| `figma` | 피그마 자료 |
 | `guides` | 가이드 문서 |
 | `design` | 디자인 결정 |
 | `governance` | 거버넌스 문서 |
@@ -129,7 +128,7 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 |------|------|------|
 | CI 실패 — "자동 생성물이 최신이 아닙니다" | rules.json 또는 tokens 수정 후 `build:*` 안 돌림 | `npm run build` 후 다시 커밋 |
 | husky pre-commit 실패 — `R-XX` | stylelint 또는 check-violations 위반 | 출력 메시지의 규칙 ID 확인, `skill/references/forbidden-patterns.md` 참조 |
-| HTML 구조 위반 — R-15 | 컴포넌트 root 태그가 `html-semantics.md` 매핑과 다름 | 매핑 표 확인, root 태그 교체 |
+| HTML 구조 경고 — R-15 | 기존 인포마인드 HTML 기본 골격과 다르거나 시맨틱 보강 필요 | `header/main/footer`, `main > section > .container` 구조와 ARIA 보강 확인 |
 | HTML 구조 위반 — R-18 | `--blue`, `--big` 같은 시각 단어 modifier 사용 | KRDS 의미 어휘로 (`--primary`, `--large` 등) |
 | 스킬 발효 안 됨 | 트리거 발화 빠뜨림 | LLM에게 `"info-design 스킬 기준으로 가자"` 발화 |
 | starter 변경이 다운스트림에 안 감 | `npm run sync:starter` 안 돌림 | 표준 변경 후 `sync:starter` 실행 |
@@ -150,12 +149,12 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 
 ### 7.1 새 컴포넌트 추가
 
-> KRDS 28종 카탈로그(`skill/references/krds-components.md`) **외 컴포넌트 추가는 UX팀 결정 필요.** 임의 추가 금지 (R-15와 충돌).
+> 기존 컴포넌트 카탈로그(`skill/references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
 
 UX팀 결정 완료 후:
 
 1. `src/snippets/{name}.md` — `skill/references/snippet-template.md` 복사해 채움
-2. `src/styles/6-components/{name}.css` 작성 (BEM + KRDS 토큰만)
+2. `src/styles/6-components/{name}.css` 작성 (BEM + 색상 토큰, 필요 시 CSS nesting + `@apply`)
 3. `src/styles/6-components/index.css`에 `@import`
 4. `src/playground/{name}.html` 미리보기 추가
 5. `site/components/{name}.md` 문서

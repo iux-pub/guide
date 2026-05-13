@@ -58,5 +58,6 @@
 ## 출처
 
 - KRDS 버튼 명세: https://www.krds.go.kr/html/site/component/component_summary.html
-- 토큰: `--krds-light-color-button-*`, `--krds-size-height-{5..9}`, `--krds-padding-{4..8}`, `--krds-radius-{small3,medium1..4}`
+- 색상: `--color-button-*`, `--color-text-*`
+- 크기/간격/반경: CSS/Tailwind 직접값
 - CSS: `src/styles/6-components/btn.css`

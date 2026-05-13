@@ -33,7 +33,7 @@ npm run watch:css   # 개발 시 CSS 변경 감지
 작업 시작 시 한 줄 발화:
 > **"info-design 스킬 기준으로 가자"**
 
-이 트리거 후 모든 CSS·HTML 코드 생성이 KRDS 토큰·INFOMIND 컴포넌트만 사용하도록 강제됩니다.
+이 트리거 후 모든 CSS·HTML 코드 생성이 INFOUX 토큰·INFOMIND 컴포넌트 패턴을 우선 사용하도록 강제됩니다.
 스킬은 `.claude/skills/info-design/`에 동봉되어 있어 자동 인식됩니다.
 
 ---
@@ -46,8 +46,7 @@ my-project/
 │   ├── SKILL.md
 │   └── references/
 ├── tokens/
-│   ├── krds-base.json           ← KRDS 정본 (수정 금지)
-│   ├── infomind-overrides.json  ← 프로젝트 결정 (수정 가능)
+│   ├── foundation.json          ← 색상 + 기본 폰트 단일 소스
 │   └── build/tokens.css         ← 자동 생성
 ├── src/
 │   ├── styles/
@@ -60,7 +59,7 @@ my-project/
 │   ├── snippets/                ← 컴포넌트 마크업 예시
 │   └── js/
 ├── scripts/
-│   ├── build-tokens.js          ← KRDS 토큰 → CSS 변환
+│   ├── build-tokens.js          ← foundation 토큰 → CSS 변환
 │   └── check-violations.js      ← 컨트랙트 위반 검출
 └── dist/css/style.css           ← 빌드 산출물
 ```
@@ -71,7 +70,7 @@ my-project/
 
 | 명령 | 용도 |
 |------|------|
-| `npm run build:tokens` | KRDS + INFOMIND 토큰 → `tokens/build/tokens.css` |
+| `npm run build:tokens` | `tokens/foundation.json` → `tokens/build/tokens.css` |
 | `npm run build:css` | Tailwind v4 컴파일 → `dist/css/style.css` |
 | `npm run watch:css` | CSS 워치 모드 |
 | `npm run build` | 전체 빌드 (tokens + CSS) |
@@ -106,31 +105,32 @@ my-project/
 </article>
 ```
 
-### Tailwind 유틸리티 (KRDS 토큰 기반)
+### Tailwind 유틸리티
 
 ```html
-<div class="bg-primary text-text-inverse p-8 rounded-medium2 shadow-2">
-  bg-primary = KRDS primary-50
-  p-8        = KRDS spacing-8 (16px)
-  rounded-medium2 = KRDS radius-medium2 (6px)
+<div class="bg-primary text-text-inverse p-[2.4rem] rounded-[0.6rem]">
+  bg-primary = INFOUX primary
+  p-[2.4rem] = 프로젝트 직접값
+  rounded-[0.6rem] = 프로젝트 직접값
 </div>
 ```
 
-> ⚠ **`bg-red-500` `text-gray-700` 같은 raw 컬러 유틸리티 사용 금지.** KRDS 시맨틱 토큰만 허용됩니다.
+> ⚠ **`bg-red-500` `text-gray-700` 같은 raw 컬러 유틸리티 사용 금지.** `--color-*` 기반 색상만 허용됩니다.
 
 ---
 
 ## 🔧 프로젝트 커스터마이징
 
-### 브랜드 색상 추가
+### 브랜드 색상/기본 폰트 변경
 
-`tokens/infomind-overrides.json` 편집:
+`tokens/foundation.json` 편집:
 
 ```json
 {
-  "infomind-brand": {
-    "primary":      { "value": "#FF5733", "type": "color" },
-    "primary-text": { "value": "#FFFFFF", "type": "color" }
+  "font": {
+    "family": {
+      "sans": { "value": "'Pretendard GOV', system-ui, sans-serif" }
+    }
   }
 }
 ```
@@ -139,7 +139,7 @@ my-project/
 
 ### 새 컴포넌트 필요 시
 
-**임의 생성 금지.** UX팀에 신규 컴포넌트 제안 → 가이드 저장소에 추가 → starter sync.
+기존 컴포넌트 카탈로그를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
 
 ---
 
@@ -148,7 +148,7 @@ my-project/
 전체 규정은 `.claude/skills/info-design/references/forbidden-patterns.md` 참조.
 
 - Raw hex/rgb/hsl 색상
-- Raw px (KRDS 스케일 외 — `p-[20px]` 같은 임의 값 금지)
+- Raw px/rem은 반복 패턴이면 토큰화 권장. 프로젝트 고유 레이아웃 값은 허용
 - Tailwind raw 컬러 유틸 (`bg-red-500`, `text-gray-700` 등)
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`)
 - `:focus { outline: none }`

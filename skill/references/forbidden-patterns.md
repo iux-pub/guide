@@ -30,7 +30,7 @@
 
 ```css
 .btn { background: var(--color-primary); }
-.btn { background: var(--krds-light-color-button-primary-fill); }
+.btn { background: var(--color-button-primary-fill); }
 .alert { border-color: var(--color-border-light); }
 ```
 
@@ -56,7 +56,7 @@
 | `bg-red-50/100` | `bg-danger-surface` |
 | `text-blue-*` (브랜드) | `text-primary` |
 | `bg-blue-500+` | `bg-primary` |
-| `bg-blue-50/100` | `bg-primary-5` 또는 `var(--krds-light-color-surface-primary-subtler)` |
+| `bg-blue-50/100` | `bg-primary-5` 또는 `var(--color-surface-primary-subtler)` |
 | `text-green-*` | `text-success` |
 | `bg-green-50/100` | `bg-success-surface` |
 | `text-amber-*` / `text-yellow-*` | `text-warning` |
@@ -81,8 +81,8 @@
 
 ```css
 /* KRDS number primitive 기반 */
-.card { padding: var(--krds-number-8); margin-top: var(--krds-number-10); }
-.btn { height: var(--krds-size-height-7); gap: var(--krds-gap-3); }
+.card { padding: 2.4rem; margin-top: 4rem; }
+.btn { height: 4.8rem; gap: 0.8rem; }
 ```
 
 ```html
@@ -215,7 +215,7 @@ body { font-family: var(--font-sans); }
 /* !important 정당화: 외부 라이브러리 오버라이드만, 사유 주석 필수 */
 .tabulator-cell {
   /* tabulator 인라인 스타일 오버라이드 — 라이브러리 한계 */
-  padding: var(--krds-padding-5) !important;
+  padding: 2rem !important;
 }
 
 /* BEM 평면 작성 (Tailwind v4는 SCSS 네스팅 미지원) */

@@ -1,10 +1,10 @@
-# 컴포넌트 스니펫 프롬프트 — KRDS 28종
+# 컴포넌트 스니펫 프롬프트 — KRDS 기반
 
 대상: 모든 코드 생성 AI
 
-이 컴포넌트 패턴을 따라 HTML을 생성하라. **카탈로그 외 임의 신설 금지.**
+이 컴포넌트 패턴을 우선 따라 HTML을 생성하라. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
-> 전체 마크업·variant·접근성 노트의 권위 있는 소스: `src/snippets/{name}.md` (28개 파일)
+> 전체 마크업·variant·접근성 노트의 권위 있는 소스: `src/snippets/{name}.md`
 > 자동 합본: `site/prompts/components.md`
 > 컴포넌트 카탈로그(BEM·접근성·토큰 매핑): `skill/references/krds-components.md`
 

@@ -7,57 +7,34 @@
 
 @layer components {
   .select {
-    width: 100%;
-    height: var(--krds-size-height-7); /* 48px */
-    padding-inline: var(--krds-padding-6) calc(var(--krds-padding-6) + 2.4rem); /* 16px */ /* 화살표 공간 */
-    border: 1px solid var(--krds-light-color-input-border);
-    border-radius: var(--krds-radius-medium2);
-    background: var(--krds-light-color-input-surface);
-    color: var(--color-text);
-    font-family: var(--font-sans);
-    font-size: var(--text-body-medium);
-    line-height: 1.5;
-    cursor: pointer;
-    appearance: none;
+    @apply w-full h-[4.8rem] border border-[var(--color-input-border)] rounded-[0.6rem] bg-[var(--color-input-surface)] text-[var(--color-text)] text-[1.7rem] leading-[1.5] cursor-pointer appearance-none ps-[1.6rem] pe-[calc(1.6rem_+_2.4rem)] [background-image:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='16'_height='16'_viewBox='0_0_16_16'_fill='none'><path_d='M4_6L8_10L12_6'_stroke='%2333363D'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")] bg-no-repeat [background-position:right_1.6rem_center] [background-size:1.6rem_1.6rem] [transition:border-color_0.15s_ease-in-out];
 
     /* KRDS 화살표 — gray.80 stroke */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M4 6L8 10L12 6' stroke='%2333363D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 1.6rem center;
-    background-size: 1.6rem 1.6rem;
-    transition:
-      border-color var(--duration-fast) var(--easing-standard);
   }
 
   .select:hover:not(:disabled) {
-    border-color: var(--color-border-dark);
+    @apply border-[var(--color-border-dark)];
   }
 
   .select:focus,
   .select:focus-visible {
-    border-color: var(--krds-light-color-input-border-active);
-    outline: none;
+    @apply border-[var(--color-input-border-active)] outline-none;
   }
 
   .select:disabled {
-    background-color: var(--krds-light-color-input-surface-disabled);
-    border-color: var(--krds-light-color-input-border-disabled);
-    color: var(--color-text-disabled);
-    cursor: not-allowed;
+    @apply bg-[var(--color-input-surface-disabled)] border-[var(--color-input-border-disabled)] text-[var(--color-text-disabled)] cursor-not-allowed;
   }
 
   .select--error,
   .select[aria-invalid="true"] {
-    border-color: var(--krds-light-color-input-border-error);
+    @apply border-[var(--color-input-border-error)];
   }
 
   .select--small {
-    height: var(--krds-size-height-6);
-    font-size: var(--text-body-small);
+    @apply h-[4rem] text-[1.5rem];
   }
 
   .select--large {
-    height: var(--krds-size-height-8);
-    font-size: var(--text-body-large);
+    @apply h-[5.6rem] text-[1.9rem];
   }
 }

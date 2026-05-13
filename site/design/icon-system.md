@@ -176,7 +176,7 @@ order: 6
   border: none;
   background: transparent;
   cursor: pointer;
-  border-radius: var(--krds-radius-medium2);
+  border-radius: 0.6rem;
   transition: background-color var(--duration-fast);
 
   &:hover {
@@ -240,4 +240,4 @@ order: 6
 
 - [디자인 감사 - 아이콘그래피](/design/design-audit/) -- 감사 체크리스트 15번
 - [접근성](/accessibility/) -- KWCAG/WCAG AA 요구사항
-- [피그마 컨벤션](/figma/) -- 피그마 아이콘 컴포넌트 관리 규칙
+- [디자인 전달 체크리스트](/onboarding/handoff/) -- 아이콘 전달 및 접근성 확인 기준

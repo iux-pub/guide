@@ -1,6 +1,6 @@
 # create-infomind-ux
 
-INFOMIND UX 스타터 키트로 새 프로젝트를 생성한다. KRDS(범정부 UI/UX 디자인 시스템) + INFOMIND 표준이 적용된 상태로 즉시 시작.
+INFOMIND UX 스타터 키트로 새 프로젝트를 생성한다. KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙 + INFOMIND 실무 표준이 적용된 상태로 즉시 시작.
 
 ## 사용
 
@@ -24,9 +24,9 @@ npx create-infomind-ux <project-name> [옵션]
 
 ## 자동 동봉되는 것
 
-- ✅ KRDS 28종 컴포넌트 CSS (BEM + ITCSS 5-layer)
-- ✅ KRDS + INFOMIND 디자인 토큰
-- ✅ Tailwind v4 + 62.5% 1rem 트릭
+- ✅ KRDS 기반 컴포넌트 CSS (BEM + ITCSS 5-layer)
+- ✅ KRDS + INFOMIND 색상/상태 토큰
+- ✅ Tailwind v4 + CSS nesting + `@apply`
 - ✅ Eleventy 문서 사이트
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식

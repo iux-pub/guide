@@ -14,12 +14,12 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ## 프롬프트
 
 ````markdown
-# KRDS 컴포넌트 스니펫 프롬프트
+# INFOMIND 컴포넌트 스니펫 프롬프트
 
-> **목적:** AI 도구에 KRDS+INFOMIND 28컴포넌트 HTML 마크업과 접근성 패턴을 제공하기 위한 프롬프트
+> **목적:** AI 도구에 INFOMIND 컴포넌트 HTML 마크업과 접근성 패턴을 제공하기 위한 프롬프트
 > **대상 AI:** Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
-> **카탈로그 외 컴포넌트 임의 생성 금지.** 신설 필요 시 UX팀 결정 → `skill/references/krds-components.md` 등재 후 사용.
+> 기존 카탈로그 패턴을 우선 사용한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
 ---
 
@@ -508,7 +508,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 닫기 버튼은 `aria-label="닫기"` 필수
 - 첫 포커스는 모달 내부 첫 인터랙티브 요소 (또는 닫기 버튼)
 - ESC 키로 닫기 가능
-- 백드롭은 `--krds-light-color-background-dim` (KRDS dim 토큰)
+- 백드롭은 `--color-bg-dim`
 
 ---
 
@@ -747,7 +747,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 접근성
 
 - `<th scope="col">` 또는 `scope="row">` 필수
-- `<caption>`으로 표 제목 명시 (시각 표시는 `--krds-light-color-bg-subtler` 헤더와 동일)
+- `<caption>`으로 표 제목 명시
 - 정렬 헤더는 `aria-sort="ascending|descending|none"`
 - 선택 행은 `aria-selected="true"`
 - 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기

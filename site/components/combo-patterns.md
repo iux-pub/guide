@@ -22,7 +22,7 @@ tags: component
   <iframe
     src="/playground/combo-modal-form.html"
     title="모달 + 폼 조합 패턴 미리보기"
-    style="width: 100%; height: 400px; border: 1px solid var(--color-border-light); border-radius: var(--krds-radius-medium2)"
+    style="width: 100%; height: 400px; border: 1px solid var(--color-border-light); border-radius: 0.6rem"
     loading="lazy"
   ></iframe>
 </div>
@@ -90,7 +90,7 @@ tags: component
   <iframe
     src="/playground/combo-card-grid.html"
     title="카드 그리드 + 페이지네이션 조합 패턴 미리보기"
-    style="width: 100%; height: 700px; border: 1px solid var(--color-border-light); border-radius: var(--krds-radius-medium2)"
+    style="width: 100%; height: 700px; border: 1px solid var(--color-border-light); border-radius: 0.6rem"
     loading="lazy"
   ></iframe>
 </div>
@@ -156,7 +156,7 @@ tags: component
   <iframe
     src="/playground/combo-search-table.html"
     title="검색 폼 + 테이블 + 브레드크럼 조합 패턴 미리보기"
-    style="width: 100%; height: 600px; border: 1px solid var(--color-border-light); border-radius: var(--krds-radius-medium2)"
+    style="width: 100%; height: 600px; border: 1px solid var(--color-border-light); border-radius: 0.6rem"
     loading="lazy"
   ></iframe>
 </div>

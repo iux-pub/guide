@@ -51,7 +51,7 @@ button, a {
 | `outline: none` 금지 | 반드시 대체 포커스 스타일 제공 |
 | `:focus-within` | 복합 컨트롤(드롭다운, 검색바)에 그룹 포커스 |
 
-```scss
+```css
 // DO
 .btn:focus-visible {
   outline: 2px solid var(--color-primary);

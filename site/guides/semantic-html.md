@@ -56,7 +56,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 
 ```html
 <!-- DO: 의미에 맞는 태그 선택 -->
-<main id="main-content">
+<main id="main">
   <section>
     <h2>공지사항</h2>
     <article>
@@ -73,7 +73,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 
 ```html
 <!-- DON'T: 모든 곳에 div 사용 -->
-<div id="main-content">
+<div id="main">
   <div class="section">
     <h2>공지사항</h2>
     <div class="article">
@@ -122,7 +122,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 
 ```html
 <!-- DO: 사이드바, 관련 링크, 부가 정보 -->
-<main id="main-content">
+<main id="main">
   <article>
     <h1>CSS Grid 가이드</h1>
     <p>CSS Grid는 2차원 레이아웃 시스템이다...</p>
@@ -141,17 +141,17 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 ```html
 <!-- 페이지 전체 구조 -->
 <body>
-  <a href="#main-content" class="skip-to-content">본문 바로가기</a>
-  <header class="site-header">
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header" class="site-header">
     <h1 class="site-header__logo">사이트명</h1>
     <nav aria-label="주 메뉴">...</nav>
   </header>
 
-  <main id="main-content">
+  <main id="main">
     <!-- 콘텐츠 -->
   </main>
 
-  <footer class="site-footer">
+  <footer id="footer" class="site-footer">
     <p>&copy; 2026 인포마인드</p>
   </footer>
 </body>
@@ -174,11 +174,11 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 ```html
 <!-- DON'T: 중복 role 지정 -->
 <nav role="navigation">...</nav>
-<main role="main">...</main>
+<main>...</main>
 
 <!-- DO: 시맨틱 태그만으로 충분 -->
 <nav aria-label="주 메뉴">...</nav>
-<main id="main-content">...</main>
+<main id="main">...</main>
 ```
 
 ## 체크리스트

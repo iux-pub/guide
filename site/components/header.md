@@ -8,7 +8,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/header.md`이며
 ## 기본 마크업
 
 ```html
-<header class="site-header">
+<header id="header" class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
       <img src="/logo.svg" alt="기관명">
@@ -33,7 +33,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/header.md`이며
 
 ## 접근성 핵심
 
-- `<header>` 시맨틱 태그 사용 (페이지당 하나)
+- `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
 - 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
 - 모바일 토글: `aria-label="메뉴 열기/닫기"` + `aria-expanded` 상태 토글

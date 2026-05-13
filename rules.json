@@ -502,7 +502,7 @@
       ],
       "good": [
         {
-          "code": "<a href=\"#main-content\" class=\"skip-to-content\">본문 바로가기</a>",
+          "code": "<a href=\"#main\" class=\"skip-to-content\">본문 바로가기</a>",
           "note": "body 최상단에 배치"
         }
       ]

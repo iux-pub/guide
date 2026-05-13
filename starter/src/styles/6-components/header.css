@@ -2,7 +2,7 @@
  * Header — KRDS Header (정부 사이트 표준 헤더 패턴)
  *
  * 구조:
- *   <header class="site-header">
+ *   <header id="header" class="site-header">
  *     <div class="container site-header__inner">
  *       <a class="site-header__brand" href="/">
  *         <img src="/logo.svg" alt="기관명">
@@ -19,11 +19,15 @@
  *       </div>
  *     </div>
  *   </header>
+ *
+ * 페이지 기본 골격은 header/main/footer를 유지하고,
+ * main 내부 콘텐츠는 section > .container 단위로 구성한다.
  */
 
 @layer components {
   .site-header {
     @apply bg-[var(--color-bg)] border-b border-[var(--color-border-light)] sticky top-0 z-[1020];
+
   }
 
   .site-header__inner {
@@ -39,6 +43,8 @@
   /* 브랜드 영역 */
   .site-header__brand {
     @apply inline-flex items-center gap-[1.6rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
+
+
   }
 
   .site-header__brand img {
@@ -56,6 +62,7 @@
 
   .site-header__menu {
     @apply flex items-center gap-[1.6rem] list-none m-0 p-0;
+
   }
 
   .site-header__menu a {
@@ -69,11 +76,16 @@
   .site-header__actions {
     @apply inline-flex items-center gap-[0.8rem] ms-auto;
 
+
+
   }
 
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
     @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border)] rounded-[0.6rem] cursor-pointer;
+
+
+
   }
 
   @media (min-width: 1024px) {

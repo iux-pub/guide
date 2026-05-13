@@ -267,7 +267,7 @@ HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section
 1. **색상 대비** — 일반 텍스트 4.5:1 이상, 큰 텍스트(24px 이상 또는 18.67px bold) 3:1 이상
 2. **터치 영역** — 인터랙티브 요소 최소 44×44px (KRDS 모바일 권장 medium=48px)
 3. **포커스 표시** — \`:focus-visible\` 4px primary 외곽선 + 2px offset (reset.css 전역 관리)
-4. **건너뛰기 링크** — body 최상단 \`<a href="#main-content" class="skip-to-content">본문 바로가기</a>\`
+4. **건너뛰기 링크** — body 최상단 \`<a href="#main" class="skip-to-content">본문 바로가기</a>\`
 5. **이미지** — \`alt\` 필수. 장식용은 \`alt=""\`
 6. **폼** — \`<label for>\` + \`id\` 연결 필수
 7. **모달** — \`role="dialog"\` + 포커스 트랩 + \`aria-labelledby\`
@@ -432,7 +432,7 @@ HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section
 - 색상 대비 4.5:1 이상, 큰 텍스트 3:1 이상 (KRDS 토큰은 AA 통과 조합)
 - 터치 영역 ≥ 44×44px (모바일 권장 medium=48px)
 - \`:focus-visible\` 4px primary 외곽선 (reset.css 전역 관리 — 컴포넌트에서 제거 금지)
-- 페이지 최상단 \`<a href="#main-content" class="skip-to-content">본문 바로가기</a>\`
+- 페이지 최상단 \`<a href="#main" class="skip-to-content">본문 바로가기</a>\`
 - 이미지 \`alt\` 필수, 폼 \`<label for>\` + \`id\` 필수
 - \`role="dialog"\` + 포커스 트랩 (모달)
 

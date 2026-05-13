@@ -105,7 +105,7 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 **✅ 올바른 형식**
 
 ```html
-<a href="#main-content" class="skip-to-content">본문 바로가기</a>   // body 최상단에 배치
+<a href="#main" class="skip-to-content">본문 바로가기</a>   // body 최상단에 배치
 ```
 
 ---

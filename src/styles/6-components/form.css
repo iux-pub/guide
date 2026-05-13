@@ -2,8 +2,8 @@
  * Form — KRDS 기반 텍스트 입력/Textarea 명세
  *
  * 구성: 레이블 → 보조설명 → 입력박스 → 시스템메시지
- *   요소 간 gap: gap-3 (8px)
- *   입력박스 내부 padding: padding-6 (16px)
+ *   요소 간 gap: 0.8rem
+ *   입력박스 내부 padding: 1.6rem
  *
  * 사이즈: small(40) / medium(48 — 기본) / large(56)
  * 상태:   default / focus / disabled / readonly / error

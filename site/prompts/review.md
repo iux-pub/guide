@@ -72,7 +72,7 @@ ChatGPT, Gemini, Claude (모든 AI 리뷰 용도)
 - [ ] 색상 대비 4.5:1 이상 (큰 텍스트 24px/18.67px bold 3:1)
 - [ ] `prefers-reduced-motion` 대응
 - [ ] 터치 타겟 ≥ 44×44px (모바일 medium=48px 권장)
-- [ ] `<a href="#main-content" class="skip-to-content">본문 바로가기</a>` 존재
+- [ ] `<a href="#main" class="skip-to-content">본문 바로가기</a>` 존재
 
 ## 반응형
 

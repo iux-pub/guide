@@ -4,7 +4,7 @@
 
 ---
 
-## 1. 색상 — Raw 사용 금지
+## 1. 색상 — Raw 사용 금지 (R-01)
 
 ### ❌ 금지
 
@@ -16,9 +16,9 @@
 ```
 
 ```html
-<!-- Tailwind raw 컬러 유틸리티 -->
-<div class="bg-red-500 text-gray-700 border-blue-300">...</div>
-<div class="bg-white">...</div>
+<!-- Tailwind 기본 팔레트 raw 컬러 유틸리티 금지 -->
+<div class="bg-[red] text-[gray] border-[blue]">...</div>
+<div class="bg-[white]">...</div>
 ```
 
 ```jsx
@@ -30,7 +30,7 @@
 
 ```css
 .btn { background: var(--color-primary); }
-.btn { background: var(--krds-light-color-button-primary-fill); }
+.btn { background: var(--color-button-primary-fill); }
 .alert { border-color: var(--color-border-light); }
 ```
 
@@ -52,11 +52,11 @@
 | `text-black` | `text-text-bolder` |
 | `border-gray-200/300` | `border-border-light` |
 | `border-gray-400+` | `border-border` 또는 `border-border-dark` |
-| `text-red-*` / `bg-red-500+` | `text-danger` / `bg-danger` |
+| red 계열 텍스트/배경 유틸 | `text-danger` / `bg-danger` |
 | `bg-red-50/100` | `bg-danger-surface` |
 | `text-blue-*` (브랜드) | `text-primary` |
 | `bg-blue-500+` | `bg-primary` |
-| `bg-blue-50/100` | `bg-primary-5` 또는 `var(--krds-light-color-surface-primary-subtler)` |
+| `bg-blue-50/100` | `bg-primary-5` 또는 `var(--color-surface-primary-subtler)` |
 | `text-green-*` | `text-success` |
 | `bg-green-50/100` | `bg-success-surface` |
 | `text-amber-*` / `text-yellow-*` | `text-warning` |
@@ -64,91 +64,67 @@
 
 ---
 
-## 2. 간격/크기 — Raw 사용 금지
+## 2. 간격/크기 — 과잉 토큰화 금지
+
+간격, 크기, 반경, 그림자, 모션, z-index는 공개 토큰으로 만들지 않는다. 화면 밀도와 컴포넌트 맥락에 맞춰 Tailwind v4 `@apply` 또는 명확한 CSS 직접값을 사용한다.
 
 ### ❌ 금지
 
 ```css
-.card { padding: 16px; margin-top: 24px; }
-.btn { height: 48px; gap: 8px; }
-```
+:root {
+  --custom-spacing-token: 1.6rem;
+  --custom-radius-token: 0.8rem;
+}
 
-```html
-<div class="p-[16px] mt-[24px] h-[48px]">...</div>
+.card {
+  padding: var(--custom-spacing-token);
+  border-radius: var(--custom-radius-token);
+}
 ```
 
 ### ✅ 허용
 
 ```css
-/* KRDS number primitive 기반 */
-.card { padding: var(--krds-number-8); margin-top: var(--krds-number-10); }
-.btn { height: var(--krds-size-height-7); gap: var(--krds-gap-3); }
+.card {
+  @apply rounded-lg;
+  padding: 2.4rem;
+  margin-top: 4rem;
+}
+
+.btn {
+  @apply inline-flex min-h-12 items-center gap-2 px-[2.4rem];
+}
 ```
 
 ```html
-<!-- Tailwind 유틸 (KRDS spacing 매핑) -->
-<div class="p-8 mt-10 h-size-height-7">...</div>
+<div class="p-[2.4rem] mt-10 min-h-12">...</div>
 ```
-
-### Spacing 토큰 표 (1rem = 10px)
-
-| 토큰 | 값 | px |
-|------|-----|-----|
-| `--spacing-0` | 0 | 0 |
-| `--spacing-1` | 0.1rem | 1 |
-| `--spacing-2` | 0.2rem | 2 |
-| `--spacing-3` | 0.4rem | **4** |
-| `--spacing-5` | 0.8rem | **8** |
-| `--spacing-7` | 1.2rem | **12** |
-| `--spacing-8` | 1.6rem | **16** |
-| `--spacing-10` | 2.4rem | **24** |
-| `--spacing-12` | 3.2rem | **32** |
-| `--spacing-14` | 4.0rem | **40** |
-| `--spacing-16` | 4.8rem | **48** |
-| `--spacing-18` | 6.4rem | **64** |
 
 ---
 
-## 3. 폰트 — Raw 사이즈 금지
+## 3. 폰트 — 패밀리 토큰만 고정
 
 ### ❌ 금지
 
 ```css
-h1 { font-size: 32px; }
-.title { font-size: 1.5rem; }
 .body { font-family: "Pretendard"; }
 ```
 
-```html
-<h1 class="text-2xl font-bold">제목</h1>
-<p class="text-base text-sm">본문</p>
-```
-
 ### ✅ 허용
 
 ```css
-h1 { font-size: var(--text-heading-large); }
-.title { font-size: var(--text-heading-medium); }
 body { font-family: var(--font-sans); }
+
+.page-title {
+  @apply text-3xl font-bold leading-tight;
+}
 ```
 
-```html
-<h1 class="text-heading-large">제목</h1>
-<p class="text-body-medium">본문</p>
-<small class="text-body-small">보조 텍스트</small>
-```
-
-### 폰트 사이즈 토큰
-
-- **Display**: `text-display-{large|medium|small}` (60/44/36 px)
-- **Heading**: `text-heading-{xlarge|large|medium|small|xsmall|xxsmall}` (40/32/24/19/17/15)
-- **Body**: `text-body-{large|large-bold|medium|medium-bold|small|small-bold|xsmall|xsmall-bold}`
-- **Label**: `text-label-{large|medium|small|xsmall}`
-- **Navigation**: `text-navigation-*`
+폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 Tailwind/CSS 값으로 작성한다.
 
 ---
 
-## 4. 버튼 — 옛 variant 사용 금지
+## 4. 버튼 — 옛 variant 사용 금지 (R-06)
 
 ### ❌ 금지
 
@@ -189,7 +165,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 5. CSS 작성 — 시스템 우회 금지
+## 5. CSS 작성 — 시스템 우회 금지 (R-02 · R-05 · R-07 · R-08)
 
 ### ❌ 금지
 
@@ -215,10 +191,10 @@ body { font-family: var(--font-sans); }
 /* !important 정당화: 외부 라이브러리 오버라이드만, 사유 주석 필수 */
 .tabulator-cell {
   /* tabulator 인라인 스타일 오버라이드 — 라이브러리 한계 */
-  padding: var(--krds-padding-5) !important;
+  padding: 2rem !important;
 }
 
-/* BEM 평면 작성 (Tailwind v4는 SCSS 네스팅 미지원) */
+/* BEM 평면 작성 또는 표준 CSS nesting 사용 (SCSS 문법은 사용하지 않음) */
 .btn--primary { ... }
 .btn__icon { ... }
 
@@ -229,7 +205,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 6. HTML 시맨틱 — div onclick 금지
+## 6. HTML 시맨틱 — div onclick 금지 (R-10)
 
 ### ❌ 금지
 
@@ -248,7 +224,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 7. 접근성 — 누락 금지
+## 7. 접근성 — 누락 금지 (R-09 · R-11 · R-12 · R-13 · R-14)
 
 ### ❌ 금지
 
@@ -271,7 +247,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 8. 컴포넌트 — 카탈로그 외 임의 생성 금지
+## 8. 컴포넌트 — 카탈로그 외 임의 생성 금지 (R-15 카탈로그 정합)
 
 `references/krds-components.md`에 없는 컴포넌트가 필요해 보이면:
 
@@ -293,7 +269,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 9. 빌드 시스템 — SCSS 사용 금지
+## 9. 빌드 시스템 — SCSS 사용 금지 (R-03)
 
 이 가이드는 **Tailwind v4 + 순수 CSS** 기반이다. SCSS는 폐기됨.
 
@@ -312,6 +288,138 @@ body { font-family: var(--font-sans); }
 - `@theme { ... }` (Tailwind v4 토큰 정의)
 - `@apply` (Tailwind v4 component layer)
 - `@layer base, components, utilities` (Tailwind v4 cascade layer)
+
+---
+
+## 10. HTML 구조 위반 (R-15 / R-16 / R-17 / R-18)
+
+> 단일 소스: `references/html-semantics.md` (28개 컴포넌트의 Root 태그·자식 시맨틱·필수 ARIA·키보드 매핑)
+
+### 10.1 컴포넌트 root 태그 불일치 (R-15)
+
+KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스를 다른 root 태그에 붙이면 검색·접근성·SEO 일관성이 깨진다.
+
+#### ❌ 금지
+
+```html
+<div class="card">...</div>
+<div class="modal">...</div>
+<div class="breadcrumb">...</div>
+<div class="main-menu">...</div>
+<div class="pagination">...</div>
+```
+
+#### ✅ 허용
+
+```html
+<article class="card">...</article>
+<dialog class="modal">...</dialog>
+<nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>
+<nav class="main-menu" aria-label="주 메뉴"><ul>...</ul></nav>
+<nav class="pagination" aria-label="페이지 내비게이션"><ol>...</ol></nav>
+```
+
+전체 28종 매핑은 `references/html-semantics.md` 참조.
+
+---
+
+### 10.2 인터랙티브 위젯 ARIA 누락 (R-16)
+
+modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없이 작동하지 않는다.
+
+#### ❌ 금지
+
+```html
+<!-- modal: aria-modal, aria-labelledby 누락 -->
+<div role="dialog" class="modal">...</div>
+
+<!-- disclosure: aria-expanded, aria-controls 누락 -->
+<button class="disclosure">자세히</button>
+<div class="disclosure__panel">...</div>
+
+<!-- tab: role/aria-selected/aria-controls 누락 -->
+<button class="tab__item">탭1</button>
+<div class="tab__panel">...</div>
+
+<!-- tooltip: aria-describedby 누락 -->
+<button class="tooltip-trigger">?</button>
+<div class="tooltip">설명</div>
+```
+
+#### ✅ 허용
+
+```html
+<div role="dialog" aria-modal="true" aria-labelledby="modal-title" class="modal">
+  <h2 id="modal-title">제목</h2>
+</div>
+
+<button class="disclosure" aria-expanded="false" aria-controls="more">자세히</button>
+<div id="more" class="disclosure__panel" hidden>...</div>
+
+<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" class="tab__item">탭1</button>
+<div id="panel-1" role="tabpanel" aria-labelledby="tab-1" class="tab__panel">...</div>
+
+<button class="tooltip-trigger" aria-describedby="tip-1">?</button>
+<div id="tip-1" role="tooltip" class="tooltip">설명</div>
+```
+
+---
+
+### 10.3 비-BEM 상태 클래스 (R-17)
+
+상태는 BEM modifier(시각) + ARIA 속성(의미)으로만 표현한다. `.is-*`, `.has-*` 같은 비-BEM 상태 클래스는 어느 컴포넌트의 상태인지 모호하다.
+
+#### ❌ 금지
+
+```html
+<button class="btn is-disabled">
+<div class="modal is-open">
+<input class="input has-error">
+<li class="tab__item is-active">
+```
+
+#### ✅ 허용
+
+```html
+<button class="btn" disabled aria-disabled="true">
+<div class="modal modal--open" aria-modal="true">
+<input class="input input--error" aria-invalid="true">
+<li role="tab" class="tab__item tab__item--selected" aria-selected="true">
+```
+
+---
+
+### 10.4 시각적 단어 modifier (R-18)
+
+modifier 이름은 의미를 담아야 한다. 색·크기를 직접 명시한 이름은 디자인 변경 시 클래스명도 같이 바꿔야 하는 부채를 만든다.
+
+#### ❌ 금지 — 시각적 단어 사전
+
+`--big` · `--small` · `--large` · `--xl` · `--xxl` · `--red` · `--blue` · `--green` · `--yellow` · `--rounded` · `--shadow` · `--bold` · `--italic`
+
+```html
+<button class="btn btn--blue">
+<div class="card card--big">
+<span class="tag tag--rounded">
+<button class="btn btn--red">
+```
+
+#### ✅ 허용 — KRDS 정의 어휘만
+
+| 카테고리 | 허용 단어 |
+|---------|---------|
+| Variant | `--primary`, `--secondary`, `--tertiary`, `--text`, `--ghost` |
+| 사이즈 (KRDS 스케일) | `--xsmall`, `--small`, `--medium`, `--large`, `--xlarge` |
+| 상태 | `--selected`, `--disabled`, `--expanded`, `--loading`, `--error`, `--success`, `--current`, `--done`, `--todo` |
+| 톤 | `--info`, `--success`, `--warning`, `--danger`, `--inverse` |
+| 레이아웃 | `--horizontal`, `--vertical`, `--block`, `--inline` |
+
+```html
+<button class="btn btn--primary">
+<div class="card card--large">
+<span class="tag tag--info">
+<button class="btn btn--danger">
+```
 
 ---
 

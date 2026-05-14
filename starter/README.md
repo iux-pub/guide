@@ -18,7 +18,7 @@ git init
 git remote add origin https://github.com/YOUR_ORG/YOUR_REPO.git
 
 # 의존성 설치
-npm install --legacy-peer-deps
+npm install
 ```
 
 ### 2. 빌드
@@ -54,7 +54,7 @@ my-project/
 │   │   ├── 3-generic/reset.css  ← 1rem=10px 트릭 적용
 │   │   ├── 4-elements/          ← HTML 태그 베이스
 │   │   ├── 5-objects/           ← 레이아웃 (BEM)
-│   │   ├── 6-components/        ← KRDS UI 컴포넌트 22개 (BEM)
+│   │   ├── 6-components/        ← KRDS 원칙 기반 UI 컴포넌트 28개 (BEM)
 │   │   └── 7-utilities/
 │   ├── snippets/                ← 컴포넌트 마크업 예시
 │   └── js/
@@ -76,6 +76,17 @@ my-project/
 | `npm run build` | 전체 빌드 (tokens + CSS) |
 | `npm run lint:css` | Stylelint 검사 |
 | `npm run check` | info-design 컨트랙트 위반 검출 |
+
+## 🧭 사이트 유형 판정
+
+AI로 화면을 생성하기 전에 프로젝트 유형을 먼저 판정합니다.
+
+| 유형 | 적용 기준 |
+|------|-----------|
+| 민간/기업 사이트 | KRDS의 접근성·구조 원칙을 우선 적용. 정부 상징/공식 배너는 생성하지 않음 |
+| 사내/CMS/관리자 | 업무 밀도와 반복 사용성을 우선. 간격·크기는 프로젝트 직접값 허용 |
+| 공공기관/정부 사이트 | 발주 요구와 운영기관 기준에 따라 공식 배너, 운영기관 식별자, 공공 푸터 링크 적용 여부 확인 |
+| 이커머스/프로모션 | 구매·전환 흐름을 우선하되 색상 토큰, 접근성, 시맨틱 구조는 유지 |
 
 ---
 
@@ -177,7 +188,7 @@ KRDS가 새 버전을 내거나 INFOMIND 결정이 바뀌면 UX팀이 가이드 
 ```bash
 # 새 버전 받기
 git pull upstream main  # upstream = iux-pub/starter
-npm install --legacy-peer-deps
+npm install
 npm run build
 ```
 
@@ -185,7 +196,7 @@ npm run build
 
 ## 🆘 문제 해결
 
-**빌드 실패** → `rm -rf node_modules && npm install --legacy-peer-deps`
+**빌드 실패** → `rm -rf node_modules && npm install`
 
 **iCloud Drive에서 hang** → 프로젝트를 iCloud 외부 위치로 이동 (`~/Documents/`가 아닌 `~/projects/` 같은 곳)
 

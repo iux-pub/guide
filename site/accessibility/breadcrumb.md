@@ -16,7 +16,7 @@ order: 11
 
 ## 구분자 처리
 
-**CSS `::before` pseudo-element (권장):** DOM에 구분자가 없으므로 스크린리더가 자동으로 무시한다. 이 프로젝트의 `_breadcrumb.scss`가 이 방식을 사용한다.
+**CSS `::before` pseudo-element (권장):** DOM에 구분자가 없으므로 스크린리더가 자동으로 무시한다. 이 프로젝트의 `src/styles/6-components/breadcrumb.css`가 이 방식을 사용한다.
 
 ## Do / Don't
 

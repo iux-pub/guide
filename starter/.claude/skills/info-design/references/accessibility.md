@@ -73,7 +73,7 @@ button:focus { outline: 0; }
 | 관련 섹션 | `<section>` (제목 필수) |
 | 보조 콘텐츠 | `<aside>` |
 
-**`<div onclick>` 절대 금지.** 클릭 가능한 요소는 button 또는 a.
+**`div/span 클릭 핸들러 패턴` 절대 금지.** 클릭 가능한 요소는 button 또는 a.
 
 ---
 

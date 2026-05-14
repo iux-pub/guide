@@ -33,7 +33,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 - [**컴포넌트 카탈로그**](/components/) — KRDS 기반 패턴의 마크업·CSS·접근성
 - [**토큰 카탈로그**](/tokens/color/) — 색상·간격·타이포 토큰 전체
 - [**접근성 체크리스트**](/accessibility/checklist/) — WCAG 2.1 AA + KWCAG
-- [**디자인 규칙**](/conventions/) — 18개 규칙 (R-01 ~ R-18)
+- [**디자인 규칙**](/conventions/) — 19개 규칙 (R-01 ~ R-19)
 
 ---
 
@@ -46,7 +46,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 [컴포넌트 카탈로그](/components/)에서 마크업을 그대로 복사해서 사용. AI에게 "info-design 기준으로 가자"라고만 하면 룰 자동 준수.
 
 **리뷰어**
-[접근성 체크리스트](/accessibility/checklist/)로 시각·키보드 검증. 18개 규칙은 CI가 자동 검출 — 사람은 비즈니스 의도와 사용성만 보면 됩니다.
+[접근성 체크리스트](/accessibility/checklist/)로 시각·키보드 검증. 19개 규칙은 CI가 자동 검출 — 사람은 비즈니스 의도와 사용성만 보면 됩니다.
 
 **신규 팀원**
 [시작 가이드](/onboarding/getting-started/)부터.

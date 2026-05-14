@@ -161,7 +161,7 @@
 ## 8. 작업 후 검증
 
 ```bash
-npm run check     # R-01~R-18 자동 검출
+npm run check     # R-01~R-19 자동 검출
 npm run lint      # Stylelint + ESLint
 npm run build     # 전체 빌드 (자동 생성물 갱신)
 npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)

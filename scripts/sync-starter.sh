@@ -11,8 +11,10 @@
 #   - scripts/check-violations.js → starter/scripts/
 #   - postcss.config.mjs      → starter/
 #   - .stylelintrc.json       → starter/
+#   - .npmrc                  → starter/
 #
-# starter/CLAUDE.md, starter/package.json, starter/README.md는 starter 전용으로 별도 관리.
+# starter/AGENTS.md, starter/CLAUDE.md, starter/.cursorrules, starter/package.json,
+# starter/README.md는 starter 전용으로 별도 관리.
 
 set -e
 
@@ -54,6 +56,7 @@ cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
 echo "[6/7] config 동기화..."
 cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
+cp "$GUIDE_DIR/.npmrc" "$STARTER_DIR/"
 
 # 6.5. info-design 스킬 (Claude Code가 자동 인식하도록 .claude/skills/에 포함)
 echo "[7/7] info-design 스킬 동봉..."
@@ -93,4 +96,4 @@ echo ""
 echo "=== 완료 ==="
 echo "개발팀이 시작할 때:"
 echo "  git clone https://github.com/iux-pub/starter.git my-project"
-echo "  cd my-project && npm install --legacy-peer-deps && npm run build"
+echo "  cd my-project && npm install && npm run build"

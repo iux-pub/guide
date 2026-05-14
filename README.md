@@ -83,7 +83,7 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 - ✅ 색상은 토큰만 사용 (raw hex/rgb/hsl 금지)
 - ✅ 간격/크기/타이포는 KRDS를 참고하되 프로젝트 밀도에 맞게 조정
 - ✅ 기존 컴포넌트 패턴 우선 사용, 필요한 컴포넌트는 UX팀 판단으로 확장
-- ✅ R-01~R-18 규칙 자동 준수
+- ✅ R-01~R-19 규칙 자동 준수
 - ✅ 위반 발견 시 작업 중단 + 사용자에게 보고
 
 정부 아이덴티티 요소는 모든 프로젝트의 기본값이 아니다. 민간 사이트, 사내 시스템, 일반 CMS에서는 공식 배너·정부 상징·운영기관 식별자를 생성하지 않고 KRDS 접근성/구조/사용성 원칙만 적용한다.
@@ -129,7 +129,7 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 |------|------|
 | `npm run dev` | 개발 서버 (Tailwind 워치 + Eleventy 서브) |
 | `npm run build` | 전체 빌드 (토큰 → 규칙 → CSS → 프롬프트 → 스킬 → 사이트) |
-| `npm run check` | 컨트랙트 위반(R-01~R-18) 자동 검출 |
+| `npm run check` | 컨트랙트 위반(R-01~R-19) 자동 검출 |
 | `npm run lint` | Stylelint + ESLint |
 | `npm run test` | 전체 CI 시뮬레이션 (check + lint + build + a11y) |
 
@@ -159,7 +159,7 @@ prompts/                  LLM 컨텍스트 묶음 (대화 첨부용)
 starter/                  스타터 키트 (sync:starter로 배포)
 scripts/                  빌드/검사 스크립트
 references/               KRDS 원본 자료
-rules.json                R-01~R-18 단일 소스
+rules.json                R-01~R-19 단일 소스
 CLAUDE.md                 LLM이 항상 따르는 룰
 ```
 
@@ -181,7 +181,7 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 
 ## 📜 코딩 규칙 (요약)
 
-`rules.json`이 단일 소스. `npm run check`가 자동 검출. 전체 18개 규칙은 [`/conventions/`](http://localhost:8080/conventions/) 또는 `CLAUDE.md` 참조.
+`rules.json`이 단일 소스. `npm run check`가 자동 검출. 전체 19개 규칙은 [`/conventions/`](http://localhost:8080/conventions/) 또는 `CLAUDE.md` 참조.
 
 | 규칙 | 영역 | 내용 |
 |------|------|------|

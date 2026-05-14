@@ -226,7 +226,7 @@ async function main() {
   console.log('')
   console.log(`${DIM}토큰 변경:${RESET}       tokens/foundation.json 편집 → npm run build`)
   console.log(`${DIM}AI 컨트랙트 발효:${RESET}    "info-design 스킬 기준으로 가자" 발화`)
-  console.log(`${DIM}문서:${RESET}              ${projectName}/README.md · docs/getting-started.md`)
+  console.log(`${DIM}문서:${RESET}              ${projectName}/README.md · CLAUDE.md · .claude/skills/info-design/SKILL.md`)
   console.log('')
 }
 

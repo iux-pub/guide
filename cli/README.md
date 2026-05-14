@@ -31,13 +31,13 @@ npx create-infomind-ux <project-name> [옵션]
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 - ✅ pa11y-ci + axe-core 접근성 검증
-- ✅ Stylelint + check-violations.js (R-01~R-18 룰)
+- ✅ Stylelint + check-violations.js (R-01~R-19 룰)
 
 ## 다음 단계
 
 1. 브랜드 색상 정의: `tokens/foundation.json` 편집 → `npm run build`
 2. AI 코딩 에이전트 사용 시: "info-design 스킬 기준으로 가자" 발화
-3. 자세한 가이드: `docs/getting-started.md`
+3. 자세한 가이드: `README.md`, `CLAUDE.md`, `.claude/skills/info-design/SKILL.md`
 
 ## 출처
 

@@ -1,0 +1,35 @@
+# AGENTS.md — INFOMIND UX Starter
+
+이 프로젝트에서 UI, CSS, HTML, 접근성 작업을 할 때는 `CLAUDE.md`와 `.claude/skills/info-design/SKILL.md`를 기준으로 한다.
+
+## 작업 전 판단
+
+- 화면을 만들기 전에 사이트 유형을 먼저 판정한다: 민간/기업, 사내/CMS/관리자, 공공기관/정부, 이커머스/프로모션.
+- 정부 상징, 공식 배너, 운영기관 식별자, 공공 푸터 링크는 적용 대상이 확인된 경우에만 생성한다.
+- 민간/사내/CMS 프로젝트에서는 KRDS의 접근성, 시맨틱 구조, 컴포넌트 패턴을 참고하되 정부 아이덴티티 요소는 만들지 않는다.
+
+## CSS/HTML 규칙
+
+- 색상은 `var(--color-*)` 시맨틱 토큰만 사용한다. raw hex/rgb/hsl 및 Tailwind 기본 팔레트 raw 컬러 유틸리티는 금지한다.
+- 간격, 크기, 폰트 사이즈, 반경, 그림자는 프로젝트 맥락에 맞는 CSS 또는 Tailwind 직접값을 허용한다.
+- CSS는 Tailwind v4 `@apply`와 표준 CSS nesting을 사용할 수 있다. SCSS 문법은 사용하지 않는다.
+- 5-objects, 6-components 레이어의 클래스명은 BEM을 따른다.
+- 기본 페이지 구조는 `header > .container`, `main > section > .container`, `footer > .container` 흐름을 유지한다.
+- 컴포넌트화는 페이지 전체가 아니라 `main` 내부 section 단위로 우선 분리한다.
+
+## 접근성
+
+- 인터랙티브 요소는 `<button>`, `<a>`, 폼 요소 등 시맨틱 태그를 우선 사용한다.
+- 이미지 `alt`, 폼 `label`, 키보드 조작, `focus-visible`, 모바일 터치 영역 44px 이상을 확인한다.
+- modal, tab, accordion, disclosure, tooltip, carousel, calendar는 WAI-ARIA 1.2 APG 패턴을 따른다.
+
+## 검증
+
+작업 후 가능한 범위에서 아래를 실행한다.
+
+```bash
+npm run check
+npm run lint:css
+npm run build
+```
+

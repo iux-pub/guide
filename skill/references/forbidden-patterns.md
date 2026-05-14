@@ -194,7 +194,7 @@ body { font-family: var(--font-sans); }
   padding: 2rem !important;
 }
 
-/* BEM 평면 작성 (Tailwind v4는 SCSS 네스팅 미지원) */
+/* BEM 평면 작성 또는 표준 CSS nesting 사용 (SCSS 문법은 사용하지 않음) */
 .btn--primary { ... }
 .btn__icon { ... }
 

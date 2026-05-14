@@ -1,7 +1,7 @@
 /**
  * Header — Site header
  * 공통 헤더 패턴. 공식 배너/정부 상징/운영기관 식별자는
- * public-government 또는 요구사항이 확인된 public-affiliated 프로젝트에서만 별도 추가한다.
+ * 공공서비스/공공기관 중 요구사항이 확인된 경우에만 별도 추가한다.
  *
  * 구조:
  *   <header id="header" class="site-header">

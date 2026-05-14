@@ -10,7 +10,7 @@ order: 1
 | 가이드 | 설명 |
 |--------|------|
 | [마이크로카피](/design/microcopy/) | 버튼, 오류 메시지, 플레이스홀더, 빈 상태 등 UI 텍스트 작성 기준 |
-| [프로젝트 프로파일](/design/project-profiles/) | 민간, CMS, 공공기관, 정부 상징 사용 서비스별 조건부 생성 규칙 |
+| [사이트 유형 판정 기준](/design/project-profiles/) | 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약별 조건부 생성 규칙 |
 | [KRDS 준수 체크리스트](/design/krds-compliance-checklist/) | RFP 대응을 위한 KRDS 원칙·스타일·컴포넌트·패턴 준수 점검 기준 |
 | [인터랙션 타이밍](/design/interaction-timing/) | 전환 시간, 이징 함수, 컴포넌트별 모션 명세와 접근성 대응 |
 | [디자인 감사](/design/design-audit/) | 17점 체크리스트와 Quick 5 납품 전 점검 기준 |

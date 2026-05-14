@@ -300,7 +300,7 @@ function checkHtmlFile(filePath) {
     // Tailwind 기본 브레이크포인트 (R-01)
     if (TW_DEFAULT_BREAKPOINT.test(trimmed)) {
       const match = trimmed.match(TW_DEFAULT_BREAKPOINT)
-      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 프로젝트 브레이크포인트와 충돌하지 않는지 확인.`, trimmed.slice(0, 100))
+      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. INFOUX 브레이크포인트 \`mobile:\` / \`tablet:\` / \`pc:\` 사용.`, trimmed.slice(0, 100))
     }
 
     // 옛 btn variant (R-06: 시각적/구형 modifier)

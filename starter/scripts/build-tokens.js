@@ -2,7 +2,7 @@
  * 파운데이션 토큰 빌드 스크립트
  *
  * 입력:
- *   tokens/foundation.json          (색상 + 기본 폰트 단일 소스)
+ *   tokens/foundation.json          (색상 + 기본 폰트 + 브레이크포인트 단일 소스)
  *
  * 출력:
  *   tokens/build/tokens.css         (공개 CSS 변수 + Tailwind v4 theme)
@@ -58,7 +58,7 @@ w(' * AUTO-GENERATED — tokens/build/tokens.css')
 w(' * 출처: tokens/foundation.json')
 w(' * 직접 수정 금지. 변경은 tokens/foundation.json에서 한다.')
 w(' *')
-w(' * 공개 토큰은 색상과 기본 폰트만 발행한다.')
+w(' * 공개 토큰은 색상, 기본 폰트, 브레이크포인트만 발행한다.')
 w(' * 간격·크기·타이포 스케일·반경·모션·그림자·z-index는 CSS/Tailwind 직접값으로 작성한다.')
 w(' */')
 w('')
@@ -66,6 +66,11 @@ w(':root {')
 w('  /* Font families */')
 w(cssLine('  --font-sans'.trim(), 'font.family.sans'))
 w(cssLine('  --font-mono'.trim(), 'font.family.mono'))
+w('')
+w('  /* Breakpoints */')
+w(cssLine('--breakpoint-mobile', 'breakpoint.mobile'))
+w(cssLine('--breakpoint-tablet', 'breakpoint.tablet'))
+w(cssLine('--breakpoint-pc', 'breakpoint.pc'))
 w('')
 w('  /* Semantic colors */')
 w(cssLine('--color-primary', 'primitive.color.light.primary.50'))
@@ -186,6 +191,12 @@ w('  --color-*: initial;')
 w('')
 w(`  --font-sans: ${readToken('font.family.sans')};`)
 w(`  --font-mono: ${readToken('font.family.mono')};`)
+w('')
+w('  /* Tailwind responsive variants: mobile:, tablet:, pc: */')
+w('  --breakpoint-*: initial;')
+w(`  --breakpoint-mobile: ${readToken('breakpoint.mobile')};`)
+w(`  --breakpoint-tablet: ${readToken('breakpoint.tablet')};`)
+w(`  --breakpoint-pc: ${readToken('breakpoint.pc')};`)
 w('')
 ;[
   'primary', 'primary-hover', 'primary-pressed', 'secondary',

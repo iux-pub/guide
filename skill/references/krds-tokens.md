@@ -2,9 +2,9 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `tokens/foundation.json`
-> 빌드: 6d23ecb
+> 빌드: 5faef08
 
-색상과 기본 폰트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.
+색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.
 
 ---
 
@@ -174,6 +174,14 @@
 | `--font-sans` | `'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif` | 본문/컴포넌트 기본 폰트 |
 | `--font-mono` | `'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace` | 코드/고정폭 텍스트 |
 
+### 브레이크포인트
+
+| 토큰 | 값 | 용도 | Tailwind variant |
+|------|----|------|------------------|
+| `--breakpoint-mobile` | `360px` | 모바일 기준 뷰포트 | `mobile:` |
+| `--breakpoint-tablet` | `768px` | 태블릿 이상 | `tablet:` |
+| `--breakpoint-pc` | `1280px` | PC 이상 | `pc:` |
+
 ---
 
 ## 사용 원칙
@@ -181,6 +189,8 @@
 - 색상은 `--color-*` 시맨틱 토큰을 우선 사용한다.
 - 단계 색상은 예외적으로 명도가 필요한 경우에만 `--color-{group}-{step}`을 사용한다.
 - 폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다.
+- 브레이크포인트는 360 / 768 / 1280 세 단계만 사용한다.
+- Tailwind 반응형 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 사용하지 않는다.
 - 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다.
 - 해당 값들은 `@apply`의 Tailwind 유틸리티 또는 명확한 CSS 직접값으로 작성한다.
 - `tokens/build/tokens.css`는 자동 생성물이므로 직접 수정하지 않는다.

@@ -25,7 +25,7 @@
   @apply hidden w-[28rem] bg-[var(--color-bg-subtler)] py-[2.4rem] px-0 min-w-[28rem] [border-right:1px_solid_var(--color-border-light)];
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .docs-layout__sidebar {
     @apply block sticky top-0 overflow-y-auto h-screen;
 
@@ -41,7 +41,7 @@
   @apply flex-1 min-w-0 p-[3.2rem_1.6rem] max-w-[80rem];
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .docs-layout__content {
     @apply p-[6.4rem_4.8rem];
   }
@@ -117,7 +117,7 @@
   @apply flex items-center justify-between p-[0.8rem_1.6rem] border-b border-[var(--color-border-light)] bg-[var(--color-bg)];
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .docs-mobile-header { @apply [display:none]; }
 }
 

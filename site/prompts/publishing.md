@@ -66,11 +66,12 @@ src/styles/
 
 ## 반응형: 모바일 퍼스트
 
-- 모바일: 0~767px (기본)
-- 태블릿: 768~1279px
+- 모바일: 360px 기준 (기본)
+- 태블릿: 768px 이상
 - PC: 1280px+
 
 CSS `@media` 또는 Tailwind v4 변종 직접 사용 (SCSS 믹스인 폐기).
+Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용한다.
 
 ```css
 .card {

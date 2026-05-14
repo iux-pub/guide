@@ -21,11 +21,15 @@ function collectValues(obj, out = []) {
   return out
 }
 
-test('foundation은 색상과 폰트만 토큰 소스로 갖는다', () => {
+test('foundation은 색상, 폰트, 브레이크포인트만 토큰 소스로 갖는다', () => {
   const publicKeys = Object.keys(source).filter(key => !key.startsWith('$')).sort()
-  assert.deepEqual(publicKeys, ['font', 'mode-high-contrast', 'mode-light', 'primitive'])
+  assert.deepEqual(publicKeys, ['breakpoint', 'font', 'mode-high-contrast', 'mode-light', 'primitive'])
   assert.ok(source.primitive.color)
   assert.ok(source.font.family.sans.value.includes('Pretendard GOV'))
+  assert.deepEqual(
+    Object.values(source.breakpoint).map(token => token.value),
+    ['360px', '768px', '1280px']
+  )
 })
 
 test('foundation에는 과한 비색상 스케일 토큰이 없다', () => {

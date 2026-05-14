@@ -3,8 +3,8 @@
  *
  * 사이즈: xsmall / small / medium (기본) / large
  *   각 사이즈는 PC/Mobile 패딩이 다름 (KRDS 정의)
- *   Mobile (< 1024px) → padding-card-* 모바일 값
- *   PC    (≥ 1024px) → padding-card-* PC 값
+ *   Mobile (< 768px) / Tablet (≥ 768px) / PC (≥ 1280px)
+ *   컴포넌트 패딩은 프로젝트 맥락에 맞는 직접값으로 조정
  *
  * Shape: radius-large1 (10px) — KRDS Large 그룹
  * Surface: gray.0 (white)

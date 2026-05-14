@@ -147,7 +147,7 @@
 | 코드 생성 전 사이트 유형 판정 | `skill/references/project-profiles.md` |
 | 컴포넌트 마크업 작성 (시각/스타일) | `skill/references/krds-components.md` |
 | 컴포넌트 마크업 작성 (root/ARIA/키보드) | `skill/references/html-semantics.md` |
-| 토큰 결정 (색상·기본 폰트) | `skill/references/krds-tokens.md` |
+| 토큰 결정 (색상·기본 폰트·브레이크포인트) | `skill/references/krds-tokens.md` |
 | Tailwind 유틸리티 사용 | `skill/references/tailwind-mapping.md` |
 | 접근성 검증 | `skill/references/accessibility.md` |
 | 금지 패턴 검토 | `skill/references/forbidden-patterns.md` |
@@ -195,7 +195,7 @@ npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)
 
 1. **접근성 (WCAG/KWCAG AA)** — 양보 불가
 2. **프로젝트 목적과 사용성** — CMS/관리자 화면은 업무 밀도와 반복 효율 우선
-3. **INFOUX 파운데이션** — `tokens/foundation.json`의 색상·기본 폰트 기준
+3. **INFOUX 파운데이션** — `tokens/foundation.json`의 색상·기본 폰트·브레이크포인트 기준
 4. **KRDS 정본** — 접근성·컴포넌트 원칙·색상 참고 기준
 5. **프로젝트 스타일** — 프로젝트별 CSS 확장
 6. **사용자 명시 지시** — 단, 접근성을 깨면 사용자에게 확인

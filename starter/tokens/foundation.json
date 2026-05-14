@@ -1,11 +1,28 @@
 {
   "$meta": {
     "name": "INFOUX Foundation Tokens",
-    "purpose": "KRDS 색상 토큰과 INFOMIND 색상 결정을 합친 단일 색상 소스. 간격/크기/타이포/모션은 토큰화하지 않는다.",
+    "purpose": "KRDS 색상 토큰과 INFOMIND 색상 결정을 합친 단일 색상 소스. 브레이크포인트는 생성 기준 통일을 위해 예외적으로 발행한다. 간격/크기/타이포/모션은 토큰화하지 않는다.",
     "version": "1.0.0",
     "owner": "INFOMIND UX Team",
     "source": "single source consolidated on 2026-05-13",
-    "policy": "Public CSS variables expose colors and font families only. Layout, spacing, size, radius, motion, shadow, and z-index use direct CSS/Tailwind values."
+    "policy": "Public CSS variables expose colors, font families, and the three project breakpoints only. Layout, spacing, size, radius, motion, shadow, and z-index use direct CSS/Tailwind values."
+  },
+  "breakpoint": {
+    "mobile": {
+      "value": "360px",
+      "type": "dimension",
+      "description": "모바일 기준 뷰포트"
+    },
+    "tablet": {
+      "value": "768px",
+      "type": "dimension",
+      "description": "태블릿 이상"
+    },
+    "pc": {
+      "value": "1280px",
+      "type": "dimension",
+      "description": "PC 이상"
+    }
   },
   "primitive": {
     "color": {

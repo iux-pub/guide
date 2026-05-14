@@ -37,7 +37,7 @@ cd my-project && rm -rf .git && git init && npm install && npm run build
 ```
 
 자동 동봉되는 것:
-- ✅ INFOUX 색상/기본 폰트 토큰
+- ✅ INFOUX 색상/기본 폰트/브레이크포인트 토큰
 - ✅ KRDS 기반 컴포넌트 CSS
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
@@ -170,7 +170,7 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 - **CSS Framework**: Tailwind v4
 - **방법론**: ITCSS 5-layer + BEM (5-objects · 6-components 한정)
 - **CSS 작성**: 표준 CSS nesting + Tailwind v4 문법(`@apply`, `@theme`, `@utility`) 허용
-- **토큰**: 색상/상태 + 기본 폰트 토큰은 강제, 간격/크기/타이포 스케일은 직접값
+- **토큰**: 색상/상태 + 기본 폰트 + 브레이크포인트 토큰은 강제, 간격/크기/타이포 스케일은 직접값
 - **HTML 골격**: 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조. 컴포넌트화는 section 단위
 - **문서 사이트**: Eleventy 3.x + Nunjucks + Pagefind
 - **린팅**: Stylelint + 자체 검사기 (`check-violations.js` + `check-html-structure.js`)

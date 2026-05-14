@@ -25,7 +25,7 @@ ChatGPT, Gemini, Claude (모든 AI 리뷰 용도)
 - [ ] **SCSS 사용 없음** — `.scss` 파일, `@use`, `@forward`, `$variable` 모두 0건
 - [ ] CSS는 표준 CSS nesting과 Tailwind v4 `@apply` 사용 가능 (`.css` 파일, `@import "tailwindcss"`, CSS Custom Property)
 - [ ] Tailwind v4 기본 팔레트 raw 컬러 유틸 없음
-- [ ] Tailwind 기본 스케일이 프로젝트 기준과 충돌하지 않음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등)
+- [ ] Tailwind 기본 스케일이 프로젝트 기준과 충돌하지 않음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등은 사용하지 않음)
 
 ## BEM (R-04, R-05, R-06)
 

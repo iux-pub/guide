@@ -36,7 +36,7 @@
     @apply flex items-center gap-[2.4rem] h-[6.4rem];
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1280px) {
     .site-header__inner {
       @apply h-[8.0rem];
     }
@@ -58,7 +58,7 @@
     @apply hidden flex-1;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1280px) {
     .site-header__nav { @apply [display:block]; }
   }
 
@@ -90,7 +90,7 @@
 
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1280px) {
     .site-header__toggle { @apply [display:none]; }
   }
 }

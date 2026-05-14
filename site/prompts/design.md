@@ -45,12 +45,11 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-primary-60` | #0b50d0 |
 | `--color-primary-80` | #052561 |
 | `--color-primary-95` | #020f27 |
-| `--color-primary-5` | var(--color-primary-5) |
-| `--color-primary-20` | var(--color-primary-20) |
-| `--color-primary-40` | var(--color-primary-40) |
-| `--color-primary-60` | var(--color-primary-60) |
-| `--color-primary-80` | var(--color-primary-80) |
-| `--color-primary-95` | var(--color-primary-95) |
+| `--color-primary-10` | var(--color-primary-10) |
+| `--color-primary-30` | var(--color-primary-30) |
+| `--color-primary-50` | var(--color-primary-50) |
+| `--color-primary-70` | var(--color-primary-70) |
+| `--color-primary-90` | var(--color-primary-90) |
 
 ### Secondary
 
@@ -61,11 +60,12 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-secondary-50` | #346fb2 |
 | `--color-secondary-70` | #063a74 |
 | `--color-secondary-90` | #031f3f |
-| `--color-secondary-10` | var(--color-secondary-10) |
-| `--color-secondary-30` | var(--color-secondary-30) |
-| `--color-secondary-50` | var(--color-secondary-50) |
-| `--color-secondary-70` | var(--color-secondary-70) |
-| `--color-secondary-90` | var(--color-secondary-90) |
+| `--color-secondary-5` | var(--color-secondary-5) |
+| `--color-secondary-20` | var(--color-secondary-20) |
+| `--color-secondary-40` | var(--color-secondary-40) |
+| `--color-secondary-60` | var(--color-secondary-60) |
+| `--color-secondary-80` | var(--color-secondary-80) |
+| `--color-secondary-95` | var(--color-secondary-95) |
 
 ### Gray
 
@@ -78,12 +78,12 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-gray-70` | #464c53 |
 | `--color-gray-90` | #1e2124 |
 | `--color-gray-100` | #000000 |
-| `--color-gray-0` | var(--color-gray-0) |
-| `--color-gray-10` | var(--color-gray-10) |
-| `--color-gray-30` | var(--color-gray-30) |
-| `--color-gray-50` | var(--color-gray-50) |
-| `--color-gray-70` | var(--color-gray-70) |
-| ... | (총 14개, tokens/build/tokens.css 참조) |
+| `--color-gray-5` | var(--color-gray-5) |
+| `--color-gray-20` | var(--color-gray-20) |
+| `--color-gray-40` | var(--color-gray-40) |
+| `--color-gray-60` | var(--color-gray-60) |
+| `--color-gray-80` | var(--color-gray-80) |
+| ... | (총 13개, tokens/build/tokens.css 참조) |
 
 ### Semantic (success/warning/danger/info)
 
@@ -109,17 +109,17 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-success-50` | #228738 |
 | `--color-success-70` | #285d33 |
 | `--color-success-90` | #122b18 |
-| `--color-danger-text` | var(--color-danger-text) |
-| `--color-warning-surface` | var(--color-warning-surface) |
-| `--color-success-text` | var(--color-success-text) |
-| `--color-info-surface` | var(--color-info-surface) |
-| `--color-danger-10` | var(--color-danger-10) |
-| `--color-danger-30` | var(--color-danger-30) |
-| `--color-danger-50` | var(--color-danger-50) |
-| `--color-danger-70` | var(--color-danger-70) |
-| `--color-danger-90` | var(--color-danger-90) |
-| `--color-warning-5` | var(--color-warning-5) |
-| ... | (총 40개, tokens/build/tokens.css 참조) |
+| `--color-danger-surface` | var(--color-danger-surface) |
+| `--color-warning-text` | var(--color-warning-text) |
+| `--color-success-surface` | var(--color-success-surface) |
+| `--color-info-text` | var(--color-info-text) |
+| `--color-danger-5` | var(--color-danger-5) |
+| `--color-danger-20` | var(--color-danger-20) |
+| `--color-danger-40` | var(--color-danger-40) |
+| `--color-danger-60` | var(--color-danger-60) |
+| `--color-danger-80` | var(--color-danger-80) |
+| `--color-danger-95` | var(--color-danger-95) |
+| ... | (총 41개, tokens/build/tokens.css 참조) |
 
 ---
 
@@ -136,9 +136,8 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-text-inverse` | #ffffff |
 | `--color-text-bolder` | #e6e8ea |
 | `--color-text-disabled` | #58616a |
-| `--color-text` | var(--color-text) |
-| `--color-text-subtle` | var(--color-text-subtle) |
-| `--color-text-inverse` | var(--color-text-inverse) |
+| `--color-text-bolder` | var(--color-text-bolder) |
+| `--color-text-disabled` | var(--color-text-disabled) |
 
 ### Background
 
@@ -149,8 +148,9 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-bg` | #000000 |
 | `--color-bg-subtle` | #1e2124 |
 | `--color-bg-dim` | #000000bf |
-| `--color-bg-subtler` | var(--color-bg-subtler) |
-| `--color-bg-inverse` | var(--color-bg-inverse) |
+| `--color-bg` | var(--color-bg) |
+| `--color-bg-subtle` | var(--color-bg-subtle) |
+| `--color-bg-dim` | var(--color-bg-dim) |
 
 ### Border
 
@@ -164,11 +164,11 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-border` | #464c53 |
 | `--color-border-dark` | #8a949e |
 | `--color-border-disabled` | #464c53 |
-| `--color-border` | var(--color-border) |
-| `--color-border-dark` | var(--color-border-dark) |
-| `--color-border-primary-light` | var(--color-border-primary-light) |
-| `--color-border-success-light` | var(--color-border-success-light) |
-| `--color-border-danger-light` | var(--color-border-danger-light) |
+| `--color-border-light` | var(--color-border-light) |
+| `--color-border-primary` | var(--color-border-primary) |
+| `--color-border-information-light` | var(--color-border-information-light) |
+| `--color-border-warning-light` | var(--color-border-warning-light) |
+| `--color-border-disabled` | var(--color-border-disabled) |
 
 ---
 
@@ -192,11 +192,11 @@ Google Stitch, Galileo, Lovable, v0
 
 | 해상도 | 범위 | 권장 시안 너비 |
 |--------|------|--------------|
-| 모바일 | 0 ~ 767px | 360px |
-| 태블릿 | 768px ~ 1279px | 768px |
-| PC | 1280px ~ | 1920px (콘텐츠 max-width: 1200px) |
+| 모바일 | 360px 기준 | 360px |
+| 태블릿 | 768px 이상 | 768px |
+| PC | 1280px 이상 | 1280px (콘텐츠 max-width: 1200px) |
 
-KRDS 표준 브레이크포인트.
+INFOUX 표준 브레이크포인트. Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`를 사용한다.
 
 ---
 

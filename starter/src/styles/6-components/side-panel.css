@@ -40,6 +40,9 @@
 
   .side-panel__close {
     @apply shrink-0 w-[4.4rem] h-[4.4rem] flex items-center justify-center bg-transparent border-0 rounded-[0.6rem] text-[var(--color-text-subtle)] text-[2.4rem] leading-none cursor-pointer;
+
+
+
   }
 
   .side-panel__close:hover {

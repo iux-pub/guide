@@ -40,6 +40,10 @@
   /* Prev/Next 버튼 */
   .carousel__nav {
     @apply absolute w-[4.4rem] h-[4.4rem] flex items-center justify-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full text-[var(--color-text)] text-[2rem] cursor-pointer shadow-[0_0_0.2rem_0_#0000000d,_0_0.4rem_0.8rem_0_#00000014] top-[50%] [transform:translateY(-50%)];
+
+
+
+
   }
   .carousel__nav--prev { @apply [left:1.2rem]; }
   .carousel__nav--next { @apply [right:1.2rem]; }

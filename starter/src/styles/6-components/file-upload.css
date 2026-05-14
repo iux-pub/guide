@@ -16,6 +16,7 @@
 
   .file-upload input[type="file"] {
     @apply absolute w-[1px] h-[1px] m-[-1px] p-0 overflow-hidden whitespace-nowrap border-0 [clip-path:inset(50%)];
+
   }
 
   /* 트리거 버튼 — 시각적으로 .btn--secondary와 동일 */

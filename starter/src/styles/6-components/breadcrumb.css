@@ -18,6 +18,7 @@
 
   .breadcrumb__list {
     @apply flex flex-wrap items-center gap-[0.8rem] list-none m-0 p-0;
+
   }
 
   .breadcrumb__item {
@@ -27,6 +28,7 @@
   /* 구분자 */
   .breadcrumb__item:not(:first-child)::before {
     @apply content-[''] w-[1.2rem] h-[1.2rem] shrink-0 [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='12'_height='12'_viewBox='0_0_12_12'_fill='none'><path_d='M4.5_2L8.5_6L4.5_10'_stroke='%236D7882'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain];
+
   }
 
   .breadcrumb__item a {
@@ -35,6 +37,7 @@
 
   .breadcrumb__item a:hover {
     @apply text-[var(--color-text)] underline underline-offset-[0.2em];
+
   }
 
   .breadcrumb__item[aria-current="page"] {

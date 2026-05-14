@@ -9,10 +9,13 @@
 @layer components {
   .switch {
     @apply inline-flex items-center gap-[1.6rem] cursor-pointer select-none min-h-[4.4rem] text-[var(--color-text)] text-[1.7rem] leading-[1.5];
+
+
   }
 
   .switch input[type="checkbox"] {
     @apply absolute w-[1px] h-[1px] m-[-1px] p-0 overflow-hidden whitespace-nowrap border-0 [clip-path:inset(50%)];
+
   }
 
   .switch__track {

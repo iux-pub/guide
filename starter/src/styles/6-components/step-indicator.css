@@ -27,6 +27,7 @@
 
   .step-indicator__item {
     @apply flex items-center flex-1 gap-[0.8rem] text-[var(--color-text-subtle)] text-[1.5rem] relative;
+
   }
 
   /* 아이템 사이 연결선 */

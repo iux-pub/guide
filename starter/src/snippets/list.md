@@ -2,7 +2,9 @@
 
 두 가지 변형 — 텍스트 목록과 구조화 목록(정의 목록).
 
-## 텍스트 목록 (List — Text)
+## 기본 마크업
+
+### 텍스트 목록 (List — Text)
 
 ```html
 <!-- 글머리표 -->
@@ -22,7 +24,7 @@
 </ol>
 ```
 
-## 구조화 목록 (List — Structured / Definition)
+### 구조화 목록 (List — Structured / Definition)
 
 KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
 
@@ -42,6 +44,14 @@ KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
   </div>
 </dl>
 ```
+
+## 시맨틱 구조
+
+- **Root 태그**: `<ul>` (순서 무관) / `<ol>` (순서 의미) / `<dl>` (정의 목록)
+- **자식**: `<li>` (ul/ol) 또는 `<dt>` + `<dd>` (dl)
+- **변형 클래스**: `.list--text` · `.list--ordered` · `.list--structured`
+- **필수 ARIA**: — (시맨틱 태그만으로 충분)
+- 상세: `skill/references/html-semantics.md#list`
 
 ## 접근성
 

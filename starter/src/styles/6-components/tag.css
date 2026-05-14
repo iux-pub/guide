@@ -27,6 +27,8 @@
   /* 닫기 버튼 (제거 가능 태그) */
   .tag__close {
     @apply bg-transparent border-0 text-[var(--color-text-subtle)] text-[1.4rem] leading-none cursor-pointer p-0 ms-[0.2rem];
+
+
   }
 
   /* Variants — 시맨틱 + outline 변형 */

@@ -41,6 +41,8 @@
 
   .calendar__nav {
     @apply w-[3.2rem] h-[3.2rem] flex items-center justify-center bg-transparent rounded-[0.4rem] text-[var(--color-text)] cursor-pointer text-[1.6rem] border border-transparent;
+
+
   }
 
   .calendar__nav:hover {
@@ -49,6 +51,7 @@
 
   .calendar__title {
     @apply text-[1.9rem] font-bold leading-none m-0 text-[var(--color-text)];
+
   }
 
   .calendar__grid {

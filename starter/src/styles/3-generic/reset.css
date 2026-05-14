@@ -14,7 +14,7 @@
 
 /* 프로젝트 기준: 1rem = 10px */
 html {
-  @apply text-[62.5%] [-webkit-text-size-adjust:100%] [text-size-adjust:100%];
+  @apply text-[62.5%] [text-size-adjust:100%];
 }
 
 /* 기본 본문: KRDS body-medium(1.7rem) + line-height 150% */

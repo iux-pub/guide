@@ -10,6 +10,8 @@
   /* ─── Text list (ul/ol) ─── */
   .list--text {
     @apply m-0 text-[var(--color-text)] leading-[1.7] ps-[0] [list-style:disc_inside];
+
+
   }
   .list--text.list--ordered { @apply [list-style:decimal_inside]; }
 

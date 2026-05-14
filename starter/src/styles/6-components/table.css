@@ -35,6 +35,8 @@
   .table th,
   .table td {
     @apply p-[1.2rem_1.6rem] text-left border-b border-[var(--color-border-light)] align-middle;
+
+
   }
 
   .table thead th {

@@ -20,6 +20,7 @@
 
   .pagination__list {
     @apply flex items-center gap-[0.2rem] list-none m-0 p-0;
+
   }
 
   /* 페이지 번호 — 정사각 */

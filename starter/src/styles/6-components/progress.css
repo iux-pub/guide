@@ -23,7 +23,11 @@
   }
 
   .progress__bar {
-    @apply appearance-none w-full h-[0.8rem] border-0 rounded-[0.2rem] bg-[var(--color-bg-subtle)] overflow-hidden appearance-none;
+    @apply appearance-none w-full h-[0.8rem] border-0 rounded-[0.2rem] bg-[var(--color-bg-subtle)] overflow-hidden;
+
+
+
+
   }
 
   /* WebKit */

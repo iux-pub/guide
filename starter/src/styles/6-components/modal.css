@@ -24,6 +24,8 @@
 @layer components {
   .modal {
     @apply fixed inset-0 z-[1050] flex items-center justify-center p-[1.6rem];
+
+
   }
 
   .modal[hidden] { @apply [display:none]; }
@@ -36,6 +38,8 @@
   /* 콘텐츠 박스 */
   .modal__content {
     @apply relative bg-[var(--color-surface)] rounded-[1.2rem] shadow-[0_0_0.2rem_0_#00000014,_0_1.6rem_2.4rem_0_#0000001f] flex flex-col w-full max-w-[56rem] z-[1] max-h-[calc(100vh_-_4.8rem)];
+
+
 
   }
 

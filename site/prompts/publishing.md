@@ -70,24 +70,29 @@ src/styles/
 - 태블릿: 768px 이상
 - PC: 1280px+
 
-CSS `@media` 또는 Tailwind v4 변종 직접 사용 (SCSS 믹스인 폐기).
-Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용한다.
+단순 반응형 속성 변경은 CSS 파일 내부에서도 Tailwind v4 variant `tablet:` / `pc:`를 우선 사용한다.
+복잡한 중첩 선택자나 여러 하위 요소를 동시에 제어해야 할 때만 `@media`를 사용한다.
+Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 쓰지 않는다.
 
 ```css
 .card {
-  padding: 1.2rem; /* 모바일 기본 */
-}
-
-@media (min-width: 768px) {
-  .card { padding: 2rem; }
-}
-
-@media (min-width: 1280px) {
-  .card { padding: 3.2rem; }
+  @apply p-[1.2rem] tablet:p-[2rem] pc:p-[3.2rem];
 }
 ```
 
-rem 기준은 기존 프로젝트 기준을 따른다. 기존 62.5% 기준 프로젝트는 유지하고, 신규 프로젝트는 팀/프로젝트 기준에 맞춰 결정한다.
+직접 `@media`가 필요한 경우 관련 선택자 내부에 중첩한다. 파일 하단에 브레이크포인트별 `@media` 블록을 몰아두지 않는다.
+
+```css
+.section {
+  @apply grid gap-[2.4rem];
+
+  @media (min-width: 1280px) {
+    @apply grid-cols-2;
+  }
+}
+```
+
+순수 CSS `@media (min-width: var(--breakpoint-pc))`는 표준으로 쓰지 않는다. 직접 `@media`가 필요하면 `768px`, `1280px` 값을 명시한다.
 
 ## HTML 기본 골격
 

@@ -8,7 +8,7 @@ CSS: BEM(Block__Element--Modifier) + Tailwind v4 + ITCSS 5레이어(3-generic/4-
 
 토큰: 색상은 `var(--color-*)`를 강제한다. 기본 폰트는 `var(--font-sans)`/`var(--font-mono)`를 사용한다. 간격/크기/타이포 스케일은 CMS·관리자 화면처럼 정보 밀도가 중요한 프로젝트 맥락에 맞게 CSS/Tailwind 직접값을 사용한다. 토큰 출처는 `tokens/foundation.json` → `tokens/build/tokens.css`.
 
-반응형: 모바일 퍼스트. CSS `@media` 또는 Tailwind v4 variant 직접 사용 (SCSS 믹스인 폐지). rem 기준은 기존 프로젝트 기준을 따른다.
+반응형: 모바일 퍼스트. 브레이크포인트는 360 / 768 / 1280만 사용한다. 단순 속성 변경은 CSS에서도 `@apply tablet:*` / `@apply pc:*`를 우선하고, 복잡한 중첩 선택자나 여러 하위 요소 동시 제어만 관련 선택자 내부 중첩 `@media`로 작성한다. 파일 하단에 `@media`를 몰아두지 않는다.
 
 컴포넌트는 기존 카탈로그 패턴을 우선 사용한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 

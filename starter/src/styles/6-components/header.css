@@ -33,13 +33,7 @@
   }
 
   .site-header__inner {
-    @apply flex items-center gap-[2.4rem] h-[6.4rem];
-  }
-
-  @media (min-width: 1280px) {
-    .site-header__inner {
-      @apply h-[8.0rem];
-    }
+    @apply flex items-center gap-[2.4rem] h-[6.4rem] pc:h-[8rem];
   }
 
   /* 브랜드 영역 */
@@ -55,11 +49,7 @@
 
   /* 주 메뉴 (PC) */
   .site-header__nav {
-    @apply hidden flex-1;
-  }
-
-  @media (min-width: 1280px) {
-    .site-header__nav { @apply [display:block]; }
+    @apply hidden flex-1 pc:block;
   }
 
   .site-header__menu {
@@ -84,13 +74,6 @@
 
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
-    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border)] rounded-[0.6rem] cursor-pointer;
-
-
-
-  }
-
-  @media (min-width: 1280px) {
-    .site-header__toggle { @apply [display:none]; }
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border)] rounded-[0.6rem] cursor-pointer pc:hidden;
   }
 }

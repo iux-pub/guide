@@ -9,6 +9,7 @@
 #   - tokens/                 → starter/tokens/ (foundation + README — build/ 제외)
 #   - scripts/build-tokens.js → starter/scripts/
 #   - scripts/check-violations.js → starter/scripts/
+#   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
 #   - .stylelintrc.json       → starter/
 #   - .npmrc                  → starter/
@@ -24,42 +25,47 @@ STARTER_DIR="$GUIDE_DIR/starter"
 echo "=== guide → starter 동기화 (INFOUX + Tailwind v4) ==="
 
 # 1. styles
-echo "[1/6] src/styles/ 동기화..."
+echo "[1/8] src/styles/ 동기화..."
 rm -rf "$STARTER_DIR/src/styles"
 cp -r "$GUIDE_DIR/src/styles" "$STARTER_DIR/src/styles"
 
 # 2. snippets
-echo "[2/6] src/snippets/ 동기화..."
+echo "[2/8] src/snippets/ 동기화..."
 rm -rf "$STARTER_DIR/src/snippets"
 cp -r "$GUIDE_DIR/src/snippets" "$STARTER_DIR/src/snippets"
 
 # 3. js
-echo "[3/6] src/js/ 동기화..."
+echo "[3/8] src/js/ 동기화..."
 if [ -d "$GUIDE_DIR/src/js" ]; then
   mkdir -p "$STARTER_DIR/src/js"
   cp "$GUIDE_DIR/src/js/"*.js "$STARTER_DIR/src/js/" 2>/dev/null || true
 fi
 
 # 4. tokens (build/ 제외 — starter에서 자체 빌드)
-echo "[4/6] tokens/ 동기화..."
+echo "[4/8] tokens/ 동기화..."
 mkdir -p "$STARTER_DIR/tokens"
 cp "$GUIDE_DIR/tokens/foundation.json" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
 
 # 5. scripts (build-tokens, check-violations)
-echo "[5/6] scripts 동기화..."
+echo "[5/8] scripts 동기화..."
 mkdir -p "$STARTER_DIR/scripts"
 cp "$GUIDE_DIR/scripts/build-tokens.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
 
+# 5.5. prompts
+echo "[6/8] prompts 동기화..."
+rm -rf "$STARTER_DIR/prompts"
+cp -r "$GUIDE_DIR/prompts" "$STARTER_DIR/prompts"
+
 # 6. config files
-echo "[6/7] config 동기화..."
+echo "[7/8] config 동기화..."
 cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.npmrc" "$STARTER_DIR/"
 
 # 6.5. info-design 스킬 (Claude Code가 자동 인식하도록 .claude/skills/에 포함)
-echo "[7/7] info-design 스킬 동봉..."
+echo "[8/8] info-design 스킬 동봉..."
 mkdir -p "$STARTER_DIR/.claude/skills/info-design"
 rm -rf "$STARTER_DIR/.claude/skills/info-design/references"
 cp -r "$GUIDE_DIR/skill/SKILL.md" "$STARTER_DIR/.claude/skills/info-design/"
@@ -71,7 +77,7 @@ echo ""
 
 # 7. iux-pub/starter 원격 저장소로 push (개발팀 clone 대상)
 STARTER_REPO="/tmp/starter-sync"
-echo "[7/7] iux-pub/starter 원격 저장소 동기화..."
+echo "[8/8] iux-pub/starter 원격 저장소 동기화..."
 rm -rf "$STARTER_REPO"
 git clone https://github.com/iux-pub/starter.git "$STARTER_REPO" 2>&1 | tail -3
 

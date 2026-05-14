@@ -228,7 +228,7 @@ ${tokensToTable(font, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 10)}
 | 태블릿 | 768px 이상 | 768px |
 | PC | 1280px 이상 | 1280px (콘텐츠 max-width: 1200px) |
 
-INFOUX 표준 브레이크포인트. Tailwind v4 variant는 \`mobile:\` / \`tablet:\` / \`pc:\`를 사용한다.
+INFOUX 표준 브레이크포인트. Tailwind v4 variant는 \`mobile:\` / \`tablet:\` / \`pc:\`만 사용한다. 단순 반응형 속성 변경은 CSS 파일 내부에서도 \`@apply tablet:*\`, \`@apply pc:*\`를 우선한다.
 
 ---
 
@@ -462,7 +462,10 @@ HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section
 ## 반응형
 
 - **모바일 퍼스트** 접근
-- CSS \`@media\` 또는 Tailwind v4 반응형 variant 직접 사용 (SCSS 믹스인 폐지)
+- 단순 속성 변경은 CSS에서도 Tailwind v4 variant \`tablet:\` / \`pc:\` 우선
+- 직접 \`@media\`는 복잡한 중첩 선택자나 여러 하위 요소 동시 제어에만 사용
+- 직접 \`@media\`는 관련 선택자 내부에 중첩하고, 파일 하단에 브레이크포인트별로 몰아두지 않음
+- \`@media (min-width: var(--breakpoint-*))\`는 표준으로 쓰지 않음
 
 ## 절대 금지
 

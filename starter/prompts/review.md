@@ -9,7 +9,7 @@
 - [ ] **SCSS 사용 없음** — `.scss` 파일, `@use`, `@forward`, `$variable` 모두 0건
 - [ ] CSS는 표준 CSS nesting과 Tailwind v4 `@apply` 사용 가능 (`.css` 파일, `@import "tailwindcss"`, CSS Custom Property)
 - [ ] Tailwind v4 기본 팔레트 raw 컬러 유틸 없음
-- [ ] Tailwind 기본 스케일이 프로젝트 기준과 충돌하지 않음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등)
+- [ ] Tailwind 기본 스케일이 프로젝트 기준과 충돌하지 않음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등은 사용하지 않음)
 
 ## BEM (R-04, R-05, R-06)
 
@@ -62,7 +62,10 @@
 ## 반응형
 
 - [ ] 모바일 퍼스트 작성 (기본 → tablet 768+ → pc 1280+)
-- [ ] CSS `@media` 또는 Tailwind v4 variant 사용 (SCSS `respond-to` 믹스인 폐기 — 사용 시 위반)
+- [ ] 단순 속성 변경은 `@apply tablet:*` / `@apply pc:*` 우선
+- [ ] 직접 `@media`는 복잡한 중첩 선택자나 여러 하위 요소 동시 제어에만 사용
+- [ ] 직접 `@media`는 관련 선택자 내부에 중첩되어 있고, 파일 하단에 브레이크포인트별로 몰려 있지 않음
+- [ ] Tailwind 기본 브레이크포인트(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`) 또는 `@media (min-width: var(--breakpoint-*))` 사용 없음
 - [ ] 프로젝트의 rem 기준을 확인했는가. 기존 62.5% 기준 프로젝트는 유지, 신규 프로젝트는 팀 기준으로 결정
 
 ## 컴포넌트 카탈로그

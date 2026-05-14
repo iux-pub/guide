@@ -71,6 +71,7 @@
 | 폰트 | `var(--font-sans)` |
 | 폰트 사이즈 | 프로젝트 타입 계층을 우선. 토큰화하지 않음 |
 | CSS 작성 | 표준 CSS nesting 허용, Tailwind v4 `@apply`/`@theme`/`@utility` 허용 |
+| 반응형 작성 | 단순 속성 변경은 `@apply tablet:*`/`@apply pc:*` 우선, 복잡한 중첩 선택자는 관련 선택자 내부 `@media` 사용 |
 | 터치 영역 | 모바일 인터랙티브 ≥ 44×44px |
 | BEM | `.block__element--modifier` (5-objects · 6-components 한정) |
 | HTML 기본 구조 | 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조 |

@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `tokens/foundation.json`
-> 빌드: 5faef08
+> 빌드: cecd9fd
 
 색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.
 
@@ -191,6 +191,10 @@
 - 폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다.
 - 브레이크포인트는 360 / 768 / 1280 세 단계만 사용한다.
 - Tailwind 반응형 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 사용하지 않는다.
+- 단순 반응형 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선 사용한다.
+- 복잡한 중첩 선택자나 여러 하위 요소를 동시에 제어해야 할 때만 `@media`를 사용하고, 관련 선택자 내부에 중첩한다.
+- 파일 하단에 브레이크포인트별 `@media` 블록을 몰아두지 않는다.
+- 순수 CSS `@media (min-width: var(--breakpoint-*))`는 표준으로 쓰지 않는다. 직접 `@media`가 필요하면 `768px`, `1280px` 값을 명시한다.
 - 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다.
 - 해당 값들은 `@apply`의 Tailwind 유틸리티 또는 명확한 CSS 직접값으로 작성한다.
 - `tokens/build/tokens.css`는 자동 생성물이므로 직접 수정하지 않는다.

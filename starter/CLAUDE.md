@@ -77,12 +77,14 @@ npm run check          # info-design 컨트랙트 위반 검출
 3. ✅ 기본 폰트 = `--font-sans` / `--font-mono`
 4. ✅ 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용
 5. ✅ CSS는 표준 nesting과 Tailwind v4 `@apply` 사용 가능
-6. ✅ HTML은 `header/main/footer`, `main > section > .container` 구조
-7. ✅ 모든 인터랙티브 = `<button>`/`<a>` 시맨틱 HTML
-8. ✅ `<img>` `alt`, 폼 `<label>`, focus 처리 모두 충족
-9. ✅ 모바일 터치 영역 ≥ 44px
+6. ✅ 단순 반응형은 `@apply tablet:*` / `@apply pc:*` 우선
+7. ✅ 직접 `@media`는 관련 선택자 내부에 중첩
+8. ✅ HTML은 `header/main/footer`, `main > section > .container` 구조
+9. ✅ 모든 인터랙티브 = `<button>`/`<a>` 시맨틱 HTML
+10. ✅ `<img>` `alt`, 폼 `<label>`, focus 처리 모두 충족
+11. ✅ 모바일 터치 영역 ≥ 44px
 
-위 8개 중 하나라도 No → 작업 미완.
+위 항목 중 하나라도 No → 작업 미완.
 
 ---
 

@@ -6,17 +6,5 @@
  */
 
 .container {
-  @apply w-full max-w-[120rem] mx-auto px-[1.6rem];
-}
-
-@media (min-width: 768px) {
-  .container {
-    @apply px-[2.4rem];
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    @apply px-[4rem];
-  }
+  @apply w-full max-w-[120rem] mx-auto px-[1.6rem] tablet:px-[2.4rem] pc:px-[4rem];
 }

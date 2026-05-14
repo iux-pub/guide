@@ -171,23 +171,28 @@ src/styles/
 
 ## 반응형 가이드
 
-CSS `@media` 또는 Tailwind v4 반응형 variant를 직접 사용한다 (SCSS 믹스인 폐지).
+모바일 퍼스트로 작성하고 Tailwind v4 variant `mobile:` / `tablet:` / `pc:`만 사용한다. 단순 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선한다.
 
 ```css
 .block {
-  /* 모바일 기본 (360px 기준) */
+  @apply p-[1.6rem] tablet:p-[2.4rem] pc:p-[4rem];
 }
+```
 
-@media (min-width: 768px) {
-  .block { /* 태블릿 ~ */ }
-}
+복잡한 중첩 선택자나 여러 하위 요소를 동시에 제어해야 할 때만 `@media`를 사용한다. 이 경우에도 관련 선택자 내부에 중첩하고, 파일 하단에 브레이크포인트별 블록을 몰아두지 않는다.
 
-@media (min-width: 1280px) {
-  .block { /* PC ~ */ }
+```css
+.block {
+  @apply grid gap-[2.4rem];
+
+  @media (min-width: 1280px) {
+    @apply grid-cols-2;
+  }
 }
 ```
 
 - 브레이크포인트 — 모바일 360 기준, 태블릿 768 이상, PC 1280 이상 (INFOUX 표준)
+- `@media (min-width: var(--breakpoint-*))`는 표준으로 쓰지 않는다
 - 표준 CSS nesting과 Tailwind v4 `@apply` 사용 가능
 
 ---

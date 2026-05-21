@@ -4,30 +4,32 @@
  * KRDS/INFOMIND rem 토큰의 0.1rem 단위 값을 맞추기 위한 프로젝트 기준이다.
  */
 
-@import "modern-normalize";
+@import "modern-normalize" layer(base);
 
-*,
-*::before,
-*::after {
-  @apply [box-sizing:border-box];
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply [box-sizing:border-box];
+  }
 
-/* 프로젝트 기준: 1rem = 10px */
-html {
-  @apply text-[62.5%] [text-size-adjust:100%];
-}
+  /* 프로젝트 기준: 1rem = 10px */
+  html {
+    @apply text-[62.5%] [text-size-adjust:100%];
+  }
 
-/* 기본 본문: KRDS body-medium(1.7rem) + line-height 150% */
-body {
-  @apply text-[1.7rem] leading-[1.5] text-[var(--color-text)] bg-[var(--color-bg)] [font-weight:400] [font-family:var(--font-sans)] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale];
-}
+  /* 기본 본문: KRDS body-medium(1.7rem) + line-height 150% */
+  body {
+    @apply text-[1.7rem] leading-[1.5] text-[var(--color-text)] bg-[var(--color-bg)] [font-weight:400] [font-family:var(--font-sans)] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale];
+  }
 
-/* KRDS 접근성 — :focus { outline: none } 금지. focus-visible만 outline 노출 */
-:focus-visible {
-  @apply [outline:0.4rem_solid_var(--color-border-primary)] [outline-offset:2px];
-}
+  /* KRDS 접근성 — :focus { outline: none } 금지. focus-visible만 outline 노출 */
+  :focus-visible {
+    @apply [outline:0.4rem_solid_var(--color-border-primary)] [outline-offset:2px];
+  }
 
-/* 마우스 클릭 시 outline 제거 (focus-visible 미지원 브라우저용 fallback 없음 — 모던 브라우저 가정) */
-:focus:not(:focus-visible) {
-  @apply outline-none;
+  /* 마우스 클릭 시 outline 제거 (focus-visible 미지원 브라우저용 fallback 없음 — 모던 브라우저 가정) */
+  :focus:not(:focus-visible) {
+    @apply outline-none;
+  }
 }

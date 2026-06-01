@@ -57,14 +57,16 @@
   }
 
   /* ─── Hover ─── */
-  .check:hover:not(:has(input:disabled)) .check__box,
-  .radio:hover:not(:has(input:disabled)) .radio__box {
+  .check:hover .check__box,
+  .radio:hover .radio__box {
     @apply border-[var(--color-border-dark)];
   }
 
   /* ─── Disabled ─── */
-  .check:has(input:disabled),
-  .radio:has(input:disabled) {
+  .check input:disabled ~ .check__box,
+  .radio input:disabled ~ .radio__box,
+  .check input:disabled ~ .check__label,
+  .radio input:disabled ~ .radio__label {
     @apply cursor-not-allowed text-[var(--color-text-disabled)];
   }
 

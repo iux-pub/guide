@@ -60,7 +60,7 @@ http://localhost:8080 에서 문서 사이트 확인.
      # 또는 한 번에:  npm run build
    ↓
 5. 검사 통과 확인
-     npm run check     # R-01~R-19 자동 검출
+     npm run check     # R-01~R-20 자동 검출
      npm run lint      # stylelint + eslint
      npm run test      # 전체 CI 시뮬레이션
    ↓

@@ -12,6 +12,14 @@
     "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
     "check": "node ./scripts/check-violations.js"
   },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Safari versions",
+    "last 2 Firefox versions",
+    "last 2 Edge versions",
+    "last 1 Samsung versions",
+    "not ie <= 11"
+  ],
   "dependencies": {
     "modern-normalize": "^3.0.1"
   },

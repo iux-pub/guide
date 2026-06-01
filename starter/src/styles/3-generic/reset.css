@@ -23,12 +23,16 @@
     @apply text-[1.7rem] leading-[1.5] text-[var(--color-text)] bg-[var(--color-bg)] [font-weight:400] [font-family:var(--font-sans)] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale];
   }
 
-  /* KRDS 접근성 — :focus { outline: none } 금지. focus-visible만 outline 노출 */
+  /* KRDS 접근성 — :focus { outline: none } 금지. :focus-visible 미지원 브라우저는 :focus 링 유지 */
+  :focus {
+    @apply [outline:0.4rem_solid_var(--color-border-primary)] [outline-offset:2px];
+  }
+
   :focus-visible {
     @apply [outline:0.4rem_solid_var(--color-border-primary)] [outline-offset:2px];
   }
 
-  /* 마우스 클릭 시 outline 제거 (focus-visible 미지원 브라우저용 fallback 없음 — 모던 브라우저 가정) */
+  /* 마우스 클릭 시 outline 제거. 미지원 브라우저는 이 선택자를 무시하고 :focus fallback을 유지한다. */
   :focus:not(:focus-visible) {
     @apply outline-none;
   }

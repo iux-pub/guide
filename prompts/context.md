@@ -12,17 +12,25 @@ CSS: BEM(Block__Element--Modifier) + Tailwind v4 + ITCSS 5레이어(3-generic/4-
 
 컴포넌트는 기존 카탈로그 패턴을 우선 사용한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
-HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section > .container` 구조로 둔다. HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 분리한다.
+HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section > .container` 구조로 둔다. HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 분리한다. 각 section은 `.container`를 직접 포함하고, heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름을 제공한다.
 
 ```html
-<header id="header">
+<a href="#main" class="skip-to-content">본문 바로가기</a>
+
+<header id="header" class="site-header">
   <div class="container">...</div>
 </header>
 <main id="main">
-  <section class="section">
-    <div class="container">...</div>
+  <section class="section section--content" aria-labelledby="section-title">
+    <div class="container">
+      <h1 id="section-title">페이지 제목</h1>
+      ...
+    </div>
   </section>
 </main>
+<footer id="footer" class="site-footer">
+  <div class="container">...</div>
+</footer>
 ```
 
 버튼 KRDS variant(4종): `--primary` `--secondary` `--tertiary` `--text`. KRDS size(5종): `--xsmall`(32) `--small`(40) medium(48, 기본) `--large`(56) `--xlarge`(64). 모바일은 medium 이상 권장.

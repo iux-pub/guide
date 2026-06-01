@@ -77,6 +77,10 @@ my-project/
 | `npm run lint:css` | Stylelint 검사 |
 | `npm run check` | info-design 컨트랙트 위반 검출 |
 
+## 🌐 브라우저 기준
+
+`package.json`의 `browserslist`를 기준으로 Chrome/Safari/Firefox/Edge 최신 2개 버전과 Samsung Internet 최신 버전을 지원합니다. IE는 기본 지원 범위에서 제외합니다.
+
 ## 🧭 사이트 유형 판정
 
 AI로 화면을 생성하기 전에 프로젝트 유형을 먼저 판정합니다.

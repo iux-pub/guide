@@ -76,6 +76,8 @@
 | BEM | `.block__element--modifier` (5-objects · 6-components 한정) |
 | HTML 기본 구조 | 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조 |
 | HTML 컴포넌트화 | 페이지 전체가 아니라 `main` 내부의 section 단위로 분리 |
+| Page shell | `<a href="#main" class="skip-to-content">` → `header#header` → `main#main` → `footer#footer` 순서. `main` 직계 자식은 section |
+| Section 구조 | 각 `section`은 `.container`를 직접 포함하고 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름 제공 |
 | 조건부 정부/공공 요소 | 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 적용 대상이 확인된 경우에만 생성. 민간·사내·일반 CMS에서는 N/A |
 | 컴포넌트 root 태그 | `skill/references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 |
@@ -97,6 +99,7 @@
 - **R-02** `warn` — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
 - **R-03** `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - **R-19** `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
+- **R-20** `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
 
 ### BEM 네이밍
 - **R-04** `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
@@ -110,7 +113,7 @@
 - **R-08** `warn` — HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)
 - **R-09** `error` — img alt 속성 필수
 - **R-10** `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
-- **R-15** `warn` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
+- **R-15** `error` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
 
 ### 접근성 규칙
 - **R-11** `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -133,11 +136,12 @@
 5. CSS nesting과 `@apply`를 쓰더라도 결과 CSS가 읽기 쉬운가?
 6. 기존 컴포넌트/패턴으로 해결 가능한가?
 7. `main` 내부 요소는 section 단위이고 각 section 안에 `.container`가 있는가?
-8. 인터랙티브 요소는 `<button>`/`<a>`/시맨틱 HTML인가?
-9. 이미지 `alt`, 폼 `<label>`, focus 처리 충족?
-10. 모바일 터치 영역 44px 이상?
+8. 각 section은 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름을 제공하는가?
+9. 인터랙티브 요소는 `<button>`/`<a>`/시맨틱 HTML인가?
+10. 이미지 `alt`, 폼 `<label>`, focus 처리 충족?
+11. 모바일 터치 영역 44px 이상?
 
-위 10개 중 하나라도 No면 **작성 중단 → 사용자에게 어느 항목이 막히는지 보고** + 옵션 제시.
+위 11개 중 하나라도 No면 **작성 중단 → 사용자에게 어느 항목이 막히는지 보고** + 옵션 제시.
 
 ---
 
@@ -162,7 +166,7 @@
 ## 8. 작업 후 검증
 
 ```bash
-npm run check     # R-01~R-19 자동 검출
+npm run check     # R-01~R-20 자동 검출
 npm run lint      # Stylelint + ESLint
 npm run build     # 전체 빌드 (자동 생성물 갱신)
 npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)

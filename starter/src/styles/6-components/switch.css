@@ -38,7 +38,8 @@
     @apply [outline:0.4rem_solid_var(--color-border-primary)] [outline-offset:2px];
   }
 
-  .switch:has(input:disabled) {
+  .switch input:disabled ~ .switch__track,
+  .switch input:disabled ~ .switch__label {
     @apply cursor-not-allowed text-[var(--color-text-disabled)];
   }
 

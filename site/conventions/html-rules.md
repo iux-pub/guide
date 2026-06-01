@@ -15,7 +15,7 @@ HTML 마크업 작성 규칙이다.
 | R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warning | check-violations.js |
 | R-09 | img alt 속성 필수 | error | check-violations.js |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | check-violations.js |
-| R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | warning | check-html-structure.js |
+| R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | check-html-structure.js |
 
 ---
 
@@ -103,9 +103,9 @@ HTML 마크업 작성 규칙이다.
 
 ## R-15 — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
 
-**심각도:** 🟡 warning &nbsp; **검증:** check-html-structure.js
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
 
-> 인포마인드가 기존에 구축·유지보수한 사이트들은 공통 HTML 골격, 영역 네이밍, 헤더/푸터/본문 구성 패턴을 갖고 있다. 신규 작업도 이 패턴을 우선 유지해 유지보수성과 팀 내 이해도를 확보한다. 페이지 전체 골격은 공통 레이아웃에 두고, HTML 컴포넌트화는 main 안의 section 단위로 분리한다. KRDS는 root 태그 강제가 아니라 시맨틱 HTML, 접근성 속성, 키보드 동작을 보강하는 기준으로 적용한다.
+> 인포마인드가 기존에 구축·유지보수한 사이트들은 공통 HTML 골격, 영역 네이밍, 헤더/푸터/본문 구성 패턴을 갖고 있다. 신규 작업도 이 패턴을 우선 유지해 유지보수성과 팀 내 이해도를 확보한다. page shell은 header#header, main#main, footer#footer를 기본으로 하고, HTML 컴포넌트화는 main 안의 section 단위로 분리한다. 각 section은 .container와 접근 가능한 이름을 가진다. KRDS는 root 태그 강제가 아니라 시맨틱 HTML, 접근성 속성, 키보드 동작을 보강하는 기준으로 적용한다.
 
 **❌ 금지**
 
@@ -118,13 +118,17 @@ HTML 마크업 작성 규칙이다.
 **✅ 올바른 형식**
 
 ```html
+<a href="#main" class="skip-to-content">본문 바로가기</a>
 <header id="header"><div class="container">...</div></header>
 <main id="main">
-  <section class="section">
-    <div class="container">...</div>
+  <section class="section section--content" aria-labelledby="section-title">
+    <div class="container">
+      <h1 id="section-title">페이지 제목</h1>
+      ...
+    </div>
   </section>
 </main>
-<footer id="footer"><div class="container">...</div></footer>   // 큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container가 폭과 정렬 담당
+<footer id="footer"><div class="container">...</div></footer>   // 큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container와 제목이 구조 담당
 <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">...</div>   // 기존 마크업 패턴 위에 접근성 속성 보강
 <nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>   // 기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용
 ```

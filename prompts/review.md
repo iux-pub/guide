@@ -44,6 +44,8 @@
 
 - [ ] 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조
 - [ ] HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부 section 단위
+- [ ] `main` 직계 자식은 `section`이고, 각 `section`은 `.container`를 직접 포함
+- [ ] 각 `section`은 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름 제공
 - [ ] `<img>`에 `alt` 속성 (장식용은 `alt=""`)
 - [ ] 인터랙티브 요소에 `aria-label` 또는 텍스트 레이블
 - [ ] `div`/`span` 클릭 핸들러 패턴 없음 — `<button>`/`<a>` 시맨틱 HTML 사용

@@ -9,7 +9,7 @@ order: 3
 
 | 포맷 | 용도 | 장점 | 단점 |
 |------|------|------|------|
-| **WebP** | 사진, 복잡한 이미지 | JPEG 대비 25-35% 작은 용량, 투명도 지원 | IE 미지원 (fallback 필요) |
+| **WebP** | 사진, 복잡한 이미지 | JPEG 대비 25-35% 작은 용량, 투명도 지원 | 일부 구형/특수 브라우저 fallback 필요 |
 | **JPEG** | 사진 (WebP fallback) | 범용 호환성 | WebP보다 큰 용량 |
 | **PNG** | 투명 배경, 단순 그래픽 | 무손실, 투명도 | 사진에는 용량 과다 |
 | **SVG** | 아이콘, 로고, 단순 일러스트 | 벡터(해상도 무관), CSS 제어 가능 | 복잡한 이미지에 부적합 |
@@ -172,7 +172,7 @@ icon_search.svg         (언더스코어 금지)
 <!-- DON'T -->
 <img src="photo.jpg" alt="사진">
 <img src="logo.svg" alt="로고 이미지">
-<img src="banner.webp">  <!-- alt 누락 -->
+&lt;img src="banner.webp"&gt;  <!-- alt 누락 예시 -->
 
 <!-- DO -->
 <img src="photo.jpg" alt="인포마인드 UX팀 워크샵 현장">

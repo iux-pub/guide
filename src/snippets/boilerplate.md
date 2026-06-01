@@ -23,8 +23,9 @@
   </header>
 
   <main id="main">
-    <section class="section">
+    <section class="section section--content" aria-labelledby="section-title">
       <div class="container">
+        <h1 id="section-title">페이지 제목</h1>
         <!-- 페이지 콘텐츠 -->
       </div>
     </section>
@@ -50,6 +51,31 @@
 | Main 랜드마크 | `<main id="main">` | 주요 콘텐츠 영역 (skip-to-content 타겟) |
 | Footer 랜드마크 | `<footer id="footer">` | 페이지 푸터 영역 |
 | 콘텐츠 래퍼 | `.container` | 최대 너비 제한 + 중앙 정렬 |
+| Section 이름 | `aria-labelledby` 또는 heading | 섹션의 접근 가능한 이름 |
+
+## Page Shell 계약
+
+에이전트가 페이지 HTML을 새로 만들 때는 아래 순서로 구조를 잡는다.
+
+1. 사이트 유형을 먼저 판정한다.
+2. `body` 첫 요소로 `.skip-to-content`를 둔다.
+3. 큰 랜드마크는 `header#header`, `main#main`, `footer#footer`만 사용한다.
+4. `main`의 직계 자식은 `section`으로 둔다.
+5. 각 `section`은 `.container`를 직접 포함하고, heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름을 가진다.
+6. 페이지 전체를 컴포넌트화하지 않고 `main` 내부 section 단위로 분리한다.
+
+### Section archetype
+
+| Archetype | 클래스 | 용도 |
+|-----------|--------|------|
+| 도입 | `.section--intro` | 브랜드, 대표 메시지, 핵심 CTA |
+| 본문 | `.section--content` | 일반 콘텐츠, 소개, 상세 설명 |
+| 목록 | `.section--list` | 카드, 뉴스, 게시물, 링크 목록 |
+| 폼 | `.section--form` | 신청, 문의, 검색 입력 |
+| 데이터 | `.section--data` | 표, 통계, 현황 |
+| 검색 | `.section--search` | 검색/필터 영역 |
+| 절차 | `.section--process` | 단계, 이용 방법, 신청 흐름 |
+| 안내 | `.section--notice` | 공지, 알림, 유의사항 |
 
 ## 프로젝트 유형별 추가 요소
 
@@ -90,6 +116,7 @@
 - `header/main/footer`는 암묵적 랜드마크가 있으므로 기본적으로 role을 중복 작성하지 않는다
 - `id="main"`: 본문 바로가기 링크의 타겟
 - 페이지당 `<main>` 태그는 1개만 사용
+- `main` 안의 `section`은 제목을 갖거나 `aria-labelledby`/`aria-label`로 이름을 제공
 - `lang="ko"` 필수: 스크린리더가 한국어로 콘텐츠를 읽도록 설정
 - 페이지 `<title>`은 고유하고 설명적인 텍스트 사용
 

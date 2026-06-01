@@ -20,7 +20,7 @@ KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙 + INFOMIND
 그 다음 AI는:
 - ✓ 색상 토큰만 사용 (raw hex/rgb/hsl 금지)
 - ✓ 기존 컴포넌트 패턴 우선, 필요 시 프로젝트 패턴 또는 공통 컴포넌트로 확장
-- ✓ HTML은 `header/main/footer`, `main > section > .container` 골격 유지
+- ✓ HTML은 `.skip-to-content`, `header#header`, `main#main`, `footer#footer`, `main > section > .container`와 section 접근 이름 유지
 - ✓ BEM·접근성·ARIA 자동 준수
 - ✓ 위반 발견 시 작업 중단 후 사용자에게 보고
 

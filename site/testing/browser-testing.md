@@ -5,6 +5,8 @@ order: 2
 
 모든 프로젝트는 아래 타겟 브라우저와 뷰포트에서 정상 동작해야 한다. 브라우저별 렌더링 차이를 사전에 파악하고 대응하여 사용자 경험 편차를 최소화한다.
 
+이 기준은 `package.json`의 `browserslist`에도 동일하게 선언한다. 빌드 도구가 브라우저 범위를 해석해야 하는 경우 문서가 아니라 `browserslist`를 기준으로 삼는다.
+
 ## 타겟 브라우저 목록
 
 | 브라우저 | 엔진 | 버전 | 비고 |
@@ -15,7 +17,7 @@ order: 2
 | Edge | Blink | 최신 2개 버전 | Chromium 기반 |
 | Samsung Internet | Blink | 최신 버전 | Android 삼성 기기 기본 브라우저 |
 
-**IE (Internet Explorer): 미지원.** Microsoft가 2022년 6월 지원을 종료했다. 공공기관 사이트도 Edge 전환이 완료된 상태이므로 IE 대응은 하지 않는다.
+**IE (Internet Explorer): 미지원.** Microsoft가 2022년 6월 지원을 종료했다. 공공기관 사이트도 Edge 전환이 완료된 상태이므로 IE 대응은 기본 범위에 포함하지 않는다. 발주처가 별도 레거시 브라우저를 명시한 경우에는 예외 요구사항으로 분리해 범위·비용·품질 리스크를 확인한다.
 
 ## 테스트 뷰포트
 
@@ -38,6 +40,7 @@ order: 2
 | Firefox | `scrollbar-width` 지원 | 스크롤바 너비가 다름 | `scrollbar-width: thin` 명시 |
 | Samsung Internet | CSS `backdrop-filter` 미지원 | 블러 배경 효과 없음 | `@supports` 분기로 대체 배경색 제공 |
 | Samsung Internet | 일부 CSS 논리 속성 미지원 | `inline-size` 등 무시 | 물리 속성(`width`)과 병행 사용 |
+| 전체 | 폴백 없는 최신 선택자 | `:has()` 등 지원 경계에 있는 선택자가 통째로 무시됨 | sibling selector, 의미적 상태 class, ARIA 속성 selector 사용 |
 
 ## 테스트 체크리스트
 
@@ -59,6 +62,7 @@ order: 2
 - [ ] CSS Custom Properties(토큰) 값이 모든 브라우저에서 동일 렌더링
 - [ ] `box-shadow`, `border-radius` 일관된 표현
 - [ ] 그라데이션 정상 렌더링
+- [ ] 폴백 없는 `:has()`, `backdrop-filter`, 최신 논리 속성 사용 없음
 
 ### 인터랙션
 

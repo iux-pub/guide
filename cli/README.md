@@ -31,7 +31,7 @@ npx create-infomind-ux <project-name> [옵션]
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 - ✅ pa11y-ci + axe-core 접근성 검증
-- ✅ Stylelint + check-violations.js (R-01~R-19 룰)
+- ✅ Stylelint + check-violations.js (R-01~R-20 룰)
 
 ## 다음 단계
 

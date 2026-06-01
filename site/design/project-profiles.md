@@ -21,10 +21,23 @@ KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 
 - `<a href="#main" class="skip-to-content">본문 바로가기</a>`
 - `header#header`, `main#main`, `footer#footer`
 - `main > section > .container`
+- 각 `section`의 heading 또는 `aria-labelledby`/`aria-label`
 - 버튼/링크/폼/이미지/테이블의 접근성 기본값
 - `var(--color-*)` 색상 토큰, `var(--font-*)` 기본 폰트
 - 포커스 표시, 키보드 접근, 터치 영역 44x44px 이상
 - 상태 표현은 색상 + 텍스트/아이콘/ARIA를 함께 사용
+
+## 유형별 Page Shell
+
+사이트 유형 판정은 HTML 구조 선택으로 이어져야 한다. 정부/공공 아이덴티티 요소는 조건부 생성 항목이며, 아래 shell에는 기본 포함하지 않는다.
+
+| 유형 | 기본 section 흐름 | 우선 컴포넌트 |
+|------|-------------------|---------------|
+| 일반사이트 | `section--intro` → `section--content` → `section--list` 또는 `section--notice` | header, main-menu, card, list, btn |
+| 공공서비스 | `section--search` 또는 `section--intro` → `section--process` → `section--form` 또는 `section--data` → `section--notice` | breadcrumb, step-indicator, form, alert, table |
+| 공공기관 | `section--intro` → `section--notice` → `section--list` → `section--content` | header, main-menu, breadcrumb, card, pagination |
+| CMS·관리자 | `section--search` → `section--data` → `section--form` 또는 `section--notice` | form, select, table, pagination, badge, toast |
+| 커머스·예약 | `section--intro` → `section--list` → `section--form` 또는 `section--process` → `section--notice` | card, btn, form, step-indicator, alert |
 
 ## 조건부 생성
 

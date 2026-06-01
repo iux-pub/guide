@@ -95,12 +95,15 @@ const ALLOWED_PX = /^(?:0|1|2|3|44|1px|2px|3px)$/
 const IMPORTANT_USED = /!important/
 // :focus { outline: none } — 단, :focus:not(:focus-visible) 패턴은 legitimate fallback이라 제외
 // 매치는 ":focus" 직후에 공백 또는 "{"가 와야 함 ":focus:" 같은 후속 의사 클래스 제외
-const FOCUS_OUTLINE_NONE = /:focus(?![-:\w])\s*\{[^}]*outline\s*:\s*(?:none|0)/
+const FOCUS_OUTLINE_NONE = /:focus(?![-:\w])\s*\{[^}]*outline\s*:\s*(?:none\b|0\s*(?:!important)?\s*(?:;|}))/
 
-// 8. BEM 위반
+// 8. 호환성 위험 CSS 선택자 — 공공/기관 납품물은 폴백 없는 최신 선택자 의존 금지
+const CSS_HAS_SELECTOR = /:has\(/
+
+// 9. BEM 위반
 const BEM_DOUBLE_ELEMENT = /\.([\w-]+)__([\w-]+)__([\w-]+)/
 
-// 9. HTML 위반
+// 10. HTML 위반
 const INLINE_STYLE = /\bstyle\s*=/
 const INLINE_STYLE_CUSTOM_PROP = /\bstyle\s*=\s*["'][^"']*--[\w-]+:[^"']*["']/
 // 실제 <img> 태그만 검출 — src= 필수 (마크다운 안 인라인 `<img>` 같은 문서적 언급 제외)
@@ -186,6 +189,11 @@ function checkCssFile(filePath) {
       if (!hasJustification) {
         warn(relPath, lineNum, '[R-02] !important 사용 시 사유 주석 필수.', trimmed)
       }
+    }
+
+    // 폴백 없는 :has() 의존 (R-20)
+    if (CSS_HAS_SELECTOR.test(trimmed)) {
+      error(relPath, lineNum, '[R-20] 핵심 CSS에서 :has() 선택자 사용 금지. sibling selector, 상태 class, ARIA 속성 selector로 대체.', trimmed)
     }
 
     // BEM 2단계 element (R-05)

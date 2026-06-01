@@ -17,8 +17,13 @@ const ROOT = path.resolve(__dirname, '..')
 const SNIPPETS_DIR = path.join(ROOT, 'src/snippets')
 const PLAYGROUND_DIR = path.join(ROOT, 'src/playground')
 const SITE_DIR = path.join(ROOT, 'site')
+const PAGE_CONTRACT_PATH = path.join(ROOT, 'contracts', 'html-page-contract.json')
 
 const TARGET_FILES = process.argv.slice(2)
+const HAS_EXPLICIT_TARGETS = TARGET_FILES.length > 0
+const PAGE_CONTRACT = fs.existsSync(PAGE_CONTRACT_PATH)
+  ? JSON.parse(fs.readFileSync(PAGE_CONTRACT_PATH, 'utf-8'))
+  : null
 
 // ─── 출력 헬퍼 ─────────────────────────────────────────
 
@@ -194,6 +199,219 @@ function extractHtmlBlocks(content) {
   return blocks
 }
 
+const VOID_TAGS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'param', 'source', 'track', 'wbr'
+])
+
+function parseAttrs(attrText) {
+  const attrs = {}
+  const re = /([:@\w-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g
+  let m
+  while ((m = re.exec(attrText)) !== null) {
+    attrs[m[1].toLowerCase()] = m[2] ?? m[3] ?? m[4] ?? ''
+  }
+  return attrs
+}
+
+function classList(node) {
+  return (node.attrs.class || '').split(/\s+/).filter(Boolean)
+}
+
+function hasClass(node, className) {
+  return classList(node).includes(className)
+}
+
+function parseHtmlTree(html) {
+  const root = { tag: '#root', attrs: {}, children: [], parent: null, line: 1, raw: '' }
+  const stack = [root]
+  const tagRe = /<\/?([a-zA-Z][\w:-]*)(\s[^<>]*?)?\/?>/g
+  let m
+
+  while ((m = tagRe.exec(html)) !== null) {
+    const raw = m[0]
+    const tag = m[1].toLowerCase()
+    if (raw.startsWith('<!')) continue
+
+    const isClosing = raw.startsWith('</')
+    if (isClosing) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag === tag) {
+          stack.length = i
+          break
+        }
+      }
+      continue
+    }
+
+    const line = html.slice(0, m.index).split('\n').length
+    const attrs = parseAttrs(m[2] || '')
+    const node = {
+      tag,
+      attrs,
+      children: [],
+      parent: stack[stack.length - 1],
+      line,
+      raw
+    }
+    stack[stack.length - 1].children.push(node)
+
+    const selfClosing = raw.endsWith('/>') || VOID_TAGS.has(tag)
+    if (!selfClosing) stack.push(node)
+  }
+
+  return root
+}
+
+function findNodes(node, predicate, out = []) {
+  if (predicate(node)) out.push(node)
+  for (const child of node.children || []) findNodes(child, predicate, out)
+  return out
+}
+
+function findById(root, id) {
+  return findNodes(root, node => node.attrs && node.attrs.id === id)[0]
+}
+
+function directElementChildren(node) {
+  return (node.children || []).filter(child => child.tag !== 'script' && child.tag !== 'template')
+}
+
+function isPageLikeHtml(html) {
+  return /<!doctype html/i.test(html) ||
+    /<body\b/i.test(html) ||
+    /<main\b/i.test(html) ||
+    /skip-to-content/.test(html)
+}
+
+function shouldCheckPageContract(html, filePath) {
+  if (!isPageLikeHtml(html)) return false
+  if (HAS_EXPLICIT_TARGETS) return true
+
+  const relative = rel(filePath)
+  return relative === 'src/snippets/boilerplate.md'
+}
+
+function nodeLine(baseLineNum, node) {
+  return baseLineNum + node.line - 1
+}
+
+function hasAccessibleSectionName(root, section) {
+  if (section.attrs['aria-label']) return true
+  const labelledBy = section.attrs['aria-labelledby']
+  if (labelledBy && findById(root, labelledBy)) return true
+  return findNodes(section, node => /^h[1-6]$/.test(node.tag)).length > 0
+}
+
+function allowedSectionModifiers() {
+  return new Set((PAGE_CONTRACT?.sectionArchetypes || []).map(name => `section--${name}`))
+}
+
+function checkPageContract(html, filePath, baseLineNum = 1) {
+  if (!shouldCheckPageContract(html, filePath)) return
+
+  const root = parseHtmlTree(html)
+  const bodies = findNodes(root, node => node.tag === 'body')
+  const body = bodies[0]
+  const skipLinks = findNodes(root, node =>
+    node.tag === 'a' &&
+    hasClass(node, 'skip-to-content') &&
+    node.attrs.href === '#main'
+  )
+  const headers = findNodes(root, node => node.tag === 'header' && node.attrs.id === 'header')
+  const mains = findNodes(root, node => node.tag === 'main')
+  const main = mains[0]
+  const footers = findNodes(root, node => node.tag === 'footer' && node.attrs.id === 'footer')
+
+  if (skipLinks.length === 0) {
+    error(
+      rel(filePath),
+      baseLineNum,
+      '[R-14] page shell에 본문 바로가기 링크가 없습니다. body 첫 요소로 <a href="#main" class="skip-to-content">본문 바로가기</a>를 배치하세요.',
+      '',
+      'R-14'
+    )
+  }
+
+  if (body && skipLinks[0]) {
+    const firstChild = directElementChildren(body)[0]
+    if (firstChild !== skipLinks[0]) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, firstChild || body),
+        '[R-14] .skip-to-content는 body의 첫 의미 요소여야 합니다.',
+        firstChild ? firstChild.raw.slice(0, 120) : body.raw.slice(0, 120),
+        'R-14'
+      )
+    }
+  }
+
+  if (headers.length === 0) {
+    error(rel(filePath), baseLineNum, '[R-15] page shell에 header#header가 없습니다.', '', 'R-15')
+  }
+
+  if (mains.length !== 1 || !main || main.attrs.id !== (PAGE_CONTRACT?.main?.id || 'main')) {
+    const line = main ? nodeLine(baseLineNum, main) : baseLineNum
+    error(rel(filePath), line, '[R-15] page shell에는 main#main이 정확히 1개 필요합니다.', main ? main.raw.slice(0, 120) : '', 'R-15')
+  }
+
+  if (footers.length === 0) {
+    error(rel(filePath), baseLineNum, '[R-15] page shell에 footer#footer가 없습니다.', '', 'R-15')
+  }
+
+  if (!main) return
+
+  const mainChildren = directElementChildren(main)
+  for (const child of mainChildren) {
+    if (child.tag !== (PAGE_CONTRACT?.main?.directChildTag || 'section')) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, child),
+        '[R-15] main의 직계 자식은 section이어야 합니다. 페이지 전체가 아니라 main 내부 section 단위로 컴포넌트화하세요.',
+        child.raw.slice(0, 120),
+        'R-15'
+      )
+    }
+  }
+
+  const sections = mainChildren.filter(child => child.tag === 'section')
+  const sectionModifierSet = allowedSectionModifiers()
+  for (const section of sections) {
+    const hasDirectContainer = directElementChildren(section).some(child => hasClass(child, 'container'))
+    if (!hasDirectContainer) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, section),
+        '[R-15] section은 직계 자식으로 .container를 포함해야 합니다.',
+        section.raw.slice(0, 120),
+        'R-15'
+      )
+    }
+
+    if (!hasAccessibleSectionName(root, section)) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, section),
+        '[R-15] section에는 heading 또는 aria-labelledby/aria-label로 접근 가능한 이름이 필요합니다.',
+        section.raw.slice(0, 120),
+        'R-15'
+      )
+    }
+
+    for (const modifier of classList(section).filter(name => name.startsWith('section--'))) {
+      if (!sectionModifierSet.has(modifier)) {
+        error(
+          rel(filePath),
+          nodeLine(baseLineNum, section),
+          `[R-18] section modifier "${modifier}"는 등록된 section archetype이 아닙니다. ${Array.from(sectionModifierSet).join(', ')} 중 하나를 사용하세요.`,
+          section.raw.slice(0, 120),
+          'R-18'
+        )
+      }
+    }
+  }
+}
+
 // HTML 태그 추출 — 정규식 기반 (간단 케이스만)
 // 더 견고하려면 node-html-parser 권장 (현 시점에선 정규식 충분)
 function findClassUsage(html, className) {
@@ -215,6 +433,8 @@ function findClassUsage(html, className) {
 
 function checkHtml(html, filePath, baseLineNum = 1) {
   const lines = html.split('\n')
+
+  checkPageContract(html, filePath, baseLineNum)
 
   // R-17: 비-BEM 상태 클래스
   lines.forEach((line, idx) => {

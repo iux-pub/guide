@@ -188,6 +188,44 @@
       ]
     },
     {
+      "id": "R-20",
+      "category": "css",
+      "summary": "호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 sibling selector, 의미적 상태 class, ARIA 속성 selector로 구현한다.",
+      "bad": [
+        {
+          "code": ".field:has(input:disabled) { opacity: .5; }",
+          "note": "부모 상태를 :has()에 의존"
+        },
+        {
+          "code": ".check:hover:not(:has(input:disabled)) .check__box { border-color: var(--color-border-dark); }",
+          "note": "비활성 상태 처리에 :has() 의존"
+        }
+      ],
+      "good": [
+        {
+          "code": ".field input:disabled ~ .field__label { color: var(--color-text-disabled); }",
+          "note": "기존 DOM 구조에서 sibling selector 사용"
+        },
+        {
+          "code": ".disclosure[aria-expanded=\"true\"] + .disclosure__panel { display: block; }",
+          "note": "ARIA 상태 속성으로 관계 표현"
+        },
+        {
+          "code": ".modal--open { display: flex; }",
+          "note": "BEM modifier로 시각 상태 표현"
+        }
+      ],
+      "refs": [
+        "site/testing/browser-testing.md",
+        "package.json#browserslist"
+      ]
+    },
+    {
       "id": "R-04",
       "category": "bem",
       "summary": "BEM 사용 (5-objects, 6-components 레이어에만 적용)",
@@ -511,12 +549,12 @@
       "id": "R-15",
       "category": "html",
       "summary": "HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다",
-      "severity": "warning",
+      "severity": "error",
       "enforcement": [
         "check-html-structure.js"
       ],
       "lang": "html",
-      "rationale": "인포마인드가 기존에 구축·유지보수한 사이트들은 공통 HTML 골격, 영역 네이밍, 헤더/푸터/본문 구성 패턴을 갖고 있다. 신규 작업도 이 패턴을 우선 유지해 유지보수성과 팀 내 이해도를 확보한다. 페이지 전체 골격은 공통 레이아웃에 두고, HTML 컴포넌트화는 main 안의 section 단위로 분리한다. KRDS는 root 태그 강제가 아니라 시맨틱 HTML, 접근성 속성, 키보드 동작을 보강하는 기준으로 적용한다.",
+      "rationale": "인포마인드가 기존에 구축·유지보수한 사이트들은 공통 HTML 골격, 영역 네이밍, 헤더/푸터/본문 구성 패턴을 갖고 있다. 신규 작업도 이 패턴을 우선 유지해 유지보수성과 팀 내 이해도를 확보한다. page shell은 header#header, main#main, footer#footer를 기본으로 하고, HTML 컴포넌트화는 main 안의 section 단위로 분리한다. 각 section은 .container와 접근 가능한 이름을 가진다. KRDS는 root 태그 강제가 아니라 시맨틱 HTML, 접근성 속성, 키보드 동작을 보강하는 기준으로 적용한다.",
       "refs": [
         "기존 인포마인드 구축 사이트 HTML",
         "skill/references/html-semantics.md",
@@ -538,8 +576,8 @@
       ],
       "good": [
         {
-          "code": "<header id=\"header\"><div class=\"container\">...</div></header>\n<main id=\"main\">\n  <section class=\"section\">\n    <div class=\"container\">...</div>\n  </section>\n</main>\n<footer id=\"footer\"><div class=\"container\">...</div></footer>",
-          "note": "큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container가 폭과 정렬 담당"
+          "code": "<a href=\"#main\" class=\"skip-to-content\">본문 바로가기</a>\n<header id=\"header\"><div class=\"container\">...</div></header>\n<main id=\"main\">\n  <section class=\"section section--content\" aria-labelledby=\"section-title\">\n    <div class=\"container\">\n      <h1 id=\"section-title\">페이지 제목</h1>\n      ...\n    </div>\n  </section>\n</main>\n<footer id=\"footer\"><div class=\"container\">...</div></footer>",
+          "note": "큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container와 제목이 구조 담당"
         },
         {
           "code": "<div class=\"modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\">...</div>",

@@ -15,6 +15,7 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | check-violations.js |
 | R-03 | SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용 | error | check-violations.js |
 | R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | check-violations.js |
+| R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | check-violations.js |
 
 ---
 
@@ -123,5 +124,30 @@ $primary: #256ef4;   // SCSS 변수
 ```
 
 **참고:** src/styles/**/*.css, starter/src/styles/**/*.css
+
+---
+
+## R-20 — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
+
+**심각도:** 🔴 error &nbsp; **검증:** check-violations.js
+
+> 공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 sibling selector, 의미적 상태 class, ARIA 속성 selector로 구현한다.
+
+**❌ 금지**
+
+```css
+.field:has(input:disabled) { opacity: .5; }   // 부모 상태를 :has()에 의존
+.check:hover:not(:has(input:disabled)) .check__box { border-color: var(--color-border-dark); }   // 비활성 상태 처리에 :has() 의존
+```
+
+**✅ 올바른 형식**
+
+```css
+.field input:disabled ~ .field__label { color: var(--color-text-disabled); }   // 기존 DOM 구조에서 sibling selector 사용
+.disclosure[aria-expanded="true"] + .disclosure__panel { display: block; }   // ARIA 상태 속성으로 관계 표현
+.modal--open { display: flex; }   // BEM modifier로 시각 상태 표현
+```
+
+**참고:** site/testing/browser-testing.md, package.json#browserslist
 
 ---

@@ -36,11 +36,11 @@
     @apply text-[var(--color-text-subtle)] text-[1.7rem];
   }
 
-  .file-upload:has(input:disabled) {
-    @apply cursor-not-allowed;
+  .file-upload input:disabled ~ .file-upload__trigger {
+    @apply cursor-not-allowed bg-[var(--color-button-disabled-fill)] text-[var(--color-text-disabled)] border-[var(--color-button-disabled-border)];
   }
 
-  .file-upload:has(input:disabled) .file-upload__trigger {
-    @apply bg-[var(--color-button-disabled-fill)] text-[var(--color-text-disabled)] border-[var(--color-button-disabled-border)];
+  .file-upload input:disabled ~ .file-upload__filename {
+    @apply text-[var(--color-text-disabled)];
   }
 }

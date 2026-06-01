@@ -15,6 +15,54 @@
 5. **포커스 가시성** — 모든 인터랙티브 요소는 `:focus-visible` 4px primary outline (reset 전역 처리, 컴포넌트 단위 override 금지).
 6. **단계 차이 50 규칙** — KRDS 색상에서 두 단계 차이 50 이상 = 명도 대비 4.5:1 자동 충족.
 
+## 0.1. Page Shell 계약
+
+페이지 HTML을 새로 생성할 때는 컴포넌트보다 먼저 page shell을 확정한다. 이 계약은 `contracts/html-page-contract.json`과 `scripts/check-html-structure.js`가 자동 검증한다.
+
+```html
+<a href="#main" class="skip-to-content">본문 바로가기</a>
+
+<header id="header" class="site-header">
+  <div class="container">...</div>
+</header>
+
+<main id="main">
+  <section class="section section--content" aria-labelledby="section-title">
+    <div class="container">
+      <h1 id="section-title">페이지 제목</h1>
+      ...
+    </div>
+  </section>
+</main>
+
+<footer id="footer" class="site-footer">
+  <div class="container">...</div>
+</footer>
+```
+
+필수 규칙:
+
+1. `body` 첫 의미 요소는 `<a href="#main" class="skip-to-content">본문 바로가기</a>`다.
+2. 페이지에는 `main#main`이 하나만 존재한다.
+3. 큰 랜드마크는 `header#header`, `main#main`, `footer#footer`를 사용한다.
+4. `main`의 직계 자식은 `section`이다.
+5. 각 `section`은 `.container`를 직접 포함한다.
+6. 각 `section`은 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름을 가진다.
+7. HTML 컴포넌트화는 전체 페이지가 아니라 `main` 내부 section 단위로 한다.
+
+Section modifier는 목적 기반 archetype만 사용한다.
+
+| Modifier | 용도 |
+|----------|------|
+| `.section--intro` | 도입/대표 메시지/핵심 CTA |
+| `.section--content` | 일반 본문 |
+| `.section--list` | 카드/뉴스/게시물 목록 |
+| `.section--form` | 신청/문의/입력 |
+| `.section--data` | 표/통계/현황 |
+| `.section--search` | 검색/필터 |
+| `.section--process` | 단계/절차 |
+| `.section--notice` | 공지/알림/유의사항 |
+
 ---
 
 ## 0.5. 컴포넌트 카테고리 ↔ BEM Block 매핑
@@ -366,12 +414,13 @@ ARIA로 연결되는 ID는 충돌 방지를 위해 다음 패턴:
 
 ## 7. 검증 자동화 (R-15 / R-16 / R-17 / R-18)
 
-`scripts/check-html-structure.js`가 본 매핑을 읽어 자동 검증:
+`contracts/html-page-contract.json`과 `scripts/check-html-structure.js`가 page shell 및 컴포넌트 구조를 자동 검증:
 
-1. **R-15** — 컴포넌트 BEM Block(`.card`/`.modal` 등) 사용 시 root 태그가 매핑과 일치하는지
-2. **R-16** — 인터랙티브 컴포넌트(`modal`/`tab`/`accordion`/`tooltip`/`disclosure`/`carousel`/`calendar`)는 필수 ARIA 속성 누락 시 error
-3. **R-17** — `.is-*`/`.has-*` 비-BEM 상태 클래스 사용 시 warn → 1개월 후 error 승급
-4. **R-18** — § 6.3 금지 단어 modifier 사용 시 error
+1. **R-14/R-15** — page shell의 skip link, `header#header`, `main#main`, `footer#footer`, `main > section > .container`, section 접근 이름
+2. **R-15** — 컴포넌트 BEM Block(`.card`/`.modal` 등) 사용 시 root 태그가 매핑과 일치하는지
+3. **R-16** — 인터랙티브 컴포넌트(`modal`/`tab`/`accordion`/`tooltip`/`disclosure`/`carousel`/`calendar`)는 필수 ARIA 속성 누락 시 error
+4. **R-17** — `.is-*`/`.has-*` 비-BEM 상태 클래스 사용 시 warn → 1개월 후 error 승급
+5. **R-18** — § 6.3 금지 단어 modifier 사용 시 error
 
 ---
 

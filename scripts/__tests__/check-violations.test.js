@@ -6,7 +6,8 @@ const assert = require('node:assert/strict')
 // 핵심 정규식 (check-violations.js와 동기화 유지 필수)
 const TW_RAW_COLOR = /\b(?:bg|text|border|ring|divide|hover:bg|hover:text|hover:border)-(?:gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d+\b/
 const HARDCODED_HEX = /:\s*#[0-9a-fA-F]{3,8}\b/
-const FOCUS_OUTLINE_NONE = /:focus(?![-:\w])\s*\{[^}]*outline\s*:\s*(?:none|0)/
+const FOCUS_OUTLINE_NONE = /:focus(?![-:\w])\s*\{[^}]*outline\s*:\s*(?:none\b|0\s*(?:!important)?\s*(?:;|}))/
+const CSS_HAS_SELECTOR = /:has\(/
 const BEM_DOUBLE_ELEMENT = /\.([\w-]+)__([\w-]+)__([\w-]+)/
 const SCSS_USE = /@use\s+['"]/
 const MISSING_ALT = /<img(?![^>]*\balt\s*=)[^>]*\bsrc\s*=[^>]*>/
@@ -39,7 +40,18 @@ test('FOCUS_OUTLINE_NONE — 포커스 outline 제거 검출', () => {
 
 test('FOCUS_OUTLINE_NONE — :focus-visible 패턴은 매칭 안 됨', () => {
   assert.doesNotMatch(':focus-visible { outline: 4px solid blue }', FOCUS_OUTLINE_NONE)
+  assert.doesNotMatch(':focus { outline: 0.4rem solid var(--color-border-primary); }', FOCUS_OUTLINE_NONE)
   assert.doesNotMatch(':focus:not(:focus-visible) { outline: none }', FOCUS_OUTLINE_NONE)
+})
+
+test('CSS_HAS_SELECTOR — :has() 선택자 검출', () => {
+  assert.match('.field:has(input:disabled) { }', CSS_HAS_SELECTOR)
+  assert.match('.check:hover:not(:has(input:disabled)) .check__box { }', CSS_HAS_SELECTOR)
+})
+
+test('CSS_HAS_SELECTOR — sibling/ARIA selector는 매칭 안 됨', () => {
+  assert.doesNotMatch('.field input:disabled ~ .field__label { }', CSS_HAS_SELECTOR)
+  assert.doesNotMatch('.disclosure[aria-expanded="true"] + .disclosure__panel { }', CSS_HAS_SELECTOR)
 })
 
 test('BEM_DOUBLE_ELEMENT — 2단계 element 중첩 검출', () => {

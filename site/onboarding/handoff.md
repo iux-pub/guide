@@ -10,26 +10,32 @@ order: 3
 큰 영역은 단순하게 잡고, 실제 폭과 정렬은 내부 `.container`가 담당한다. `main` 안의 콘텐츠는 section 단위로 분리한다.
 
 ```html
-<header id="header">
+<a href="#main" class="skip-to-content">본문 바로가기</a>
+
+<header id="header" class="site-header">
   <div class="container">...</div>
 </header>
 
 <main id="main">
-  <section class="section">
-    <div class="container">...</div>
+  <section class="section section--content" aria-labelledby="section-title">
+    <div class="container">
+      <h1 id="section-title">페이지 제목</h1>
+      ...
+    </div>
   </section>
 </main>
 
-<footer id="footer">
+<footer id="footer" class="site-footer">
   <div class="container">...</div>
 </footer>
 ```
 
-HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 진행한다.
+HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section 단위로 진행한다. 각 section은 `.container`를 직접 포함하고 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름을 제공한다.
 
 ## 전달 항목 체크리스트
 
-- [ ] **페이지 구조:** `header/main/footer`, `main > section > .container` 골격이 확인된다
+- [ ] **페이지 구조:** `.skip-to-content`, `header#header`, `main#main`, `footer#footer`, `main > section > .container` 골격이 확인된다
+- [ ] **섹션 이름:** 각 section은 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름을 제공한다
 - [ ] **섹션 단위:** 반복·교체 가능한 콘텐츠는 section 단위로 나뉜다
 - [ ] **색상:** 사용 색상이 KRDS 정본 또는 INFOMIND 시맨틱 별칭에 매핑된다. raw hex/rgb/hsl이 필요하면 UX팀과 협의한다
 - [ ] **간격/정렬:** 반복되는 패딩/갭은 토큰 또는 공통 스타일로 정리한다. 프로젝트 고유 보정값은 의도와 근거가 명확하다

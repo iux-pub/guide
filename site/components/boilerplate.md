@@ -29,8 +29,9 @@ tags: component
   </header>
 
   <main id="main">
-    <section class="section">
+    <section class="section section--content" aria-labelledby="section-title">
       <div class="container">
+        <h1 id="section-title">페이지 제목</h1>
         <!-- 페이지 콘텐츠 -->
       </div>
     </section>
@@ -56,11 +57,13 @@ tags: component
 | Main 랜드마크 | `<main id="main">` | 주요 콘텐츠 영역 |
 | Footer 랜드마크 | `<footer id="footer">` | 페이지 푸터 영역 |
 | 콘텐츠 래퍼 | `.container` | 최대 너비 제한 + 중앙 정렬 |
+| Section 이름 | `aria-labelledby` 또는 heading | 섹션의 접근 가능한 이름 |
 
 ## 접근성 주의사항
 
 - `skip-to-content` 링크: `<body>` 바로 뒤 첫 번째 요소로 배치
 - `header/main/footer`는 암묵적 랜드마크가 있으므로 기본적으로 role을 중복 작성하지 않는다
 - 페이지당 `<main>` 태그는 1개만 사용
+- `main` 안의 `section`은 제목을 갖거나 `aria-labelledby`/`aria-label`로 이름을 제공
 - `lang="ko"` 필수: 스크린리더가 한국어로 읽도록 설정
 - `<title>`은 고유하고 설명적인 텍스트 사용

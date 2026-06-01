@@ -469,6 +469,15 @@ HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section
 - 이미지 \`alt\` 필수, 폼 \`<label for>\` + \`id\` 필수
 - \`role="dialog"\` + 포커스 트랩 (모달)
 
+## 하네스 없는 프로젝트의 자체 검증
+
+개발팀 기존 프로젝트처럼 infoUX 전용 \`npm run check\`, \`scripts/check-violations.js\`, \`scripts/check-html-structure.js\`가 없더라도 검증을 생략하지 않는다.
+
+1. 프로젝트의 \`package.json\`, CI 설정, README에서 기존 \`lint\`/\`build\`/\`test\`/\`a11y\` 명령을 먼저 찾아 실행한다.
+2. 자동 하네스가 없으면 변경 파일을 직접 점검한다.
+3. 최소 점검: raw 색상, Tailwind raw 컬러, SCSS 문법, \`!important\`, 핵심 CSS \`:has()\`, focus outline 제거, BEM 위반, 비-BEM 상태 클래스, 시각적 modifier, \`div/span\` 클릭, \`alt\`/\`label\`/ARIA 누락, skip link/page shell, 모바일 360px 터치 영역과 overflow.
+4. 최종 보고에는 실행한 자동 검증, 대체한 수동 검증, 남은 수동 QA 항목을 구분해 적는다.
+
 ## 반응형
 
 - **모바일 퍼스트** 접근

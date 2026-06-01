@@ -159,6 +159,15 @@ npm run lint:css    # Stylelint
 
 심화: [BEM 네이밍](/conventions/bem/) · [CSS 규칙](/conventions/css-rules/)
 
+### 기존 개발팀 프로젝트에 적용할 때
+
+스타터가 아닌 기존 프로젝트는 infoUX 전용 하네스가 없을 수 있다. 이 경우에도 에이전트는 검증을 생략하지 않는다.
+
+1. 프로젝트의 `package.json`, CI 설정, README에서 기존 `lint`/`build`/`test`/`a11y` 명령을 먼저 찾는다
+2. infoUX 하네스(`npm run check`, `scripts/check-violations.js`, `scripts/check-html-structure.js`)가 있으면 실행한다
+3. 하네스가 없으면 변경 파일을 직접 점검한다: raw 색상, `:has()`, focus outline 제거, BEM 위반, 비-BEM 상태 클래스, 시맨틱 HTML, `alt`/`label`/ARIA, 모바일 44px 터치 영역, 가로 overflow
+4. 최종 보고에는 자동 검증과 수동 대체 검증을 구분해 적는다
+
 ## Step 6: 접근성 체크
 
 KWCAG/WCAG 2.1 AA 기준을 준수한다. 코드 작성 후 접근성 검사를 실행한다.

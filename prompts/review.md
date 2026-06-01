@@ -4,6 +4,12 @@
 
 아래 체크리스트로 이 코드를 리뷰하라. 위반 항목을 구체적으로 지적하라.
 
+## 검증 환경
+
+- [ ] 프로젝트의 `package.json`, CI 설정, README에서 사용 가능한 `check`/`lint`/`build`/`test`/`a11y` 명령을 확인했는가
+- [ ] infoUX 하네스(`scripts/check-violations.js`, `scripts/check-html-structure.js`)가 있으면 실행했는가
+- [ ] 하네스가 없으면 변경 파일을 직접 스캔하고, 대체한 수동 검증 항목을 리뷰 결과에 명시했는가
+
 ## CSS 시스템 (R-03)
 
 - [ ] **SCSS 사용 없음** — `.scss` 파일, `@use`, `@forward`, `$variable` 모두 0건

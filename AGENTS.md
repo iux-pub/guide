@@ -172,6 +172,18 @@ npm run build     # 전체 빌드 (자동 생성물 갱신)
 npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)
 ```
 
+외부 개발팀 프로젝트처럼 infoUX 하네스가 아직 이식되지 않은 경우에도 검증을 생략하지 않는다.
+
+1. 먼저 해당 프로젝트의 `package.json`, CI 설정, README에서 기존 `check`/`lint`/`build`/`test`/`a11y` 명령을 찾아 실행한다.
+2. infoUX 전용 `npm run check` 또는 `scripts/check-*`가 없으면, 에이전트가 변경 파일을 직접 점검한다.
+3. 직접 점검 최소 항목:
+   - raw `hex`/`rgb`/`hsl`, Tailwind raw 컬러 유틸, SCSS 문법, `!important`
+   - 핵심 CSS의 `:has()` 의존, `:focus { outline: none }`
+   - BEM 2단계 element, 비-BEM 상태 클래스, 시각적 modifier
+   - `div/span` 클릭 핸들러, 이미지 `alt`, 폼 `label`, 필수 ARIA, skip link/page shell
+   - 모바일 360px 기준 터치 영역 44px 이상, 텍스트 겹침, 가로 overflow
+4. 자동 검증을 대체한 항목과 실행하지 못한 항목을 최종 보고에 명시한다.
+
 규칙 위반 발견 시:
 1. 즉시 작업 중단
 2. 사용자에게 위반 항목·근거 보고

@@ -17,9 +17,15 @@
   --color-code-comment: #6a9955;
   --color-code-keyword: #569cd6;
   --color-code-string: #ce9178;
+  --color-code-inserted: #b5cea8;
   --color-code-number: #b5cea8;
   --color-code-function: #dcdcaa;
   --color-code-type: #4ec9b0;
   --color-code-attribute: #9cdcfe;
+  --color-code-link: #4fc1ff;
+  --color-code-markup: #d7ba7d;
   --color-code-regex: #d16969;
+  --color-code-terminal-red: #f48771;
+  --color-code-terminal-yellow: #ffb114;
+  --color-code-terminal-green: #7ec88e;
 }

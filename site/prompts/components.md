@@ -23,7 +23,17 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 1. 아코디언 (Accordion) — KRDS
+## 1. HTML Snippet Scope
+
+### 기본 마크업
+
+```html
+
+```
+
+---
+
+## 2. 아코디언 (Accordion) — KRDS
 
 ### 기본 마크업
 
@@ -58,7 +68,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 2. 알림 (Alert / Critical Alerts) — KRDS
+## 3. 알림 (Alert / Critical Alerts) — KRDS
 
 ### 기본 마크업
 
@@ -92,7 +102,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 3. 배지 (Badge) — KRDS
+## 4. 배지 (Badge) — KRDS
 
 ### 기본 마크업
 
@@ -113,7 +123,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 4. 브레드크럼 (Breadcrumb) — KRDS
+## 5. 브레드크럼 (Breadcrumb) — KRDS
 
 ### 기본 마크업
 
@@ -136,7 +146,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 5. 버튼 (Button) — KRDS
+## 6. 버튼 (Button) — KRDS
 
 ### 기본 마크업
 
@@ -163,7 +173,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 6. 달력 (Calendar) — KRDS
+## 7. 달력 (Calendar) — KRDS
 
 ### 기본 마크업
 
@@ -217,7 +227,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 7. 카드 (Card) — KRDS
+## 8. 카드 (Card) — KRDS
 
 ### 기본 마크업
 
@@ -243,7 +253,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 8. 캐러셀 (Carousel) — KRDS
+## 9. 캐러셀 (Carousel) — KRDS
 
 ### 기본 마크업
 
@@ -283,7 +293,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 9. 체크박스 & 라디오 — KRDS Form check
+## 10. 체크박스 & 라디오 — KRDS Form check
 
 ### 기본 마크업
 
@@ -303,7 +313,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 10. 디스클로저 (Disclosure) — KRDS
+## 11. 디스클로저 (Disclosure) — KRDS
 
 ### 기본 마크업
 
@@ -324,7 +334,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 11. 파일 업로드 (File Upload) — KRDS
+## 12. 파일 업로드 (File Upload) — KRDS
 
 ### 기본 마크업
 
@@ -345,7 +355,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 12. 폼 필드 (Form Field) — KRDS
+## 13. 폼 필드 (Form Field) — KRDS
 
 ### 기본 마크업
 
@@ -370,7 +380,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 13. 사이트 헤더 (Site Header)
+## 14. 사이트 헤더 (Site Header)
 
 ### 기본 마크업
 
@@ -408,7 +418,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 14. 목록 (List) — KRDS Text list / Structured list
+## 15. 목록 (List) — KRDS Text list / Structured list
 
 ### 기본 마크업
 
@@ -438,7 +448,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 15. 주 메뉴 (Main Menu) — KRDS
+## 16. 주 메뉴 (Main Menu) — KRDS
 
 ### 기본 마크업
 
@@ -477,7 +487,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 16. 모달 (Modal / Dialog) — KRDS
+## 17. 모달 (Modal / Dialog) — KRDS
 
 ### 기본 마크업
 
@@ -512,7 +522,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 17. 페이지네이션 (Pagination) — KRDS
+## 18. 페이지네이션 (Pagination) — KRDS
 
 ### 기본 마크업
 
@@ -539,7 +549,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 18. 진행률 (Progress) — KRDS
+## 19. 진행률 (Progress) — KRDS
 
 ### 기본 마크업
 
@@ -561,7 +571,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 19. 셀렉트 (Select) — KRDS
+## 20. 셀렉트 (Select) — KRDS
 
 ### 기본 마크업
 
@@ -584,7 +594,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 20. 사이드 패널 (Side Panel) — KRDS Help panel 응용
+## 21. 사이드 패널 (Side Panel) — KRDS Help panel 응용
 
 ### 기본 마크업
 
@@ -614,7 +624,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 21. 스피너 (Spinner) — KRDS
+## 22. 스피너 (Spinner) — KRDS
 
 ### 기본 마크업
 
@@ -629,7 +639,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 22. 단계 표시기 (Step Indicator) — KRDS
+## 23. 단계 표시기 (Step Indicator) — KRDS
 
 ### 기본 마크업
 
@@ -658,7 +668,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 23. 토글 스위치 (Switch) — KRDS
+## 24. 토글 스위치 (Switch) — KRDS
 
 ### 기본 마크업
 
@@ -678,7 +688,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 24. 탭 (Tab) — KRDS
+## 25. 탭 (Tab) — KRDS
 
 ### 기본 마크업
 
@@ -716,7 +726,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 25. 표 (Table) — KRDS
+## 26. 표 (Table) — KRDS
 
 ### 기본 마크업
 
@@ -754,7 +764,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 26. 태그 (Tag) — KRDS
+## 27. 태그 (Tag) — KRDS
 
 ### 기본 마크업
 
@@ -782,7 +792,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 27. 토스트 (Toast) — KRDS
+## 28. 토스트 (Toast) — KRDS
 
 ### 기본 마크업
 
@@ -804,7 +814,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 28. 툴팁 (Tooltip) — KRDS
+## 29. 툴팁 (Tooltip) — KRDS
 
 ### 기본 마크업
 

@@ -19,6 +19,7 @@ order: 1
 | [버전 정책](/governance/versioning/) | 시맨틱 버전(MAJOR/MINOR/PATCH) 기준과 CHANGELOG 작성 규칙 |
 | [변경 승인 프로세스](/governance/governance-process/) | 토큰/컴포넌트 추가 및 변경 승인 절차 |
 | [기여 가이드](/governance/contributing/) | 이슈 등록, PR 작성, 코드 리뷰 절차 |
+| [AI 에이전트 규칙 준수 전략](/governance/agent-compliance-strategy/) | 검사 중심에서 예방형 생성 하네스로 전환하는 구조와 로드맵 |
 
 ## 관련 가이드
 

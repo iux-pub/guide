@@ -158,7 +158,7 @@ const REQUIRED_ARIA = {
 // ─── R-17: 비-BEM 상태 클래스 ───────────────────────────────────
 // .is-active, .has-error, .is-open 같은 패턴 검출
 // 단, 일부는 라이브러리 호환(.is-* 가 React/Vue lib에서 사용)이라 예외 가능
-// 1차는 warn으로 시작 — 1개월 운영 후 error 승급
+// 절대 금지 규칙으로 error 처리
 
 const NON_BEM_STATE_CLASS = /\bclass\s*=\s*["'][^"']*?\b(is|has)-[a-z][\w-]*/g
 
@@ -275,6 +275,150 @@ function findById(root, id) {
 
 function directElementChildren(node) {
   return (node.children || []).filter(child => child.tag !== 'script' && child.tag !== 'template')
+}
+
+function ancestor(node, predicate) {
+  let current = node.parent
+  while (current) {
+    if (predicate(current)) return current
+    current = current.parent
+  }
+  return null
+}
+
+function checkFormLabels(root, filePath, baseLineNum) {
+  const controls = findNodes(root, node => {
+    if (!['input', 'select', 'textarea'].includes(node.tag)) return false
+    if (node.tag !== 'input') return true
+    return !['hidden', 'button', 'submit', 'reset', 'image'].includes(node.attrs.type || 'text')
+  })
+
+  for (const control of controls) {
+    const id = control.attrs.id
+    const hasExplicitLabel = id && findNodes(root, node =>
+      node.tag === 'label' && node.attrs.for === id
+    ).length > 0
+    const hasWrappingLabel = Boolean(ancestor(control, node => node.tag === 'label'))
+    const hasAriaLabel = Boolean(control.attrs['aria-label'])
+    const labelledBy = control.attrs['aria-labelledby']
+    const hasAriaLabelledBy = Boolean(labelledBy && findById(root, labelledBy))
+
+    if (!hasExplicitLabel && !hasWrappingLabel && !hasAriaLabel && !hasAriaLabelledBy) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, control),
+        '[R-16] 폼 컨트롤에 접근 가능한 이름이 없습니다. label[for], 감싸는 label, aria-label 또는 유효한 aria-labelledby를 사용하세요.',
+        control.raw.slice(0, 120),
+        'R-16'
+      )
+    }
+  }
+}
+
+function checkTabPattern(root, filePath, baseLineNum) {
+  const tabRoots = findNodes(root, node => hasClass(node, 'tab'))
+
+  for (const tabRoot of tabRoots) {
+    const tablists = findNodes(tabRoot, node => node.attrs.role === 'tablist')
+    const tabs = findNodes(tabRoot, node => node.attrs.role === 'tab')
+    const panels = findNodes(tabRoot, node => node.attrs.role === 'tabpanel')
+
+    if (tablists.length !== 1 || tabs.length === 0 || panels.length === 0) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, tabRoot),
+        '[R-16] tab은 role="tablist", role="tab", role="tabpanel" 구조를 모두 포함해야 합니다.',
+        tabRoot.raw.slice(0, 120),
+        'R-16'
+      )
+      continue
+    }
+
+    let selectedCount = 0
+    for (const tab of tabs) {
+      const selected = tab.attrs['aria-selected']
+      const controls = tab.attrs['aria-controls']
+      if (selected === 'true') selectedCount++
+      if (!tab.attrs.id || !['true', 'false'].includes(selected) || !controls) {
+        error(
+          rel(filePath),
+          nodeLine(baseLineNum, tab),
+          '[R-16] 각 tab에는 id, aria-selected="true|false", aria-controls가 필요합니다.',
+          tab.raw.slice(0, 120),
+          'R-16'
+        )
+        continue
+      }
+      const panel = findById(root, controls)
+      if (!panel || panel.attrs.role !== 'tabpanel' || panel.attrs['aria-labelledby'] !== tab.attrs.id) {
+        error(
+          rel(filePath),
+          nodeLine(baseLineNum, tab),
+          '[R-16] tab의 aria-controls 대상은 role="tabpanel"이며 해당 패널은 tab id를 aria-labelledby로 참조해야 합니다.',
+          tab.raw.slice(0, 120),
+          'R-16'
+        )
+      }
+    }
+
+    if (selectedCount !== 1) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, tabRoot),
+        '[R-16] tab 그룹에는 aria-selected="true"인 탭이 정확히 하나 필요합니다.',
+        tabRoot.raw.slice(0, 120),
+        'R-16'
+      )
+    }
+  }
+}
+
+function checkAccordionPattern(root, filePath, baseLineNum) {
+  const accordionRoots = findNodes(root, node => hasClass(node, 'accordion'))
+
+  for (const accordionRoot of accordionRoots) {
+    const details = findNodes(accordionRoot, node => node.tag === 'details')
+    if (details.length > 0) {
+      for (const item of details) {
+        const firstChild = directElementChildren(item)[0]
+        if (!firstChild || firstChild.tag !== 'summary') {
+          error(
+            rel(filePath),
+            nodeLine(baseLineNum, item),
+            '[R-16] native accordion의 details 첫 자식은 summary여야 합니다.',
+            item.raw.slice(0, 120),
+            'R-16'
+          )
+        }
+      }
+      continue
+    }
+
+    const triggers = findNodes(accordionRoot, node => hasClass(node, 'accordion__trigger'))
+    if (triggers.length === 0) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, accordionRoot),
+        '[R-16] accordion은 details/summary 또는 accordion__trigger 기반 ARIA 패턴을 사용해야 합니다.',
+        accordionRoot.raw.slice(0, 120),
+        'R-16'
+      )
+      continue
+    }
+
+    for (const trigger of triggers) {
+      const controls = trigger.attrs['aria-controls']
+      if (trigger.tag !== 'button' || !['true', 'false'].includes(trigger.attrs['aria-expanded']) || !controls || !findById(root, controls)) {
+        error(
+          rel(filePath),
+          nodeLine(baseLineNum, trigger),
+          '[R-16] custom accordion trigger는 button이며 aria-expanded="true|false", aria-controls와 유효한 패널 id가 필요합니다.',
+          trigger.raw.slice(0, 120),
+          'R-16'
+        )
+      }
+    }
+  }
 }
 
 function isPageLikeHtml(html) {
@@ -433,8 +577,12 @@ function findClassUsage(html, className) {
 
 function checkHtml(html, filePath, baseLineNum = 1) {
   const lines = html.split('\n')
+  const root = parseHtmlTree(html)
 
   checkPageContract(html, filePath, baseLineNum)
+  checkFormLabels(root, filePath, baseLineNum)
+  checkTabPattern(root, filePath, baseLineNum)
+  checkAccordionPattern(root, filePath, baseLineNum)
 
   // R-17: 비-BEM 상태 클래스
   lines.forEach((line, idx) => {
@@ -443,7 +591,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
     while ((m = NON_BEM_STATE_CLASS.exec(line)) !== null) {
       const lineNum = baseLineNum + idx
       const stateName = m[1]
-      warn(
+      error(
         rel(filePath),
         lineNum,
         `[R-17] 비-BEM 상태 클래스 "${stateName}-*" 발견. BEM modifier + ARIA 속성으로 표현하세요.`,

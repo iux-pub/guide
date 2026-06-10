@@ -12,7 +12,7 @@
 | 🆕 **새 프로젝트를 시작하는 개발자** | [→ 스타터 키트로 시작](#-신규-프로젝트-시작-개발자) |
 | 🛠 **이 표준 저장소를 손보는 UX팀** | [→ 5분 시작](#-5분-시작-ux팀--표준-관리자) |
 | 🤝 **컨트리뷰션하려는 사람** | `CONTRIBUTING.md` |
-| 🤖 **Claude/AI에게 디자인 작업 시키는 사람** | [→ 스킬 트리거](#-claude--ai와-함께-쓰기) |
+| 🤖 **Claude/AI에게 디자인 작업 시키는 사람** | [→ 예방형 작업 흐름](#-ai-코딩-에이전트와-함께-쓰기-다중-llm-호환) |
 
 ---
 
@@ -40,7 +40,9 @@ cd my-project && rm -rf .git && git init && npm install && npm run build
 - ✅ INFOUX 색상/기본 폰트/브레이크포인트 토큰
 - ✅ KRDS 기반 컴포넌트 CSS
 - ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
+- ✅ `.agents/skills/` + `.claude/skills/` — 페이지·폼·위젯·토큰 작업별 절차
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
+- ✅ `contracts/task-contract.md` — 구현 전 판단 계약
 
 브랜드 색상 또는 기본 폰트 변경: `tokens/foundation.json` 편집 → `npm run build`.
 
@@ -63,7 +65,8 @@ npm run dev          # http://localhost:8080
 
 ```bash
 npm run build              # 전체 재빌드
-npm run sync:starter       # iux-pub/starter 푸시 (다운스트림 배포)
+npm run sync:starter       # 로컬 starter/ 생성물 갱신
+npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 ```
 
@@ -73,9 +76,15 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 본 저장소는 **모든 AI 코딩 에이전트**가 INFOMIND UX Core Rules를 따르도록 설계됐다. KRDS는 원칙과 접근성 기준으로 적용하고, 수치 체계는 프로젝트 맥락에 맞게 조정한다.
 
-### 작업 시작 시 — 한 줄 발화
+### 작업 시작 시 — 자동 적용
 
-> **"info-design 스킬 기준으로 가자"** (또는 "infomind 디자인 기준으로", "ux 가이드대로")
+저장소에서 UI/CSS/HTML 작업을 시작하면 별도 트리거 없이 infoUX 계약이 발효된다. AI는 구현 전에 `contracts/task-contract.md` 형식으로 다음을 먼저 확정한다.
+
+- 사이트 유형과 사용자의 핵심 과업
+- 페이지/section 패턴
+- 재사용할 기존 컴포넌트
+- 인터랙티브 위젯과 접근성 패턴
+- 공공 아이덴티티 적용 여부와 예외
 
 이후 AI는:
 - ✅ 코드 생성 전 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 먼저 판정
@@ -92,21 +101,26 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 | 도구 | 자동 인식 | 비고 |
 |------|-----------|------|
-| **Claude Code** | `CLAUDE.md` + `.claude/skills/info-design/` | 트리거 발화로 스킬 활성 |
-| **Cursor** | `AGENTS.md` + `.cursorrules` | 자동 |
+| **Claude Code** | `CLAUDE.md` + `.claude/skills/` | 작업 설명에 맞는 스킬 자동 선택 |
+| **Cursor** | `AGENTS.md` + 경로별 `AGENTS.md` + `.cursorrules` | 자동 |
 | **Aider** | `AGENTS.md` | 자동 |
-| **OpenAI Codex CLI** | `AGENTS.md` | 자동 |
+| **OpenAI Codex CLI** | `AGENTS.md` + `.agents/skills/` | 자동 |
 | **Continue.dev** | `AGENTS.md` | 자동 |
-| **GitHub Copilot Chat** | 사용자가 `prompts/context.md` 첨부 | 수동 첨부 |
+| **GitHub Copilot Chat** | `.github/instructions/*.instructions.md` | 파일 경로별 자동 적용 |
 | **Hermes Agent** | 사용자가 시스템 프롬프트로 `AGENTS.md` 또는 `prompts/` 주입 | 수동 |
 
 자동 인식 못 하는 LLM은 `prompts/context.md` 또는 `AGENTS.md`를 대화에 첨부.
 
-### Claude Code 스킬 (가장 정밀)
+### 작업별 스킬
 
-스킬은 두 경로로 인식된다:
-- 사용자 글로벌: `~/.claude/skills/info-design/` (수동 `deploy:skill`)
-- 프로젝트 동봉: 스타터에 자동 포함 (별도 설치 불필요)
+`.agents/skills`가 원본이며 `npm run build:agents`가 `.claude/skills`를 생성한다.
+
+- `design-page`: 사이트 유형, page shell, section 패턴
+- `create-component`: 기존 컴포넌트 검색과 신규 공통화 판단
+- `design-form`: label, 도움말, 오류, 제출 흐름
+- `design-widget`: ARIA 관계, 키보드, 포커스
+- `change-token`: 토큰 영향 범위와 생성물
+- `review-ui`: Task Contract와 구현 차이 검토
 
 ---
 
@@ -116,7 +130,8 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 | 채널 | 명령 | 도착지 |
 |------|------|-------|
-| 스타터 키트 | `npm run sync:starter` | `iux-pub/starter` 저장소 |
+| 스타터 키트 로컬 생성 | `npm run sync:starter` | `starter/` |
+| 스타터 원격 배포 | `npm run sync:starter:push` | `iux-pub/starter` 저장소 |
 | AI 스킬 | `npm run deploy:skill` | `~/.claude/skills/info-design/` |
 | 문서 사이트 | `npm run build` | `_site/` (Eleventy + Pagefind) |
 | LLM 컨텍스트 | `npm run build:prompts` | `prompts/*.md` (대화 첨부용) |
@@ -128,12 +143,22 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 | 명령 | 용도 |
 |------|------|
 | `npm run dev` | 개발 서버 (Tailwind 워치 + Eleventy 서브) |
-| `npm run build` | 전체 빌드 (토큰 → 규칙 → CSS → 프롬프트 → 스킬 → 사이트) |
+| `npm run build` | 전체 빌드 (에이전트 스킬 → 토큰 → 규칙 → CSS → 프롬프트 → 사이트) |
 | `npm run check` | 컨트랙트 위반(R-01~R-20) 자동 검출 |
 | `npm run lint` | Stylelint + ESLint |
 | `npm run test` | 전체 CI 시뮬레이션 (check + lint + build + a11y) |
 
 세부 빌드 단계(`build:tokens`, `build:rules`, `build:prompts`, `build:skill` 등)는 `package.json` 참조. 평소엔 `npm run build` 하나면 충분.
+
+### 하네스 강제 계층
+
+1. Task Contract가 구현 전에 사이트 유형, 사용자 과업, 재사용 패턴과 위젯을 확정한다.
+2. 작업별 스킬과 경로별 `AGENTS.md`/Copilot instructions가 필요한 규칙만 제공한다.
+3. 기존 컴포넌트 카탈로그와 승인 패턴을 조합해 첫 생성의 준수율을 높인다.
+4. `rules.json`과 `contracts/`가 기계 판독 가능한 계약을 제공한다.
+5. 정적 검사와 CI는 예방 흐름이 실패했을 때 배포를 막는 마지막 안전망으로 동작한다.
+
+자동 접근성 검사는 전체 WCAG 판단을 대체하지 않는다. 키보드 탭 순서, 스크린리더 읽기 순서, 실기기 브라우저는 수동 QA로 남기고 최종 보고에 구분해 적는다.
 
 ---
 
@@ -153,6 +178,10 @@ skill/                    info-design 스킬 (Claude 컨트랙트)
   SKILL.md                컨트랙트 본체
   references/             html-semantics · krds-tokens · krds-components ·
                           accessibility · forbidden-patterns · snippet-template
+.agents/skills/            작업별 스킬 단일 원본
+.claude/skills/            build:agents로 생성되는 Claude용 스킬
+contracts/                 Task Contract + HTML Page Contract
+.github/instructions/      Copilot 파일 경로별 지시
 
 site/                     문서 사이트 (Eleventy 소스)
 prompts/                  LLM 컨텍스트 묶음 (대화 첨부용)
@@ -207,7 +236,8 @@ tokens/foundation.json 갱신
    ↓
 npm run build  ← 토큰·규칙·CSS·프롬프트·스킬·사이트 전체 재빌드
    ↓
-npm run sync:starter   → iux-pub/starter 푸시
+npm run sync:starter        → 로컬 starter/ 생성물 갱신
+npm run sync:starter:push   → 검토 후 iux-pub/starter 푸시
 npm run deploy:skill   → 로컬 ~/.claude/skills/info-design/ 갱신
 ```
 

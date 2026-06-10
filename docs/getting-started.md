@@ -105,9 +105,7 @@ nvm use           # 자동으로 .nvmrc 따라 전환
 
 **자동 (CLAUDE.md)**: 저장소 루트의 `CLAUDE.md`를 Claude Code가 자동으로 읽는다. 별도 설정 불필요.
 
-**스킬 (info-design)**: 정확한 컨트랙트 발효를 위해 다음 트리거 발화:
-
-> "info-design 스킬 기준으로 가자"
+**작업별 스킬**: UI 작업 설명에 따라 `.claude/skills`의 페이지·폼·위젯·토큰 스킬을 자동 선택한다. 구현 전 `contracts/task-contract.md` 형식으로 판단을 확정한다.
 
 스킬 설치:
 ```bash
@@ -254,8 +252,8 @@ nvm install 20 && nvm use 20
 
 1. AI 에이전트가 `AGENTS.md` 또는 `CLAUDE.md`를 인식하는지 확인
 2. 인식 안 되는 도구(Hermes, Copilot)면 컨텍스트에 수동 첨부
-3. 트리거 발화: "info-design 스킬 기준으로 가자"
-4. 그래도 안 되면 `prompts/context.md`를 대화에 첨부
+3. 수정 경로와 가장 가까운 `AGENTS.md` 및 `.github/instructions`가 적용되는지 확인
+4. 자동 인식이 안 되는 도구라면 `prompts/context.md`를 대화에 첨부
 
 ### `npm run dev`가 포트 8080 충돌
 
@@ -278,7 +276,7 @@ A. KRDS 변경사항을 검토한 뒤 필요한 색상/폰트만 `tokens/foundat
 A. 현재는 없음. starter는 1회 클론 모델. 후속에 `npx infomind-ux upgrade` 같은 명령 도입 예정.
 
 **Q. info-design 스킬을 다른 프로젝트에도 쓸 수 있나?**
-A. 가능. `npm run deploy:skill`로 글로벌 설치하면 `~/.claude/skills/info-design/`에서 어디서든 발효. 단, 트리거 발화 필수.
+A. 가능. `npm run deploy:skill`로 글로벌 설치하면 `~/.claude/skills/info-design/`에서 참조할 수 있다. 프로젝트의 `AGENTS.md`와 Task Contract도 함께 적용해야 한다.
 
 **Q. Tailwind v3에서 v4로 마이그레이션?**
 A. 본 저장소는 처음부터 Tailwind v4 기반. v3는 지원 안 함. KRDS 토큰은 Tailwind `@theme`로 정의됐다.

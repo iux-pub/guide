@@ -1,6 +1,8 @@
 #!/bin/bash
 # guide → starter 동기화 (INFOUX + Tailwind v4 시스템)
-# 사용법: npm run sync:starter
+# 사용법:
+#   npm run sync:starter       # 로컬 starter/만 갱신
+#   npm run sync:starter:push  # 로컬 갱신 후 iux-pub/starter 푸시
 #
 # 동기화 대상:
 #   - src/styles/             → starter/src/styles/
@@ -8,7 +10,8 @@
 #   - src/js/                 → starter/src/js/
 #   - tokens/                 → starter/tokens/ (foundation + README — build/ 제외)
 #   - scripts/build-tokens.js → starter/scripts/
-#   - scripts/check-violations.js → starter/scripts/
+#   - scripts/check-*.js      → starter/scripts/
+#   - contracts/             → starter/contracts/
 #   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
 #   - .stylelintrc.json       → starter/
@@ -18,6 +21,11 @@
 # starter/README.md는 starter 전용으로 별도 관리.
 
 set -e
+
+PUSH_REMOTE=false
+if [ "${1:-}" = "--push" ]; then
+  PUSH_REMOTE=true
+fi
 
 GUIDE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STARTER_DIR="$GUIDE_DIR/starter"
@@ -46,12 +54,16 @@ echo "[4/8] tokens/ 동기화..."
 mkdir -p "$STARTER_DIR/tokens"
 cp "$GUIDE_DIR/tokens/foundation.json" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
+cp "$GUIDE_DIR/tokens/AGENTS.md" "$STARTER_DIR/tokens/"
 
-# 5. scripts (build-tokens, check-violations)
+# 5. scripts + contracts
 echo "[5/8] scripts 동기화..."
 mkdir -p "$STARTER_DIR/scripts"
 cp "$GUIDE_DIR/scripts/build-tokens.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
+cp "$GUIDE_DIR/scripts/check-html-structure.js" "$STARTER_DIR/scripts/"
+mkdir -p "$STARTER_DIR/contracts"
+cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
 
 # 5.5. prompts
 echo "[6/8] prompts 동기화..."
@@ -64,8 +76,24 @@ cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.npmrc" "$STARTER_DIR/"
 
-# 6.5. info-design 스킬 (Claude Code가 자동 인식하도록 .claude/skills/에 포함)
-echo "[8/8] info-design 스킬 동봉..."
+# 6.5. 작업별 스킬 + 도구별 경로 지시
+echo "[8/8] 에이전트 스킬과 경로별 지시 동봉..."
+rm -rf "$STARTER_DIR/.agents/skills"
+mkdir -p "$STARTER_DIR/.agents"
+cp -r "$GUIDE_DIR/.agents/skills" "$STARTER_DIR/.agents/"
+
+mkdir -p "$STARTER_DIR/.claude/skills"
+for skill_dir in "$GUIDE_DIR/.agents/skills/"*; do
+  skill_name="$(basename "$skill_dir")"
+  rm -rf "$STARTER_DIR/.claude/skills/$skill_name"
+  cp -r "$skill_dir" "$STARTER_DIR/.claude/skills/$skill_name"
+done
+
+mkdir -p "$STARTER_DIR/.github"
+rm -rf "$STARTER_DIR/.github/instructions"
+cp -r "$GUIDE_DIR/.github/instructions" "$STARTER_DIR/.github/"
+
+# info-design 상세 참조 스킬
 mkdir -p "$STARTER_DIR/.claude/skills/info-design"
 rm -rf "$STARTER_DIR/.claude/skills/info-design/references"
 cp -r "$GUIDE_DIR/skill/SKILL.md" "$STARTER_DIR/.claude/skills/info-design/"
@@ -74,6 +102,12 @@ cp -r "$GUIDE_DIR/skill/references" "$STARTER_DIR/.claude/skills/info-design/"
 echo ""
 echo "✓ 로컬 starter/ 동기화 완료"
 echo ""
+
+# 기본 명령은 로컬 생성물만 갱신한다. 원격 push는 명시적 --push에서만 실행한다.
+if [ "$PUSH_REMOTE" != true ]; then
+  echo "원격 배포는 실행하지 않았습니다. 배포 시 npm run sync:starter:push 사용."
+  exit 0
+fi
 
 # 7. iux-pub/starter 원격 저장소로 push (개발팀 clone 대상)
 STARTER_REPO="/tmp/starter-sync"

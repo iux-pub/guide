@@ -21,28 +21,39 @@
 
 ---
 
-## 2. 컨트랙트 발효 트리거 (LLM 도구별)
+## 2. 컨트랙트 자동 인식 (LLM 도구별)
 
-**기본 원칙: 본 저장소(`infoUX/` 또는 `infomind-ux-guide`)에서 UI/CSS/HTML 작업을 시작하면 트리거 발화 여부와 무관하게 본 룰을 따른다.**
-
-발화 트리거(컨트랙트 명시 활성화):
-- "info-design 스킬 기준으로 가자"
-- "infomind 디자인 기준으로 작업해 줘"
-- "ux 가이드대로"
+**본 저장소(`infoUX/` 또는 `infomind-ux-guide`)에서 UI/CSS/HTML 작업을 시작하면 별도 발화 없이 본 룰을 따른다.**
 
 도구별 인식 방식:
 
 | 도구 | 인식 경로 | 비고 |
 |------|----------|------|
-| **Claude Code** | `CLAUDE.md` (자동) + `.claude/skills/info-design/` (트리거 발화) | 가장 정밀 |
+| **Claude Code** | `CLAUDE.md` (자동) + `.claude/skills/` | 작업별 스킬 자동 선택 |
 | **Cursor** | `AGENTS.md` (본 파일) + `.cursorrules` | 본 파일 1차 |
 | **Aider** | `CONVENTIONS.md` 또는 `AGENTS.md` | `AGENTS.md` 우선 |
 | **OpenAI Codex CLI** | `AGENTS.md` (자동) | 본 파일 |
-| **GitHub Copilot Chat** | 사용자가 컨텍스트에 첨부 | `prompts/context.md` 권장 |
+| **GitHub Copilot Chat** | `.github/instructions/*.instructions.md` | 파일 경로별 자동 적용 |
 | **Hermes Agent** | 사용자가 `prompts/` 첨부 또는 시스템 프롬프트 | `prompts/context.md` 권장 |
 | **Continue.dev** | `AGENTS.md` (자동) + `.continue/config.json` | 본 파일 |
 
 본 파일을 자동 인식하지 못하는 LLM은 사용자가 `prompts/context.md` 또는 본 파일을 대화에 첨부한다.
+
+---
+
+## 2.1 예방형 작업 라우팅
+
+절차의 단일 원본은 `contracts/agent-workflow.json`이다. Codex와 Claude를 포함한 모든 에이전트는 아래 순서를 동일하게 수행한다.
+
+UI/CSS/HTML은 검사부터 시작하지 않는다. 다음 순서로 올바른 생성 경로를 먼저 확정한다.
+
+1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯, 예외를 선언한다.
+2. 현재 작업에 맞는 스킬을 적용한다: `design-page`, `create-component`, `design-form`, `design-widget`, `change-token`, `review-ui`.
+3. 수정 파일과 가장 가까운 `AGENTS.md`를 추가로 읽는다.
+4. 기존 카탈로그와 승인 패턴을 조합해 구현한다.
+5. `npm run check`는 선택과 설계를 대신하지 않는 마지막 안전망으로 실행한다.
+
+Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않는다. 단순 수정은 작업 응답에 짧게 선언하고, 페이지·기능 단위 작업은 계약 파일을 남긴다.
 
 ---
 
@@ -105,7 +116,7 @@
 - **R-04** `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
 - **R-05** `error` — element 2단계 중첩 금지 — 평탄화
 - **R-06** `error` — 시각적 modifier 금지 — 의미적 이름 사용
-- **R-17** `warn` — 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지
+- **R-17** `error` — 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지
 - **R-18** `error` — modifier 이름은 의미적이어야 함 — 시각적 단어 금지
 
 ### HTML/마크업 규칙

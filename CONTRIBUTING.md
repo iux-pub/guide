@@ -130,7 +130,7 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 | husky pre-commit 실패 — `R-XX` | stylelint 또는 check-violations 위반 | 출력 메시지의 규칙 ID 확인, `skill/references/forbidden-patterns.md` 참조 |
 | HTML 구조 경고 — R-15 | 기존 인포마인드 HTML 기본 골격과 다르거나 시맨틱 보강 필요 | `header/main/footer`, `main > section > .container` 구조와 ARIA 보강 확인 |
 | HTML 구조 위반 — R-18 | `--blue`, `--big` 같은 시각 단어 modifier 사용 | KRDS 의미 어휘로 (`--primary`, `--large` 등) |
-| 스킬 발효 안 됨 | 트리거 발화 빠뜨림 | LLM에게 `"info-design 스킬 기준으로 가자"` 발화 |
+| 스킬이 적용되지 않음 | 도구가 루트/경로별 계약을 인식하지 못함 | `AGENTS.md`, `.agents/skills`, `.github/instructions` 인식 여부 확인 |
 | starter 변경이 다운스트림에 안 감 | `npm run sync:starter` 안 돌림 | 표준 변경 후 `sync:starter` 실행 |
 
 ---

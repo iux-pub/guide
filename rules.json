@@ -636,12 +636,12 @@
       "id": "R-17",
       "category": "bem",
       "summary": "상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지",
-      "severity": "warning",
+      "severity": "error",
       "enforcement": [
         "check-html-structure.js"
       ],
       "lang": "html",
-      "rationale": "BEM의 modifier가 상태 표현의 표준이며, `.is-active` 같은 비-BEM 클래스는 어느 컴포넌트의 상태인지 모호하다. ARIA 속성(`aria-selected`, `aria-expanded`)이 의미 표현을 담당하고, 시각 변화는 BEM modifier(`.tab__item--selected`)가 담당한다. 1개월 운영 후 error로 승급 예정 (deprecation period).",
+      "rationale": "BEM의 modifier가 상태 표현의 표준이며, `.is-active` 같은 비-BEM 클래스는 어느 컴포넌트의 상태인지 모호하다. ARIA 속성(`aria-selected`, `aria-expanded`)이 의미 표현을 담당하고, 시각 변화는 BEM modifier(`.tab__item--selected`)가 담당한다.",
       "refs": [
         "skill/references/html-semantics.md#62-상태-표현-r-17"
       ],

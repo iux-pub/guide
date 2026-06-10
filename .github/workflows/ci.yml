@@ -41,6 +41,9 @@ jobs:
       - name: Stylelint
         run: npm run lint:css
 
+      - name: 검사기 단위 테스트
+        run: npm run test:unit
+
       - name: 규칙 자동 생성 검증 (rules.json → CLAUDE.md/conventions/)
         run: npm run build:rules
 
@@ -50,11 +53,17 @@ jobs:
       - name: info-design 스킬 빌드 검증
         run: npm run build:skill
 
+      - name: 스타터 로컬 동기화 및 하네스 검증
+        run: |
+          npm run sync:starter
+          npm run check:harness
+          (cd starter && npm run check)
+
       - name: 자동 생성물 drift 검사
         run: |
           # 빌드 sha 라인은 매 커밋마다 다르므로 검사에서 제외 (정보성 메타이며 콘텐츠 결정성과 무관)
           # -I <regex>: 매칭 라인 변경만 있는 hunk는 diff에서 무시 (git 2.30+)
-          if ! git diff --exit-code -I '^> 빌드: ' -I '"sha":' -- CLAUDE.md AGENTS.md site/conventions/ site/prompts/ prompts/ skill/references/krds-tokens.md skill/references/krds-components.md tokens/build/; then
+          if ! git diff --exit-code -I '^> 빌드: ' -I '"sha":' -- CLAUDE.md AGENTS.md site/conventions/ site/prompts/ prompts/ skill/references/krds-tokens.md skill/references/krds-components.md tokens/build/ starter/; then
             echo ""
             echo "❌ 자동 생성물이 최신이 아닙니다."
             echo "   다음 명령을 실행하고 결과를 커밋하세요:"
@@ -73,4 +82,6 @@ jobs:
         run: npx @11ty/eleventy
 
       - name: 접근성 검증 (pa11y-ci, KWCAG/WCAG 2.1 AA)
-        run: npx pa11y-ci --config .pa11yci.js
+        run: |
+          npx puppeteer browsers install chrome
+          npx pa11y-ci --config .pa11yci.js

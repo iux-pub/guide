@@ -166,3 +166,40 @@ test('비-BEM 상태 클래스는 R-17 오류로 실패한다', () => {
   assert.equal(result.status, 2)
   assert.match(result.stderr, /\[R-17\]/)
 })
+
+test('lang 없는 <html>은 R-21 오류로 실패한다', () => {
+  const result = runCheck(`<!DOCTYPE html>
+<html>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--content" aria-labelledby="t">
+      <div class="container"><h1 id="t">제목</h1></div>
+    </section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-21\]/)
+})
+
+test('lang="ko"가 있는 <html>은 R-21을 통과한다', () => {
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--content" aria-labelledby="t">
+      <div class="container"><h1 id="t">제목</h1></div>
+    </section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 0, result.stderr)
+})

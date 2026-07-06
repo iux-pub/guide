@@ -40,6 +40,8 @@ order: 1
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-17 | 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지 | error | [BEM 네이밍](/conventions/bem/) |
 | R-18 | modifier 이름은 의미적이어야 함 — 시각적 단어 금지 | error | [BEM 네이밍](/conventions/bem/) |
+| R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | [접근성 규칙](/conventions/a11y-rules/) |
+| R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | [접근성 규칙](/conventions/a11y-rules/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

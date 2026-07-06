@@ -16,6 +16,8 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-13 | 터치/클릭 영역 최소 44×44px | error | manual |
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | check-violations.js |
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
+| R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | check-html-structure.js |
+| R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | manual |
 
 ---
 
@@ -135,5 +137,52 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 ```
 
 **참고:** skill/references/html-semantics.md, skill/references/accessibility.md
+
+---
+
+## R-21 — html lang 속성 필수 — 문서 기본 언어 명시
+
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
+
+> 스크린리더가 올바른 발음·언어 엔진을 선택하려면 <html>에 문서 기본 언어가 명시되어야 한다. WCAG 3.1.1 Language of Page (A) / KWCAG. 한국어 페이지는 lang="ko"를 사용한다.
+
+**❌ 금지**
+
+```html
+<html>   // lang 속성 없음 — 문서 언어 미정
+<html class="no-js">   // lang 누락
+```
+
+**✅ 올바른 형식**
+
+```html
+<html lang="ko">   // 한국어 문서 언어 명시
+```
+
+**참고:** skill/references/accessibility.md
+
+---
+
+## R-22 — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
+
+**심각도:** 🟡 warning &nbsp; **검증:** manual
+
+> 전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). 자동 검출이 어려워 수동 QA로 확인한다.
+
+**❌ 금지**
+
+```css
+.carousel__track { animation: slide 5s infinite; }   // reduced-motion 가드 없는 자동 애니메이션
+```
+
+**✅ 올바른 형식**
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track { animation: none; }
+}   // 모션 최소화 선호 시 정지
+```
+
+**참고:** site/guides/css-animation.md, skill/references/accessibility.md
 
 ---

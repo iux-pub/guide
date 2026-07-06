@@ -575,11 +575,27 @@ function findClassUsage(html, className) {
 
 // ─── 검사 본체 ─────────────────────────────────────────────
 
+// ─── R-21: <html> lang 속성 ───────────────────────────────────
+function checkHtmlLang(html, filePath, baseLineNum) {
+  const m = /<html\b([^>]*)>/i.exec(html)
+  if (!m) return // <html> 태그가 없는 조각은 대상 아님
+  if (/\blang\s*=\s*["'][^"']+["']/i.test(m[1])) return
+  const lineNum = baseLineNum + html.slice(0, m.index).split('\n').length - 1
+  error(
+    rel(filePath),
+    lineNum,
+    '[R-21] <html>에 lang 속성이 없습니다. 문서 기본 언어를 명시하세요 (예: <html lang="ko">).',
+    m[0].slice(0, 120),
+    'R-21'
+  )
+}
+
 function checkHtml(html, filePath, baseLineNum = 1) {
   const lines = html.split('\n')
   const root = parseHtmlTree(html)
 
   checkPageContract(html, filePath, baseLineNum)
+  checkHtmlLang(html, filePath, baseLineNum)
   checkFormLabels(root, filePath, baseLineNum)
   checkTabPattern(root, filePath, baseLineNum)
   checkAccordionPattern(root, filePath, baseLineNum)
@@ -714,7 +730,9 @@ function walk(dir, exts, accumulator) {
 
 function getTargetFiles() {
   if (TARGET_FILES.length > 0) {
-    return TARGET_FILES.map(f => path.resolve(f))
+    // 명시적 인자(lint-staged 등)도 SKIP_PATTERNS를 적용한다.
+    // 규칙 문서(site/conventions 등)는 의도된 ❌ 금지 예시를 포함하므로 walk 모드와 동일하게 제외한다.
+    return TARGET_FILES.map(f => path.resolve(f)).filter(f => !isSkipped(f))
   }
   const files = []
   walk(SNIPPETS_DIR, ['.md'], files)

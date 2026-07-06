@@ -132,6 +132,8 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - **R-13** `error` — 터치/클릭 영역 최소 44×44px
 - **R-14** `error` — 건너뛰기 링크 필수 — .skip-to-content
 - **R-16** `error` — 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다
+- **R-21** `error` — html lang 속성 필수 — 문서 기본 언어 명시
+- **R-22** `warn` — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
 <!-- AGENTS_RULES_END -->
 
 ---

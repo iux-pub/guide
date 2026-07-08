@@ -17,7 +17,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | check-violations.js |
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | check-html-structure.js |
-| R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | manual |
+| R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | check-violations.js, manual |
 
 ---
 
@@ -165,9 +165,9 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 
 ## R-22 — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
 
-**심각도:** 🟡 warning &nbsp; **검증:** manual
+**심각도:** 🟡 warning &nbsp; **검증:** check-violations.js · manual
 
-> 전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). 자동 검출이 어려워 수동 QA로 확인한다.
+> 전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). check-violations.js가 animation·@keyframes 사용 파일의 가드 누락을 경고로 자동 검출하며, 실제 모션 강도의 적절성은 수동 QA로 확인한다.
 
 **❌ 금지**
 

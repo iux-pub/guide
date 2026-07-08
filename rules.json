@@ -754,10 +754,11 @@
       "summary": "모션 최소화 선호 존중 — prefers-reduced-motion 가드",
       "severity": "warning",
       "enforcement": [
+        "check-violations.js",
         "manual"
       ],
       "lang": "css",
-      "rationale": "전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). 자동 검출이 어려워 수동 QA로 확인한다.",
+      "rationale": "전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). check-violations.js가 animation·@keyframes 사용 파일의 가드 누락을 경고로 자동 검출하며, 실제 모션 강도의 적절성은 수동 QA로 확인한다.",
       "refs": [
         "site/guides/css-animation.md",
         "skill/references/accessibility.md"

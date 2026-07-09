@@ -48,24 +48,26 @@ inSTACK CMS에 Puck 컴포넌트로 콘텐츠를 반영한다. UX팀은 **퍼블
 
 ### 3.1 아키텍처 — 3-repo 구조
 
-| repo | 역할 | 스택 | UX팀 관여 |
+> **repo는 프로젝트마다 별도다.** 새 프로젝트는 CMS·Portal·API repo를 각각 새로 가지며, 실제 주소는 **개발팀이 프로젝트별로 안내**한다. 이 문서의 `INFO_INSTACK_*`(repo)·`Infomind*`/`infomind-*`(콘텐츠 컴포넌트·CSS)는 **인포마인드 홈페이지 프로젝트의 예시**다 — 구조·역할은 공통이고 이름만 프로젝트마다 바뀐다.
+
+| repo (역할) | 하는 일 | 스택 | UX팀 관여 |
 |---|---|---|---|
-| **CMS** (`INFO_INSTACK_CMS_WORK`) | 어드민 + Puck 페이지 빌더 | Next 16 / React 19 / Puck 0.20 / Tiptap / krds-react | **Puck config·마크업** |
-| **PORTAL** (`INFO_INSTACK_PORTAL_WORK`) | 방문자용 최종 표시 | Next 16 / React 19 / krds-react | **콘텐츠 CSS(edtr.css 원본)** |
-| **API** (`INFO_INSTACK_API_WORK`) | 백엔드·DB·렌더 프록시 | Spring Boot / eGovFrame / Oracle | **없음** (개발팀 전담) |
+| **CMS repo** | 어드민 + Puck 페이지 빌더 | Next 16 / React 19 / Puck 0.20 / Tiptap / krds-react | **Puck config·마크업** |
+| **Portal repo** | 방문자용 최종 표시 | Next 16 / React 19 / krds-react | **콘텐츠 CSS(edtr.css 원본)** |
+| **API repo** | 백엔드·DB·렌더 프록시 | Spring Boot / eGovFrame / DB | **없음** (개발팀 전담) |
 
 **데이터 흐름:**
 ```
 [제작] CMS Puck 에디터로 페이지 작성 (config.krds.tsx 블록)
    → Puck JSON
-[저장] API → Oracle (cttDesc 컬럼)
+[저장] API → DB (cttDesc 컬럼)
 [표시] 포털 방문 → API → CMS /api/puck/render (JSON→HTML) → 포털에 주입
 ```
 렌더 실체(JSON→HTML)는 **CMS**가, 최종 스타일은 **포털 CSS**가 담당한다. API는 저장·프록시만.
 
 **작업 경계:**
-- ✅ UX팀: CMS `puck/config.tsx`·`config.krds.tsx`·`infomindPuckComponents.tsx`·`InfomindCompanyIntro.tsx`(마크업), 포털 `src/styles/6-components/*.css`(스타일), 토큰
-- ❌ 건드리지 않음: `actions.ts`·인증/권한·`proxy.ts`·빌드설정·API 전체·iframe 방어코드(`KrdsEditorIframe.tsx`)
+- ✅ UX팀: CMS repo의 Puck 설정(`shared/domains/puck/config.tsx`·`config.krds.tsx`)과 콘텐츠 블록 컴포넌트(마크업), Portal repo의 콘텐츠 CSS(`src/styles/6-components/*.css`), 토큰
+- ❌ 건드리지 않음: `actions.ts`·인증/권한·`proxy.ts`·빌드설정·API 전체·Puck iframe 방어코드(`KrdsEditorIframe.tsx`)
 
 ### 3.2 로컬 셋업
 
@@ -74,9 +76,10 @@ inSTACK CMS에 Puck 컴포넌트로 콘텐츠를 반영한다. UX팀은 **퍼블
 **최초 1회 셋업** — 각 repo에서 `.env.example`을 `.env.local`로 복사하고, **개발팀이 안내하는 dev API 주소**를 넣는다(CMS `API_URL`, Portal `PORTAL_API_URL`). 로컬 `yarn dev`는 `.env.local`을 읽으며, 이 파일은 gitignore라 개인 로컬 설정으로 유지된다.
 
 ```bash
+# 개발팀이 안내한 프로젝트별 CMS·Portal repo를 clone
 cp .env.example .env.local   # 각 repo, API 주소 입력(개발팀 안내값) — 최초 1회
-cd INFO_INSTACK_CMS_WORK    && yarn dev   # :3000
-cd INFO_INSTACK_PORTAL_WORK && yarn dev   # :3001
+cd <CMS repo>    && yarn dev   # :3000
+cd <Portal repo> && yarn dev   # :3001
 ```
 > 개발팀이 dev API에 localhost origin 허용(CORS) + 퍼블리셔 로컬 계정을 제공한다. (`.env.dev`는 dev **배포**용이라 로컬 `dev`가 읽지 않는다 — 로컬은 `.env.local` 기준.)
 
@@ -132,7 +135,7 @@ InfomindSomething: {
 - 스타일(CSS): 포털 `src/styles/6-components/infomind-company.css`
 - **새 element/modifier는 반드시 양쪽 동시 추가.** 한쪽만 하면 스타일이 조용히 빠진다.
 
-**UX팀 Puck 블록 스타일 수정 지점 = 포털 `infomind-company.css`.** 수정 후 포털 재빌드 → edtr.css 픽업 → CMS 프리뷰 반영. (신규 블록은 `6-components/index.css`에 `@import` 유지)
+**UX팀 Puck 블록 스타일 수정 지점 = Portal repo의 콘텐츠 CSS**(`src/styles/6-components/`; 인포마인드 예: `infomind-company.css`). 수정 후 포털 재빌드 → edtr.css 픽업 → CMS 프리뷰 반영. (신규 블록은 `6-components/index.css`에 `@import` 유지)
 
 **admin CSS는 별개:** CMS `globals.css`·`tokens.css`는 어드민 UI 전용이고 Puck 블록엔 안 쓴다. iframe에 새면 오염원(`KrdsEditorIframe`이 제거) — UX가 `globals.css` 헤더 주석/구조를 바꾸면 방어 로직이 깨질 수 있으니 주의.
 

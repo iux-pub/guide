@@ -45,6 +45,9 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    페이지·폼·위젯 설계나 컴포넌트 신규 생성처럼 절차가 정해진 작업은 get_workflow를 먼저 읽는다.
 4. 규칙 R-01~R-22를 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
 5. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
+6. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
+   화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
+   100% 통과가 조건이다.
 
 기술 스택은 Tailwind v4 + 표준 CSS nesting + BEM + ITCSS 5계층이다. SCSS는 쓰지 않는다.`
 

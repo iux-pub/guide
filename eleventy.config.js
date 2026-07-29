@@ -95,6 +95,21 @@ export default function(eleventyConfig) {
       .trim()
   })
 
+  /**
+   * 원본 본문에서 맨 앞 h1을 뺀다.
+   * 사이트 페이지는 레이아웃이 프론트매터 title로 h1을 이미 그리므로,
+   * 문서 자체의 h1을 그대로 넣으면 h1이 둘이 된다.
+   */
+  eleventyConfig.addFilter('sourceBodyAsSection', (inputPath) => {
+    if (!inputPath) return ''
+    const filePath = path.resolve(inputPath)
+    if (!fs.existsSync(filePath)) return ''
+    return fs.readFileSync(filePath, 'utf8')
+      .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+      .replace(/^\s*#\s+.*\r?\n/, '')
+      .trim()
+  })
+
   /** 본문 첫 문단 한 줄 요약. 목록만 보고 무엇인지 알 수 있어야 한다. */
   eleventyConfig.addFilter('sourceSummary', (inputPath) => {
     if (!inputPath) return ''

@@ -1,5 +1,5 @@
 {
-  "version": "03500c6",
+  "version": "59f789b",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -51,6 +51,12 @@
       "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
     },
     {
+      "id": "release-checklist",
+      "file": "release-checklist.md",
+      "chars": 1973,
+      "summary": "자동검사가 통과했다고 배포해도 되는 것은 아니다. `npm run check`는 규칙 위반을 잡을 뿐, \"이 화면이 쓸 만한가\"는 판단하지 못한다."
+    },
+    {
       "id": "snippet-template",
       "file": "snippet-template.md",
       "chars": 3913,
@@ -61,6 +67,12 @@
       "file": "tailwind-mapping.md",
       "chars": 1699,
       "summary": "INFOUX는 Tailwind v4 `@theme`에 색상과 폰트만 공개한다."
+    },
+    {
+      "id": "trade-off-rules",
+      "file": "trade-off-rules.md",
+      "chars": 1729,
+      "summary": "좋은 원칙끼리 부딪히는 순간이 실제 작업의 대부분이다. \"접근성도 중요하고 브랜드도 중요하다\"는 말은 결정을 미룰 뿐이다. 아래는 **무엇이 무엇을 이기는지**를 미리 정한 것이다."
     }
   ],
   "workflows": [

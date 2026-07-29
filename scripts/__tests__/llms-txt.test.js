@@ -60,3 +60,24 @@ test('전문에 문서 본문이 실제로 들어 있다', { skip: !built && '�
   assert.match(body, /skip-to-content/)
   assert.match(body, /var\(--color-/)
 })
+
+test('판단 기준 문서가 원본 한 곳에만 있다', { skip: !built && '빌드 전' }, () => {
+  const refs = path.join(ROOT, 'references')
+  for (const name of ['trade-off-rules.md', 'release-checklist.md']) {
+    assert.ok(fs.existsSync(path.join(refs, name)), `references/${name} 누락`)
+  }
+
+  // 사이트 페이지는 원본을 읽는 래퍼여야 한다. 본문을 복사해 두면 갈라진다.
+  for (const page of ['governance/trade-off-rules.md', 'design-qa/release-checklist.md']) {
+    const body = fs.readFileSync(path.join(ROOT, 'site', page), 'utf8')
+    assert.match(body, /sourceBodyAsSection/, `site/${page}: 원본을 읽지 않고 내용을 복사했다`)
+  }
+})
+
+test('배포 전 체크리스트의 필수 구분이 살아 있다', { skip: !built && '빌드 전' }, () => {
+  const body = fs.readFileSync(path.join(ROOT, 'references', 'release-checklist.md'), 'utf8')
+  assert.match(body, /100%/, '필수 항목 기준이 없으면 체크리스트가 형식이 된다')
+  for (const required of ['접근성', '과업 흐름', '품질']) {
+    assert.ok(body.includes(required), `필수 구분 "${required}" 누락`)
+  }
+})

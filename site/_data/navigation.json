@@ -4,49 +4,132 @@
       "title": "시작하기",
       "key": "onboarding",
       "items": [
-        { "title": "시작 가이드", "url": "/onboarding/getting-started/" },
-        { "title": "퍼블리셔 시작", "url": "/conventions/bem/" },
-        { "title": "디자인 전달 체크리스트", "url": "/onboarding/handoff/" }
+        {
+          "title": "시작 가이드",
+          "url": "/onboarding/getting-started/"
+        },
+        {
+          "title": "퍼블리셔 시작",
+          "url": "/conventions/bem/"
+        },
+        {
+          "title": "디자인 전달 체크리스트",
+          "url": "/onboarding/handoff/"
+        }
       ]
     },
     {
       "title": "컴포넌트",
       "key": "components",
       "items": [
-        { "title": "버튼", "url": "/components/btn/" },
-        { "title": "폼", "url": "/components/form/" },
-        { "title": "카드", "url": "/components/card/" },
-        { "title": "테이블", "url": "/components/table/" },
-        { "title": "모달", "url": "/components/modal/" },
-        { "title": "탭", "url": "/components/tab/" },
-        { "title": "페이지네이션", "url": "/components/pagination/" },
-        { "title": "브레드크럼", "url": "/components/breadcrumb/" },
-        { "title": "조합 패턴", "url": "/components/combo-patterns/" },
-        { "title": "보일러플레이트", "url": "/components/boilerplate/" }
+        {
+          "title": "버튼",
+          "url": "/components/btn/"
+        },
+        {
+          "title": "폼",
+          "url": "/components/form/"
+        },
+        {
+          "title": "카드",
+          "url": "/components/card/"
+        },
+        {
+          "title": "테이블",
+          "url": "/components/table/"
+        },
+        {
+          "title": "모달",
+          "url": "/components/modal/"
+        },
+        {
+          "title": "탭",
+          "url": "/components/tab/"
+        },
+        {
+          "title": "페이지네이션",
+          "url": "/components/pagination/"
+        },
+        {
+          "title": "브레드크럼",
+          "url": "/components/breadcrumb/"
+        },
+        {
+          "title": "조합 패턴",
+          "url": "/components/combo-patterns/"
+        },
+        {
+          "title": "보일러플레이트",
+          "url": "/components/boilerplate/"
+        }
       ]
     },
     {
       "title": "규칙",
       "key": "conventions",
       "items": [
-        { "title": "파운데이션 토큰", "url": "/tokens/" },
-        { "title": "토큰 — 색상", "url": "/tokens/color/" },
-        { "title": "BEM 네이밍", "url": "/conventions/bem/" },
-        { "title": "CSS 구조", "url": "/conventions/css-structure/" },
-        { "title": "마이크로카피", "url": "/design/microcopy/" },
-        { "title": "인터랙션 타이밍", "url": "/design/interaction-timing/" },
-        { "title": "인터랙션 규칙", "url": "/guides/interaction-rules/" }
+        {
+          "title": "원칙 충돌 시 우선순위",
+          "url": "/governance/trade-off-rules/"
+        },
+        {
+          "title": "파운데이션 토큰",
+          "url": "/tokens/"
+        },
+        {
+          "title": "토큰 — 색상",
+          "url": "/tokens/color/"
+        },
+        {
+          "title": "BEM 네이밍",
+          "url": "/conventions/bem/"
+        },
+        {
+          "title": "CSS 구조",
+          "url": "/conventions/css-structure/"
+        },
+        {
+          "title": "마이크로카피",
+          "url": "/design/microcopy/"
+        },
+        {
+          "title": "인터랙션 타이밍",
+          "url": "/design/interaction-timing/"
+        },
+        {
+          "title": "인터랙션 규칙",
+          "url": "/guides/interaction-rules/"
+        }
       ]
     },
     {
       "title": "품질 검증",
       "key": "quality",
       "items": [
-        { "title": "접근성 체크리스트", "url": "/accessibility/checklist/" },
-        { "title": "색상 대비", "url": "/accessibility/color-contrast/" },
-        { "title": "디자인 QA", "url": "/design-qa/checklist/" },
-        { "title": "브라우저 테스트", "url": "/testing/browser-testing/" },
-        { "title": "AI 프롬프트", "url": "/prompts/" }
+        {
+          "title": "배포 전 체크리스트",
+          "url": "/design-qa/release-checklist/"
+        },
+        {
+          "title": "접근성 체크리스트",
+          "url": "/accessibility/checklist/"
+        },
+        {
+          "title": "색상 대비",
+          "url": "/accessibility/color-contrast/"
+        },
+        {
+          "title": "디자인 QA",
+          "url": "/design-qa/checklist/"
+        },
+        {
+          "title": "브라우저 테스트",
+          "url": "/testing/browser-testing/"
+        },
+        {
+          "title": "AI 프롬프트",
+          "url": "/prompts/"
+        }
       ]
     }
   ]

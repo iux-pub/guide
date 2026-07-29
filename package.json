@@ -1,6 +1,6 @@
 {
   "name": "infomind-ux-guide",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "인포마인드 UX 디자인/퍼블리싱 가이드 시스템",
   "private": true,
   "scripts": {

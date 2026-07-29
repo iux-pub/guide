@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-07-29
+
+### Added
+- `references/trade-off-rules.md` — 원칙이 충돌할 때의 우선순위 6단계. 1순위는 접근성이다. 자동검사가 잡지 못하는 설계 판단을 다룬다.
+- `references/release-checklist.md` — 배포 전 점검 7개 구분 26항목. 접근성·과업 흐름·품질은 100%, 전체 85% 통과가 조건이다.
+- 문서 사이트에 두 문서를 노출한다(`/governance/trade-off-rules/`, `/design-qa/release-checklist/`). 사이트 페이지는 `references/` 원본을 읽는 래퍼이며 내용을 복사하지 않는다.
+- MCP 서버 지시문에 두 문서를 넣었다. 원칙 충돌 시 우선순위를 따르고, 화면을 마무리하면 체크리스트로 점검하도록 건다.
+
 ## [3.2.0] - 2026-07-29
 
 ### Added

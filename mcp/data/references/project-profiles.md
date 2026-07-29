@@ -2,15 +2,57 @@
 
 KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다.
 
+<!-- profiles:begin — contracts/profiles.json에서 자동 생성. 직접 수정 금지. npm run build:profiles -->
+
 ## 사이트 유형
 
-| 유형 | 적용 대상 | 기본 생성 | 조건부/제외 |
-|------|-----------|-----------|-------------|
-| 일반사이트 | 민간 기업, 브랜드, 캠페인, 포트폴리오, 회사 홈페이지 | 시맨틱 구조, 접근성, 색상 토큰, 반응형, 브랜드 표현 | 정부 상징/공식 배너/운영기관 식별자 제외 |
-| 공공서비스 | 중앙부처·지자체·공공기관이 시민에게 제공하는 민원, 신청, 조회, 정책, 참여 서비스 | KRDS 접근성·컴포넌트·서비스 패턴 적극 적용, 신청/검색/로그인/알림 흐름 보강 | 공식 배너/정부 상징/운영기관 식별자는 과업·기관 정책 확인 시만 |
-| 공공기관 | 공기업, 출자·출연기관, 산하기관, 재단, 공공기관 대표 홈페이지 | 공공 톤의 헤더/푸터, 기관 식별, 정보공개/공지/홍보 구조 | 정부 상징은 기본값 아님. 기관 CI/BI와 과업 요구 우선 |
-| CMS·관리자 | CMS, 관리자, 사내 업무 시스템, 운영 콘솔 | 고밀도 정보 구조, 폼/테이블/검색/필터/상태 패턴, 접근성 | 정부 아이덴티티 제외. 공공 운영 CMS라도 관리자 화면에는 업무 효율 우선 |
-| 커머스·예약 | 쇼핑몰, 면세점, 예약, 결제, 이벤트·프로모션 | 상품/주문/결제 접근성, 명확한 CTA, 전환 흐름 | 법정 링크, 환불/교환/개인정보 안내. 공공기관 운영이면 공공기관 조건과 병행 |
+| 유형 | id | 적용 대상 | 기본 생성 | 정부 아이덴티티 |
+|------|----|-----------|-----------|-----------------|
+| 일반사이트 | `general-site` | 민간 기업, 브랜드, 캠페인, 포트폴리오, 회사 홈페이지 | 시맨틱 구조, 접근성, 색상 토큰, 반응형, 브랜드 표현 | 제외 |
+| 공공서비스 | `public-service` | 중앙부처·지자체·공공기관이 시민에게 제공하는 민원, 신청, 조회, 정책, 참여 서비스 | KRDS 접근성·컴포넌트·서비스 패턴 적극 적용. 신청/검색/로그인/알림 흐름 보강 | 조건부 — 과업·기관 정책 확인 시만 |
+| 공공기관 | `public-institution` | 공기업, 출자·출연기관, 산하기관, 재단, 공공기관 대표 홈페이지 | 공공 톤의 헤더/푸터, 기관 식별, 정보공개/공지/홍보 구조 | 조건부 — 과업·기관 정책 확인 시만 |
+| CMS·관리자 | `cms-admin` | CMS, 관리자, 사내 업무 시스템, 운영 콘솔 | 고밀도 정보 구조, 폼/테이블/검색/필터/상태 패턴, 접근성 | 제외 |
+| 커머스·예약 | `commerce-reservation` | 쇼핑몰, 면세점, 예약, 결제, 이벤트·프로모션 | 상품/주문/결제 접근성, 명확한 CTA, 전환 흐름 | 제외 |
+
+## 유형별 Page Shell
+
+사이트 유형 판정은 HTML 구조 선택으로 이어져야 한다. 정부/공공 아이덴티티 요소는 조건부 생성 항목이며 아래 shell에 기본 포함하지 않는다.
+
+| 유형 | 기본 section 흐름 | 우선 컴포넌트 | 밀도 |
+|------|-------------------|---------------|------|
+| 일반사이트 | `section--intro` → `section--content` → `section--list`<br>또는 `section--intro` → `section--content` → `section--notice` | header, main-menu, card, list, btn | 여유 |
+| 공공서비스 | `section--search` → `section--process` → `section--form` → `section--notice`<br>또는 `section--intro` → `section--process` → `section--data` → `section--notice` | breadcrumb, step-indicator, form, alert, table | 여유 |
+| 공공기관 | `section--intro` → `section--notice` → `section--list` → `section--content` | header, main-menu, breadcrumb, card, pagination | 여유 |
+| CMS·관리자 | `section--search` → `section--data` → `section--form`<br>또는 `section--search` → `section--data` → `section--notice` | form, select, table, pagination, badge, toast | 고밀도 |
+| 커머스·예약 | `section--intro` → `section--list` → `section--form` → `section--notice`<br>또는 `section--intro` → `section--list` → `section--process` → `section--notice` | card, btn, form, step-indicator, alert | 여유 |
+
+## 밀도 기준
+
+간격은 토큰이 아니라 직접값이다. 아래는 유형별 출발점이며, 프로젝트 맥락에서 조정할 수 있다.
+
+| 밀도 | section 패딩 (PC / 모바일) | 폼 행 간격 | 표 셀 패딩 | 기준 |
+|------|---------------------------|------------|------------|------|
+| 여유 | 8rem / 4rem | 2.4rem | 1.6rem | 읽기 중심 화면. 한 화면에 담는 정보보다 가독성을 우선한다. |
+| 고밀도 | 4rem / 2.4rem | 1.6rem | 1rem | 반복 작업 화면. 스크롤과 클릭 수를 줄이는 쪽을 우선한다. 터치 영역 44px 하한은 그대로 지킨다. |
+
+## 조건부 생성
+
+| 항목 | 생성 조건 | 생성하지 않는 경우 |
+|------|-----------|--------------------|
+| 공식 배너 | 공공서비스 중 정부 상징 사용이 명시되었거나 과업에서 요구됨 | 일반사이트, CMS·관리자, 커머스, 기관 정책 미확인 |
+| 정부 상징 로고 | 정부 상징 사용 대상 서비스로 확인됨 | 자체 CI/BI가 우선인 일반사이트·공공기관·사내 프로젝트 |
+| 운영기관 식별자 | 상위 운영기관 표시가 과업에 포함됨 | 운영기관 계층이 없거나 브랜드 사이트인 경우 |
+| 공공 푸터 필수 링크 | 공공서비스 또는 공공기관 웹사이트 납품/운영 요구가 있음 | 일반사이트는 해당 법정/운영 링크로 대체 |
+
+## 유형별 주의
+
+- **일반사이트** — 정부 상징·공식 배너·운영기관 식별자를 생성하지 않는다.
+- **공공서비스** — 공식 배너·정부 상징·운영기관 식별자는 과업지시서나 기관 정책이 확인된 경우에만 생성한다.
+- **공공기관** — 정부 상징은 기본값이 아니다. 기관 CI/BI와 과업 요구가 우선한다.
+- **CMS·관리자** — 공공 운영 CMS라도 관리자 화면에는 업무 효율을 우선한다. 마케팅형 hero나 장식 카드 중심 구성을 피한다.
+- **커머스·예약** — 법정 링크와 환불/교환/개인정보 안내가 필요하다. 공공기관이 운영하면 public-institution 조건을 병행한다.
+
+<!-- profiles:end -->
 
 ## 항상 생성에 반영
 
@@ -23,18 +65,6 @@ KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 
 - `var(--color-*)` 색상 토큰, `var(--font-*)` 기본 폰트
 - 포커스 표시, 키보드 접근, 터치 영역 44x44px 이상
 - 상태 표현은 색상 + 텍스트/아이콘/ARIA를 함께 사용
-
-## 유형별 Page Shell
-
-사이트 유형 판정은 HTML 구조 선택으로 이어져야 한다. 정부/공공 아이덴티티 요소는 조건부 생성 항목이며, 아래 shell에는 기본 포함하지 않는다.
-
-| 유형 | 기본 section 흐름 | 우선 컴포넌트 |
-|------|-------------------|---------------|
-| 일반사이트 | `section--intro` → `section--content` → `section--list` 또는 `section--notice` | header, main-menu, card, list, btn |
-| 공공서비스 | `section--search` 또는 `section--intro` → `section--process` → `section--form` 또는 `section--data` → `section--notice` | breadcrumb, step-indicator, form, alert, table |
-| 공공기관 | `section--intro` → `section--notice` → `section--list` → `section--content` | header, main-menu, breadcrumb, card, pagination |
-| CMS·관리자 | `section--search` → `section--data` → `section--form` 또는 `section--notice` | form, select, table, pagination, badge, toast |
-| 커머스·예약 | `section--intro` → `section--list` → `section--form` 또는 `section--process` → `section--notice` | card, btn, form, step-indicator, alert |
 
 공통 page shell:
 

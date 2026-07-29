@@ -1,5 +1,5 @@
 {
-  "version": "59f789b",
+  "version": "5c02eb3",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -47,7 +47,7 @@
     {
       "id": "project-profiles",
       "file": "project-profiles.md",
-      "chars": 4256,
+      "chars": 5651,
       "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
     },
     {

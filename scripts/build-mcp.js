@@ -7,6 +7,7 @@
  *
  * 입력:
  *   rules.json                       (규칙 원본)
+ *   contracts/profiles.json          (사이트 유형 프리셋)
  *   references/CONTRACT.md           (작업 컨트랙트)
  *   references/*.md                  (토큰·컴포넌트·접근성 등 레퍼런스)
  *   references/workflows/*.md        (작업 절차 — 옛 스킬을 대체한다)
@@ -73,8 +74,9 @@ function summarize(body) {
 
 resetDir(DATA_DIR)
 
-// 1. 규칙
+// 1. 규칙 / 사이트 유형 프리셋
 fs.copyFileSync(path.join(ROOT, 'rules.json'), path.join(DATA_DIR, 'rules.json'))
+fs.copyFileSync(path.join(ROOT, 'contracts', 'profiles.json'), path.join(DATA_DIR, 'profiles.json'))
 
 // 2. 컨트랙트 본문
 fs.copyFileSync(path.join(ROOT, 'references', 'CONTRACT.md'), path.join(DATA_DIR, 'contract.md'))

@@ -226,12 +226,17 @@ function readBrandFile(brandPath) {
   return { resolved, brand }
 }
 
-/** 사이트 유형을 프로젝트에 남긴다 — 에이전트가 매번 되묻지 않게 한다. */
+/**
+ * 사이트 유형을 프로젝트에 남긴다 — 에이전트가 매번 되묻지 않게 한다.
+ * 프리셋 본문(section 흐름·우선 컴포넌트·밀도)은 여기 복사하지 않는다.
+ * 스타터에 동봉된 contracts/profiles.json과 MCP get_profile이 원본이다.
+ */
 function writeProjectProfile(projectPath, profile) {
   const configPath = path.join(projectPath, 'infoux.json')
   fs.writeFileSync(configPath, JSON.stringify({
     profile,
-    note: 'infoUX 사이트 유형. AI 도구는 이 값을 사이트 유형 판정 결과로 사용한다. 값은 contracts/task-contract.schema.json의 profile enum을 따른다.'
+    note: 'infoUX 사이트 유형. AI 도구는 이 값을 사이트 유형 판정 결과로 사용하고 다시 판정하지 않는다. 프리셋 상세는 contracts/profiles.json 또는 MCP get_profile(profile)에서 읽는다.',
+    preset: 'contracts/profiles.json'
   }, null, 2) + '\n')
 
   // 에이전트 지시 파일에도 한 줄 박아 둔다. infoux.json을 안 읽는 도구도 있다.
@@ -241,7 +246,8 @@ function writeProjectProfile(projectPath, profile) {
     const body = fs.readFileSync(docPath, 'utf-8')
     fs.writeFileSync(docPath,
       `> **이 프로젝트의 사이트 유형: \`${profile}\`** — ${PROFILES[profile]}\n` +
-      '> 사이트 유형을 다시 판정하지 않는다. 바꿔야 하면 UX팀에 확인한다.\n\n' + body)
+      '> 사이트 유형을 다시 판정하지 않는다. 바꿔야 하면 UX팀에 확인한다.\n' +
+      `> section 흐름·우선 컴포넌트·밀도는 MCP \`get_profile("${profile}")\` 또는 \`contracts/profiles.json\`에서 읽는다.\n\n` + body)
   }
 }
 
@@ -378,6 +384,9 @@ async function main() {
   console.log('')
   console.log(`${DIM}브랜드 변경:${RESET}   tokens/brand.json 편집 → npm run build → npm run check`)
   console.log(`${DIM}AI 기준 연결:${RESET}  claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp`)
+  if (args.flags.profile) {
+    console.log(`${DIM}프리셋 조회:${RESET}   MCP get_profile("${args.flags.profile}") — section 흐름·우선 컴포넌트·밀도`)
+  }
   if (args.flags.deliver) {
     console.log('')
     console.log(`${YELLOW}납품본입니다.${RESET} 제외된 사내 자산: ${removed.join(', ') || '없음'}`)

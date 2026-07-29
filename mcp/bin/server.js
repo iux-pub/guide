@@ -27,6 +27,7 @@ function readData(...segments) {
 
 const manifest = JSON.parse(readData('manifest.json'))
 const rules = JSON.parse(readData('rules.json'))
+const profileSpec = JSON.parse(readData('profiles.json'))
 
 // ─────────────────────────────────────────────────────
 // 서버 지시문 — 에이전트가 도구를 언제 써야 하는지 알려준다
@@ -38,6 +39,8 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
 
 1. 사이트 유형을 판정한다 — 일반사이트 / 공공서비스 / 공공기관 / CMS·관리자 / 커머스·예약.
    판단이 서지 않으면 get_reference("project-profiles")를 읽는다.
+   판정했으면 get_profile(id)로 section 흐름·우선 컴포넌트·밀도를 가져간다.
+   프로젝트에 infoux.json이 있으면 그 profile 값이 판정 결과다 — 다시 판정하지 않는다.
 2. 색상은 반드시 토큰을 쓴다. hex/rgb/hsl 직접 작성 금지. get_tokens로 확인한다.
    토큰명을 지어내지 않는다 — 목록에 없으면 사용자에게 확인한다.
 3. 컴포넌트는 카탈로그를 먼저 본다. list_components → get_component 순으로 확인하고
@@ -117,6 +120,19 @@ const TOOLS = [
       type: 'object',
       properties: {
         name: { type: 'string', description: '문서 이름 (예: accessibility, forbidden-patterns)' }
+      }
+    }
+  },
+  {
+    name: 'get_profile',
+    description:
+      '사이트 유형 프리셋을 반환한다. name 없이 부르면 5종 목록을 준다. ' +
+      'section 흐름, 우선 컴포넌트, 밀도 기준, 정부 아이덴티티 조건이 들어 있다. ' +
+      '사이트 유형을 판정한 직후에 읽어 구조를 잡는다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: '유형 id (general-site, public-service, public-institution, cms-admin, commerce-reservation)' }
       }
     }
   },
@@ -209,6 +225,65 @@ function getRules({ id, category, severity } = {}) {
     if (rule.good) lines.push('', '준수:', '```', String(rule.good), '```')
     lines.push('')
   }
+  return text(lines.join('\n'))
+}
+
+function getProfile(name) {
+  const profiles = profileSpec.profiles
+
+  if (!name) {
+    const lines = ['# infoUX 사이트 유형', '', '판정 후 get_profile(id)로 프리셋을 가져간다.', '']
+    for (const p of profiles) {
+      lines.push(`- **${p.id}** (${p.label}) — ${p.appliesTo}`)
+    }
+    lines.push('', '판정이 서지 않으면 get_reference("project-profiles")의 판정 절차를 읽는다.')
+    return text(lines.join('\n'))
+  }
+
+  const profile = profiles.find(p => p.id === name)
+  if (!profile) return notFound(`사이트 유형 "${name}"`, profiles.map(p => p.id))
+
+  const density = profileSpec.density[profile.density]
+  const identity = profile.governmentIdentity === 'excluded'
+    ? '제외 — 정부 상징·공식 배너·운영기관 식별자를 생성하지 않는다.'
+    : '조건부 — 과업지시서나 기관 정책이 확인된 경우에만 생성한다.'
+
+  const lines = [
+    `# ${profile.label} (${profile.id})`,
+    '',
+    `적용 대상: ${profile.appliesTo}`,
+    `기본 생성: ${profile.focus}`,
+    '',
+    '## 기본 section 흐름',
+    '',
+    profile.sectionFlow.map(s => `section--${s}`).join(' → ')
+  ]
+  if (profile.sectionFlowAlt) {
+    lines.push('', '대안 흐름:', profile.sectionFlowAlt.map(s => `section--${s}`).join(' → '))
+  }
+  lines.push(
+    '',
+    '## 우선 컴포넌트',
+    '',
+    profile.priorityComponents.map(c => `- ${c}`).join('\n'),
+    '',
+    `## 밀도 — ${density.label}`,
+    '',
+    `- section 패딩: PC ${density.sectionPaddingPc} / 모바일 ${density.sectionPaddingMobile}`,
+    `- 폼 행 간격: ${density.formRowGap}`,
+    `- 표 셀 패딩: ${density.tableCellPadding}`,
+    `- ${density.note}`,
+    '',
+    '## 정부 아이덴티티',
+    '',
+    identity,
+    '',
+    '## 주의',
+    '',
+    profile.note,
+    '',
+    '간격은 토큰이 아니라 직접값이다. 위 수치는 출발점이며 프로젝트 맥락에서 조정한다.'
+  )
   return text(lines.join('\n'))
 }
 
@@ -312,6 +387,8 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
         return getReference(args.name)
       case 'get_workflow':
         return getWorkflow(args.name)
+      case 'get_profile':
+        return getProfile(args.name)
       case 'search_docs':
         return searchDocs(args.query)
       default:

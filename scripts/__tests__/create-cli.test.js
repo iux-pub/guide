@@ -21,21 +21,49 @@ function listFromCli(constName) {
   return [...body.matchAll(/'([^']+)'/g)].map(m => m[1])
 }
 
-test('--profile 값은 Task Contract 스키마의 profile enum과 같다', () => {
+test('사이트 유형 정의가 세 곳에서 일치한다', () => {
+  // CLI(입력 검증) · Task Contract 스키마(계약) · profiles.json(프리셋)이 갈라지면
+  // 생성물이 계약을 어기거나 MCP가 없는 유형을 답한다.
   const schema = JSON.parse(
     fs.readFileSync(path.join(ROOT, 'contracts', 'task-contract.schema.json'), 'utf8')
   )
+  const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+
   const schemaProfiles = schema.properties.profile.enum.slice().sort()
+  const presetProfiles = spec.profiles.map(p => p.id).sort()
 
   const block = CLI.match(/const PROFILES = \{([\s\S]*?)\n\}/)
   assert.ok(block, 'PROFILES를 읽지 못했다')
   const cliProfiles = [...block[1].matchAll(/^\s*'([a-z-]+)':/gm)].map(m => m[1]).sort()
 
-  assert.deepEqual(
-    cliProfiles,
-    schemaProfiles,
-    'CLI가 받는 사이트 유형과 스키마 enum이 다르면 생성물이 계약을 어긴다'
+  assert.deepEqual(cliProfiles, schemaProfiles, 'CLI와 Task Contract 스키마가 다르다')
+  assert.deepEqual(presetProfiles, schemaProfiles, 'profiles.json과 Task Contract 스키마가 다르다')
+})
+
+test('프로필 프리셋이 실제 컴포넌트와 section archetype만 가리킨다', () => {
+  const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+  const pageContract = JSON.parse(
+    fs.readFileSync(path.join(ROOT, 'contracts', 'html-page-contract.json'), 'utf8')
   )
+  const archetypes = pageContract.sectionArchetypes
+  const components = fs
+    .readdirSync(path.join(ROOT, 'src', 'snippets'))
+    .filter(name => name.endsWith('.md') && name !== 'AGENTS.md')
+    .map(name => name.replace(/\.md$/, ''))
+
+  for (const profile of spec.profiles) {
+    for (const flow of [profile.sectionFlow, profile.sectionFlowAlt ?? []]) {
+      for (const section of flow) {
+        assert.ok(archetypes.includes(section),
+          `${profile.id}: section--${section}은 등록된 archetype이 아니다`)
+      }
+    }
+    for (const component of profile.priorityComponents) {
+      assert.ok(components.includes(component),
+        `${profile.id}: 컴포넌트 "${component}"이 카탈로그에 없다`)
+    }
+    assert.ok(spec.density[profile.density], `${profile.id}: 밀도 "${profile.density}" 정의 없음`)
+  }
 })
 
 test('납품본에서 제외하는 것과 남겨야 하는 것이 겹치지 않는다', () => {

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-07-29
+
+### Added
+- `contracts/profiles.json` — 사이트 유형 5종의 실행 프리셋. section 흐름, 우선 컴포넌트, 밀도(여유/고밀도) 수치, 정부 아이덴티티 조건을 기계가 읽을 수 있게 정의한다. 산문으로만 있던 판정 기준을 옮긴 것이다.
+- MCP `get_profile` 도구(9종째). 유형을 판정한 직후 프리셋을 가져가 구조를 잡는다. 서버 지시문에도 넣어 `infoux.json`이 있으면 재판정하지 않도록 했다.
+- `npm run build:profiles` — `references/project-profiles.md`의 표를 `profiles.json`에서 생성한다. 산문은 손대지 않고 표 구간만 덮어쓴다.
+
+### Changed
+- 사이트 유형 정의가 세 곳(CLI · Task Contract 스키마 · profiles.json)에서 일치하는지 단위 테스트가 강제한다. 프리셋이 가리키는 컴포넌트와 section archetype이 실제로 존재하는지도 검사한다.
+
 ## [3.3.0] - 2026-07-29
 
 ### Added

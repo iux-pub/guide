@@ -44,24 +44,24 @@ PR 템플릿에 따라 변경 요약, 영향 범위, 체크리스트를 작성�
 
 ## 새 컴포넌트 추가 절차
 
-> KRDS 28컴포넌트 카탈로그 외 신설은 UX팀 결정 + `skill/references/krds-components.md` 등재가 선행되어야 한다.
+> KRDS 28컴포넌트 카탈로그 외 신설은 UX팀 결정 + `references/krds-components.md` 등재가 선행되어야 한다.
 
 1. **CSS 파일 생성**: `src/styles/6-components/{컴포넌트명}.css`
 2. **index.css에 등록**: `@import "./{컴포넌트명}.css"`
 3. **스니펫 작성**: `src/snippets/{컴포넌트명}.md` (KRDS 정합 마크업·variant·접근성)
 4. **플레이그라운드 작성**: `src/playground/{컴포넌트명}.html`
 5. **문서 페이지**: `site/components/{컴포넌트명}.md`
-6. **카탈로그 등재**: `skill/references/krds-components.md`에 BEM·접근성·토큰 매핑 추가
+6. **카탈로그 등재**: `references/krds-components.md`에 BEM·접근성·토큰 매핑 추가
 7. **검증**: `npm run check && npm run lint:css && npm run test:a11y`
 
-> `/create-component {컴포넌트명}` 스킬을 사용하면 1~5번 파일이 일괄 생성된다.
+> AI에게 맡기면 MCP `get_workflow("create-component")` 절차에 따라 1~5번 파일이 일괄 생성된다.
 
 ## 새 토큰 추가 절차
 
 1. **KRDS 정본 갱신은 직접 수정 금지** — `tokens/foundation.json`은 KRDS-uiux 외부 갱신만 동기화
 2. **INFOMIND 결정**: `tokens/foundation.json`에서 KRDS 같은 경로 덮어쓰기 또는 `infomind-*` 네임스페이스 추가
 3. **빌드**: `npm run build:tokens` 실행 → `tokens/build/tokens.css` 갱신
-4. **문서 업데이트**: `site/tokens/` 관련 페이지 + `skill/references/krds-tokens.md`
+4. **문서 업데이트**: `site/tokens/` 관련 페이지 + `references/krds-tokens.md`
 5. **CLAUDE.md 업데이트**: 필요 시 토큰 카테고리 반영
 6. **거버넌스 승인**: 팀 리뷰 후 반영
 

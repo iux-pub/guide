@@ -6,7 +6,7 @@
 // R-17: 비-BEM 상태 클래스 (.is-*, .has-*)
 // R-18: 시각적 단어 modifier (--blue, --big, --rounded 등)
 //
-// 단일 소스: skill/references/html-semantics.md
+// 단일 소스: references/html-semantics.md
 // 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
 //   STRICT=1 시 경고도 1로 실패 처리
 

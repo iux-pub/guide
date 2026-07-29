@@ -6,7 +6,7 @@
 
 > 전체 마크업·variant·접근성 노트의 권위 있는 소스: `src/snippets/{name}.md`
 > 자동 합본: `site/prompts/components.md`
-> 컴포넌트 카탈로그(BEM·접근성·토큰 매핑): `skill/references/krds-components.md`
+> 컴포넌트 카탈로그(BEM·접근성·토큰 매핑): `references/krds-components.md`
 
 ---
 

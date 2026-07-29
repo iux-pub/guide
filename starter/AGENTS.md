@@ -1,11 +1,11 @@
 # AGENTS.md — INFOMIND UX Starter
 
-이 프로젝트에서 UI, CSS, HTML, 접근성 작업을 할 때는 `CLAUDE.md`와 `.claude/skills/info-design/SKILL.md`를 기준으로 한다.
+이 프로젝트에서 UI, CSS, HTML, 접근성 작업을 할 때는 `CLAUDE.md`와 infoUX MCP(`npx -y @infomind/infoux-mcp`)의 `get_contract()`를 기준으로 한다.
 
 ## 예방형 작업 순서
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 인터랙티브 위젯과 예외를 먼저 선언한다.
-2. `.agents/skills` 또는 `.claude/skills`에서 작업에 맞는 스킬을 적용한다.
+2. MCP `get_workflow`로 작업에 맞는 절차를 확인한다.
 3. 수정 파일과 가장 가까운 `AGENTS.md`를 읽는다.
 4. 기존 컴포넌트와 승인 패턴을 조합해 구현한다.
 5. 검사는 설계를 대신하지 않는 마지막 안전망으로 실행한다.

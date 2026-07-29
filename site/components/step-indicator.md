@@ -3,7 +3,7 @@ title: 단계 표시기
 order: 21
 ---
 
-KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/step-indicator.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#step-indicator)에 있다.
+KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/step-indicator.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [references/krds-components.md](https://github.com/iux-pub/guide/blob/main/references/krds-components.md#step-indicator)에 있다.
 
 ## 기본 마크업
 
@@ -34,4 +34,4 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/step-indicator.m
 
 - 마크업: `src/snippets/step-indicator.md`
 - CSS: `src/styles/6-components/step-indicator.css`
-- 카탈로그: [krds-components.md#step-indicator](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#step-indicator)
+- 카탈로그: [krds-components.md#step-indicator](https://github.com/iux-pub/guide/blob/main/references/krds-components.md#step-indicator)

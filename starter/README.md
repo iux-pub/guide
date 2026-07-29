@@ -35,10 +35,10 @@ npm run watch:css   # 개발 시 CSS 변경 감지
 UI/CSS/HTML 작업은 별도 트리거 없이 infoUX 계약이 적용됩니다.
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형과 핵심 과업을 확정합니다.
-2. `.agents/skills` 또는 `.claude/skills`에서 작업별 절차를 적용합니다.
+2. infoUX MCP의 `get_workflow`로 작업별 절차를 확인합니다.
 3. 기존 컴포넌트와 승인 패턴을 조합한 뒤 구현합니다.
 
-상세 참조 스킬은 `.claude/skills/info-design/`에 동봉되어 있습니다.
+상세 기준은 infoUX MCP가 제공합니다 — `claude mcp add infoux -- npx -y @infomind/infoux-mcp`
 
 ---
 
@@ -46,7 +46,6 @@ UI/CSS/HTML 작업은 별도 트리거 없이 infoUX 계약이 적용됩니다.
 
 ```
 my-project/
-├── .claude/skills/info-design/   ← AI 컨트랙트 (자동 인식)
 │   ├── SKILL.md
 │   └── references/
 ├── tokens/
@@ -168,7 +167,7 @@ AI로 화면을 생성하기 전에 프로젝트 유형을 먼저 판정합니�
 
 ## 🚫 절대 금지 (요약)
 
-전체 규정은 `.claude/skills/info-design/references/forbidden-patterns.md` 참조.
+전체 규정은 MCP `get_reference("forbidden-patterns")` 참조.
 
 - Raw hex/rgb/hsl 색상
 - Raw px/rem은 반복 패턴이면 토큰화 권장. 프로젝트 고유 레이아웃 값은 허용
@@ -185,9 +184,9 @@ AI로 화면을 생성하기 전에 프로젝트 유형을 먼저 판정합니�
 ## 📚 더 알아보기
 
 - **KRDS 공식**: https://www.krds.go.kr
-- **info-design 스킬**: `.claude/skills/info-design/SKILL.md` (전체 컨트랙트)
-- **토큰 카탈로그**: `.claude/skills/info-design/references/krds-tokens.md`
-- **컴포넌트 카탈로그**: `.claude/skills/info-design/references/krds-components.md`
+- **작업 컨트랙트**: MCP `get_contract()`
+- **토큰 카탈로그**: MCP `get_tokens()`
+- **컴포넌트 카탈로그**: MCP `list_components()` / `get_component(name)`
 - **가이드 저장소**: https://github.com/iux-pub/guide
 
 ---

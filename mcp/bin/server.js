@@ -42,6 +42,7 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    토큰명을 지어내지 않는다 — 목록에 없으면 사용자에게 확인한다.
 3. 컴포넌트는 카탈로그를 먼저 본다. list_components → get_component 순으로 확인하고
    기존 스니펫을 조합한다. 카탈로그 밖 컴포넌트는 임의 생성하지 않는다.
+   페이지·폼·위젯 설계나 컴포넌트 신규 생성처럼 절차가 정해진 작업은 get_workflow를 먼저 읽는다.
 4. 규칙 R-01~R-22를 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
 5. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
 
@@ -113,6 +114,18 @@ const TOOLS = [
       type: 'object',
       properties: {
         name: { type: 'string', description: '문서 이름 (예: accessibility, forbidden-patterns)' }
+      }
+    }
+  },
+  {
+    name: 'get_workflow',
+    description:
+      '작업 절차를 반환한다. name 없이 부르면 목록을 준다. 페이지·폼·위젯 설계, 컴포넌트 신규 생성, ' +
+      '토큰 변경, UI 리뷰, 프로젝트 초기화 절차가 있다. 해당 작업을 시작하기 전에 읽는다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: '절차 이름 (예: design-page, change-token, create-component)' }
       }
     }
   },
@@ -196,6 +209,19 @@ function getRules({ id, category, severity } = {}) {
   return text(lines.join('\n'))
 }
 
+function getWorkflow(name) {
+  if (!name) {
+    const lines = ['# infoUX 작업 절차', '', '작업을 시작하기 전에 해당 절차를 읽는다.', '']
+    for (const item of manifest.workflows) {
+      lines.push(`- **${item.id}** — ${item.summary || '(설명 없음)'}`)
+    }
+    return text(lines.join('\n'))
+  }
+  const entry = manifest.workflows.find(item => item.id === name)
+  if (!entry) return notFound(`절차 "${name}"`, manifest.workflows.map(i => i.id))
+  return text(readData('workflows', entry.file))
+}
+
 function getReference(name) {
   if (!name) {
     const lines = ['# infoUX 레퍼런스 문서', '']
@@ -226,6 +252,7 @@ function searchDocs(query) {
   }
 
   scan('reference', 'references', manifest.references)
+  scan('workflow', 'workflows', manifest.workflows)
   scan('component', 'snippets', manifest.snippets)
 
   const ruleHits = rules.rules.filter(rule =>
@@ -243,7 +270,8 @@ function searchDocs(query) {
     lines.push('')
   }
   for (const hit of hits) {
-    const getter = hit.kind === 'reference' ? 'get_reference' : 'get_component'
+    const getter =
+      hit.kind === 'reference' ? 'get_reference' : hit.kind === 'workflow' ? 'get_workflow' : 'get_component'
     lines.push(`## ${hit.id} (${hit.kind}, ${hit.count}건) — ${getter}("${hit.id}")`)
     for (const sample of hit.samples) lines.push(`  ${sample.index + 1}: ${sample.line}`)
     lines.push('')
@@ -268,7 +296,7 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
   try {
     switch (name) {
       case 'get_contract':
-        return text(readData('skill.md'))
+        return text(readData('contract.md'))
       case 'list_components':
         return listComponents()
       case 'get_component':
@@ -279,6 +307,8 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
         return getRules(args)
       case 'get_reference':
         return getReference(args.name)
+      case 'get_workflow':
+        return getWorkflow(args.name)
       case 'search_docs':
         return searchDocs(args.query)
       default:

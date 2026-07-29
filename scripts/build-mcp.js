@@ -7,8 +7,9 @@
  *
  * 입력:
  *   rules.json                       (규칙 원본)
- *   skill/SKILL.md                   (info-design 컨트랙트)
- *   skill/references/*.md            (토큰·컴포넌트·접근성 등 레퍼런스)
+ *   references/CONTRACT.md           (작업 컨트랙트)
+ *   references/*.md                  (토큰·컴포넌트·접근성 등 레퍼런스)
+ *   references/workflows/*.md        (작업 절차 — 옛 스킬을 대체한다)
  *   src/snippets/*.md                (컴포넌트 마크업 스니펫)
  *   tokens/build/tokens.css          (실제 토큰 값)
  *
@@ -53,12 +54,19 @@ function copyMarkdownDir(sourceDir, targetDir) {
   })
 }
 
-/** 문서 첫 문단을 한 줄 요약으로 쓴다 — 목록 응답에서 무엇인지 알려면 필요하다. */
+/**
+ * 한 줄 요약을 뽑는다 — 목록 응답만 보고 무엇인지 알 수 있어야 한다.
+ * 워크플로는 `> **언제 쓰나** — ...` 줄이 용도를 가장 정확히 말한다. 그 줄을 우선하고,
+ * 없으면 첫 본문 문단으로 떨어진다.
+ */
 function summarize(body) {
-  const line = body
-    .split('\n')
-    .map(s => s.trim())
-    .find(s => s && !s.startsWith('#') && !s.startsWith('>') && !s.startsWith('---'))
+  const lines = body.split('\n').map(s => s.trim())
+
+  const when = lines.find(s => s.startsWith('> **언제 쓰나**'))
+  const line = when
+    ? when.replace(/^>\s*\*\*언제 쓰나\*\*\s*—\s*/, '')
+    : lines.find(s => s && !s.startsWith('#') && !s.startsWith('>') && !s.startsWith('---'))
+
   if (!line) return ''
   return line.length > 160 ? `${line.slice(0, 157)}...` : line
 }
@@ -69,10 +77,12 @@ resetDir(DATA_DIR)
 fs.copyFileSync(path.join(ROOT, 'rules.json'), path.join(DATA_DIR, 'rules.json'))
 
 // 2. 컨트랙트 본문
-fs.copyFileSync(path.join(ROOT, 'skill', 'SKILL.md'), path.join(DATA_DIR, 'skill.md'))
+fs.copyFileSync(path.join(ROOT, 'references', 'CONTRACT.md'), path.join(DATA_DIR, 'contract.md'))
 
-// 3. 레퍼런스 / 스니펫
-const references = copyMarkdownDir(path.join(ROOT, 'skill', 'references'), path.join(DATA_DIR, 'references'))
+// 3. 레퍼런스 / 워크플로 / 스니펫
+const references = copyMarkdownDir(path.join(ROOT, 'references'), path.join(DATA_DIR, 'references'))
+  .filter(item => item.id !== 'CONTRACT')
+const workflows = copyMarkdownDir(path.join(ROOT, 'references', 'workflows'), path.join(DATA_DIR, 'workflows'))
 const snippets = copyMarkdownDir(path.join(ROOT, 'src', 'snippets'), path.join(DATA_DIR, 'snippets'))
 
 // 4. 실제 토큰 값 — 카탈로그 문서만으로는 hex를 확정할 수 없다
@@ -89,9 +99,13 @@ const manifest = {
   version: buildVersion(),
   generated: 'scripts/build-mcp.js',
   references: withSummary(references, 'references'),
+  workflows: withSummary(workflows, 'workflows'),
   snippets: withSummary(snippets, 'snippets')
 }
 
 fs.writeFileSync(path.join(DATA_DIR, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
 
-console.log(`✓ mcp/data — 레퍼런스 ${references.length}건, 스니펫 ${snippets.length}건, 빌드 ${manifest.version}`)
+console.log(
+  `✓ mcp/data — 레퍼런스 ${references.length}건, 워크플로 ${workflows.length}건, ` +
+  `스니펫 ${snippets.length}건, 빌드 ${manifest.version}`
+)

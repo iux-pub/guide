@@ -17,9 +17,9 @@ exceptions: []
 
 ## 진행 조건
 
-1. `profile`은 `skill/references/project-profiles.md`의 다섯 유형 중 하나로 판정한다.
-2. `reuse`는 `skill/references/krds-components.md`를 검색한 결과다.
-3. `interactive`가 있으면 `skill/references/html-semantics.md`의 ARIA·키보드 패턴을 지정한다.
+1. `profile`은 `references/project-profiles.md`의 다섯 유형 중 하나로 판정한다.
+2. `reuse`는 `references/krds-components.md`를 검색한 결과다.
+3. `interactive`가 있으면 `references/html-semantics.md`의 ARIA·키보드 패턴을 지정한다.
 4. 공공 아이덴티티가 확인되지 않았으면 `unconfirmed`로 두고 생성하지 않는다.
 5. `exceptions`는 규칙을 무시하는 목록이 아니다. 불가피한 예외의 규칙, 이유, 소유자, 만료일을 기록한다.
 6. 필수 판단이 비어 있으면 코드 생성을 시작하지 않는다.

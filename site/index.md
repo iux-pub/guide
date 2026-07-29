@@ -13,11 +13,15 @@ KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙 + INFOMIND
 
 ## AI에게 작업을 맡길 때
 
-작업 시작할 때 이 한 줄만 발화하세요:
+**한 번만 등록하면 됩니다.** 발화로 스킬을 부르던 방식은 폐기했습니다 — 이제 AI가 기준을 직접 조회합니다.
 
-> ### "info-design 스킬 기준으로 가자"
+```bash
+claude mcp add infoux -- npx -y @infomind/infoux-mcp
+```
 
-그 다음 AI는:
+Codex·Cursor도 같은 명령을 각자 설정에 넣으면 됩니다([등록 방법](/onboarding/mcp/)).
+
+등록하면 AI는 작업 중 필요할 때마다 토큰·컴포넌트·규칙을 직접 가져가고:
 - ✓ 색상 토큰만 사용 (raw hex/rgb/hsl 금지)
 - ✓ 기존 컴포넌트 패턴 우선, 필요 시 프로젝트 패턴 또는 공통 컴포넌트로 확장
 - ✓ HTML은 `.skip-to-content`, `header#header`, `main#main`, `footer#footer`, `main > section > .container`와 section 접근 이름 유지
@@ -43,7 +47,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 [디자인 QA](/design-qa/checklist/) → [디자인 전달 체크리스트](/onboarding/handoff/) → [접근성 체크리스트](/accessibility/checklist/)
 
 **퍼블리셔**
-[컴포넌트 카탈로그](/components/)에서 마크업을 그대로 복사해서 사용. AI에게 "info-design 기준으로 가자"라고만 하면 룰 자동 준수.
+[컴포넌트 카탈로그](/components/)에서 마크업을 그대로 복사해서 사용. [MCP를 등록](/onboarding/mcp/)해 두면 AI가 룰을 자동 준수합니다.
 
 **리뷰어**
 [접근성 체크리스트](/accessibility/checklist/)로 시각·키보드 검증. 19개 규칙은 CI가 자동 검출 — 사람은 비즈니스 의도와 사용성만 보면 됩니다.
@@ -57,7 +61,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 
 규칙은 18개지만 AI가 다 외웁니다. 사람이 기억할 건 이게 전부:
 
-1. **AI 발화 한 줄** — `"info-design 스킬 기준으로 가자"`
+1. **MCP 등록 한 번** — `claude mcp add infoux -- npx -y @infomind/infoux-mcp` (이후 발화 불필요)
 2. **CI 빨강** — AI에게 메시지 보여주고 `"고쳐줘"`
 3. **새 컴포넌트 필요** — 기존 패턴으로 해결할지, 프로젝트 패턴/공통 컴포넌트로 확장할지 UX팀 판단
 4. **토큰/색상 변경 필요** — UX팀에 슬랙

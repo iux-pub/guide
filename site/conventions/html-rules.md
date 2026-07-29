@@ -133,6 +133,6 @@ HTML 마크업 작성 규칙이다.
 <nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>   // 기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용
 ```
 
-**참고:** 기존 인포마인드 구축 사이트 HTML, skill/references/html-semantics.md, skill/references/krds-components.md
+**참고:** 기존 인포마인드 구축 사이트 HTML, references/html-semantics.md, references/krds-components.md
 
 ---

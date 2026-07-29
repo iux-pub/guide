@@ -5,7 +5,7 @@ playground_src: /playground/tab.html
 preview_height: 500
 ---
 
-KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/tab.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#tab)에 있다.
+KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/tab.md`이며, BEM·접근성·토큰 매핑 카탈로그는 [references/krds-components.md](https://github.com/iux-pub/guide/blob/main/references/krds-components.md#tab)에 있다.
 
 ## 기본 마크업
 
@@ -45,4 +45,4 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/tab.md`이며, B
 
 - 마크업: `src/snippets/tab.md`
 - CSS: `src/styles/6-components/tab.css`
-- 카탈로그: [krds-components.md#tab](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md#tab)
+- 카탈로그: [krds-components.md#tab](https://github.com/iux-pub/guide/blob/main/references/krds-components.md#tab)

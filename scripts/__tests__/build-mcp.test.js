@@ -9,7 +9,7 @@ const ROOT = path.resolve(__dirname, '..', '..')
 const DATA_DIR = path.join(ROOT, 'mcp', 'data')
 
 test('MCP 번들이 서버가 읽는 파일을 모두 갖췄다', () => {
-  for (const required of ['manifest.json', 'rules.json', 'skill.md', 'tokens.css']) {
+  for (const required of ['manifest.json', 'rules.json', 'contract.md', 'tokens.css']) {
     assert.ok(fs.existsSync(path.join(DATA_DIR, required)), `mcp/data/${required} 누락 — npm run build:mcp`)
   }
 })
@@ -18,12 +18,23 @@ test('manifest의 항목은 실제 파일을 가리킨다', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'manifest.json'), 'utf8'))
 
   assert.ok(manifest.references.length > 0)
+  assert.ok(manifest.workflows.length > 0)
   assert.ok(manifest.snippets.length > 0)
 
-  for (const [dir, items] of [['references', manifest.references], ['snippets', manifest.snippets]]) {
+  for (const [dir, items] of [
+    ['references', manifest.references],
+    ['workflows', manifest.workflows],
+    ['snippets', manifest.snippets]
+  ]) {
     for (const item of items) {
       assert.ok(fs.existsSync(path.join(DATA_DIR, dir, item.file)), `${dir}/${item.file} 누락`)
     }
+  }
+})
+
+test('스킬 계층은 저장소에서 사라졌다', () => {
+  for (const removed of ['skill', '.claude/skills', '.agents/skills', 'starter/.claude/skills', 'starter/.agents/skills']) {
+    assert.equal(fs.existsSync(path.join(ROOT, removed)), false, `${removed}가 남아 있다 — 전달 경로는 MCP 하나다`)
   }
 })
 

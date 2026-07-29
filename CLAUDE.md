@@ -5,14 +5,14 @@
 이 저장소에서 CSS·HTML·UI 작업을 시작하면 별도 트리거 없이 infoUX 컨트랙트가 발효된다.
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯, 예외를 먼저 선언한다.
-2. `.claude/skills`에서 작업에 맞는 스킬을 적용한다.
+2. infoUX MCP(`npx -y @infomind/infoux-mcp`)의 `get_workflow`로 작업 절차를 확인한다.
 3. 수정 파일과 가장 가까운 `AGENTS.md`를 읽는다.
 4. 기존 카탈로그와 승인 패턴을 조합한 뒤 구현한다.
 5. 검사는 설계 판단을 대신하지 않는 마지막 안전망으로 실행한다.
 
 Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않는다. 규칙 위반을 발견하면 즉시 작업을 중단하고 사용자에게 보고한다.
 
-> 스킬 본체 소스는 이 저장소의 `skill/`. `npm run build:skill` → `npm run deploy:skill`로 로컬 Claude Code에 배포된다.
+> 기준 본체는 이 저장소의 `references/`. `npm run build:mcp`로 MCP 번들(`mcp/data/`)에 반영되고, 팀원은 MCP 등록만으로 받는다. 스킬 계층은 2026-07-29 폐기했다.
 
 ---
 
@@ -20,11 +20,11 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 
 **INFOMIND UX 디자인/퍼블리싱 가이드 시스템**
 
-KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 합쳐 신규 프로젝트가 즉시 적용 가능한 토큰·컴포넌트·스니펫·스킬을 한 저장소에서 발행한다.
+KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 합쳐 신규 프로젝트가 즉시 적용 가능한 토큰·컴포넌트·스니펫·기준을 한 저장소에서 발행한다.
 
 **Core Value:** 검증된 팀 표준을 일관되게 유지하며, 토큰부터 컴포넌트·스니펫·LLM 컨트랙트까지 단일 소스에서 발행한다.
 
-발행 채널 — `starter/`(KRDS+Tailwind v4 스타터 키트), `skill/`(info-design 스킬), `prompts/`(LLM 컨텍스트 묶음).
+발행 채널 — `starter/`(KRDS+Tailwind v4 스타터 키트), `mcp/`(infoUX MCP 서버 — AI 도구 공통 경로), `prompts/`(LLM 컨텍스트 묶음).
 
 ---
 
@@ -97,7 +97,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 10. 인터랙티브 요소: `role`, `aria-*`, `tabindex` 확인
 11. 폼 요소: `<label for>` + `id` 연결 필수
 12. 모바일 터치 영역 ≥ 44×44px (R-13)
-13. 이유 없는 wrapper 금지 — 자식 하나만 감싸는 `<div>`나 역할이 겹치는 연속 래핑을 두지 않는다. 대상 요소에 직접 클래스를 주거나 시맨틱 요소를 쓴다. `.container`·flex/grid 부모·스크롤 래퍼·`role` 그룹은 예외 (`skill/references/html-semantics.md` § 6.6)
+13. 이유 없는 wrapper 금지 — 자식 하나만 감싸는 `<div>`나 역할이 겹치는 연속 래핑을 두지 않는다. 대상 요소에 직접 클래스를 주거나 시맨틱 요소를 쓴다. `.container`·flex/grid 부모·스크롤 래퍼·`role` 그룹은 예외 (`references/html-semantics.md` § 6.6)
 
 기본 골격:
 
@@ -124,7 +124,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 
 ### 신규 컴포넌트 생성 시
 
-`/create-component {컴포넌트명}` 스킬 사용 — 아래 파일이 일괄 생성된다:
+MCP `get_workflow("create-component")` 절차를 따른다 — 아래 파일이 일괄 생성된다:
 
 | 파일 | 위치 |
 |------|------|
@@ -133,7 +133,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 | 플레이그라운드 | `src/playground/{name}.html` |
 | 문서 페이지 | `site/components/{name}.md` |
 
-> 컴포넌트 카탈로그(`skill/references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 재사용 가능성을 판단해 UX팀 결정으로 확장한다.
+> 컴포넌트 카탈로그(`references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 재사용 가능성을 판단해 UX팀 결정으로 확장한다.
 
 ---
 
@@ -236,7 +236,7 @@ src/styles/
 
 각 컴포넌트는 다음 4종 자료가 동일한 BEM Block명으로 정렬되어 있다 — CSS(`src/styles/6-components/{name}.css`) · 스니펫(`src/snippets/{name}.md`) · 플레이그라운드(`src/playground/{name}.html`) · 문서(`site/components/{name}.md`).
 
-> 상세 카탈로그(BEM·접근성·토큰 매핑) — `skill/references/krds-components.md`
+> 상세 카탈로그(BEM·접근성·토큰 매핑) — `references/krds-components.md`
 
 ---
 
@@ -252,13 +252,13 @@ src/styles/
 | `prompts/design-rules.md` | 디자인 품질 규칙 |
 | `prompts/publishing.md` | 퍼블리싱 체크리스트 |
 
-`mcp/` — infoUX MCP 서버(`@infomind/infoux-mcp`). 스킬은 Claude Code 전용이고 파일 복사가 필요하지만, MCP는 등록 한 줄로 Codex·Cursor 팀원에게도 같은 기준이 간다. 도구 7종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / search_docs). 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다. 상세: `mcp/README.md`.
+`mcp/` — infoUX MCP 서버(`@infomind/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 8종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / get_workflow / search_docs). 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다. 상세: `mcp/README.md`.
 
-`skill/` — info-design 스킬 본체. SKILL.md + references/(krds-tokens, krds-components, tailwind-mapping, accessibility, forbidden-patterns, guide-import). `npm run build:skill` → `npm run deploy:skill`로 로컬 `~/.claude/skills/info-design/`에 배포.
+`references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
 
 ---
 
-## 절대 금지 (요약 — 상세는 스킬 `references/forbidden-patterns.md`)
+## 절대 금지 (요약 — 상세는 `references/forbidden-patterns.md`)
 
 - Raw hex/rgb/hsl 색상
 - 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
@@ -291,12 +291,11 @@ npm run build:css       # Tailwind v4 → dist/css/style.css
 npm run build:docs-css  # 문서 사이트 CSS → dist/css/docs.css
 npm run build:rules     # rules.json → site/conventions/ + CLAUDE.md 자동 주입
 npm run build:prompts   # prompts/*.md 재생성
-npm run build:skill     # skill/ 빌드
+npm run build:references # references/ 생성물 빌드
 npm run build:mcp       # mcp/data 번들 (MCP 서버가 읽는 문서)
 npm run build           # 위 전부 + Eleventy 사이트 빌드
 
 # 발행
-npm run deploy:skill    # 로컬 ~/.claude/skills/info-design/ 동기화
 npm run sync:starter    # iux-pub/starter 저장소로 동기화
 
 # 개발 / 검증

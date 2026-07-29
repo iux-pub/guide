@@ -37,4 +37,4 @@ code {
 ## 관련 문서
 
 - [색상 토큰](/tokens/color/)
-- [토큰 카탈로그](https://github.com/iux-pub/guide/blob/main/skill/references/krds-tokens.md)
+- [토큰 카탈로그](https://github.com/iux-pub/guide/blob/main/references/krds-tokens.md)

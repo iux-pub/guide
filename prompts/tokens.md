@@ -5,7 +5,7 @@
 **권위 있는 소스:**
 - 단일 소스: `tokens/foundation.json`
 - 빌드 산출물: `tokens/build/tokens.css`
-- 카탈로그: `skill/references/krds-tokens.md`
+- 카탈로그: `references/krds-tokens.md`
 
 `npm run build:tokens`로 산출물을 재생성한다.
 

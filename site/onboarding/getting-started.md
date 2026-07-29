@@ -7,7 +7,7 @@ order: 2
 
 ## 새 프로젝트 시작
 
-스타터 킷을 clone하여 바로 시작한다. KRDS+Tailwind v4 + 28컴포넌트 CSS + info-design 스킬이 동봉된 최소 구성이다.
+스타터 킷을 clone하여 바로 시작한다. KRDS+Tailwind v4 + 컴포넌트 CSS + 토큰 2계층(foundation/brand)이 동봉된 최소 구성이다.
 
 ```bash
 git clone https://github.com/iux-pub/starter.git my-project
@@ -27,7 +27,7 @@ npm run build           # 토큰 + Tailwind v4 CSS 한 번에
 
 > **가이드 문서 열람:** [https://github.com/iux-pub/guide](https://github.com/iux-pub/guide) 저장소의 문서 사이트 참조
 
-> **Claude Code 사용 시:** 작업 시작 전 `"info-design 스킬 기준으로 가자"` 발화로 KRDS 컨트랙트 활성화
+> **AI 도구 사용 시:** [infoUX MCP를 등록](/onboarding/mcp/)해 두면 발화 없이 기준이 적용된다.
 
 ---
 
@@ -118,7 +118,7 @@ src/styles/
 | D — 피드백 | alert, badge, progress, spinner, step-indicator, tag, toast, tooltip |
 | E — 콘텐츠 | calendar, carousel, list, table |
 
-심화: [컴포넌트 개요](/components/) · [KRDS 카탈로그](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md)
+심화: [컴포넌트 개요](/components/) · [KRDS 카탈로그](https://github.com/iux-pub/guide/blob/main/references/krds-components.md)
 
 ### 버튼 KRDS 정의
 

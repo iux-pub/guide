@@ -183,8 +183,8 @@ Google Stitch, Galileo, Lovable, v0
 
 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다. Tailwind v4 `@apply`와 명확한 CSS 직접값으로 작성한다.
 
-> 전체 토큰 카탈로그(상세 + 시맨틱 매핑) — `skill/references/krds-tokens.md`
-> Tailwind v4 @theme 매핑 — `skill/references/tailwind-mapping.md`
+> 전체 토큰 카탈로그(상세 + 시맨틱 매핑) — `references/krds-tokens.md`
+> Tailwind v4 @theme 매핑 — `references/tailwind-mapping.md`
 
 ---
 
@@ -210,7 +210,7 @@ INFOUX 표준 브레이크포인트. Tailwind v4 variant는 `mobile:` / `tablet:
 | D — 피드백 | `alert` · `badge` · `progress` · `spinner` · `step-indicator` · `tag` · `toast` · `tooltip` |
 | E — 콘텐츠/표현 | `calendar` · `carousel` · `list` · `table` |
 
-> 각 컴포넌트의 BEM·접근성·토큰 매핑 — `skill/references/krds-components.md`
+> 각 컴포넌트의 BEM·접근성·토큰 매핑 — `references/krds-components.md`
 > 마크업 스니펫 — `src/snippets/{name}.md`
 
 ## HTML 기본 골격
@@ -247,7 +247,7 @@ HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section �
 - 공공기관: 기관 CI/BI와 정보공개/공지/홍보 구조를 우선하고, 정부 상징은 확인 시만 생성
 - 유형이 불명확하면 정부 아이덴티티 요소를 제외하고 공통 접근성/구조 규칙만 적용
 
-상세 기준: `skill/references/project-profiles.md`
+상세 기준: `references/project-profiles.md`
 
 ---
 

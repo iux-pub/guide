@@ -5,14 +5,14 @@
 CSS·HTML·UI 작업은 별도 트리거 없이 infoUX 컨트랙트를 적용한다.
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯과 예외를 선언한다.
-2. `.claude/skills`에서 작업에 맞는 스킬을 적용한다.
+2. infoUX MCP(`npx -y @infomind/infoux-mcp`)의 `get_workflow`로 작업 절차를 확인한다.
 3. 수정 파일과 가장 가까운 `AGENTS.md`를 읽는다.
 4. 기존 카탈로그와 승인 패턴을 조합한 뒤 구현한다.
 5. 검사는 마지막 안전망으로 실행한다.
 
 Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않는다. 위반 발견 시 즉시 작업을 중단하고 사용자에게 보고한다.
 
-> 스킬이 설치되지 않았으면 UX팀(infoUX 가이드 저장소)에서 받아 `.claude/skills/info-design/`에 배치한다.
+> MCP가 등록되어 있지 않으면 `claude mcp add infoux -- npx -y @infomind/infoux-mcp`로 붙인다. Codex·Cursor도 같은 명령을 각자 설정에 넣는다.
 
 ---
 
@@ -98,7 +98,7 @@ npm run check          # info-design 컨트랙트 위반 검출
 
 ---
 
-## 절대 금지 (요약 — 상세는 스킬 `references/forbidden-patterns.md`)
+## 절대 금지 (요약 — 상세는 MCP `get_reference("forbidden-patterns")`)
 
 - Raw hex/rgb/hsl 색상
 - 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
@@ -123,7 +123,7 @@ INFOUX 파운데이션 기준이 변경되면:
 1. UX팀이 infoUX 가이드 저장소 갱신
 2. UX팀이 이 프로젝트 `tokens/foundation.json` 갱신
 3. `npm run build:tokens && npm run build:css`
-4. `.claude/skills/info-design/`도 새 스킬 콘텐츠로 갱신
+4. MCP는 별도 갱신이 필요 없다 — 서버가 최신 기준을 제공한다
 
 ---
 

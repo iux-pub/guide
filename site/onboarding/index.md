@@ -14,7 +14,7 @@ order: 1
 | **디자인 토큰** | `--color-*`, `--font-*`만 CSS Custom Properties로 발행한다 |
 | **컴포넌트 패턴** | 기존 카탈로그 패턴 우선, 필요 시 프로젝트 패턴 또는 공통 컴포넌트로 확장 |
 | **HTML 기본 골격** | `.skip-to-content`, `header#header`, `main#main`, `footer#footer`, `main > section > .container`; section별 접근 이름 |
-| **info-design 스킬** | Claude Code용 LLM 컨트랙트 — 색상 토큰, 접근성, 인포마인드 HTML 골격을 일관되게 적용 |
+| **infoUX MCP** | 모든 AI 도구용 기준 제공 — 색상 토큰, 컴포넌트, 규칙, 작업 절차를 AI가 직접 조회 |
 | **접근성** | KWCAG/WCAG 2.1 AA 기준을 준수하여 공공기관 납품 요건을 충족한다 |
 
 ## 온보딩 가이드

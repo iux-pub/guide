@@ -39,8 +39,8 @@ cd my-project && rm -rf .git && git init && npm install && npm run build
 자동 동봉되는 것:
 - ✅ INFOUX 색상/기본 폰트/브레이크포인트 토큰
 - ✅ KRDS 기반 컴포넌트 CSS
-- ✅ `.claude/skills/info-design/` — Claude Code 자동 인식
-- ✅ `.agents/skills/` + `.claude/skills/` — 페이지·폼·위젯·토큰 작업별 절차
+- ✅ infoUX MCP — Claude Code·Codex·Cursor 공통 (`npx -y @infomind/infoux-mcp`)
+- ✅ MCP `get_workflow` — 페이지·폼·위젯·토큰 작업별 절차
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 - ✅ `contracts/task-contract.md` — 구현 전 판단 계약
 
@@ -67,7 +67,6 @@ npm run dev          # http://localhost:8080
 npm run build              # 전체 재빌드
 npm run sync:starter       # 로컬 starter/ 생성물 갱신
 npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
-npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 ```
 
 ---
@@ -101,7 +100,7 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 | 도구 | 자동 인식 | 비고 |
 |------|-----------|------|
-| **Claude Code** | `CLAUDE.md` + `.claude/skills/` | 작업 설명에 맞는 스킬 자동 선택 |
+| **Claude Code** | `CLAUDE.md` + infoUX MCP | 필요한 기준을 도구로 직접 조회 |
 | **Cursor** | `AGENTS.md` + 경로별 `AGENTS.md` + `.cursorrules` | 자동 |
 | **Aider** | `AGENTS.md` | 자동 |
 | **OpenAI Codex CLI** | `AGENTS.md` + `.agents/skills/` | 자동 |
@@ -113,7 +112,7 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 
 ### 작업별 스킬
 
-`.agents/skills`가 원본이며 `npm run build:agents`가 `.claude/skills`를 생성한다.
+작업 절차는 `references/workflows/`가 원본이며 `npm run build:mcp`가 MCP 번들로 발행한다.
 
 - `design-page`: 사이트 유형, page shell, section 패턴
 - `create-component`: 기존 컴포넌트 검색과 신규 공통화 판단
@@ -132,7 +131,7 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 |------|------|-------|
 | 스타터 키트 로컬 생성 | `npm run sync:starter` | `starter/` |
 | 스타터 원격 배포 | `npm run sync:starter:push` | `iux-pub/starter` 저장소 |
-| AI 스킬 | `npm run deploy:skill` | `~/.claude/skills/info-design/` |
+| AI 기준 | `npm run build:mcp` | infoUX MCP 번들 (`mcp/data/`) |
 | 문서 사이트 | `npm run build` | `_site/` (Eleventy + Pagefind) |
 | LLM 컨텍스트 | `npm run build:prompts` | `prompts/*.md` (대화 첨부용) |
 
@@ -148,7 +147,7 @@ npm run deploy:skill       # 로컬 ~/.claude/skills/info-design/ 갱신
 | `npm run lint` | Stylelint + ESLint |
 | `npm run test` | 전체 CI 시뮬레이션 (check + lint + build + a11y) |
 
-세부 빌드 단계(`build:tokens`, `build:rules`, `build:prompts`, `build:skill` 등)는 `package.json` 참조. 평소엔 `npm run build` 하나면 충분.
+세부 빌드 단계(`build:tokens`, `build:rules`, `build:prompts`, `build:references`, `build:mcp` 등)는 `package.json` 참조. 평소엔 `npm run build` 하나면 충분.
 
 ### 하네스 강제 계층
 
@@ -179,7 +178,7 @@ skill/                    info-design 스킬 (Claude 컨트랙트)
   references/             html-semantics · krds-tokens · krds-components ·
                           accessibility · forbidden-patterns · snippet-template
 .agents/skills/            작업별 스킬 단일 원본
-.claude/skills/            build:agents로 생성되는 Claude용 스킬
+mcp/                       infoUX MCP 서버 — 팀원 배포 단일 경로
 contracts/                 Task Contract + HTML Page Contract
 .github/instructions/      Copilot 파일 경로별 지시
 
@@ -238,7 +237,7 @@ npm run build  ← 토큰·규칙·CSS·프롬프트·스킬·사이트 전체 �
    ↓
 npm run sync:starter        → 로컬 starter/ 생성물 갱신
 npm run sync:starter:push   → 검토 후 iux-pub/starter 푸시
-npm run deploy:skill   → 로컬 ~/.claude/skills/info-design/ 갱신
+npm run build:mcp      → MCP 번들 갱신 (팀원은 등록만으로 최신 기준 사용)
 ```
 
 ---
@@ -251,13 +250,13 @@ npm run deploy:skill   → 로컬 ~/.claude/skills/info-design/ 갱신
 | **컨트리뷰터 가이드** | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | **다중 LLM 컨트랙트** (Cursor · Aider · Codex · Hermes 등) | [`AGENTS.md`](AGENTS.md) |
 | **Claude Code 자동 컨텍스트** | [`CLAUDE.md`](CLAUDE.md) |
-| 신규 컴포넌트 작성 가이드 | `skill/references/snippet-template.md` |
-| HTML 구조 매핑 (28종 × Root/ARIA/키보드) | `skill/references/html-semantics.md` |
-| 토큰 카탈로그 | `skill/references/krds-tokens.md` |
-| 컴포넌트 카탈로그 | `skill/references/krds-components.md` |
-| Tailwind v4 매핑 | `skill/references/tailwind-mapping.md` |
-| 접근성 컨트랙트 | `skill/references/accessibility.md` |
-| 금지 패턴 | `skill/references/forbidden-patterns.md` |
+| 신규 컴포넌트 작성 가이드 | `references/snippet-template.md` |
+| HTML 구조 매핑 (28종 × Root/ARIA/키보드) | `references/html-semantics.md` |
+| 토큰 카탈로그 | `references/krds-tokens.md` |
+| 컴포넌트 카탈로그 | `references/krds-components.md` |
+| Tailwind v4 매핑 | `references/tailwind-mapping.md` |
+| 접근성 컨트랙트 | `references/accessibility.md` |
+| 금지 패턴 | `references/forbidden-patterns.md` |
 | KRDS 원본 정리 | `references/krds-source.md` |
 | KRDS 공식 | https://www.krds.go.kr |
 

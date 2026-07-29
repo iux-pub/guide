@@ -136,7 +136,7 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 <button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">탭1</button>   // 탭 ARIA 4종 세트
 ```
 
-**참고:** skill/references/html-semantics.md, skill/references/accessibility.md
+**참고:** references/html-semantics.md, references/accessibility.md
 
 ---
 
@@ -159,7 +159,7 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 <html lang="ko">   // 한국어 문서 언어 명시
 ```
 
-**참고:** skill/references/accessibility.md
+**참고:** references/accessibility.md
 
 ---
 
@@ -183,6 +183,6 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 }   // 모션 최소화 선호 시 정지
 ```
 
-**참고:** site/guides/css-animation.md, skill/references/accessibility.md
+**참고:** site/guides/css-animation.md, references/accessibility.md
 
 ---

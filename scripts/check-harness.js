@@ -28,20 +28,6 @@ function requireSame(source, target) {
   }
 }
 
-function listSkillFiles(relativeDir) {
-  const root = path.join(ROOT, relativeDir)
-  if (!fs.existsSync(root)) {
-    fail(`스킬 디렉터리 누락: ${relativeDir}`)
-    return []
-  }
-
-  return fs.readdirSync(root, { withFileTypes: true })
-    .filter(entry => entry.isDirectory())
-    .map(entry => `${entry.name}/SKILL.md`)
-    .filter(relativePath => fs.existsSync(path.join(root, relativePath)))
-    .sort()
-}
-
 const rules = JSON.parse(read('rules.json') || '{"rules":[]}')
 const knownEnforcers = new Set([
   'check-violations.js',
@@ -100,33 +86,14 @@ if (starterPackage.scripts?.check !== STARTER_CHECK) {
   fail('starter npm run check가 정적 검사기 3종(위반·HTML 구조·대비)을 모두 실행하지 않습니다.')
 }
 
-const agentSkills = listSkillFiles('.agents/skills')
-const claudeSkills = listSkillFiles('.claude/skills')
-if (agentSkills.join('\n') !== claudeSkills.join('\n')) {
-  fail('.agents/skills와 .claude/skills 목록이 다릅니다. npm run build:agents를 실행하세요.')
-}
-
-for (const relativeSkill of agentSkills) {
-  const skillPath = `.agents/skills/${relativeSkill}`
-  requireSame(skillPath, `.claude/skills/${relativeSkill}`)
-  requireSame(skillPath, `starter/.agents/skills/${relativeSkill}`)
-  requireSame(skillPath, `starter/.claude/skills/${relativeSkill}`)
-  const content = read(skillPath)
-  for (const banned of ['src/scss', '.scss', '@use ', '@forward ', '--spacing-', '--font-family-base']) {
-    if (content.includes(banned)) fail(`${skillPath}에 폐기 패턴 "${banned}"이 남아 있습니다.`)
-  }
-}
-
-for (const requiredSkill of [
-  'change-token/SKILL.md',
-  'create-component/SKILL.md',
-  'design-form/SKILL.md',
-  'design-page/SKILL.md',
-  'design-widget/SKILL.md',
-  'init-project/SKILL.md',
-  'review-ui/SKILL.md'
+// 스킬 계층은 2026-07-29 폐기했다. 작업 절차·레퍼런스는 infoUX MCP가 단일 경로로 제공한다.
+// 대신 MCP 번들이 원본과 어긋나지 않는지 확인한다 — 낡은 기준을 답하는 것이 가장 큰 사고다.
+for (const bundled of [
+  ['rules.json', 'mcp/data/rules.json'],
+  ['references/CONTRACT.md', 'mcp/data/contract.md'],
+  ['tokens/build/tokens.css', 'mcp/data/tokens.css']
 ]) {
-  if (!agentSkills.includes(requiredSkill)) fail(`필수 예방 스킬 누락: ${requiredSkill}`)
+  requireSame(bundled[0], bundled[1])
 }
 
 for (const requiredPath of [

@@ -39,7 +39,7 @@ ChatGPT, Gemini, Claude 웹
 - 공공기관: 기관 CI/BI와 정보공개/공지/홍보 구조를 우선하고, 정부 상징은 확인 시만 생성
 - 유형이 불명확하면 정부 아이덴티티 요소를 제외하고 공통 접근성/구조 규칙만 적용
 
-상세 기준: `skill/references/project-profiles.md`
+상세 기준: `references/project-profiles.md`
 
 ## 디자인 토큰
 
@@ -48,7 +48,7 @@ ChatGPT, Gemini, Claude 웹
 - **색상** (`--color-*`) — 의미 기반 토큰
 - **폰트** (`--font-sans`, `--font-mono`) — 전역 기본 폰트
 
-> 전체 토큰 카탈로그 — `skill/references/krds-tokens.md`
+> 전체 토큰 카탈로그 — `references/krds-tokens.md`
 
 ## 컴포넌트 (KRDS 기반)
 
@@ -58,7 +58,7 @@ ChatGPT, Gemini, Claude 웹
 - **피드백** — alert, badge, progress, spinner, step-indicator, tag, toast, tooltip
 - **콘텐츠** — calendar, carousel, list, table
 
-> 각 컴포넌트의 BEM·접근성·토큰 매핑 — `skill/references/krds-components.md`
+> 각 컴포넌트의 BEM·접근성·토큰 매핑 — `references/krds-components.md`
 
 ## HTML 기본 골격
 

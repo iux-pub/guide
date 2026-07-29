@@ -72,8 +72,8 @@ INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트 목록입니
 1. 각 컴포넌트 페이지에서 마크업을 확인한다
 2. 권위 있는 소스인 `src/snippets/{name}.md`에서 전체 마크업·variant·접근성 노트를 복사한다
 3. CSS는 `src/styles/6-components/{name}.css`에 정의되어 있다 — 빌드 결과 `dist/css/style.css`로 발행
-4. 새 컴포넌트 신설은 UX팀 결정 → `skill/references/krds-components.md` 등재 후 사용
+4. 새 컴포넌트 신설은 UX팀 결정 → `references/krds-components.md` 등재 후 사용
 
 ## 카탈로그 (전체 28종 BEM·접근성·토큰 매핑)
 
-[skill/references/krds-components.md](https://github.com/iux-pub/guide/blob/main/skill/references/krds-components.md) — 가장 권위 있는 단일 소스
+[references/krds-components.md](https://github.com/iux-pub/guide/blob/main/references/krds-components.md) — 가장 권위 있는 단일 소스

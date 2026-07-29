@@ -2,7 +2,7 @@
 
 // build-prompts.js — AI 프롬프트 파일 자동 재생성 스크립트
 // 입력: tokens/build/tokens.css (토큰), src/snippets/*.md (28컴포넌트 스니펫),
-//       site/design/*.md (디자인 규칙), skill/references/* (KRDS 카탈로그)
+//       site/design/*.md (디자인 규칙), references/* (KRDS 카탈로그)
 // 출력: site/prompts/{design,components,context}.md (사람이 복붙)
 //       prompts/{design-rules,design-audit}.md (스킬이 fetch)
 //
@@ -215,8 +215,8 @@ ${tokensToTable(font, ['토큰', '값'], t => [`\`${t.name}\``, t.value], 10)}
 
 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다. Tailwind v4 \`@apply\`와 명확한 CSS 직접값으로 작성한다.
 
-> 전체 토큰 카탈로그(상세 + 시맨틱 매핑) — \`skill/references/krds-tokens.md\`
-> Tailwind v4 @theme 매핑 — \`skill/references/tailwind-mapping.md\`
+> 전체 토큰 카탈로그(상세 + 시맨틱 매핑) — \`references/krds-tokens.md\`
+> Tailwind v4 @theme 매핑 — \`references/tailwind-mapping.md\`
 
 ---
 
@@ -238,7 +238,7 @@ INFOUX 표준 브레이크포인트. Tailwind v4 variant는 \`mobile:\` / \`tabl
 |------|---------|
 ${componentTable}
 
-> 각 컴포넌트의 BEM·접근성·토큰 매핑 — \`skill/references/krds-components.md\`
+> 각 컴포넌트의 BEM·접근성·토큰 매핑 — \`references/krds-components.md\`
 > 마크업 스니펫 — \`src/snippets/{name}.md\`
 
 ## HTML 기본 골격
@@ -275,7 +275,7 @@ HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section
 - 공공기관: 기관 CI/BI와 정보공개/공지/홍보 구조를 우선하고, 정부 상징은 확인 시만 생성
 - 유형이 불명확하면 정부 아이덴티티 요소를 제외하고 공통 접근성/구조 규칙만 적용
 
-상세 기준: \`skill/references/project-profiles.md\`
+상세 기준: \`references/project-profiles.md\`
 
 ---
 
@@ -418,7 +418,7 @@ function buildContextPrompt() {
 - 공공기관: 기관 CI/BI와 정보공개/공지/홍보 구조를 우선하고, 정부 상징은 확인 시만 생성
 - 유형이 불명확하면 정부 아이덴티티 요소를 제외하고 공통 접근성/구조 규칙만 적용
 
-상세 기준: \`skill/references/project-profiles.md\`
+상세 기준: \`references/project-profiles.md\`
 
 ## 디자인 토큰
 
@@ -427,13 +427,13 @@ function buildContextPrompt() {
 - **색상** (\`--color-*\`) — 의미 기반 토큰
 - **폰트** (\`--font-sans\`, \`--font-mono\`) — 전역 기본 폰트
 
-> 전체 토큰 카탈로그 — \`skill/references/krds-tokens.md\`
+> 전체 토큰 카탈로그 — \`references/krds-tokens.md\`
 
 ## 컴포넌트 (KRDS 기반)
 
 ${componentLines}
 
-> 각 컴포넌트의 BEM·접근성·토큰 매핑 — \`skill/references/krds-components.md\`
+> 각 컴포넌트의 BEM·접근성·토큰 매핑 — \`references/krds-components.md\`
 
 ## HTML 기본 골격
 

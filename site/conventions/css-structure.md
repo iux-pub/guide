@@ -62,7 +62,7 @@ src/styles/
 
 ### 새 컴포넌트 추가
 
-`/create-component {컴포넌트명}` 스킬을 사용하면 4개 파일이 일괄 생성된다.
+AI에게 컴포넌트 생성을 맡기면 MCP `get_workflow("create-component")` 절차에 따라 4개 파일이 일괄 생성된다.
 
 1. `src/styles/6-components/{name}.css`
 2. `src/snippets/{name}.md`
@@ -71,7 +71,7 @@ src/styles/
 
 수동 추가 시 `src/styles/6-components/index.css`에 `@import "./{name}.css";`를 명시적으로 추가한다.
 
-> 기존 컴포넌트 카탈로그(`skill/references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
+> 기존 컴포넌트 카탈로그(`references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
 
 ### 새 유틸리티 추가
 
@@ -124,4 +124,4 @@ INFOUX 공개 토큰은 `--color-*`, `--font-*`만 사용한다.
 }
 ```
 
-토큰 카탈로그 — `skill/references/krds-tokens.md` 참조.
+토큰 카탈로그 — `references/krds-tokens.md` 참조.

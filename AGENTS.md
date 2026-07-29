@@ -15,7 +15,7 @@
 
 발행 채널 4개:
 - 스타터 키트 → `iux-pub/starter`
-- AI 스킬 → `~/.claude/skills/info-design/`
+- AI 기준 배포 → infoUX MCP (`npx -y @infomind/infoux-mcp`)
 - 문서 사이트 → `_site/`
 - LLM 컨텍스트 묶음 → `prompts/*.md`
 
@@ -29,7 +29,7 @@
 
 | 도구 | 인식 경로 | 비고 |
 |------|----------|------|
-| **Claude Code** | `CLAUDE.md` (자동) + `.claude/skills/` | 작업별 스킬 자동 선택 |
+| **Claude Code** | `CLAUDE.md` (자동) + infoUX MCP | 필요한 기준을 도구로 직접 조회 |
 | **Cursor** | `AGENTS.md` (본 파일) + `.cursorrules` | 본 파일 1차 |
 | **Aider** | `CONVENTIONS.md` 또는 `AGENTS.md` | `AGENTS.md` 우선 |
 | **OpenAI Codex CLI** | `AGENTS.md` (자동) | 본 파일 |
@@ -90,7 +90,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 | Page shell | `<a href="#main" class="skip-to-content">` → `header#header` → `main#main` → `footer#footer` 순서. `main` 직계 자식은 section |
 | Section 구조 | 각 `section`은 `.container`를 직접 포함하고 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름 제공 |
 | 조건부 정부/공공 요소 | 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 적용 대상이 확인된 경우에만 생성. 민간·사내·일반 CMS에서는 N/A |
-| 컴포넌트 root 태그 | `skill/references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
+| 컴포넌트 root 태그 | `references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 |
 | 상태 표현 | BEM modifier (시각) + ARIA 속성 (의미) 동시 |
 | 색상 대비 | 일반 텍스트 4.5:1, 큰 텍스트 3:1 (WCAG 2.1 AA) |
@@ -163,16 +163,16 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 
 | 작업 맥락 | 파일 |
 |----------|------|
-| 코드 생성 전 사이트 유형 판정 | `skill/references/project-profiles.md` |
-| 컴포넌트 마크업 작성 (시각/스타일) | `skill/references/krds-components.md` |
-| 컴포넌트 마크업 작성 (root/ARIA/키보드) | `skill/references/html-semantics.md` |
-| 토큰 결정 (색상·기본 폰트·브레이크포인트) | `skill/references/krds-tokens.md` |
-| Tailwind 유틸리티 사용 | `skill/references/tailwind-mapping.md` |
-| 접근성 검증 | `skill/references/accessibility.md` |
-| 금지 패턴 검토 | `skill/references/forbidden-patterns.md` |
-| 새 컴포넌트 스니펫 작성 | `skill/references/snippet-template.md` |
+| 코드 생성 전 사이트 유형 판정 | `references/project-profiles.md` |
+| 컴포넌트 마크업 작성 (시각/스타일) | `references/krds-components.md` |
+| 컴포넌트 마크업 작성 (root/ARIA/키보드) | `references/html-semantics.md` |
+| 토큰 결정 (색상·기본 폰트·브레이크포인트) | `references/krds-tokens.md` |
+| Tailwind 유틸리티 사용 | `references/tailwind-mapping.md` |
+| 접근성 검증 | `references/accessibility.md` |
+| 금지 패턴 검토 | `references/forbidden-patterns.md` |
+| 새 컴포넌트 스니펫 작성 | `references/snippet-template.md` |
 | LLM 컨텍스트 첨부용 | `prompts/context.md`, `prompts/components.md`, `prompts/design-rules.md` |
-| 컨트랙트 본체 | `skill/SKILL.md` |
+| 컨트랙트 본체 | `references/CONTRACT.md` |
 | 컨트리뷰션 가이드 | `CONTRIBUTING.md` |
 
 ---
@@ -207,7 +207,7 @@ npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)
 
 ## 9. 신규 컴포넌트가 필요해 보일 때
 
-기존 컴포넌트 카탈로그를 먼저 확인하되, 프로젝트에 필요한 컴포넌트는 UX팀 판단으로 확장할 수 있다. 카탈로그 확인: `skill/references/krds-components.md`.
+기존 컴포넌트 카탈로그를 먼저 확인하되, 프로젝트에 필요한 컴포넌트는 UX팀 판단으로 확장할 수 있다. 카탈로그 확인: `references/krds-components.md`.
 
 신규 필요 시:
 1. 기존 컴포넌트 조합으로 해결 가능한지 확인

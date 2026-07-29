@@ -116,7 +116,7 @@ CSS 클래스 명명 규칙이다. Stylelint와 check-violations.js로 자동 �
 <input class="input input--error" aria-invalid="true">   // BEM modifier + ARIA
 ```
 
-**참고:** skill/references/html-semantics.md#62-상태-표현-r-17
+**참고:** references/html-semantics.md#62-상태-표현-r-17
 
 ---
 
@@ -142,6 +142,6 @@ CSS 클래스 명명 규칙이다. Stylelint와 check-violations.js로 자동 �
 <span class="tag tag--info">   // 톤 — 의미 기반
 ```
 
-**참고:** skill/references/html-semantics.md#63-modifier-의미성-r-06-r-18, skill/references/krds-components.md
+**참고:** references/html-semantics.md#63-modifier-의미성-r-06-r-18, references/krds-components.md
 
 ---

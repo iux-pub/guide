@@ -8,7 +8,7 @@
 #   - src/styles/             → starter/src/styles/
 #   - src/snippets/           → starter/src/snippets/
 #   - src/js/                 → starter/src/js/
-#   - tokens/                 → starter/tokens/ (foundation + README — build/ 제외)
+#   - tokens/                 → starter/tokens/ (foundation + brand + README — build/ 제외)
 #   - scripts/build-tokens.js → starter/scripts/
 #   - scripts/check-*.js      → starter/scripts/
 #   - contracts/             → starter/contracts/
@@ -82,28 +82,12 @@ cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
 cp "$GUIDE_DIR/.npmrc" "$STARTER_DIR/"
 
-# 6.5. 작업별 스킬 + 도구별 경로 지시
-echo "[8/8] 에이전트 스킬과 경로별 지시 동봉..."
-rm -rf "$STARTER_DIR/.agents/skills"
-mkdir -p "$STARTER_DIR/.agents"
-cp -r "$GUIDE_DIR/.agents/skills" "$STARTER_DIR/.agents/"
-
-mkdir -p "$STARTER_DIR/.claude/skills"
-for skill_dir in "$GUIDE_DIR/.agents/skills/"*; do
-  skill_name="$(basename "$skill_dir")"
-  rm -rf "$STARTER_DIR/.claude/skills/$skill_name"
-  cp -r "$skill_dir" "$STARTER_DIR/.claude/skills/$skill_name"
-done
-
+# 6.5. 도구별 경로 지시
+#      스킬은 폐기했다 — 작업 절차·레퍼런스는 infoUX MCP가 제공한다.
+echo "[8/8] 경로별 지시 동봉..."
 mkdir -p "$STARTER_DIR/.github"
 rm -rf "$STARTER_DIR/.github/instructions"
 cp -r "$GUIDE_DIR/.github/instructions" "$STARTER_DIR/.github/"
-
-# info-design 상세 참조 스킬
-mkdir -p "$STARTER_DIR/.claude/skills/info-design"
-rm -rf "$STARTER_DIR/.claude/skills/info-design/references"
-cp -r "$GUIDE_DIR/skill/SKILL.md" "$STARTER_DIR/.claude/skills/info-design/"
-cp -r "$GUIDE_DIR/skill/references" "$STARTER_DIR/.claude/skills/info-design/"
 
 echo ""
 echo "✓ 로컬 starter/ 동기화 완료"

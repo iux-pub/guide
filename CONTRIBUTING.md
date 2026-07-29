@@ -36,10 +36,10 @@ http://localhost:8080 에서 문서 사이트 확인.
 | CSS 컴포넌트 | `src/styles/6-components/{name}.css` | 사이트 · 스타터 |
 | 마크업 스니펫 | `src/snippets/{name}.md` | 스킬 자동 생성 · 사이트 |
 | 코딩 규칙 | `rules.json` | CLAUDE.md · site/conventions/ |
-| 스킬 컨트랙트 | `skill/SKILL.md` · `skill/references/*.md` (수동 작성분만) | `~/.claude/skills/info-design/` · 스타터 동봉 |
+| 작업 컨트랙트 | `references/CONTRACT.md` · `references/*.md` (수동 작성분만) | infoUX MCP (`get_contract` / `get_reference`) |
 | 빌드 스크립트 | `scripts/*.js` | 발행 파이프라인 |
 
-> 자동 생성물(`skill/references/krds-tokens.md`, `krds-components.md`, `prompts/design-*.md`, `site/conventions/*.md`, `tokens/build/*`)을 **직접 수정하지 말 것.** 원본 소스를 고치고 build로 재생성한다.
+> 자동 생성물(`references/krds-tokens.md`, `krds-components.md`, `prompts/design-*.md`, `site/conventions/*.md`, `tokens/build/*`)을 **직접 수정하지 말 것.** 원본 소스를 고치고 build로 재생성한다.
 
 ---
 
@@ -56,7 +56,7 @@ http://localhost:8080 에서 문서 사이트 확인.
      npm run build:tokens   # 토큰 바꿨으면
      npm run build:rules    # rules.json 바꿨으면
      npm run build:prompts  # prompts 바꿨으면
-     npm run build:skill    # src/snippets 또는 tokens 바꿨으면
+     npm run build:references && npm run build:mcp   # src/snippets 또는 tokens 바꿨으면
      # 또는 한 번에:  npm run build
    ↓
 5. 검사 통과 확인
@@ -96,7 +96,7 @@ http://localhost:8080 에서 문서 사이트 확인.
 | `rules` | 코딩 규칙 (`rules.json`) |
 | `conventions` | 규칙 문서 (`site/conventions/`) |
 | `starter` | 스타터 키트 (`starter/`) |
-| `accessibility` | 접근성 컨트랙트 (`skill/references/accessibility.md`) |
+| `accessibility` | 접근성 컨트랙트 (`references/accessibility.md`) |
 | `playground` | 컴포넌트 플레이그라운드 (`src/playground/`) |
 | `guides` | 가이드 문서 |
 | `design` | 디자인 결정 |
@@ -127,7 +127,7 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 | 증상 | 원인 | 해결 |
 |------|------|------|
 | CI 실패 — "자동 생성물이 최신이 아닙니다" | rules.json 또는 tokens 수정 후 `build:*` 안 돌림 | `npm run build` 후 다시 커밋 |
-| husky pre-commit 실패 — `R-XX` | stylelint 또는 check-violations 위반 | 출력 메시지의 규칙 ID 확인, `skill/references/forbidden-patterns.md` 참조 |
+| husky pre-commit 실패 — `R-XX` | stylelint 또는 check-violations 위반 | 출력 메시지의 규칙 ID 확인, `references/forbidden-patterns.md` 참조 |
 | HTML 구조 경고 — R-15 | 기존 인포마인드 HTML 기본 골격과 다르거나 시맨틱 보강 필요 | `header/main/footer`, `main > section > .container` 구조와 ARIA 보강 확인 |
 | HTML 구조 위반 — R-18 | `--blue`, `--big` 같은 시각 단어 modifier 사용 | KRDS 의미 어휘로 (`--primary`, `--large` 등) |
 | 스킬이 적용되지 않음 | 도구가 루트/경로별 계약을 인식하지 못함 | `AGENTS.md`, `.agents/skills`, `.github/instructions` 인식 여부 확인 |
@@ -149,25 +149,25 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 
 ### 7.1 새 컴포넌트 추가
 
-> 기존 컴포넌트 카탈로그(`skill/references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
+> 기존 컴포넌트 카탈로그(`references/krds-components.md`)를 먼저 확인한다. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 UX팀 결정으로 확장한다.
 
 UX팀 결정 완료 후:
 
-1. `src/snippets/{name}.md` — `skill/references/snippet-template.md` 복사해 채움
+1. `src/snippets/{name}.md` — `references/snippet-template.md` 복사해 채움
 2. `src/styles/6-components/{name}.css` 작성 (BEM + 색상 토큰, 필요 시 CSS nesting + `@apply`)
 3. `src/styles/6-components/index.css`에 `@import`
 4. `src/playground/{name}.html` 미리보기 추가
 5. `site/components/{name}.md` 문서
-6. `skill/references/html-semantics.md`에 매핑 추가 (Root/자식/ARIA/키보드)
+6. `references/html-semantics.md`에 매핑 추가 (Root/자식/ARIA/키보드)
 7. `scripts/check-html-structure.js`의 `COMPONENT_ROOT_MAPPING`에 항목 추가
-8. `npm run build:skill` 실행
+8. `npm run build:references && npm run build:mcp` 실행
 9. `npm run check` 통과 확인
 
 ### 7.2 새 규칙(R-XX) 추가
 
 1. `rules.json`에 schema 따라 추가 — `id`, `category`, `summary`, `severity`, `enforcement`, `rationale`, `bad`, `good`, `refs`
 2. enforcement에 어떤 스크립트가 검출하는지 명시 — 신규 검출 로직 필요하면 `scripts/check-*.js`에 추가
-3. `skill/SKILL.md`와 `skill/references/forbidden-patterns.md`에 사례 추가
+3. `references/CONTRACT.md`와 `references/forbidden-patterns.md`에 사례 추가
 4. `npm run build:rules` 실행 → CLAUDE.md/site/conventions/ 자동 갱신
 5. 새 규칙이 기존 코드에 위반을 만들면 PR을 같이 정리
 
@@ -184,7 +184,6 @@ UX팀 결정 완료 후:
 UX팀 표준 관리자만 해당:
 
 ```bash
-npm run deploy:skill   # 로컬 ~/.claude/skills/info-design/ 동기화
 npm run sync:starter   # iux-pub/starter 저장소로 푸시
 ```
 

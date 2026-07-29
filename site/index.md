@@ -16,7 +16,7 @@ KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙 + INFOMIND
 **한 번만 등록하면 됩니다.** 발화로 스킬을 부르던 방식은 폐기했습니다 — 이제 AI가 기준을 직접 조회합니다.
 
 ```bash
-claude mcp add infoux -- npx -y @infomind/infoux-mcp
+claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp
 ```
 
 Codex·Cursor도 같은 명령을 각자 설정에 넣으면 됩니다([등록 방법](/onboarding/mcp/)).
@@ -61,7 +61,7 @@ Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 
 
 규칙은 18개지만 AI가 다 외웁니다. 사람이 기억할 건 이게 전부:
 
-1. **MCP 등록 한 번** — `claude mcp add infoux -- npx -y @infomind/infoux-mcp` (이후 발화 불필요)
+1. **MCP 등록 한 번** — `claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp` (이후 발화 불필요)
 2. **CI 빨강** — AI에게 메시지 보여주고 `"고쳐줘"`
 3. **새 컴포넌트 필요** — 기존 패턴으로 해결할지, 프로젝트 패턴/공통 컴포넌트로 확장할지 UX팀 판단
 4. **토큰/색상 변경 필요** — UX팀에 슬랙

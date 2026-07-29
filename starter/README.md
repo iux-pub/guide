@@ -38,7 +38,7 @@ UI/CSS/HTML 작업은 별도 트리거 없이 infoUX 계약이 적용됩니다.
 2. infoUX MCP의 `get_workflow`로 작업별 절차를 확인합니다.
 3. 기존 컴포넌트와 승인 패턴을 조합한 뒤 구현합니다.
 
-상세 기준은 infoUX MCP가 제공합니다 — `claude mcp add infoux -- npx -y @infomind/infoux-mcp`
+상세 기준은 infoUX MCP가 제공합니다 — `claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp`
 
 ---
 

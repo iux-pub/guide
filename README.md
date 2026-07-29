@@ -39,7 +39,7 @@ cd my-project && rm -rf .git && git init && npm install && npm run build
 자동 동봉되는 것:
 - ✅ INFOUX 색상/기본 폰트/브레이크포인트 토큰
 - ✅ KRDS 기반 컴포넌트 CSS
-- ✅ infoUX MCP — Claude Code·Codex·Cursor 공통 (`npx -y @infomind/infoux-mcp`)
+- ✅ infoUX MCP — Claude Code·Codex·Cursor 공통 (`npx -y @infomind-ux/infoux-mcp`)
 - ✅ MCP `get_workflow` — 페이지·폼·위젯·토큰 작업별 절차
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 - ✅ `contracts/task-contract.md` — 구현 전 판단 계약

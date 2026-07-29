@@ -1,5 +1,5 @@
 {
-  "version": "ecf89a7",
+  "version": "5305e86",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -17,7 +17,7 @@
     {
       "id": "guide-import",
       "file": "guide-import.md",
-      "chars": 1535,
+      "chars": 1550,
       "summary": "이 문서는 **UX팀이 개발팀·협력사 환경에 infoUX 기준을 배포하는 방법**과 **개발자가 활성화하는 방법**을 다룬다."
     },
     {

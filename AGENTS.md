@@ -15,7 +15,7 @@
 
 발행 채널 4개:
 - 스타터 키트 → `iux-pub/starter`
-- AI 기준 배포 → infoUX MCP (`npx -y @infomind/infoux-mcp`)
+- AI 기준 배포 → infoUX MCP (`npx -y @infomind-ux/infoux-mcp`)
 - 문서 사이트 → `_site/`
 - LLM 컨텍스트 묶음 → `prompts/*.md`
 

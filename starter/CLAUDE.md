@@ -5,14 +5,14 @@
 CSS·HTML·UI 작업은 별도 트리거 없이 infoUX 컨트랙트를 적용한다.
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯과 예외를 선언한다.
-2. infoUX MCP(`npx -y @infomind/infoux-mcp`)의 `get_workflow`로 작업 절차를 확인한다.
+2. infoUX MCP(`npx -y @infomind-ux/infoux-mcp`)의 `get_workflow`로 작업 절차를 확인한다.
 3. 수정 파일과 가장 가까운 `AGENTS.md`를 읽는다.
 4. 기존 카탈로그와 승인 패턴을 조합한 뒤 구현한다.
 5. 검사는 마지막 안전망으로 실행한다.
 
 Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않는다. 위반 발견 시 즉시 작업을 중단하고 사용자에게 보고한다.
 
-> MCP가 등록되어 있지 않으면 `claude mcp add infoux -- npx -y @infomind/infoux-mcp`로 붙인다. Codex·Cursor도 같은 명령을 각자 설정에 넣는다.
+> MCP가 등록되어 있지 않으면 `claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp`로 붙인다. Codex·Cursor도 같은 명령을 각자 설정에 넣는다.
 
 ---
 

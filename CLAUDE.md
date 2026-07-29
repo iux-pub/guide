@@ -5,7 +5,7 @@
 이 저장소에서 CSS·HTML·UI 작업을 시작하면 별도 트리거 없이 infoUX 컨트랙트가 발효된다.
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯, 예외를 먼저 선언한다.
-2. infoUX MCP(`npx -y @infomind/infoux-mcp`)의 `get_workflow`로 작업 절차를 확인한다.
+2. infoUX MCP(`npx -y @infomind-ux/infoux-mcp`)의 `get_workflow`로 작업 절차를 확인한다.
 3. 수정 파일과 가장 가까운 `AGENTS.md`를 읽는다.
 4. 기존 카탈로그와 승인 패턴을 조합한 뒤 구현한다.
 5. 검사는 설계 판단을 대신하지 않는 마지막 안전망으로 실행한다.
@@ -252,7 +252,7 @@ src/styles/
 | `prompts/design-rules.md` | 디자인 품질 규칙 |
 | `prompts/publishing.md` | 퍼블리싱 체크리스트 |
 
-`mcp/` — infoUX MCP 서버(`@infomind/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 8종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / get_workflow / search_docs). 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다. 상세: `mcp/README.md`.
+`mcp/` — infoUX MCP 서버(`@infomind-ux/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 8종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / get_workflow / search_docs). 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다. 상세: `mcp/README.md`.
 
 `references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
 

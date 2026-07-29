@@ -1,4 +1,4 @@
-# @infomind/infoux-mcp
+# @infomind-ux/infoux-mcp
 
 INFOMIND UX팀의 퍼블리싱 기준(infoUX)을 MCP로 제공한다. 팀원이 스킬 파일을 각자 복사하지 않아도, 쓰는 에이전트가 무엇이든 같은 기준을 보게 하는 배포 경로다.
 
@@ -24,7 +24,7 @@ INFOMIND UX팀의 퍼블리싱 기준(infoUX)을 MCP로 제공한다. 팀원이 
 ### Claude Code
 
 ```bash
-claude mcp add infoux -- npx -y @infomind/infoux-mcp
+claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp
 ```
 
 저장소를 clone해서 쓰는 경우(사내 배포 전):
@@ -40,7 +40,7 @@ claude mcp add infoux -- node /절대경로/infoUX/mcp/bin/server.js
 ```toml
 [mcp_servers.infoux]
 command = "npx"
-args = ["-y", "@infomind/infoux-mcp"]
+args = ["-y", "@infomind-ux/infoux-mcp"]
 ```
 
 ### Cursor / Claude Desktop
@@ -52,7 +52,7 @@ args = ["-y", "@infomind/infoux-mcp"]
   "mcpServers": {
     "infoux": {
       "command": "npx",
-      "args": ["-y", "@infomind/infoux-mcp"]
+      "args": ["-y", "@infomind-ux/infoux-mcp"]
     }
   }
 }
@@ -61,7 +61,7 @@ args = ["-y", "@infomind/infoux-mcp"]
 ## 확인
 
 ```bash
-npx -y @infomind/infoux-mcp
+npx -y @infomind-ux/infoux-mcp
 ```
 
 `infoUX MCP 준비됨 — 빌드 <sha>, 도구 8종`이 stderr로 나오면 정상이다. stdout은 프로토콜 채널이라 로그를 싣지 않는다.

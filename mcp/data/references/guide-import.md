@@ -13,7 +13,7 @@
 ### Claude Code
 
 ```bash
-claude mcp add infoux -- npx -y @infomind/infoux-mcp
+claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp
 ```
 
 ### Codex
@@ -23,7 +23,7 @@ claude mcp add infoux -- npx -y @infomind/infoux-mcp
 ```toml
 [mcp_servers.infoux]
 command = "npx"
-args = ["-y", "@infomind/infoux-mcp"]
+args = ["-y", "@infomind-ux/infoux-mcp"]
 ```
 
 ### Cursor · Claude Desktop
@@ -35,7 +35,7 @@ args = ["-y", "@infomind/infoux-mcp"]
   "mcpServers": {
     "infoux": {
       "command": "npx",
-      "args": ["-y", "@infomind/infoux-mcp"]
+      "args": ["-y", "@infomind-ux/infoux-mcp"]
     }
   }
 }
@@ -50,7 +50,7 @@ args = ["-y", "@infomind/infoux-mcp"]
   "mcpServers": {
     "infoux": {
       "command": "npx",
-      "args": ["-y", "@infomind/infoux-mcp"]
+      "args": ["-y", "@infomind-ux/infoux-mcp"]
     }
   }
 }
@@ -61,7 +61,7 @@ args = ["-y", "@infomind/infoux-mcp"]
 ## 2. 확인
 
 ```bash
-npx -y @infomind/infoux-mcp
+npx -y @infomind-ux/infoux-mcp
 ```
 
 `infoUX MCP 준비됨 — 빌드 <sha>, 도구 8종`이 stderr로 뜨면 정상이다.

@@ -3,7 +3,7 @@
  * infoUX MCP 서버
  *
  * 팀원이 스킬 파일을 각자 복사하지 않고도 infoUX 기준을 쓰게 하는 배포 경로다.
- * Claude Code / Codex / Cursor 어디서든 `npx @infomind/infoux-mcp` 한 줄로 붙는다.
+ * Claude Code / Codex / Cursor 어디서든 `npx @infomind-ux/infoux-mcp` 한 줄로 붙는다.
  *
  * 데이터는 mcp/data/에 번들되어 있다(`npm run build:mcp`로 생성). 저장소를
  * clone하지 않은 PC에서도 답할 수 있어야 하기 때문이다.

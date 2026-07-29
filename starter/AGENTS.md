@@ -1,6 +1,6 @@
 # AGENTS.md — INFOMIND UX Starter
 
-이 프로젝트에서 UI, CSS, HTML, 접근성 작업을 할 때는 `CLAUDE.md`와 infoUX MCP(`npx -y @infomind/infoux-mcp`)의 `get_contract()`를 기준으로 한다.
+이 프로젝트에서 UI, CSS, HTML, 접근성 작업을 할 때는 `CLAUDE.md`와 infoUX MCP(`npx -y @infomind-ux/infoux-mcp`)의 `get_contract()`를 기준으로 한다.
 
 ## 예방형 작업 순서
 

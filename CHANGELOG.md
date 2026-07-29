@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-07-29
+
+### Added
+- 토큰 브랜드 계층 `tokens/brand.json` 신설. 프로젝트는 이 파일만 갈아끼우면 사이트 전체 색이 따라온다.
+- 대비 자동검증 `scripts/check-contrast.js`를 `npm run check`에 편입. 라이트·고대비 두 모드에서 전경/배경 40건의 WCAG 2.1 AA 대비를 계산한다.
+- `tokens/contrast-baseline.json` 래칫. 기존 위반 6건을 고정하고 새 위반만 차단한다. 기준선 항목이 고쳐지면 목록을 지우도록 실패시킨다.
+- infoUX MCP 서버 `@infomind-ux/infoux-mcp`. 도구 8종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / get_workflow / search_docs)으로 기준을 제공하며, 접속 시 지시문을 넘겨 준수 순서를 자동으로 건다.
+- 문서 사이트에 `/onboarding/mcp/` 신설.
+
+### Changed
+- BREAKING: 토큰 원본이 두 파일로 갈렸다. `tokens/foundation.json`은 gray·상태색·의미 토큰만 갖는 불변 계층이 되고, 브랜드 팔레트(primary/secondary/point)와 `--font-sans`는 `tokens/brand.json`이 소유한다. 생성되는 `tokens/build/tokens.css`의 변수명과 값은 이전과 동일하다.
+- BREAKING: 스킬 계층을 폐기했다. `.agents/skills`·`.claude/skills`와 스타터 사본을 제거하고 전달 경로를 MCP 하나로 모았다. 작업 절차 7종은 `references/workflows/`로 옮겨 `get_workflow`로 제공한다.
+- BREAKING: `skill/`을 `references/`로 통합하고 `skill/SKILL.md`를 `references/CONTRACT.md`로 옮겼다.
+- `check-harness.js`가 스킬 4벌 동일성 대신 MCP 번들과 원본의 동기화를 검사한다.
+- 문서 사이트와 스타터 안내에서 "info-design 스킬 발화"를 MCP 등록 안내로 교체했다.
+
+### Removed
+- `scripts/build-agent-harness.js`, `npm run build:agents`, `npm run deploy:skill`.
+
 ## [2.0.0] - 2026-06-01
 
 ### Added

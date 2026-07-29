@@ -7,17 +7,15 @@
     "//-public": "── 일상 명령 (README 노출) ─────────────────",
     "dev": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\"",
     "build": "npm run build:agents && npm run build:tokens && npm run build:rules && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:skill && npm run clean:site && npx @11ty/eleventy",
-    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js && node scripts/check-harness.js",
+    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js && node scripts/check-harness.js && node scripts/check-contrast.js",
     "lint": "npm run lint:css && npm run lint:js",
     "lint:fix": "npm run lint:css:fix && npm run lint:js:fix",
     "test": "npm run check && npm run lint && npm run test:unit && npm run build:agents && npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:prompts && npm run build:skill && npm run clean:site && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",
     "deploy:skill": "rsync -av --delete skill/ ~/.claude/skills/info-design/",
     "sync:starter": "bash scripts/sync-starter.sh",
     "sync:starter:push": "bash scripts/sync-starter.sh --push",
-
     "//-aliases": "── 별칭 (이전 이름 유지 — 점진 마이그레이션) ──",
     "serve": "npm run dev",
-
     "//-internal-build": "── 빌드 하위 단계 (build가 호출) ─────────",
     "build:agents": "node scripts/build-agent-harness.js",
     "build:tokens": "node scripts/build-tokens.js",
@@ -29,10 +27,10 @@
     "build:site": "npm run build:tokens && npm run build:css && npm run build:docs-css && npm run clean:site && npx @11ty/eleventy",
     "clean:site": "node scripts/clean-site.js",
     "watch:css": "tailwindcss -i src/styles/style.css -o dist/css/style.css --watch",
-
     "//-internal-check": "── 검사 하위 (check가 호출) ────────────",
     "check:html": "node scripts/check-html-structure.js",
     "check:harness": "node scripts/check-harness.js",
+    "check:contrast": "node scripts/check-contrast.js",
     "lint:css": "stylelint \"src/styles/**/*.css\"",
     "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
     "lint:js": "eslint scripts/ eleventy.config.js",
@@ -40,7 +38,6 @@
     "test:unit": "node --test scripts/__tests__/*.test.js",
     "test:a11y": "npm run build && pa11y-ci --config .pa11yci.js",
     "test:a11y:single": "axe",
-
     "//-hooks": "── git hooks ─────────────────────────────",
     "prepare": "husky"
   },

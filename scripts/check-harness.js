@@ -46,6 +46,7 @@ const rules = JSON.parse(read('rules.json') || '{"rules":[]}')
 const knownEnforcers = new Set([
   'check-violations.js',
   'check-html-structure.js',
+  'check-contrast.js',
   'stylelint',
   'pa11y-ci',
   'manual'
@@ -63,6 +64,19 @@ for (const rule of rules.rules || []) {
 
 requireSame('scripts/check-violations.js', 'starter/scripts/check-violations.js')
 requireSame('scripts/check-html-structure.js', 'starter/scripts/check-html-structure.js')
+requireSame('scripts/check-contrast.js', 'starter/scripts/check-contrast.js')
+requireSame('scripts/lib/token-source.js', 'starter/scripts/lib/token-source.js')
+// 브랜드 계층은 프로젝트가 갈아끼우는 파일이라 값 동일성을 요구하지 않는다.
+// 다만 스타터가 세 파일을 모두 갖추지 못하면 브랜드 교체 구조 자체가 성립하지 않는다.
+for (const required of [
+  'starter/tokens/foundation.json',
+  'starter/tokens/brand.json',
+  'starter/tokens/contrast-baseline.json'
+]) {
+  if (!fs.existsSync(path.join(ROOT, required))) {
+    fail(`스타터에 ${required}가 없습니다. npm run sync:starter를 실행하세요.`)
+  }
+}
 requireSame('contracts/html-page-contract.json', 'starter/contracts/html-page-contract.json')
 requireSame('contracts/agent-workflow.json', 'starter/contracts/agent-workflow.json')
 requireSame('contracts/task-contract.schema.json', 'starter/contracts/task-contract.schema.json')
@@ -81,8 +95,9 @@ for (const instruction of [
 }
 
 const starterPackage = JSON.parse(read('starter/package.json') || '{}')
-if (starterPackage.scripts?.check !== 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js') {
-  fail('starter npm run check가 두 정적 검사기를 모두 실행하지 않습니다.')
+const STARTER_CHECK = 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js'
+if (starterPackage.scripts?.check !== STARTER_CHECK) {
+  fail('starter npm run check가 정적 검사기 3종(위반·HTML 구조·대비)을 모두 실행하지 않습니다.')
 }
 
 const agentSkills = listSkillFiles('.agents/skills')

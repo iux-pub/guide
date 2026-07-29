@@ -50,18 +50,24 @@ if [ -d "$GUIDE_DIR/src/js" ]; then
 fi
 
 # 4. tokens (build/ 제외 — starter에서 자체 빌드)
+#    brand.json은 프로젝트가 갈아끼우는 파일이지만, 스타터에는 INFOMIND 기본값을
+#    실어 보낸다. 프로젝트는 이 파일만 고치고 foundation.json은 건드리지 않는다.
 echo "[4/8] tokens/ 동기화..."
 mkdir -p "$STARTER_DIR/tokens"
 cp "$GUIDE_DIR/tokens/foundation.json" "$STARTER_DIR/tokens/"
+cp "$GUIDE_DIR/tokens/brand.json" "$STARTER_DIR/tokens/"
+cp "$GUIDE_DIR/tokens/contrast-baseline.json" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/AGENTS.md" "$STARTER_DIR/tokens/"
 
 # 5. scripts + contracts
 echo "[5/8] scripts 동기화..."
-mkdir -p "$STARTER_DIR/scripts"
+mkdir -p "$STARTER_DIR/scripts/lib"
 cp "$GUIDE_DIR/scripts/build-tokens.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-html-structure.js" "$STARTER_DIR/scripts/"
+cp "$GUIDE_DIR/scripts/check-contrast.js" "$STARTER_DIR/scripts/"
+cp "$GUIDE_DIR/scripts/lib/token-source.js" "$STARTER_DIR/scripts/lib/"
 mkdir -p "$STARTER_DIR/contracts"
 cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
 

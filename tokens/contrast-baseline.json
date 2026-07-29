@@ -1,0 +1,46 @@
+{
+  "$meta": {
+    "purpose": "check-contrast.js가 이미 알고 있는 대비 위반 목록. 새 위반만 차단하기 위한 래칫이며, 위반을 승인하는 문서가 아니다.",
+    "recorded": "2026-07-29",
+    "policy": "여기 있는 항목은 전부 고쳐야 할 결함이다. 고치면 이 파일에서 지운다(지우지 않으면 검사가 '기준선이 낡았다'로 실패한다). 새 항목을 늘리지 않는다.",
+    "rootCause": "고대비 모드가 색상 변수 164개 중 21개만 덮는다. --color-bg는 검정으로 뒤집히는데 link/button/status 계열은 라이트 모드 값을 유지해 대비가 깨진다."
+  },
+  "known": [
+    {
+      "id": "light|--color-border|--color-bg",
+      "ratio": "2.01:1",
+      "required": "3:1",
+      "note": "--color-border는 표 구분선 같은 장식뿐 아니라 캐러셀 dot 버튼 배경 등 실제 컨트롤에도 쓰인다. 값 조정 또는 컨트롤 전용 토큰 분리가 필요하다."
+    },
+    {
+      "id": "high-contrast|--color-text-inverse|--color-button-primary-fill",
+      "ratio": "2.37:1",
+      "required": "4.5:1",
+      "note": "고대비 모드가 button-primary-fill을 덮지 않아 어두운 텍스트가 어두운 버튼 위에 올라간다."
+    },
+    {
+      "id": "high-contrast|--color-link-hover|--color-bg",
+      "ratio": "3.07:1",
+      "required": "4.5:1",
+      "note": "고대비 모드가 link-hover를 덮지 않는다."
+    },
+    {
+      "id": "high-contrast|--color-link-visited|--color-bg",
+      "ratio": "2.24:1",
+      "required": "4.5:1",
+      "note": "고대비 모드가 link-visited를 덮지 않는다."
+    },
+    {
+      "id": "high-contrast|--color-danger-text|--color-bg",
+      "ratio": "3.53:1",
+      "required": "4.5:1",
+      "note": "고대비 모드가 상태 텍스트 계열(danger/warning/success/info)을 덮지 않는다."
+    },
+    {
+      "id": "high-contrast|--color-border|--color-bg",
+      "ratio": "2.42:1",
+      "required": "3:1",
+      "note": "고대비 모드 border 값이 검정 배경에서 충분히 밝지 않다."
+    }
+  ]
+}

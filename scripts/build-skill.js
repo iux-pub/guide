@@ -35,15 +35,17 @@ function buildVersion() {
   }
 }
 
+const { loadTokenSource } = require('./lib/token-source')
+
 const ROOT = path.resolve(__dirname, '..')
-const FOUNDATION_PATH = path.join(ROOT, 'tokens', 'foundation.json')
 const SNIPPETS_DIR = path.join(ROOT, 'src', 'snippets')
 const _COMPONENTS_DIR = path.join(ROOT, 'src', 'styles', '6-components')
 const SKILL_REFS_DIR = path.join(ROOT, 'skill', 'references')
 
 if (!fs.existsSync(SKILL_REFS_DIR)) fs.mkdirSync(SKILL_REFS_DIR, { recursive: true })
 
-const foundation = JSON.parse(fs.readFileSync(FOUNDATION_PATH, 'utf-8'))
+// 스킬 카탈로그는 프로젝트가 실제로 보는 값을 실어야 한다 — foundation + brand 합성 결과.
+const foundation = loadTokenSource(ROOT)
 
 // ─────────────────────────────────────────────────────
 // 1. krds-tokens.md — 토큰 카탈로그
@@ -56,7 +58,7 @@ function buildKrdsTokensMd() {
   w('# INFOUX 파운데이션 토큰 카탈로그')
   w('')
   w('> 자동 생성됨. 직접 수정 금지.')
-  w('> 출처: `tokens/foundation.json`')
+  w('> 출처: `tokens/foundation.json` + `tokens/brand.json` (합성 결과)')
   w('> 빌드: ' + buildVersion())
   w('')
   w('색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.')

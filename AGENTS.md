@@ -226,7 +226,7 @@ npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)
 
 1. **접근성 (WCAG/KWCAG AA)** — 양보 불가
 2. **프로젝트 목적과 사용성** — CMS/관리자 화면은 업무 밀도와 반복 효율 우선
-3. **INFOUX 파운데이션** — `tokens/foundation.json`의 색상·기본 폰트·브레이크포인트 기준
+3. **INFOUX 파운데이션** — `tokens/foundation.json`(불변: 색상 스케일·상태색·브레이크포인트) + `tokens/brand.json`(교체: 브랜드 팔레트·본문 폰트) 기준
 4. **KRDS 정본** — 접근성·컴포넌트 원칙·색상 참고 기준
 5. **프로젝트 스타일** — 프로젝트별 CSS 확장
 6. **사용자 명시 지시** — 단, 접근성을 깨면 사용자에게 확인

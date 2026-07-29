@@ -75,7 +75,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 
 1. ✅ 사이트 유형을 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 하나로 판정
 2. ✅ 공식 배너, 정부 상징, 운영기관 식별자는 적용 대상이 확인된 경우에만 생성
-3. ✅ 사용할 토큰 확인: `tokens/foundation.json`
+3. ✅ 사용할 토큰 확인: `tokens/foundation.json`(불변) + `tokens/brand.json`(프로젝트 교체)
 4. ✅ 모든 색상 = `var(--color-*)` 시맨틱 토큰
 5. ✅ 기본 폰트 = `var(--font-sans)` / 코드 폰트 = `var(--font-mono)`
 6. ✅ 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용
@@ -155,7 +155,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 | Site Generator | Eleventy (11ty) | ^3.1.5 |
 | CSS Framework | Tailwind v4 | ^4.0.0 |
 | CSS 작성 | 표준 CSS nesting + Tailwind v4 `@apply` | SCSS 빌드 없이 중첩 구조와 유틸 조합 사용 |
-| Tokens | INFOUX foundation | `tokens/foundation.json` (색상 + 기본 폰트) |
+| Tokens | INFOUX foundation + brand | `tokens/foundation.json`(불변) + `tokens/brand.json`(교체) |
 | ITCSS Pattern | 5-layer (3-generic ~ 7-utilities) | — |
 | BEM | Block__Element--Modifier | 5-objects · 6-components 한정 |
 | Linting | Stylelint + check-violations.js | ^17.5.0 |
@@ -169,10 +169,13 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 
 | 단계 | 파일 | 갱신 정책 |
 |------|------|----------|
-| 단일 소스 | `tokens/foundation.json` | 색상 + 기본 폰트 기준 |
+| 불변 계층 | `tokens/foundation.json` | gray·상태색·의미 토큰·브레이크포인트. 프로젝트에서 수정 금지 |
+| 교체 계층 | `tokens/brand.json` | 브랜드 팔레트(primary/secondary/point) + `--font-sans`. 프로젝트가 고치는 유일한 토큰 파일 |
 | 빌드 산출물 | `tokens/build/tokens.css` | `npm run build:tokens` 자동 생성 — 직접 수정 금지 |
 
-빌드 흐름: `foundation.json` → `build-tokens.js` → Tailwind v4 `@theme` 형태의 `tokens.css`.
+빌드 흐름: `foundation.json` + `brand.json` → `build-tokens.js`(깊은 병합) → Tailwind v4 `@theme` 형태의 `tokens.css`.
+
+브랜드를 바꾸면 `npm run check:contrast`가 WCAG 2.1 AA 위반을 잡는다. 기존 위반은 `tokens/contrast-baseline.json`에 기록돼 있고, **여기에 항목을 추가해 새 위반을 덮지 않는다.**
 
 ---
 
@@ -280,7 +283,8 @@ npm run lint:css        # Stylelint (src/styles/**/*.css)
 npm run lint:css:fix    # Stylelint 자동 수정
 
 # 빌드
-npm run build:tokens    # tokens/foundation.json → tokens/build/tokens.css
+npm run build:tokens    # foundation.json + brand.json → tokens/build/tokens.css
+npm run check:contrast  # 대비 검사 (WCAG 2.1 AA)
 npm run build:css       # Tailwind v4 → dist/css/style.css
 npm run build:docs-css  # 문서 사이트 CSS → dist/css/docs.css
 npm run build:rules     # rules.json → site/conventions/ + CLAUDE.md 자동 주입

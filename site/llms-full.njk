@@ -1,0 +1,20 @@
+---
+permalink: /llms-full.txt
+eleventyExcludeFromCollections: true
+---
+# INFOMIND UX Guide (infoUX) — 전문
+# 버전 {{ site.version }}
+# 이 파일은 자동 생성됩니다. 원본은 https://github.com/iux-pub/guide
+
+{% for section in collections.llmSections %}
+================================================================================
+SECTION: {{ section.key }}
+================================================================================
+{% for page in section.pages %}
+--------------------------------------------------------------------------------
+{{ page.data.title | safe }} — {{ page.url }}
+--------------------------------------------------------------------------------
+
+{{ page.inputPath | sourceBody | safe }}
+
+{% endfor %}{% endfor %}

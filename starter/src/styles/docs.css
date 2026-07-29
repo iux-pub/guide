@@ -372,7 +372,12 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { @apply [background:var(
 
 .docs-layout__content :not(pre) > code {
   @apply text-[0.92em] bg-[var(--color-gray-5)] rounded-[0.4rem] border border-[var(--color-border-light)] py-[0.18em] px-[0.42em] [word-break:break-word];
+}
 
+/* 링크 안의 인라인 코드 — 링크색(#256ef4)이 코드 배경(gray-5) 위에서 4.17:1로 떨어진다.
+   흰 배경에서는 4.55:1로 통과하지만 코드 배경에서는 미달이라 더 진한 색을 쓴다(6.26:1). */
+.docs-layout__content a > code {
+  @apply text-[var(--color-text-primary)];
 }
 
 .docs-layout__content table {

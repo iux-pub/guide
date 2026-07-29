@@ -1,0 +1,34 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+# INFOMIND UX Guide (infoUX)
+
+> {{ (site.description or "KRDS 접근성·구조 원칙 + INFOMIND UX팀 실무 표준의 단일 소스.") | safe }}
+> 버전 {{ site.version }}
+
+인포마인드 UX팀이 구축하는 사이트들의 공통 기반 기준이다. 색상은 토큰을 강제하고, 컴포넌트는 카탈로그를 우선하며, 접근성은 WCAG 2.1 AA + KWCAG를 따른다.
+
+## 코드를 생성한다면 MCP를 쓰는 편이 낫다
+
+이 문서는 읽기용 전문이다. 실제 작업에는 infoUX MCP를 연결하면 필요한 부분만 도구로 가져갈 수 있다.
+
+```
+claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp
+```
+
+## 섹션
+
+각 섹션은 요약(`llms.txt`)과 전문(`llms-full.txt`) 두 형태로 제공한다.
+
+{% for section in collections.llmSections %}- {{ section.key }} ({{ section.pages | length }}건): /{{ section.key }}/llms.txt · /{{ section.key }}/llms-full.txt
+{% endfor %}
+
+## 전체
+
+- 전문 한 파일: /llms-full.txt
+
+## 원본
+
+- 저장소: https://github.com/iux-pub/guide
+- 문서 사이트: https://footer.kr/guide/

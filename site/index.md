@@ -28,7 +28,7 @@ Codex·Cursor도 같은 명령을 각자 설정에 넣으면 됩니다([등록 �
 - ✓ BEM·접근성·ARIA 자동 준수
 - ✓ 위반 발견 시 작업 중단 후 사용자에게 보고
 
-Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 인식합니다.
+Cursor·Codex·Aider 등 다른 AI 도구는 저장소의 `AGENTS.md`를 자동 인식합니다. MCP를 못 붙이는 환경에는 [`/llms.txt`](/llms.txt)로 문서 전문을 전달할 수 있습니다.
 
 ---
 

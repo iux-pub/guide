@@ -1,6 +1,8 @@
 // Eleventy ESM 설정 -- INFOMIND UX 가이드 문서 사이트
 import syntaxHighlight from '@11ty/eleventy-plugin-syntaxhighlight'
 import { HtmlBasePlugin } from '@11ty/eleventy'
+import fs from 'node:fs'
+import path from 'node:path'
 
 export default function(eleventyConfig) {
   // 코드 하이라이팅 플러그인
@@ -52,6 +54,58 @@ export default function(eleventyConfig) {
     execSync('npx -y pagefind --site _site --glob "**/*.html"', {
       stdio: 'inherit'
     })
+  })
+
+  // ─── llms.txt 발행 ───────────────────────────────────
+  // 문서를 사람용 HTML과 AI용 텍스트 두 형태로 낸다. "문서만 공개" 결정에 따라
+  // 발주처·협력사 AI가 우리 기준을 읽고 코드를 짜게 하는 경로다(2026-07-29).
+
+  /** 섹션별로 문서를 묶는다. 섹션 키는 각 디렉토리 데이터 파일의 `section`이다. */
+  eleventyConfig.addCollection('llmSections', (collectionApi) => {
+    const bySection = new Map()
+
+    for (const item of collectionApi.getAll()) {
+      const section = item.data.section
+      // 섹션이 없는 것(홈 등)과 HTML이 아닌 산출물은 제외한다.
+      if (typeof section !== 'string' || !item.outputPath || !item.outputPath.endsWith('.html')) continue
+      if (!bySection.has(section)) bySection.set(section, [])
+      bySection.get(section).push(item)
+    }
+
+    return [...bySection.entries()]
+      .map(([key, pages]) => ({
+        key,
+        pages: pages.sort((a, b) =>
+          (a.data.order ?? 99) - (b.data.order ?? 99) ||
+          String(a.data.title).localeCompare(String(b.data.title)))
+      }))
+      .sort((a, b) => a.key.localeCompare(b.key))
+  })
+
+  /**
+   * 페이지 원본 마크다운을 프론트매터 없이 돌려준다.
+   * 렌더된 HTML을 주면 LLM이 태그를 걷어내야 해서 손해다.
+   */
+  eleventyConfig.addFilter('sourceBody', (inputPath) => {
+    if (!inputPath) return ''
+    const filePath = path.resolve(inputPath)
+    if (!fs.existsSync(filePath)) return ''
+    return fs.readFileSync(filePath, 'utf8')
+      .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+      .trim()
+  })
+
+  /** 본문 첫 문단 한 줄 요약. 목록만 보고 무엇인지 알 수 있어야 한다. */
+  eleventyConfig.addFilter('sourceSummary', (inputPath) => {
+    if (!inputPath) return ''
+    const filePath = path.resolve(inputPath)
+    if (!fs.existsSync(filePath)) return ''
+    const body = fs.readFileSync(filePath, 'utf8')
+      .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+    const line = body.split('\n').map(l => l.trim())
+      .find(l => l && !l.startsWith('#') && !l.startsWith('>') && !l.startsWith('|') && !l.startsWith('```'))
+    if (!line) return ''
+    return line.length > 160 ? `${line.slice(0, 157)}...` : line
   })
 
   return {

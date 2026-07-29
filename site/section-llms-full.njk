@@ -1,0 +1,17 @@
+---
+pagination:
+  data: collections.llmSections
+  size: 1
+  alias: section
+permalink: "/{{ section.key }}/llms-full.txt"
+eleventyExcludeFromCollections: true
+---
+# infoUX — {{ section.key }} (전문)
+# 이 파일은 자동 생성됩니다. 원본은 https://github.com/iux-pub/guide
+{% for page in section.pages %}
+--------------------------------------------------------------------------------
+{{ page.data.title | safe }} — {{ page.url }}
+--------------------------------------------------------------------------------
+
+{{ page.inputPath | sourceBody | safe }}
+{% endfor %}

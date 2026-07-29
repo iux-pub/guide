@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2026-07-29
+
+### Added
+- 문서 사이트가 `llms.txt` / `llms-full.txt`를 발행한다. 루트에 전체 목차와 전문, 섹션(11개)마다 요약과 전문을 낸다. MCP를 붙이기 어려운 발주처·협력사에 문서를 텍스트로 전달하는 경로다.
+- `create-infomind-ux` 0.2.0 — `--profile`(사이트 유형 기록) / `--brand`(브랜드 팔레트 주입) / `--deliver`(사내 문서 제외).
+
+### Fixed
+- 링크 안 인라인 코드의 대비. 링크색이 코드 배경 위에서 4.17:1로 떨어졌다(흰 배경에서는 4.55:1로 통과). `--color-text-primary`로 6.26:1 확보.
+
 ## [3.1.0] - 2026-07-29
 
 ### Added

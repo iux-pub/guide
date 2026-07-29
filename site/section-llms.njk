@@ -1,0 +1,19 @@
+---
+pagination:
+  data: collections.llmSections
+  size: 1
+  alias: section
+permalink: "/{{ section.key }}/llms.txt"
+eleventyExcludeFromCollections: true
+---
+# infoUX — {{ section.key }}
+
+문서 {{ section.pages | length }}건. 전문은 /{{ section.key }}/llms-full.txt 에 있다.
+
+{% for page in section.pages %}## {{ page.data.title | safe }}
+{{ page.url }}
+{% set summary = page.inputPath | sourceSummary %}{% if summary %}{{ summary | safe }}
+{% endif %}
+{% endfor %}
+---
+전체 목차: /llms.txt

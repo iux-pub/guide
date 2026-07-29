@@ -57,7 +57,7 @@
 
   /* ─── Variant: secondary (KRDS button.secondary-*) ─── */
   .btn--secondary {
-    @apply bg-[var(--color-button-secondary-fill)] text-[var(--color-primary)] border-[var(--color-button-secondary-border)];
+    @apply bg-[var(--color-button-secondary-fill)] text-[var(--color-text-primary)] border-[var(--color-button-secondary-border)];
   }
 
   .btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {

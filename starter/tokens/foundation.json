@@ -1607,7 +1607,7 @@
           "type": "color"
         },
         "gray": {
-          "value": "{primitive.color.high-contrast.gray.70}",
+          "value": "{primitive.color.high-contrast.gray.50}",
           "type": "color",
           "description": "disabled"
         },
@@ -1938,15 +1938,15 @@
       },
       "button": {
         "primary-fill": {
-          "value": "{primitive.color.high-contrast.primary.60}",
+          "value": "{primitive.color.high-contrast.primary.30}",
           "type": "color"
         },
         "primary-fill-hover": {
-          "value": "{primitive.color.high-contrast.primary.70}",
+          "value": "{primitive.color.high-contrast.primary.20}",
           "type": "color"
         },
         "primary-fill-pressed": {
-          "value": "{primitive.color.high-contrast.primary.80}",
+          "value": "{primitive.color.high-contrast.primary.10}",
           "type": "color"
         },
         "secondary-fill": {

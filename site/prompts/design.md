@@ -45,11 +45,13 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-primary-60` | #0b50d0 |
 | `--color-primary-80` | #052561 |
 | `--color-primary-95` | #020f27 |
-| `--color-primary-10` | var(--color-primary-10) |
-| `--color-primary-30` | var(--color-primary-30) |
-| `--color-primary-50` | var(--color-primary-50) |
-| `--color-primary-70` | var(--color-primary-70) |
-| `--color-primary-90` | var(--color-primary-90) |
+| `--color-primary-5` | #ecf2fe |
+| `--color-primary-20` | #b1cefb |
+| `--color-primary-40` | #4c87f6 |
+| `--color-primary-60` | #0b50d0 |
+| `--color-primary-80` | #052561 |
+| `--color-primary-95` | #020f27 |
+| ... | (총 18개, tokens/build/tokens.css 참조) |
 
 ### Secondary
 
@@ -60,12 +62,14 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-secondary-50` | #346fb2 |
 | `--color-secondary-70` | #063a74 |
 | `--color-secondary-90` | #031f3f |
-| `--color-secondary-5` | var(--color-secondary-5) |
-| `--color-secondary-20` | var(--color-secondary-20) |
-| `--color-secondary-40` | var(--color-secondary-40) |
-| `--color-secondary-60` | var(--color-secondary-60) |
-| `--color-secondary-80` | var(--color-secondary-80) |
-| `--color-secondary-95` | var(--color-secondary-95) |
+| `--color-secondary-10` | #d5ebf1 |
+| `--color-secondary-30` | #75c0d1 |
+| `--color-secondary-50` | #268097 |
+| `--color-secondary-70` | #17505e |
+| `--color-secondary-90` | #0e3139 |
+| `--color-secondary-10` | var(--color-secondary-10) |
+| `--color-secondary-30` | var(--color-secondary-30) |
+| ... | (총 15개, tokens/build/tokens.css 참조) |
 
 ### Gray
 
@@ -78,21 +82,21 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-gray-70` | #464c53 |
 | `--color-gray-90` | #1e2124 |
 | `--color-gray-100` | #000000 |
-| `--color-gray-5` | var(--color-gray-5) |
-| `--color-gray-20` | var(--color-gray-20) |
-| `--color-gray-40` | var(--color-gray-40) |
-| `--color-gray-60` | var(--color-gray-60) |
-| `--color-gray-80` | var(--color-gray-80) |
-| ... | (총 13개, tokens/build/tokens.css 참조) |
+| `--color-gray-0` | #ffffff |
+| `--color-gray-10` | #e6e8ea |
+| `--color-gray-30` | #b1b8be |
+| `--color-gray-50` | #6d7882 |
+| `--color-gray-70` | #464c53 |
+| ... | (총 21개, tokens/build/tokens.css 참조) |
 
 ### Semantic (success/warning/danger/info)
 
 | 토큰 | 값 |
 |----|----|
-| `--color-danger-text` | #bd2c0f |
-| `--color-warning-surface` | #fff3db |
-| `--color-success-text` | #267337 |
-| `--color-info-surface` | #e7f4fe |
+| `--color-danger-surface` | #fdefec |
+| `--color-warning-text` | #8a5c00 |
+| `--color-success-surface` | #eaf6ec |
+| `--color-info-text` | #096ab3 |
 | `--color-danger-10` | #fcdfd9 |
 | `--color-danger-30` | #f48771 |
 | `--color-danger-50` | #de3412 |
@@ -109,17 +113,17 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-success-50` | #228738 |
 | `--color-success-70` | #285d33 |
 | `--color-success-90` | #122b18 |
-| `--color-danger-surface` | var(--color-danger-surface) |
-| `--color-warning-text` | var(--color-warning-text) |
-| `--color-success-surface` | var(--color-success-surface) |
-| `--color-info-text` | var(--color-info-text) |
-| `--color-danger-5` | var(--color-danger-5) |
-| `--color-danger-20` | var(--color-danger-20) |
-| `--color-danger-40` | var(--color-danger-40) |
-| `--color-danger-60` | var(--color-danger-60) |
-| `--color-danger-80` | var(--color-danger-80) |
-| `--color-danger-95` | var(--color-danger-95) |
-| ... | (총 41개, tokens/build/tokens.css 참조) |
+| `--color-danger-surface` | #260903 |
+| `--color-warning-text` | #ffc95c |
+| `--color-success-surface` | #0e2012 |
+| `--color-info-text` | #9ed2fa |
+| `--color-danger-10` | #fcdfd9 |
+| `--color-danger-30` | #f48771 |
+| `--color-danger-50` | #de3412 |
+| `--color-danger-70` | #8a240f |
+| `--color-danger-90` | #390d05 |
+| `--color-warning-5` | #fff3db |
+| ... | (총 60개, tokens/build/tokens.css 참조) |
 
 ---
 
@@ -134,41 +138,45 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-text` | #1e2124 |
 | `--color-text-subtle` | #464c53 |
 | `--color-text-inverse` | #ffffff |
-| `--color-text-bolder` | #e6e8ea |
-| `--color-text-disabled` | #58616a |
+| `--color-text` | #f4f5f6 |
+| `--color-text-subtle` | #cdd1d5 |
+| `--color-text-inverse` | #1e2124 |
 | `--color-text-bolder` | var(--color-text-bolder) |
 | `--color-text-disabled` | var(--color-text-disabled) |
+| `--color-text-primary` | var(--color-text-primary) |
 
 ### Background
 
 | 토큰 | 값 |
 |----|----|
-| `--color-bg-subtler` | #f4f5f6 |
-| `--color-bg-inverse` | #1e2124 |
+| `--color-bg` | #ffffff |
+| `--color-bg-subtle` | #e6e8ea |
+| `--color-bg-dim` | #000000bf |
 | `--color-bg` | #000000 |
 | `--color-bg-subtle` | #1e2124 |
 | `--color-bg-dim` | #000000bf |
-| `--color-bg` | var(--color-bg) |
-| `--color-bg-subtle` | var(--color-bg-subtle) |
-| `--color-bg-dim` | var(--color-bg-dim) |
+| `--color-bg-subtler` | var(--color-bg-subtler) |
+| `--color-bg-inverse` | var(--color-bg-inverse) |
 
 ### Border
 
 | 토큰 | 값 |
 |----|----|
-| `--color-border` | #b1b8be |
-| `--color-border-dark` | #58616a |
-| `--color-border-primary-light` | #d8e5fd |
-| `--color-border-success-light` | #d8eedd |
-| `--color-border-danger-light` | #fcdfd9 |
-| `--color-border` | #464c53 |
-| `--color-border-dark` | #8a949e |
+| `--color-border-light` | #cdd1d5 |
+| `--color-border-primary` | #256ef4 |
+| `--color-border-information-light` | #d3ebfd |
+| `--color-border-warning-light` | #ffe0a3 |
+| `--color-border-disabled` | #b1b8be |
+| `--color-border-light` | #33363d |
+| `--color-border-primary` | #256ef4 |
+| `--color-border-information-light` | #03253f |
+| `--color-border-warning-light` | #2e1f00 |
 | `--color-border-disabled` | #464c53 |
-| `--color-border-light` | var(--color-border-light) |
-| `--color-border-primary` | var(--color-border-primary) |
-| `--color-border-information-light` | var(--color-border-information-light) |
-| `--color-border-warning-light` | var(--color-border-warning-light) |
-| `--color-border-disabled` | var(--color-border-disabled) |
+| `--color-border` | var(--color-border) |
+| `--color-border-dark` | var(--color-border-dark) |
+| `--color-border-primary-light` | var(--color-border-primary-light) |
+| `--color-border-success-light` | var(--color-border-success-light) |
+| `--color-border-danger-light` | var(--color-border-danger-light) |
 
 ---
 

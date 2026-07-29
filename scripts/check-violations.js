@@ -254,6 +254,26 @@ function checkHtmlFile(filePath) {
     }
   }
 
+  // <style> 블록 안의 색상 (R-01)
+  // HTML은 인라인 style 속성만 보고 있어 <style> 안의 raw 색상이 새어 나갔다.
+  // 2026-07-29 플레이그라운드 12개 파일이 이 경로로 raw hex를 유지했고,
+  // 고대비 모드에서 흰 배경 위 옅은 글씨가 되어 미리보기가 깨졌다.
+  const styleBlocks = [...content.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)]
+  for (const block of styleBlocks) {
+    const startLine = content.slice(0, block.index).split('\n').length
+    block[1].split('\n').forEach((styleLine, offset) => {
+      const t = styleLine.trim()
+      if (!t) return
+      const lineNum = startLine + offset
+      if (HARDCODED_HEX.test(t)) {
+        error(relPath, lineNum, '[R-01] <style> 블록 raw hex 색상 금지. var(--color-*) 토큰 사용.', t)
+      }
+      if (HARDCODED_RGB.test(t) || HARDCODED_HSL.test(t)) {
+        error(relPath, lineNum, '[R-01] <style> 블록 raw rgb/hsl 색상 금지. var(--color-*) 토큰 사용.', t)
+      }
+    })
+  }
+
   lines.forEach((line, i) => {
     const lineNum = i + 1
     const trimmed = line.trim()

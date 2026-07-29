@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-07-29
+
+### Added
+- `--color-border-control` 신설. 사용자가 조작하는 요소의 경계·상태를 나타내는 테두리로, WCAG 1.4.11에 따라 배경 대비 3:1 이상을 유지한다. 표 구분선 같은 장식은 `--color-border`를 그대로 쓴다.
+- `--color-text-primary` 노출. 소스에 있었으나 발행되지 않아 secondary 버튼이 `--color-primary`로 대신 쓰다 4.05:1로 AA 미달이었다.
+- `check-violations.js`가 `<style>` 블록 안의 raw 색상도 검사한다. 인라인 `style` 속성만 보느라 사각지대였다.
+
+### Fixed
+- BREAKING(고대비 모드 외관): 고대비 모드가 색상 변수 74개 중 21개만 덮어 링크·버튼·상태 텍스트가 라이트 값을 유지했다. `build-tokens.js`가 라이트·고대비 두 블록을 같은 목록에서 생성하도록 바꿔 모드 누락이 구조적으로 생기지 않게 했다(고대비 21 → 164개). 라이트 모드 출력은 한 줄도 바뀌지 않는다.
+- 고대비 primary 버튼 채움을 밝은 파랑으로 뒤집었다. 어두운 테마인데 라이트와 같은 진한 파랑이라 어두운 레이블이 읽히지 않았다(2.37:1 → 7.33:1).
+- 고대비 기본 테두리를 gray.50으로 올렸다(2.42:1 → 4.66:1).
+- 플레이그라운드 12개 파일의 raw hex를 토큰으로 교체했다. 고대비에서 흰 배경에 옅은 글씨가 되어 미리보기가 깨져 있었다.
+- `check-html-structure.js`가 플레이그라운드를 page shell 검사에서 면제한다. `check-violations.js`와 판단이 어긋나 pre-commit에서만 실패했다.
+
+### Changed
+- 대비 검사 대상이 40 → 48건으로 늘었다(버튼 레이블·입력 필드·컨트롤 테두리 추가, 장식 테두리와 투명 배경 조합 제외).
+- `tokens/contrast-baseline.json`이 비었다. 예외 없이 전량 통과한다.
+
 ## [3.0.0] - 2026-07-29
 
 ### Added

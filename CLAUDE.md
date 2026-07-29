@@ -252,6 +252,8 @@ src/styles/
 | `prompts/design-rules.md` | 디자인 품질 규칙 |
 | `prompts/publishing.md` | 퍼블리싱 체크리스트 |
 
+`mcp/` — infoUX MCP 서버(`@infomind/infoux-mcp`). 스킬은 Claude Code 전용이고 파일 복사가 필요하지만, MCP는 등록 한 줄로 Codex·Cursor 팀원에게도 같은 기준이 간다. 도구 7종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / search_docs). 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다. 상세: `mcp/README.md`.
+
 `skill/` — info-design 스킬 본체. SKILL.md + references/(krds-tokens, krds-components, tailwind-mapping, accessibility, forbidden-patterns, guide-import). `npm run build:skill` → `npm run deploy:skill`로 로컬 `~/.claude/skills/info-design/`에 배포.
 
 ---
@@ -290,6 +292,7 @@ npm run build:docs-css  # 문서 사이트 CSS → dist/css/docs.css
 npm run build:rules     # rules.json → site/conventions/ + CLAUDE.md 자동 주입
 npm run build:prompts   # prompts/*.md 재생성
 npm run build:skill     # skill/ 빌드
+npm run build:mcp       # mcp/data 번들 (MCP 서버가 읽는 문서)
 npm run build           # 위 전부 + Eleventy 사이트 빌드
 
 # 발행

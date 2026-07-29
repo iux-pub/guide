@@ -1,0 +1,236 @@
+{
+  "version": "3c97011",
+  "generated": "scripts/build-mcp.js",
+  "references": [
+    {
+      "id": "accessibility",
+      "file": "accessibility.md",
+      "chars": 5489,
+      "summary": "KRDS는 **WCAG 2.1 Level AA 이상 + KWCAG 2.1/2.2** 준수를 강제한다. 본 스킬도 이를 그대로 따른다."
+    },
+    {
+      "id": "forbidden-patterns",
+      "file": "forbidden-patterns.md",
+      "chars": 10600,
+      "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
+    },
+    {
+      "id": "guide-import",
+      "file": "guide-import.md",
+      "chars": 4213,
+      "summary": "이 문서는 **UX 팀장이 개발팀 환경에 info-design 스킬을 배포하는 방법**과"
+    },
+    {
+      "id": "html-semantics",
+      "file": "html-semantics.md",
+      "chars": 19682,
+      "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
+    },
+    {
+      "id": "krds-components",
+      "file": "krds-components.md",
+      "chars": 33775,
+      "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
+    },
+    {
+      "id": "krds-tokens",
+      "file": "krds-tokens.md",
+      "chars": 6700,
+      "summary": "색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다."
+    },
+    {
+      "id": "project-profiles",
+      "file": "project-profiles.md",
+      "chars": 4256,
+      "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
+    },
+    {
+      "id": "snippet-template",
+      "file": "snippet-template.md",
+      "chars": 3887,
+      "summary": "```markdown"
+    },
+    {
+      "id": "tailwind-mapping",
+      "file": "tailwind-mapping.md",
+      "chars": 1699,
+      "summary": "INFOUX는 Tailwind v4 `@theme`에 색상과 폰트만 공개한다."
+    }
+  ],
+  "snippets": [
+    {
+      "id": "accordion",
+      "file": "accordion.md",
+      "chars": 1260,
+      "summary": "native `<details>`/`<summary>` 활용 — JS 없이 동작."
+    },
+    {
+      "id": "alert",
+      "file": "alert.md",
+      "chars": 961,
+      "summary": "페이지에 고정 노출되는 정보/경고/오류 메시지."
+    },
+    {
+      "id": "badge",
+      "file": "badge.md",
+      "chars": 553,
+      "summary": "작은 알림 표시기 (카운트 / 상태 / 새 항목)."
+    },
+    {
+      "id": "boilerplate",
+      "file": "boilerplate.md",
+      "chars": 3524,
+      "summary": "기본 마크업은 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약 모두에 적용 가능한 공통 골격이다. 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 사이트 유형 판정에서 적용 대상이 확인된 경우에만 추가한다."
+    },
+    {
+      "id": "breadcrumb",
+      "file": "breadcrumb.md",
+      "chars": 634,
+      "summary": "페이지 경로 표시. 사용자의 현재 위치를 보여주고 상위 페이지로 빠르게 이동할 수 있게 한다."
+    },
+    {
+      "id": "btn",
+      "file": "btn.md",
+      "chars": 2098,
+      "summary": "```html"
+    },
+    {
+      "id": "calendar",
+      "file": "calendar.md",
+      "chars": 2016,
+      "summary": "날짜 선택 그리드. 단독 사용 또는 date input의 팝업으로 사용."
+    },
+    {
+      "id": "card",
+      "file": "card.md",
+      "chars": 1199,
+      "summary": "```html"
+    },
+    {
+      "id": "carousel",
+      "file": "carousel.md",
+      "chars": 1483,
+      "summary": "스크롤 스냅 기반 슬라이드 컨테이너."
+    },
+    {
+      "id": "check-radio",
+      "file": "check-radio.md",
+      "chars": 1428,
+      "summary": "```html"
+    },
+    {
+      "id": "disclosure",
+      "file": "disclosure.md",
+      "chars": 1026,
+      "summary": "단일 \"더보기/접기\" 토글. Accordion(다중 그룹)과 달리 단독 토글에 사용."
+    },
+    {
+      "id": "file-upload",
+      "file": "file-upload.md",
+      "chars": 815,
+      "summary": "```html"
+    },
+    {
+      "id": "form",
+      "file": "form.md",
+      "chars": 1869,
+      "summary": "KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스템메시지** (요소 간 8px gap)"
+    },
+    {
+      "id": "header",
+      "file": "header.md",
+      "chars": 1561,
+      "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
+    },
+    {
+      "id": "list",
+      "file": "list.md",
+      "chars": 1129,
+      "summary": "두 가지 변형 — 텍스트 목록과 구조화 목록(정의 목록)."
+    },
+    {
+      "id": "main-menu",
+      "file": "main-menu.md",
+      "chars": 1257,
+      "summary": "드롭다운형 주 내비게이션. 헤더 안에서 사용."
+    },
+    {
+      "id": "modal",
+      "file": "modal.md",
+      "chars": 1546,
+      "summary": "```html"
+    },
+    {
+      "id": "pagination",
+      "file": "pagination.md",
+      "chars": 1110,
+      "summary": "목록을 여러 페이지로 나눠 탐색."
+    },
+    {
+      "id": "progress",
+      "file": "progress.md",
+      "chars": 579,
+      "summary": "native `<progress>` + 시각 커스텀."
+    },
+    {
+      "id": "select",
+      "file": "select.md",
+      "chars": 696,
+      "summary": "native `<select>` 기반. input과 동일 사이즈/패딩 토큰."
+    },
+    {
+      "id": "side-panel",
+      "file": "side-panel.md",
+      "chars": 1476,
+      "summary": "우측에서 슬라이드 인하는 보조 패널. 모달과 달리 본문 스크롤을 차단하지 않는다."
+    },
+    {
+      "id": "spinner",
+      "file": "spinner.md",
+      "chars": 375,
+      "summary": "로딩 표시기. 진행 시간을 알 수 없을 때 사용."
+    },
+    {
+      "id": "step-indicator",
+      "file": "step-indicator.md",
+      "chars": 1000,
+      "summary": "다단계 폼/프로세스의 현재 단계 표시."
+    },
+    {
+      "id": "switch",
+      "file": "switch.md",
+      "chars": 660,
+      "summary": "```html"
+    },
+    {
+      "id": "tab",
+      "file": "tab.md",
+      "chars": 1535,
+      "summary": "```html"
+    },
+    {
+      "id": "table",
+      "file": "table.md",
+      "chars": 1141,
+      "summary": "데이터 표. 모바일에서는 가로 스크롤 컨테이너로 감싸서 사용."
+    },
+    {
+      "id": "tag",
+      "file": "tag.md",
+      "chars": 752,
+      "summary": "카테고리, 필터, 속성 라벨."
+    },
+    {
+      "id": "toast",
+      "file": "toast.md",
+      "chars": 986,
+      "summary": "일시적 피드백 메시지. 화면 우측 상단/하단에 잠시 노출 후 자동 사라짐."
+    },
+    {
+      "id": "tooltip",
+      "file": "tooltip.md",
+      "chars": 788,
+      "summary": "짧은 보조 설명 팝업. **JS 트리거 변형 권장** (키보드/터치 호환)."
+    }
+  ]
+}

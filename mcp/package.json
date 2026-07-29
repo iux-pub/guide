@@ -1,0 +1,34 @@
+{
+  "name": "@infomind/infoux-mcp",
+  "version": "0.1.0",
+  "description": "INFOMIND UX 퍼블리싱 기준(infoUX)을 MCP로 제공한다. 토큰·컴포넌트·규칙·접근성 기준을 에이전트가 직접 조회한다.",
+  "bin": {
+    "infoux-mcp": "bin/server.js"
+  },
+  "files": [
+    "bin/",
+    "data/",
+    "README.md"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "infomind",
+    "ux",
+    "krds",
+    "design-system",
+    "mcp",
+    "model-context-protocol"
+  ],
+  "homepage": "https://github.com/iux-pub/guide",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iux-pub/guide.git",
+    "directory": "mcp"
+  },
+  "license": "ISC"
+}

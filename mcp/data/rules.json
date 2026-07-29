@@ -1,0 +1,780 @@
+{
+  "meta": {
+    "version": "2.0",
+    "description": "인포마인드 UX팀 코딩 규칙 — 소스 진실. scripts/build-rules.js가 CLAUDE.md와 site/conventions/ 페이지를 여기서 생성한다. KRDS+Tailwind v4 기준 (2.0)."
+  },
+  "categories": [
+    {
+      "id": "css",
+      "title": "CSS 규칙",
+      "slug": "css-rules",
+      "order": 2,
+      "description": "CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOUX 토큰 기반.",
+      "lang": "css"
+    },
+    {
+      "id": "bem",
+      "title": "BEM 네이밍",
+      "slug": "bem",
+      "order": 3,
+      "description": "CSS 클래스 명명 규칙이다. Stylelint와 check-violations.js로 자동 검증한다. 5-objects, 6-components 레이어에만 적용된다.",
+      "lang": "css"
+    },
+    {
+      "id": "html",
+      "title": "HTML/마크업 규칙",
+      "slug": "html-rules",
+      "order": 4,
+      "description": "HTML 마크업 작성 규칙이다.",
+      "lang": "html"
+    },
+    {
+      "id": "a11y",
+      "title": "접근성 규칙",
+      "slug": "a11y-rules",
+      "order": 5,
+      "description": "KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.",
+      "lang": "css"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-01",
+      "category": "css",
+      "summary": "색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "색상은 브랜드·상태·접근성·테마 변경의 영향이 크므로 반드시 토큰으로 관리한다. 반면 간격·크기·타이포 스케일은 KRDS 값을 참고하되 프로젝트 성격에 맞게 조정할 수 있다. 특히 CMS/관리자 화면은 정보 밀도와 반복 작업 효율이 중요하므로 KRDS 수치 체계를 그대로 강제하지 않는다.",
+      "bad": [
+        {
+          "code": "color: #256ef4;",
+          "note": "하드코딩 색상"
+        },
+        {
+          "code": "background: #f8f8f8;",
+          "note": "하드코딩 색상"
+        },
+        {
+          "code": "color: rgb(37, 110, 244);",
+          "note": "하드코딩 색상"
+        }
+      ],
+      "good": [
+        {
+          "code": "color: var(--color-primary);",
+          "note": "INFOUX 공개 토큰"
+        },
+        {
+          "code": "color: var(--color-primary);",
+          "note": "INFOMIND 시맨틱 별칭 (INFOUX 토큰을 가리킴)"
+        },
+        {
+          "code": "padding: 16px;",
+          "note": "프로젝트 맥락상 명확한 간격값은 허용"
+        },
+        {
+          "code": "gap: 1.6rem;",
+          "note": "반복 패턴에는 INFOMIND 간격 별칭 권장"
+        }
+      ],
+      "refs": [
+        "tokens/foundation.json",
+        "tokens/foundation.json",
+        "tokens/build/tokens.css"
+      ]
+    },
+    {
+      "id": "R-02",
+      "category": "css",
+      "summary": "!important 사용 금지 — 부득이한 경우 주석으로 사유 필수",
+      "severity": "warning",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "캐스케이드 우선순위를 강제 무력화하여 이후 오버라이드를 불가능하게 만든다. 외부 라이브러리 인라인 스타일을 덮어야 하는 등 불가피한 경우에만 허용하며 반드시 사유를 주석으로 명시한다.",
+      "bad": [
+        {
+          "code": ".element { color: var(--color-primary) !important; }",
+          "note": "사유 없는 !important"
+        }
+      ],
+      "good": [
+        {
+          "code": ".pagefind-ui__input { font-size: 1.7rem !important; /* pagefind 인라인 스타일 오버라이드 */ }",
+          "note": "사유 주석 명시"
+        }
+      ]
+    },
+    {
+      "id": "R-03",
+      "category": "css",
+      "summary": "SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "프로젝트는 SCSS 빌드 파이프라인을 사용하지 않는다. .scss 확장자, @use/@forward, SCSS 변수($var), SCSS 전용 함수/믹스인 사용을 금지한다. 단, 표준 CSS nesting과 Tailwind v4의 @theme/@apply/@utility 등 CSS 기반 문법은 허용한다.",
+      "bad": [
+        {
+          "code": "/* style.scss */",
+          "note": ".scss 확장자 — 빌드 파이프라인 없음"
+        },
+        {
+          "code": "@use '../1-settings' as settings;",
+          "note": "Dart Sass @use"
+        },
+        {
+          "code": "@forward 'btn';",
+          "note": "Dart Sass @forward"
+        },
+        {
+          "code": "$primary: #256ef4;",
+          "note": "SCSS 변수"
+        }
+      ],
+      "good": [
+        {
+          "code": "/* style.css */",
+          "note": ".css 확장자만"
+        },
+        {
+          "code": ".card { &__title { color: var(--color-text); } }",
+          "note": "표준 CSS nesting"
+        },
+        {
+          "code": ".btn { @apply inline-flex items-center; }",
+          "note": "Tailwind @apply"
+        },
+        {
+          "code": "@import \"tailwindcss\";",
+          "note": "Tailwind v4 import"
+        }
+      ],
+      "refs": [
+        "src/styles/style.css",
+        "tokens/build/tokens.css"
+      ]
+    },
+    {
+      "id": "R-19",
+      "category": "css",
+      "summary": "스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "반복되는 레이아웃, 정렬, 표시 상태, 커서, overflow 같은 유틸리티 성격의 선언은 Tailwind v4 @apply로 작성해 CSS 구조를 간결하게 유지한다. 색상, 간격, 크기, radius, shadow, typography처럼 KRDS/INFOMIND 토큰 의미가 중요한 값은 Tailwind 기본 유틸로 억지 변환하지 않고 var(--token)을 유지한다.",
+      "bad": [
+        {
+          "code": ".btn {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}",
+          "note": "@apply로 표현 가능한 raw utility 선언"
+        }
+      ],
+      "good": [
+        {
+          "code": ".btn {\n  @apply inline-flex items-center justify-center;\n  color: var(--color-text);\n}",
+          "note": "유틸은 @apply, 토큰 값은 var() 유지"
+        },
+        {
+          "code": ".card {\n  @apply relative overflow-hidden;\n  border-radius: 0.6rem;\n}",
+          "note": "구조 유틸과 INFOUX 토큰 병행"
+        }
+      ],
+      "refs": [
+        "src/styles/**/*.css",
+        "starter/src/styles/**/*.css"
+      ]
+    },
+    {
+      "id": "R-20",
+      "category": "css",
+      "summary": "호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 sibling selector, 의미적 상태 class, ARIA 속성 selector로 구현한다.",
+      "bad": [
+        {
+          "code": ".field:has(input:disabled) { opacity: .5; }",
+          "note": "부모 상태를 :has()에 의존"
+        },
+        {
+          "code": ".check:hover:not(:has(input:disabled)) .check__box { border-color: var(--color-border-dark); }",
+          "note": "비활성 상태 처리에 :has() 의존"
+        }
+      ],
+      "good": [
+        {
+          "code": ".field input:disabled ~ .field__label { color: var(--color-text-disabled); }",
+          "note": "기존 DOM 구조에서 sibling selector 사용"
+        },
+        {
+          "code": ".disclosure[aria-expanded=\"true\"] + .disclosure__panel { display: block; }",
+          "note": "ARIA 상태 속성으로 관계 표현"
+        },
+        {
+          "code": ".modal--open { display: flex; }",
+          "note": "BEM modifier로 시각 상태 표현"
+        }
+      ],
+      "refs": [
+        "site/testing/browser-testing.md",
+        "package.json#browserslist"
+      ]
+    },
+    {
+      "id": "R-04",
+      "category": "bem",
+      "summary": "BEM 사용 (5-objects, 6-components 레이어에만 적용)",
+      "severity": "info",
+      "enforcement": [
+        "stylelint"
+      ],
+      "rationale": "클래스명만으로 컴포넌트 역할과 관계를 파악할 수 있어 HTML과 CSS를 별도 탐색 없이 이해할 수 있다. 3-generic·4-elements·7-utilities 레이어는 BEM 미적용.",
+      "bad": [
+        {
+          "code": ".btn-primary { }",
+          "note": "modifier 구분자 누락"
+        },
+        {
+          "code": ".card-header { }",
+          "note": "element 구분자 누락"
+        },
+        {
+          "code": ".inputBox { }",
+          "note": "camelCase"
+        }
+      ],
+      "good": [
+        {
+          "code": ".btn--primary { }",
+          "note": "modifier: 이중 하이픈"
+        },
+        {
+          "code": ".card__header { }",
+          "note": "element: 이중 언더스코어"
+        },
+        {
+          "code": ".form__input { }",
+          "note": "소문자 kebab"
+        }
+      ]
+    },
+    {
+      "id": "R-05",
+      "category": "bem",
+      "summary": "element 2단계 중첩 금지 — 평탄화",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js",
+        "stylelint"
+      ],
+      "rationale": "HTML 구조가 바뀌면 클래스명이 함께 깨진다. Block 기준으로 element를 평탄화하면 HTML 리팩토링에 독립적이다.",
+      "bad": [
+        {
+          "code": ".card__header__title { }",
+          "note": "2단계 element"
+        },
+        {
+          "code": ".form__group__label { }",
+          "note": "2단계 element"
+        }
+      ],
+      "good": [
+        {
+          "code": ".card__title { }",
+          "note": "Block 기준 평탄화"
+        },
+        {
+          "code": ".form__label { }",
+          "note": "Block 기준 평탄화"
+        }
+      ]
+    },
+    {
+      "id": "R-06",
+      "category": "bem",
+      "summary": "시각적 modifier 금지 — 의미적 이름 사용",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "브랜드 색상이 바뀌거나 디자인이 개편되면 시각적 이름(.btn--blue)은 클래스를 전부 바꿔야 한다. 의미적 이름(.btn--primary)은 디자인 변경에 독립적이다. KRDS 표준 modifier(primary/secondary/tertiary/text/xsmall~xlarge)만 사용한다.",
+      "bad": [
+        {
+          "code": ".btn--gray { }",
+          "note": "색상 이름 modifier"
+        },
+        {
+          "code": ".btn--blue { }",
+          "note": "색상 이름 modifier"
+        },
+        {
+          "code": ".text--red { }",
+          "note": "색상 이름 modifier"
+        },
+        {
+          "code": ".btn--ghost { }",
+          "note": "옛 variant — KRDS에서 폐기됨"
+        },
+        {
+          "code": ".btn--outline { }",
+          "note": "옛 variant — KRDS에서 폐기됨"
+        },
+        {
+          "code": ".btn--sm { }",
+          "note": "옛 size — KRDS small/xsmall 사용"
+        }
+      ],
+      "good": [
+        {
+          "code": ".btn--primary { }",
+          "note": "KRDS 정의 variant"
+        },
+        {
+          "code": ".btn--secondary { }",
+          "note": "KRDS 정의 variant"
+        },
+        {
+          "code": ".btn--tertiary { }",
+          "note": "KRDS 정의 variant"
+        },
+        {
+          "code": ".btn--small { }",
+          "note": "KRDS 정의 size"
+        },
+        {
+          "code": ".text--danger { }",
+          "note": "시맨틱 상태"
+        }
+      ]
+    },
+    {
+      "id": "R-07",
+      "category": "html",
+      "summary": "inline style 금지 — CSS 커스텀 프로퍼티 style=\"--var: val\"은 허용",
+      "severity": "warning",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "스타일은 CSS 파일에서만 관리한다. 인라인 스타일은 특이도가 높아 오버라이드가 어렵고 토큰 시스템을 우회한다. CSS 커스텀 프로퍼티 주입(style=\"--width: 320px\")은 동적 값 전달 패턴이므로 허용한다.",
+      "bad": [
+        {
+          "code": "<div style=\"padding: 16px; color: #333\">",
+          "note": "일반 인라인 스타일"
+        }
+      ],
+      "good": [
+        {
+          "code": "<div style=\"--card-ratio: 16/9\">",
+          "note": "CSS 커스텀 프로퍼티만"
+        },
+        {
+          "code": "<div class=\"card card--featured\">",
+          "note": "클래스로 스타일 적용"
+        }
+      ]
+    },
+    {
+      "id": "R-08",
+      "category": "html",
+      "summary": "HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)",
+      "severity": "warning",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "R-05와 동일 원칙. HTML 클래스가 CSS에서 정의된 것과 일치해야 한다.",
+      "bad": [
+        {
+          "code": "<div class=\"card__header__title\">",
+          "note": "2단계 element"
+        }
+      ],
+      "good": [
+        {
+          "code": "<div class=\"card__title\">",
+          "note": "평탄화"
+        }
+      ]
+    },
+    {
+      "id": "R-09",
+      "category": "html",
+      "summary": "img alt 속성 필수",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "스크린 리더 사용자에게 이미지 정보를 전달한다. 장식용 이미지는 alt=\"\"로 빈 값을 명시해 스크린 리더가 건너뛰게 한다. WCAG 1.1.1 비텍스트 콘텐츠 (A등급).",
+      "bad": [
+        {
+          "code": "<img src=\"photo.jpg\">",
+          "note": "alt 없음"
+        }
+      ],
+      "good": [
+        {
+          "code": "<img src=\"photo.jpg\" alt=\"제품 상세 이미지\">",
+          "note": "의미 있는 alt"
+        },
+        {
+          "code": "<img src=\"deco.svg\" alt=\"\">",
+          "note": "장식용: 빈 alt 명시"
+        }
+      ]
+    },
+    {
+      "id": "R-10",
+      "category": "html",
+      "summary": "인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "div에 onclick을 붙이면 키보드 포커스가 안 되고 스크린 리더가 역할을 인식하지 못한다. 시맨틱 요소는 키보드·스크린 리더 지원이 내장되어 있다.",
+      "bad": [
+        {
+          "code": "<div onclick=\"fn()\">클릭</div>",
+          "note": "키보드 접근 불가"
+        }
+      ],
+      "good": [
+        {
+          "code": "<button type=\"button\" onclick=\"fn()\">클릭</button>",
+          "note": "키보드·스크린 리더 지원"
+        }
+      ]
+    },
+    {
+      "id": "R-11",
+      "category": "a11y",
+      "summary": "포커스 스타일 필수 — :focus { outline: none } 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "키보드만 사용하는 사용자가 현재 포커스 위치를 파악할 수 없다. WCAG 2.4.7 Focus Visible (AA). KRDS는 4px 외곽선 + offset을 reset.css에서 전역 관리하므로 컴포넌트에서 제거 금지.",
+      "bad": [
+        {
+          "code": ":focus { outline: none; }",
+          "note": "포커스 제거 — 절대 금지"
+        },
+        {
+          "code": "*:focus { outline: 0; }",
+          "note": "전역 포커스 제거 — 절대 금지"
+        }
+      ],
+      "good": [
+        {
+          "code": ":focus-visible {\n  outline: 4px solid var(--color-primary);\n  outline-offset: 2px;\n}",
+          "note": "마우스 클릭은 포커스 표시 안 함, 키보드는 표시"
+        }
+      ]
+    },
+    {
+      "id": "R-12",
+      "category": "a11y",
+      "summary": "색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상",
+      "severity": "error",
+      "enforcement": [
+        "pa11y-ci"
+      ],
+      "rationale": "시력이 약한 사용자와 밝은 환경에서도 콘텐츠를 인식할 수 있어야 한다. WCAG 1.4.3 Contrast Minimum (AA). 큰 텍스트 기준: 24px 이상 또는 18.67px bold 이상. INFOUX 토큰은 AA 통과 조합으로 설계되어 있으므로 임의 색상 대신 시맨틱 토큰을 사용한다.",
+      "bad": [
+        {
+          "code": "color: #b1b8be; /* 흰 배경 대비 2.7:1 */",
+          "note": "하드코딩 + 대비 부족"
+        }
+      ],
+      "good": [
+        {
+          "code": "color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1 */",
+          "note": "AA 기준 통과"
+        }
+      ]
+    },
+    {
+      "id": "R-13",
+      "category": "a11y",
+      "summary": "터치/클릭 영역 최소 44×44px",
+      "severity": "error",
+      "enforcement": [
+        "manual"
+      ],
+      "rationale": "손가락으로 정확히 터치하기 어려운 작은 버튼은 오작동을 유발한다. 시각적 크기는 작더라도 padding으로 터치 영역을 확보한다. WCAG 2.5.5 Target Size (AAA) / iOS·Android HIG 권장. KRDS 모바일 권장 사이즈는 medium(48px) 이상이다.",
+      "bad": [
+        {
+          "code": ".icon-btn {\n  width: 24px;\n  height: 24px;\n}",
+          "note": "터치 영역 너무 작음"
+        }
+      ],
+      "good": [
+        {
+          "code": ".icon-btn {\n  width: 24px;\n  height: 24px;\n  padding: 1.6rem; /* 터치 영역 ≥ 44px */\n}",
+          "note": "padding으로 터치 영역 확보"
+        }
+      ]
+    },
+    {
+      "id": "R-14",
+      "category": "a11y",
+      "summary": "건너뛰기 링크 필수 — .skip-to-content",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "키보드 사용자가 반복 네비게이션을 건너뛰고 본문으로 바로 이동할 수 있어야 한다. WCAG 2.4.1 Bypass Blocks (A).",
+      "bad": [
+        {
+          "code": "<!-- 건너뛰기 링크 없음 -->",
+          "note": "키보드 사용자는 nav를 전부 탭해야 함"
+        }
+      ],
+      "good": [
+        {
+          "code": "<a href=\"#main\" class=\"skip-to-content\">본문 바로가기</a>",
+          "note": "body 최상단에 배치"
+        }
+      ]
+    },
+    {
+      "id": "R-15",
+      "category": "html",
+      "summary": "HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "인포마인드가 기존에 구축·유지보수한 사이트들은 공통 HTML 골격, 영역 네이밍, 헤더/푸터/본문 구성 패턴을 갖고 있다. 신규 작업도 이 패턴을 우선 유지해 유지보수성과 팀 내 이해도를 확보한다. page shell은 header#header, main#main, footer#footer를 기본으로 하고, HTML 컴포넌트화는 main 안의 section 단위로 분리한다. 각 section은 .container와 접근 가능한 이름을 가진다. KRDS는 root 태그 강제가 아니라 시맨틱 HTML, 접근성 속성, 키보드 동작을 보강하는 기준으로 적용한다.",
+      "refs": [
+        "기존 인포마인드 구축 사이트 HTML",
+        "skill/references/html-semantics.md",
+        "skill/references/krds-components.md"
+      ],
+      "bad": [
+        {
+          "code": "<div onclick=\"goPage()\">이동</div>",
+          "note": "기존 골격 유지와 무관하게 인터랙션을 div에 직접 부여하는 것은 금지"
+        },
+        {
+          "code": "<div class=\"modal\">...</div>",
+          "note": "dialog 역할/상태 속성 없이 모달을 구성"
+        },
+        {
+          "code": "<div id=\"content\"><div class=\"header\">...</div><div class=\"footer\">...</div></div>",
+          "note": "기존 사이트 골격과 다른 임의 구조"
+        }
+      ],
+      "good": [
+        {
+          "code": "<a href=\"#main\" class=\"skip-to-content\">본문 바로가기</a>\n<header id=\"header\"><div class=\"container\">...</div></header>\n<main id=\"main\">\n  <section class=\"section section--content\" aria-labelledby=\"section-title\">\n    <div class=\"container\">\n      <h1 id=\"section-title\">페이지 제목</h1>\n      ...\n    </div>\n  </section>\n</main>\n<footer id=\"footer\"><div class=\"container\">...</div></footer>",
+          "note": "큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container와 제목이 구조 담당"
+        },
+        {
+          "code": "<div class=\"modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\">...</div>",
+          "note": "기존 마크업 패턴 위에 접근성 속성 보강"
+        },
+        {
+          "code": "<nav class=\"breadcrumb\" aria-label=\"페이지 경로\"><ol>...</ol></nav>",
+          "note": "기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용"
+        }
+      ]
+    },
+    {
+      "id": "R-16",
+      "category": "a11y",
+      "summary": "인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "modal/tab/accordion/tooltip/disclosure/carousel/calendar 등 위젯 컴포넌트는 스크린리더가 의미를 파악할 수 있도록 ARIA로 상태·관계·역할을 명시해야 한다. 네이티브 시맨틱만으로 부족한 영역이며, KRDS와 WAI-ARIA 1.2 APG가 정의한 패턴을 따른다. KWCAG 1.3.1 / 4.1.2.",
+      "refs": [
+        "skill/references/html-semantics.md",
+        "skill/references/accessibility.md"
+      ],
+      "bad": [
+        {
+          "code": "<button class=\"disclosure\">자세히</button>\n<div class=\"disclosure__panel\">...</div>",
+          "note": "aria-expanded, aria-controls 누락"
+        },
+        {
+          "code": "<div role=\"dialog\" class=\"modal\">...</div>",
+          "note": "aria-modal과 aria-labelledby 누락"
+        },
+        {
+          "code": "<button class=\"tab__item\">탭1</button>",
+          "note": "role=\"tab\", aria-selected, aria-controls 누락"
+        }
+      ],
+      "good": [
+        {
+          "code": "<button class=\"disclosure\" aria-expanded=\"false\" aria-controls=\"more\">자세히</button>\n<div id=\"more\" class=\"disclosure__panel\" hidden>...</div>",
+          "note": "트리거-패널 ARIA 연결"
+        },
+        {
+          "code": "<div role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\">...</div>",
+          "note": "다이얼로그 3종 세트"
+        },
+        {
+          "code": "<button role=\"tab\" id=\"tab-1\" aria-selected=\"true\" aria-controls=\"panel-1\">탭1</button>",
+          "note": "탭 ARIA 4종 세트"
+        }
+      ]
+    },
+    {
+      "id": "R-17",
+      "category": "bem",
+      "summary": "상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "BEM의 modifier가 상태 표현의 표준이며, `.is-active` 같은 비-BEM 클래스는 어느 컴포넌트의 상태인지 모호하다. ARIA 속성(`aria-selected`, `aria-expanded`)이 의미 표현을 담당하고, 시각 변화는 BEM modifier(`.tab__item--selected`)가 담당한다.",
+      "refs": [
+        "skill/references/html-semantics.md#62-상태-표현-r-17"
+      ],
+      "bad": [
+        {
+          "code": "<button class=\"btn is-disabled\">",
+          "note": ".is-disabled — 비-BEM 상태 클래스"
+        },
+        {
+          "code": "<div class=\"modal is-open\">",
+          "note": ".is-open — 비-BEM 상태 클래스"
+        },
+        {
+          "code": "<input class=\"input has-error\">",
+          "note": ".has-error — 비-BEM 상태 클래스"
+        }
+      ],
+      "good": [
+        {
+          "code": "<button class=\"btn\" disabled aria-disabled=\"true\">",
+          "note": "네이티브 속성 + ARIA"
+        },
+        {
+          "code": "<div class=\"modal modal--open\" aria-modal=\"true\">",
+          "note": "BEM modifier + ARIA"
+        },
+        {
+          "code": "<input class=\"input input--error\" aria-invalid=\"true\">",
+          "note": "BEM modifier + ARIA"
+        }
+      ]
+    },
+    {
+      "id": "R-18",
+      "category": "bem",
+      "summary": "modifier 이름은 의미적이어야 함 — 시각적 단어 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js",
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "`.btn--blue`나 `.card--big` 같은 시각적 modifier는 의미가 시각 표현과 묶여 디자인 변경 시 클래스명도 같이 바꿔야 한다. 의미적 이름(`--primary`, `--large`)을 쓰면 색상·크기가 바뀌어도 클래스는 그대로 유지된다. KRDS 정의 variant/size 어휘만 허용. R-06의 자동화 버전.",
+      "refs": [
+        "skill/references/html-semantics.md#63-modifier-의미성-r-06-r-18",
+        "skill/references/krds-components.md"
+      ],
+      "bad": [
+        {
+          "code": "<button class=\"btn btn--blue\">",
+          "note": "색을 직접 명시한 modifier"
+        },
+        {
+          "code": "<div class=\"card card--big\">",
+          "note": "크기를 시각 단어로"
+        },
+        {
+          "code": "<span class=\"tag tag--rounded\">",
+          "note": "장식 속성을 modifier로"
+        }
+      ],
+      "good": [
+        {
+          "code": "<button class=\"btn btn--primary\">",
+          "note": "KRDS variant — 의미 기반"
+        },
+        {
+          "code": "<div class=\"card card--large\">",
+          "note": "KRDS 사이즈 스케일"
+        },
+        {
+          "code": "<span class=\"tag tag--info\">",
+          "note": "톤 — 의미 기반"
+        }
+      ]
+    },
+    {
+      "id": "R-21",
+      "category": "a11y",
+      "summary": "html lang 속성 필수 — 문서 기본 언어 명시",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "스크린리더가 올바른 발음·언어 엔진을 선택하려면 <html>에 문서 기본 언어가 명시되어야 한다. WCAG 3.1.1 Language of Page (A) / KWCAG. 한국어 페이지는 lang=\"ko\"를 사용한다.",
+      "refs": [
+        "skill/references/accessibility.md"
+      ],
+      "bad": [
+        {
+          "code": "<html>",
+          "note": "lang 속성 없음 — 문서 언어 미정"
+        },
+        {
+          "code": "<html class=\"no-js\">",
+          "note": "lang 누락"
+        }
+      ],
+      "good": [
+        {
+          "code": "<html lang=\"ko\">",
+          "note": "한국어 문서 언어 명시"
+        }
+      ]
+    },
+    {
+      "id": "R-22",
+      "category": "a11y",
+      "summary": "모션 최소화 선호 존중 — prefers-reduced-motion 가드",
+      "severity": "warning",
+      "enforcement": [
+        "check-violations.js",
+        "manual"
+      ],
+      "lang": "css",
+      "rationale": "전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). check-violations.js가 animation·@keyframes 사용 파일의 가드 누락을 경고로 자동 검출하며, 실제 모션 강도의 적절성은 수동 QA로 확인한다.",
+      "refs": [
+        "site/guides/css-animation.md",
+        "skill/references/accessibility.md"
+      ],
+      "bad": [
+        {
+          "code": ".carousel__track { animation: slide 5s infinite; }",
+          "note": "reduced-motion 가드 없는 자동 애니메이션"
+        }
+      ],
+      "good": [
+        {
+          "code": "@media (prefers-reduced-motion: reduce) {\n  .carousel__track { animation: none; }\n}",
+          "note": "모션 최소화 선호 시 정지"
+        }
+      ]
+    }
+  ]
+}

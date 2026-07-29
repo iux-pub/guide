@@ -27,7 +27,7 @@
   "homepage": "https://github.com/iux-pub/guide",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iux-pub/guide.git",
+    "url": "git+https://github.com/iux-pub/guide.git",
     "directory": "mcp"
   },
   "license": "ISC"

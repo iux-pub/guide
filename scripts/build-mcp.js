@@ -40,11 +40,11 @@ function resetDir(dir) {
   fs.mkdirSync(dir, { recursive: true })
 }
 
-function copyMarkdownDir(sourceDir, targetDir) {
+function copyMarkdownDir(sourceDir, targetDir, exclude = []) {
   fs.mkdirSync(targetDir, { recursive: true })
   const names = fs
     .readdirSync(sourceDir)
-    .filter(name => name.endsWith('.md') && name !== 'AGENTS.md')
+    .filter(name => name.endsWith('.md') && name !== 'AGENTS.md' && !exclude.includes(name))
     .sort()
 
   return names.map(name => {
@@ -80,8 +80,8 @@ fs.copyFileSync(path.join(ROOT, 'rules.json'), path.join(DATA_DIR, 'rules.json')
 fs.copyFileSync(path.join(ROOT, 'references', 'CONTRACT.md'), path.join(DATA_DIR, 'contract.md'))
 
 // 3. 레퍼런스 / 워크플로 / 스니펫
-const references = copyMarkdownDir(path.join(ROOT, 'references'), path.join(DATA_DIR, 'references'))
-  .filter(item => item.id !== 'CONTRACT')
+// CONTRACT.md는 data/contract.md로 따로 싣는다 — 두 벌 넣으면 번들만 커진다.
+const references = copyMarkdownDir(path.join(ROOT, 'references'), path.join(DATA_DIR, 'references'), ['CONTRACT.md'])
 const workflows = copyMarkdownDir(path.join(ROOT, 'references', 'workflows'), path.join(DATA_DIR, 'workflows'))
 const snippets = copyMarkdownDir(path.join(ROOT, 'src', 'snippets'), path.join(DATA_DIR, 'snippets'))
 

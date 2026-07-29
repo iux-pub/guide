@@ -8,7 +8,7 @@
 
 @layer components {
   .tag {
-    @apply inline-flex items-center gap-[0.4rem] h-[2.4rem] px-[1rem] border border-[var(--color-border)] rounded-[0.4rem] bg-[var(--color-surface)] text-[var(--color-text)] text-[1.3rem] font-bold leading-none no-underline [transition:background-color_0.15s_ease-in-out,_border-color_0.15s_ease-in-out];
+    @apply inline-flex items-center gap-[0.4rem] h-[2.4rem] px-[1rem] border border-[var(--color-border-control)] rounded-[0.4rem] bg-[var(--color-surface)] text-[var(--color-text)] text-[1.3rem] font-bold leading-none no-underline [transition:background-color_0.15s_ease-in-out,_border-color_0.15s_ease-in-out];
   }
 
   /* 클릭 가능 (button/a) 변형 */

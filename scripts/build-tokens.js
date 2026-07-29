@@ -99,6 +99,7 @@ const SEMANTIC_COLORS = [
   ['--color-border', 'mode-light.color.border.gray'],
   ['--color-border-light', 'mode-light.color.border.gray-light'],
   ['--color-border-dark', 'mode-light.color.border.gray-dark'],
+  ['--color-border-control', 'mode-light.color.border.control'],
   ['--color-border-primary', 'mode-light.color.border.primary'],
   ['--color-border-primary-light', 'mode-light.color.border.primary-light'],
   ['--color-border-information-light', 'mode-light.color.border.information-light'],

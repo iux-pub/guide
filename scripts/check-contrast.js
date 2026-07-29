@@ -48,7 +48,11 @@ const PAIRS = [
   ['--color-success-text', '--color-success-surface', TEXT_AA, '성공 메시지'],
   ['--color-info-text', '--color-info-surface', TEXT_AA, '정보 메시지'],
   ['--color-danger-text', '--color-bg', TEXT_AA, '흰 배경 위 오류 텍스트'],
-  ['--color-border', '--color-bg', UI_AA, '기본 테두리'],
+  // --color-border는 표 구분선·아코디언 경계 같은 장식이다. WCAG 1.4.11은 장식 경계에
+  // 3:1을 요구하지 않으므로 검사 대상이 아니다. 사용자가 조작하는 요소의 경계는
+  // --color-border-control을 쓰고, 그쪽을 아래에서 검사한다.
+  ['--color-border-control', '--color-bg', UI_AA, '컨트롤 테두리'],
+  ['--color-border-control', '--color-surface', UI_AA, '카드 위 컨트롤 테두리'],
   ['--color-input-border', '--color-bg', UI_AA, '입력 필드 테두리'],
   ['--color-input-border-active', '--color-bg', UI_AA, '입력 필드 활성 테두리'],
   ['--color-input-border-error', '--color-bg', UI_AA, '입력 필드 오류 테두리'],

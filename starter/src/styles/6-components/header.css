@@ -74,6 +74,6 @@
 
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
-    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border)] rounded-[0.6rem] cursor-pointer pc:hidden;
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] cursor-pointer pc:hidden;
   }
 }

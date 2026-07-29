@@ -830,6 +830,11 @@
           "type": "color",
           "description": "active"
         },
+        "control": {
+          "value": "{primitive.color.light.gray.50}",
+          "type": "color",
+          "description": "사용자가 조작하는 요소의 경계·상태를 나타내는 테두리. WCAG 1.4.11에 따라 배경 대비 3:1 이상을 유지한다. 표 구분선 같은 장식에는 border.gray를 쓴다."
+        },
         "primary": {
           "value": "{primitive.color.light.primary.50}",
           "type": "color",
@@ -1651,6 +1656,11 @@
           "value": "{primitive.color.high-contrast.gray.40}",
           "type": "color",
           "description": "active"
+        },
+        "control": {
+          "value": "{primitive.color.high-contrast.gray.40}",
+          "type": "color",
+          "description": "사용자가 조작하는 요소의 경계·상태를 나타내는 테두리. WCAG 1.4.11에 따라 배경 대비 3:1 이상을 유지한다. 표 구분선 같은 장식에는 border.gray를 쓴다."
         },
         "primary": {
           "value": "{primitive.color.high-contrast.primary.50}",

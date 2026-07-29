@@ -51,7 +51,7 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-primary-60` | #0b50d0 |
 | `--color-primary-80` | #052561 |
 | `--color-primary-95` | #020f27 |
-| ... | (총 18개, tokens/build/tokens.css 참조) |
+| ... | (총 17개, tokens/build/tokens.css 참조) |
 
 ### Secondary
 
@@ -67,9 +67,9 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-secondary-50` | #268097 |
 | `--color-secondary-70` | #17505e |
 | `--color-secondary-90` | #0e3139 |
-| `--color-secondary-10` | var(--color-secondary-10) |
-| `--color-secondary-30` | var(--color-secondary-30) |
-| ... | (총 15개, tokens/build/tokens.css 참조) |
+| `--color-secondary-5` | var(--color-secondary-5) |
+| `--color-secondary-20` | var(--color-secondary-20) |
+| ... | (총 16개, tokens/build/tokens.css 참조) |
 
 ### Gray
 
@@ -87,16 +87,16 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-gray-30` | #b1b8be |
 | `--color-gray-50` | #6d7882 |
 | `--color-gray-70` | #464c53 |
-| ... | (총 21개, tokens/build/tokens.css 참조) |
+| ... | (총 20개, tokens/build/tokens.css 참조) |
 
 ### Semantic (success/warning/danger/info)
 
 | 토큰 | 값 |
 |----|----|
-| `--color-danger-surface` | #fdefec |
-| `--color-warning-text` | #8a5c00 |
-| `--color-success-surface` | #eaf6ec |
-| `--color-info-text` | #096ab3 |
+| `--color-danger-text` | #bd2c0f |
+| `--color-warning-surface` | #fff3db |
+| `--color-success-text` | #267337 |
+| `--color-info-surface` | #e7f4fe |
 | `--color-danger-10` | #fcdfd9 |
 | `--color-danger-30` | #f48771 |
 | `--color-danger-50` | #de3412 |
@@ -113,17 +113,17 @@ Google Stitch, Galileo, Lovable, v0
 | `--color-success-50` | #228738 |
 | `--color-success-70` | #285d33 |
 | `--color-success-90` | #122b18 |
-| `--color-danger-surface` | #260903 |
-| `--color-warning-text` | #ffc95c |
-| `--color-success-surface` | #0e2012 |
-| `--color-info-text` | #9ed2fa |
+| `--color-danger-text` | #f7afa1 |
+| `--color-warning-surface` | #241800 |
+| `--color-success-text` | #a9dab4 |
+| `--color-info-surface` | #021a2c |
 | `--color-danger-10` | #fcdfd9 |
 | `--color-danger-30` | #f48771 |
 | `--color-danger-50` | #de3412 |
 | `--color-danger-70` | #8a240f |
 | `--color-danger-90` | #390d05 |
 | `--color-warning-5` | #fff3db |
-| ... | (총 60개, tokens/build/tokens.css 참조) |
+| ... | (총 61개, tokens/build/tokens.css 참조) |
 
 ---
 
@@ -163,20 +163,21 @@ Google Stitch, Galileo, Lovable, v0
 | 토큰 | 값 |
 |----|----|
 | `--color-border-light` | #cdd1d5 |
-| `--color-border-primary` | #256ef4 |
-| `--color-border-information-light` | #d3ebfd |
-| `--color-border-warning-light` | #ffe0a3 |
-| `--color-border-disabled` | #b1b8be |
+| `--color-border-control` | #6d7882 |
+| `--color-border-primary-light` | #d8e5fd |
+| `--color-border-success-light` | #d8eedd |
+| `--color-border-danger-light` | #fcdfd9 |
 | `--color-border-light` | #33363d |
-| `--color-border-primary` | #256ef4 |
-| `--color-border-information-light` | #03253f |
-| `--color-border-warning-light` | #2e1f00 |
-| `--color-border-disabled` | #464c53 |
+| `--color-border-control` | #8a949e |
+| `--color-border-primary-light` | #03163a |
+| `--color-border-success-light` | #122b18 |
+| `--color-border-danger-light` | #390d05 |
 | `--color-border` | var(--color-border) |
 | `--color-border-dark` | var(--color-border-dark) |
-| `--color-border-primary-light` | var(--color-border-primary-light) |
-| `--color-border-success-light` | var(--color-border-success-light) |
-| `--color-border-danger-light` | var(--color-border-danger-light) |
+| `--color-border-primary` | var(--color-border-primary) |
+| `--color-border-information-light` | var(--color-border-information-light) |
+| `--color-border-warning-light` | var(--color-border-warning-light) |
+| `--color-border-disabled` | var(--color-border-disabled) |
 
 ---
 

@@ -38,7 +38,7 @@
 
   /* 단계 번호 원 */
   .step-indicator__num {
-    @apply shrink-0 w-[3.2rem] h-[3.2rem] inline-flex items-center justify-center rounded-full bg-[var(--color-bg)] text-[var(--color-text-subtle)] font-bold leading-none [border:2px_solid_var(--color-border)];
+    @apply shrink-0 w-[3.2rem] h-[3.2rem] inline-flex items-center justify-center rounded-full bg-[var(--color-bg)] text-[var(--color-text-subtle)] font-bold leading-none [border:2px_solid_var(--color-border-control)];
   }
 
   .step-indicator__label {

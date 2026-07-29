@@ -1,6 +1,6 @@
 {
   "name": "create-infomind-ux",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "INFOMIND UX 스타터 키트로 새 프로젝트 생성",
   "bin": {
     "create-infomind-ux": "bin/create.js"

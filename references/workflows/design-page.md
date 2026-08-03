@@ -7,11 +7,12 @@
 ## 절차
 
 1. `references/project-profiles.md`에서 사이트 유형과 기본 section 흐름을 판정한다.
-2. 사용자의 핵심 과업을 한 문장으로 쓴다.
-3. `references/krds-components.md`에서 재사용할 컴포넌트를 고른다.
-4. `contracts/html-page-contract.json`으로 page shell과 section 구조를 확정한다.
-5. 인터랙티브 위젯이 있으면 `design-widget` 절차를 함께 적용한다.
-6. Task Contract의 필수 항목이 채워진 뒤에만 구현한다.
+2. `get_art_direction(profile)`로 표현 등급, 섹션 리듬 변주, 카피 톤을 확정하고, 실제 기관 용어·콘텐츠의 출처(`contentSources`)를 확보한다. 등급 상향은 Task Contract의 `expression` 필드에 근거와 함께 기록한다.
+3. 사용자의 핵심 과업을 한 문장으로 쓴다.
+4. `references/krds-components.md`에서 재사용할 컴포넌트를 고른다.
+5. `contracts/html-page-contract.json`으로 page shell과 section 구조를 확정한다.
+6. 인터랙티브 위젯이 있으면 `design-widget` 절차를 함께 적용한다.
+7. Task Contract의 필수 항목이 채워진 뒤에만 구현한다.
 
 ## 생성 원칙
 

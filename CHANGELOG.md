@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **아트 디렉션 계층 v1** — "규정 준수형 무개성"을 벗어나기 위한 표현 판단 기준을 계약·카탈로그·검사로 도입했다.
+  - 표현 등급(expression) 축 — `contracts/profiles.json` 1.1.0에 `utility`(기능형) / `restrained`(절제형) / `expressive`(표현형) 3등급과 프로필별 기본 등급을 정의했다. 등급은 상한이지 목표가 아니며, Task Contract 스키마의 `expression` 필드로만 상향한다(`publicIdentity: required`면 상한 restrained — 스키마가 강제). `contentSources` 필드로 실제 기관 용어·콘텐츠 출처를 운반한다.
+  - `contracts/art-direction.json` — 한글 조판 수치(keep-all·행간·자간·weight 상한), 타이포 페어링 카탈로그(원 배포처가 공식 woff2를 제공하는 폰트만 — 파일은 입수 대기), 팔레트 인덱스, 프로필별 리듬·카피 톤의 기계용 정본. 산문 해설·안티패턴 색인·납품 전 리뷰 체크리스트는 `references/art-direction.md`에 있다.
+  - 팔레트 프리셋 `tokens/presets/` — trust-blue(현행 승계)·coast-teal(관광 청록)·market-terracotta(커머스 웜 테라코타). 정준 Y 사다리 기반으로 생성해 **대비 검사 위반 0건이 입고 조건**이며 `check-presets.js`가 강제한다. 적용은 `cp` → `build:tokens` → `check:contrast` 3줄.
+  - 규칙 R-23(가짜 콘텐츠 금지)·R-24(한글 조판 하한)·R-25(섹션 리듬)·R-26(폰트 스택 한글 fallback) — 전부 표현 등급과 무관한 전역 하한만 기계 검출한다. 검출과 함께 대체 공급 패턴(`section-media` 이미지-텍스트 교차, `hero-bleed` 풀블리드 인트로, 시그니처 요소 스니펫)을 같은 버전에 입고했다.
+  - `tokens/brand.json`에 `font.family.heading` 슬롯 → `--font-heading` 토큰 발행. 슬롯이 없으면 `--font-sans`로 폴백해 기존 파생 사이트는 무중단이다.
+  - MCP `get_art_direction` 도구 — 프로필별 표현 등급 상세·타이포 후보·팔레트 후보·한글 조판 공통값·안티패턴 색인을 답한다. 구조·밀도는 `get_profile` 소유로 반복하지 않는다.
+  - `contracts/agent-workflow.json` version 2 — task-contract step에 표현 등급 선언을 추가하고, 패턴 조합 전에 아트 디렉션 확정 step을 넣었다. `design-page`·`init-project` 워크플로에 등급 확정·contentSources 확보·프리셋 적용·`--font-heading` 절차를 연결했다.
+
 ### Changed
 - BREAKING(파생 사이트 외관): 한글 조판 기본값을 base 계층에 도입했다. `3-generic/reset.css`의 body에 `word-break: keep-all`·`overflow-wrap: break-word`를 추가하고(`pre`·`code`는 `word-break: normal` 예외), 본문 line-height를 1.5 → 1.7로 올렸다. `4-elements/base.css`의 h1~h6 line-height는 1.5 → 1.3으로 내렸다. font-weight는 바뀌지 않는다.
 - 영향 범위: 이 저장소의 reset/base를 상속하는 모든 파생 사이트에서 ① 자체 `line-height`가 없는 본문 문단·목록의 행간이 커져 페이지 세로 길이가 늘고 ② 제목 행간이 줄어 여러 줄 제목이 조밀해지며 ③ keep-all로 한글 줄바꿈 위치가 단어 경계로 바뀐다. `leading-*`을 직접 지정한 컴포넌트(btn·badge·form·alert 등 6-components)는 영향이 없다. 파생 사이트는 업데이트 후 본문·제목이 긴 페이지의 시각 회귀를 확인해야 한다.

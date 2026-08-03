@@ -34,6 +34,24 @@ npm run check
 npm run build
 ```
 
+## 브랜드 프리셋 적용
+
+브랜드 색이 확정되지 않았거나 검증된 팔레트에서 출발하려면 `tokens/presets/`의 프리셋을 그대로 적용한다. 후보와 무드는 `get_art_direction` 또는 `references/art-direction.md` §4에서 고른다. 프리셋은 대비 검사 전량 통과 상태로만 입고되므로 적용 직후 검사가 깨지지 않는다.
+
+```bash
+cp tokens/presets/<id>.json tokens/brand.json
+npm run build:tokens
+npm run check:contrast
+```
+
+## 제목 폰트(--font-heading)
+
+제목 서체를 본문과 다르게 가져가는 프로젝트만 설정한다. 생략하면 `--font-heading`은 `--font-sans` 값으로 폴백된다.
+
+1. `references/art-direction.md` §3 타이포 카탈로그에서 페어링을 고른다 — 재배포 가능 라이선스 + 한글 폴백 스택이 전제다.
+2. `tokens/brand.json`의 `font.family.heading`에 페어링 스택을 기록한다. 한글 가용 폰트가 스택에 없으면 R-26이 빌드를 실패시킨다.
+3. `npm run build:tokens`로 `--font-heading`을 재발행한다.
+
 ## 프로젝트 CSS 예시
 
 ```css

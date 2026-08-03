@@ -67,6 +67,7 @@ requireSame('contracts/html-page-contract.json', 'starter/contracts/html-page-co
 requireSame('contracts/agent-workflow.json', 'starter/contracts/agent-workflow.json')
 requireSame('contracts/task-contract.schema.json', 'starter/contracts/task-contract.schema.json')
 requireSame('contracts/task-contract.md', 'starter/contracts/task-contract.md')
+requireSame('contracts/profiles.json', 'starter/contracts/profiles.json')
 requireSame('tokens/AGENTS.md', 'starter/tokens/AGENTS.md')
 requireSame('src/styles/AGENTS.md', 'starter/src/styles/AGENTS.md')
 requireSame('src/snippets/AGENTS.md', 'starter/src/snippets/AGENTS.md')
@@ -91,7 +92,8 @@ if (starterPackage.scripts?.check !== STARTER_CHECK) {
 for (const bundled of [
   ['rules.json', 'mcp/data/rules.json'],
   ['references/CONTRACT.md', 'mcp/data/contract.md'],
-  ['tokens/build/tokens.css', 'mcp/data/tokens.css']
+  ['tokens/build/tokens.css', 'mcp/data/tokens.css'],
+  ['contracts/profiles.json', 'mcp/data/profiles.json']
 ]) {
   requireSame(bundled[0], bundled[1])
 }

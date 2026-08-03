@@ -1,0 +1,41 @@
+/**
+ * Hero Bleed — 풀블리드 인트로 패턴 (R-25 대체 공급)
+ *   - 화면 가로 전체를 쓰는 도입 섹션. section 자체에 붙여 쓴다
+ *   - `--scrim` 변형은 배경 이미지 위 텍스트 대비를 위한 단색 스크림(50%)을 깐다
+ *     — 텍스트 대비 4.5:1은 스크림 위에서 실측한다 (references/art-direction.md §7)
+ *   - 공공서비스 프로필은 장식 hero를 화면 1/2 이하로 유지한다
+ *   - 사용 조건·마크업: src/snippets/hero-bleed.md
+ */
+
+.hero-bleed {
+  @apply relative overflow-hidden bg-[var(--color-bg-inverse)];
+}
+
+.hero-bleed__media {
+  @apply absolute inset-0;
+}
+
+.hero-bleed__img {
+  @apply w-full h-full object-cover;
+}
+
+/* 스크림 — 이미지 위 단색 40~60% (기본 alpha-black-50 토큰) */
+.hero-bleed--scrim .hero-bleed__media::after {
+  @apply content-[''] absolute inset-0 bg-[var(--color-alpha-black-50)];
+}
+
+.hero-bleed__content {
+  @apply relative flex flex-col justify-center gap-[1.6rem] min-h-[36rem] py-[6.4rem] tablet:min-h-[44rem] pc:min-h-[52rem];
+}
+
+.hero-bleed__title {
+  @apply text-[3.2rem] font-bold leading-[1.3] text-[var(--color-text-inverse)] m-0 pc:text-[4.8rem];
+}
+
+.hero-bleed__desc {
+  @apply text-[1.9rem] leading-[1.7] text-[var(--color-text-inverse)] m-0 max-w-[64rem];
+}
+
+.hero-bleed__actions {
+  @apply flex flex-wrap gap-[0.8rem] mt-[1.6rem];
+}

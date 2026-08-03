@@ -775,6 +775,140 @@
           "note": "모션 최소화 선호 시 정지"
         }
       ]
+    },
+    {
+      "id": "R-23",
+      "category": "html",
+      "summary": "가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "시안·납품물에 채움 콘텐츠가 남으면 검수 신뢰가 깨지고, placeholder 이미지 핫링크는 외부 서비스 의존이라 납품 self-contained 정책과도 이중으로 충돌한다. 콘텐츠가 미확정이면 task contract의 contentSources로 실제 용어·문서 출처를 먼저 확보하고, 이미지는 실제 자산 경로 또는 실제 비율의 data-uri 표기를 쓴다.",
+      "bad": [
+        {
+          "code": "<p>Lorem ipsum dolor sit amet</p>",
+          "note": "영문 채움 텍스트"
+        },
+        {
+          "code": "<p>여기에 설명 텍스트가 들어갑니다</p>",
+          "note": "한글 자리 채움 문구"
+        },
+        {
+          "code": "<img src=\"https://placehold.co/300x200\" alt=\"\">",
+          "note": "placeholder 핫링크 — self-contained 정책과 이중 위반"
+        }
+      ],
+      "good": [
+        {
+          "code": "<p>독서문화 프로그램은 매월 첫째 주 월요일부터 신청을 받습니다.</p>",
+          "note": "실제 서비스 문안 (contentSources 기반)"
+        },
+        {
+          "code": "<img src=\"/images/program-reading.jpg\" alt=\"독서문화 프로그램 진행 모습\">",
+          "note": "실제 자산 경로 + 의미 있는 alt"
+        }
+      ],
+      "refs": [
+        "references/art-direction.md",
+        "contracts/task-contract.schema.json"
+      ]
+    },
+    {
+      "id": "R-24",
+      "category": "css",
+      "summary": "한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "한글은 단어 중간 줄바꿈(keep-all 부재)과 좁은 행간에서 가독성이 급락한다. reset 계층(3-generic/reset.css)의 word-break: keep-all 부재와 HTML의 leading-none 클래스는 error, CSS line-height 1.5 미만은 warn으로 검출한다. 임계값 1.5의 정본은 contracts/art-direction.json hangul.bodyLineHeight.lintFloor이며 단위 테스트가 동일성을 강제한다. badge·tag·btn처럼 한 줄로 고정되는 단행 컴포넌트 CSS 파일은 예외다.",
+      "bad": [
+        {
+          "code": "p { line-height: 1.3; }",
+          "note": "본문 하한(1.5) 미만 — warn"
+        },
+        {
+          "code": "/* 3-generic/reset.css에 word-break: keep-all 부재 */",
+          "note": "한글 조판 기본값 누락 — error"
+        }
+      ],
+      "good": [
+        {
+          "code": "body {\n  word-break: keep-all;\n  overflow-wrap: break-word;\n  line-height: 1.7;\n}",
+          "note": "한글 조판 기본값 (3-generic/reset.css 소유)"
+        },
+        {
+          "code": ".badge { line-height: 1; }",
+          "note": "단행 컴포넌트 예외 — badge·tag·btn"
+        }
+      ],
+      "refs": [
+        "contracts/art-direction.json",
+        "references/art-direction.md",
+        "src/styles/3-generic/reset.css"
+      ]
+    },
+    {
+      "id": "R-25",
+      "category": "html",
+      "summary": "섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "\"중앙 제목 + 카드 그리드\" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 대체 패턴은 5-objects의 section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로)와 src/snippets/signature.md의 시그니처 요소가 공급한다.",
+      "bad": [
+        {
+          "code": "<main id=\"main\">\n  <section class=\"section section--list\">…</section>\n  <section class=\"section section--list\">…</section>\n  <section class=\"section section--list\">…</section>\n</main>",
+          "note": "동일 archetype 3연속 — 연속 상한 2"
+        },
+        {
+          "code": "<article class=\"card\">\n  <article class=\"card\">…</article>\n</article>",
+          "note": "카드 안 카드 중첩"
+        }
+      ],
+      "good": [
+        {
+          "code": "<main id=\"main\">\n  <section class=\"section section--intro hero-bleed\">…</section>\n  <section class=\"section section--list\">…</section>\n  <section class=\"section section--content\">\n    <div class=\"container\">\n      <div class=\"section-media\">…</div>\n    </div>\n  </section>\n</main>",
+          "note": "archetype 교차 + 변주 패턴 삽입"
+        }
+      ],
+      "refs": [
+        "references/art-direction.md",
+        "src/snippets/section-media.md",
+        "src/snippets/hero-bleed.md",
+        "src/snippets/signature.md"
+      ]
+    },
+    {
+      "id": "R-26",
+      "category": "css",
+      "summary": "폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함",
+      "severity": "error",
+      "enforcement": [
+        "build-tokens.js"
+      ],
+      "rationale": "영문 전용 폰트 스택은 한글이 시스템 기본 폰트로 떨어져 fallback 미설계 조판이 된다. scripts/lib/token-source.js가 build:tokens·check:presets 경로에서 --font-sans·--font-heading 값에 한글 가용 폰트(Pretendard·Noto Sans/Serif KR·Wanted Sans 등) 포함을 강제하며, 미포함이면 빌드가 실패한다. 미정의 슬롯은 하위호환으로 통과한다.",
+      "bad": [
+        {
+          "code": "--font-sans: 'Inter', sans-serif;",
+          "note": "한글 가용 폰트 없음 — build:tokens 실패"
+        }
+      ],
+      "good": [
+        {
+          "code": "--font-sans: 'Pretendard GOV', Pretendard, 'Apple SD Gothic Neo', sans-serif;",
+          "note": "한글 가용 폰트 + 시스템 폴백"
+        }
+      ],
+      "refs": [
+        "scripts/lib/token-source.js",
+        "tokens/brand.json",
+        "contracts/art-direction.json"
+      ]
     }
   ]
 }

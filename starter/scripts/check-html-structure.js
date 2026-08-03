@@ -5,6 +5,7 @@
 // R-16: 인터랙티브 컴포넌트의 필수 ARIA 속성 누락
 // R-17: 비-BEM 상태 클래스 (.is-*, .has-*)
 // R-18: 시각적 단어 modifier (--blue, --big, --rounded 등)
+// R-25: 섹션 리듬 — 동일 archetype 3연속·카드 중첩·카드 그리드 남발
 //
 // 단일 소스: references/html-semantics.md
 // 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
@@ -421,6 +422,100 @@ function checkAccordionPattern(root, filePath, baseLineNum) {
   }
 }
 
+// ─── R-25: 섹션 리듬 ────────────────────────────────────────
+// "중앙 제목 + 카드 그리드" 반복이 규정 준수형 무개성의 최빈 패턴이다.
+// ① 형제 section 시퀀스에서 동일 archetype(section--X) 3연속 — error
+// ② .card 내부 .card 중첩 — error
+// ③ 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)이 페이지당 3개 이상 또는 연속 배치 — warn
+// 대체 패턴 공급: src/styles/5-objects/section-media.css·hero-bleed.css + src/snippets/signature.md
+
+function sectionArchetype(section) {
+  const modifier = classList(section).find(name => /^section--[\w-]+$/.test(name))
+  return modifier ? modifier.slice('section--'.length) : null
+}
+
+function isCardGridSection(section) {
+  return findNodes(section, node =>
+    directElementChildren(node).filter(child => hasClass(child, 'card')).length >= 3
+  ).length > 0
+}
+
+function checkSectionRhythm(root, filePath, baseLineNum) {
+  // ② 카드 중첩 — 위치 무관 전역 검사
+  for (const card of findNodes(root, node => hasClass(node, 'card'))) {
+    if (ancestor(card, node => hasClass(node, 'card'))) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, card),
+        '[R-25] 카드 안에 카드를 중첩하지 마세요. 내부 콘텐츠는 목록·정의형 마크업으로 평탄화합니다.',
+        card.raw.slice(0, 120),
+        'R-25'
+      )
+    }
+  }
+
+  // 형제 section 시퀀스 단위로 리듬을 판정한다 (main 직계 포함, 래퍼 무관)
+  const parents = findNodes(root, node =>
+    (node.children || []).filter(child => child.tag === 'section').length > 0)
+
+  const gridSections = []
+  for (const parent of parents) {
+    const sections = directElementChildren(parent).filter(child => child.tag === 'section')
+
+    // ① 동일 archetype 3연속
+    let streakName = null
+    let streak = 0
+    for (const section of sections) {
+      const archetype = sectionArchetype(section)
+      if (archetype && archetype === streakName) {
+        streak++
+      } else {
+        streakName = archetype
+        streak = archetype ? 1 : 0
+      }
+      if (streak >= 3) {
+        error(
+          rel(filePath),
+          nodeLine(baseLineNum, section),
+          `[R-25] 동일 archetype "section--${archetype}" 3연속 — 연속 상한은 2입니다. section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로) 같은 변주 패턴을 사이에 끼우세요.`,
+          section.raw.slice(0, 120),
+          'R-25'
+        )
+        streakName = null
+        streak = 0
+      }
+    }
+
+    // ③ 카드 그리드 섹션 — 연속 배치 판정 (형제 시퀀스 기준)
+    let prevWasGrid = false
+    for (const section of sections) {
+      const grid = isCardGridSection(section)
+      if (grid) gridSections.push(section)
+      if (grid && prevWasGrid) {
+        warn(
+          rel(filePath),
+          nodeLine(baseLineNum, section),
+          '[R-25] 카드 그리드 섹션이 연속 배치됐습니다. 사이에 section-media 같은 변주 패턴이나 목록·표 섹션을 끼우세요.',
+          section.raw.slice(0, 120),
+          'R-25'
+        )
+      }
+      prevWasGrid = grid
+    }
+  }
+
+  // ③ 카드 그리드 섹션 페이지당 3개 이상
+  if (gridSections.length > 2) {
+    warn(
+      rel(filePath),
+      nodeLine(baseLineNum, gridSections[2]),
+      `[R-25] 카드 그리드 섹션이 페이지당 ${gridSections.length}개 — 2개 이하를 권장합니다. 카드가 아니어도 되는 콘텐츠는 목록·표로 풉니다.`,
+      gridSections[2].raw.slice(0, 120),
+      'R-25'
+    )
+  }
+}
+
 function isPageLikeHtml(html) {
   return /<!doctype html/i.test(html) ||
     /<body\b/i.test(html) ||
@@ -606,6 +701,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   checkFormLabels(root, filePath, baseLineNum)
   checkTabPattern(root, filePath, baseLineNum)
   checkAccordionPattern(root, filePath, baseLineNum)
+  checkSectionRhythm(root, filePath, baseLineNum)
 
   // R-17: 비-BEM 상태 클래스
   lines.forEach((line, idx) => {

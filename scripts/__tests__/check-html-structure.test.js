@@ -186,6 +186,156 @@ test('lang 없는 <html>은 R-21 오류로 실패한다', () => {
   assert.match(result.stderr, /\[R-21\]/)
 })
 
+test('R-25: 동일 archetype 3연속 section은 오류다', () => {
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--list" aria-label="공지 목록"><div class="container">공지</div></section>
+    <section class="section section--list" aria-label="보도자료 목록"><div class="container">보도자료</div></section>
+    <section class="section section--list" aria-label="채용 목록"><div class="container">채용</div></section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-25\]/)
+  assert.match(result.stderr, /3연속/)
+})
+
+test('R-25: archetype을 교차한 section 시퀀스는 통과한다', () => {
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--intro" aria-label="기관 소개"><div class="container">소개</div></section>
+    <section class="section section--list" aria-label="공지 목록"><div class="container">공지</div></section>
+    <section class="section section--content" aria-label="이용 안내"><div class="container">안내</div></section>
+    <section class="section section--list" aria-label="보도자료 목록"><div class="container">보도자료</div></section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 0, result.stderr)
+})
+
+test('R-25: 카드 안 카드 중첩은 오류다', () => {
+  const result = runCheck(`
+<article class="card">
+  <div class="card__body">
+    <article class="card">
+      <div class="card__body">중첩 카드</div>
+    </article>
+  </div>
+</article>`)
+
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-25\]/)
+  assert.match(result.stderr, /중첩/)
+})
+
+test('R-25: 카드 그리드 섹션이 페이지당 3개 이상이면 경고한다 (차단 없음)', () => {
+  const grid = (label) => `
+    <section class="section section--list" aria-label="${label}">
+      <div class="container">
+        <div class="grid">
+          <article class="card"><div class="card__body">${label} 1</div></article>
+          <article class="card"><div class="card__body">${label} 2</div></article>
+          <article class="card"><div class="card__body">${label} 3</div></article>
+        </div>
+      </div>
+    </section>`
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    ${grid('공지')}
+    <section class="section section--content" aria-label="이용 안내"><div class="container">안내</div></section>
+    ${grid('행사')}
+    <section class="section section--intro" aria-label="기관 소개"><div class="container">소개</div></section>
+    ${grid('자료')}
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-25\]/)
+  assert.match(result.stderr, /페이지당/)
+})
+
+test('R-25: 카드 그리드 섹션 연속 배치는 경고한다 (차단 없음)', () => {
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--list" aria-label="공지 목록">
+      <div class="container">
+        <div class="grid">
+          <article class="card"><div class="card__body">공지 1</div></article>
+          <article class="card"><div class="card__body">공지 2</div></article>
+          <article class="card"><div class="card__body">공지 3</div></article>
+        </div>
+      </div>
+    </section>
+    <section class="section section--data" aria-label="현황 카드">
+      <div class="container">
+        <div class="grid">
+          <article class="card"><div class="card__body">현황 1</div></article>
+          <article class="card"><div class="card__body">현황 2</div></article>
+          <article class="card"><div class="card__body">현황 3</div></article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-25\]/)
+  assert.match(result.stderr, /연속 배치/)
+})
+
+test('R-25: 카드 그리드 2개가 떨어져 있으면 경고하지 않는다', () => {
+  const grid = (label) => `
+    <section class="section section--list" aria-label="${label}">
+      <div class="container">
+        <div class="grid">
+          <article class="card"><div class="card__body">${label} 1</div></article>
+          <article class="card"><div class="card__body">${label} 2</div></article>
+          <article class="card"><div class="card__body">${label} 3</div></article>
+        </div>
+      </div>
+    </section>`
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    ${grid('공지')}
+    <section class="section section--content" aria-label="이용 안내"><div class="container">안내</div></section>
+    ${grid('행사')}
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.doesNotMatch(result.stderr, /\[R-25\]/)
+})
+
 test('lang="ko"가 있는 <html>은 R-21을 통과한다', () => {
   const result = runCheck(`<!DOCTYPE html>
 <html lang="ko">

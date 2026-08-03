@@ -40,6 +40,8 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-03 `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - R-19 `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 - R-20 `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
+- R-24 `error` — 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고
+- R-26 `error` — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
 
 ### BEM 네이밍
 - R-04 `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
@@ -54,6 +56,8 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-09 `error` — img alt 속성 필수
 - R-10 `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
 - R-15 `error` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
+- R-23 `error` — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
+- R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지

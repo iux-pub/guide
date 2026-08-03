@@ -1,5 +1,5 @@
 {
-  "version": "915cb5d",
+  "version": "e653242",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -59,7 +59,7 @@
     {
       "id": "release-checklist",
       "file": "release-checklist.md",
-      "chars": 1973,
+      "chars": 2184,
       "summary": "자동검사가 통과했다고 배포해도 되는 것은 아니다. `npm run check`는 규칙 위반을 잡을 뿐, \"이 화면이 쓸 만한가\"는 판단하지 못한다."
     },
     {
@@ -211,6 +211,12 @@
       "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
     },
     {
+      "id": "hero-bleed",
+      "file": "hero-bleed.md",
+      "chars": 1506,
+      "summary": "화면 가로 전체를 쓰는 도입 섹션이다. section 자체에 클래스를 얹어 쓰고, 내부 `.container`가 본문 폭을 잡는다. 배경 이미지 위에 텍스트를 얹을 때는 `--scrim`을 함께 쓴다."
+    },
+    {
       "id": "list",
       "file": "list.md",
       "chars": 1129,
@@ -241,6 +247,12 @@
       "summary": "native `<progress>` + 시각 커스텀."
     },
     {
+      "id": "section-media",
+      "file": "section-media.md",
+      "chars": 1974,
+      "summary": "동일 archetype 연속(R-25)을 끊는 변주 패턴이다. 태블릿 이상에서 이미지와 본문이 2컬럼으로 나란히 서고, `--reverse`로 좌우를 교차해 zigzag 리듬을 만든다."
+    },
+    {
       "id": "select",
       "file": "select.md",
       "chars": 696,
@@ -251,6 +263,12 @@
       "file": "side-panel.md",
       "chars": 1476,
       "summary": "우측에서 슬라이드 인하는 보조 패널. 모달과 달리 본문 스크롤을 차단하지 않는다."
+    },
+    {
+      "id": "signature",
+      "file": "signature.md",
+      "chars": 3970,
+      "summary": "\"이 사이트만의 것\"으로 기억되는 반복 장치 3패턴이다. 등급별 상한(utility 0 · restrained 1 · expressive 3)은 `contracts/art-direction.json` expressionLevels가 정본이고, 선정·배치 원칙은 `references..."
     },
     {
       "id": "spinner",

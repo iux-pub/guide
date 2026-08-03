@@ -16,6 +16,8 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-03 | SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용 | error | check-violations.js |
 | R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | check-violations.js |
 | R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | check-violations.js |
+| R-24 | 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고 | error | check-violations.js |
+| R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | build-tokens.js |
 
 ---
 
@@ -149,5 +151,55 @@ $primary: #256ef4;   // SCSS 변수
 ```
 
 **참고:** site/testing/browser-testing.md, package.json#browserslist
+
+---
+
+## R-24 — 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고
+
+**심각도:** 🔴 error &nbsp; **검증:** check-violations.js
+
+> 한글은 단어 중간 줄바꿈(keep-all 부재)과 좁은 행간에서 가독성이 급락한다. reset 계층(3-generic/reset.css)의 word-break: keep-all 부재와 HTML의 leading-none 클래스는 error, CSS line-height 1.5 미만은 warn으로 검출한다. 임계값 1.5의 정본은 contracts/art-direction.json hangul.bodyLineHeight.lintFloor이며 단위 테스트가 동일성을 강제한다. badge·tag·btn처럼 한 줄로 고정되는 단행 컴포넌트 CSS 파일은 예외다.
+
+**❌ 금지**
+
+```css
+p { line-height: 1.3; }   // 본문 하한(1.5) 미만 — warn
+/* 3-generic/reset.css에 word-break: keep-all 부재 */   // 한글 조판 기본값 누락 — error
+```
+
+**✅ 올바른 형식**
+
+```css
+body {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.7;
+}   // 한글 조판 기본값 (3-generic/reset.css 소유)
+.badge { line-height: 1; }   // 단행 컴포넌트 예외 — badge·tag·btn
+```
+
+**참고:** contracts/art-direction.json, references/art-direction.md, src/styles/3-generic/reset.css
+
+---
+
+## R-26 — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
+
+**심각도:** 🔴 error &nbsp; **검증:** build-tokens.js
+
+> 영문 전용 폰트 스택은 한글이 시스템 기본 폰트로 떨어져 fallback 미설계 조판이 된다. scripts/lib/token-source.js가 build:tokens·check:presets 경로에서 --font-sans·--font-heading 값에 한글 가용 폰트(Pretendard·Noto Sans/Serif KR·Wanted Sans 등) 포함을 강제하며, 미포함이면 빌드가 실패한다. 미정의 슬롯은 하위호환으로 통과한다.
+
+**❌ 금지**
+
+```css
+--font-sans: 'Inter', sans-serif;   // 한글 가용 폰트 없음 — build:tokens 실패
+```
+
+**✅ 올바른 형식**
+
+```css
+--font-sans: 'Pretendard GOV', Pretendard, 'Apple SD Gothic Neo', sans-serif;   // 한글 가용 폰트 + 시스템 폴백
+```
+
+**참고:** scripts/lib/token-source.js, tokens/brand.json, contracts/art-direction.json
 
 ---

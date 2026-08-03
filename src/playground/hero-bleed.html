@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>히어로 블리드 패턴 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .pg__code {
+      background-color: var(--color-bg-subtler);
+      border: 1px solid var(--color-border-light);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">히어로 블리드 (Hero Bleed)</h1>
+
+    <!-- 기본 (배경색) -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 (배경색 인트로)</h2>
+      <div class="pg__preview">
+        <div class="hero-bleed">
+          <div class="container hero-bleed__content">
+            <h3 class="hero-bleed__title">항구도시 문화재단</h3>
+            <p class="hero-bleed__desc">공연·전시·교육 프로그램을 한곳에서 찾고 신청할 수 있습니다.</p>
+            <div class="hero-bleed__actions">
+              <a class="btn btn--primary btn--large" href="#program">프로그램 신청</a>
+              <a class="btn btn--secondary btn--large" href="#space">공간 대관 안내</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;section class="section section--intro hero-bleed" aria-labelledby="intro-title"&gt;
+  &lt;div class="container hero-bleed__content"&gt;
+    &lt;h1 class="hero-bleed__title" id="intro-title"&gt;항구도시 문화재단&lt;/h1&gt;
+    &lt;p class="hero-bleed__desc"&gt;공연·전시·교육 프로그램을 한곳에서 찾고 신청할 수 있습니다.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 스크림 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">배경 이미지 + 스크림 (--scrim)</h2>
+      <div class="pg__preview">
+        <div class="hero-bleed hero-bleed--scrim">
+          <div class="hero-bleed__media">
+            <img class="hero-bleed__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%2354789e'/%3E%3Cpath d='M0 640 Q400 560 800 620 T1600 600 V900 H0 Z' fill='%233b5e81'/%3E%3Ccircle cx='1240' cy='220' r='90' fill='%23dfe5ec'/%3E%3C/svg%3E" alt="">
+          </div>
+          <div class="container hero-bleed__content">
+            <h3 class="hero-bleed__title">밤바다 등대 축제</h3>
+            <p class="hero-bleed__desc">10월 셋째 주, 방파제 일대. 야간 프로그램은 사전 예약제로 운영합니다.</p>
+            <div class="hero-bleed__actions">
+              <a class="btn btn--primary btn--large" href="#reserve">야간 관람 예약</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;section class="section section--intro hero-bleed hero-bleed--scrim" aria-labelledby="intro-title"&gt;
+  &lt;div class="hero-bleed__media"&gt;
+    &lt;img class="hero-bleed__img" src="/images/hero-harbor.jpg" alt=""&gt;
+  &lt;/div&gt;
+  &lt;div class="container hero-bleed__content"&gt;
+    &lt;h1 class="hero-bleed__title" id="intro-title"&gt;밤바다 등대 축제&lt;/h1&gt;
+    &lt;p class="hero-bleed__desc"&gt;10월 셋째 주, 방파제 일대.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

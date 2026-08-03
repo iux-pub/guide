@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>섹션 미디어 패턴 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__code {
+      background-color: var(--color-bg-subtler);
+      border: 1px solid var(--color-border-light);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">섹션 미디어 (Section Media)</h1>
+
+    <!-- 기본 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 (미디어 왼쪽)</h2>
+      <div class="pg__preview">
+        <div class="section-media">
+          <div class="section-media__media">
+            <img class="section-media__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23aad3d8'/%3E%3Cpath d='M0 430 Q200 370 400 420 T800 400 V600 H0 Z' fill='%2375b9c1'/%3E%3Ccircle cx='640' cy='140' r='56' fill='%23eaf4f5'/%3E%3C/svg%3E" alt="해안 산책로 전경">
+          </div>
+          <div class="section-media__body">
+            <p class="section-media__eyebrow">추천 코스</p>
+            <h3 class="section-media__title">해안 산책로 3.2km</h3>
+            <p class="section-media__desc">방파제에서 등대까지 이어지는 완만한 코스입니다. 휠체어·유아차 통행이 가능하며, 중간 쉼터 2곳에 그늘막이 있습니다.</p>
+            <div class="section-media__actions">
+              <a class="btn btn--primary" href="#course">코스 안내</a>
+              <a class="btn btn--tertiary" href="#map">지도 내려받기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="section-media"&gt;
+  &lt;div class="section-media__media"&gt;
+    &lt;img class="section-media__img" src="/images/course-haean.jpg" alt="해안 산책로 전경"&gt;
+  &lt;/div&gt;
+  &lt;div class="section-media__body"&gt;
+    &lt;p class="section-media__eyebrow"&gt;추천 코스&lt;/p&gt;
+    &lt;h3 class="section-media__title"&gt;해안 산책로 3.2km&lt;/h3&gt;
+    &lt;p class="section-media__desc"&gt;방파제에서 등대까지 이어지는 완만한 코스입니다.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- 교차 -->
+    <div class="pg__section">
+      <h2 class="pg__subtitle">교차 (--reverse, 미디어 오른쪽)</h2>
+      <div class="pg__preview">
+        <div class="section-media section-media--reverse">
+          <div class="section-media__media">
+            <img class="section-media__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23dfe5ec'/%3E%3Cpath d='M0 500 L260 260 L430 400 L620 200 L800 340 V600 H0 Z' fill='%239cb1c6'/%3E%3C/svg%3E" alt="오름 정상에서 내려다본 풍경">
+          </div>
+          <div class="section-media__body">
+            <h3 class="section-media__title">오름 전망 코스</h3>
+            <p class="section-media__desc">정상까지 40분. 경사가 있어 운동화를 권장하며, 일몰 1시간 전 출발이 가장 좋습니다.</p>
+            <div class="section-media__actions">
+              <a class="btn btn--primary" href="#course">코스 안내</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pg__code">
+<pre><code>&lt;div class="section-media section-media--reverse"&gt;
+  &lt;div class="section-media__media"&gt;…&lt;/div&gt;
+  &lt;div class="section-media__body"&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

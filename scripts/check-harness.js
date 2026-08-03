@@ -33,6 +33,7 @@ const knownEnforcers = new Set([
   'check-violations.js',
   'check-html-structure.js',
   'check-contrast.js',
+  'build-tokens.js',
   'stylelint',
   'pa11y-ci',
   'manual'

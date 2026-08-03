@@ -16,6 +16,8 @@ HTML 마크업 작성 규칙이다.
 | R-09 | img alt 속성 필수 | error | check-violations.js |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | check-violations.js |
 | R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | check-html-structure.js |
+| R-23 | 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크 | error | check-violations.js |
+| R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
 
 ---
 
@@ -134,5 +136,67 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** 기존 인포마인드 구축 사이트 HTML, references/html-semantics.md, references/krds-components.md
+
+---
+
+## R-23 — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
+
+**심각도:** 🔴 error &nbsp; **검증:** check-violations.js
+
+> 시안·납품물에 채움 콘텐츠가 남으면 검수 신뢰가 깨지고, placeholder 이미지 핫링크는 외부 서비스 의존이라 납품 self-contained 정책과도 이중으로 충돌한다. 콘텐츠가 미확정이면 task contract의 contentSources로 실제 용어·문서 출처를 먼저 확보하고, 이미지는 실제 자산 경로 또는 실제 비율의 data-uri 표기를 쓴다.
+
+**❌ 금지**
+
+```html
+<p>Lorem ipsum dolor sit amet</p>   // 영문 채움 텍스트
+<p>여기에 설명 텍스트가 들어갑니다</p>   // 한글 자리 채움 문구
+<img src="https://placehold.co/300x200" alt="">   // placeholder 핫링크 — self-contained 정책과 이중 위반
+```
+
+**✅ 올바른 형식**
+
+```html
+<p>독서문화 프로그램은 매월 첫째 주 월요일부터 신청을 받습니다.</p>   // 실제 서비스 문안 (contentSources 기반)
+<img src="/images/program-reading.jpg" alt="독서문화 프로그램 진행 모습">   // 실제 자산 경로 + 의미 있는 alt
+```
+
+**참고:** references/art-direction.md, contracts/task-contract.schema.json
+
+---
+
+## R-25 — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
+
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
+
+> "중앙 제목 + 카드 그리드" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 대체 패턴은 5-objects의 section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로)와 src/snippets/signature.md의 시그니처 요소가 공급한다.
+
+**❌ 금지**
+
+```html
+<main id="main">
+  <section class="section section--list">…</section>
+  <section class="section section--list">…</section>
+  <section class="section section--list">…</section>
+</main>   // 동일 archetype 3연속 — 연속 상한 2
+<article class="card">
+  <article class="card">…</article>
+</article>   // 카드 안 카드 중첩
+```
+
+**✅ 올바른 형식**
+
+```html
+<main id="main">
+  <section class="section section--intro hero-bleed">…</section>
+  <section class="section section--list">…</section>
+  <section class="section section--content">
+    <div class="container">
+      <div class="section-media">…</div>
+    </div>
+  </section>
+</main>   // archetype 교차 + 변주 패턴 삽입
+```
+
+**참고:** references/art-direction.md, src/snippets/section-media.md, src/snippets/hero-bleed.md, src/snippets/signature.md
 
 ---

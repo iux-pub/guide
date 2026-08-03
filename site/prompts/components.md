@@ -418,7 +418,35 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 15. 목록 (List) — KRDS Text list / Structured list
+## 15. 히어로 블리드 (Hero Bleed) — 풀블리드 인트로 패턴
+
+### 기본 마크업
+
+```html
+<section class="section section--intro hero-bleed hero-bleed--scrim" aria-labelledby="intro-title">
+  <div class="hero-bleed__media">
+    <img class="hero-bleed__img" src="/images/hero-harbor.jpg" alt="">
+  </div>
+  <div class="container hero-bleed__content">
+    <h1 class="hero-bleed__title" id="intro-title">항구도시 문화재단</h1>
+    <p class="hero-bleed__desc">공연·전시·교육 프로그램을 한곳에서 찾고 신청할 수 있습니다.</p>
+    <div class="hero-bleed__actions">
+      <a class="btn btn--primary btn--large" href="/program">프로그램 신청</a>
+      <a class="btn btn--secondary btn--large" href="/space">공간 대관 안내</a>
+    </div>
+  </div>
+</section>
+```
+
+### 접근성
+
+- 배경 이미지는 장식이다 — `alt=""` 고정. 의미 있는 이미지는 본문 콘텐츠로 옮긴다
+- 텍스트 대비 4.5:1은 스크림 위에서 실측한다 — 스크림 없이 이미지 위 텍스트 금지
+- 제목이 섹션의 접근 가능한 이름이 되도록 `aria-labelledby`로 연결한다
+
+---
+
+## 16. 목록 (List) — KRDS Text list / Structured list
 
 ### 기본 마크업
 
@@ -448,7 +476,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 16. 주 메뉴 (Main Menu) — KRDS
+## 17. 주 메뉴 (Main Menu) — KRDS
 
 ### 기본 마크업
 
@@ -487,7 +515,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 17. 모달 (Modal / Dialog) — KRDS
+## 18. 모달 (Modal / Dialog) — KRDS
 
 ### 기본 마크업
 
@@ -522,7 +550,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 18. 페이지네이션 (Pagination) — KRDS
+## 19. 페이지네이션 (Pagination) — KRDS
 
 ### 기본 마크업
 
@@ -549,7 +577,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 19. 진행률 (Progress) — KRDS
+## 20. 진행률 (Progress) — KRDS
 
 ### 기본 마크업
 
@@ -571,7 +599,40 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 20. 셀렉트 (Select) — KRDS
+## 21. 섹션 미디어 (Section Media) — 이미지-텍스트 교차 패턴
+
+### 기본 마크업
+
+```html
+<section class="section section--content" aria-labelledby="walk-title">
+  <div class="container">
+    <div class="section-media">
+      <div class="section-media__media">
+        <img class="section-media__img" src="/images/course-haean.jpg" alt="해안 산책로를 걷는 방문객">
+      </div>
+      <div class="section-media__body">
+        <p class="section-media__eyebrow">추천 코스</p>
+        <h2 class="section-media__title" id="walk-title">해안 산책로 3.2km</h2>
+        <p class="section-media__desc">방파제에서 등대까지 이어지는 완만한 코스입니다. 휠체어·유아차 통행이 가능하며, 중간 쉼터 2곳에 그늘막이 있습니다.</p>
+        <div class="section-media__actions">
+          <a class="btn btn--primary" href="/course/haean">코스 안내</a>
+          <a class="btn btn--tertiary" href="/course/haean/map">지도 내려받기</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### 접근성
+
+- 이미지 `alt`는 장면을 설명한다. 장식이면 `alt=""`
+- 제목(`__title`)이 섹션의 접근 가능한 이름이 되도록 `aria-labelledby`로 연결한다
+- `--reverse`는 시각 순서만 바꾼다 — 키보드·스크린리더 순서는 DOM 순서(미디어 → 본문) 그대로다
+
+---
+
+## 22. 셀렉트 (Select) — KRDS
 
 ### 기본 마크업
 
@@ -594,7 +655,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 21. 사이드 패널 (Side Panel) — KRDS Help panel 응용
+## 23. 사이드 패널 (Side Panel) — KRDS Help panel 응용
 
 ### 기본 마크업
 
@@ -624,7 +685,28 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 22. 스피너 (Spinner) — KRDS
+## 24. 시그니처 요소 (Signature) — 실물 3패턴
+
+### 기본 마크업
+
+```html
+<section class="section section--intro" aria-labelledby="festival-title">
+  <div class="container">
+    <p class="motif" aria-hidden="true">바다</p>
+    <h1 id="festival-title">항구도시 등대 축제</h1>
+    <p>10월 셋째 주, 방파제 일대에서 열립니다.</p>
+  </div>
+</section>
+```
+
+### 접근성
+
+- 세 패턴 모두 순수 장식이다 — `aria-hidden="true"` 또는 pseudo-element로만 구현해 보조기기 트리에서 제외한다
+- 고대비 모드(hc)에서 패턴·모티프가 본문 가독을 해치지 않는지 확인한다
+
+---
+
+## 25. 스피너 (Spinner) — KRDS
 
 ### 기본 마크업
 
@@ -639,7 +721,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 23. 단계 표시기 (Step Indicator) — KRDS
+## 26. 단계 표시기 (Step Indicator) — KRDS
 
 ### 기본 마크업
 
@@ -668,7 +750,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 24. 토글 스위치 (Switch) — KRDS
+## 27. 토글 스위치 (Switch) — KRDS
 
 ### 기본 마크업
 
@@ -688,7 +770,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 25. 탭 (Tab) — KRDS
+## 28. 탭 (Tab) — KRDS
 
 ### 기본 마크업
 
@@ -726,7 +808,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 26. 표 (Table) — KRDS
+## 29. 표 (Table) — KRDS
 
 ### 기본 마크업
 
@@ -764,7 +846,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 27. 태그 (Tag) — KRDS
+## 30. 태그 (Tag) — KRDS
 
 ### 기본 마크업
 
@@ -792,7 +874,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 28. 토스트 (Toast) — KRDS
+## 31. 토스트 (Toast) — KRDS
 
 ### 기본 마크업
 
@@ -814,7 +896,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 29. 툴팁 (Tooltip) — KRDS
+## 32. 툴팁 (Tooltip) — KRDS
 
 ### 기본 마크업
 

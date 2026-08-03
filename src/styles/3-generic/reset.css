@@ -18,9 +18,15 @@
     @apply text-[62.5%] [text-size-adjust:100%];
   }
 
-  /* 기본 본문: KRDS body-medium(1.7rem) + line-height 150% */
+  /* 기본 본문: KRDS body-medium(1.7rem) + line-height 170% + 한글 조판 기본값(keep-all·break-word) */
   body {
-    @apply text-[1.7rem] leading-[1.5] text-[var(--color-text)] bg-[var(--color-bg)] [font-weight:400] [font-family:var(--font-sans)] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale];
+    @apply text-[1.7rem] leading-[1.7] text-[var(--color-text)] bg-[var(--color-bg)] [font-weight:400] [font-family:var(--font-sans)] [word-break:keep-all] [overflow-wrap:break-word] [-webkit-font-smoothing:antialiased] [-moz-osx-font-smoothing:grayscale];
+  }
+
+  /* 코드는 원문 그대로 줄바꿈 — 한글 keep-all 상속 예외 */
+  pre,
+  code {
+    @apply [word-break:normal];
   }
 
   /* KRDS 접근성 — :focus { outline: none } 금지. :focus-visible 미지원 브라우저는 :focus 링 유지 */

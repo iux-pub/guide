@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- BREAKING(파생 사이트 외관): 한글 조판 기본값을 base 계층에 도입했다. `3-generic/reset.css`의 body에 `word-break: keep-all`·`overflow-wrap: break-word`를 추가하고(`pre`·`code`는 `word-break: normal` 예외), 본문 line-height를 1.5 → 1.7로 올렸다. `4-elements/base.css`의 h1~h6 line-height는 1.5 → 1.3으로 내렸다. font-weight는 바뀌지 않는다.
+- 영향 범위: 이 저장소의 reset/base를 상속하는 모든 파생 사이트에서 ① 자체 `line-height`가 없는 본문 문단·목록의 행간이 커져 페이지 세로 길이가 늘고 ② 제목 행간이 줄어 여러 줄 제목이 조밀해지며 ③ keep-all로 한글 줄바꿈 위치가 단어 경계로 바뀐다. `leading-*`을 직접 지정한 컴포넌트(btn·badge·form·alert 등 6-components)는 영향이 없다. 파생 사이트는 업데이트 후 본문·제목이 긴 페이지의 시각 회귀를 확인해야 한다.
+
 ## [3.4.0] - 2026-07-29
 
 ### Added

@@ -34,7 +34,8 @@ const docPages = [
   'design/design-audit/index.html',
   'design/ui-states/index.html',
   'design/aesthetics/index.html',
-  'design/icon-system/index.html'
+  'design/icon-system/index.html',
+  'design/art-direction/index.html'
 ]
 
 // 색상 대비(WCAG 1_4_3 G18/G145) 포함 모든 AA 룰 강제. R-12 광범위 정정 완료

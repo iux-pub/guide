@@ -13,6 +13,7 @@
  *   references/workflows/*.md        (작업 절차 — 옛 스킬을 대체한다)
  *   src/snippets/*.md                (컴포넌트 마크업 스니펫)
  *   tokens/build/tokens.css          (실제 토큰 값)
+ *   tokens/presets/*.json            (팔레트 프리셋 — brand.json 교체용)
  *
  * 출력:
  *   mcp/data/**                      (번들 — 직접 수정 금지)
@@ -90,6 +91,17 @@ const snippets = copyMarkdownDir(path.join(ROOT, 'src', 'snippets'), path.join(D
 // 4. 실제 토큰 값 — 카탈로그 문서만으로는 hex를 확정할 수 없다
 fs.copyFileSync(path.join(ROOT, 'tokens', 'build', 'tokens.css'), path.join(DATA_DIR, 'tokens.css'))
 
+// 4.5. 팔레트 프리셋 — MCP가 단일 경로다. 서버가 clone 없이 프리셋 hex를 답할 수 있어야 한다
+const presetsDir = path.join(ROOT, 'tokens', 'presets')
+fs.mkdirSync(path.join(DATA_DIR, 'presets'), { recursive: true })
+const presets = fs
+  .readdirSync(presetsDir)
+  .filter(name => name.endsWith('.json'))
+  .sort()
+for (const name of presets) {
+  fs.copyFileSync(path.join(presetsDir, name), path.join(DATA_DIR, 'presets', name))
+}
+
 // 5. 색인
 const withSummary = (items, dir) =>
   items.map(item => ({
@@ -109,5 +121,5 @@ fs.writeFileSync(path.join(DATA_DIR, 'manifest.json'), `${JSON.stringify(manifes
 
 console.log(
   `✓ mcp/data — 레퍼런스 ${references.length}건, 워크플로 ${workflows.length}건, ` +
-  `스니펫 ${snippets.length}건, 빌드 ${manifest.version}`
+  `스니펫 ${snippets.length}건, 프리셋 ${presets.length}건, 빌드 ${manifest.version}`
 )

@@ -8,7 +8,7 @@
 #   - src/styles/             → starter/src/styles/
 #   - src/snippets/           → starter/src/snippets/
 #   - src/js/                 → starter/src/js/
-#   - tokens/                 → starter/tokens/ (foundation + brand + README — build/ 제외)
+#   - tokens/                 → starter/tokens/ (foundation + brand + presets + README — build/ 제외)
 #   - scripts/build-tokens.js → starter/scripts/
 #   - scripts/check-*.js      → starter/scripts/
 #   - contracts/             → starter/contracts/
@@ -59,6 +59,10 @@ cp "$GUIDE_DIR/tokens/brand.json" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/contrast-baseline.json" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
 cp "$GUIDE_DIR/tokens/AGENTS.md" "$STARTER_DIR/tokens/"
+# 팔레트 프리셋 — brand.json 자리에 그대로 복사해 쓰는 완전 동형 파일
+rm -rf "$STARTER_DIR/tokens/presets"
+mkdir -p "$STARTER_DIR/tokens/presets"
+cp "$GUIDE_DIR/tokens/presets/"*.json "$STARTER_DIR/tokens/presets/"
 
 # 5. scripts + contracts
 echo "[5/8] scripts 동기화..."

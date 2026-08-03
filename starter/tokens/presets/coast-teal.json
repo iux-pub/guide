@@ -1,0 +1,362 @@
+{
+  "$meta": {
+    "name": "INFOUX Brand Tokens — coast-teal",
+    "purpose": "팔레트 프리셋. tokens/brand.json 자리에 그대로 복사해 쓴다 — cp tokens/presets/coast-teal.json tokens/brand.json && npm run build:tokens && npm run check:contrast.",
+    "version": "1.0.0",
+    "owner": "INFOMIND UX Team",
+    "policy": "brand.json과 완전 동형이다. gray 스케일·상태색·의미 토큰은 foundation이 소유하며 여기서 재정의하지 않는다. 대비 검사쌍 전량(2모드) 위반 0건이 입고 조건이고 scripts/check-presets.js가 강제한다.",
+    "modes": "light와 high-contrast 두 모드 값을 모두 정의해야 한다. 누락 시 build:tokens가 실패한다.",
+    "preset": {
+      "id": "coast-teal",
+      "label": "관광 청록",
+      "mood": "바다·환경·청량",
+      "profiles": [
+        "general-site",
+        "public-service"
+      ],
+      "seed": "#00818c",
+      "generation": {
+        "colorSpace": "oklch",
+        "yLadder": {
+          "5": 0.885,
+          "10": 0.777,
+          "20": 0.605,
+          "30": 0.426,
+          "40": 0.255,
+          "50": 0.178,
+          "60": 0.104,
+          "70": 0.049,
+          "80": 0.022,
+          "90": 0.009,
+          "95": 0.005
+        },
+        "chromaCurve": {
+          "5": 0.08,
+          "10": 0.17,
+          "20": 0.34,
+          "30": 0.54,
+          "40": 0.83,
+          "50": 1,
+          "60": 0.97,
+          "70": 0.73,
+          "80": 0.53,
+          "90": 0.35,
+          "95": 0.25
+        },
+        "hue": {
+          "primary": 205.3,
+          "secondary": 250.5,
+          "point": 345.3,
+          "highContrastSecondary": 250.5
+        },
+        "chroma50": {
+          "primary": 0.094,
+          "secondary": 0.072,
+          "point": 0.11
+        },
+        "rules": [
+          "hue는 스케일 전체 상수. hue·chroma50은 seed hex의 OKLCH 실측값이 정본이다.",
+          "L은 hex 양자화 후의 WCAG 상대휘도 Y가 사다리 값에 최근접하도록 이분탐색한다.",
+          "sRGB 감마 밖 색은 hue·L을 유지하고 chroma만 축소해 클리핑한다.",
+          "50·60 단계는 흰 배경 4.5:1을 하드 스냅으로 보장한다.",
+          "secondary chroma는 primary chroma50의 0.4~0.7배, hue는 ±45° 이내 또는 중성.",
+          "point는 primary와 hue 거리 60° 이상, 상태색 hue ±25° 금지 밴드를 지킨다 (허용 창 100~122·172~225·275~7.6).",
+          "high-contrast는 light와 동일 사다리가 기본. ΔH(primary, secondary)<40°면 hc secondary를 ΔH≥40° 위치로 재생성한다."
+        ],
+        "note": "ΔH(primary, secondary)=45.2°≥40° — hc secondary 이동 불요, high-contrast는 light와 동일하다."
+      }
+    }
+  },
+  "font": {
+    "family": {
+      "sans": {
+        "value": "'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
+        "$comment": "인포마인드 UX팀 기본 본문 폰트. 팔레트 프리셋은 본문 폰트를 바꾸지 않는다."
+      }
+    }
+  },
+  "primitive": {
+    "color": {
+      "light": {
+        "primary": {
+          "5": {
+            "value": "#eaf4f5",
+            "type": "color"
+          },
+          "10": {
+            "value": "#d4e8eb",
+            "type": "color"
+          },
+          "20": {
+            "value": "#aad3d8",
+            "type": "color"
+          },
+          "30": {
+            "value": "#75b9c1",
+            "type": "color"
+          },
+          "40": {
+            "value": "#0099a5",
+            "type": "color"
+          },
+          "50": {
+            "value": "#00818c",
+            "type": "color"
+          },
+          "60": {
+            "value": "#00656d",
+            "type": "color"
+          },
+          "70": {
+            "value": "#00454c",
+            "type": "color"
+          },
+          "80": {
+            "value": "#002f33",
+            "type": "color"
+          },
+          "90": {
+            "value": "#001c1f",
+            "type": "color"
+          },
+          "95": {
+            "value": "#001215",
+            "type": "color"
+          }
+        },
+        "secondary": {
+          "5": {
+            "value": "#eff2f5",
+            "type": "color"
+          },
+          "10": {
+            "value": "#dfe5ec",
+            "type": "color"
+          },
+          "20": {
+            "value": "#c0cedc",
+            "type": "color"
+          },
+          "30": {
+            "value": "#9cb1c6",
+            "type": "color"
+          },
+          "40": {
+            "value": "#6f8dae",
+            "type": "color"
+          },
+          "50": {
+            "value": "#54789e",
+            "type": "color"
+          },
+          "60": {
+            "value": "#3b5e81",
+            "type": "color"
+          },
+          "70": {
+            "value": "#284159",
+            "type": "color"
+          },
+          "80": {
+            "value": "#1a2b3b",
+            "type": "color"
+          },
+          "90": {
+            "value": "#0f1923",
+            "type": "color"
+          },
+          "95": {
+            "value": "#0a1017",
+            "type": "color"
+          }
+        },
+        "point": {
+          "5": {
+            "value": "#f6f0f3",
+            "type": "color"
+          },
+          "10": {
+            "value": "#efe1e8",
+            "type": "color"
+          },
+          "20": {
+            "value": "#e1c4d3",
+            "type": "color"
+          },
+          "30": {
+            "value": "#cea3ba",
+            "type": "color"
+          },
+          "40": {
+            "value": "#b6779b",
+            "type": "color"
+          },
+          "50": {
+            "value": "#a75d88",
+            "type": "color"
+          },
+          "60": {
+            "value": "#88446c",
+            "type": "color"
+          },
+          "70": {
+            "value": "#5f2f4b",
+            "type": "color"
+          },
+          "80": {
+            "value": "#3e1e31",
+            "type": "color"
+          },
+          "90": {
+            "value": "#26111d",
+            "type": "color"
+          },
+          "95": {
+            "value": "#190b13",
+            "type": "color"
+          }
+        }
+      },
+      "high-contrast": {
+        "primary": {
+          "5": {
+            "value": "#eaf4f5",
+            "type": "color"
+          },
+          "10": {
+            "value": "#d4e8eb",
+            "type": "color"
+          },
+          "20": {
+            "value": "#aad3d8",
+            "type": "color"
+          },
+          "30": {
+            "value": "#75b9c1",
+            "type": "color"
+          },
+          "40": {
+            "value": "#0099a5",
+            "type": "color"
+          },
+          "50": {
+            "value": "#00818c",
+            "type": "color"
+          },
+          "60": {
+            "value": "#00656d",
+            "type": "color"
+          },
+          "70": {
+            "value": "#00454c",
+            "type": "color"
+          },
+          "80": {
+            "value": "#002f33",
+            "type": "color"
+          },
+          "90": {
+            "value": "#001c1f",
+            "type": "color"
+          },
+          "95": {
+            "value": "#001215",
+            "type": "color"
+          }
+        },
+        "secondary": {
+          "5": {
+            "value": "#eff2f5",
+            "type": "color"
+          },
+          "10": {
+            "value": "#dfe5ec",
+            "type": "color"
+          },
+          "20": {
+            "value": "#c0cedc",
+            "type": "color"
+          },
+          "30": {
+            "value": "#9cb1c6",
+            "type": "color"
+          },
+          "40": {
+            "value": "#6f8dae",
+            "type": "color"
+          },
+          "50": {
+            "value": "#54789e",
+            "type": "color"
+          },
+          "60": {
+            "value": "#3b5e81",
+            "type": "color"
+          },
+          "70": {
+            "value": "#284159",
+            "type": "color"
+          },
+          "80": {
+            "value": "#1a2b3b",
+            "type": "color"
+          },
+          "90": {
+            "value": "#0f1923",
+            "type": "color"
+          },
+          "95": {
+            "value": "#0a1017",
+            "type": "color"
+          }
+        },
+        "point": {
+          "5": {
+            "value": "#f6f0f3",
+            "type": "color"
+          },
+          "10": {
+            "value": "#efe1e8",
+            "type": "color"
+          },
+          "20": {
+            "value": "#e1c4d3",
+            "type": "color"
+          },
+          "30": {
+            "value": "#cea3ba",
+            "type": "color"
+          },
+          "40": {
+            "value": "#b6779b",
+            "type": "color"
+          },
+          "50": {
+            "value": "#a75d88",
+            "type": "color"
+          },
+          "60": {
+            "value": "#88446c",
+            "type": "color"
+          },
+          "70": {
+            "value": "#5f2f4b",
+            "type": "color"
+          },
+          "80": {
+            "value": "#3e1e31",
+            "type": "color"
+          },
+          "90": {
+            "value": "#26111d",
+            "type": "color"
+          },
+          "95": {
+            "value": "#190b13",
+            "type": "color"
+          }
+        }
+      }
+    }
+  }
+}

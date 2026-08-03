@@ -71,6 +71,16 @@ requireSame('contracts/task-contract.schema.json', 'starter/contracts/task-contr
 requireSame('contracts/task-contract.md', 'starter/contracts/task-contract.md')
 requireSame('contracts/profiles.json', 'starter/contracts/profiles.json')
 requireSame('tokens/AGENTS.md', 'starter/tokens/AGENTS.md')
+// 팔레트 프리셋은 원본·스타터·MCP 번들 세 곳이 항상 같아야 한다 — 낡은 hex가 퍼지는 사고를 막는다.
+const presetsDir = path.join(ROOT, 'tokens', 'presets')
+const presetNames = fs.existsSync(presetsDir)
+  ? fs.readdirSync(presetsDir).filter(name => name.endsWith('.json')).sort()
+  : []
+if (presetNames.length === 0) fail('tokens/presets/에 프리셋 파일이 없습니다.')
+for (const name of presetNames) {
+  requireSame(`tokens/presets/${name}`, `starter/tokens/presets/${name}`)
+  requireSame(`tokens/presets/${name}`, `mcp/data/presets/${name}`)
+}
 requireSame('src/styles/AGENTS.md', 'starter/src/styles/AGENTS.md')
 requireSame('src/snippets/AGENTS.md', 'starter/src/snippets/AGENTS.md')
 

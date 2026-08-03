@@ -74,6 +74,10 @@
       "sans": {
         "value": "'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
         "$comment": "인포마인드 UX팀 기본 본문 폰트. reset.css의 body에서 var(--font-sans)로 적용한다."
+      },
+      "heading": {
+        "value": "'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif",
+        "$comment": "제목 폰트 슬롯. 팔레트 프리셋은 본문과 동일 값으로 두고, 차등 서체는 프로젝트가 카탈로그 페어링으로 교체한다."
       }
     }
   },

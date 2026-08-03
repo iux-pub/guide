@@ -10,6 +10,7 @@
 :root {
   /* Font families */
   --font-sans: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace;
 
   /* Breakpoints */
@@ -365,6 +366,7 @@
   --color-*: initial;
 
   --font-sans: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace;
 
   /* Tailwind responsive variants: mobile:, tablet:, pc: */

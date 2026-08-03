@@ -40,90 +40,90 @@ Google Stitch, Galileo, Lovable, v0
 | 토큰 | 값 |
 |----|----|
 | `--color-primary-5` | #ecf2fe |
+| `--color-primary-10` | #d8e5fd |
 | `--color-primary-20` | #b1cefb |
+| `--color-primary-30` | #86aff9 |
 | `--color-primary-40` | #4c87f6 |
+| `--color-primary-50` | #256ef4 |
 | `--color-primary-60` | #0b50d0 |
+| `--color-primary-70` | #083891 |
 | `--color-primary-80` | #052561 |
+| `--color-primary-90` | #03163a |
 | `--color-primary-95` | #020f27 |
 | `--color-primary-5` | #ecf2fe |
-| `--color-primary-20` | #b1cefb |
-| `--color-primary-40` | #4c87f6 |
-| `--color-primary-60` | #0b50d0 |
-| `--color-primary-80` | #052561 |
-| `--color-primary-95` | #020f27 |
-| ... | (총 17개, tokens/build/tokens.css 참조) |
+| ... | (총 33개, tokens/build/tokens.css 참조) |
 
 ### Secondary
 
 | 토큰 | 값 |
 |----|----|
+| `--color-secondary-5` | #eef2f7 |
 | `--color-secondary-10` | #d6e0eb |
+| `--color-secondary-20` | #bacbde |
 | `--color-secondary-30` | #90b0d5 |
+| `--color-secondary-40` | #6b96c7 |
 | `--color-secondary-50` | #346fb2 |
+| `--color-secondary-60` | #1c589c |
 | `--color-secondary-70` | #063a74 |
+| `--color-secondary-80` | #052b57 |
 | `--color-secondary-90` | #031f3f |
-| `--color-secondary-10` | #d5ebf1 |
-| `--color-secondary-30` | #75c0d1 |
-| `--color-secondary-50` | #268097 |
-| `--color-secondary-70` | #17505e |
-| `--color-secondary-90` | #0e3139 |
-| `--color-secondary-5` | var(--color-secondary-5) |
-| `--color-secondary-20` | var(--color-secondary-20) |
-| ... | (총 16개, tokens/build/tokens.css 참조) |
+| `--color-secondary-95` | #02162c |
+| `--color-secondary-5` | #edf6f8 |
+| ... | (총 33개, tokens/build/tokens.css 참조) |
 
 ### Gray
 
 | 토큰 | 값 |
 |----|----|
 | `--color-gray-0` | #ffffff |
+| `--color-gray-5` | #f4f5f6 |
 | `--color-gray-10` | #e6e8ea |
+| `--color-gray-20` | #cdd1d5 |
 | `--color-gray-30` | #b1b8be |
+| `--color-gray-40` | #8a949e |
 | `--color-gray-50` | #6d7882 |
+| `--color-gray-60` | #58616a |
 | `--color-gray-70` | #464c53 |
+| `--color-gray-80` | #33363d |
 | `--color-gray-90` | #1e2124 |
-| `--color-gray-100` | #000000 |
-| `--color-gray-0` | #ffffff |
-| `--color-gray-10` | #e6e8ea |
-| `--color-gray-30` | #b1b8be |
-| `--color-gray-50` | #6d7882 |
-| `--color-gray-70` | #464c53 |
-| ... | (총 20개, tokens/build/tokens.css 참조) |
+| `--color-gray-95` | #131416 |
+| ... | (총 39개, tokens/build/tokens.css 참조) |
 
 ### Semantic (success/warning/danger/info)
 
 | 토큰 | 값 |
 |----|----|
 | `--color-danger-text` | #bd2c0f |
+| `--color-danger-surface` | #fdefec |
+| `--color-warning-text` | #8a5c00 |
 | `--color-warning-surface` | #fff3db |
 | `--color-success-text` | #267337 |
+| `--color-success-surface` | #eaf6ec |
+| `--color-info-text` | #096ab3 |
 | `--color-info-surface` | #e7f4fe |
+| `--color-danger-5` | #fdefec |
 | `--color-danger-10` | #fcdfd9 |
+| `--color-danger-20` | #f7afa1 |
 | `--color-danger-30` | #f48771 |
+| `--color-danger-40` | #f05f42 |
 | `--color-danger-50` | #de3412 |
+| `--color-danger-60` | #bd2c0f |
 | `--color-danger-70` | #8a240f |
+| `--color-danger-80` | #5c180a |
 | `--color-danger-90` | #390d05 |
+| `--color-danger-95` | #260903 |
 | `--color-warning-5` | #fff3db |
+| `--color-warning-10` | #ffe0a3 |
 | `--color-warning-20` | #ffc95c |
+| `--color-warning-30` | #ffb114 |
 | `--color-warning-40` | #c78500 |
+| `--color-warning-50` | #9e6a00 |
 | `--color-warning-60` | #8a5c00 |
+| `--color-warning-70` | #614100 |
 | `--color-warning-80` | #422c00 |
+| `--color-warning-90` | #2e1f00 |
 | `--color-warning-95` | #241800 |
-| `--color-success-10` | #d8eedd |
-| `--color-success-30` | #7ec88e |
-| `--color-success-50` | #228738 |
-| `--color-success-70` | #285d33 |
-| `--color-success-90` | #122b18 |
-| `--color-danger-text` | #f7afa1 |
-| `--color-warning-surface` | #241800 |
-| `--color-success-text` | #a9dab4 |
-| `--color-info-surface` | #021a2c |
-| `--color-danger-10` | #fcdfd9 |
-| `--color-danger-30` | #f48771 |
-| `--color-danger-50` | #de3412 |
-| `--color-danger-70` | #8a240f |
-| `--color-danger-90` | #390d05 |
-| `--color-warning-5` | #fff3db |
-| ... | (총 61개, tokens/build/tokens.css 참조) |
+| ... | (총 123개, tokens/build/tokens.css 참조) |
 
 ---
 
@@ -136,13 +136,22 @@ Google Stitch, Galileo, Lovable, v0
 | 토큰 | 값 |
 |----|----|
 | `--color-text` | #1e2124 |
+| `--color-text-bolder` | #131416 |
 | `--color-text-subtle` | #464c53 |
+| `--color-text-disabled` | #8a949e |
 | `--color-text-inverse` | #ffffff |
+| `--color-text-primary` | #0b50d0 |
 | `--color-text` | #f4f5f6 |
+| `--color-text-bolder` | #e6e8ea |
 | `--color-text-subtle` | #cdd1d5 |
+| `--color-text-disabled` | #58616a |
 | `--color-text-inverse` | #1e2124 |
+| `--color-text-primary` | #b1cefb |
+| `--color-text` | var(--color-text) |
 | `--color-text-bolder` | var(--color-text-bolder) |
+| `--color-text-subtle` | var(--color-text-subtle) |
 | `--color-text-disabled` | var(--color-text-disabled) |
+| `--color-text-inverse` | var(--color-text-inverse) |
 | `--color-text-primary` | var(--color-text-primary) |
 
 ### Background
@@ -150,34 +159,46 @@ Google Stitch, Galileo, Lovable, v0
 | 토큰 | 값 |
 |----|----|
 | `--color-bg` | #ffffff |
+| `--color-bg-subtler` | #f4f5f6 |
 | `--color-bg-subtle` | #e6e8ea |
+| `--color-bg-inverse` | #1e2124 |
 | `--color-bg-dim` | #000000bf |
 | `--color-bg` | #000000 |
+| `--color-bg-subtler` | #131416 |
 | `--color-bg-subtle` | #1e2124 |
+| `--color-bg-inverse` | #e6e8ea |
 | `--color-bg-dim` | #000000bf |
+| `--color-bg` | var(--color-bg) |
 | `--color-bg-subtler` | var(--color-bg-subtler) |
+| `--color-bg-subtle` | var(--color-bg-subtle) |
 | `--color-bg-inverse` | var(--color-bg-inverse) |
+| `--color-bg-dim` | var(--color-bg-dim) |
 
 ### Border
 
 | 토큰 | 값 |
 |----|----|
+| `--color-border` | #b1b8be |
 | `--color-border-light` | #cdd1d5 |
+| `--color-border-dark` | #58616a |
 | `--color-border-control` | #6d7882 |
+| `--color-border-primary` | #256ef4 |
 | `--color-border-primary-light` | #d8e5fd |
+| `--color-border-information-light` | #d3ebfd |
 | `--color-border-success-light` | #d8eedd |
+| `--color-border-warning-light` | #ffe0a3 |
 | `--color-border-danger-light` | #fcdfd9 |
+| `--color-border-disabled` | #b1b8be |
+| `--color-border` | #6d7882 |
 | `--color-border-light` | #33363d |
+| `--color-border-dark` | #8a949e |
 | `--color-border-control` | #8a949e |
+| `--color-border-primary` | #256ef4 |
 | `--color-border-primary-light` | #03163a |
+| `--color-border-information-light` | #03253f |
 | `--color-border-success-light` | #122b18 |
-| `--color-border-danger-light` | #390d05 |
-| `--color-border` | var(--color-border) |
-| `--color-border-dark` | var(--color-border-dark) |
-| `--color-border-primary` | var(--color-border-primary) |
-| `--color-border-information-light` | var(--color-border-information-light) |
-| `--color-border-warning-light` | var(--color-border-warning-light) |
-| `--color-border-disabled` | var(--color-border-disabled) |
+| `--color-border-warning-light` | #2e1f00 |
+| ... | (총 33개, tokens/build/tokens.css 참조) |
 
 ---
 
@@ -186,7 +207,11 @@ Google Stitch, Galileo, Lovable, v0
 | 토큰 | 값 |
 |----|----|
 | `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-heading` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-mono` | 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace |
 | `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-heading` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-mono` | 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace |
 
 ## 직접값 사용 범위
 

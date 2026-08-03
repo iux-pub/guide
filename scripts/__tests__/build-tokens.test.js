@@ -11,8 +11,10 @@ const {
   BRAND_MODES,
   mergeTokens,
   assertBrandModeParity,
+  assertHangulFontFallback,
   loadTokenSource
 } = require('../lib/token-source')
+const { buildTokensCss } = require('../lib/build-tokens-css')
 
 const ROOT = path.resolve(__dirname, '..', '..')
 const foundation = JSON.parse(fs.readFileSync(path.join(ROOT, 'tokens', 'foundation.json'), 'utf8'))
@@ -96,6 +98,57 @@ test('합성 결과는 foundation과 brand를 모두 포함한다', () => {
   assert.ok(source.primitive.color.light.gray['0'].value.startsWith('#'))
   assert.ok(source.font.family.sans.value.includes('Pretendard GOV'))
   assert.ok(source.font.family.mono.value.includes('JetBrains Mono'))
+})
+
+// ── 제목 폰트 슬롯 (--font-heading) ─────────────────────────
+// 표현 등급이 허용하는 프로젝트만 heading을 카탈로그 페어링으로 교체한다.
+// 슬롯이 없는 구 brand.json 파생 사이트는 sans 폴백으로 무중단이어야 한다.
+
+test('--font-heading은 :root와 @theme 양쪽에 발행된다', () => {
+  const css = buildTokensCss(source)
+  const rootBlock = css.slice(css.indexOf(':root {'), css.indexOf('[data-color-mode'))
+  const themeBlock = css.slice(css.indexOf('@theme {'))
+  assert.ok(rootBlock.includes('--font-heading:'), ':root에 --font-heading이 없다')
+  assert.ok(themeBlock.includes('--font-heading:'), '@theme에 --font-heading이 없다')
+})
+
+test('heading 슬롯 부재 시 --font-heading은 sans 값으로 폴백한다', () => {
+  const legacy = structuredClone(source)
+  delete legacy.font.family.heading
+  let css
+  assert.doesNotThrow(() => { css = buildTokensCss(legacy) })
+  assert.ok(
+    css.includes(`--font-heading: ${legacy.font.family.sans.value};`),
+    'heading 부재 시 sans 값이 발행돼야 구 brand.json 파생 사이트가 무중단이다'
+  )
+})
+
+test('제목 폰트 슬롯은 foundation이 아니라 brand가 소유한다', () => {
+  assert.equal(foundation.font?.family?.heading, undefined, '제목 폰트는 brand 소유다')
+  assert.ok(brand.font.family.heading, 'brand에 heading 슬롯이 없다')
+  assert.equal(
+    brand.font.family.heading.value,
+    brand.font.family.sans.value,
+    'v1 기본값은 본문(sans)과 동일 문자열이다'
+  )
+})
+
+// ── R-26 폰트 한글 fallback ─────────────────────────────────
+
+test('R-26 — 한글 가용 폰트가 없는 sans 스택은 조립을 막는다', () => {
+  const broken = structuredClone(source)
+  broken.font.family.sans = { value: 'Helvetica, Arial, sans-serif' }
+  assert.throws(() => buildTokensCss(broken), /R-26/)
+})
+
+test('R-26 — heading 스택도 검사하고, 미정의 슬롯은 통과한다', () => {
+  const brokenHeading = structuredClone(source)
+  brokenHeading.font.family.heading = { value: "'Playfair Display', Georgia, serif" }
+  assert.throws(() => assertHangulFontFallback(brokenHeading), /heading/)
+
+  const legacy = structuredClone(source)
+  delete legacy.font.family.heading
+  assert.doesNotThrow(() => assertHangulFontFallback(legacy), 'heading 미정의는 하위호환으로 통과다')
 })
 
 test('브랜드 모드 정합 — 고대비 단계 누락은 빌드를 막는다', () => {

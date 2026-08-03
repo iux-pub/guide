@@ -58,6 +58,32 @@ function assertBrandModeParity(brand) {
   }
 }
 
+/**
+ * R-26 폰트 한글 fallback — --font-sans·--font-heading 스택의 한글 가용 폰트 판정 정본.
+ * 영문 display 폰트만 적으면 한글이 시스템 기본 서체로 떨어져 조판이 깨진다.
+ */
+const HANGUL_FONT_PATTERN = /(Pretendard|Noto\s*(Sans|Serif)\s*KR|Wanted\s*Sans|Hahmlet|IBM\s*Plex\s*Sans\s*KR|Nanum|Spoqa|Malgun|Apple\s*SD\s*Gothic)/i
+
+/**
+ * 본문·제목 폰트 스택에 한글 가용 폰트가 포함됐는지 검사한다 (R-26).
+ * 미정의 슬롯은 통과시킨다 — heading 슬롯이 없는 구 brand.json 파생 사이트가
+ * 빌드에서 끊기면 안 된다.
+ */
+function assertHangulFontFallback(source) {
+  const { readToken } = createResolver(source)
+  const errors = []
+  for (const slot of ['sans', 'heading']) {
+    if (!source?.font?.family?.[slot]) continue
+    const value = readToken(`font.family.${slot}`)
+    if (!HANGUL_FONT_PATTERN.test(value)) {
+      errors.push(`font.family.${slot}: 스택에 한글 가용 폰트가 없다 — ${value}`)
+    }
+  }
+  if (errors.length) {
+    throw new Error(`R-26 폰트 한글 fallback 실패:\n  - ${errors.join('\n  - ')}`)
+  }
+}
+
 /** foundation + brand를 읽어 합성한 토큰 소스를 돌려준다. */
 function loadTokenSource(root) {
   const foundation = JSON.parse(fs.readFileSync(path.join(root, 'tokens', 'foundation.json'), 'utf8'))
@@ -97,8 +123,10 @@ function createResolver(source) {
 module.exports = {
   BRAND_GROUPS,
   BRAND_MODES,
+  HANGUL_FONT_PATTERN,
   mergeTokens,
   assertBrandModeParity,
+  assertHangulFontFallback,
   loadTokenSource,
   createResolver
 }

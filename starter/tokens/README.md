@@ -20,7 +20,7 @@ tokens/
 
 | | foundation.json | brand.json |
 |---|---|---|
-| 소유 | gray 스케일, 상태색(danger/warning/success/information), surface·border·input·button 등 의미 토큰, 브레이크포인트, `--font-mono` | 브랜드 팔레트(primary / secondary / point), `--font-sans` |
+| 소유 | gray 스케일, 상태색(danger/warning/success/information), surface·border·input·button 등 의미 토큰, 브레이크포인트, `--font-mono` | 브랜드 팔레트(primary / secondary / point), `--font-sans`, `--font-heading`(선택 슬롯) |
 | 프로젝트에서 | **수정 금지** | **교체 대상** |
 | 이유 | KRDS 기반 접근성 기준이다. 프로젝트마다 흔들리면 보증이 깨진다 | 발주처 CI는 프로젝트마다 다르다 |
 
@@ -32,8 +32,9 @@ tokens/
 
 1. `tokens/brand.json`의 `primary` / `secondary` / `point` 팔레트를 프로젝트 색으로 바꾼다.
 2. **`light`와 `high-contrast` 두 모드를 모두 채운다.** 라이트만 채우고 고대비를 잊는 것이 가장 흔한 사고이며, 빌드가 이를 막는다.
-3. `npm run build:tokens`
-4. `npm run check` — 대비 검사가 WCAG 2.1 AA 위반을 잡는다.
+3. 제목 서체를 본문과 다르게 쓰는 프로젝트만 `font.family.heading`을 페어링 스택으로 바꾼다. 슬롯을 지워도 `--font-heading`은 sans 값으로 폴백되어 빌드가 끊기지 않는다.
+4. `npm run build:tokens` — `--font-sans`·`--font-heading` 스택에 한글 가용 폰트가 없으면 여기서 실패한다.
+5. `npm run check` — 대비 검사가 WCAG 2.1 AA 위반을 잡는다.
 
 ## 대비 검사
 
@@ -41,7 +42,7 @@ tokens/
 npm run check:contrast
 ```
 
-생성된 `build/tokens.css`를 읽어 라이트·고대비 두 모드에서 전경/배경 조합 40건을 계산한다. 기준은 일반 텍스트 4.5:1, 비텍스트 UI 요소 3:1이다.
+생성된 `build/tokens.css`를 읽어 라이트·고대비 두 모드에서 전경/배경 검사쌍 전량을 계산한다. 기준은 일반 텍스트 4.5:1, 비텍스트 UI 요소 3:1이다.
 
 `contrast-baseline.json`은 **이미 알고 있는 위반**을 기록한 래칫이다. 기준선에 없는 새 위반이 생기면 실패하고, 기준선 항목이 고쳐지면 "기준선이 낡았다"로 실패해 목록을 지우게 만든다. 이 파일은 위반을 승인하는 문서가 아니라 고칠 목록이다.
 
@@ -56,7 +57,7 @@ npm run build:tokens
 `tokens/build/tokens.css`는 다음만 발행한다.
 
 - 색상: `--color-*`
-- 폰트 패밀리: `--font-sans`, `--font-mono`
+- 폰트 패밀리: `--font-sans`, `--font-heading`, `--font-mono`
 - 브레이크포인트: `--breakpoint-mobile` / `-tablet` / `-pc`
 
 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다.
@@ -67,10 +68,11 @@ npm run build:tokens
 - 컴포넌트/페이지 색상은 `--color-*` 시맨틱 토큰을 우선 사용한다.
 - 단계 색상은 명도 조정이 필요한 예외에만 `--color-primary-50`, `--color-gray-20`처럼 사용한다.
 - 폰트 지정은 전역 `body`에서 `var(--font-sans)`로 한 번 적용한다.
+- 제목 차등 서체는 `var(--font-heading)`으로 적용한다. `brand.json`에 `heading` 슬롯이 없으면 sans와 같은 값이 발행되므로 안심하고 참조한다.
 - 코드 영역은 `var(--font-mono)`를 사용한다.
 - 공개 사용 규칙에는 `--color-*`, `--font-*`만 포함한다.
 
 ## 갱신
 
-- 브랜드 색·본문 폰트가 바뀌면 `brand.json`만 수정한다.
+- 브랜드 색·본문 폰트·제목 폰트가 바뀌면 `brand.json`만 수정한다.
 - 접근성 기준·상태색·의미 토큰 구조가 바뀌면 `foundation.json`을 수정한다. 이는 팀 표준 변경이므로 UX팀 판단이 필요하다.

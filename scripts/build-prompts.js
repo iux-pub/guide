@@ -31,7 +31,9 @@ function parseTokensCss() {
   }
   const content = fs.readFileSync(TOKENS_CSS, 'utf-8')
   const tokens = []
-  const re = /^\s*(--[\w-]+):\s*([^;]+);\s*(?:\/\*\s*(.+?)\s*\*\/)?/gm
+  // 세미콜론 뒤는 같은 줄 공백만 허용한다 — \s*가 다음 줄 들여쓰기를 삼키면
+  // ^ 앵커가 어긋나 바로 다음 선언이 한 줄씩 건너뛰어 파싱됐다(--font-mono 누락 사고)
+  const re = /^\s*(--[\w-]+):\s*([^;]+);[ \t]*(?:\/\*\s*(.+?)\s*\*\/)?/gm
   let m
   while ((m = re.exec(content)) !== null) {
     tokens.push({ name: m[1], value: m[2].trim(), comment: (m[3] || '').trim() })
@@ -425,7 +427,7 @@ function buildContextPrompt() {
 색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(\`var(--token)\`)와 Tailwind \`@theme\` 기준을 사용하라. 간격·크기·타이포 스케일은 CSS/Tailwind 직접값을 사용한다.
 
 - **색상** (\`--color-*\`) — 의미 기반 토큰
-- **폰트** (\`--font-sans\`, \`--font-mono\`) — 전역 기본 폰트
+- **폰트** (\`--font-sans\`, \`--font-heading\`, \`--font-mono\`) — 전역 기본 폰트. 제목 차등 서체는 \`--font-heading\`(brand에 heading 슬롯이 없으면 sans 값으로 폴백)
 
 > 전체 토큰 카탈로그 — \`references/krds-tokens.md\`
 

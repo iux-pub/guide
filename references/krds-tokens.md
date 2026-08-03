@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `tokens/foundation.json` + `tokens/brand.json` (합성 결과)
-> 빌드: 5c02eb3
+> 빌드: efc17ae
 
 색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.
 
@@ -172,6 +172,7 @@
 | 토큰 | 값 | 용도 |
 |------|----|------|
 | `--font-sans` | `'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif` | 본문/컴포넌트 기본 폰트 |
+| `--font-heading` | `'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif` | 제목 차등 서체 — brand에 heading 슬롯이 없으면 sans 값 폴백 |
 | `--font-mono` | `'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace` | 코드/고정폭 텍스트 |
 
 ### 브레이크포인트
@@ -188,7 +189,7 @@
 
 - 색상은 `--color-*` 시맨틱 토큰을 우선 사용한다.
 - 단계 색상은 예외적으로 명도가 필요한 경우에만 `--color-{group}-{step}`을 사용한다.
-- 폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다.
+- 폰트 패밀리는 `--font-sans`, `--font-heading`, `--font-mono`만 사용한다.
 - 브레이크포인트는 360 / 768 / 1280 세 단계만 사용한다.
 - Tailwind 반응형 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 사용하지 않는다.
 - 단순 반응형 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선 사용한다.

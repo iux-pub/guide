@@ -9,7 +9,7 @@
  * 실제로 74개 중 21개만 덮여 링크·버튼·상태 텍스트 대비가 깨져 있었다.
  */
 
-const { createResolver } = require('./token-source')
+const { createResolver, assertHangulFontFallback } = require('./token-source')
 
 /** 시맨틱 색상 변수 — 라이트 경로만 적는다. 고대비는 여기서 파생한다. */
 const SEMANTIC_COLORS = [
@@ -112,7 +112,14 @@ function stagesOf(group) {
 
 /** 합성 토큰 소스(mergeTokens 결과)로 tokens.css 전문을 조립해 돌려준다. */
 function buildTokensCss(source) {
+  // R-26 — 본문·제목 폰트 스택에 한글 가용 폰트가 없으면 조립 자체를 막는다
+  assertHangulFontFallback(source)
+
   const { readToken } = createResolver(source)
+
+  // 제목 폰트 슬롯 — heading 부재 시 sans 값 폴백. 구 brand.json 파생 사이트도
+  // --font-heading을 받아야 컴포넌트 CSS가 슬롯 유무를 분기하지 않는다.
+  const headingPath = source.font?.family?.heading ? 'font.family.heading' : 'font.family.sans'
 
   function cssLine(name, tokenPath) {
     return `  ${name}: ${readToken(tokenPath)};`
@@ -152,6 +159,7 @@ function buildTokensCss(source) {
   w(':root {')
   w('  /* Font families */')
   w(cssLine('--font-sans', 'font.family.sans'))
+  w(cssLine('--font-heading', headingPath))
   w(cssLine('--font-mono', 'font.family.mono'))
   w('')
   w('  /* Breakpoints */')
@@ -171,6 +179,7 @@ function buildTokensCss(source) {
   w('  --color-*: initial;')
   w('')
   w(`  --font-sans: ${readToken('font.family.sans')};`)
+  w(`  --font-heading: ${readToken(headingPath)};`)
   w(`  --font-mono: ${readToken('font.family.mono')};`)
   w('')
   w('  /* Tailwind responsive variants: mobile:, tablet:, pc: */')

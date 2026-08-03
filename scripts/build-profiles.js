@@ -48,11 +48,12 @@ w('## 유형별 Page Shell')
 w('')
 w('사이트 유형 판정은 HTML 구조 선택으로 이어져야 한다. 정부/공공 아이덴티티 요소는 조건부 생성 항목이며 아래 shell에 기본 포함하지 않는다.')
 w('')
-w('| 유형 | 기본 section 흐름 | 우선 컴포넌트 | 밀도 |')
-w('|------|-------------------|---------------|------|')
+w('| 유형 | 기본 section 흐름 | 우선 컴포넌트 | 밀도 | 표현 등급 |')
+w('|------|-------------------|---------------|------|-----------|')
 for (const p of spec.profiles) {
   const density = spec.density[p.density]
-  w(`| ${p.label} | ${flow(p)} | ${p.priorityComponents.join(', ')} | ${density.label} |`)
+  const expression = spec.expressionLevels[p.expression]
+  w(`| ${p.label} | ${flow(p)} | ${p.priorityComponents.join(', ')} | ${density.label} | ${expression.label} |`)
 }
 w('')
 w('## 밀도 기준')
@@ -63,6 +64,25 @@ w('| 밀도 | section 패딩 (PC / 모바일) | 폼 행 간격 | 표 셀 패딩 
 w('|------|---------------------------|------------|------------|------|')
 for (const [, d] of Object.entries(spec.density)) {
   w(`| ${d.label} | ${d.sectionPaddingPc} / ${d.sectionPaddingMobile} | ${d.formRowGap} | ${d.tableCellPadding} | ${d.note} |`)
+}
+w('')
+w('## 표현 등급 기준')
+w('')
+w('등급은 상한이지 목표가 아니다. 아래는 유형별 기본값이며, task contract의 expression 필드로 덮어쓸 수 있다.')
+w('모션 수치는 장식·스크롤 진입 모션 한정이다. 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing.md 소유로 등급 무관이다.')
+w('')
+w('| 등급 | 정의 | hero | 시그니처 | 모션 | 제목 폰트 | 레이아웃 |')
+w('|------|------|------|----------|------|-----------|----------|')
+for (const [id, level] of Object.entries(spec.expressionLevels)) {
+  const signature = level.signature.maxCount === 0
+    ? '없음'
+    : `최대 ${level.signature.maxCount} — ${level.signature.types.join(', ')}`
+  const motion = `${level.motion.effects.join(', ')} · ${level.motion.durationMs[0]}~${level.motion.durationMs[1]}ms`
+  w(`| ${level.label} (\`${id}\`) | ${level.definition} | ${level.hero.join(', ')} | ${signature} | ${motion} | ${level.displayFont} | ${level.layout} |`)
+}
+w('')
+for (const [, level] of Object.entries(spec.expressionLevels)) {
+  w(`- **${level.label}** — ${level.note}`)
 }
 w('')
 w('## 조건부 생성')
@@ -95,4 +115,4 @@ const before = current.slice(0, current.indexOf(BEGIN))
 const after = current.slice(current.indexOf(END) + END.length)
 fs.writeFileSync(TARGET, before + generated + after)
 
-console.log(`✓ references/project-profiles.md — 프로필 ${spec.profiles.length}종, 조건부 ${spec.conditional.length}건`)
+console.log(`✓ references/project-profiles.md — 프로필 ${spec.profiles.length}종, 표현 등급 ${Object.keys(spec.expressionLevels).length}종, 조건부 ${spec.conditional.length}건`)

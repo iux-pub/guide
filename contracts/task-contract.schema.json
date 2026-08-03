@@ -38,6 +38,16 @@
       "enum": ["required", "not-applicable", "unconfirmed"],
       "default": "unconfirmed"
     },
+    "expression": {
+      "enum": ["utility", "restrained", "expressive"],
+      "description": "표현 등급 override. 생략 시 profile 기본값(contracts/profiles.json). 상향 근거는 primaryTask 또는 exceptions에 명시. task contract는 페이지·과업 단위로 작성되므로 이 값이 페이지 스코프 등급을 운반한다 — 결제·인증·폼 페이지는 utility로 강등해 작성한다."
+    },
+    "contentSources": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "description": "실제 기관 용어·메뉴명·콘텐츠의 출처(과업 문서 경로, 용어집, 기존 사이트 URL). 비어 있으면 카피는 임시 초안 신분을 벗어날 수 없다."
+    },
     "exceptions": {
       "type": "array",
       "items": {
@@ -52,5 +62,11 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "publicIdentity": { "const": "required" } }, "required": ["publicIdentity"] },
+      "then": { "properties": { "expression": { "enum": ["utility", "restrained"] } } }
+    }
+  ]
 }

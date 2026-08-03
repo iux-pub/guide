@@ -18,13 +18,13 @@ KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 
 
 사이트 유형 판정은 HTML 구조 선택으로 이어져야 한다. 정부/공공 아이덴티티 요소는 조건부 생성 항목이며 아래 shell에 기본 포함하지 않는다.
 
-| 유형 | 기본 section 흐름 | 우선 컴포넌트 | 밀도 |
-|------|-------------------|---------------|------|
-| 일반사이트 | `section--intro` → `section--content` → `section--list`<br>또는 `section--intro` → `section--content` → `section--notice` | header, main-menu, card, list, btn | 여유 |
-| 공공서비스 | `section--search` → `section--process` → `section--form` → `section--notice`<br>또는 `section--intro` → `section--process` → `section--data` → `section--notice` | breadcrumb, step-indicator, form, alert, table | 여유 |
-| 공공기관 | `section--intro` → `section--notice` → `section--list` → `section--content` | header, main-menu, breadcrumb, card, pagination | 여유 |
-| CMS·관리자 | `section--search` → `section--data` → `section--form`<br>또는 `section--search` → `section--data` → `section--notice` | form, select, table, pagination, badge, toast | 고밀도 |
-| 커머스·예약 | `section--intro` → `section--list` → `section--form` → `section--notice`<br>또는 `section--intro` → `section--list` → `section--process` → `section--notice` | card, btn, form, step-indicator, alert | 여유 |
+| 유형 | 기본 section 흐름 | 우선 컴포넌트 | 밀도 | 표현 등급 |
+|------|-------------------|---------------|------|-----------|
+| 일반사이트 | `section--intro` → `section--content` → `section--list`<br>또는 `section--intro` → `section--content` → `section--notice` | header, main-menu, card, list, btn | 여유 | 표현형 |
+| 공공서비스 | `section--search` → `section--process` → `section--form` → `section--notice`<br>또는 `section--intro` → `section--process` → `section--data` → `section--notice` | breadcrumb, step-indicator, form, alert, table | 여유 | 절제형 |
+| 공공기관 | `section--intro` → `section--notice` → `section--list` → `section--content` | header, main-menu, breadcrumb, card, pagination | 여유 | 절제형 |
+| CMS·관리자 | `section--search` → `section--data` → `section--form`<br>또는 `section--search` → `section--data` → `section--notice` | form, select, table, pagination, badge, toast | 고밀도 | 기능형 |
+| 커머스·예약 | `section--intro` → `section--list` → `section--form` → `section--notice`<br>또는 `section--intro` → `section--list` → `section--process` → `section--notice` | card, btn, form, step-indicator, alert | 여유 | 표현형 |
 
 ## 밀도 기준
 
@@ -34,6 +34,21 @@ KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 
 |------|---------------------------|------------|------------|------|
 | 여유 | 8rem / 4rem | 2.4rem | 1.6rem | 읽기 중심 화면. 한 화면에 담는 정보보다 가독성을 우선한다. |
 | 고밀도 | 4rem / 2.4rem | 1.6rem | 1rem | 반복 작업 화면. 스크롤과 클릭 수를 줄이는 쪽을 우선한다. 터치 영역 44px 하한은 그대로 지킨다. |
+
+## 표현 등급 기준
+
+등급은 상한이지 목표가 아니다. 아래는 유형별 기본값이며, task contract의 expression 필드로 덮어쓸 수 있다.
+모션 수치는 장식·스크롤 진입 모션 한정이다. 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing.md 소유로 등급 무관이다.
+
+| 등급 | 정의 | hero | 시그니처 | 모션 | 제목 폰트 | 레이아웃 |
+|------|------|------|----------|------|-----------|----------|
+| 기능형 (`utility`) | 반복 업무 화면. 표현 요소가 과업 효율을 침해하지 않는 최소 수준. | none, text | 없음 | fade · 100~200ms | body-only | symmetric-grid |
+| 절제형 (`restrained`) | 신뢰가 우선인 공공 톤. 브랜드는 색·서체 수준에서 드러나고 장식은 절제한다. | text, image, carousel | 최대 1 — 그래픽 패턴, 포토 톤 통일, 커스텀 일러스트 | fade, translate-16, scroll-fade-in-once · 150~300ms | body-first | alternating |
+| 표현형 (`expressive`) | 브랜드 개성이 기억에 남아야 하는 사이트. 시그니처·타이포·섹션 리듬으로 정체성을 만든다. | text, image, carousel, video | 최대 3 — 그래픽 패턴, 커스텀 일러스트, 포토 트리트먼트, 타이포 모티프, 커스텀 불릿·구분선 | fade, translate-24, scale-2pct, stagger-50-80 · 200~400ms | heading-pairing | asymmetric |
+
+- **기능형** — 브랜드 식별은 로고와 primary 색상으로만 한다. point 색은 상태·배지·필수 표시 등 기능적 용도 외 사용하지 않는다.
+- **절제형** — 시그니처는 hero·인트로 구간 한정. displayFont body-first = 본문 폰트 기본, 기관 CI 전용 서체 또는 카탈로그 페어링이 계약된 경우만 제목 페어링.
+- **표현형** — 제목 페어링은 contracts/art-direction.json 카탈로그에서 선택 — 재배포 가능 라이선스 + 한글 폴백 스택 필수. 본문 콘텐츠 영역은 그리드 유지.
 
 ## 조건부 생성
 
@@ -47,12 +62,32 @@ KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 
 ## 유형별 주의
 
 - **일반사이트** — 정부 상징·공식 배너·운영기관 식별자를 생성하지 않는다.
-- **공공서비스** — 공식 배너·정부 상징·운영기관 식별자는 과업지시서나 기관 정책이 확인된 경우에만 생성한다.
+- **공공서비스** — 공식 배너·정부 상징·운영기관 식별자는 과업지시서나 기관 정책이 확인된 경우에만 생성한다. 관광·홍보 성격 서비스는 task contract에서 expression을 expressive로 상향할 수 있다. 단 publicIdentity가 required면 restrained 상한.
 - **공공기관** — 정부 상징은 기본값이 아니다. 기관 CI/BI와 과업 요구가 우선한다.
 - **CMS·관리자** — 공공 운영 CMS라도 관리자 화면에는 업무 효율을 우선한다. 마케팅형 hero나 장식 카드 중심 구성을 피한다.
-- **커머스·예약** — 법정 링크와 환불/교환/개인정보 안내가 필요하다. 공공기관이 운영하면 public-institution 조건을 병행한다.
+- **커머스·예약** — 법정 링크와 환불/교환/개인정보 안내가 필요하다. 공공기관이 운영하면 public-institution 조건을 병행한다. 주문·결제·인증 페이지의 task contract는 expression을 utility로 강등해 작성한다.
 
 <!-- profiles:end -->
+
+## 표현 등급 운용 원칙
+
+등급 정의와 유형별 기본값은 위 생성 구간의 표가 정본이다. 운용은 다음 다섯 원칙을 따른다.
+
+1. 등급은 상한이지 목표가 아니다 — "허용되니까"는 근거가 아니다.
+2. 상향은 task contract `expression` 필드로만 하고, 근거 기록이 필수다. 하향은 언제나 자유다.
+3. 페이지 단위 강등 — 폼·결제·인증·오류·검색결과는 사이트 등급 무관 utility~restrained 수위로 작성한다. 운반체는 페이지 단위 task contract, 확인은 납품 전 리뷰 체크리스트 항목이다.
+4. 축 단위 예외 — 등급 묶음에서 축 하나만 열 때는 `exceptions[]`에 `"rule": "expression.hero"` 형식으로 근거와 함께 기록한다(예: 공공기관 메인 영상 배경 발주 요구). 통째 상향보다 이 경로를 우선한다.
+5. publicIdentity 캡 — `required` 확정 시 상한은 restrained다(task contract 스키마가 강제한다). `unconfirmed` 상태에서는 상향을 보류한다.
+
+### 표현 등급 판정 예시
+
+실프로젝트의 등급 매핑은 저장소에 등재하지 않는다. 아래는 익명화한 판정 예시다.
+
+| 입력 단서 | 판정 | 이유 |
+|-----------|------|------|
+| "군 단위 지자체의 관광 안내 사이트" | public-service + expressive 상향 후보 | 관광·홍보 성격 — task contract에 상향 근거를 기록한다. publicIdentity가 required로 확정되면 상한은 restrained |
+| "출연 재단 대표 홈페이지, 정부 상징 사용 확인됨" | public-institution + restrained | publicIdentity required — 스키마가 상한 restrained를 강제한다 |
+| "지역 특산물 온라인 스토어의 프로모션 시즌 개편" | commerce-reservation + expressive | 기본 등급 유지. 단 주문·결제·인증 페이지의 task contract는 utility로 강등한다 |
 
 ## 항상 생성에 반영
 

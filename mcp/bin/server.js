@@ -244,6 +244,7 @@ function getProfile(name) {
   if (!profile) return notFound(`사이트 유형 "${name}"`, profiles.map(p => p.id))
 
   const density = profileSpec.density[profile.density]
+  const expression = profileSpec.expressionLevels[profile.expression]
   const identity = profile.governmentIdentity === 'excluded'
     ? '제외 — 정부 상징·공식 배너·운영기관 식별자를 생성하지 않는다.'
     : '조건부 — 과업지시서나 기관 정책이 확인된 경우에만 생성한다.'
@@ -253,6 +254,7 @@ function getProfile(name) {
     '',
     `적용 대상: ${profile.appliesTo}`,
     `기본 생성: ${profile.focus}`,
+    `표현 등급: ${expression.label} — 상세는 get_art_direction`,
     '',
     '## 기본 section 흐름',
     '',

@@ -63,7 +63,24 @@ test('프로필 프리셋이 실제 컴포넌트와 section archetype만 가리�
         `${profile.id}: 컴포넌트 "${component}"이 카탈로그에 없다`)
     }
     assert.ok(spec.density[profile.density], `${profile.id}: 밀도 "${profile.density}" 정의 없음`)
+    assert.ok(spec.expressionLevels[profile.expression],
+      `${profile.id}: 표현 등급 "${profile.expression}" 정의 없음`)
   }
+})
+
+test('표현 등급 정의가 스키마와 프리셋에서 일치한다', () => {
+  // expressionLevels 정의와 Task Contract의 expression enum이 갈라지면
+  // 계약이 허용한 등급을 프리셋이 모르거나, 프리셋 등급을 계약이 거부한다.
+  const schema = JSON.parse(
+    fs.readFileSync(path.join(ROOT, 'contracts', 'task-contract.schema.json'), 'utf8')
+  )
+  const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+
+  assert.deepEqual(
+    schema.properties.expression.enum.slice().sort(),
+    Object.keys(spec.expressionLevels).sort(),
+    'Task Contract 스키마의 expression enum과 expressionLevels 정의가 다르다'
+  )
 })
 
 test('납품본에서 제외하는 것과 남겨야 하는 것이 겹치지 않는다', () => {

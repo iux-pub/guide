@@ -4,6 +4,7 @@
 
 const fs = require('node:fs')
 const path = require('node:path')
+const crypto = require('node:crypto')
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
 
@@ -58,10 +59,19 @@ test('셀프호스팅 폰트는 파일 경로를 선언하고, sha256 기록분�
         assert.equal(font.acquiredAt, PENDING, `${entry.id}/${font.family}: sha256이 입수 대기면 acquiredAt도 입수 대기여야 한다`)
         continue
       }
-      assert.match(font.sha256, /^[0-9a-f]{64}$/, `${entry.id}/${font.family}: sha256 형식 오류`)
+      // 입수 완료 폰트: sha256은 파일 경로 → 해시 맵이며, 실물 해시와 일치해야 한다
       assert.notEqual(font.acquiredAt, PENDING, `${entry.id}/${font.family}: sha256이 기록됐는데 acquiredAt이 입수 대기다`)
+      assert.deepEqual(
+        Object.keys(font.sha256).sort(),
+        [...font.files].sort(),
+        `${entry.id}/${font.family}: sha256 맵의 키가 files 목록과 다르다`
+      )
       for (const file of font.files) {
-        assert.ok(fs.existsSync(path.join(ROOT, file)), `${entry.id}/${font.family}: ${file} 실물 누락`)
+        const full = path.join(ROOT, file)
+        assert.ok(fs.existsSync(full), `${entry.id}/${font.family}: ${file} 실물 누락`)
+        assert.match(font.sha256[file], /^[0-9a-f]{64}$/, `${entry.id}/${font.family}: ${file} sha256 형식 오류`)
+        const actual = crypto.createHash('sha256').update(fs.readFileSync(full)).digest('hex')
+        assert.equal(actual, font.sha256[file], `${entry.id}/${font.family}: ${file} 해시 불일치 — 파일이 기록과 다르다`)
       }
     }
   }

@@ -60,11 +60,11 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 <!-- art-direction:typography:begin — contracts/art-direction.json에서 자동 생성. 직접 수정 금지. npm run build:art-direction -->
 | id | 라벨 | 무드 | 제목 | 본문 | 등급 | 라이선스 | 파일 |
 |----|------|------|------|------|------|----------|------|
-| `standard-gov` | 표준 관청체 | 중립·신뢰·표준 | `var(--font-sans)` 600/700 · ls -0.02em · lh 1.35 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 4건 입수 대기 |
-| `product-modern` | 프로덕트 산세리프 | 친근·현대적·제품 | `'Wanted Sans', var(--font-sans)` 600/700 · ls -0.02em · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 2건 입수 대기 |
-| `formal-serif` | 격식 명조 | 격식·기록·전통 | `'Noto Serif KR', var(--font-sans)` 600 · ls -0.01em · lh 1.4 | 400/500 · lh 1.7 | restrained, expressive | OFL-1.1 | 1건 입수 대기 |
-| `retro-display` | 레트로 디스플레이 | 레트로·문화·독립 | `'Hahmlet', var(--font-sans)` 500/600 · ls 0 · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 1건 입수 대기 |
-| `technical-global` | 테크니컬 고딕 | 테크·국제·데이터 | `'IBM Plex Sans KR', var(--font-sans)` 600 · ls -0.01em · lh 1.3 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 1건 입수 대기 |
+| `standard-gov` | 표준 관청체 | 중립·신뢰·표준 | `var(--font-sans)` 600/700 · ls -0.02em · lh 1.35 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 4건 입수 완료 |
+| `product-modern` | 프로덕트 산세리프 | 친근·현대적·제품 | `'Wanted Sans', var(--font-sans)` 600/700 · ls -0.02em · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 2건 입수 완료 |
+| `formal-serif` | 격식 명조 | 격식·기록·전통 | `'Noto Serif KR', var(--font-sans)` 600 · ls -0.01em · lh 1.4 | 400/500 · lh 1.7 | restrained, expressive | OFL-1.1 | 1건 입수 완료 |
+| `retro-display` | 레트로 디스플레이 | 레트로·문화·독립 | `'Hahmlet', var(--font-sans)` 500/600 · ls 0 · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 1건 입수 완료 |
+| `technical-global` | 테크니컬 고딕 | 테크·국제·데이터 | `'IBM Plex Sans KR', var(--font-sans)` 600 · ls -0.01em · lh 1.3 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 1건 입수 완료 |
 
 - **standard-gov** [warn] 단독으로는 무개성 — 크기 대비(본문 1.7rem ↔ h1 4rem)와 여백으로 위계를 만든다.
 - **standard-gov** [info] 민간 프로젝트는 일반 Pretendard도 무방. 전 프로필 안전 기본값.

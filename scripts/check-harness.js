@@ -52,6 +52,8 @@ requireSame('scripts/check-violations.js', 'starter/scripts/check-violations.js'
 requireSame('scripts/check-html-structure.js', 'starter/scripts/check-html-structure.js')
 requireSame('scripts/check-contrast.js', 'starter/scripts/check-contrast.js')
 requireSame('scripts/lib/token-source.js', 'starter/scripts/lib/token-source.js')
+requireSame('scripts/lib/contrast.js', 'starter/scripts/lib/contrast.js')
+requireSame('scripts/lib/build-tokens-css.js', 'starter/scripts/lib/build-tokens-css.js')
 // 브랜드 계층은 프로젝트가 갈아끼우는 파일이라 값 동일성을 요구하지 않는다.
 // 다만 스타터가 세 파일을 모두 갖추지 못하면 브랜드 교체 구조 자체가 성립하지 않는다.
 for (const required of [

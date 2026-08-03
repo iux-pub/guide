@@ -68,6 +68,8 @@ cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-html-structure.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/check-contrast.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/lib/token-source.js" "$STARTER_DIR/scripts/lib/"
+cp "$GUIDE_DIR/scripts/lib/contrast.js" "$STARTER_DIR/scripts/lib/"
+cp "$GUIDE_DIR/scripts/lib/build-tokens-css.js" "$STARTER_DIR/scripts/lib/"
 mkdir -p "$STARTER_DIR/contracts"
 cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
 

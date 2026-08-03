@@ -14,7 +14,9 @@ INFOMIND UX팀의 퍼블리싱 기준(infoUX)을 MCP로 제공한다. 팀원이 
 | `get_tokens` | 색상·폰트·브레이크포인트 토큰. `query`로 필터, `raw`로 tokens.css 원본 |
 | `get_rules` | 코딩 규칙 R-01~R-22 (위반·준수 예시 포함) |
 | `get_reference` | 접근성·금지패턴·Tailwind 매핑·HTML 시맨틱·사이트 유형 프로필 |
+| `get_profile` | 사이트 유형 프리셋 — section 흐름·우선 컴포넌트·밀도·표현 등급 |
 | `get_workflow` | 작업 절차 — 페이지·폼·위젯 설계, 컴포넌트 생성, 토큰 변경, UI 리뷰, 프로젝트 초기화 |
+| `get_art_direction` | 프로필별 아트 디렉션 — 표현 등급 상세·타이포 페어링·팔레트 프리셋·한글 조판·안티패턴 색인 |
 | `search_docs` | 어느 문서를 봐야 할지 모를 때 전체 검색 |
 
 서버는 접속 시 **지시문**도 함께 넘긴다 — 사이트 유형 판정, 토큰 강제, 카탈로그 우선, 규칙 준수 순서가 에이전트에 자동으로 걸린다.
@@ -64,7 +66,7 @@ args = ["-y", "@infomind-ux/infoux-mcp"]
 npx -y @infomind-ux/infoux-mcp
 ```
 
-`infoUX MCP 준비됨 — 빌드 <sha>, 도구 8종`이 stderr로 나오면 정상이다. stdout은 프로토콜 채널이라 로그를 싣지 않는다.
+`infoUX MCP 준비됨 — 빌드 <sha>, 도구 <n>종`이 stderr로 나오면 정상이다. stdout은 프로토콜 채널이라 로그를 싣지 않는다.
 
 ## 데이터 갱신
 
@@ -74,7 +76,7 @@ npx -y @infomind-ux/infoux-mcp
 npm run build:mcp
 ```
 
-원본이 바뀌면(`rules.json`, `skill/`, `src/snippets/`, `tokens/`) 재생성 후 커밋한다. `npm run build`와 `npm test`에 이미 포함돼 있다.
+원본이 바뀌면(`rules.json`, `contracts/`, `references/`, `src/snippets/`, `tokens/`) 재생성 후 커밋한다. `npm run build`와 `npm test`에 이미 포함돼 있다.
 
 ## 범위
 

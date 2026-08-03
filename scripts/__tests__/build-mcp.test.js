@@ -9,7 +9,7 @@ const ROOT = path.resolve(__dirname, '..', '..')
 const DATA_DIR = path.join(ROOT, 'mcp', 'data')
 
 test('MCP 번들이 서버가 읽는 파일을 모두 갖췄다', () => {
-  for (const required of ['manifest.json', 'rules.json', 'contract.md', 'tokens.css']) {
+  for (const required of ['manifest.json', 'rules.json', 'contract.md', 'tokens.css', 'art-direction.json']) {
     assert.ok(fs.existsSync(path.join(DATA_DIR, required)), `mcp/data/${required} 누락 — npm run build:mcp`)
   }
 })
@@ -48,6 +48,12 @@ test('번들 규칙이 원본 rules.json과 같다', () => {
   const bundled = fs.readFileSync(path.join(DATA_DIR, 'rules.json'), 'utf8')
   const source = fs.readFileSync(path.join(ROOT, 'rules.json'), 'utf8')
   assert.equal(bundled, source, 'MCP가 낡은 규칙을 답한다 — npm run build:mcp')
+})
+
+test('번들 아트 디렉션이 원본 contracts/art-direction.json과 같다', () => {
+  const bundled = fs.readFileSync(path.join(DATA_DIR, 'art-direction.json'), 'utf8')
+  const source = fs.readFileSync(path.join(ROOT, 'contracts', 'art-direction.json'), 'utf8')
+  assert.equal(bundled, source, 'MCP가 낡은 아트 디렉션을 답한다 — npm run build:mcp')
 })
 
 test('서버가 선언한 도구 이름과 구현 분기가 어긋나지 않는다', () => {

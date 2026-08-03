@@ -105,7 +105,8 @@ for (const bundled of [
   ['rules.json', 'mcp/data/rules.json'],
   ['references/CONTRACT.md', 'mcp/data/contract.md'],
   ['tokens/build/tokens.css', 'mcp/data/tokens.css'],
-  ['contracts/profiles.json', 'mcp/data/profiles.json']
+  ['contracts/profiles.json', 'mcp/data/profiles.json'],
+  ['contracts/art-direction.json', 'mcp/data/art-direction.json']
 ]) {
   requireSame(bundled[0], bundled[1])
 }

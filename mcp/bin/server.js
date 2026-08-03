@@ -28,6 +28,7 @@ function readData(...segments) {
 const manifest = JSON.parse(readData('manifest.json'))
 const rules = JSON.parse(readData('rules.json'))
 const profileSpec = JSON.parse(readData('profiles.json'))
+const artDirection = JSON.parse(readData('art-direction.json'))
 
 // ─────────────────────────────────────────────────────
 // 서버 지시문 — 에이전트가 도구를 언제 써야 하는지 알려준다
@@ -41,6 +42,7 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    판단이 서지 않으면 get_reference("project-profiles")를 읽는다.
    판정했으면 get_profile(id)로 section 흐름·우선 컴포넌트·밀도를 가져간다.
    프로젝트에 infoux.json이 있으면 그 profile 값이 판정 결과다 — 다시 판정하지 않는다.
+   프리셋과 함께 get_art_direction(profile)로 표현 등급·타이포·팔레트·카피 톤 기준을 가져간다.
 2. 색상은 반드시 토큰을 쓴다. hex/rgb/hsl 직접 작성 금지. get_tokens로 확인한다.
    토큰명을 지어내지 않는다 — 목록에 없으면 사용자에게 확인한다.
 3. 컴포넌트는 카탈로그를 먼저 본다. list_components → get_component 순으로 확인하고
@@ -145,6 +147,19 @@ const TOOLS = [
       type: 'object',
       properties: {
         name: { type: 'string', description: '절차 이름 (예: design-page, change-token, create-component)' }
+      }
+    }
+  },
+  {
+    name: 'get_art_direction',
+    description:
+      '프로필별 아트 디렉션 — 표현 등급 상세, 타이포 페어링 후보, 팔레트 프리셋 후보, 한글 조판 공통값, ' +
+      '안티패턴 색인. 인자 없이 호출하면 전체 색인. 밀도·section 흐름은 get_profile 소유라 반복하지 않는다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        profile: { type: 'string', description: '사이트 유형 id (general-site, public-service, public-institution, cms-admin, commerce-reservation). 생략 시 등급 정의와 전체 후보 색인' },
+        expression: { type: 'string', description: '표현 등급 덮어쓰기 (utility, restrained, expressive). 생략 시 프로필 기본값. Task Contract의 expression과 같은 값' }
       }
     }
   },
@@ -315,6 +330,143 @@ function getReference(name) {
   return text(readData('references', entry.file))
 }
 
+/** 프리셋 파일에서 라이트 모드 50단계 대표색을 읽는다 — hex 정본은 프리셋이라 값을 복사해 두지 않는다. */
+function presetRepresentative(id) {
+  const preset = JSON.parse(readData('presets', `${id}.json`))
+  const pick = group => preset.primitive.color.light[group]['50'].value
+  return {
+    primary: pick('primary'),
+    secondary: pick('secondary'),
+    point: pick('point'),
+    pointException: preset.$meta?.preset?.pointException
+  }
+}
+
+function hangulLines() {
+  const h = artDirection.hangul
+  return [
+    `- word-break: ${h.wordBreak} / 본문 line-height ${h.bodyLineHeight.min}~${h.bodyLineHeight.max}(기본 ${h.bodyLineHeight.default}) / 제목 ${h.headingLineHeight.min}~${h.headingLineHeight.max}`,
+    `- 큰 제목(${h.headingLetterSpacing.appliesFromRem}rem+) letter-spacing ${h.headingLetterSpacing.min}~${h.headingLetterSpacing.max} / weight: 본문 ${h.weights.bodyBase} 기본, 제목 ${h.weights.headingMax}은 h1~h2 한정, 화면당 ${h.weights.maxPerScreen}종 이하`
+  ]
+}
+
+function antiPatternLines() {
+  return [
+    '- 기계 검출: 가짜 콘텐츠(R-23) · 한글 조판 하한(R-24) · 섹션 리듬(R-25) · 폰트 한글 fallback(R-26)',
+    '- 산문 안티패턴 10건·납품 전 리뷰 체크리스트: get_reference("art-direction")'
+  ]
+}
+
+function typographyLines(entry) {
+  const lines = [
+    `### ${entry.id} — ${entry.label}`,
+    `- 제목: ${entry.heading.stack} ${entry.heading.weights.join('/')}, ls ${entry.heading.letterSpacing}, lh ${entry.heading.lineHeight} / 본문: ${entry.body.weights.join('/')}, lh ${entry.body.lineHeight}`,
+    `- 라이선스: ${[...new Set(entry.fonts.map(f => f.license.type))].join(', ')} / 셀프호스팅 woff2: assets/fonts/${entry.id}/${entry.fonts.some(f => f.sha256 === '입수 대기') ? ' (입수 대기)' : ''}`,
+    '- 적용: brand.json font.family.heading(차등 시) → npm run build:tokens'
+  ]
+  for (const caution of entry.cautions) {
+    lines.push(`- [${caution.severity}] ${caution.text}`)
+  }
+  return lines
+}
+
+function paletteLines(palette) {
+  const rep = presetRepresentative(palette.id)
+  const lines = [
+    `### ${palette.id} — ${palette.label}`,
+    `- 대표색: primary 50 ${rep.primary} / secondary 50 ${rep.secondary} / point 50 ${rep.point}`,
+    `- 적용: cp tokens/presets/${palette.id}.json tokens/brand.json → npm run build:tokens → npm run check:contrast`
+  ]
+  if (rep.pointException === 'krds-heritage') {
+    lines.push('- [예외] point 크림슨은 krds-heritage 승계 — 위험 액션 버튼 사용 금지, danger 알림 인접 40px 내 배치 금지.')
+  }
+  return lines
+}
+
+function getArtDirection({ profile, expression } = {}) {
+  const levels = profileSpec.expressionLevels
+
+  if (expression && !levels[expression]) {
+    return notFound(`표현 등급 "${expression}"`, Object.keys(levels))
+  }
+
+  if (!profile) {
+    const lines = ['# 아트 디렉션 — 전체 색인', '', '프로필을 주면 후보를 걸러 상세로 답한다 — get_art_direction(profile).', '']
+    lines.push('## 표현 등급', '')
+    for (const [id, level] of Object.entries(levels)) {
+      lines.push(`- **${id}** (${level.label}) — ${level.definition}`)
+    }
+    lines.push('', '프로필 기본값: ' + profileSpec.profiles.map(p => `${p.id}=${p.expression}`).join(', '))
+    lines.push('', '## 한글 조판 공통값', '', ...hangulLines())
+    lines.push('', '## 타이포 카탈로그', '')
+    for (const entry of artDirection.typography) {
+      lines.push(`- **${entry.id}** — ${entry.label} (${entry.mood.join('·')}) · 등급 ${entry.expression.join(', ')} · 프로필 ${entry.profiles.join(', ')}`)
+    }
+    lines.push('', '## 팔레트 프리셋', '')
+    for (const palette of artDirection.palettes) {
+      const rep = presetRepresentative(palette.id)
+      lines.push(`- **${palette.id}** — ${palette.label} · primary 50 ${rep.primary} · 등급 ${palette.expression.join(', ')} · 프로필 ${palette.profiles.join(', ')}`)
+    }
+    lines.push('', '## 안티패턴 색인', '', ...antiPatternLines())
+    return text(lines.join('\n'))
+  }
+
+  const p = profileSpec.profiles.find(item => item.id === profile)
+  if (!p) return notFound(`사이트 유형 "${profile}"`, profileSpec.profiles.map(item => item.id))
+
+  const effective = expression || p.expression
+  const level = levels[effective]
+  const map = artDirection.profiles[profile]
+  const overridden = effective !== p.expression
+
+  const lines = [`# 아트 디렉션 — ${p.label}`, '']
+  lines.push(`## 표현 등급: ${effective} (${level.label})${overridden ? ` — 기본 ${p.expression}에서 덮어씀` : ''}`)
+  if (overridden) {
+    lines.push('- 덮어쓰기는 Task Contract의 expression 필드와 근거 기록이 전제다. publicIdentity가 required면 상향은 무효(상한 restrained).')
+  }
+  const signature = level.signature.maxCount === 0
+    ? '없음'
+    : `최대 ${level.signature.maxCount} — ${level.signature.types.join(', ')}`
+  lines.push(`- 모션 예산: ${level.motion.effects.join(', ')} · ${level.motion.durationMs[0]}~${level.motion.durationMs[1]}ms. prefers-reduced-motion 가드 필수(R-22). ${level.motion.note}`)
+  lines.push(`- 시그니처 요소: ${signature} / hero: ${level.hero.join('·')} / 제목 폰트: ${level.displayFont} / 레이아웃: ${level.layout}`)
+  lines.push(`- ${level.note}`)
+  lines.push('- 표현은 trade-off 서열 최하위다 — 접근성·과업 완수와 충돌하면 양보한다. 등급은 상한이지 목표가 아니다.')
+  lines.push('- 결제·인증·폼 페이지의 task contract는 utility로 강등해 작성한다.')
+
+  if (map) {
+    lines.push('', '## 리듬·카피 톤', '', `- 섹션 리듬: ${map.rhythm}`, `- 카피 톤: ${map.copyTone}`)
+  }
+
+  lines.push('', '## 한글 조판 공통값', '', ...hangulLines())
+
+  const typography = artDirection.typography.filter(
+    entry => entry.profiles.includes(profile) && entry.expression.includes(effective)
+  )
+  lines.push('', `## 타이포 후보 (${typography.length})`, '')
+  for (const entry of typography) {
+    lines.push(...typographyLines(entry), '')
+  }
+
+  const palettes = artDirection.palettes.filter(
+    palette => palette.profiles.includes(profile) && palette.expression.includes(effective)
+  )
+  lines.push(`## 팔레트 프리셋 후보 (${palettes.length})`, '')
+  for (const palette of palettes) {
+    lines.push(...paletteLines(palette))
+  }
+  lines.push('- 전 프리셋은 대비 검사 전량 통과 상태로 입고된다 — 위반 프리셋은 존재하지 않는다.')
+
+  lines.push('', '## 안티패턴 색인', '', ...antiPatternLines())
+  lines.push(
+    '',
+    '## 이 도구가 다루지 않는 것',
+    '',
+    `- section 흐름·우선 컴포넌트·밀도 → get_profile("${profile}")`,
+    '- 상태 셋 명세 → ui-states / 모션 수치 → interaction-timing·R-22 / 카피 문장 공식 → microcopy'
+  )
+  return text(lines.join('\n'))
+}
+
 function searchDocs(query) {
   const needle = query.toLowerCase()
   const hits = []
@@ -391,6 +543,8 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
         return getWorkflow(args.name)
       case 'get_profile':
         return getProfile(args.name)
+      case 'get_art_direction':
+        return getArtDirection(args)
       case 'search_docs':
         return searchDocs(args.query)
       default:

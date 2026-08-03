@@ -164,6 +164,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 | 작업 맥락 | 파일 |
 |----------|------|
 | 코드 생성 전 사이트 유형 판정 | `references/project-profiles.md` |
+| 표현 등급·타이포 페어링·팔레트 프리셋·한글 조판 판단 | `references/art-direction.md` |
 | 컴포넌트 마크업 작성 (시각/스타일) | `references/krds-components.md` |
 | 컴포넌트 마크업 작성 (root/ARIA/키보드) | `references/html-semantics.md` |
 | 토큰 결정 (색상·기본 폰트·브레이크포인트) | `references/krds-tokens.md` |

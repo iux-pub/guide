@@ -252,7 +252,7 @@ src/styles/
 | `prompts/design-rules.md` | 디자인 품질 규칙 |
 | `prompts/publishing.md` | 퍼블리싱 체크리스트 |
 
-`mcp/` — infoUX MCP 서버(`@infomind-ux/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 8종(get_contract / list_components / get_component / get_tokens / get_rules / get_reference / get_workflow / search_docs). 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다. 상세: `mcp/README.md`.
+`mcp/` — infoUX MCP 서버(`@infomind-ux/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 목록은 `mcp/README.md`를 참조한다. 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다.
 
 `references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
 

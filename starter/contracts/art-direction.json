@@ -1,0 +1,128 @@
+{
+  "name": "INFOUX Art Direction",
+  "version": "1.0.0",
+  "policy": "타이포 카탈로그·팔레트 인덱스·한글 조판 수치의 기계용 정본. references/art-direction.md의 표는 build-art-direction.js가 이 파일에서 생성한다. 팔레트 hex 정본은 tokens/presets/*.json — 여기서는 참조만 한다. 폰트 입수·라이선스 판단은 원 배포처 기준으로만 하며, CI는 외부 URL을 fetch하지 않는다. woff2 실물 입수 전까지 파일 실존 검사는 sha256이 기록된 폰트에만 적용한다.",
+  "hangul": {
+    "wordBreak": "keep-all",
+    "overflowWrap": "break-word",
+    "bodyLineHeight": { "min": 1.6, "max": 1.7, "default": 1.7, "compactDefault": 1.6, "lintFloor": 1.5 },
+    "headingLineHeight": { "min": 1.2, "max": 1.45 },
+    "headingLetterSpacing": { "min": "-0.03em", "max": "0", "appliesFromRem": 2.4 },
+    "headingMaxLines": 2,
+    "weights": { "bodyBase": 400, "bodyEmphasisMax": 700, "headingMax": 700, "maxPerScreen": 4 },
+    "note": "lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2."
+  },
+  "typography": [
+    {
+      "id": "standard-gov",
+      "label": "표준 관청체",
+      "mood": ["중립", "신뢰", "표준"],
+      "heading": { "stack": "var(--font-sans)", "weights": [600, 700], "letterSpacing": "-0.02em", "lineHeight": 1.35 },
+      "body": { "stack": "var(--font-sans)", "weights": [400, 500], "lineHeight": 1.7 },
+      "fonts": [
+        { "family": "Pretendard GOV", "hangul": true, "hosting": "self",
+          "license": { "type": "OFL-1.1", "verifiedAt": "2026-08-03" },
+          "provenance": "github.com/orioncactus/pretendard (공식 woff2·동적 서브셋 제공)",
+          "files": ["assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2", "assets/fonts/standard-gov/PretendardGOV-Medium.subset.woff2", "assets/fonts/standard-gov/PretendardGOV-SemiBold.subset.woff2", "assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2"],
+          "sha256": "입수 대기", "acquiredAt": "입수 대기" }
+      ],
+      "expression": ["utility", "restrained", "expressive"],
+      "profiles": ["general-site", "public-service", "public-institution", "cms-admin", "commerce-reservation"],
+      "cautions": [
+        { "severity": "warn", "text": "단독으로는 무개성 — 크기 대비(본문 1.7rem ↔ h1 4rem)와 여백으로 위계를 만든다." },
+        { "severity": "info", "text": "민간 프로젝트는 일반 Pretendard도 무방. 전 프로필 안전 기본값." }
+      ]
+    },
+    {
+      "id": "product-modern",
+      "label": "프로덕트 산세리프",
+      "mood": ["친근", "현대적", "제품"],
+      "heading": { "stack": "'Wanted Sans', var(--font-sans)", "weights": [600, 700], "letterSpacing": "-0.02em", "lineHeight": 1.3 },
+      "body": { "stack": "var(--font-sans)", "weights": [400, 500], "lineHeight": 1.7 },
+      "fonts": [
+        { "family": "Wanted Sans", "hangul": true, "hosting": "self",
+          "license": { "type": "OFL-1.1", "verifiedAt": "2026-08-03" },
+          "provenance": "github.com/wanteddev/wanted-sans (공식 woff2·웹폰트 가이드)",
+          "files": ["assets/fonts/product-modern/WantedSans-SemiBold.subset.woff2", "assets/fonts/product-modern/WantedSans-Bold.subset.woff2"],
+          "sha256": "입수 대기", "acquiredAt": "입수 대기" }
+      ],
+      "expression": ["expressive"],
+      "profiles": ["general-site", "commerce-reservation"],
+      "cautions": [
+        { "severity": "error", "text": "본문까지 Wanted Sans로 바꾸지 않는다 — 본문 축은 --font-sans 고정이 카탈로그 전제." }
+      ]
+    },
+    {
+      "id": "formal-serif",
+      "label": "격식 명조",
+      "mood": ["격식", "기록", "전통"],
+      "heading": { "stack": "'Noto Serif KR', var(--font-sans)", "weights": [600], "letterSpacing": "-0.01em", "lineHeight": 1.4 },
+      "body": { "stack": "var(--font-sans)", "weights": [400, 500], "lineHeight": 1.7 },
+      "fonts": [
+        { "family": "Noto Serif KR", "hangul": true, "hosting": "self",
+          "license": { "type": "OFL-1.1", "verifiedAt": "2026-08-03" },
+          "provenance": "fonts.google.com/noto (Google 공식)",
+          "files": ["assets/fonts/formal-serif/NotoSerifKR-SemiBold.subset.woff2"],
+          "sha256": "입수 대기", "acquiredAt": "입수 대기" }
+      ],
+      "expression": ["restrained", "expressive"],
+      "profiles": ["public-institution", "general-site"],
+      "cautions": [
+        { "severity": "error", "text": "2rem 미만 크기 사용 금지 — 명조 가는 획이 뭉개진다." },
+        { "severity": "warn", "text": "CJK 명조는 용량이 크다 — 서브셋 필수, heading 전용 weight 1종(600)만 로드." }
+      ]
+    },
+    {
+      "id": "retro-display",
+      "label": "레트로 디스플레이",
+      "mood": ["레트로", "문화", "독립"],
+      "heading": { "stack": "'Hahmlet', var(--font-sans)", "weights": [500, 600], "letterSpacing": "0", "lineHeight": 1.3 },
+      "body": { "stack": "var(--font-sans)", "weights": [400, 500], "lineHeight": 1.7 },
+      "fonts": [
+        { "family": "Hahmlet", "hangul": true, "hosting": "self",
+          "license": { "type": "OFL-1.1", "verifiedAt": "2026-08-03" },
+          "provenance": "github.com/hyper-type/hahmlet + fonts.google.com (가변 폰트)",
+          "files": ["assets/fonts/retro-display/Hahmlet-Variable.subset.woff2"],
+          "sha256": "입수 대기", "acquiredAt": "입수 대기" }
+      ],
+      "expression": ["expressive"],
+      "profiles": ["general-site"],
+      "cautions": [
+        { "severity": "error", "text": "hero·배너·섹션 타이틀 전용 — 본문·폼·표 사용 금지." },
+        { "severity": "warn", "text": "글리프 커버리지 검수 — 프로젝트 실제 카피(기관명·고유명사)로 누락 음절을 확인한 뒤 채택한다." }
+      ]
+    },
+    {
+      "id": "technical-global",
+      "label": "테크니컬 고딕",
+      "mood": ["테크", "국제", "데이터"],
+      "heading": { "stack": "'IBM Plex Sans KR', var(--font-sans)", "weights": [600], "letterSpacing": "-0.01em", "lineHeight": 1.3 },
+      "body": { "stack": "var(--font-sans)", "weights": [400, 500], "lineHeight": 1.7 },
+      "fonts": [
+        { "family": "IBM Plex Sans KR", "hangul": true, "hosting": "self",
+          "license": { "type": "OFL-1.1", "verifiedAt": "2026-08-03" },
+          "provenance": "github.com/IBM/plex (npm 공식 woff2 배포)",
+          "files": ["assets/fonts/technical-global/IBMPlexSansKR-SemiBold.subset.woff2"],
+          "sha256": "입수 대기", "acquiredAt": "입수 대기" }
+      ],
+      "expression": ["utility", "restrained", "expressive"],
+      "profiles": ["cms-admin", "general-site"],
+      "cautions": [
+        { "severity": "warn", "text": "한글 글리프가 완성형 중심 — 실제 카피로 누락 음절 검수." },
+        { "severity": "info", "text": "foundation의 --font-mono(Plex Mono 계열)와 가족 정합 — 데이터 화면에서 강점. admin에서는 standard-gov 단일 서체도 유효한 대안." }
+      ]
+    }
+  ],
+  "palettes": [
+    { "id": "trust-blue", "label": "공공 신뢰 블루", "mood": "관공서·금융 신뢰, 현행 기본 승계", "file": "tokens/presets/trust-blue.json", "expression": ["utility", "restrained", "expressive"], "profiles": ["public-service", "public-institution", "cms-admin"] },
+    { "id": "coast-teal", "label": "관광 청록", "mood": "바다·환경·청량", "file": "tokens/presets/coast-teal.json", "expression": ["restrained", "expressive"], "profiles": ["general-site", "public-service"] },
+    { "id": "market-terracotta", "label": "커머스 웜 테라코타", "mood": "온기·식욕·프로모션", "file": "tokens/presets/market-terracotta.json", "expression": ["expressive"], "profiles": ["commerce-reservation", "general-site"] }
+  ],
+  "profiles": {
+    "general-site": { "typography": ["standard-gov", "product-modern", "formal-serif", "retro-display"], "palettes": ["coast-teal", "market-terracotta"], "rhythm": "풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용", "copyTone": "합쇼체 기본. 명사형 버튼 레이블. 직역체·2인칭 '당신' 금지" },
+    "public-service": { "typography": ["standard-gov"], "palettes": ["trust-blue", "coast-teal"], "rhythm": "과업 진입(search) 우선. 장식 hero는 화면 1/2 이하", "copyTone": "합쇼체 고정. 느낌표 금지. KRDS 용어 우선" },
+    "public-institution": { "typography": ["standard-gov", "formal-serif"], "palettes": ["trust-blue"], "rhythm": "기관 정체성+공지 결합형 인트로. 슬라이더는 정지 컨트롤 필수", "copyTone": "합쇼체 고정. 성과 홍보 어조 금지 — 사실 서술" },
+    "cms-admin": { "typography": ["standard-gov", "technical-global"], "palettes": ["trust-blue"], "rhythm": "hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터", "copyTone": "명사형·개조식. 문장 최소화" },
+    "commerce-reservation": { "typography": ["standard-gov", "product-modern"], "palettes": ["market-terracotta", "trust-blue"], "rhythm": "상품·프로모션 중심, 전환 CTA 1개 원칙. 결제 플로우는 utility 강등", "copyTone": "합쇼체 기본. 근거 없는 최상급 금지. 가격·기간 사실 정보 우선" }
+  }
+}

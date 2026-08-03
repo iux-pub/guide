@@ -557,7 +557,9 @@ function readSorted(dir) {
 }
 
 function buildDesignRules() {
-  const files = readSorted(DESIGN_DIR).filter(f => f.file !== 'design-audit.md')
+  // design-audit.md는 전용 산출물(buildDesignAudit)이 있고,
+  // art-direction.md는 references/ 원본을 읽는 njk 래퍼라 본문이 없다 — 둘 다 제외
+  const files = readSorted(DESIGN_DIR).filter(f => f.file !== 'design-audit.md' && f.file !== 'art-direction.md')
 
   const sections = files.map(f => {
     const cleaned = cleanMarkdown(f.content)

@@ -75,6 +75,24 @@ button:focus { outline: 0; }
 
 **`div/span 클릭 핸들러 패턴` 절대 금지.** 클릭 가능한 요소는 button 또는 a.
 
+### 새 창 링크 (KWCAG)
+
+`target="_blank"`는 사용자가 예측하지 못한 맥락 전환이다 — **열기 전에 예고한다.**
+
+```html
+<!-- 텍스트에 고지 -->
+<a href="..." target="_blank" rel="noopener">이용약관 <span class="sr-only">(새 창 열림)</span></a>
+
+<!-- 아이콘으로 고지할 때 — 아이콘은 장식, 고지는 텍스트가 담당 -->
+<a href="..." target="_blank" rel="noopener" aria-label="이용약관 (새 창 열림)">
+  이용약관 <i class="icon-external" aria-hidden="true"></i>
+</a>
+```
+
+- `target="_blank"`에는 `rel="noopener"` 필수
+- 고지는 시각(아이콘·문구)과 스크린리더(`sr-only`·`aria-label`) 양쪽에 전달한다
+- 예고 없는 새 창은 KWCAG 심사에서 걸린다 — 꼭 필요한 곳에만 쓰고, 기본은 같은 창 이동
+
 ---
 
 ## 5. 폼 접근성
@@ -194,6 +212,7 @@ button:focus { outline: 0; }
 - `prefers-reduced-motion: reduce` 미디어 쿼리로 **자동 비활성화** — 불필요한 transition·animation은 모션 감소 시 제거
 - **자동 재생 슬라이드/캐러셀 금지** (사용자가 명시 활성화 안 했으면 OFF) — WCAG 2.2.2
 - 자동 재생 시 **일시정지 버튼 필수**
+- **초당 3회를 넘는 번쩍임 금지** — WCAG 2.3.1 / KWCAG 광과민성 발작 예방. 점멸 배너·경고 강조·로딩 효과 전부 해당하며, 예외 없이 금지다
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -239,5 +258,7 @@ KRDS는 **light + high-contrast** 두 모드 시스템 차원에서 지원.
 - [ ] Skip link 제공?
 - [ ] 다크/고대비 토글 시 깨지지 않음 (raw 색 0건이면 자동)?
 - [ ] `prefers-reduced-motion` 대응?
+- [ ] `target="_blank"` 링크에 새 창 예고 + `rel="noopener"`?
+- [ ] 초당 3회 넘는 번쩍임 0건?
 
-위 12개 중 하나라도 No → 작업 미완으로 간주.
+위 14개 중 하나라도 No → 작업 미완으로 간주.

@@ -34,7 +34,7 @@ order: 1
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-11 | 포커스 스타일 필수 — :focus { outline: none } 금지 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-12 | 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상 | error | [접근성 규칙](/conventions/a11y-rules/) |
-| R-13 | 터치/클릭 영역 최소 44×44px | error | [접근성 규칙](/conventions/a11y-rules/) |
+| R-13 | 터치 영역 최소 44×44px — 터치 입력 기기 기준 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | [접근성 규칙](/conventions/a11y-rules/) |

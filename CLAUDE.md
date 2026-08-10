@@ -62,7 +62,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
 - R-12 `error` — 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상
-- R-13 `error` — 터치/클릭 영역 최소 44×44px
+- R-13 `error` — 터치 영역 최소 44×44px — 터치 입력 기기 기준
 - R-14 `error` — 건너뛰기 링크 필수 — .skip-to-content
 - R-16 `error` — 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다
 - R-21 `error` — html lang 속성 필수 — 문서 기본 언어 명시

@@ -13,7 +13,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 |----|------|--------|------|
 | R-11 | 포커스 스타일 필수 — :focus { outline: none } 금지 | error | check-violations.js |
 | R-12 | 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상 | error | pa11y-ci |
-| R-13 | 터치/클릭 영역 최소 44×44px | error | manual |
+| R-13 | 터치 영역 최소 44×44px — 터치 입력 기기 기준 | error | manual |
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | check-violations.js |
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | check-html-structure.js |
@@ -65,11 +65,11 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 
 ---
 
-## R-13 — 터치/클릭 영역 최소 44×44px
+## R-13 — 터치 영역 최소 44×44px — 터치 입력 기기 기준
 
 **심각도:** 🔴 error &nbsp; **검증:** manual
 
-> 손가락으로 정확히 터치하기 어려운 작은 버튼은 오작동을 유발한다. 시각적 크기는 작더라도 padding으로 터치 영역을 확보한다. WCAG 2.5.5 Target Size (AAA) / iOS·Android HIG 권장. KRDS 모바일 권장 사이즈는 medium(48px) 이상이다.
+> 손가락으로 정확히 터치하기 어려운 작은 버튼은 오작동을 유발한다. 시각적 크기는 작더라도 padding으로 터치 영역을 확보한다. 적용 범위는 터치 입력(모바일·태블릿)이며, 마우스처럼 정밀한 포인터를 쓰는 데스크탑 dense UI에는 강제하지 않는다 — btn xsmall(32px)·small(40px)이 데스크탑에서 허용되는 근거다. 근거: Apple HIG 44pt / Android 48dp, WCAG 2.5.5 Target Size (AAA). AA 의무선은 WCAG 2.2의 2.5.8 Target Size (Minimum) 24×24이고 간격 대체가 허용되므로, 44px은 팀이 터치 환경에 한정해 상향한 기준이다. KRDS 모바일 권장 사이즈는 medium(48px) 이상이다.
 
 **❌ 금지**
 
@@ -116,7 +116,7 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 
 **심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
 
-> modal/tab/accordion/tooltip/disclosure/carousel/calendar 등 위젯 컴포넌트는 스크린리더가 의미를 파악할 수 있도록 ARIA로 상태·관계·역할을 명시해야 한다. 네이티브 시맨틱만으로 부족한 영역이며, KRDS와 WAI-ARIA 1.2 APG가 정의한 패턴을 따른다. KWCAG 1.3.1 / 4.1.2.
+> modal/tab/accordion/tooltip/disclosure/carousel/calendar 등 위젯 컴포넌트는 스크린리더가 의미를 파악할 수 있도록 ARIA로 상태·관계·역할을 명시해야 한다. 네이티브 시맨틱만으로 부족한 영역이며, KRDS와 WAI-ARIA 1.2 APG가 정의한 패턴을 따른다. WCAG 1.3.1 Info and Relationships (A) / 4.1.2 Name, Role, Value (A) — KWCAG 대응 항목은 5.3.2 콘텐츠의 선형구조 / 8.2.1 웹 애플리케이션 접근성 준수다.
 
 **❌ 금지**
 

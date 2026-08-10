@@ -24,9 +24,11 @@ function fromLinear(value) {
   return c * 255
 }
 
-/** '#rrggbb' / '#rgb' → {r,g,b} 0~255. 그 외는 null. */
+/** '#rrggbb' / '#rgb' → {r,g,b} 0~255. 16진수가 아니면 null. */
 function parseHexColor(hex) {
   const body = String(hex).trim().replace(/^#/, '')
+  if (!/^[0-9a-fA-F]+$/.test(body)) return null
+
   if (body.length === 3) {
     const expand = c => parseInt(c + c, 16)
     return { r: expand(body[0]), g: expand(body[1]), b: expand(body[2]) }

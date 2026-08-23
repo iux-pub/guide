@@ -29,6 +29,32 @@ npm run studio
 
 > **찾기·내보내기는 로그인 없이도 됩니다.** 로그인은 「만들기」에서만 씁니다.
 
+### 서버에서 죽지 않게 띄우기
+
+ssh로 `nohup`이나 `setsid`를 써서 띄우면 **세션이 끊길 때 함께 죽는다.** 일꾼은 claude를
+자식으로 띄우기 때문에 특히 그렇다(2026-08-23 실측: 서버는 버티는데 일꾼은 매번 죽었다).
+
+부팅 스크립트로 등록해 init이 띄우게 한다. Synology 기준:
+
+```bash
+# 1) 시작·정지 스크립트는 홈에 둔다 (이미 저장소에 있다)
+cp -r studio/../services/icon-studio ~/services/   # start.sh · stop.sh
+
+# 2) rc.d에 등록 — root 권한이 필요하다
+sudo tee /usr/local/etc/rc.d/S99icon-studio.sh > /dev/null <<'RC'
+#!/bin/sh
+case "$1" in
+  start)   su -s /bin/sh <계정> -c "$HOME/services/icon-studio/start.sh" ;;
+  stop)    su -s /bin/sh <계정> -c "$HOME/services/icon-studio/stop.sh" ;;
+  restart) su -s /bin/sh <계정> -c "$HOME/services/icon-studio/stop.sh; $HOME/services/icon-studio/start.sh" ;;
+esac
+RC
+sudo chmod +x /usr/local/etc/rc.d/S99icon-studio.sh
+sudo /usr/local/etc/rc.d/S99icon-studio.sh start
+```
+
+맥에서는 launchd를 쓴다 — `bash studio/install-service.sh` 한 줄이면 된다.
+
 ### 팀이 함께 쓰는 서버에 올릴 때
 
 가이드 문서 사이트와 **같은 주소 체계**로 붙인다 — `https://footer.kr/guide/_icons/`.

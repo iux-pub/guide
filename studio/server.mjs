@@ -23,6 +23,7 @@ const ROOT = path.join(HERE, '..')
 const PUBLIC = path.join(HERE, 'public')
 const QUEUE = path.join(HERE, 'queue')
 const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
+const OUT_ICONS = path.join(ROOT, 'assets/icons')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
@@ -216,6 +217,70 @@ const routes = {
     } catch (err) {
       json(res, 400, { error: err.message })
     }
+  },
+
+  // 내보내기 묶음 — 프로젝트에 그대로 복사할 파일들을 한 번에 만든다.
+  // 브라우저에서 스프라이트만 조립하면 CSS·낱개·고지가 빠져 half-done이 된다.
+  'POST /api/bundle': async (req, res) => {
+    const body = await readBody(req)
+    const names = Array.isArray(body.names) ? body.names.filter((n) => /^[a-z][a-z0-9-]*$/.test(n)) : []
+    if (names.length === 0) return json(res, 400, { error: '아이콘을 하나 이상 고르세요' })
+
+    const ledger = readJson(LEDGER, { icons: {} })
+    const contract = readJson(CONTRACT, {})
+    const canvas = contract.canvas?.width ?? 24
+    const rule = contract.output?.fillRule
+
+    const files = {}
+    const symbols = []
+    let missing = 0
+
+    for (const name of names) {
+      const p = path.join(SVG_DIR, `${name}.svg`)
+      if (!fs.existsSync(p) || !ledger.icons[name]) { missing += 1; continue }
+      const svg = fs.readFileSync(p, 'utf8')
+      files[`svg/${name}.svg`] = svg
+      const paths = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`).join('')
+      symbols.push(`<symbol id="${name}" viewBox="0 0 ${canvas} ${canvas}"${rule ? ` fill-rule="${rule}"` : ''}>${paths}</symbol>`)
+    }
+
+    files['sprite.svg'] =
+      `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">\n` +
+      symbols.join('\n') + '\n</svg>\n'
+
+    // 이 묶음에 실제로 든 아이콘만 담은 CSS. 원본 icons.css를 통째로 주면
+    // 없는 아이콘의 클래스까지 따라가 쓰는 사람이 헷갈린다.
+    const guideCss = path.join(OUT_ICONS, 'icons.css')
+    if (fs.existsSync(guideCss)) {
+      const full = fs.readFileSync(guideCss, 'utf8')
+      const head = full.split('@layer components {')[0]
+      const fontFace = (full.match(/@font-face \{[\s\S]*?\n {2}\}/) || [''])[0]
+      const iconFont = (full.match(/\.icon-font \{[\s\S]*?\n {2}\}/) || [''])[0]
+      const rows = names
+        .filter((n) => ledger.icons[n])
+        .map((n) => `  .icon-font--${n}::before { content: "${ledger.icons[n].codepoint.replace('U+', '\\')}"; }`)
+      files['icons.css'] = `${head}@layer components {\n${fontFace}\n\n${iconFont}\n\n${rows.join('\n')}\n}\n`
+    }
+
+    const notice = path.join(OUT_ICONS, 'LICENSE-NOTICE.txt')
+    if (fs.existsSync(notice)) files['LICENSE-NOTICE.txt'] = fs.readFileSync(notice, 'utf8')
+
+    files['README.txt'] =
+      `infoUX 아이콘 묶음 — ${Object.keys(files).filter((f) => f.startsWith('svg/')).length}종\n` +
+      `${new Date().toISOString().slice(0, 10)} 생성\n\n` +
+      `프로젝트의 assets/icons/ 에 이 폴더 내용을 그대로 넣는다.\n\n` +
+      `쓰는 법\n` +
+      `  <svg class="icon" aria-hidden="true">\n` +
+      `    <use href="/assets/icons/sprite.svg#${names[0]}"></use>\n` +
+      `  </svg>\n\n` +
+      `옆에 텍스트가 없어 아이콘이 뜻을 담을 때는 aria-hidden 대신\n` +
+      `role="img" aria-label="설명" 을 쓴다.\n\n` +
+      `.icon 컴포넌트 CSS는 프로젝트의 6-components/icon.css에 이미 있다.\n` +
+      `icons.css는 SVG를 못 받는 환경을 위한 폰트 여벌이며, 쓸 때는\n` +
+      `infoux-icons.woff2 를 저장소 assets/icons/ 에서 함께 가져온다.\n\n` +
+      `아이콘 목록·추가 요청은 아이콘 스튜디오에서 한다.\n`
+
+    json(res, 200, { files, count: names.length - missing, missing })
   },
 
   'POST /api/discard': async (req, res) => {

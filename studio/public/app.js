@@ -114,7 +114,7 @@ async function openSheet(name) {
   if (!icon) return
   const svg = await loadSvg(name)
 
-  $('#sheet-preview').innerHTML = [32, 24, 20, 16].map((px) => sized(svg, px)).join('')
+  $('#sheet-preview').innerHTML = [48, 24, 20, 16].map((px) => sized(svg, px)).join('')
   $('#sheet-name').textContent = name
   $('#sheet-meta').textContent =
     `${icon.categoryLabel} · ${icon.own ? '우리가 만든 것' : '구글 아이콘'} · ${icon.codepoint}`
@@ -145,16 +145,18 @@ function candCard(job, cand) {
     .map((n) => `<p class="note note--${n.level}">${esc(n.text)}</p>`)
     .join('')
   const blocked = cand.review.ok === false
-  const suggested = job.text.trim().split(/\s+/)[0].replace(/[^a-z0-9-]/gi, '').toLowerCase()
+  // 모델이 지어 온 이름을 기본값으로 쓴다. 요청이 한글이면 화면에서
+  // 이름을 뽑아낼 방법이 없어 예전에는 늘 빈칸이었다.
+  const suggested = cand.suggested || ''
 
   return `<div class="cand" data-job="${esc(job.id)}" data-idx="${cand.index}">
     <div class="cand__art">
-      ${sized(cand.svg, 34)}${sized(cand.svg, 20)}${sized(cand.svg, 16)}
+      ${sized(cand.svg, 48)}${sized(cand.svg, 24)}${sized(cand.svg, 16)}
     </div>
     ${notes}
     ${blocked ? '' : `<div class="namefield">
-      <label for="nm-${esc(job.id)}-${cand.index}">이름 (영문, 의미로)</label>
-      <input id="nm-${esc(job.id)}-${cand.index}" class="cand__name" value="${esc(suggested)}" placeholder="예: e-ticket">
+      <label for="nm-${esc(job.id)}-${cand.index}">이름 — 영문, 뜻을 담아</label>
+      <input id="nm-${esc(job.id)}-${cand.index}" class="cand__name" value="${esc(suggested)}" placeholder="예: e-ticket" autocomplete="off" spellcheck="false">
     </div>`}
     <div class="cand__foot">
       ${blocked
@@ -230,32 +232,56 @@ function renderTree() {
   $('#tree').textContent =
     `assets/icons/\n` +
     `├─ sprite.svg          ${n}개\n` +
-    `├─ icons.css\n` +
+    `├─ icons.css           폰트 여벌\n` +
     `├─ svg/                낱개 ${n}개\n` +
-    `└─ LICENSE-NOTICE.txt`
+    `├─ LICENSE-NOTICE.txt  재배포 조건\n` +
+    `└─ README.txt          쓰는 법`
 }
 
-/** 고른 아이콘만 담은 스프라이트를 브라우저에서 직접 만든다. 서버 왕복이 필요 없다. */
+/**
+ * 묶음 내려받기.
+ *
+ * 서버가 파일 목록을 만들어 주고 브라우저는 저장만 한다. 예전에는 브라우저에서
+ * 스프라이트만 조립했는데, 그러면 CSS·낱개·라이선스 고지가 빠져 프로젝트에
+ * 넣어도 반쪽이었다.
+ *
+ * zip 라이브러리를 쓰지 않는다 — 사내 도구에 의존성을 늘리지 않으려고
+ * 파일을 하나씩 저장한다. 브라우저가 「여러 파일 다운로드」를 물어보면 허용한다.
+ */
 async function doExport() {
-  const names = [...state.picked]
-  const symbols = []
-  for (const name of names) {
-    const svg = await loadSvg(name)
-    const paths = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`).join('')
-    symbols.push(`<symbol id="${name}" viewBox="0 0 24 24">${paths}</symbol>`)
-  }
-  const sprite =
-    `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">\n` +
-    symbols.join('\n') + '\n</svg>\n'
+  const btn = $('#do-export')
+  const note = $('#export-status')
+  btn.disabled = true
+  note.textContent = '묶음을 만드는 중입니다…'
 
-  const blob = new Blob([sprite], { type: 'image/svg+xml' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = 'sprite.svg'
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(a.href)
+  try {
+    const { files, count, missing } = await api('/api/bundle', {
+      method: 'POST',
+      body: JSON.stringify({ names: [...state.picked] })
+    })
+
+    const entries = Object.entries(files)
+    for (const [name, content] of entries) {
+      const blob = new Blob([content], { type: name.endsWith('.svg') ? 'image/svg+xml' : 'text/plain' })
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      // 폴더 구조를 파일명에 담는다 — 브라우저가 경로를 만들어 주지 않는다
+      a.download = name.replace(/\//g, '_')
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(a.href)
+      await new Promise((r) => setTimeout(r, 120)) // 연속 저장을 브라우저가 막지 않게
+    }
+
+    note.textContent = `${count}종 · 파일 ${entries.length}개를 내려받았습니다.` +
+      (missing ? ` (${missing}개는 파일이 없어 빠졌습니다)` : '') +
+      ' svg_로 시작하는 파일은 svg/ 폴더에 넣으세요.'
+  } catch (e) {
+    note.textContent = `내려받지 못했습니다 — ${e.message}`
+  } finally {
+    btn.disabled = state.picked.size === 0
+  }
 }
 
 // ── 시작 ──────────────────────────────────────────────
@@ -379,6 +405,13 @@ async function approve(card) {
   const idx = Number(card.dataset.idx)
   const nameInput = card.querySelector('.cand__name')
   const name = (nameInput?.value || '').trim()
+  if (!name) {
+    nameInput?.focus()
+    const err = $('#ask-error')
+    err.textContent = '이름을 먼저 정해 주세요. 영문 소문자와 붙임표만 씁니다 (예: e-ticket).'
+    err.hidden = false
+    return
+  }
 
   const { requests } = await api('/api/requests')
   const job = requests.find((r) => r.id === jobId)

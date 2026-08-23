@@ -72,14 +72,14 @@ h2 {
   color: var(--mut); font-weight: 600; margin: 36px 0 12px;
 }
 .grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1px; background: var(--line); border: 1px solid var(--line);
 }
 .cell {
   background: var(--bg); padding: 15px 8px 12px;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
 }
-.row { display: flex; align-items: flex-end; gap: 11px; height: 30px; }
+.row { display: flex; align-items: flex-end; gap: 11px; height: 50px; }
 .row svg { color: var(--fg); display: block; }
 .frame { outline: 1px dashed color-mix(in srgb, var(--key) 42%, transparent); }
 .name {
@@ -103,7 +103,7 @@ let html = `<!doctype html>
 </head>
 <body>
 <h1>infoUX 아이콘 ${total}종</h1>
-<p class="lead">왼쪽부터 24 · 20 · 16px. 점선은 24 캔버스 경계다. 실제 화면에서는 대부분 20 이하로 쓰이므로 작은 쪽을 먼저 본다.</p>
+<p class="lead">왼쪽부터 48 · 24 · 20 · 16px. 큰 것은 형태를, 작은 것은 뭉개짐을 본다 — 작은 크기만 보면 테두리와 내부 요소가 뭉쳐 「꽉 찬 덩어리」로 잘못 읽힌다. 점선은 24 캔버스 경계다.</p>
 <p class="lead">볼 것 — 획 굵기가 다른 것들과 같은가, 여백이 고른가, 16px에서 뭉개지지 않는가.</p>
 `
 
@@ -114,7 +114,7 @@ for (const g of groups) {
     const meta = ledger.icons[name]
     html += '<div class="cell">'
     if (svg) {
-      html += `<div class="row"><span class="frame">${sized(svg, 24)}</span>${sized(svg, 20)}${sized(svg, 16)}</div>`
+      html += `<div class="row">${sized(svg, 48)}<span class="frame">${sized(svg, 24)}</span>${sized(svg, 20)}${sized(svg, 16)}</div>`
     } else {
       html += '<div class="row"><span class="miss">파일 없음</span></div>'
     }

@@ -71,8 +71,9 @@
         <h2 class="export__title">프로젝트에 넣을 것</h2>
         <p class="export__desc">아래 파일을 프로젝트의 <code>assets/icons/</code>에 그대로 복사합니다. 외부에서 불러오는 것이 없어 폐쇄망에서도 뜹니다.</p>
         <pre class="tree" id="tree"></pre>
-        <button class="btn" id="do-export">묶음 내려받기</button>
-        <p class="export__note">스프라이트와 CSS만 내려받습니다. 폰트가 필요하면 저장소의 <code>assets/icons/infoux-icons.woff2</code>를 함께 넣으세요.</p>
+        <button class="btn" id="do-export" disabled>묶음 내려받기</button>
+        <p class="export__note" id="export-status" role="status" aria-live="polite"></p>
+        <p class="export__note">폰트가 필요하면 저장소의 <code>assets/icons/infoux-icons.woff2</code>를 함께 넣으세요. 기본 경로는 스프라이트입니다.</p>
       </div>
     </div>
   </section>

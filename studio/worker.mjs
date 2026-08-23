@@ -182,8 +182,16 @@ ${examples().map((e) => `  ${e}`).join('\n')}
 ${seedNames.join(', ')}
 
 ## 출력 형식
-SVG 코드만 출력한다. 설명·주석·코드펜스를 붙이지 않는다.
-반드시 <svg 로 시작해 </svg> 로 끝난다.`
+아래 두 줄만 출력한다. 설명·주석·코드펜스를 붙이지 않는다.
+
+  name: <영문 이름>
+  <svg …></svg>
+
+이름은 kebab-case로 **뜻을 담아** 짓는다 — 색·크기 같은 겉모습 단어를 넣지 않는다.
+요청이 한글이어도 이름은 영문이다. 이미 있는 이름과 겹치지 않게 한다.
+
+  좋음: e-ticket, duty-free-limit, tour-course
+  나쁨: ticket-blue(색), big-icon(크기), icon-ticket(icon 중복)`
 }
 
 /**
@@ -224,6 +232,11 @@ function normalize(raw) {
   if (!m) throw new Error('SVG를 찾지 못했습니다')
   let svg = m[0]
 
+  // 모델이 제안한 이름. 규칙에 안 맞으면 버리고 사람이 짓게 둔다 —
+  // 요청이 한글이면 화면에서 이름을 뽑아낼 방법이 없다.
+  const nameLine = raw.match(/^\s*name\s*:\s*([a-z][a-z0-9-]*)\s*$/im)
+  const suggested = nameLine ? nameLine[1] : null
+
   const vb = svg.match(/viewBox="([^"]+)"/)
   if (!vb) throw new Error('viewBox가 없습니다')
   const [vx, vy, vw, vh] = vb[1].trim().split(/\s+/).map(Number)
@@ -242,7 +255,7 @@ function normalize(raw) {
   // fill-rule은 규격이 정한다 — 모델이 빠뜨려도 여기서 붙는다
   const rule = contract.output.fillRule ? ` fill-rule="${contract.output.fillRule}"` : ''
   svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS} ${CANVAS}" width="${CANVAS}" height="${CANVAS}" fill="currentColor"${rule}>${body}</svg>\n`
-  return { svg, ds }
+  return { svg, ds, suggested }
 }
 
 /** 사람이 보고 판단할 수 있는 말로만 적는다. viewBox·stroke 같은 용어를 쓰지 않는다. */
@@ -325,20 +338,20 @@ async function handle(id, request) {
         const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes))
         const second = normalize(raw2)
         const verdict2 = review(second.svg, second.ds, raw2)
-        if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true }
+        if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
         // 둘 다 어긋났으면 덜 나쁜 쪽을 준다
         const score = (v) => v.notes.filter((n) => n.level === 'bad').length * 10 +
                              v.notes.filter((n) => n.level === 'warn').length
         const worse2 = score(verdict2)
         const worse1 = score(verdict)
         return worse2 <= worse1
-          ? { ok: true, svg: second.svg, review: verdict2, retried: true }
-          : { ok: true, svg: first.svg, review: verdict, retried: true }
+          ? { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
+          : { ok: true, svg: first.svg, review: verdict, retried: true, suggested: first.suggested }
       } catch {
-        return { ok: true, svg: first.svg, review: verdict, retried: true }
+        return { ok: true, svg: first.svg, review: verdict, retried: true, suggested: first.suggested }
       }
     }
-    return { ok: true, svg: first.svg, review: verdict, retried: false }
+    return { ok: true, svg: first.svg, review: verdict, retried: false, suggested: first.suggested }
   }
 
   const jobs = Array.from({ length: request.count }, (_, i) =>
@@ -348,7 +361,7 @@ async function handle(id, request) {
   const settled = await Promise.all(jobs)
   const candidates = settled
     .filter((c) => c.ok)
-    .map((c, i) => ({ index: i, svg: c.svg, review: c.review, retried: c.retried }))
+    .map((c, i) => ({ index: i, svg: c.svg, review: c.review, retried: c.retried, suggested: c.suggested }))
   const failures = settled.filter((c) => !c.ok).map((c) => c.error)
 
   // 인증 실패는 개별 후보 문제가 아니라 워커가 못 도는 상태다 — 요청을 소진하지 않는다

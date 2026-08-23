@@ -29,6 +29,23 @@ npm run studio
 
 > **찾기·내보내기는 로그인 없이도 됩니다.** 로그인은 「만들기」에서만 씁니다.
 
+### 팀이 함께 쓰는 서버에 올릴 때
+
+가이드 문서 사이트와 **같은 주소 체계**로 붙인다 — `https://footer.kr/guide/_icons/`.
+스튜디오만 포트를 따로 쓰면 팀원이 두 가지를 외워야 한다.
+
+```bash
+# 1) 스튜디오를 127.0.0.1:4710으로 띄운다
+PORT=4710 npm run studio:server
+
+# 2) nginx가 /guide/_icons/ 를 그리로 넘긴다
+sudo cp studio/nginx-icon-studio.conf /etc/nginx/conf.d/www.icon-studio.conf
+sudo nginx -t && sudo synosystemctl restart nginx
+```
+
+설정 파일에 놓을 자리와 이유가 적혀 있다. Synology에서는 `conf.d/www.*.conf`가
+443 블록에 include된다 — `alias.*.conf`는 DSM 관리 페이지(5000) 쪽이라 쓰면 안 된다.
+
 ### 상시로 켜 두고 싶다면
 
 자기 맥에서 늘 떠 있게 하려면 launchd에 등록합니다. 터미널을 켜 둘 필요가 없어집니다.

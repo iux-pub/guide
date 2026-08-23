@@ -20,8 +20,17 @@ const state = {
 
 // ── 공통 ──────────────────────────────────────────────
 
+/**
+ * API 주소는 **상대경로**로 만든다.
+ * `/api/...`처럼 절대경로를 쓰면 nginx가 하위 경로(예: /guide/_icons/)로 프록시할 때
+ * 브라우저가 문서 루트를 때려 404가 난다. 상대경로면 현재 위치를 기준으로 붙는다.
+ */
+function apiUrl(p) {
+  return String(p).replace(/^\//, '')
+}
+
 async function api(path, options) {
-  const res = await fetch(path, {
+  const res = await fetch(apiUrl(path), {
     headers: { 'content-type': 'application/json' },
     ...options
   })
@@ -33,7 +42,7 @@ async function api(path, options) {
 /** 아이콘 SVG를 가져와 캐시한다. 같은 아이콘을 여러 크기로 여러 번 그린다. */
 async function loadSvg(name) {
   if (state.svgCache.has(name)) return state.svgCache.get(name)
-  const res = await fetch(`/icons/${encodeURIComponent(name)}.svg`)
+  const res = await fetch(`icons/${encodeURIComponent(name)}.svg`)
   const text = res.ok ? await res.text() : ''
   state.svgCache.set(name, text)
   return text

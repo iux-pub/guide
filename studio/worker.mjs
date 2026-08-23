@@ -358,10 +358,27 @@ function variantExamples(variantId) {
 
 function variantPrompt(name, baseSvg, combo, target) {
   const baseD = [...baseSvg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
+  // 「가늘게 그려라」만으로는 안 통한다 — 2026-08-23 실측: star의 slim이 면적 1.06배로
+  // 거의 그대로 나왔다(재시도해도 마찬가지). 아웃라인 아이콘은 바깥 선과 안쪽 선 두 겹이고
+  // 굵기는 그 사이 간격이다. **어느 선을 어느 쪽으로 옮기는지**를 말해 줘야 한다.
+  const how = {
+    slim: `바깥 선은 **그 자리에 그대로 두고**, 안쪽 선만 바깥쪽으로 밀어 두 선 사이를 좁힌다.
+사이 간격이 지금의 약 ${(target.areaRatio.median).toFixed(2)}배가 되도록 좁힌다.`,
+    bold: `바깥 선은 **그 자리에 그대로 두고**, 안쪽 선만 안쪽으로 밀어 두 선 사이를 넓힌다.
+사이 간격이 지금의 약 ${(target.areaRatio.median).toFixed(2)}배가 되도록 넓힌다.`,
+    fill: '안쪽 선을 **지운다**. 바깥 선 하나만 남기면 속이 찬 덩어리가 된다.'
+  }[combo.id] || ''
+
   const what = {
-    slim: `획을 **가늘게** 다시 그린다. 목표 굵기 ${target.strokeWeight.median} (기본의 약 ${target.areaRatio.median}배 면적).`,
-    bold: `획을 **굵게** 다시 그린다. 목표 굵기 ${target.strokeWeight.median} (기본의 약 ${target.areaRatio.median}배 면적).`,
-    fill: '속을 **채운다**. 윤곽 안쪽을 메워 덩어리로 만든다. 뜻을 전하는 데 꼭 필요한 구멍(예: 자물쇠 열쇠구멍)만 남긴다.'
+    slim: `획을 **가늘게** 다시 그린다. 목표 굵기 ${target.strokeWeight.median} (기본의 약 ${target.areaRatio.median}배 면적).
+
+${how}`,
+    bold: `획을 **굵게** 다시 그린다. 목표 굵기 ${target.strokeWeight.median} (기본의 약 ${target.areaRatio.median}배 면적).
+
+${how}`,
+    fill: `속을 **채운다**. 윤곽 안쪽을 메워 덩어리로 만든다. 뜻을 전하는 데 꼭 필요한 구멍(예: 자물쇠 열쇠구멍)만 남긴다.
+
+${how}`
   }[combo.id] || `${combo.id} 표정으로 다시 그린다.`
 
   return `아이콘 "${name}"의 **${combo.id} 표정**을 만든다.
@@ -424,10 +441,15 @@ function reviewVariant(baseSvg, svg, ds, combo, target) {
   const lo = target.areaRatio.min * 0.8
   const hi = target.areaRatio.max * 1.25
   if (ratio < lo || ratio > hi) {
-    const dir = combo.id === 'slim' ? '가늘게' : '굵게'
+    // 재시도 프롬프트가 이 문장을 그대로 물고 간다 — 「틀렸다」로 끝내지 않고 방법을 적는다
+    const fix = {
+      slim: '안쪽 선을 바깥쪽으로 더 밀어 두 선 사이를 좁혀야 합니다',
+      bold: '안쪽 선을 안쪽으로 더 밀어 두 선 사이를 넓혀야 합니다',
+      fill: '안쪽 선을 지워 속을 채워야 합니다'
+    }[combo.id] || '굵기를 더 크게 바꿔야 합니다'
     notes.push({
       level: 'bad',
-      text: `기본 대비 ${ratio.toFixed(2)}배입니다 — ${dir} 그려야 하는데 씨앗 범위(${lo.toFixed(2)}~${hi.toFixed(2)})를 벗어납니다`
+      text: `기본 대비 ${ratio.toFixed(2)}배로 거의 그대로입니다 — ${fix} (씨앗 범위 ${lo.toFixed(2)}~${hi.toFixed(2)})`
     })
   }
 

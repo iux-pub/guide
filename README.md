@@ -134,6 +134,37 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 | AI 기준 | `npm run build:mcp` | infoUX MCP 번들 (`mcp/data/`) |
 | 문서 사이트 | `npm run build` | `_site/` (Eleventy + Pagefind) |
 | LLM 컨텍스트 | `npm run build:prompts` | `prompts/*.md` (대화 첨부용) |
+| 아이콘 자산 | `npm run icons:build` | `assets/icons/` (스프라이트·폰트·CSS·낱개) |
+
+---
+
+## 🎯 아이콘
+
+72종을 세트로 관리한다. 구글 Material Symbols를 씨앗으로 삼고, 없는 아이콘은
+스튜디오에서 만들어 사람이 승인한 것만 넣는다.
+
+```html
+<svg class="icon" aria-hidden="true">
+  <use href="/assets/icons/sprite.svg#search"></use>
+</svg>
+```
+
+| 하는 일 | 명령 |
+|---|---|
+| 목록 보기 | `npm run icons:sheet` → `dist/icon-sheet.html` |
+| 스튜디오 (찾기·만들기·내보내기) | `bash studio/install-service.sh` → `http://127.0.0.1:4700` |
+| 씨앗 추가 반입 | `icon-seed-map.json`에 넣고 `npm run icons:import` |
+| 출력 재생성 | `npm run icons:build` (스프라이트·폰트·CSS) |
+| 검사 | `npm run check:icons` (`npm run check`에 포함) |
+
+**카탈로그에 없는 아이콘 이름을 지어내지 않는다** (R-27). AI 도구는 MCP
+`list_icons`·`get_icon`으로 실재하는 이름만 받는다.
+
+규격은 `contracts/icon-contract.json`, 번호 대장은 `contracts/icon-codepoints.json`이
+정본이다. **한 번 부여한 코드포인트는 영구히 고정한다** — 밀리면 이미 납품한
+사이트의 아이콘이 전부 다른 그림으로 바뀐다.
+
+자세한 사용법은 [`studio/README.md`](studio/README.md).
 
 ---
 

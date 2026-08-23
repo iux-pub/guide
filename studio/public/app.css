@@ -631,6 +631,29 @@ code {
 .sheet__meta { margin: 0; font-size: 12px; color: var(--muted); }
 .sheet__label { font-size: 12px; color: var(--muted); }
 
+/* 일꾼이 멈췄을 때 — 요청을 넣기 전에 보이도록 화면 맨 위에 둔다 */
+.workerdown {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--warn, #b45309);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--warn, #b45309) 10%, transparent);
+  color: var(--fg);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.workerdown b { font-weight: 600; }
+
+.workerdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--fg) 10%, transparent);
+}
+
 .export__variants {
   display: flex;
   gap: 6px;

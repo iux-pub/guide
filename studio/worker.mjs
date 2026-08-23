@@ -422,17 +422,43 @@ async function tick() {
   }
 }
 
+/**
+ * 살아 있다는 표시를 남긴다.
+ *
+ * 일꾼이 조용히 멈추는 실패가 실제로 있다 — claude 세션 자격이 만료되면
+ * 자동 갱신이 안 되는 상태로 빠지고, 그때부터 요청이 「기다리는 중」으로
+ * 영원히 남는다. 화면에 아무 신호가 없으면 쓰는 사람은 자기가 뭘 잘못했는지
+ * 몰라 계속 기다린다.
+ *
+ * 파일 하나면 충분하다 — 서버는 이 파일의 시각만 보면 된다.
+ */
+function beat(state) {
+  try {
+    fs.mkdirSync(QUEUE, { recursive: true })
+    fs.writeFileSync(
+      path.join(QUEUE, 'worker-heartbeat.json'),
+      JSON.stringify({ at: new Date().toISOString(), state, pid: process.pid, pollMs: POLL_MS }) + '\n'
+    )
+  } catch {
+    // 심장 박동을 못 남기는 것으로 일을 멈추지는 않는다
+  }
+}
+
 async function main() {
   console.log('아이콘 워커 시작')
   console.log(`  claude: ${CLAUDE}`)
   console.log(`  장기 토큰: ${fs.existsSync(AUTH_ENV) ? '있음' : '없음 (세션 자격으로 시도)'}`)
   console.log(`  ${POLL_MS / 1000}초마다 큐를 봅니다. Ctrl+C로 멈춥니다.\n`)
 
+  beat('시작')
   for (;;) {
     try {
       await tick()
+      beat('도는 중')
     } catch (err) {
       console.error('  회차 실패:', err.message)
+      // 실패해도 박동은 남긴다 — 「죽었다」와 「돌지만 실패한다」는 다른 문제다
+      beat(`회차 실패: ${err.message}`.slice(0, 200))
     }
     await new Promise((r) => setTimeout(r, POLL_MS))
   }

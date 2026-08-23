@@ -99,6 +99,37 @@ function listRequests() {
   return out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
 }
 
+/**
+ * 일꾼이 살아 있나.
+ *
+ * 세션 자격이 만료되면 일꾼은 조용히 멈추고 요청은 「기다리는 중」으로 영원히 남는다.
+ * 화면이 그걸 말해 주지 않으면 쓰는 사람은 자기가 뭘 잘못했는지 몰라 계속 기다린다.
+ *
+ * 판정은 박동 파일의 시각 하나로 한다 — 프로세스를 뒤지면 컨테이너·원격에서 안 맞는다.
+ * 폴링 주기의 6배를 넘으면 멈춘 것으로 본다(4초 주기 → 24초). 한 회차가 오래 걸리는
+ * 일은 없다. 실제 생성은 자식 프로세스가 하고 그동안에도 박동은 남는다.
+ */
+function workerHealth() {
+  const p = path.join(QUEUE, 'worker-heartbeat.json')
+  if (!fs.existsSync(p)) {
+    return { alive: false, reason: '한 번도 뛴 적이 없습니다 — 일꾼이 뜨지 않았습니다' }
+  }
+  const beat = readJson(p, null)
+  if (!beat?.at) return { alive: false, reason: '박동을 읽지 못했습니다' }
+
+  const ageMs = Date.now() - new Date(beat.at).getTime()
+  const limit = (beat.pollMs || 4000) * 6
+  if (ageMs > limit) {
+    return {
+      alive: false,
+      lastBeat: beat.at,
+      ageSec: Math.round(ageMs / 1000),
+      reason: `${Math.round(ageMs / 1000)}초째 박동이 없습니다`
+    }
+  }
+  return { alive: true, lastBeat: beat.at, ageSec: Math.round(ageMs / 1000), state: beat.state }
+}
+
 // ── 아이콘 ────────────────────────────────────────────
 
 function iconCatalog() {
@@ -252,7 +283,8 @@ const routes = {
     })
   },
 
-  'GET /api/requests': (req, res) => json(res, 200, { requests: listRequests() }),
+  'GET /api/requests': (req, res) =>
+    json(res, 200, { requests: listRequests(), worker: workerHealth() }),
 
   'POST /api/requests': async (req, res) => {
     const body = await readBody(req)

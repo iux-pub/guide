@@ -70,6 +70,24 @@ sudo /usr/local/etc/rc.d/S99icon-studio.sh start
 
 맥에서는 launchd를 쓴다 — `bash studio/install-service.sh` 한 줄이면 된다.
 
+### 일꾼이 멈췄는지 보기
+
+일꾼은 큐를 볼 때마다 `studio/queue/worker-heartbeat.json`에 시각을 남긴다.
+서버는 그 시각만 보고 판정해 `/api/requests` 응답에 `worker`로 싣고, 화면은
+만들기 탭 맨 위에 경고를 띄우며 「4개 만들기」를 막는다.
+
+```bash
+curl -s http://127.0.0.1:4710/api/requests | grep -o '"worker":{[^}]*}'
+# {"alive":true,"lastBeat":"…","ageSec":1,"state":"도는 중"}
+```
+
+폴링 주기의 6배(기본 24초)를 넘으면 멈춘 것으로 본다. **왜 이 신호가 필요한가**:
+claude 세션 자격이 만료되면 일꾼은 오류 없이 조용히 멈추고, 요청은 「기다리는 중」으로
+영원히 남는다. 화면이 말해 주지 않으면 쓰는 사람은 자기가 뭘 잘못 적었나 싶어
+계속 기다린다.
+
+되살리는 법은 위의 「서버에서 죽지 않게 띄우기」와 같다.
+
 ### 팀이 함께 쓰는 서버에 올릴 때
 
 가이드 문서 사이트와 **같은 주소 체계**로 붙인다 — `https://footer.kr/guide/_icons/`.

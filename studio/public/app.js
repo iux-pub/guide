@@ -246,10 +246,42 @@ function renderJobs(jobs) {
     .join('')
 }
 
+/**
+ * 일꾼이 멈췄으면 말해 준다.
+ *
+ * 조용히 멈추는 실패가 실제로 있다 — claude 세션 자격이 만료되면 자동 갱신이 안 되는
+ * 상태로 빠지고, 그때부터 요청은 「기다리는 중」으로 영원히 남는다. 아무 말이 없으면
+ * 쓰는 사람은 자기가 뭘 잘못 적었나 싶어 계속 기다린다.
+ *
+ * **요청을 넣기 전에** 보여야 하므로 입력칸 위에 둔다. 「4개 만들기」도 막는다 —
+ * 처리되지 않을 요청을 큐에 쌓아 봐야 나중에 지울 일만 생긴다.
+ */
+function renderWorkerHealth(worker) {
+  const box = $('#worker-down')
+  const send = $('#ask-send')
+  if (!box) return
+
+  if (!worker || worker.alive) {
+    box.hidden = true
+    box.innerHTML = ''
+    if (send) send.disabled = false
+    return
+  }
+
+  box.hidden = false
+  box.innerHTML =
+    `<b>만들기가 지금 멈춰 있습니다.</b> ${esc(worker.reason || '일꾼이 응답하지 않습니다')} — ` +
+    '지금 요청을 넣으면 처리되지 않고 쌓이기만 합니다.<br>' +
+    '<b>찾기와 내보내기는 그대로 됩니다.</b> 만들기는 UX팀에 알려 주세요 ' +
+    '(서버에서 <code>~/services/icon-studio/start.sh</code>).'
+  if (send) send.disabled = true
+}
+
 async function refreshJobs() {
   try {
-    const { requests } = await api('/api/requests')
+    const { requests, worker } = await api('/api/requests')
     renderJobs(requests)
+    renderWorkerHealth(worker)
   } catch {
     /* 워커가 없어도 화면은 살아 있어야 한다 */
   }

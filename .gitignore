@@ -7,3 +7,4 @@ reports/
 .sass-cache/
 .claude/worktrees/
 screen_*.png
+studio/queue/

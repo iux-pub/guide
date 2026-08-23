@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아이콘 스튜디오</title>
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <h1 class="topbar__title">아이콘</h1>
+  <nav class="tabs" role="tablist" aria-label="화면 전환">
+    <button class="tabs__btn tabs__btn--on" role="tab" aria-selected="true" data-view="find">찾기</button>
+    <button class="tabs__btn" role="tab" aria-selected="false" data-view="make">만들기</button>
+    <button class="tabs__btn" role="tab" aria-selected="false" data-view="export">내보내기</button>
+  </nav>
+  <p class="topbar__count" id="count"></p>
+</header>
+
+<main id="main">
+
+  <!-- ── 찾기 ─────────────────────────────────── -->
+  <section class="view view--on" id="view-find" aria-label="아이콘 찾기">
+    <div class="toolbar">
+      <label class="search">
+        <span class="sr-only">아이콘 검색</span>
+        <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"/></svg>
+        <input type="search" id="q" placeholder="이름으로 찾기 (예: 화살표, search)" autocomplete="off">
+      </label>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="empty" id="find-empty" hidden>찾는 아이콘이 없습니다. <button class="linkbtn" data-goto="make">만들기로 넘어가기</button></p>
+  </section>
+
+  <!-- ── 만들기 ───────────────────────────────── -->
+  <section class="view" id="view-make" aria-label="아이콘 만들기" hidden>
+    <div class="ask">
+      <label class="ask__label" for="ask-text">어떤 아이콘이 필요한가요?</label>
+      <textarea id="ask-text" rows="2" placeholder="예) 모바일 전자티켓. 입장권 모양 안에 QR 코드가 들어간 형태"></textarea>
+      <div class="ask__row">
+        <p class="ask__hint">한 문장이면 충분합니다. 지금 있는 아이콘들과 굵기를 맞춰서 그립니다.</p>
+        <button class="btn" id="ask-send">4개 만들기</button>
+      </div>
+      <p class="ask__error" id="ask-error" hidden></p>
+    </div>
+
+    <div id="jobs"></div>
+    <p class="empty" id="make-empty">아직 만든 것이 없습니다.</p>
+  </section>
+
+  <!-- ── 내보내기 ─────────────────────────────── -->
+  <section class="view" id="view-export" aria-label="아이콘 내보내기" hidden>
+    <div class="export">
+      <div class="export__pick">
+        <div class="export__head">
+          <span>쓸 아이콘 고르기</span>
+          <span class="export__n" id="pick-n">0개</span>
+        </div>
+        <div class="export__tools">
+          <button class="linkbtn" id="pick-all">전체 선택</button>
+          <button class="linkbtn" id="pick-none">전체 해제</button>
+          <button class="linkbtn" id="pick-own">우리가 만든 것만</button>
+        </div>
+        <div class="picklist" id="picklist"></div>
+      </div>
+
+      <div class="export__out">
+        <h2 class="export__title">프로젝트에 넣을 것</h2>
+        <p class="export__desc">아래 파일을 프로젝트의 <code>assets/icons/</code>에 그대로 복사합니다. 외부에서 불러오는 것이 없어 폐쇄망에서도 뜹니다.</p>
+        <pre class="tree" id="tree"></pre>
+        <button class="btn" id="do-export">묶음 내려받기</button>
+        <p class="export__note">스프라이트와 CSS만 내려받습니다. 폰트가 필요하면 저장소의 <code>assets/icons/infoux-icons.woff2</code>를 함께 넣으세요.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- 아이콘 상세 -->
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-name">
+  <form method="dialog" class="sheet__close-form">
+    <button class="sheet__close" aria-label="닫기">✕</button>
+  </form>
+  <div class="sheet__body">
+    <div class="sheet__preview" id="sheet-preview"></div>
+    <div class="sheet__info">
+      <h2 class="sheet__name" id="sheet-name"></h2>
+      <p class="sheet__meta" id="sheet-meta"></p>
+      <label class="sheet__label" for="sheet-code">붙여 넣을 코드</label>
+      <textarea class="sheet__code" id="sheet-code" rows="3" readonly></textarea>
+      <button class="btn btn--full" id="sheet-copy">복사</button>
+      <p class="sheet__hint" id="sheet-hint"></p>
+    </div>
+  </div>
+</dialog>
+
+<script src="./app.js"></script>
+</body>
+</html>

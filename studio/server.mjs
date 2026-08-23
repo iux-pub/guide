@@ -1,0 +1,284 @@
+#!/usr/bin/env node
+// 아이콘 스튜디오 — 로컬 서버.
+//
+// 디자이너가 브라우저만 열면 되도록 만든다. 터미널·git·npm이 화면에 나오지 않는다.
+//
+// 왜 서버가 필요한가: 아이콘을 승인하면 파일을 쓰고 대장을 갱신해야 한다.
+// 브라우저 혼자서는 못 한다. 그 외에는 정적 파일 서빙과 얇은 API가 전부다.
+//
+// 왜 의존성이 없는가: 이건 사내 운영 도구다. 프레임워크를 얹으면 그것부터
+// 관리 대상이 된다. node 기본 모듈로 충분한 규모다.
+//
+// 실행:  npm run studio        (기본 4700 포트)
+//        PORT=4800 npm run studio
+
+import http from 'node:http'
+import fs from 'node:fs'
+import path from 'node:path'
+import crypto from 'node:crypto'
+import { fileURLToPath } from 'node:url'
+
+const HERE = path.dirname(fileURLToPath(import.meta.url))
+const ROOT = path.join(HERE, '..')
+const PUBLIC = path.join(HERE, 'public')
+const QUEUE = path.join(HERE, 'queue')
+const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
+const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
+const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
+const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
+
+const PORT = Number(process.env.PORT || 4700)
+
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.svg': 'image/svg+xml; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.woff2': 'font/woff2'
+}
+
+const readJson = (p, fallback = null) => {
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8'))
+  } catch {
+    return fallback
+  }
+}
+
+const json = (res, code, body) => {
+  const s = JSON.stringify(body)
+  res.writeHead(code, { 'content-type': MIME['.json'], 'content-length': Buffer.byteLength(s) })
+  res.end(s)
+}
+
+const readBody = (req) =>
+  new Promise((resolve, reject) => {
+    let acc = ''
+    req.on('data', (c) => {
+      acc += c
+      if (acc.length > 2_000_000) reject(new Error('요청이 너무 큽니다'))
+    })
+    req.on('end', () => {
+      try {
+        resolve(acc ? JSON.parse(acc) : {})
+      } catch {
+        reject(new Error('JSON을 읽지 못했습니다'))
+      }
+    })
+    req.on('error', reject)
+  })
+
+// ── 큐 ────────────────────────────────────────────────
+// 웹 화면은 요청을 파일로 남기기만 하고, 워커가 그걸 집어 처리한다.
+// 화면과 모델 호출을 떼어 놓아야 디자이너가 창을 닫아도 작업이 이어진다.
+
+function ensureQueue() {
+  for (const d of ['requests', 'results', 'archive']) {
+    fs.mkdirSync(path.join(QUEUE, d), { recursive: true })
+  }
+}
+
+function listRequests() {
+  ensureQueue()
+  const reqDir = path.join(QUEUE, 'requests')
+  const resDir = path.join(QUEUE, 'results')
+  const out = []
+  for (const f of fs.readdirSync(reqDir).filter((n) => n.endsWith('.json'))) {
+    const req = readJson(path.join(reqDir, f))
+    if (!req) continue
+    const result = readJson(path.join(resDir, f))
+    out.push({ ...req, status: result ? result.status : 'waiting', result })
+  }
+  return out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+}
+
+// ── 아이콘 ────────────────────────────────────────────
+
+function iconCatalog() {
+  const ledger = readJson(LEDGER, { icons: {} })
+  const seed = readJson(SEED_MAP, { categories: [] })
+
+  const labels = new Map()
+  for (const c of seed.categories) labels.set(c.id, c.label)
+
+  const icons = Object.entries(ledger.icons).map(([name, meta]) => ({
+    name,
+    codepoint: meta.codepoint,
+    category: meta.category,
+    categoryLabel: labels.get(meta.category) || meta.category,
+    source: meta.source,
+    own: meta.source !== 'google-material',
+    addedAt: meta.addedAt
+  }))
+
+  return { icons, categories: [...labels.entries()].map(([id, label]) => ({ id, label })) }
+}
+
+/** 승인 — 후보 SVG를 자산으로 굳히고 대장에 올린다. 여기가 유일한 쓰기 지점이다. */
+function approve({ name, svg, category, requestedBy, model, prompt }) {
+  const contract = readJson(CONTRACT)
+  const ledger = readJson(LEDGER)
+  if (!contract || !ledger) throw new Error('규격 또는 대장을 읽지 못했습니다')
+
+  if (!new RegExp(contract.naming.pattern).test(name)) {
+    throw new Error(`이름 규칙에 맞지 않습니다: ${name}`)
+  }
+  const bad = name.split('-').filter((s) => contract.naming.forbiddenWords.includes(s))
+  if (bad.length > 0) throw new Error(`쓸 수 없는 단어입니다: ${bad.join(', ')}`)
+  if (ledger.icons[name]) throw new Error(`이미 있는 이름입니다: ${name}`)
+
+  // 코드포인트는 대장과 tombstone을 모두 피해 새로 뽑는다 — 재사용은 납품 사고다
+  const used = new Set(Object.values(ledger.icons).map((m) => m.codepoint))
+  for (const cp of Object.keys(ledger.tombstones || {})) used.add(cp)
+  let n = parseInt(contract.codepoints.range.start.replace('U+', ''), 16)
+  let codepoint
+  for (;;) {
+    const hex = 'U+' + n.toString(16).toUpperCase().padStart(4, '0')
+    if (!used.has(hex)) {
+      codepoint = hex
+      break
+    }
+    n += 1
+  }
+
+  fs.mkdirSync(SVG_DIR, { recursive: true })
+  fs.writeFileSync(path.join(SVG_DIR, `${name}.svg`), svg)
+
+  ledger.icons[name] = {
+    codepoint,
+    category: category || 'custom',
+    source: 'infomind-original',
+    license: 'proprietary',
+    sha256: crypto.createHash('sha256').update(svg).digest('hex'),
+    paths: (svg.match(/<path/g) || []).length,
+    addedAt: new Date().toISOString().slice(0, 10),
+    ...(requestedBy ? { requestedBy } : {}),
+    ...(model ? { model } : {}),
+    ...(prompt ? { prompt } : {})
+  }
+  ledger.updatedAt = new Date().toISOString().slice(0, 10)
+  fs.writeFileSync(LEDGER, JSON.stringify(ledger, null, 2) + '\n')
+
+  return { name, codepoint }
+}
+
+// ── 라우팅 ────────────────────────────────────────────
+
+const routes = {
+  'GET /api/catalog': (req, res) => json(res, 200, iconCatalog()),
+
+  'GET /api/contract': (req, res) => {
+    const c = readJson(CONTRACT)
+    json(res, 200, {
+      canvas: c.canvas,
+      geometry: c.geometry,
+      naming: c.naming,
+      generation: c.generation
+    })
+  },
+
+  'GET /api/requests': (req, res) => json(res, 200, { requests: listRequests() }),
+
+  'POST /api/requests': async (req, res) => {
+    const body = await readBody(req)
+    const text = String(body.text || '').trim()
+    if (text.length < 2) return json(res, 400, { error: '어떤 아이콘이 필요한지 적어 주세요' })
+
+    ensureQueue()
+    const id = new Date().toISOString().replace(/[:.]/g, '-') + '-' + crypto.randomBytes(3).toString('hex')
+    const request = {
+      id,
+      text,
+      count: Math.min(6, Math.max(1, Number(body.count) || 4)),
+      createdAt: new Date().toISOString(),
+      status: 'waiting'
+    }
+    fs.writeFileSync(path.join(QUEUE, 'requests', `${id}.json`), JSON.stringify(request, null, 2) + '\n')
+    json(res, 201, request)
+  },
+
+  'POST /api/approve': async (req, res) => {
+    const body = await readBody(req)
+    try {
+      const result = approve(body)
+      // 승인이 끝난 요청은 보관함으로 옮긴다 — 목록이 계속 쌓이면 화면이 일거리가 된다
+      if (body.requestId) {
+        for (const dir of ['requests', 'results']) {
+          const from = path.join(QUEUE, dir, `${body.requestId}.json`)
+          if (fs.existsSync(from)) {
+            fs.mkdirSync(path.join(QUEUE, 'archive', dir), { recursive: true })
+            fs.renameSync(from, path.join(QUEUE, 'archive', dir, `${body.requestId}.json`))
+          }
+        }
+      }
+      json(res, 200, result)
+    } catch (err) {
+      json(res, 400, { error: err.message })
+    }
+  },
+
+  'POST /api/discard': async (req, res) => {
+    const body = await readBody(req)
+    const id = String(body.requestId || '')
+    if (!/^[\w.-]+$/.test(id)) return json(res, 400, { error: '잘못된 요청 번호입니다' })
+    for (const dir of ['requests', 'results']) {
+      const from = path.join(QUEUE, dir, `${id}.json`)
+      if (fs.existsSync(from)) {
+        fs.mkdirSync(path.join(QUEUE, 'archive', dir), { recursive: true })
+        fs.renameSync(from, path.join(QUEUE, 'archive', dir, `${id}.json`))
+      }
+    }
+    json(res, 200, { ok: true })
+  }
+}
+
+function serveStatic(req, res, urlPath) {
+  // 아이콘 SVG는 자산 폴더에서 바로 준다
+  if (urlPath.startsWith('/icons/')) {
+    const name = path.basename(urlPath.slice('/icons/'.length))
+    const p = path.join(SVG_DIR, name)
+    if (path.dirname(p) === SVG_DIR && fs.existsSync(p)) {
+      res.writeHead(200, { 'content-type': MIME['.svg'], 'cache-control': 'no-cache' })
+      return res.end(fs.readFileSync(p))
+    }
+    res.writeHead(404)
+    return res.end('없음')
+  }
+
+  const rel = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '')
+  const p = path.join(PUBLIC, rel)
+  if (!p.startsWith(PUBLIC) || !fs.existsSync(p) || fs.statSync(p).isDirectory()) {
+    res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
+    return res.end('없음')
+  }
+  res.writeHead(200, { 'content-type': MIME[path.extname(p)] || 'application/octet-stream', 'cache-control': 'no-cache' })
+  res.end(fs.readFileSync(p))
+}
+
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://localhost:${PORT}`)
+  const key = `${req.method} ${url.pathname}`
+
+  if (routes[key]) {
+    try {
+      await routes[key](req, res)
+    } catch (err) {
+      json(res, 500, { error: err.message })
+    }
+    return
+  }
+
+  if (req.method === 'GET') return serveStatic(req, res, url.pathname)
+
+  res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
+  res.end('없음')
+})
+
+// 로컬 전용. 팀원 접속은 Tailnet 같은 상위 계층이 담당한다.
+server.listen(PORT, '127.0.0.1', () => {
+  const { icons } = iconCatalog()
+  console.log(`아이콘 스튜디오 — http://127.0.0.1:${PORT}`)
+  console.log(`  아이콘 ${icons.length}종 · 자체 제작 ${icons.filter((i) => i.own).length}종`)
+  console.log('  만들기 기능을 쓰려면 다른 창에서 npm run studio:worker 를 함께 켠다')
+})

@@ -1,0 +1,420 @@
+/**
+ * 아이콘 스튜디오 — 화면 동작.
+ *
+ * 초보자 기준으로 만든다. 화면에 기술 용어를 쓰지 않는다 —
+ * "viewBox가 다릅니다"가 아니라 "선이 다른 아이콘보다 굵습니다"로 말한다.
+ * 수치는 서버·워커가 재고, 화면은 결론만 전한다.
+ */
+
+const $ = (sel) => document.querySelector(sel)
+const $$ = (sel) => [...document.querySelectorAll(sel)]
+
+const state = {
+  icons: [],
+  categories: [],
+  filter: { q: '', category: null },
+  picked: new Set(),
+  svgCache: new Map(),
+  pollTimer: null
+}
+
+// ── 공통 ──────────────────────────────────────────────
+
+async function api(path, options) {
+  const res = await fetch(path, {
+    headers: { 'content-type': 'application/json' },
+    ...options
+  })
+  const body = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(body.error || `요청 실패 (${res.status})`)
+  return body
+}
+
+/** 아이콘 SVG를 가져와 캐시한다. 같은 아이콘을 여러 크기로 여러 번 그린다. */
+async function loadSvg(name) {
+  if (state.svgCache.has(name)) return state.svgCache.get(name)
+  const res = await fetch(`/icons/${encodeURIComponent(name)}.svg`)
+  const text = res.ok ? await res.text() : ''
+  state.svgCache.set(name, text)
+  return text
+}
+
+/** width/height만 바꿔 같은 SVG를 여러 크기로 쓴다. */
+function sized(svg, px) {
+  return svg.replace(/width="\d+" height="\d+"/, `width="${px}" height="${px}"`)
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+}
+
+// ── 화면 전환 ─────────────────────────────────────────
+
+function show(view) {
+  $$('.view').forEach((v) => { v.hidden = v.id !== `view-${view}` })
+  $$('.tabs__btn').forEach((b) => {
+    const on = b.dataset.view === view
+    b.classList.toggle('tabs__btn--on', on)
+    b.setAttribute('aria-selected', String(on))
+  })
+  if (view === 'make') startPolling()
+  else stopPolling()
+  if (view === 'export') renderExport()
+}
+
+// ── 찾기 ──────────────────────────────────────────────
+
+function renderChips() {
+  const chips = [
+    { id: null, label: `전체 ${state.icons.length}` },
+    { id: '__own', label: `우리가 만든 것 ${state.icons.filter((i) => i.own).length}` },
+    ...state.categories.map((c) => ({
+      id: c.id,
+      label: `${c.label} ${state.icons.filter((i) => i.category === c.id).length}`
+    }))
+  ]
+  $('#chips').innerHTML = chips
+    .map((c) => `<button class="chip${state.filter.category === c.id ? ' chip--on' : ''}" data-cat="${c.id ?? ''}">${esc(c.label)}</button>`)
+    .join('')
+}
+
+function filtered() {
+  const q = state.filter.q.trim().toLowerCase()
+  const cat = state.filter.category
+  return state.icons.filter((i) => {
+    if (cat === '__own' && !i.own) return false
+    if (cat && cat !== '__own' && i.category !== cat) return false
+    if (!q) return true
+    return i.name.includes(q) || (i.categoryLabel || '').includes(q)
+  })
+}
+
+async function renderGrid() {
+  const rows = filtered()
+  const grid = $('#grid')
+  $('#find-empty').hidden = rows.length > 0
+
+  grid.innerHTML = rows
+    .map((i) => `<button class="cell${i.own ? ' cell--own' : ''}" data-name="${esc(i.name)}">
+      <span class="cell__svg" data-svg="${esc(i.name)}"></span>
+      <span class="cell__name">${esc(i.name)}</span>
+    </button>`)
+    .join('')
+
+  // SVG는 따로 채운다 — 한 번에 72개를 fetch해도 캐시가 받아 준다
+  for (const holder of grid.querySelectorAll('[data-svg]')) {
+    loadSvg(holder.dataset.svg).then((svg) => { holder.innerHTML = svg })
+  }
+}
+
+// ── 상세 ──────────────────────────────────────────────
+
+async function openSheet(name) {
+  const icon = state.icons.find((i) => i.name === name)
+  if (!icon) return
+  const svg = await loadSvg(name)
+
+  $('#sheet-preview').innerHTML = [32, 24, 20, 16].map((px) => sized(svg, px)).join('')
+  $('#sheet-name').textContent = name
+  $('#sheet-meta').textContent =
+    `${icon.categoryLabel} · ${icon.own ? '우리가 만든 것' : '구글 아이콘'} · ${icon.codepoint}`
+  $('#sheet-code').value =
+    `<svg class="icon" aria-hidden="true">\n  <use href="/assets/icons/sprite.svg#${name}"></use>\n</svg>`
+  $('#sheet-hint').textContent = ''
+  $('#sheet').showModal()
+}
+
+// ── 만들기 ────────────────────────────────────────────
+
+function statusLine(job) {
+  if (job.status === 'waiting') {
+    return `<p class="status status--waiting"><span class="status__dot"></span>차례를 기다리는 중입니다. 창을 닫아도 됩니다.</p>`
+  }
+  if (job.status === 'working') {
+    return `<p class="status status--working"><span class="status__dot"></span>그리는 중입니다 — 보통 1~2분 걸립니다. 창을 닫아도 됩니다.</p>`
+  }
+  if (job.status === 'failed') {
+    const why = (job.result?.failures || []).join(' / ') || '알 수 없는 이유'
+    return `<p class="status status--failed"><span class="status__dot"></span>만들지 못했습니다 — ${esc(why)}</p>`
+  }
+  return ''
+}
+
+function candCard(job, cand) {
+  const notes = cand.review.notes
+    .map((n) => `<p class="note note--${n.level}">${esc(n.text)}</p>`)
+    .join('')
+  const blocked = cand.review.ok === false
+  const suggested = job.text.trim().split(/\s+/)[0].replace(/[^a-z0-9-]/gi, '').toLowerCase()
+
+  return `<div class="cand" data-job="${esc(job.id)}" data-idx="${cand.index}">
+    <div class="cand__art">
+      ${sized(cand.svg, 34)}${sized(cand.svg, 20)}${sized(cand.svg, 16)}
+    </div>
+    ${notes}
+    ${blocked ? '' : `<div class="namefield">
+      <label for="nm-${esc(job.id)}-${cand.index}">이름 (영문, 의미로)</label>
+      <input id="nm-${esc(job.id)}-${cand.index}" class="cand__name" value="${esc(suggested)}" placeholder="예: e-ticket">
+    </div>`}
+    <div class="cand__foot">
+      ${blocked
+        ? '<button class="btn btn--ghost btn--full" disabled>규격에 안 맞습니다</button>'
+        : '<button class="btn btn--full cand__pick">이걸로 정하기</button>'}
+    </div>
+  </div>`
+}
+
+function renderJobs(jobs) {
+  $('#make-empty').hidden = jobs.length > 0
+  $('#jobs').innerHTML = jobs
+    .map((job) => {
+      const when = new Date(job.createdAt).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      const cands = job.result?.candidates || []
+      return `<article class="job">
+        <div class="job__head">
+          <p class="job__text">${esc(job.text)}</p>
+          <span class="job__time">${when}
+            <button class="linkbtn job__discard" data-job="${esc(job.id)}">버리기</button>
+          </span>
+        </div>
+        ${statusLine(job)}
+        ${cands.length > 0 ? `<div class="cands">${cands.map((c) => candCard(job, c)).join('')}</div>` : ''}
+      </article>`
+    })
+    .join('')
+}
+
+async function refreshJobs() {
+  try {
+    const { requests } = await api('/api/requests')
+    renderJobs(requests)
+  } catch {
+    /* 워커가 없어도 화면은 살아 있어야 한다 */
+  }
+}
+
+function startPolling() {
+  refreshJobs()
+  stopPolling()
+  state.pollTimer = setInterval(refreshJobs, 4000)
+}
+
+function stopPolling() {
+  if (state.pollTimer) clearInterval(state.pollTimer)
+  state.pollTimer = null
+}
+
+// ── 내보내기 ──────────────────────────────────────────
+
+async function renderExport() {
+  const list = $('#picklist')
+  list.innerHTML = state.icons
+    .map((i) => `<label class="pickrow">
+      <input type="checkbox" data-pick="${esc(i.name)}"${state.picked.has(i.name) ? ' checked' : ''}>
+      <span class="pickrow__svg" data-svg="${esc(i.name)}"></span>
+      <span>${esc(i.name)}</span>
+      <em>${i.own ? '우리가 만든 것' : '구글'}</em>
+    </label>`)
+    .join('')
+
+  for (const holder of list.querySelectorAll('[data-svg]')) {
+    loadSvg(holder.dataset.svg).then((svg) => { holder.innerHTML = sized(svg, 20) })
+  }
+  renderTree()
+}
+
+function renderTree() {
+  const n = state.picked.size
+  $('#pick-n').textContent = `${n}개`
+  $('#do-export').disabled = n === 0
+  $('#tree').textContent =
+    `assets/icons/\n` +
+    `├─ sprite.svg          ${n}개\n` +
+    `├─ icons.css\n` +
+    `├─ svg/                낱개 ${n}개\n` +
+    `└─ LICENSE-NOTICE.txt`
+}
+
+/** 고른 아이콘만 담은 스프라이트를 브라우저에서 직접 만든다. 서버 왕복이 필요 없다. */
+async function doExport() {
+  const names = [...state.picked]
+  const symbols = []
+  for (const name of names) {
+    const svg = await loadSvg(name)
+    const paths = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`).join('')
+    symbols.push(`<symbol id="${name}" viewBox="0 0 24 24">${paths}</symbol>`)
+  }
+  const sprite =
+    `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">\n` +
+    symbols.join('\n') + '\n</svg>\n'
+
+  const blob = new Blob([sprite], { type: 'image/svg+xml' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = 'sprite.svg'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(a.href)
+}
+
+// ── 시작 ──────────────────────────────────────────────
+
+async function load() {
+  const data = await api('/api/catalog')
+  state.icons = data.icons
+  state.categories = data.categories
+  $('#count').textContent = `${data.icons.length}종 · 우리가 만든 것 ${data.icons.filter((i) => i.own).length}종`
+  renderChips()
+  renderGrid()
+}
+
+document.addEventListener('click', async (e) => {
+  const t = e.target
+
+  const tab = t.closest('.tabs__btn')
+  if (tab) return show(tab.dataset.view)
+
+  const goto = t.closest('[data-goto]')
+  if (goto) return show(goto.dataset.goto)
+
+  const chip = t.closest('.chip')
+  if (chip) {
+    state.filter.category = chip.dataset.cat || null
+    renderChips()
+    renderGrid()
+    return
+  }
+
+  const cell = t.closest('.cell')
+  if (cell) return openSheet(cell.dataset.name)
+
+  if (t.closest('#sheet-copy')) {
+    const code = $('#sheet-code')
+    code.select()
+    try {
+      await navigator.clipboard.writeText(code.value)
+      $('#sheet-hint').textContent = '복사했습니다. 코드에 붙여 넣으세요.'
+    } catch {
+      $('#sheet-hint').textContent = '복사하지 못했습니다 — 위 상자에서 직접 복사하세요.'
+    }
+    return
+  }
+
+  if (t.closest('#ask-send')) return sendAsk()
+
+  const pick = t.closest('.cand__pick')
+  if (pick) return approve(pick.closest('.cand'))
+
+  const discard = t.closest('.job__discard')
+  if (discard) {
+    await api('/api/discard', { method: 'POST', body: JSON.stringify({ requestId: discard.dataset.job }) })
+    return refreshJobs()
+  }
+
+  if (t.closest('#pick-all')) {
+    state.icons.forEach((i) => state.picked.add(i.name))
+    return renderExport()
+  }
+  if (t.closest('#pick-none')) {
+    state.picked.clear()
+    return renderExport()
+  }
+  if (t.closest('#pick-own')) {
+    state.picked.clear()
+    state.icons.filter((i) => i.own).forEach((i) => state.picked.add(i.name))
+    return renderExport()
+  }
+  if (t.closest('#do-export')) return doExport()
+})
+
+// 상세 시트 바깥을 누르면 닫는다. 초보자는 ✕를 찾기 전에 바깥을 먼저 누른다.
+// <dialog>는 backdrop 클릭을 기본으로 잡아 주지 않으므로 좌표로 판정한다.
+$('#sheet').addEventListener('click', (e) => {
+  const sheet = $('#sheet')
+  if (e.target !== sheet) return // 내용 위 클릭은 통과
+  const r = sheet.getBoundingClientRect()
+  const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom
+  if (!inside) sheet.close()
+})
+
+document.addEventListener('change', (e) => {
+  const pick = e.target.closest('[data-pick]')
+  if (!pick) return
+  if (pick.checked) state.picked.add(pick.dataset.pick)
+  else state.picked.delete(pick.dataset.pick)
+  renderTree()
+})
+
+$('#q').addEventListener('input', (e) => {
+  state.filter.q = e.target.value
+  renderGrid()
+})
+
+async function sendAsk() {
+  const text = $('#ask-text').value.trim()
+  const err = $('#ask-error')
+  err.hidden = true
+  if (text.length < 2) {
+    err.textContent = '어떤 아이콘이 필요한지 적어 주세요.'
+    err.hidden = false
+    return
+  }
+  const btn = $('#ask-send')
+  btn.disabled = true
+  try {
+    await api('/api/requests', { method: 'POST', body: JSON.stringify({ text, count: 4 }) })
+    $('#ask-text').value = ''
+    startPolling()
+  } catch (e) {
+    err.textContent = e.message
+    err.hidden = false
+  } finally {
+    btn.disabled = false
+  }
+}
+
+async function approve(card) {
+  const jobId = card.dataset.job
+  const idx = Number(card.dataset.idx)
+  const nameInput = card.querySelector('.cand__name')
+  const name = (nameInput?.value || '').trim()
+
+  const { requests } = await api('/api/requests')
+  const job = requests.find((r) => r.id === jobId)
+  const cand = job?.result?.candidates?.find((c) => c.index === idx)
+  if (!cand) return
+
+  try {
+    await api('/api/approve', {
+      method: 'POST',
+      body: JSON.stringify({
+        name,
+        svg: cand.svg,
+        category: 'custom',
+        requestId: jobId,
+        prompt: job.text,
+        model: 'claude'
+      })
+    })
+    state.svgCache.delete(name)
+    await load()
+    await refreshJobs()
+    show('find')
+    $('#q').value = name
+    state.filter.q = name
+    state.filter.category = null
+    renderChips()
+    renderGrid()
+  } catch (e) {
+    const err = $('#ask-error')
+    err.textContent = e.message
+    err.hidden = false
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+load().catch((e) => {
+  document.querySelector('#main').innerHTML =
+    `<p class="empty">아이콘 목록을 불러오지 못했습니다 — ${esc(e.message)}</p>`
+})

@@ -29,6 +29,9 @@ const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
 
 const PORT = Number(process.env.PORT || 4700)
+// 기본은 이 기계에서만 열린다. 사내 서버에 올려 팀이 함께 볼 때만 HOST=0.0.0.0을 준다.
+// 스튜디오에는 로그인이 없다 — 열어 둔 곳에서는 누구나 아이콘을 만들고 승인할 수 있다.
+const HOST = process.env.HOST || '127.0.0.1'
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -340,10 +343,13 @@ const server = http.createServer(async (req, res) => {
   res.end('없음')
 })
 
-// 로컬 전용. 팀원 접속은 Tailnet 같은 상위 계층이 담당한다.
-server.listen(PORT, '127.0.0.1', () => {
+server.listen(PORT, HOST, () => {
   const { icons } = iconCatalog()
-  console.log(`아이콘 스튜디오 — http://127.0.0.1:${PORT}`)
+  const shown = HOST === '0.0.0.0' ? '이 기계의 주소' : HOST
+  console.log(`아이콘 스튜디오 — http://${shown}:${PORT}`)
+  if (HOST === '0.0.0.0') {
+    console.log('  ⚠ 바깥에 열려 있습니다 — 로그인이 없으므로 닿을 수 있는 사람은 누구나 씁니다')
+  }
   console.log(`  아이콘 ${icons.length}종 · 자체 제작 ${icons.filter((i) => i.own).length}종`)
   console.log('  npm run studio 로 켜면 일꾼도 함께 뜬다')
 })

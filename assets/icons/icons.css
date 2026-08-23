@@ -1,0 +1,126 @@
+/**
+ * infoUX Icons — 생성물이다. 직접 고치지 않는다.
+ * 원본: assets/icons/svg/ · 대장: contracts/icon-codepoints.json
+ * 다시 만들기: npm run icons:build
+ *
+ * 쓰는 법 (기본 — 스프라이트)
+ *   장식용:  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+ *   의미있음: <svg class="icon" role="img" aria-label="검색"><use href="/assets/icons/sprite.svg#search"></use></svg>
+ *
+ * 폰트는 여벌이다. SVG를 못 받는 환경에서만 쓰고, 반드시 aria-hidden과
+ * 텍스트 라벨을 함께 둔다 — 폰트가 안 뜨면 아이콘 자리가 두부로 남는다.
+ */
+
+@layer components {
+  .icon {
+    @apply inline-block shrink-0 align-[-0.125em];
+
+    width: 2.4rem;
+    height: 2.4rem;
+    fill: currentColor;
+  }
+
+  /* KRDS 사이즈 어휘를 따른다 — 시각적 이름(--big)은 쓰지 않는다 (R-06·R-18) */
+  .icon--xsmall { width: 1.6rem; height: 1.6rem; }
+  .icon--small  { width: 2rem;   height: 2rem; }
+  .icon--medium { width: 2.4rem; height: 2.4rem; }
+  .icon--large  { width: 3.2rem; height: 3.2rem; }
+  .icon--xlarge { width: 4rem;   height: 4rem; }
+
+  /* 글자 크기를 따라가는 변형 — 버튼·링크 안에서 쓴다 */
+  .icon--inherit { width: 1em; height: 1em; }
+}
+
+@layer components {
+  @font-face {
+    font-family: "infoUX Icons";
+    src: url("./infoux-icons.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+
+  .icon-font {
+    @apply inline-block shrink-0 not-italic normal-case;
+
+    font-family: "infoUX Icons", sans-serif;
+    font-size: 2.4rem;
+    line-height: 1;
+    font-variant-ligatures: none;
+    speak: never;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .icon-font--chevron-left::before { content: "\E000"; }
+  .icon-font--chevron-right::before { content: "\E001"; }
+  .icon-font--chevron-up::before { content: "\E002"; }
+  .icon-font--chevron-down::before { content: "\E003"; }
+  .icon-font--arrow-left::before { content: "\E004"; }
+  .icon-font--arrow-right::before { content: "\E005"; }
+  .icon-font--arrow-up::before { content: "\E006"; }
+  .icon-font--arrow-down::before { content: "\E007"; }
+  .icon-font--menu::before { content: "\E008"; }
+  .icon-font--close::before { content: "\E009"; }
+  .icon-font--more-vertical::before { content: "\E00A"; }
+  .icon-font--external-link::before { content: "\E00B"; }
+  .icon-font--search::before { content: "\E00C"; }
+  .icon-font--filter::before { content: "\E00D"; }
+  .icon-font--download::before { content: "\E00E"; }
+  .icon-font--upload::before { content: "\E00F"; }
+  .icon-font--share::before { content: "\E010"; }
+  .icon-font--print::before { content: "\E011"; }
+  .icon-font--copy::before { content: "\E012"; }
+  .icon-font--edit::before { content: "\E013"; }
+  .icon-font--delete::before { content: "\E014"; }
+  .icon-font--add::before { content: "\E015"; }
+  .icon-font--refresh::before { content: "\E016"; }
+  .icon-font--save::before { content: "\E017"; }
+  .icon-font--settings::before { content: "\E018"; }
+  .icon-font--check::before { content: "\E019"; }
+  .icon-font--info::before { content: "\E01A"; }
+  .icon-font--warning::before { content: "\E01B"; }
+  .icon-font--error::before { content: "\E01C"; }
+  .icon-font--success::before { content: "\E01D"; }
+  .icon-font--help::before { content: "\E01E"; }
+  .icon-font--bell::before { content: "\E01F"; }
+  .icon-font--lock::before { content: "\E020"; }
+  .icon-font--unlock::before { content: "\E021"; }
+  .icon-font--calendar::before { content: "\E022"; }
+  .icon-font--clock::before { content: "\E023"; }
+  .icon-font--eye::before { content: "\E024"; }
+  .icon-font--eye-off::before { content: "\E025"; }
+  .icon-font--attachment::before { content: "\E026"; }
+  .icon-font--checkbox::before { content: "\E027"; }
+  .icon-font--radio::before { content: "\E028"; }
+  .icon-font--dropdown::before { content: "\E029"; }
+  .icon-font--minus::before { content: "\E02A"; }
+  .icon-font--drag-handle::before { content: "\E02B"; }
+  .icon-font--file::before { content: "\E02C"; }
+  .icon-font--folder::before { content: "\E02D"; }
+  .icon-font--image::before { content: "\E02E"; }
+  .icon-font--video::before { content: "\E02F"; }
+  .icon-font--document::before { content: "\E030"; }
+  .icon-font--list::before { content: "\E031"; }
+  .icon-font--grid::before { content: "\E032"; }
+  .icon-font--table::before { content: "\E033"; }
+  .icon-font--link::before { content: "\E034"; }
+  .icon-font--tag::before { content: "\E035"; }
+  .icon-font--user::before { content: "\E036"; }
+  .icon-font--users::before { content: "\E037"; }
+  .icon-font--building::before { content: "\E038"; }
+  .icon-font--phone::before { content: "\E039"; }
+  .icon-font--mail::before { content: "\E03A"; }
+  .icon-font--map-pin::before { content: "\E03B"; }
+  .icon-font--play::before { content: "\E03C"; }
+  .icon-font--pause::before { content: "\E03D"; }
+  .icon-font--volume::before { content: "\E03E"; }
+  .icon-font--fullscreen::before { content: "\E03F"; }
+  .icon-font--zoom-in::before { content: "\E040"; }
+  .icon-font--zoom-out::before { content: "\E041"; }
+  .icon-font--home::before { content: "\E042"; }
+  .icon-font--bookmark::before { content: "\E043"; }
+  .icon-font--star::before { content: "\E044"; }
+  .icon-font--chart-bar::before { content: "\E045"; }
+  .icon-font--globe::before { content: "\E046"; }
+  .icon-font--language::before { content: "\E047"; }
+}

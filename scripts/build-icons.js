@@ -175,7 +175,11 @@ async function buildFont(icons) {
     fontStream.end()
   })
 
-  const ttf = Buffer.from(svg2ttf(svgFont, { copyright: 'INFOMIND UX' }).buffer)
+  // 폰트 생성 시각을 고정한다. 기본값은 now()라 빌드할 때마다 파일이 달라지고,
+  // CI의 「자동 생성물 drift」 검사가 영원히 실패한다(2026-08-23 실측: 세 번 빌드에
+  // 해시 세 개). 대장의 갱신일을 쓰므로 아이콘이 바뀔 때만 폰트도 바뀐다.
+  const stamp = Math.floor(new Date(`${ledger.updatedAt || '2026-01-01'}T00:00:00Z`).getTime() / 1000)
+  const ttf = Buffer.from(svg2ttf(svgFont, { copyright: 'INFOMIND UX', ts: stamp }).buffer)
   const woff2 = ttf2woff2(ttf)
   fs.writeFileSync(path.join(OUT_DIR, 'infoux-icons.woff2'), woff2)
   return woff2.length

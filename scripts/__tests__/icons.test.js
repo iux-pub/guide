@@ -171,7 +171,8 @@ test('스프라이트용 .icon은 컴포넌트 레이어에 있고 생성물에 
   assert.ok(fs.existsSync(comp), '.icon은 손으로 관리하는 컴포넌트다')
   const compCss = fs.readFileSync(comp, 'utf8')
   assert.match(compCss, /\.icon\s*\{/, '.icon 정의가 없다')
-  assert.match(compCss, /fill:\s*currentColor/, 'currentColor 상속이 없으면 색이 안 따라간다')
+  // stylelint(value-keyword-case)가 키워드를 소문자로 바꾸므로 대소문자를 가리지 않는다
+  assert.match(compCss, /fill:\s*currentcolor/i, 'currentColor 상속이 없으면 색이 안 따라간다')
 
   const index = fs.readFileSync(path.join(ROOT, 'src/styles/6-components/index.css'), 'utf8')
   assert.ok(index.includes('icon.css'), 'index.css에 등록되지 않으면 빌드에 안 들어간다')
@@ -224,4 +225,12 @@ test('기준선이 씨앗만으로 만들어진다', () => {
   )
   assert.ok(baseline.strokeWeight.min < baseline.strokeWeight.median)
   assert.ok(baseline.strokeWeight.median < baseline.strokeWeight.max)
+})
+
+test('폰트 빌드가 결정적이다', () => {
+  // svg2ttf는 기본으로 생성 시각을 now()로 넣는다. 그대로 두면 빌드할 때마다
+  // 파일이 달라져 CI의 자동 생성물 drift 검사가 영원히 실패한다
+  // (2026-08-23 실측: 세 번 빌드에 해시 세 개). ts를 대장 갱신일로 고정한다.
+  const src = fs.readFileSync(path.join(ROOT, 'scripts/build-icons.js'), 'utf8')
+  assert.match(src, /svg2ttf\([^)]*ts:/s, '폰트 생성 시각을 고정하지 않으면 빌드가 비결정적이다')
 })

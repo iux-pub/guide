@@ -55,6 +55,10 @@
           "url": "/components/breadcrumb/"
         },
         {
+          "title": "아이콘",
+          "url": "/components/icon/"
+        },
+        {
           "title": "조합 패턴",
           "url": "/components/combo-patterns/"
         },
@@ -79,6 +83,10 @@
         {
           "title": "토큰 — 색상",
           "url": "/tokens/color/"
+        },
+        {
+          "title": "아이콘 목록 72종",
+          "url": "/icons/"
         },
         {
           "title": "BEM 네이밍",

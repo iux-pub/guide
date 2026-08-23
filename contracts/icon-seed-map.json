@@ -1,0 +1,135 @@
+{
+  "name": "infoUX Icon Seed Map",
+  "version": "1.0.0",
+  "policy": "씨앗 아이콘의 우리 이름 ↔ 원본 이름 매핑이다. 우리 이름이 정본이고 원본 이름은 출처 추적용이다. 구글이 아이콘 이름을 바꿔도 우리 이름은 흔들리지 않는다. 아이콘을 추가할 때 이 파일에 먼저 넣고 scripts/import-icons.js를 돌린다.",
+  "source": {
+    "id": "google-material",
+    "style": "materialsymbolsoutlined",
+    "urlTemplate": "https://fonts.gstatic.com/s/i/short-term/release/{style}/{material}/default/24px.svg",
+    "license": "Apache-2.0",
+    "provenance": "fonts.gstatic.com (Google Material Symbols 공식 배포)",
+    "note": "원본은 viewBox 0 -960 960 960 좌표계다. import 스크립트가 24 좌표계로 변환한다."
+  },
+  "categories": [
+    {
+      "id": "navigation",
+      "label": "내비게이션·방향",
+      "icons": [
+        { "name": "chevron-left", "material": "chevron_left" },
+        { "name": "chevron-right", "material": "chevron_right" },
+        { "name": "chevron-up", "material": "keyboard_arrow_up" },
+        { "name": "chevron-down", "material": "keyboard_arrow_down" },
+        { "name": "arrow-left", "material": "arrow_back" },
+        { "name": "arrow-right", "material": "arrow_forward" },
+        { "name": "arrow-up", "material": "arrow_upward" },
+        { "name": "arrow-down", "material": "arrow_downward" },
+        { "name": "menu", "material": "menu" },
+        { "name": "close", "material": "close" },
+        { "name": "more-vertical", "material": "more_vert" },
+        { "name": "external-link", "material": "open_in_new" }
+      ]
+    },
+    {
+      "id": "action",
+      "label": "액션",
+      "icons": [
+        { "name": "search", "material": "search" },
+        { "name": "filter", "material": "filter_alt" },
+        { "name": "download", "material": "download" },
+        { "name": "upload", "material": "upload" },
+        { "name": "share", "material": "share" },
+        { "name": "print", "material": "print" },
+        { "name": "copy", "material": "content_copy" },
+        { "name": "edit", "material": "edit" },
+        { "name": "delete", "material": "delete" },
+        { "name": "add", "material": "add" },
+        { "name": "refresh", "material": "refresh" },
+        { "name": "save", "material": "save" },
+        { "name": "settings", "material": "settings" },
+        { "name": "check", "material": "check" }
+      ]
+    },
+    {
+      "id": "status",
+      "label": "상태·알림",
+      "icons": [
+        { "name": "info", "material": "info" },
+        { "name": "warning", "material": "warning" },
+        { "name": "error", "material": "error" },
+        { "name": "success", "material": "check_circle" },
+        { "name": "help", "material": "help" },
+        { "name": "bell", "material": "notifications" },
+        { "name": "lock", "material": "lock" },
+        { "name": "unlock", "material": "lock_open" }
+      ]
+    },
+    {
+      "id": "form",
+      "label": "폼·입력",
+      "icons": [
+        { "name": "calendar", "material": "calendar_today" },
+        { "name": "clock", "material": "schedule" },
+        { "name": "eye", "material": "visibility" },
+        { "name": "eye-off", "material": "visibility_off" },
+        { "name": "attachment", "material": "attach_file" },
+        { "name": "checkbox", "material": "check_box" },
+        { "name": "radio", "material": "radio_button_checked" },
+        { "name": "dropdown", "material": "arrow_drop_down" },
+        { "name": "minus", "material": "remove" },
+        { "name": "drag-handle", "material": "drag_indicator" }
+      ]
+    },
+    {
+      "id": "content",
+      "label": "콘텐츠·파일",
+      "icons": [
+        { "name": "file", "material": "description" },
+        { "name": "folder", "material": "folder" },
+        { "name": "image", "material": "image" },
+        { "name": "video", "material": "videocam" },
+        { "name": "document", "material": "article" },
+        { "name": "list", "material": "list" },
+        { "name": "grid", "material": "grid_view" },
+        { "name": "table", "material": "table_chart" },
+        { "name": "link", "material": "link" },
+        { "name": "tag", "material": "label" }
+      ]
+    },
+    {
+      "id": "identity",
+      "label": "사용자·조직",
+      "icons": [
+        { "name": "user", "material": "person" },
+        { "name": "users", "material": "group" },
+        { "name": "building", "material": "apartment" },
+        { "name": "phone", "material": "call" },
+        { "name": "mail", "material": "mail" },
+        { "name": "map-pin", "material": "place" }
+      ]
+    },
+    {
+      "id": "media",
+      "label": "미디어·표시",
+      "icons": [
+        { "name": "play", "material": "play_arrow" },
+        { "name": "pause", "material": "pause" },
+        { "name": "volume", "material": "volume_up" },
+        { "name": "fullscreen", "material": "fullscreen" },
+        { "name": "zoom-in", "material": "zoom_in" },
+        { "name": "zoom-out", "material": "zoom_out" }
+      ]
+    },
+    {
+      "id": "domain",
+      "label": "업무 도메인",
+      "icons": [
+        { "name": "home", "material": "home" },
+        { "name": "bookmark", "material": "bookmark" },
+        { "name": "star", "material": "star" },
+        { "name": "chart-bar", "material": "bar_chart" },
+        { "name": "globe", "material": "public" },
+        { "name": "language", "material": "translate" }
+      ]
+    }
+  ]
+}

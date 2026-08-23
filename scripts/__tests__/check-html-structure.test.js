@@ -353,3 +353,34 @@ test('lang="ko"가 있는 <html>은 R-21을 통과한다', () => {
 
   assert.equal(result.status, 0, result.stderr)
 })
+
+test('다른 블록의 modifier를 컴포넌트 root로 오인하지 않는다 (R-15)', () => {
+  // icon-font--calendar는 아이콘 이름이지 calendar 컴포넌트가 아니다.
+  // 부분 문자열로 비교하면 걸린다 — 2026-08-23에 아이콘을 쓴 파일마다 경고가 떴다.
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--content" aria-labelledby="t">
+      <div class="container">
+        <h1 id="t">제목</h1>
+        <button class="btn">
+          <span class="icon-font icon-font--calendar" aria-hidden="true"></span>
+          일정
+        </button>
+        <button class="btn">
+          <span class="icon-font icon-font--small icon-font--table" aria-hidden="true"></span>
+          표
+        </button>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.doesNotMatch(result.stderr, /\[R-15\]/, '아이콘 클래스를 컴포넌트로 잡으면 안 된다')
+})

@@ -81,9 +81,13 @@
       "old",
       "icon",
       "svg",
-      "img"
+      "img",
+      "medium",
+      "xsmall",
+      "xlarge",
+      "inherit"
     ],
-    "note": "시각적 이름은 디자인이 바뀌면 클래스까지 바꿔야 한다. arrow-blue가 아니라 chevron-right로 짓는다 — R-06·R-18의 아이콘판. 이름에 icon을 넣지 않는다(icon-icon-search가 된다)."
+    "note": "시각적 이름은 디자인이 바뀌면 클래스까지 바꿔야 한다. arrow-blue가 아니라 chevron-right로 짓는다 — R-06·R-18의 아이콘판. 이름에 icon을 넣지 않는다(icon-icon-search가 된다). 크기 클래스(.icon-font--small 등)와 같은 네임스페이스이므로 사이즈 어휘를 아이콘 이름으로 쓸 수 없다."
   },
   "sources": {
     "allowed": [

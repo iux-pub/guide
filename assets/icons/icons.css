@@ -25,7 +25,7 @@
   }
 
   .icon-font {
-    @apply inline-block shrink-0 not-italic normal-case;
+    @apply inline-block shrink-0 not-italic normal-case align-[-0.125em];
 
     font-family: "infoUX Icons", sans-serif;
     font-size: 2.4rem;
@@ -34,6 +34,16 @@
     speak: never;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* KRDS 사이즈 어휘 — .icon과 같은 이름을 쓴다 (R-06·R-18) */
+  .icon-font--xsmall { font-size: 1.6rem; }
+  .icon-font--small  { font-size: 2rem; }
+  .icon-font--medium { font-size: 2.4rem; }
+  .icon-font--large  { font-size: 3.2rem; }
+  .icon-font--xlarge { font-size: 4rem; }
+
+  /* 본문과 섞일 때 — 글자 크기를 그대로 따른다 */
+  .icon-font--inherit { font-size: 1em; }
 
   .icon-font--chevron-left::before { content: "\E000"; }
   .icon-font--chevron-right::before { content: "\E001"; }

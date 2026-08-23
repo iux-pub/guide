@@ -310,13 +310,10 @@ src/styles/project/
 ### 5-1. 한 줄이면 된다
 
 ```html
-<svg class="icon" aria-hidden="true">
-  <use href="/assets/icons/sprite.svg#search"></use>
-</svg>
+<span class="icon-font icon-font--search" aria-hidden="true"></span>
 ```
 
-`search` 자리에 아이콘 이름을 넣는다. 색은 부모의 글자색을 그대로 따라가므로
-따로 지정하지 않는다.
+`search` 자리에 아이콘 이름을 넣는다. 색은 부모의 글자색을, 크기는 `font-size`를 따라간다.
 
 ### 5-2. 어떤 아이콘이 있는지 보기
 
@@ -324,7 +321,7 @@ src/styles/project/
 npm run icons:sheet
 ```
 
-`dist/icon-sheet.html`이 생긴다. 브라우저로 열면 전체 목록이 24·20·16px로 나온다.
+`dist/icon-sheet.html`이 생긴다. 브라우저로 열면 전체 목록이 48·24·20·16px로 나온다.
 이름을 그대로 복사해 쓰면 된다.
 
 AI 도구(Claude·Codex 등)와 작업할 때는 infoUX MCP의 `list_icons`가 같은 목록을 준다.
@@ -333,30 +330,31 @@ AI 도구(Claude·Codex 등)와 작업할 때는 infoUX MCP의 `list_icons`가 �
 
 | 클래스 | 크기 | 쓰는 곳 |
 |---|---|---|
-| `.icon` | 24px | 기본 |
-| `.icon--xsmall` | 16px | 표 안, 작은 배지 |
-| `.icon--small` | 20px | 버튼 안, 목록 |
-| `.icon--large` | 32px | 카드 헤더 |
-| `.icon--xlarge` | 40px | 빈 화면 안내 |
-| `.icon--inherit` | 글자 크기 | 본문 텍스트와 섞일 때 |
+| `.icon-font` | 24px | 기본 |
+| `.icon-font--xsmall` | 16px | 표 안, 작은 배지 |
+| `.icon-font--small` | 20px | 버튼 안, 목록 |
+| `.icon-font--large` | 32px | 카드 헤더 |
+| `.icon-font--xlarge` | 40px | 빈 화면 안내 |
+| `.icon-font--inherit` | 글자 크기 | 본문 텍스트와 섞일 때 |
 
-### 5-4. aria는 두 가지만 구분한다
+### 5-4. aria-hidden은 항상 붙인다
 
-**옆에 텍스트가 있으면** → `aria-hidden="true"`
-스크린리더가 아이콘을 건너뛴다. 텍스트가 이미 의미를 전달하므로 두 번 읽을 필요가 없다.
+폰트 아이콘은 스크린리더가 코드포인트를 엉뚱하게 읽는다. **아이콘은 숨기고 뜻은 밖에서 전한다.**
+
+**옆에 텍스트가 있으면** 그 텍스트가 뜻을 전한다.
 
 ```html
 <button class="btn">
-  <svg class="icon icon--small" aria-hidden="true"><use href="/assets/icons/sprite.svg#download"></use></svg>
+  <span class="icon-font icon-font--small icon-font--download" aria-hidden="true"></span>
   내려받기
 </button>
 ```
 
-**아이콘만 있으면** → `role="img"` + `aria-label`, 버튼에도 `aria-label`
+**아이콘만 있으면** 버튼에 `aria-label`을 준다.
 
 ```html
 <button class="btn btn--text" aria-label="닫기">
-  <svg class="icon" role="img" aria-label="닫기"><use href="/assets/icons/sprite.svg#close"></use></svg>
+  <span class="icon-font icon-font--close" aria-hidden="true"></span>
 </button>
 ```
 
@@ -367,21 +365,21 @@ padding으로 영역을 확보한다 (R-13).
 
 - **다른 데서 아이콘을 가져와 붙이지 않는다.** 굵기와 여백이 안 맞아 세트가 무너지고
   라이선스 근거도 안 남는다 (R-27)
-- **아이콘 안에 색을 넣지 않는다.** `fill="#333"` 같은 것을 쓰면 다크모드나 브랜드
-  교체에서 그 아이콘만 색이 안 바뀐다
-- **목록에 없는 이름을 쓰지 않는다.** 화면에 아무것도 안 나온다. 필요한 아이콘이
-  없으면 UX팀에 요청한다
+- **아이콘에 색을 넣지 않는다.** 부모의 `color`를 따라가게 둔다
+- **목록에 없는 이름을 쓰지 않는다.** 아무것도 안 나온다. 필요하면 UX팀에 요청한다
+- **이름에 크기 어휘를 쓰지 않는다.** `small`·`large` 등은 크기 클래스와 겹친다
 
-### 5-6. 폰트 방식 (특수한 경우만)
+### 5-6. SVG 태그가 필요할 때
 
-일부 CMS 에디터나 앱 웹뷰처럼 SVG를 못 받는 환경이 있다. 그때만 쓴다.
+폰트를 못 쓰는 곳(일부 메일 템플릿·외부 CMS)이나 아이콘 하나만 색을 달리해야 할 때 쓴다.
 
 ```html
-<span class="icon-font icon-font--search" aria-hidden="true"></span>
+<svg class="icon" aria-hidden="true">
+  <use href="/assets/icons/sprite.svg#search"></use>
+</svg>
 ```
 
-폰트가 안 뜨면 자리가 네모(□)로 남고 스크린리더가 엉뚱하게 읽으므로,
-**반드시 `aria-hidden`을 붙이고 옆에 텍스트를 둔다.** 기본은 위의 SVG 방식이다.
+낱개 SVG 파일이 필요하면 아이콘 스튜디오에서 「SVG 파일 받기」로 내려받는다.
 
 ## 6. 개발 중 자주 쓰는 명령
 

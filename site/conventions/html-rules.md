@@ -206,22 +206,23 @@ HTML 마크업 작성 규칙이다.
 
 **심각도:** 🔴 error &nbsp; **검증:** check-icons.js · manual
 
-> 아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 마크업은 장식용이면 aria-hidden, 의미를 담으면 role=img와 aria-label을 붙인다(R-09·R-16 연장). 폰트 아이콘은 여벌이므로 반드시 aria-hidden과 텍스트 라벨을 함께 둔다 — 폰트가 안 뜨면 자리가 두부로 남는다.
+> 아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 기본 표기는 `<span class="icon-font icon-font--{name}">`이고, 아이콘에는 항상 aria-hidden을 붙인다(스크린리더가 PUA 코드포인트를 오독한다). 뜻은 아이콘 밖에서 전한다 — 옆의 텍스트나 버튼의 aria-label이다. SVG 태그는 폰트를 못 쓰는 곳이나 개별 색이 필요할 때만 쓴다.
 
 **❌ 금지**
 
 ```html
 <svg viewBox="0 0 20 20"><path fill="#333" d="..."/></svg>   // 카탈로그 밖 임의 SVG — 뷰박스·색이 세트와 어긋난다
-<i class="icon-font icon-font--search"></i>   // 폰트만 쓰고 aria-hidden·텍스트 라벨이 없다
-<svg class="icon"><use href="#magnifier"></use></svg>   // 대장에 없는 이름 — 아이콘이 안 나온다
+<span class="icon-font icon-font--search"></span>   // aria-hidden이 없다 — 스크린리더가 코드포인트를 읽는다
+<button class="btn btn--text"><span class="icon-font icon-font--close" aria-hidden="true"></span></button>   // 아이콘만 있는데 버튼에 이름이 없다 — 무슨 버튼인지 알 수 없다
+<span class="icon-font icon-font--magnifier" aria-hidden="true"></span>   // 대장에 없는 이름 — 아무것도 안 나온다
 ```
 
 **✅ 올바른 형식**
 
 ```html
-<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>   // 장식용 — 옆에 텍스트가 있을 때
-<svg class="icon" role="img" aria-label="검색"><use href="/assets/icons/sprite.svg#search"></use></svg>   // 아이콘만으로 기능을 나타낼 때
-<button class="btn"><span class="icon-font icon-font--search" aria-hidden="true"></span>검색</button>   // 폰트를 쓸 때 — aria-hidden + 텍스트 라벨
+<button class="btn"><span class="icon-font icon-font--search" aria-hidden="true"></span>검색</button>   // 옆의 텍스트가 뜻을 전한다
+<button class="btn btn--text" aria-label="닫기"><span class="icon-font icon-font--close" aria-hidden="true"></span></button>   // 아이콘만 있을 때는 버튼에 이름을 준다
+<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>   // 폰트를 못 쓰는 곳이나 개별 색이 필요할 때
 ```
 
 ---

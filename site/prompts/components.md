@@ -453,22 +453,23 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ```html
 <!-- 장식용 — 옆에 텍스트가 있어 아이콘이 의미를 더하지 않을 때 -->
 <button class="btn">
-  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+  <span class="icon-font icon-font--search" aria-hidden="true"></span>
   검색
 </button>
 
 <!-- 의미를 담을 때 — 아이콘만으로 기능을 나타낸다 -->
 <button class="btn btn--text" aria-label="닫기">
-  <svg class="icon" role="img" aria-label="닫기"><use href="/assets/icons/sprite.svg#close"></use></svg>
+  <span class="icon-font icon-font--close" aria-hidden="true"></span>
 </button>
 ```
 
 ### 접근성
 
-- 장식용: `aria-hidden="true"` — 스크린리더가 건너뛴다
-- 의미있음: `role="img"` + `aria-label="…"` — 없으면 무슨 버튼인지 알 수 없다
-- 아이콘만 있는 버튼은 버튼 자체에도 `aria-label`을 준다
-- 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13). 아이콘이 작아도 padding으로 확보한다
+- 아이콘에는 항상 `aria-hidden="true"`를 붙인다. 폰트는 스크린리더가 오독하고, SVG도
+- **뜻은 아이콘 밖에서 전한다** — 옆의 텍스트, 또는 버튼의 `aria-label`
+- 아이콘만 있는 버튼은 버튼에 `aria-label`이 없으면 무슨 버튼인지 알 수 없다
+- 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13)
+- SVG를 의미 전달에 직접 쓸 때만 `role="img"` + `aria-label`을 쓴다
 
 ---
 

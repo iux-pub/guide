@@ -8,22 +8,39 @@ AI 도구에서는 MCP `list_icons`로 받는다. 없는 아이콘은 지어내�
 ```html
 <!-- 장식용 — 옆에 텍스트가 있어 아이콘이 의미를 더하지 않을 때 -->
 <button class="btn">
-  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+  <span class="icon-font icon-font--search" aria-hidden="true"></span>
   검색
 </button>
 
 <!-- 의미를 담을 때 — 아이콘만으로 기능을 나타낸다 -->
 <button class="btn btn--text" aria-label="닫기">
-  <svg class="icon" role="img" aria-label="닫기"><use href="/assets/icons/sprite.svg#close"></use></svg>
+  <span class="icon-font icon-font--close" aria-hidden="true"></span>
 </button>
 ```
 
+`aria-hidden`은 장식·의미 어느 쪽이든 붙인다. 폰트 아이콘은 스크린리더가 PUA 코드포인트를
+엉뚱하게 읽으므로 아이콘 자체를 숨기고, **뜻은 옆의 텍스트나 버튼의 `aria-label`이 전한다.**
+
+### SVG 태그로 넣을 때
+
+폰트를 못 쓰는 곳(일부 메일 템플릿·외부 CMS)이나 아이콘 하나만 색을 달리해야 할 때 쓴다.
+
+```html
+<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+<svg class="icon" role="img" aria-label="검색"><use href="/assets/icons/sprite.svg#search"></use></svg>
+```
+
+낱개 SVG 파일이 필요하면 스튜디오 상세 화면에서 「SVG 파일 받기」로 내려받는다.
+
 ## 크기
 
-KRDS 사이즈 어휘를 따른다. 시각적 이름(`--big`)은 쓰지 않는다 (R-06·R-18).
+폰트는 `font-size`를 따라간다. 기본 24px이고, 클래스로 바꾼다.
 
-- `.icon` (기본 24px) · `.icon--xsmall` 16 · `.icon--small` 20 · `.icon--medium` 24 · `.icon--large` 32 · `.icon--xlarge` 40
-- `.icon--inherit` — 글자 크기(1em)를 따라간다. 버튼·링크 안에서 텍스트와 함께 쓸 때 편하다
+- `.icon-font` (기본 24px) · `--xsmall` 16 · `--small` 20 · `--large` 32 · `--xlarge` 40
+- 본문과 섞일 때는 크기를 지정하지 않는다 — 글자 크기를 그대로 따른다
+
+SVG 방식은 `.icon` + 같은 어휘(`.icon--small` 등)를 쓴다. 시각적 이름(`--big`)은
+쓰지 않는다 (R-06·R-18).
 
 ## 색
 
@@ -36,26 +53,14 @@ KRDS 사이즈 어휘를 따른다. 시각적 이름(`--big`)은 쓰지 않는�
 </span>
 ```
 
-## 폰트 변형 (여벌)
-
-SVG를 못 받는 환경(일부 CMS 에디터·앱 웹뷰)에서만 쓴다. 기본 경로는 스프라이트다.
-
-```html
-<button class="btn">
-  <span class="icon-font icon-font--search" aria-hidden="true"></span>
-  검색
-</button>
-```
-
-폰트는 로드에 실패하면 자리가 두부(□)로 남고, 사용자가 폰트를 강제 치환하면 사라지며,
-스크린리더가 PUA 코드포인트를 엉뚱하게 읽는다. **반드시 `aria-hidden`과 텍스트 라벨을 함께 둔다.**
-
 ## 접근성
 
-- 장식용: `aria-hidden="true"` — 스크린리더가 건너뛴다
-- 의미있음: `role="img"` + `aria-label="…"` — 없으면 무슨 버튼인지 알 수 없다
-- 아이콘만 있는 버튼은 버튼 자체에도 `aria-label`을 준다
-- 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13). 아이콘이 작아도 padding으로 확보한다
+- 아이콘에는 항상 `aria-hidden="true"`를 붙인다. 폰트는 스크린리더가 오독하고, SVG도
+  장식일 때가 대부분이다
+- **뜻은 아이콘 밖에서 전한다** — 옆의 텍스트, 또는 버튼의 `aria-label`
+- 아이콘만 있는 버튼은 버튼에 `aria-label`이 없으면 무슨 버튼인지 알 수 없다
+- 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13)
+- SVG를 의미 전달에 직접 쓸 때만 `role="img"` + `aria-label`을 쓴다
 
 ## 출처
 

@@ -12,48 +12,53 @@ infoUX 아이콘 세트. 권위 있는 소스는 `src/snippets/icon.md`이며, �
 ```html
 <!-- 장식용 — 옆에 텍스트가 있어 아이콘이 의미를 더하지 않을 때 -->
 <button class="btn">
-  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+  <span class="icon-font icon-font--search" aria-hidden="true"></span>
   검색
 </button>
 
 <!-- 의미를 담을 때 — 아이콘만으로 기능을 나타낸다 -->
 <button class="btn btn--text" aria-label="닫기">
-  <svg class="icon" role="img" aria-label="닫기"><use href="/assets/icons/sprite.svg#close"></use></svg>
+  <span class="icon-font icon-font--close" aria-hidden="true"></span>
 </button>
 ```
 
-## 크기
+`aria-hidden`은 어느 쪽이든 붙인다. 폰트 아이콘은 스크린리더가 PUA 코드포인트를 엉뚱하게
+읽으므로 아이콘 자체를 숨기고, **뜻은 옆의 텍스트나 버튼의 `aria-label`이 전한다.**
 
-KRDS 사이즈 어휘를 따른다. 시각적 이름(`--big`)은 쓰지 않는다 (R-06·R-18).
+## 크기
 
 | 클래스 | 크기 | 쓰는 곳 |
 |---|---|---|
-| `.icon` | 24px | 기본 |
-| `.icon--xsmall` | 16px | 표 안, 작은 배지 |
-| `.icon--small` | 20px | 버튼 안, 목록 |
-| `.icon--large` | 32px | 카드 헤더 |
-| `.icon--xlarge` | 40px | 빈 화면 안내 |
-| `.icon--inherit` | 글자 크기 | 본문과 섞일 때 |
+| `.icon-font` | 24px | 기본 |
+| `--xsmall` | 16px | 표 안, 작은 배지 |
+| `--small` | 20px | 버튼 안, 목록 |
+| `--large` | 32px | 카드 헤더 |
+| `--xlarge` | 40px | 빈 화면 안내 |
+| `--inherit` | 글자 크기 | 본문과 섞일 때 |
+
+크기 클래스와 아이콘 이름이 같은 네임스페이스이므로 **아이콘 이름에 사이즈 어휘를
+쓸 수 없다** (`small`·`large` 등은 예약어).
 
 ## 색
 
-색을 아이콘에 넣지 않는다. `fill: currentColor`라 부모의 `color`를 따라간다 — R-01의 아이콘판이다.
+색을 아이콘에 넣지 않는다. 폰트는 `color`를, SVG는 `fill: currentColor`를 따라간다 —
+R-01의 아이콘판이다.
 
-## 폰트 변형 (여벌)
+## SVG 태그로 넣을 때
 
-일부 CMS 에디터나 앱 웹뷰처럼 SVG를 못 받는 환경에서만 쓴다. 기본 경로는 스프라이트다.
+폰트를 못 쓰는 곳(일부 메일 템플릿·외부 CMS)이나 아이콘 하나만 색을 달리해야 할 때 쓴다.
 
 ```html
-<span class="icon-font icon-font--search" aria-hidden="true"></span>
+<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+<svg class="icon" role="img" aria-label="검색"><use href="/assets/icons/sprite.svg#search"></use></svg>
 ```
 
-폰트는 로드에 실패하면 자리가 두부(□)로 남고, 사용자가 폰트를 강제 치환하면 사라지며, 스크린리더가 PUA 코드포인트를 엉뚱하게 읽는다. **반드시 `aria-hidden`과 텍스트 라벨을 함께 둔다.**
+낱개 SVG 파일은 스튜디오 상세 화면의 「SVG 파일 받기」로 내려받는다.
 
 ## 접근성 핵심
 
-- 장식용: `aria-hidden="true"` — 스크린리더가 건너뛴다
-- 의미있음: `role="img"` + `aria-label` — 없으면 무슨 버튼인지 알 수 없다
-- 아이콘만 있는 버튼은 버튼 자체에도 `aria-label`을 준다
+- 아이콘에는 항상 `aria-hidden="true"`
+- **뜻은 아이콘 밖에서 전한다** — 옆의 텍스트, 또는 버튼의 `aria-label`
 - 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13)
 
 ## 아이콘 추가

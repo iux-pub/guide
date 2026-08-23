@@ -118,9 +118,12 @@ async function openSheet(name) {
   $('#sheet-name').textContent = name
   $('#sheet-meta').textContent =
     `${icon.categoryLabel} · ${icon.own ? '우리가 만든 것' : '구글 아이콘'} · ${icon.codepoint}`
-  $('#sheet-code').value =
+  // 기본은 span(폰트) 방식이다. 한 줄이라 붙여 넣기 쉽고 마크업이 짧다.
+  $('#sheet-code').value = `<span class="icon-font icon-font--${name}" aria-hidden="true"></span>`
+  $('#sheet-alt').value =
     `<svg class="icon" aria-hidden="true">\n  <use href="/assets/icons/sprite.svg#${name}"></use>\n</svg>`
   $('#sheet-hint').textContent = ''
+  $('#sheet').dataset.name = name
   $('#sheet').showModal()
 }
 
@@ -321,6 +324,33 @@ document.addEventListener('click', async (e) => {
     try {
       await navigator.clipboard.writeText(code.value)
       $('#sheet-hint').textContent = '복사했습니다. 코드에 붙여 넣으세요.'
+    } catch {
+      $('#sheet-hint').textContent = '복사하지 못했습니다 — 위 상자에서 직접 복사하세요.'
+    }
+    return
+  }
+
+  if (t.closest('#sheet-svg')) {
+    const name = $('#sheet').dataset.name
+    const svg = await loadSvg(name)
+    const blob = new Blob([svg], { type: 'image/svg+xml' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${name}.svg`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(a.href)
+    $('#sheet-hint').textContent = `${name}.svg 를 내려받았습니다.`
+    return
+  }
+
+  if (t.closest('#sheet-copy-alt')) {
+    const code = $('#sheet-alt')
+    code.select()
+    try {
+      await navigator.clipboard.writeText(code.value)
+      $('#sheet-hint').textContent = 'SVG 방식 코드를 복사했습니다.'
     } catch {
       $('#sheet-hint').textContent = '복사하지 못했습니다 — 위 상자에서 직접 복사하세요.'
     }

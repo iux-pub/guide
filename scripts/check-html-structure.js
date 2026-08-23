@@ -742,8 +742,12 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   for (const [blockName, mapping] of Object.entries(COMPONENT_ROOT_MAPPING)) {
     const matches = findClassUsage(html, blockName)
     for (const match of matches) {
-      // class 안에 element ('__')나 modifier ('--') 포함된 건 root가 아니므로 스킵
-      const isBlockRoot = new RegExp(`class\\s*=\\s*["'][^"']*\\b${blockName.replace(/-/g, '\\-')}(?![_-])`).test(match.fullMatch)
+      // class를 토큰으로 쪼개 정확히 비교한다. 부분 문자열로 보면 다른 블록의 modifier가
+      // 걸린다 — icon-font--calendar가 calendar 컴포넌트로 잡혔다(2026-08-23).
+      // element('__')나 다른 블록의 modifier는 root가 아니므로 자연히 빠진다.
+      const classAttr = match.fullMatch.match(/class\s*=\s*["']([^"']*)["']/)
+      const tokens = classAttr ? classAttr[1].trim().split(/\s+/) : []
+      const isBlockRoot = tokens.some((t) => t === blockName || t.startsWith(`${blockName}--`))
       if (!isBlockRoot) continue
 
       // R-15: root 태그 점검

@@ -91,8 +91,19 @@
       <h2 class="sheet__name" id="sheet-name"></h2>
       <p class="sheet__meta" id="sheet-meta"></p>
       <label class="sheet__label" for="sheet-code">붙여 넣을 코드</label>
-      <textarea class="sheet__code" id="sheet-code" rows="3" readonly></textarea>
-      <button class="btn btn--full" id="sheet-copy">복사</button>
+      <textarea class="sheet__code" id="sheet-code" rows="2" readonly></textarea>
+      <div class="sheet__actions">
+        <button class="btn" id="sheet-copy">복사</button>
+        <button class="btn btn--ghost" id="sheet-svg">SVG 파일 받기</button>
+      </div>
+
+      <details class="sheet__more">
+        <summary>SVG 태그로 넣기</summary>
+        <p class="sheet__note">폰트를 못 쓰는 곳이나, 아이콘 하나만 색을 달리해야 할 때 쓴다.</p>
+        <textarea class="sheet__code" id="sheet-alt" rows="3" readonly></textarea>
+        <button class="btn btn--ghost" id="sheet-copy-alt">이 코드 복사</button>
+      </details>
+
       <p class="sheet__hint" id="sheet-hint"></p>
     </div>
   </div>

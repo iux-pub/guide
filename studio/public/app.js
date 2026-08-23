@@ -21,7 +21,9 @@ const state = {
   reference: null,
   referenceImage: null,
   variants: [],
-  sheetVariant: 'regular'
+  sheetVariant: 'regular',
+  // 내보내기에 함께 담을 표정. 기본은 늘 들어가므로 목록에 두지 않는다
+  exportVariants: new Set()
 }
 
 // ── 공통 ──────────────────────────────────────────────
@@ -104,7 +106,12 @@ function filtered() {
     if (cat === '__own' && !i.own) return false
     if (cat && cat !== '__own' && i.category !== cat) return false
     if (!q) return true
-    return i.name.includes(q) || (i.categoryLabel || '').includes(q)
+    // 이름은 영어인데 쓰는 사람은 한국어로 생각한다 — 검색어 사전이 그 다리다
+    return (
+      i.name.includes(q) ||
+      (i.categoryLabel || '').includes(q) ||
+      (i.keywords || []).some((k) => k.includes(q))
+    )
   })
 }
 
@@ -206,6 +213,10 @@ function candCard(job, cand) {
     ${blocked ? '' : `<div class="namefield">
       <label for="nm-${esc(job.id)}-${cand.index}">이름 — 영문, 뜻을 담아</label>
       <input id="nm-${esc(job.id)}-${cand.index}" class="cand__name" value="${esc(suggested)}" placeholder="예: e-ticket" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="namefield">
+      <label for="kw-${esc(job.id)}-${cand.index}">찾을 말 — 쉼표로 나눠, 한국어로</label>
+      <input id="kw-${esc(job.id)}-${cand.index}" class="cand__keywords" value="${esc(guessKeywords(job.text, suggested).join(', '))}" placeholder="예: 전자티켓, 입장권, QR" autocomplete="off">
     </div>`}
     <div class="cand__foot">
       ${blocked
@@ -274,28 +285,55 @@ async function renderExport() {
   renderTree()
 }
 
+function renderVariantPicker() {
+  const box = $('#export-variants')
+  if (!box) return
+  box.innerHTML = state.variants
+    .map((v) => {
+      const on = state.exportVariants.has(v.id)
+      return `<button type="button" class="vbtn${on ? ' vbtn--on' : ''}" data-export-variant="${v.id}" aria-pressed="${on}">${VARIANT_LABEL[v.id] || v.id}</button>`
+    })
+    .join('')
+}
+
 function renderTree() {
   const n = state.picked.size
   $('#pick-n').textContent = `${n}개`
   $('#do-export').disabled = n === 0
-  $('#tree').textContent =
-    `assets/icons/\n` +
-    `├─ sprite.svg          ${n}개\n` +
-    `├─ icons.css           폰트 여벌\n` +
-    `├─ svg/                낱개 ${n}개\n` +
-    `├─ LICENSE-NOTICE.txt  재배포 조건\n` +
+  renderVariantPicker()
+
+  const picked = [...state.picked]
+  const chosen = state.variants.filter((v) => state.exportVariants.has(v.id))
+
+  // 표정이 없는 아이콘은 그 표정 파일에서 빠진다 — 숫자를 미리 보여 주면
+  // 「필을 골랐는데 왜 40개뿐이냐」를 받은 뒤에 묻지 않는다
+  const countFor = (id) =>
+    picked.filter((n2) => (state.icons.find((i) => i.name === n2)?.variants || []).includes(id)).length
+
+  const rows = [
+    `├─ sprite.svg          ${n}개`,
+    ...chosen.map((v) => `├─ sprite-${v.id}.svg${' '.repeat(Math.max(1, 10 - v.id.length))}${countFor(v.id)}개`),
+    `├─ infoux-icons.woff2  폰트`,
+    ...chosen.map((v) => `├─ infoux-icons-${v.id}.woff2`),
+    `├─ icons.css           폰트 여벌 (Tailwind 없이 그대로 씁니다)`,
+    `├─ svg/                낱개 ${n}개`,
+    ...chosen.map((v) => `├─ svg/${v.id}/${' '.repeat(Math.max(1, 15 - v.id.length))}낱개 ${countFor(v.id)}개`),
+    `├─ LICENSE-NOTICE.txt  재배포 조건`,
     `└─ README.txt          쓰는 법`
+  ]
+  $('#tree').textContent = `infoux-icons.zip → assets/icons/\n${rows.join('\n')}`
 }
 
 /**
- * 묶음 내려받기.
+ * 묶음 내려받기 — zip 하나.
  *
- * 서버가 파일 목록을 만들어 주고 브라우저는 저장만 한다. 예전에는 브라우저에서
- * 스프라이트만 조립했는데, 그러면 CSS·낱개·라이선스 고지가 빠져 프로젝트에
- * 넣어도 반쪽이었다.
+ * 예전에는 파일을 낱개로 떨구며 폴더를 이름에 접어 넣고(`svg_star.svg`)
+ * 「svg_로 시작하는 파일은 svg/ 폴더에 넣으세요」라고 안내했다. 받는 사람이
+ * 손으로 다시 조립해야 했고, 폰트(woff2)는 이진이라 아예 못 보내 「저장소에서
+ * 따로 가져오라」는 한 줄이 남았다. 그 한 줄이 「별다른 절차 없이」를 깨뜨렸다.
  *
- * zip 라이브러리를 쓰지 않는다 — 사내 도구에 의존성을 늘리지 않으려고
- * 파일을 하나씩 저장한다. 브라우저가 「여러 파일 다운로드」를 물어보면 허용한다.
+ * zip은 서버가 만든다(studio/lib/zip.mjs — 의존성 없이 직접 씀). 브라우저는
+ * 받은 것을 저장만 한다.
  */
 async function doExport() {
   const btn = $('#do-export')
@@ -304,28 +342,37 @@ async function doExport() {
   note.textContent = '묶음을 만드는 중입니다…'
 
   try {
-    const { files, count, missing } = await api('/api/bundle', {
+    const res = await fetch(apiUrl('/api/bundle'), {
       method: 'POST',
-      body: JSON.stringify({ names: [...state.picked] })
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        names: [...state.picked],
+        variants: [...state.exportVariants]
+      })
     })
-
-    const entries = Object.entries(files)
-    for (const [name, content] of entries) {
-      const blob = new Blob([content], { type: name.endsWith('.svg') ? 'image/svg+xml' : 'text/plain' })
-      const a = document.createElement('a')
-      a.href = URL.createObjectURL(blob)
-      // 폴더 구조를 파일명에 담는다 — 브라우저가 경로를 만들어 주지 않는다
-      a.download = name.replace(/\//g, '_')
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      URL.revokeObjectURL(a.href)
-      await new Promise((r) => setTimeout(r, 120)) // 연속 저장을 브라우저가 막지 않게
+    if (!res.ok) {
+      const msg = await res.json().catch(() => ({}))
+      throw new Error(msg.error || `서버 ${res.status}`)
     }
 
-    note.textContent = `${count}종 · 파일 ${entries.length}개를 내려받았습니다.` +
+    const count = Number(res.headers.get('x-icon-count') || 0)
+    const missing = Number(res.headers.get('x-icon-missing') || 0)
+    const fileCount = Number(res.headers.get('x-icon-files') || 0)
+
+    const blob = await res.blob()
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'infoux-icons.zip'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(a.href)
+
+    const kb = (blob.size / 1024).toFixed(0)
+    note.textContent =
+      `infoux-icons.zip 내려받았습니다 — ${count}종 · 파일 ${fileCount}개 · ${kb}KB.` +
       (missing ? ` (${missing}개는 파일이 없어 빠졌습니다)` : '') +
-      ' svg_로 시작하는 파일은 svg/ 폴더에 넣으세요.'
+      ' 풀어서 assets/icons/ 에 그대로 넣으세요.'
   } catch (e) {
     note.textContent = `내려받지 못했습니다 — ${e.message}`
   } finally {
@@ -364,6 +411,14 @@ document.addEventListener('click', async (e) => {
 
   const cell = t.closest('.cell')
   if (cell) return openSheet(cell.dataset.name)
+
+  const evb = t.closest('[data-export-variant]')
+  if (evb) {
+    const id = evb.dataset.exportVariant
+    if (state.exportVariants.has(id)) state.exportVariants.delete(id)
+    else state.exportVariants.add(id)
+    return renderTree()
+  }
 
   const vbtn = t.closest('.vbtn')
   if (vbtn) {
@@ -594,6 +649,32 @@ async function sendAsk() {
   }
 }
 
+/**
+ * 요청문에서 찾을 말을 미리 뽑는다. 서버의 keywordsFromPrompt와 같은 규칙이다.
+ *
+ * 왜 화면에도 두나: 승인 직전에 눈으로 보고 고칠 수 있어야 한다. 서버만 뽑으면
+ * 엉뚱한 말이 들어가도 아무도 모른 채 검색 사전에 남는다.
+ */
+const KW_NOISE = new Set([
+  '아이콘', '만들어', '만들어줘', '그려', '그려줘', '해줘', '주세요', '필요',
+  '느낌', '모양', '스타일', '심플하게', '간단하게', '느낌으로', '표현',
+  'icon', 'make', 'create', 'please'
+])
+
+function guessKeywords(prompt, name) {
+  const words = String(prompt || '')
+    .split(/[\s,·./()[\]{}"'`~!@#$%^&*+=<>?|\\:;]+/)
+    .map((w) => w.trim().replace(/(을|를|이|가|은|는|의|에|로|으로|와|과|도|만)$/, ''))
+    .filter((w) => w.length >= 2 && w.length <= 12 && !KW_NOISE.has(w) && !/^\d+$/.test(w))
+
+  const out = []
+  for (const w of words) if (!out.includes(w)) out.push(w)
+  for (const seg of String(name).split('-')) {
+    if (seg.length >= 2 && !out.includes(seg)) out.push(seg)
+  }
+  return out.slice(0, 8)
+}
+
 async function approve(card) {
   const jobId = card.dataset.job
   const idx = Number(card.dataset.idx)
@@ -621,7 +702,11 @@ async function approve(card) {
         category: 'custom',
         requestId: jobId,
         prompt: job.text,
-        model: 'claude'
+        model: 'claude',
+        keywords: (card.querySelector('.cand__keywords')?.value || '')
+          .split(',')
+          .map((k) => k.trim())
+          .filter(Boolean)
       })
     })
     state.svgCache.delete(name)

@@ -248,8 +248,15 @@ function listIcons({ query } = {}) {
 
   const all = Object.entries(ledger.icons).map(([name, meta]) => ({ name, ...meta }))
   const needle = query ? String(query).toLowerCase() : null
+  // 한국어로도 찾는다 — 「달력」·「즐겨찾기」·「찾아오는길」. 이름이 영어라
+  // 이 다리가 없으면 AI가 「없다」고 판단해 이름을 지어낸다 (R-27)
   const rows = needle
-    ? all.filter(i => i.name.includes(needle) || (i.category || '').includes(needle) || (i.label || '').includes(needle))
+    ? all.filter(i =>
+        i.name.includes(needle) ||
+        (i.category || '').includes(needle) ||
+        (i.label || '').includes(needle) ||
+        (i.keywords || []).some(k => String(k).toLowerCase().includes(needle))
+      )
     : all
 
   if (rows.length === 0) {
@@ -269,6 +276,13 @@ function listIcons({ query } = {}) {
   const withFill = all.filter((i) => (i.variants || []).includes('fill')).length
   const lines = ['# infoUX 아이콘 카탈로그', '']
   lines.push(query ? `"${query}" 검색 — ${rows.length}종` : `총 ${rows.length}종.`, '')
+  if (needle) {
+    // 이름에 없는 말로 걸린 것은 왜 걸렸는지 밝힌다 — 엉뚱한 결과처럼 보이지 않게
+    const via = rows
+      .filter(i => !i.name.includes(needle))
+      .map(i => `${i.name}(${(i.keywords || []).find(k => String(k).toLowerCase().includes(needle))})`)
+    if (via.length > 0) lines.push(`검색어로 걸린 것 — ${via.join(', ')}`, '')
+  }
   for (const [cat, names] of byCat) {
     lines.push(`- **${cat}** — ${names.join(', ')}`)
   }
@@ -333,6 +347,9 @@ function getIcon(name) {
     `# ${name}`,
     '',
     `분류 ${meta.category} · 출처 ${meta.source} · 코드포인트 ${meta.codepoint}`,
+    ...(Array.isArray(meta.keywords) && meta.keywords.length > 0
+      ? ['', `이 아이콘을 부르는 말 — ${meta.keywords.join(' · ')}`]
+      : []),
     '',
     '## 붙여 넣을 코드 (기본 — 폰트)',
     '',

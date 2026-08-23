@@ -17,6 +17,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
+import { makeZip } from './lib/zip.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(HERE, '..')
@@ -24,6 +25,7 @@ const PUBLIC = path.join(HERE, 'public')
 const QUEUE = path.join(HERE, 'queue')
 const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
 const OUT_ICONS = path.join(ROOT, 'assets/icons')
+const KEYWORDS = path.join(ROOT, 'contracts/icon-keywords.json')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
@@ -110,6 +112,7 @@ function iconCatalog() {
   // 폴더를 직접 뒤지지 않는다 — 빌드를 안 거친 파일이 섞이면 없는 표정을 권하게 된다.
   const contract = readJson(CONTRACT, {})
   const combos = (contract.variants?.combinations || []).filter((c) => !c.default)
+  const keywords = readJson(KEYWORDS, { keywords: {} }).keywords || {}
 
   const icons = Object.entries(ledger.icons).map(([name, meta]) => ({
     name,
@@ -119,7 +122,9 @@ function iconCatalog() {
     source: meta.source,
     own: meta.source !== 'google-material',
     addedAt: meta.addedAt,
-    variants: meta.variants || []
+    variants: meta.variants || [],
+    // 한국어로 찾을 수 있게. 화면에는 안 보이고 검색에만 쓴다
+    keywords: keywords[name] || []
   }))
 
   return {
@@ -130,7 +135,54 @@ function iconCatalog() {
 }
 
 /** 승인 — 후보 SVG를 자산으로 굳히고 대장에 올린다. 여기가 유일한 쓰기 지점이다. */
-function approve({ name, svg, category, requestedBy, model, prompt }) {
+/**
+ * 요청문에서 검색어 후보를 뽑는다.
+ *
+ * 사용자가 「전자티켓 QR 스캔 아이콘」이라고 적었으면 그 말이 곧 남들이 찾을 말이다.
+ * 완벽할 필요는 없다 — 승인 화면에서 고칠 수 있고, 여기서 하는 일은
+ * **빈칸으로 두지 않는 것**이다. 검색어가 없으면 만들자마자 안 찾힌다.
+ */
+function keywordsFromPrompt(prompt, name) {
+  // 아이콘 요청문에 늘 붙는 말은 검색어로 쓸모가 없다 — 다 걸린다
+  const noise = new Set([
+    '아이콘', '만들어', '만들어줘', '그려', '그려줘', '해줘', '주세요', '필요',
+    '느낌', '모양', '스타일', '심플하게', '간단하게', '느낌으로', '표현',
+    'icon', 'make', 'create', 'please'
+  ])
+
+  const words = String(prompt || '')
+    .split(/[\s,·.·/()[\]{}"'`~!@#$%^&*+=<>?|\\:;]+/)
+    .map((w) => w.trim())
+    // 조사·어미가 붙은 채로 남으면 검색이 안 걸린다. 흔한 것만 떼어 낸다.
+    .map((w) => w.replace(/(을|를|이|가|은|는|의|에|로|으로|와|과|도|만)$/, ''))
+    .filter((w) => w.length >= 2 && w.length <= 12)
+    .filter((w) => !noise.has(w))
+    .filter((w) => !/^\d+$/.test(w))
+
+  const out = []
+  for (const w of words) if (!out.includes(w)) out.push(w)
+
+  // 이름을 마디로 쪼개 함께 넣는다 — e-ticket이면 e·ticket으로도 찾힌다
+  for (const seg of String(name).split('-')) {
+    if (seg.length >= 2 && !out.includes(seg)) out.push(seg)
+  }
+  return out.slice(0, 8)
+}
+
+/** 검색어 사전에 적는다. 대장 순서를 그대로 따라 파일이 흔들리지 않게 한다. */
+function writeKeywords(name, words, ledger) {
+  if (!fs.existsSync(KEYWORDS)) return
+  const dict = readJson(KEYWORDS, null)
+  if (!dict) return
+  dict.keywords = dict.keywords || {}
+  dict.keywords[name] = words
+  const ordered = {}
+  for (const n of Object.keys(ledger.icons)) if (dict.keywords[n]) ordered[n] = dict.keywords[n]
+  dict.keywords = ordered
+  fs.writeFileSync(KEYWORDS, JSON.stringify(dict, null, 2) + '\n')
+}
+
+function approve({ name, svg, category, requestedBy, model, prompt, keywords }) {
   const contract = readJson(CONTRACT)
   const ledger = readJson(LEDGER)
   if (!contract || !ledger) throw new Error('규격 또는 대장을 읽지 못했습니다')
@@ -174,7 +226,15 @@ function approve({ name, svg, category, requestedBy, model, prompt }) {
   ledger.updatedAt = new Date().toISOString().slice(0, 10)
   fs.writeFileSync(LEDGER, JSON.stringify(ledger, null, 2) + '\n')
 
-  return { name, codepoint }
+  // 검색어가 없으면 만들자마자 화면에서 안 찾힌다 — 쓰는 사람은 없는 줄 알고
+  // 또 만들어 달라고 하거나 남의 SVG를 붙여 넣는다 (R-27 위반)
+  const given = Array.isArray(keywords)
+    ? keywords.map((k) => String(k).trim()).filter(Boolean)
+    : []
+  const words = given.length > 0 ? [...new Set(given)].slice(0, 10) : keywordsFromPrompt(prompt, name)
+  writeKeywords(name, words, ledger)
+
+  return { name, codepoint, keywords: words }
 }
 
 // ── 라우팅 ────────────────────────────────────────────
@@ -275,57 +335,164 @@ const routes = {
     const contract = readJson(CONTRACT, {})
     const canvas = contract.canvas?.width ?? 24
     const rule = contract.output?.fillRule
+    const allCombos = contract.variants?.combinations || [{ id: 'regular', default: true }]
 
-    const files = {}
-    const symbols = []
+    // 고른 표정만 담는다. 기본은 늘 들어간다 — 표정만 있고 기본이 없으면
+    // 클래스를 안 붙인 자리가 통째로 빈 네모가 된다.
+    const asked = new Set(Array.isArray(body.variants) ? body.variants : [])
+    const combos = allCombos.filter((c) => c.default || asked.has(c.id))
+
+    const files = []
+    const kept = []
     let missing = 0
 
-    for (const name of names) {
-      const p = path.join(SVG_DIR, `${name}.svg`)
-      if (!fs.existsSync(p) || !ledger.icons[name]) { missing += 1; continue }
-      const svg = fs.readFileSync(p, 'utf8')
-      files[`svg/${name}.svg`] = svg
-      const paths = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`).join('')
-      symbols.push(`<symbol id="${name}" viewBox="0 0 ${canvas} ${canvas}"${rule ? ` fill-rule="${rule}"` : ''}>${paths}</symbol>`)
+    const svgOf = (name, combo) => {
+      const dir = combo.default ? SVG_DIR : path.join(SVG_DIR, combo.id)
+      const p = path.join(dir, `${name}.svg`)
+      return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null
     }
 
-    files['sprite.svg'] =
-      `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">\n` +
-      symbols.join('\n') + '\n</svg>\n'
+    for (const name of names) {
+      const base = ledger.icons[name] ? svgOf(name, combos[0]) : null
+      if (!base) { missing += 1; continue }
+      kept.push(name)
+    }
+
+    for (const combo of combos) {
+      const symbols = []
+      for (const name of kept) {
+        const svg = svgOf(name, combo)
+        // 표정이 없는 아이콘은 그 표정 스프라이트에서 빠진다 — 기본을 대신 넣으면
+        // 「필인 줄 알았는데 아웃라인」이 조용히 섞인다
+        if (!svg) continue
+        const dir = combo.default ? 'svg' : `svg/${combo.id}`
+        files.push({ name: `${dir}/${name}.svg`, data: svg })
+        const paths = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`).join('')
+        symbols.push(`<symbol id="${name}" viewBox="0 0 ${canvas} ${canvas}"${rule ? ` fill-rule="${rule}"` : ''}>${paths}</symbol>`)
+      }
+      if (symbols.length === 0) continue
+      files.push({
+        name: combo.default ? 'sprite.svg' : `sprite-${combo.id}.svg`,
+        data:
+          `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">\n` +
+          symbols.join('\n') + '\n</svg>\n'
+      })
+
+      // 폰트는 이진이다. 예전에는 「저장소에서 따로 가져오라」고 안내만 했는데,
+      // 그 한 줄이 받는 사람에게 별도 절차였다. zip이면 그냥 넣을 수 있다.
+      const font = path.join(OUT_ICONS, combo.default ? 'infoux-icons.woff2' : `infoux-icons-${combo.id}.woff2`)
+      if (fs.existsSync(font)) {
+        files.push({ name: path.basename(font), data: fs.readFileSync(font) })
+      }
+    }
 
     // 이 묶음에 실제로 든 아이콘만 담은 CSS. 원본 icons.css를 통째로 주면
     // 없는 아이콘의 클래스까지 따라가 쓰는 사람이 헷갈린다.
     const guideCss = path.join(OUT_ICONS, 'icons.css')
-    if (fs.existsSync(guideCss)) {
+    if (fs.existsSync(guideCss) && kept.length > 0) {
       const full = fs.readFileSync(guideCss, 'utf8')
       const head = full.split('@layer components {')[0]
-      const fontFace = (full.match(/@font-face \{[\s\S]*?\n {2}\}/) || [''])[0]
-      const iconFont = (full.match(/\.icon-font \{[\s\S]*?\n {2}\}/) || [''])[0]
-      const rows = names
-        .filter((n) => ledger.icons[n])
-        .map((n) => `  .icon-font--${n}::before { content: "${ledger.icons[n].codepoint.replace('U+', '\\')}"; }`)
-      files['icons.css'] = `${head}@layer components {\n${fontFace}\n\n${iconFont}\n\n${rows.join('\n')}\n}\n`
+
+      // 저장소의 icons.css는 Tailwind `@apply`를 쓴다. 그건 빌드를 거쳐야 값이 되는
+      // 문법이라, Tailwind가 없는 프로젝트에 그대로 주면 아이콘이 통째로 안 뜬다.
+      // 묶음은 어디에 넣어도 그냥 도는 것이 조건이므로 순수 CSS로 편다.
+      const iconFont =
+        `  .icon-font {\n` +
+        `    display: inline-block;\n` +
+        `    flex-shrink: 0;\n` +
+        `    font-family: "infoUX Icons", sans-serif;\n` +
+        `    font-size: 2.4rem;\n` +
+        `    line-height: 1;\n` +
+        `    font-style: normal;\n` +
+        `    text-transform: none;\n` +
+        `    vertical-align: -0.125em;\n` +
+        `    font-variant-ligatures: none;\n` +
+        `    speak: never;\n` +
+        `    -webkit-font-smoothing: antialiased;\n` +
+        `  }\n\n` +
+        `  /* KRDS 사이즈 어휘 — 시각적 이름(--big)은 쓰지 않는다 */\n` +
+        `  .icon-font--xsmall { font-size: 1.6rem; }\n` +
+        `  .icon-font--small  { font-size: 2rem; }\n` +
+        `  .icon-font--medium { font-size: 2.4rem; }\n` +
+        `  .icon-font--large  { font-size: 3.2rem; }\n` +
+        `  .icon-font--xlarge { font-size: 4rem; }\n` +
+        `  .icon-font--inherit { font-size: inherit; }`
+      const blocks = []
+
+      for (const combo of combos) {
+        const family = combo.default ? 'infoUX Icons' : `infoUX Icons ${combo.id}`
+        const file = combo.default ? 'infoux-icons.woff2' : `infoux-icons-${combo.id}.woff2`
+        blocks.push(
+          `  @font-face {\n` +
+          `    font-family: "${family}";\n` +
+          `    src: url("./${file}") format("woff2");\n` +
+          `    font-weight: normal;\n` +
+          `    font-style: normal;\n` +
+          `    font-display: block;\n` +
+          `  }`
+        )
+      }
+      blocks.push(iconFont)
+
+      // 코드포인트는 표정과 무관하게 한 번만 적는다 — 두 번 적으면 대장이 두 곳으로 갈린다
+      blocks.push(
+        kept.map((n) => `  .icon-font--${n}::before { content: "${ledger.icons[n].codepoint.replace('U+', '\\')}"; }`).join('\n')
+      )
+
+      for (const combo of combos.filter((c) => !c.default)) {
+        const has = kept.filter((n) => (ledger.icons[n].variants || []).includes(combo.id))
+        if (has.length === 0) continue
+        const sel = has.map((n) => `  .icon-font--${combo.id}.icon-font--${n}`).join(',\n')
+        blocks.push(`${sel} {\n    font-family: "infoUX Icons ${combo.id}", "infoUX Icons", sans-serif;\n  }`)
+      }
+
+      files.push({ name: 'icons.css', data: `${head}@layer components {\n${blocks.join('\n\n')}\n}\n` })
     }
 
     const notice = path.join(OUT_ICONS, 'LICENSE-NOTICE.txt')
-    if (fs.existsSync(notice)) files['LICENSE-NOTICE.txt'] = fs.readFileSync(notice, 'utf8')
+    if (fs.existsSync(notice)) files.push({ name: 'LICENSE-NOTICE.txt', data: fs.readFileSync(notice, 'utf8') })
 
-    files['README.txt'] =
-      `infoUX 아이콘 묶음 — ${Object.keys(files).filter((f) => f.startsWith('svg/')).length}종\n` +
-      `${new Date().toISOString().slice(0, 10)} 생성\n\n` +
-      `프로젝트의 assets/icons/ 에 이 폴더 내용을 그대로 넣는다.\n\n` +
-      `쓰는 법\n` +
-      `  <svg class="icon" aria-hidden="true">\n` +
-      `    <use href="/assets/icons/sprite.svg#${names[0]}"></use>\n` +
-      `  </svg>\n\n` +
-      `옆에 텍스트가 없어 아이콘이 뜻을 담을 때는 aria-hidden 대신\n` +
-      `role="img" aria-label="설명" 을 쓴다.\n\n` +
-      `.icon 컴포넌트 CSS는 프로젝트의 6-components/icon.css에 이미 있다.\n` +
-      `icons.css는 SVG를 못 받는 환경을 위한 폰트 여벌이며, 쓸 때는\n` +
-      `infoux-icons.woff2 를 저장소 assets/icons/ 에서 함께 가져온다.\n\n` +
-      `아이콘 목록·추가 요청은 아이콘 스튜디오에서 한다.\n`
+    const extra = combos.filter((c) => !c.default)
+    const sample = kept[0] || 'search'
+    files.push({
+      name: 'README.txt',
+      data:
+        `infoUX 아이콘 묶음 — ${kept.length}종\n` +
+        `표정 ${combos.map((c) => c.id).join(' · ')}\n` +
+        `${new Date().toISOString().slice(0, 10)} 생성\n\n` +
+        `이 폴더 내용을 프로젝트의 assets/icons/ 에 그대로 넣는다. 폰트도 들어 있다.\n\n` +
+        `쓰는 법 — 폰트(기본)\n` +
+        `  <span class="icon-font icon-font--${sample}" aria-hidden="true"></span>\n\n` +
+        `쓰는 법 — SVG (폰트를 못 쓰는 곳, 개별 색이 필요할 때)\n` +
+        `  <svg class="icon" aria-hidden="true">\n` +
+        `    <use href="/assets/icons/sprite.svg#${sample}"></use>\n` +
+        `  </svg>\n\n` +
+        (extra.length > 0
+          ? `표정 바꾸기\n` +
+            extra.map((c) =>
+              `  <span class="icon-font icon-font--${c.id} icon-font--${sample}" aria-hidden="true"></span>\n` +
+              `  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite-${c.id}.svg#${sample}"></use></svg>\n`
+            ).join('') +
+            `\n  폰트는 클래스가, SVG는 스프라이트 파일이 표정을 정한다.\n` +
+            `  아이콘마다 있는 표정이 다르다 — 없는 표정을 부르면 빈 네모가 나온다.\n` +
+            `  한 화면에서 표정을 섞지 않는다.\n\n`
+          : '') +
+        `아이콘에는 늘 aria-hidden을 붙인다. 뜻은 옆의 텍스트나 버튼의\n` +
+        `aria-label이 전한다 — 스크린리더는 코드포인트를 엉뚱하게 읽는다.\n\n` +
+        `.icon 컴포넌트 CSS는 프로젝트의 6-components/icon.css에 이미 있다.\n\n` +
+        `아이콘 목록·추가 요청은 아이콘 스튜디오에서 한다.\n`
+    })
 
-    json(res, 200, { files, count: names.length - missing, missing })
+    const zip = makeZip(files)
+    res.writeHead(200, {
+      'content-type': 'application/zip',
+      'content-disposition': 'attachment; filename="infoux-icons.zip"',
+      'content-length': zip.length,
+      'x-icon-count': String(kept.length),
+      'x-icon-missing': String(missing),
+      'x-icon-files': String(files.length)
+    })
+    res.end(zip)
   },
 
   'POST /api/discard': async (req, res) => {

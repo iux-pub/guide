@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 5d647f7
+> 빌드: 5d2466a
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -1293,6 +1293,10 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 
 카탈로그에 등재된 아이콘만 쓴다. 목록은 `npm run icons:sheet`로 보거나
 AI 도구에서는 MCP `list_icons`로 받는다. 없는 아이콘은 지어내지 말고 UX팀에 요청한다 (R-27).
+
+**한국어로 찾는다.** `list_icons("달력")`처럼 평소 쓰는 말로 물으면 걸린다 —
+이름이 영어라 「없다」고 판단하고 지어내는 일을 막는 다리다
+(사전: `contracts/icon-keywords.json`).
 
 #### 기본 마크업
 

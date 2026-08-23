@@ -87,12 +87,15 @@
       </div>
 
       <div class="export__out">
-        <h2 class="export__title">프로젝트에 넣을 것</h2>
-        <p class="export__desc">아래 파일을 프로젝트의 <code>assets/icons/</code>에 그대로 복사합니다. 외부에서 불러오는 것이 없어 폐쇄망에서도 뜹니다.</p>
+        <h2 class="export__title">함께 담을 표정</h2>
+        <p class="export__desc">기본(레귤러)은 늘 들어갑니다. 쓸 표정만 고르면 파일이 그만큼만 늘어납니다.</p>
+        <div class="export__variants" id="export-variants" role="group" aria-label="표정 고르기"></div>
+
+        <h2 class="export__title">받게 될 것</h2>
+        <p class="export__desc">zip 하나로 받습니다. 푼 내용을 프로젝트의 <code>assets/icons/</code>에 그대로 넣으면 끝입니다 — 폰트까지 들어 있고, 외부에서 불러오는 것이 없어 폐쇄망에서도 뜹니다.</p>
         <pre class="tree" id="tree"></pre>
         <button class="btn" id="do-export" disabled>묶음 내려받기</button>
         <p class="export__note" id="export-status" role="status" aria-live="polite"></p>
-        <p class="export__note">폰트가 필요하면 저장소의 <code>assets/icons/infoux-icons.woff2</code>를 함께 넣으세요. 기본 경로는 스프라이트입니다.</p>
       </div>
     </div>
   </section>

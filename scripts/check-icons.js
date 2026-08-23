@@ -22,6 +22,7 @@ const ROOT = path.join(__dirname, '..')
 const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const BASELINE = path.join(ROOT, 'contracts/icon-metrics-baseline.json')
+const KEYWORDS = path.join(ROOT, 'contracts/icon-keywords.json')
 const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
 
 const STRICT = process.argv.includes('--strict')
@@ -127,6 +128,37 @@ function checkSvg(name, svg, isSeed) {
 // 기준선(icon-metrics-baseline.json)은 구글 씨앗의 실측 분포다. 씨앗 자신은
 // 이미 사람 손으로 시각 보정을 마친 것이므로 검사 대상이 아니고,
 // 자체 제작 아이콘만 그 분포와 견준다. 자세한 근거는 build-icon-baseline.js.
+
+// ── 검색어 ─────────────────────────────────────────────
+
+/**
+ * 한국어 검색어가 빠지면 그 아이콘은 **화면에서 안 찾힌다.**
+ *
+ * 파일도 멀쩡하고 그림도 멀쩡한데 「달력」을 쳐도 안 나온다. 쓰는 사람은
+ * 없는 아이콘으로 여기고 새로 만들어 달라고 하거나 남의 SVG를 붙여 넣는다(R-27 위반).
+ * 그래서 누락은 경고가 아니라 실패로 본다.
+ */
+function checkKeywords(names) {
+  if (!fs.existsSync(KEYWORDS)) return
+  const dict = JSON.parse(fs.readFileSync(KEYWORDS, 'utf8')).keywords || {}
+
+  for (const n of names) {
+    const words = dict[n]
+    if (!Array.isArray(words) || words.length === 0) {
+      fail(n, '한국어 검색어가 없다 — contracts/icon-keywords.json에 넣는다. 없으면 화면에서 안 찾힌다')
+      continue
+    }
+    if (words.length < 3) {
+      warn(n, `검색어가 ${words.length}개뿐이다 — 쓰는 사람이 칠 만한 말을 4개 이상 둔다`)
+    }
+    const dup = words.filter((w, i) => words.indexOf(w) !== i)
+    if (dup.length > 0) fail(n, `검색어 중복: ${[...new Set(dup)].join(', ')}`)
+  }
+
+  for (const n of Object.keys(dict)) {
+    if (!names.includes(n)) fail(n, '대장에 없는 아이콘의 검색어다 — 이름이 바뀌었거나 폐기됐다')
+  }
+}
 
 // ── 변형 ───────────────────────────────────────────────
 
@@ -239,6 +271,7 @@ function main() {
   }
 
   checkVariants(names)
+  checkKeywords(names)
 
   // 획 굵기 — 기준선 분포 밖이면 세트에서 튄다는 신호다
   if (baseline) {

@@ -9,6 +9,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "왼쪽",
+        "이전",
+        "뒤로",
+        "화살괄호",
+        "back",
+        "prev"
       ]
     },
     "chevron-right": {
@@ -18,6 +26,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "오른쪽",
+        "다음",
+        "더보기",
+        "화살괄호",
+        "next",
+        "more"
       ]
     },
     "chevron-up": {
@@ -27,6 +43,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "위",
+        "접기",
+        "위로",
+        "collapse",
+        "up"
       ]
     },
     "chevron-down": {
@@ -36,6 +59,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "아래",
+        "펼치기",
+        "아래로",
+        "더보기",
+        "expand",
+        "down"
       ]
     },
     "arrow-left": {
@@ -45,6 +76,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "왼쪽",
+        "뒤로",
+        "이전",
+        "돌아가기",
+        "화살표",
+        "back"
       ]
     },
     "arrow-right": {
@@ -54,6 +93,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "오른쪽",
+        "다음",
+        "이동",
+        "화살표",
+        "forward",
+        "go"
       ]
     },
     "arrow-up": {
@@ -63,6 +110,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "위",
+        "위로",
+        "화살표",
+        "상승",
+        "정렬"
       ]
     },
     "arrow-down": {
@@ -72,6 +126,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "아래",
+        "아래로",
+        "화살표",
+        "하락",
+        "정렬"
       ]
     },
     "menu": {
@@ -81,6 +142,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "메뉴",
+        "햄버거",
+        "전체메뉴",
+        "네비게이션",
+        "hamburger",
+        "nav"
       ]
     },
     "close": {
@@ -90,6 +159,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "닫기",
+        "취소",
+        "엑스",
+        "삭제",
+        "x",
+        "cancel",
+        "dismiss"
       ]
     },
     "more-vertical": {
@@ -99,6 +177,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "더보기",
+        "케밥",
+        "점세개",
+        "옵션",
+        "kebab",
+        "options"
       ]
     },
     "external-link": {
@@ -108,6 +194,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "새창",
+        "새탭",
+        "외부링크",
+        "바로가기",
+        "팝업",
+        "new-window",
+        "popup"
       ]
     },
     "search": {
@@ -117,6 +212,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "검색",
+        "찾기",
+        "돋보기",
+        "조회",
+        "find",
+        "magnifier"
       ]
     },
     "filter": {
@@ -127,6 +230,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "필터",
+        "거르기",
+        "정렬",
+        "조건",
+        "깔때기",
+        "sort"
       ]
     },
     "download": {
@@ -136,6 +247,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "내려받기",
+        "다운로드",
+        "저장",
+        "받기",
+        "save"
       ]
     },
     "upload": {
@@ -145,6 +263,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "올리기",
+        "업로드",
+        "첨부",
+        "등록",
+        "attach"
       ]
     },
     "share": {
@@ -155,6 +280,12 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "공유",
+        "보내기",
+        "퍼가기",
+        "sns"
       ]
     },
     "print": {
@@ -165,6 +296,11 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "인쇄",
+        "출력",
+        "프린트"
       ]
     },
     "copy": {
@@ -175,6 +311,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "복사",
+        "복제",
+        "클립보드",
+        "duplicate",
+        "clipboard"
       ]
     },
     "edit": {
@@ -185,6 +328,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "수정",
+        "편집",
+        "연필",
+        "고치기",
+        "작성",
+        "pencil",
+        "modify"
       ]
     },
     "delete": {
@@ -195,6 +347,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "삭제",
+        "지우기",
+        "휴지통",
+        "버리기",
+        "제거",
+        "trash",
+        "remove"
       ]
     },
     "add": {
@@ -204,6 +365,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "추가",
+        "더하기",
+        "새로",
+        "등록",
+        "플러스",
+        "plus",
+        "new"
       ]
     },
     "refresh": {
@@ -213,6 +383,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "새로고침",
+        "다시",
+        "갱신",
+        "초기화",
+        "reload",
+        "reset"
       ]
     },
     "save": {
@@ -223,6 +401,12 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "저장",
+        "보관",
+        "디스크",
+        "플로피"
       ]
     },
     "settings": {
@@ -233,6 +417,16 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "설정",
+        "환경설정",
+        "톱니",
+        "관리",
+        "옵션",
+        "gear",
+        "config",
+        "preferences"
       ]
     },
     "check": {
@@ -242,6 +436,16 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "체크",
+        "확인",
+        "완료",
+        "선택",
+        "동의",
+        "tick",
+        "done",
+        "ok"
       ]
     },
     "info": {
@@ -252,6 +456,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "정보",
+        "안내",
+        "알림",
+        "도움",
+        "느낌표",
+        "notice"
       ]
     },
     "warning": {
@@ -262,6 +474,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "경고",
+        "주의",
+        "삼각형",
+        "위험",
+        "caution",
+        "alert"
       ]
     },
     "error": {
@@ -272,6 +492,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "오류",
+        "에러",
+        "실패",
+        "문제",
+        "fail"
       ]
     },
     "success": {
@@ -282,6 +509,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "성공",
+        "완료",
+        "확인",
+        "체크",
+        "정상",
+        "done",
+        "complete"
       ]
     },
     "help": {
@@ -292,6 +528,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "도움말",
+        "물음표",
+        "질문",
+        "안내",
+        "faq",
+        "question"
       ]
     },
     "bell": {
@@ -302,6 +546,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "알림",
+        "종",
+        "공지",
+        "소식",
+        "notification",
+        "alarm"
       ]
     },
     "lock": {
@@ -312,6 +564,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "잠금",
+        "자물쇠",
+        "보안",
+        "비공개",
+        "비밀번호",
+        "secure",
+        "private"
       ]
     },
     "unlock": {
@@ -322,6 +583,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "잠금해제",
+        "열림",
+        "공개",
+        "해제",
+        "open"
       ]
     },
     "calendar": {
@@ -332,6 +600,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "달력",
+        "날짜",
+        "일정",
+        "예약",
+        "캘린더",
+        "date",
+        "schedule"
       ]
     },
     "clock": {
@@ -342,6 +619,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "시간",
+        "시계",
+        "시각",
+        "기간",
+        "최근",
+        "time",
+        "recent"
       ]
     },
     "eye": {
@@ -352,6 +638,16 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "보기",
+        "눈",
+        "미리보기",
+        "표시",
+        "조회수",
+        "view",
+        "preview",
+        "show"
       ]
     },
     "eye-off": {
@@ -362,6 +658,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "숨기기",
+        "감추기",
+        "비표시",
+        "눈감김",
+        "hide",
+        "hidden"
       ]
     },
     "attachment": {
@@ -371,6 +675,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "첨부",
+        "클립",
+        "파일첨부",
+        "붙임",
+        "clip"
       ]
     },
     "checkbox": {
@@ -381,6 +692,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "체크박스",
+        "선택",
+        "다중선택",
+        "네모",
+        "동의"
       ]
     },
     "radio": {
@@ -390,6 +708,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "라디오",
+        "단일선택",
+        "동그라미",
+        "택일",
+        "option"
       ]
     },
     "dropdown": {
@@ -399,6 +724,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "펼침",
+        "드롭다운",
+        "선택상자",
+        "셀렉트",
+        "세모",
+        "select",
+        "caret"
       ]
     },
     "minus": {
@@ -408,6 +742,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "빼기",
+        "제거",
+        "마이너스",
+        "축소",
+        "minus",
+        "remove"
       ]
     },
     "drag-handle": {
@@ -417,6 +759,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "끌기",
+        "순서변경",
+        "손잡이",
+        "이동",
+        "drag",
+        "reorder",
+        "handle"
       ]
     },
     "file": {
@@ -427,6 +778,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "파일",
+        "문서",
+        "서류",
+        "자료",
+        "doc"
       ]
     },
     "folder": {
@@ -437,6 +795,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "폴더",
+        "디렉터리",
+        "분류",
+        "보관함",
+        "directory"
       ]
     },
     "image": {
@@ -447,6 +812,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "이미지",
+        "사진",
+        "그림",
+        "사진첨부",
+        "photo",
+        "picture"
       ]
     },
     "video": {
@@ -457,6 +830,13 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "영상",
+        "동영상",
+        "비디오",
+        "캠",
+        "movie"
       ]
     },
     "document": {
@@ -467,6 +847,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "문서",
+        "본문",
+        "글",
+        "기사",
+        "내용",
+        "article",
+        "text"
       ]
     },
     "list": {
@@ -476,6 +865,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "목록",
+        "리스트",
+        "줄",
+        "나열",
+        "게시판"
       ]
     },
     "grid": {
@@ -486,6 +882,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "격자",
+        "타일",
+        "바둑판",
+        "카드보기",
+        "갤러리",
+        "tile"
       ]
     },
     "table": {
@@ -496,6 +900,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "표",
+        "테이블",
+        "도표",
+        "통계",
+        "행렬",
+        "chart"
       ]
     },
     "link": {
@@ -505,6 +917,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "링크",
+        "연결",
+        "주소",
+        "url",
+        "체인"
       ]
     },
     "tag": {
@@ -515,6 +934,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "태그",
+        "라벨",
+        "꼬리표",
+        "분류",
+        "label",
+        "keyword"
       ]
     },
     "user": {
@@ -525,6 +952,16 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "사용자",
+        "회원",
+        "사람",
+        "계정",
+        "프로필",
+        "person",
+        "account",
+        "profile"
       ]
     },
     "users": {
@@ -535,6 +972,16 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "사용자들",
+        "회원",
+        "그룹",
+        "단체",
+        "여러명",
+        "group",
+        "team",
+        "members"
       ]
     },
     "building": {
@@ -544,6 +991,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "기관",
+        "회사",
+        "건물",
+        "조직",
+        "사업장",
+        "office",
+        "company"
       ]
     },
     "phone": {
@@ -554,6 +1010,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "전화",
+        "연락처",
+        "통화",
+        "수화기",
+        "call",
+        "tel"
       ]
     },
     "mail": {
@@ -564,6 +1028,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "메일",
+        "이메일",
+        "편지",
+        "봉투",
+        "문의",
+        "email",
+        "contact"
       ]
     },
     "map-pin": {
@@ -574,6 +1047,16 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "위치",
+        "지도",
+        "장소",
+        "주소",
+        "찾아오는길",
+        "map",
+        "location",
+        "place"
       ]
     },
     "play": {
@@ -584,6 +1067,12 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "재생",
+        "시작",
+        "플레이",
+        "세모"
       ]
     },
     "pause": {
@@ -594,6 +1083,12 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "일시정지",
+        "멈춤",
+        "정지",
+        "휴지"
       ]
     },
     "volume": {
@@ -604,6 +1099,14 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "소리",
+        "음량",
+        "스피커",
+        "볼륨",
+        "sound",
+        "audio"
       ]
     },
     "fullscreen": {
@@ -613,6 +1116,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "전체화면",
+        "크게",
+        "확대",
+        "전체보기",
+        "expand"
       ]
     },
     "zoom-in": {
@@ -622,6 +1132,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "확대",
+        "크게",
+        "돋보기",
+        "줌인",
+        "enlarge"
       ]
     },
     "zoom-out": {
@@ -631,6 +1148,13 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "축소",
+        "작게",
+        "돋보기",
+        "줌아웃",
+        "shrink"
       ]
     },
     "home": {
@@ -641,6 +1165,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "홈",
+        "처음",
+        "메인",
+        "집",
+        "첫화면",
+        "main",
+        "index"
       ]
     },
     "bookmark": {
@@ -651,6 +1184,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "북마크",
+        "즐겨찾기",
+        "책갈피",
+        "저장",
+        "스크랩",
+        "favorite",
+        "scrap"
       ]
     },
     "star": {
@@ -661,6 +1203,15 @@
         "slim",
         "bold",
         "fill"
+      ],
+      "keywords": [
+        "별",
+        "즐겨찾기",
+        "평점",
+        "중요",
+        "추천",
+        "favorite",
+        "rating"
       ]
     },
     "chart-bar": {
@@ -670,6 +1221,16 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "차트",
+        "그래프",
+        "통계",
+        "막대",
+        "현황",
+        "실적",
+        "graph",
+        "stats"
       ]
     },
     "globe": {
@@ -679,6 +1240,15 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "지구",
+        "세계",
+        "웹",
+        "글로벌",
+        "공개",
+        "world",
+        "public"
       ]
     },
     "language": {
@@ -688,6 +1258,14 @@
       "variants": [
         "slim",
         "bold"
+      ],
+      "keywords": [
+        "언어",
+        "번역",
+        "다국어",
+        "외국어",
+        "translate",
+        "locale"
       ]
     }
   }

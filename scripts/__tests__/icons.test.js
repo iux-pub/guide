@@ -376,3 +376,65 @@ test('표정 클래스가 font-family만 바꾼다 — 코드포인트는 그대
     assert.match(rule[2], /font-family/, `${combo.id}/${name} — font-family를 바꿔야 한다`)
   }
 })
+
+
+// ── 검색어 ─────────────────────────────────────────────
+
+test('모든 아이콘에 한국어 검색어가 있다', () => {
+  const p = path.join(ROOT, 'contracts/icon-keywords.json')
+  if (!fs.existsSync(p)) return
+  const dict = JSON.parse(fs.readFileSync(p, 'utf8')).keywords
+
+  for (const name of Object.keys(ledger.icons)) {
+    const words = dict[name]
+    assert.ok(Array.isArray(words) && words.length > 0, `${name}: 검색어가 없다 — 화면에서 안 찾힌다`)
+    assert.ok(words.some((w) => /[가-힣]/.test(w)), `${name}: 한국어 낱말이 하나도 없다`)
+  }
+  for (const name of Object.keys(dict)) {
+    assert.ok(ledger.icons[name], `${name}: 대장에 없는 아이콘의 검색어다`)
+  }
+})
+
+test('검색어가 실제로 아이콘을 집어낸다', () => {
+  const p = path.join(ROOT, 'contracts/icon-keywords.json')
+  if (!fs.existsSync(p)) return
+  const dict = JSON.parse(fs.readFileSync(p, 'utf8')).keywords
+
+  // 스튜디오·MCP가 쓰는 것과 같은 판정이다. 사전이 있어도 이 규칙이 어긋나면
+  // 화면에서는 여전히 안 찾힌다.
+  const find = (q) =>
+    Object.keys(ledger.icons).filter(
+      (n) => n.includes(q) || (dict[n] || []).some((k) => k.includes(q))
+    )
+
+  const cases = [
+    ['달력', 'calendar'],
+    ['즐겨찾기', 'star'],
+    ['찾아오는길', 'map-pin'],
+    ['휴지통', 'delete'],
+    ['전체메뉴', 'menu'],
+    ['새창', 'external-link']
+  ]
+  for (const [q, want] of cases) {
+    assert.ok(find(q).includes(want), `"${q}"로 ${want}가 안 나온다`)
+  }
+})
+
+test('검색어가 지나치게 넓지 않다', () => {
+  const p = path.join(ROOT, 'contracts/icon-keywords.json')
+  if (!fs.existsSync(p)) return
+  const dict = JSON.parse(fs.readFileSync(p, 'utf8')).keywords
+
+  // 한 낱말이 아이콘 여럿을 부르는 것 자체는 정상이다(「즐겨찾기」= star·bookmark).
+  // 다만 대여섯을 넘으면 검색 결과가 뭉개져 고르기 어려워진다.
+  const hits = new Map()
+  for (const [name, words] of Object.entries(dict)) {
+    for (const w of words) {
+      if (!hits.has(w)) hits.set(w, [])
+      hits.get(w).push(name)
+    }
+  }
+  for (const [w, names] of hits) {
+    assert.ok(names.length <= 5, `"${w}"가 ${names.length}종을 부른다 (${names.join(', ')}) — 너무 넓다`)
+  }
+})

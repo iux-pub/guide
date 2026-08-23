@@ -7,6 +7,8 @@ infoUX 아이콘 세트. 권위 있는 소스는 `src/snippets/icon.md`이며, �
 
 **카탈로그에 없는 아이콘 이름을 쓰지 않는다** (R-27). 없으면 지어내지 말고 UX팀에 요청한다. AI 도구는 infoUX MCP의 `list_icons`·`get_icon`으로 실재하는 이름만 받는다.
 
+찾을 때는 **한국어로 친다** — 이름은 영어지만 `contracts/icon-keywords.json`이 다리를 놓는다. 「달력」→ calendar, 「즐겨찾기」→ bookmark·star, 「찾아오는길」→ map-pin. 스튜디오 검색창과 MCP `list_icons` 둘 다 이 사전을 쓴다.
+
 ## 기본 마크업
 
 ```html

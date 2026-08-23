@@ -631,6 +631,13 @@ code {
 .sheet__meta { margin: 0; font-size: 12px; color: var(--muted); }
 .sheet__label { font-size: 12px; color: var(--muted); }
 
+.export__variants {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 2px 0 18px;
+}
+
 .sheet__variants {
   display: flex;
   gap: 6px;

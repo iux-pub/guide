@@ -86,11 +86,18 @@ fs.copyFileSync(path.join(ROOT, 'contracts', 'art-direction.json'), path.join(DA
 const iconLedgerPath = path.join(ROOT, 'contracts', 'icon-codepoints.json')
 if (fs.existsSync(iconLedgerPath)) {
   const full = JSON.parse(fs.readFileSync(iconLedgerPath, 'utf8'))
+  // 한국어 검색어를 함께 싣는다 — AI가 「달력」으로 물어도 calendar를 찾아야
+  // 이름을 지어내지 않는다 (R-27)
+  const kwPath = path.join(ROOT, 'contracts', 'icon-keywords.json')
+  const keywords = fs.existsSync(kwPath)
+    ? JSON.parse(fs.readFileSync(kwPath, 'utf8')).keywords || {}
+    : {}
   const slim = { name: full.name, version: full.version, icons: {} }
   for (const [name, meta] of Object.entries(full.icons)) {
     // variants를 빠뜨리면 MCP가 「표정 없음」이라고 답한다 — AI가 볼드를 아예 안 쓴다
     slim.icons[name] = { codepoint: meta.codepoint, category: meta.category, source: meta.source }
     if (meta.variants) slim.icons[name].variants = meta.variants
+    if (keywords[name]) slim.icons[name].keywords = keywords[name]
   }
   fs.writeFileSync(path.join(DATA_DIR, 'icons.json'), JSON.stringify(slim, null, 2) + '\n')
 }

@@ -16,12 +16,12 @@
     "icons:import": "node scripts/import-icons.js",
     "icons:import:force": "node scripts/import-icons.js --force",
     "icons:sheet": "node scripts/build-icon-sheet.js",
-  "icons:build": "node scripts/build-icons.js",
-  "icons:baseline": "node scripts/build-icon-baseline.js",
-  "check:icons": "node scripts/check-icons.js",
-  "studio": "node studio/start.mjs",
-  "studio:server": "node studio/server.mjs",
-  "studio:worker": "node studio/worker.mjs",
+    "icons:build": "node scripts/build-icons.js",
+    "icons:baseline": "node scripts/build-icon-baseline.js",
+    "check:icons": "node scripts/check-icons.js",
+    "studio": "node studio/start.mjs",
+    "studio:server": "node studio/server.mjs",
+    "studio:worker": "node studio/worker.mjs",
     "sync:starter": "bash scripts/sync-starter.sh",
     "sync:starter:push": "bash scripts/sync-starter.sh --push",
     "//-aliases": "── 별칭 (이전 이름 유지 — 점진 마이그레이션) ──",
@@ -52,7 +52,8 @@
     "test:a11y": "npm run build && pa11y-ci --config .pa11yci.js",
     "test:a11y:single": "axe",
     "//-hooks": "── git hooks ─────────────────────────────",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy:nas": "bash scripts/deploy-nas.sh"
   },
   "lint-staged": {
     "src/styles/**/*.css": [

@@ -30,6 +30,8 @@ export default function(eleventyConfig) {
   // dist/css를 그대로 복사 -- 문서 사이트와 playground iframe 모두 /dist/css/ 경로 사용
   eleventyConfig.addPassthroughCopy({ 'dist/css': 'dist/css' }).addWatchTarget('dist/css/')
   eleventyConfig.addPassthroughCopy({ 'src/playground': 'playground' })
+  // 아이콘 검수 시트 — npm run icons:sheet 산출물. 팀원이 /icons/ 에서 목록을 본다.
+  eleventyConfig.addPassthroughCopy({ 'dist/icon-sheet.html': 'icons/index.html' })
   eleventyConfig.addPassthroughCopy({ 'node_modules/clipboard/dist/clipboard.min.js': 'assets/js/clipboard.min.js' })
 
   // 동일 섹션 내 이전/다음 페이지 필터

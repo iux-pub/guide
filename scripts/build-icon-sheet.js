@@ -16,6 +16,10 @@ const ROOT = path.join(__dirname, '..')
 const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
+// dist에 낸다. 문서 사이트에는 eleventy.config.js가 /icons/ 로 복사한다 —
+// site/ 아래에 두면 .gitignore된 생성물을 Eleventy가 무시해 페이지가 안 생긴다.
+// 스프라이트가 아니라 SVG를 그대로 심는다: 사이트 경로와 자산 경로가 달라
+// <use> 외부 참조가 깨지기 쉽다.
 const OUT = path.join(ROOT, 'dist/icon-sheet.html')
 
 const seed = JSON.parse(fs.readFileSync(SEED_MAP, 'utf8'))
@@ -127,4 +131,5 @@ html += '\n</body>\n</html>\n'
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true })
 fs.writeFileSync(OUT, html)
-console.log(`검수 시트 생성: ${path.relative(ROOT, OUT)} (${total}종)`)
+
+console.log(`검수 시트 생성: ${path.relative(ROOT, OUT)} (${total}종) → 사이트 /icons/`)

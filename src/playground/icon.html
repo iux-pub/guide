@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아이콘 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pg__note {
+      color: var(--color-text-subtle);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .pg__row {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .pg__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+    }
+
+    .pg__cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 8px;
+      border: 1px solid var(--color-border);
+      border-radius: 0.4rem;
+    }
+
+    .pg__label {
+      font-size: 1.2rem;
+      color: var(--color-text-subtle);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">아이콘 (Icon)</h1>
+
+    <section class="pg__section">
+      <h2 class="pg__subtitle">크기</h2>
+      <p class="pg__note">
+        KRDS 사이즈 어휘를 따른다. 큰 크기로 형태를 보고, 작은 크기로 뭉개짐을 본다.
+      </p>
+      <div class="pg__row">
+        <div class="pg__cell">
+          <svg class="icon icon--xlarge" aria-hidden="true"><use href="/assets/icons/sprite.svg#calendar"></use></svg>
+          <span class="pg__label">xlarge 40</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon icon--large" aria-hidden="true"><use href="/assets/icons/sprite.svg#calendar"></use></svg>
+          <span class="pg__label">large 32</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#calendar"></use></svg>
+          <span class="pg__label">기본 24</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon icon--small" aria-hidden="true"><use href="/assets/icons/sprite.svg#calendar"></use></svg>
+          <span class="pg__label">small 20</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#calendar"></use></svg>
+          <span class="pg__label">xsmall 16</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="pg__section">
+      <h2 class="pg__subtitle">색은 부모를 따라간다</h2>
+      <p class="pg__note">
+        아이콘에 색을 넣지 않는다. <code>fill: currentColor</code>라 부모의 <code>color</code>를 상속받는다 — R-01의 아이콘판이다.
+      </p>
+      <div class="pg__row">
+        <button class="btn">
+          <svg class="icon icon--small" aria-hidden="true"><use href="/assets/icons/sprite.svg#download"></use></svg>
+          내려받기
+        </button>
+        <button class="btn btn--secondary">
+          <svg class="icon icon--small" aria-hidden="true"><use href="/assets/icons/sprite.svg#print"></use></svg>
+          인쇄
+        </button>
+        <button class="btn btn--text">
+          <svg class="icon icon--small" aria-hidden="true"><use href="/assets/icons/sprite.svg#share"></use></svg>
+          공유
+        </button>
+      </div>
+    </section>
+
+    <section class="pg__section">
+      <h2 class="pg__subtitle">아이콘만 있는 버튼</h2>
+      <p class="pg__note">
+        아이콘만으로 기능을 나타낼 때는 <code>role="img"</code>과 <code>aria-label</code>을 주고,
+        버튼 자체에도 이름을 준다. 클릭 영역은 44×44px 이상 (R-13).
+      </p>
+      <div class="pg__row">
+        <button class="btn btn--text" aria-label="닫기">
+          <svg class="icon" role="img" aria-label="닫기"><use href="/assets/icons/sprite.svg#close"></use></svg>
+        </button>
+        <button class="btn btn--text" aria-label="설정">
+          <svg class="icon" role="img" aria-label="설정"><use href="/assets/icons/sprite.svg#settings"></use></svg>
+        </button>
+        <button class="btn btn--text" aria-label="더 보기">
+          <svg class="icon" role="img" aria-label="더 보기"><use href="/assets/icons/sprite.svg#more-vertical"></use></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="pg__section">
+      <h2 class="pg__subtitle">본문과 섞일 때</h2>
+      <p class="pg__note">
+        <code>.icon--inherit</code>는 글자 크기(1em)를 따라간다.
+      </p>
+      <p>
+        자세한 내용은
+        <a href="#">안내 문서
+          <svg class="icon icon--inherit" aria-hidden="true"><use href="/assets/icons/sprite.svg#external-link"></use></svg>
+        </a>
+        를 확인한다.
+      </p>
+    </section>
+
+    <section class="pg__section">
+      <h2 class="pg__subtitle">자주 쓰는 것</h2>
+      <p class="pg__note">
+        전체 목록은 <code>npm run icons:sheet</code>으로 본다. 카탈로그에 없는 이름을 쓰지 않는다 (R-27).
+      </p>
+      <div class="pg__grid">
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+          <span class="pg__label">search</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#home"></use></svg>
+          <span class="pg__label">home</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#user"></use></svg>
+          <span class="pg__label">user</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#file"></use></svg>
+          <span class="pg__label">file</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+          <span class="pg__label">chevron-right</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#check"></use></svg>
+          <span class="pg__label">check</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#warning"></use></svg>
+          <span class="pg__label">warning</span>
+        </div>
+        <div class="pg__cell">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#info"></use></svg>
+          <span class="pg__label">info</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

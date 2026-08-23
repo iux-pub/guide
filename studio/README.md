@@ -31,24 +31,39 @@ npm run studio
 
 ### 서버에서 죽지 않게 띄우기
 
-ssh로 `nohup`이나 `setsid`를 써서 띄우면 **세션이 끊길 때 함께 죽는다.** 일꾼은 claude를
-자식으로 띄우기 때문에 특히 그렇다(2026-08-23 실측: 서버는 버티는데 일꾼은 매번 죽었다).
+`start.sh`가 `nohup setsid`로 프로세스를 **새 세션으로 떼어 낸다.** 세션이 끊길 때 오는
+SIGHUP은 옛 세션에만 가므로 화면도 일꾼도, 일꾼이 띄우는 claude도 함께 죽지 않는다.
+그래서 ssh에서 그냥 불러도 된다 — 권한도 필요 없다.
 
-부팅 스크립트로 등록해 init이 띄우게 한다. Synology 기준:
+```bash
+ssh <서버> '~/services/icon-studio/stop.sh && ~/services/icon-studio/start.sh'
+```
+
+살아남았는지는 **부모(PPID)로 확인한다.** 1이면 세션에서 떨어져 나온 것이다.
+
+```bash
+ssh <서버> 'ps -eo pid,ppid,args | grep "[s]tudio/"'
+# 32057  1  node studio/server.mjs
+# 32077  1  node studio/worker.mjs
+```
+
+> **한동안 이 문서는 「ssh로 띄우면 세션이 끊길 때 함께 죽으니 init이 부모여야 한다」고
+> 적고 있었다. 틀린 진단이었고, 그 탓에 배포할 때마다 sudo 비밀번호를 사람이 손으로
+> 넣어야 했다.** 2026-08-23 실측으로 뒤집었다 — `setsid`로 띄운 프로세스는 ssh를 끊고
+> 10초 뒤에도 PPID 1로 멀쩡했다. 프로세스 자체는 계정 권한으로 돌고, root가 필요한 것은
+> rc.d 디렉터리에 파일을 쓰는 일뿐이다.
+
+#### 부팅할 때 자동으로 뜨게 (설치 한 번만)
+
+NAS를 재부팅해도 알아서 뜨게 하려면 rc.d에 등록한다. **이때만 root가 필요하고,
+평소 껐다 켜는 데는 필요 없다.**
 
 ```bash
 # 1) 시작·정지 스크립트는 홈에 둔다 (이미 저장소에 있다)
-cp -r studio/../services/icon-studio ~/services/   # start.sh · stop.sh
+cp -r studio/service ~/services/icon-studio   # start.sh · stop.sh · S99icon-studio.sh
 
-# 2) rc.d에 등록 — root 권한이 필요하다
-sudo tee /usr/local/etc/rc.d/S99icon-studio.sh > /dev/null <<'RC'
-#!/bin/sh
-case "$1" in
-  start)   su -s /bin/sh <계정> -c "$HOME/services/icon-studio/start.sh" ;;
-  stop)    su -s /bin/sh <계정> -c "$HOME/services/icon-studio/stop.sh" ;;
-  restart) su -s /bin/sh <계정> -c "$HOME/services/icon-studio/stop.sh; $HOME/services/icon-studio/start.sh" ;;
-esac
-RC
+# 2) rc.d에 등록 — 여기서만 root
+sudo cp ~/services/icon-studio/S99icon-studio.sh /usr/local/etc/rc.d/
 sudo chmod +x /usr/local/etc/rc.d/S99icon-studio.sh
 sudo /usr/local/etc/rc.d/S99icon-studio.sh start
 ```

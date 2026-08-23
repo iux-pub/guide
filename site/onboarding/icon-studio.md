@@ -123,6 +123,16 @@ git add -A && git commit && git push
 bash studio/install-service.sh
 ```
 
+## NAS에 올린 것을 갱신하려면
+
+`npm run deploy:nas` 한 줄이면 문서 사이트와 스튜디오가 함께 바뀐다.
+검사·빌드부터 무중단 교체, 주소 200 확인, 스튜디오 재기동까지 들어 있다.
+**비밀번호를 물어보지 않는다** — 스튜디오 프로세스는 계정 권한으로 돌고,
+`start.sh`가 `nohup setsid`로 세션에서 떼어 내 ssh가 끊겨도 살아남는다.
+
+root가 필요한 자리는 딱 둘이고 **처음 설치할 때 한 번뿐**이다 —
+부팅 자동 시작(rc.d 등록)과 nginx 경로 설정.
+
 ## 더 볼 것
 
 - [아이콘 목록 72종](/icons/) — 지금 있는 것

@@ -17,6 +17,7 @@ set -euo pipefail
 HOST="${NAS_HOST:-footer-nas}"
 WEB="/volume1/web/guide"
 STUDIO="\$HOME/icon-studio"
+STUDIO_SVC="\$HOME/services/icon-studio"
 # NAS의 git은 PATH에 없다. Synology 패키지 자리를 직접 가리킨다.
 NAS_PATH="/usr/local/bin:/usr/bin:/bin"
 
@@ -100,13 +101,37 @@ if [ "$fail" -ne 0 ]; then
   exit 1
 fi
 
+# ── 6. 스튜디오 재기동 ───────────────────────────────────
+# 저장소만 갱신하면 도는 것은 옛 코드다. 프로세스를 바꿔 끼워야 새 화면이 나온다.
+#
+# sudo가 필요하지 않다. start.sh의 `nohup setsid`가 프로세스를 새 세션으로 떼어 내므로
+# ssh가 끊겨도 화면·일꾼·일꾼이 띄우는 claude가 함께 죽지 않는다(2026-08-23 실측).
+# 한동안 rc.d를 root로 불러야 하는 줄 알고 배포마다 사람에게 비밀번호를 물었다.
+say "스튜디오 재기동"
+ssh "$HOST" "$STUDIO_SVC/stop.sh > /dev/null 2>&1 || true
+  sleep 1
+  $STUDIO_SVC/start.sh 2>&1 | tail -2"
+
+sleep 3
+say "스튜디오 확인"
+studio_ok=$(curl -s --max-time 20 "https://footer.kr/guide/_icons/api/catalog" \
+  | node -e "let d=\"\";process.stdin.on(\"data\",c=>d+=c).on(\"end\",()=>{
+      try { const r = JSON.parse(d)
+        const s = r.icons.find(i => i.name === \"star\") || {}
+        console.log([
+          \"아이콘 \" + r.icons.length + \"종\",
+          \"표정 \" + ((r.variants || []).map(v => v.id).join(\"·\") || \"없음\"),
+          \"검색어 \" + ((s.keywords || []).length ? \"있음\" : \"없음\")
+        ].join(\" · \"))
+      } catch { console.log(\"응답을 읽지 못했습니다\") }
+    })" || echo "확인 실패")
+printf '  %s\n' "$studio_ok"
+
+ssh "$HOST" "ps -eo pid,ppid,args | grep -E '[s]tudio/(server|worker)\.mjs' | awk '{printf \"  pid %s (부모 %s) %s\\n\", \$1, \$2, \$NF}'"
+
 cat <<'DONE'
 
-✓ 문서 사이트 배포 완료
+✓ 배포 완료 — 문서 사이트와 스튜디오 모두
 
-  스튜디오 프로세스는 남았습니다 — 저장소만 갱신됐고 도는 것은 옛 코드입니다.
-  ssh 세션에서 띄우면 세션이 끊길 때 일꾼(claude)이 함께 죽으므로 init이 부모여야
-  합니다. sudo 비밀번호가 필요하니 사람이 직접 실행합니다:
-
-    ssh -t footer-nas 'sudo /usr/local/etc/rc.d/S99icon-studio.sh restart'
+  부모가 1이면 세션에서 떨어져 나온 것이라 ssh를 끊어도 계속 돕니다.
 DONE

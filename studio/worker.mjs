@@ -436,11 +436,26 @@ function reviewVariant(baseSvg, svg, ds, combo, target) {
     }
   }
 
-  // ② 방향이 맞는가 — 슬림은 기본보다 작고, 볼드·필은 커야 한다
+  // ② 그 표정답게 굵기가 바뀌었는가.
+  //
+  // **면적비가 주 지표다.** 같은 아이콘의 자기 기본과 견주므로 형태 복잡도에 휘둘리지 않는다.
+  //
+  // 범위는 min~max가 아니라 **p10~p90**에 여유를 얹어 잡는다. min·max로 잡으면 뜻이 사라진다 —
+  // 2026-08-23 실측: slim이 min×0.8~max×1.25면 0.36~1.05가 되어 「면적 0.95배(거의 그대로)」가
+  // 통과했고, bold는 0.94까지 열려 **기본보다 얇은 볼드**도 통과할 판이었다.
+  // 씨앗의 p10~p90은 좁다(slim 0.62~0.67, bold 1.34~1.43). 그게 이 표정의 뜻이다.
   const ratio = base.area > 0 ? now.area / base.area : 0
-  const lo = target.areaRatio.min * 0.8
-  const hi = target.areaRatio.max * 1.25
-  if (ratio < lo || ratio > hi) {
+  const lo = target.areaRatio.p10 * 0.85
+  const hi = target.areaRatio.p90 * 1.15
+
+  // 방향은 분포와 무관한 불변이다. 슬림이 기본보다 굵으면 그건 슬림이 아니다.
+  const wantThinner = target.areaRatio.p90 < 1
+  if (wantThinner ? ratio >= 1 : ratio <= 1) {
+    notes.push({
+      level: 'bad',
+      text: `기본 대비 ${ratio.toFixed(2)}배입니다 — ${wantThinner ? '가늘어야' : '굵어야'} 하는데 방향이 반대이거나 그대로입니다`
+    })
+  } else if (ratio < lo || ratio > hi) {
     // 재시도 프롬프트가 이 문장을 그대로 물고 간다 — 「틀렸다」로 끝내지 않고 방법을 적는다
     const fix = {
       slim: '안쪽 선을 바깥쪽으로 더 밀어 두 선 사이를 좁혀야 합니다',
@@ -453,12 +468,12 @@ function reviewVariant(baseSvg, svg, ds, combo, target) {
     })
   }
 
-  // ③ 굵기 — 필은 덩어리라 획 개념이 흐리므로 넓게 본다
+  // ③ 획 굵기는 곁들여 본다 — 면적비가 이미 주 지표이고, 형태에 따라 이 값은 흔들린다.
   const sw = now.strokeWeight
   const t = target.strokeWeight
-  if (sw < t.min * 0.75) {
+  if (sw < t.p10 * 0.7) {
     notes.push({ level: 'warn', text: `다른 ${combo.id} 아이콘보다 가늡니다 (${sw.toFixed(2)})` })
-  } else if (sw > t.max * 1.35) {
+  } else if (sw > t.p90 * 1.3) {
     notes.push({ level: 'warn', text: `다른 ${combo.id} 아이콘보다 굵습니다 (${sw.toFixed(2)})` })
   }
 

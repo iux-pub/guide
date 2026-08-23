@@ -33,7 +33,9 @@ const BASELINE = path.join(ROOT, 'contracts/icon-metrics-baseline.json')
 const AUTH_ENV = path.join(os.homedir(), '.config/icon-studio/auth.env')
 
 const POLL_MS = Number(process.env.POLL_MS || 4000)
-const TIMEOUT_MS = Number(process.env.TIMEOUT_MS || 180000)
+// 프롬프트에 예시 path가 들어가 응답이 길어진다. 180초에서는 3개 중 1개가
+// 시간 초과로 떨어졌다(2026-08-23 실측). 넉넉히 잡는다 — 어차피 비동기다.
+const TIMEOUT_MS = Number(process.env.TIMEOUT_MS || 300000)
 
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width

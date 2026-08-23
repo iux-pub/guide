@@ -237,6 +237,9 @@ function normalize(raw) {
 function review(svg, ds, original) {
   const notes = []
   let ok = true
+  // 규격 위반은 아니지만 다시 그려 볼 값어치가 있는 상태 —
+  // 획이 씨앗 범위를 벗어나면 대개 바깥 윤곽을 한 겹만 그린 것이다.
+  let retryWorthy = false
 
   if (/\sstroke=/.test(original)) {
     notes.push({ level: 'bad', text: '선을 면으로 바꾸지 않고 그렸습니다' })
@@ -273,6 +276,7 @@ function review(svg, ds, original) {
       ok = false
     } else if (sw < min || sw > max) {
       notes.push({ level: 'warn', text: sw < min ? '선이 다른 아이콘보다 많이 가늡니다' : '선이 다른 아이콘보다 많이 굵습니다' })
+      retryWorthy = true
     } else if (sw < p10 || sw > p90) {
       notes.push({ level: 'warn', text: sw < p10 ? '선이 조금 가는 편입니다' : '선이 조금 굵은 편입니다' })
     }
@@ -281,7 +285,7 @@ function review(svg, ds, original) {
   if (ok && notes.length === 0) {
     notes.push({ level: 'good', text: '다른 아이콘들과 굵기·여백이 잘 맞습니다' })
   }
-  return { ok, notes }
+  return { ok, notes, retryWorthy: !ok || retryWorthy }
 }
 
 // ── 처리 ──────────────────────────────────────────────
@@ -303,15 +307,17 @@ async function handle(id, request) {
     // 규격을 어겼으면 무엇이 잘못됐는지 알려 주고 한 번 더 그리게 한다.
     // 두 번째도 어긋나면 그대로 둔다 — 판단은 사람 몫이고, 무한정 시도하면
     // 디자이너가 기다리는 시간만 길어진다.
-    if (!verdict.ok) {
+    if (verdict.retryWorthy) {
       try {
         const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes))
         const second = normalize(raw2)
         const verdict2 = review(second.svg, second.ds, raw2)
-        if (verdict2.ok) return { ok: true, svg: second.svg, review: verdict2, retried: true }
+        if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true }
         // 둘 다 어긋났으면 덜 나쁜 쪽을 준다
-        const worse2 = verdict2.notes.filter((n) => n.level === 'bad').length
-        const worse1 = verdict.notes.filter((n) => n.level === 'bad').length
+        const score = (v) => v.notes.filter((n) => n.level === 'bad').length * 10 +
+                             v.notes.filter((n) => n.level === 'warn').length
+        const worse2 = score(verdict2)
+        const worse1 = score(verdict)
         return worse2 <= worse1
           ? { ok: true, svg: second.svg, review: verdict2, retried: true }
           : { ok: true, svg: first.svg, review: verdict, retried: true }

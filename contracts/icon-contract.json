@@ -29,11 +29,11 @@
     "note": "형태별 시각 무게를 맞추기 위한 기준 도형. 원은 사각형보다 커야 같은 크기로 보인다."
   },
   "geometry": {
-    "strokeWeight": 2,
+    "strokeWeight": 1.5,
     "cornerRadius": 2,
     "terminals": "square",
     "minStrokeGap": 2,
-    "note": "획 굵기 2는 Material weight 400 기준이다. 획 사이 간격이 2 미만이면 작은 크기에서 붙어 보인다."
+    "note": "획 굵기 1.5는 **기본 표정(regular = Material wght300)**의 실측값이다. 새로 만드는 아이콘은 기본 표정으로 그리므로 이 값을 따른다 — variants.axes.weight.default와 같은 축을 가리킨다. 둘이 어긋나면 만들기가 씨앗보다 굵은 아이콘을 내놓고 판정은 매번 「굵다」고 경고하게 된다(2026-08-23 실측: 기본을 wght300으로 내린 뒤 이 값만 2로 남아 실제로 그랬다). 굵기를 바꿀 때는 여기와 variants를 함께 옮기고 기준선(icon-metrics-baseline.json)을 다시 만든다. 획 사이 간격이 2 미만이면 작은 크기에서 붙어 보인다."
   },
   "output": {
     "allowedElements": [

@@ -105,7 +105,7 @@ function askClaude(prompt) {
 function examples() {
   // 안에 격자·내부 요소가 있는 것을 고른다. 실패는 그 주제군에서 나오므로
   // 「윤곽 두 겹 + 내부 요소」가 실제로 어떻게 생겼는지 보여 주는 것이 맞다.
-  // 획 굵기도 기준(2)에 가까운 것들이다 — 가는 예시를 주면 따라 가늘어진다.
+  // 획 굵기가 기준(기본 표정)에 가까운 것들이다 — 예시가 곧 굵기 지시다.
   const picks = ['calendar', 'table', 'grid', 'file']
   const out = []
   for (const name of picks) {

@@ -438,3 +438,40 @@ test('검색어가 지나치게 넓지 않다', () => {
     assert.ok(names.length <= 5, `"${w}"가 ${names.length}종을 부른다 (${names.join(', ')}) — 너무 넓다`)
   }
 })
+
+
+test('만들기 지시와 판정 기준이 같은 굵기를 말한다', () => {
+  // 일꾼은 contract.geometry.strokeWeight를 프롬프트에 실어 「이 굵기로 그려라」라고 하고,
+  // 판정은 icon-metrics-baseline.json 분포로 「굵다/가늘다」를 말한다. 둘이 어긋나면
+  // 만들기가 씨앗보다 굵은 아이콘을 내놓고 판정은 매번 경고를 붙인다 — 쓰는 사람은
+  // 경고를 무시하는 법부터 배운다. 2026-08-23에 실제로 그랬다(기본을 wght300으로
+  // 내렸는데 geometry만 2로 남았다).
+  const bp = path.join(ROOT, 'contracts/icon-metrics-baseline.json')
+  if (!fs.existsSync(bp)) return
+  const b = JSON.parse(fs.readFileSync(bp, 'utf8')).strokeWeight
+  const w = contract.geometry.strokeWeight
+
+  assert.ok(
+    w >= b.p10 && w <= b.p90,
+    `생성 지시 ${w}가 기준선 p10~p90(${b.p10}~${b.p90}) 밖이다 — 만들 때마다 경고가 붙는다`
+  )
+})
+
+test('생성 예시로 쓰는 씨앗이 실제로 그 굵기다', () => {
+  // 프롬프트는 규격을 말로 적기도 하지만 실제 path를 예시로 보여 준다.
+  // 말과 예시가 다르면 모델은 예시를 따른다 — 예시가 진짜 지시다.
+  const picks = ['calendar', 'table', 'grid', 'file']
+  const w = contract.geometry.strokeWeight
+
+  for (const name of picks) {
+    const p = path.join(SVG_DIR, `${name}.svg`)
+    if (!fs.existsSync(p)) continue
+    const svg = fs.readFileSync(p, 'utf8')
+    const ds = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
+    const sw = measure(ds).strokeWeight
+    assert.ok(
+      Math.abs(sw - w) < 0.6,
+      `예시 ${name}의 획이 ${sw.toFixed(2)}인데 지시는 ${w}다 — 모델은 예시를 따른다`
+    )
+  }
+})

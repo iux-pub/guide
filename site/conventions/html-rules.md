@@ -18,6 +18,7 @@ HTML 마크업 작성 규칙이다.
 | R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | check-html-structure.js |
 | R-23 | 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크 | error | check-violations.js |
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
+| R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, manual |
 
 ---
 
@@ -198,5 +199,29 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** references/art-direction.md, src/snippets/section-media.md, src/snippets/hero-bleed.md, src/snippets/signature.md
+
+---
+
+## R-27 — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
+
+**심각도:** 🔴 error &nbsp; **검증:** check-icons.js · manual
+
+> 아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 마크업은 장식용이면 aria-hidden, 의미를 담으면 role=img와 aria-label을 붙인다(R-09·R-16 연장). 폰트 아이콘은 여벌이므로 반드시 aria-hidden과 텍스트 라벨을 함께 둔다 — 폰트가 안 뜨면 자리가 두부로 남는다.
+
+**❌ 금지**
+
+```html
+<svg viewBox="0 0 20 20"><path fill="#333" d="..."/></svg>   // 카탈로그 밖 임의 SVG — 뷰박스·색이 세트와 어긋난다
+<i class="icon-font icon-font--search"></i>   // 폰트만 쓰고 aria-hidden·텍스트 라벨이 없다
+<svg class="icon"><use href="#magnifier"></use></svg>   // 대장에 없는 이름 — 아이콘이 안 나온다
+```
+
+**✅ 올바른 형식**
+
+```html
+<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>   // 장식용 — 옆에 텍스트가 있을 때
+<svg class="icon" role="img" aria-label="검색"><use href="/assets/icons/sprite.svg#search"></use></svg>   // 아이콘만으로 기능을 나타낼 때
+<button class="btn"><span class="icon-font icon-font--search" aria-hidden="true"></span>검색</button>   // 폰트를 쓸 때 — aria-hidden + 텍스트 라벨
+```
 
 ---

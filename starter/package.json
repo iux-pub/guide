@@ -10,7 +10,8 @@
     "build": "npm run build:tokens && npm run build:css",
     "lint:css": "stylelint \"src/styles/**/*.css\"",
     "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
-    "check": "node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js"
+    "check": "node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js",
+    "icons:sheet": "node scripts/build-icon-sheet.js"
   },
   "browserslist": [
     "last 2 Chrome versions",

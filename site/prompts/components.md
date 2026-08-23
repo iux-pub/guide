@@ -446,7 +446,33 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 16. 목록 (List) — KRDS Text list / Structured list
+## 16. 아이콘 (Icon) — infoUX
+
+### 기본 마크업
+
+```html
+<!-- 장식용 — 옆에 텍스트가 있어 아이콘이 의미를 더하지 않을 때 -->
+<button class="btn">
+  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+  검색
+</button>
+
+<!-- 의미를 담을 때 — 아이콘만으로 기능을 나타낸다 -->
+<button class="btn btn--text" aria-label="닫기">
+  <svg class="icon" role="img" aria-label="닫기"><use href="/assets/icons/sprite.svg#close"></use></svg>
+</button>
+```
+
+### 접근성
+
+- 장식용: `aria-hidden="true"` — 스크린리더가 건너뛴다
+- 의미있음: `role="img"` + `aria-label="…"` — 없으면 무슨 버튼인지 알 수 없다
+- 아이콘만 있는 버튼은 버튼 자체에도 `aria-label`을 준다
+- 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13). 아이콘이 작아도 padding으로 확보한다
+
+---
+
+## 17. 목록 (List) — KRDS Text list / Structured list
 
 ### 기본 마크업
 
@@ -476,7 +502,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 17. 주 메뉴 (Main Menu) — KRDS
+## 18. 주 메뉴 (Main Menu) — KRDS
 
 ### 기본 마크업
 
@@ -515,7 +541,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 18. 모달 (Modal / Dialog) — KRDS
+## 19. 모달 (Modal / Dialog) — KRDS
 
 ### 기본 마크업
 
@@ -550,7 +576,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 19. 페이지네이션 (Pagination) — KRDS
+## 20. 페이지네이션 (Pagination) — KRDS
 
 ### 기본 마크업
 
@@ -577,7 +603,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 20. 진행률 (Progress) — KRDS
+## 21. 진행률 (Progress) — KRDS
 
 ### 기본 마크업
 
@@ -599,7 +625,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 21. 섹션 미디어 (Section Media) — 이미지-텍스트 교차 패턴
+## 22. 섹션 미디어 (Section Media) — 이미지-텍스트 교차 패턴
 
 ### 기본 마크업
 
@@ -632,7 +658,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 22. 셀렉트 (Select) — KRDS
+## 23. 셀렉트 (Select) — KRDS
 
 ### 기본 마크업
 
@@ -655,7 +681,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 23. 사이드 패널 (Side Panel) — KRDS Help panel 응용
+## 24. 사이드 패널 (Side Panel) — KRDS Help panel 응용
 
 ### 기본 마크업
 
@@ -685,7 +711,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 24. 시그니처 요소 (Signature) — 실물 3패턴
+## 25. 시그니처 요소 (Signature) — 실물 3패턴
 
 ### 기본 마크업
 
@@ -706,7 +732,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 25. 스피너 (Spinner) — KRDS
+## 26. 스피너 (Spinner) — KRDS
 
 ### 기본 마크업
 
@@ -721,7 +747,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 26. 단계 표시기 (Step Indicator) — KRDS
+## 27. 단계 표시기 (Step Indicator) — KRDS
 
 ### 기본 마크업
 
@@ -750,7 +776,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 27. 토글 스위치 (Switch) — KRDS
+## 28. 토글 스위치 (Switch) — KRDS
 
 ### 기본 마크업
 
@@ -770,7 +796,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 28. 탭 (Tab) — KRDS
+## 29. 탭 (Tab) — KRDS
 
 ### 기본 마크업
 
@@ -808,7 +834,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 29. 표 (Table) — KRDS
+## 30. 표 (Table) — KRDS
 
 ### 기본 마크업
 
@@ -846,7 +872,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 30. 태그 (Tag) — KRDS
+## 31. 태그 (Tag) — KRDS
 
 ### 기본 마크업
 
@@ -874,7 +900,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 31. 토스트 (Toast) — KRDS
+## 32. 토스트 (Toast) — KRDS
 
 ### 기본 마크업
 
@@ -896,7 +922,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 32. 툴팁 (Tooltip) — KRDS
+## 33. 툴팁 (Tooltip) — KRDS
 
 ### 기본 마크업
 

@@ -1,5 +1,5 @@
 {
-  "version": "dc30dea",
+  "version": "35cfd97",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -215,6 +215,12 @@
       "file": "hero-bleed.md",
       "chars": 1506,
       "summary": "화면 가로 전체를 쓰는 도입 섹션이다. section 자체에 클래스를 얹어 쓰고, 내부 `.container`가 본문 폭을 잡는다. 배경 이미지 위에 텍스트를 얹을 때는 `--scrim`을 함께 쓴다."
+    },
+    {
+      "id": "icon",
+      "file": "icon.md",
+      "chars": 1766,
+      "summary": "카탈로그에 등재된 아이콘만 쓴다. 목록은 `npm run icons:sheet`로 보거나"
     },
     {
       "id": "list",

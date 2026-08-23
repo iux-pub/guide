@@ -33,6 +33,7 @@ const knownEnforcers = new Set([
   'check-violations.js',
   'check-html-structure.js',
   'check-contrast.js',
+  'check-icons.js',
   'build-tokens.js',
   'stylelint',
   'pa11y-ci',
@@ -52,6 +53,10 @@ for (const rule of rules.rules || []) {
 requireSame('scripts/check-violations.js', 'starter/scripts/check-violations.js')
 requireSame('scripts/check-html-structure.js', 'starter/scripts/check-html-structure.js')
 requireSame('scripts/check-contrast.js', 'starter/scripts/check-contrast.js')
+requireSame('scripts/check-icons.js', 'starter/scripts/check-icons.js')
+requireSame('scripts/build-icon-sheet.js', 'starter/scripts/build-icon-sheet.js')
+requireSame('scripts/lib/svg-path.js', 'starter/scripts/lib/svg-path.js')
+requireSame('scripts/lib/svg-geometry.js', 'starter/scripts/lib/svg-geometry.js')
 requireSame('scripts/lib/token-source.js', 'starter/scripts/lib/token-source.js')
 requireSame('scripts/lib/contrast.js', 'starter/scripts/lib/contrast.js')
 requireSame('scripts/lib/build-tokens-css.js', 'starter/scripts/lib/build-tokens-css.js')
@@ -95,9 +100,9 @@ for (const instruction of [
 }
 
 const starterPackage = JSON.parse(read('starter/package.json') || '{}')
-const STARTER_CHECK = 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js'
+const STARTER_CHECK = 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js'
 if (starterPackage.scripts?.check !== STARTER_CHECK) {
-  fail('starter npm run check가 정적 검사기 3종(위반·HTML 구조·대비)을 모두 실행하지 않습니다.')
+  fail('starter npm run check가 정적 검사기 4종(위반·HTML 구조·대비·아이콘)을 모두 실행하지 않습니다.')
 }
 
 // 스킬 계층은 2026-07-29 폐기했다. 작업 절차·레퍼런스는 infoUX MCP가 단일 경로로 제공한다.

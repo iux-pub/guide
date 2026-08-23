@@ -46,6 +46,7 @@ order: 1
 | R-24 | 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | [CSS 규칙](/conventions/css-rules/) |
+| R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

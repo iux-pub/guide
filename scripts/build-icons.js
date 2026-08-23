@@ -72,38 +72,26 @@ function buildCss(icons) {
     })
     .join('\n')
 
+  // `.icon`(스프라이트용 컴포넌트)은 여기서 만들지 않는다.
+  // 그건 손으로 관리하는 컴포넌트라 src/styles/6-components/icon.css에 있다.
+  // 이 파일은 **폰트 여벌만** 담당한다 — 코드포인트가 대장에서 나오므로 생성물이어야 한다.
+  // 폰트 파일과 같은 폴더에 두어 상대 url이 그대로 유효하다.
   const css = `/**
- * infoUX Icons — 생성물이다. 직접 고치지 않는다.
- * 원본: assets/icons/svg/ · 대장: contracts/icon-codepoints.json
+ * infoUX Icons — 폰트 여벌. **생성물이므로 직접 고치지 않는다.**
  * 다시 만들기: npm run icons:build
  *
- * 쓰는 법 (기본 — 스프라이트)
- *   장식용:  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
- *   의미있음: <svg class="icon" role="img" aria-label="검색"><use href="/assets/icons/sprite.svg#search"></use></svg>
+ * 기본 경로는 스프라이트이고 이 파일은 SVG를 못 받는 환경(일부 CMS 에디터·앱
+ * 웹뷰)을 위한 여벌이다. 폰트는 로드 실패 시 자리가 두부로 남고, 사용자가 폰트를
+ * 강제 치환하면 사라지며, 스크린리더가 PUA 코드포인트를 오독한다.
+ * 그래서 반드시 aria-hidden과 텍스트 라벨을 함께 둔다 (R-27).
  *
- * 폰트는 여벌이다. SVG를 못 받는 환경에서만 쓰고, 반드시 aria-hidden과
- * 텍스트 라벨을 함께 둔다 — 폰트가 안 뜨면 아이콘 자리가 두부로 남는다.
+ *   <button class="btn">
+ *     <span class="icon-font icon-font--search" aria-hidden="true"></span>
+ *     검색
+ *   </button>
+ *
+ * 스프라이트 방식(권장): src/styles/6-components/icon.css의 .icon을 쓴다.
  */
-
-@layer components {
-  .icon {
-    @apply inline-block shrink-0 align-[-0.125em];
-
-    width: 2.4rem;
-    height: 2.4rem;
-    fill: currentColor;
-  }
-
-  /* KRDS 사이즈 어휘를 따른다 — 시각적 이름(--big)은 쓰지 않는다 (R-06·R-18) */
-  .icon--xsmall { width: 1.6rem; height: 1.6rem; }
-  .icon--small  { width: 2rem;   height: 2rem; }
-  .icon--medium { width: 2.4rem; height: 2.4rem; }
-  .icon--large  { width: 3.2rem; height: 3.2rem; }
-  .icon--xlarge { width: 4rem;   height: 4rem; }
-
-  /* 글자 크기를 따라가는 변형 — 버튼·링크 안에서 쓴다 */
-  .icon--inherit { width: 1em; height: 1em; }
-}
 
 @layer components {
   @font-face {

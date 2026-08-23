@@ -1,0 +1,26 @@
+{
+  "name": "infoUX Icon Metrics Baseline",
+  "version": "1.0.0",
+  "policy": "구글 씨앗의 기하 실측 분포다. 자체 제작 아이콘이 이 범위 밖이면 세트에서 튄다는 신호이며, 경고이지 자동 실패가 아니다. **이 파일에 자체 제작 아이콘을 추가하지 않는다** — 추가하면 기준이 스스로 느슨해져 검사가 무의미해진다. tokens/contrast-baseline.json과 같은 원칙이다.",
+  "generatedFrom": {
+    "source": "google-material",
+    "count": 72
+  },
+  "strokeWeight": {
+    "note": "평균 획 굵기 근사 = 2 × 면적 / 둘레. 형태 복잡도와 무관하게 획의 두께를 잰다.",
+    "min": 0.454,
+    "p10": 1.054,
+    "median": 1.858,
+    "p90": 2.085,
+    "max": 3.205
+  },
+  "area": {
+    "note": "채워진 순면적(구멍 제외). 24×24 캔버스 기준.",
+    "min": 25,
+    "p10": 38.11,
+    "median": 96.7,
+    "p90": 159.02,
+    "max": 224
+  },
+  "generatedAt": "2026-08-23"
+}

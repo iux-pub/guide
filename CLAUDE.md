@@ -58,6 +58,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-15 `error` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
 - R-23 `error` — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
+- R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지

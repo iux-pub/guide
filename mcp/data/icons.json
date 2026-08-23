@@ -1,0 +1,366 @@
+{
+  "name": "infoUX Icon Codepoints",
+  "version": "1.0.0",
+  "icons": {
+    "chevron-left": {
+      "codepoint": "U+E000",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "chevron-right": {
+      "codepoint": "U+E001",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "chevron-up": {
+      "codepoint": "U+E002",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "chevron-down": {
+      "codepoint": "U+E003",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "arrow-left": {
+      "codepoint": "U+E004",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "arrow-right": {
+      "codepoint": "U+E005",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "arrow-up": {
+      "codepoint": "U+E006",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "arrow-down": {
+      "codepoint": "U+E007",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "menu": {
+      "codepoint": "U+E008",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "close": {
+      "codepoint": "U+E009",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "more-vertical": {
+      "codepoint": "U+E00A",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "external-link": {
+      "codepoint": "U+E00B",
+      "category": "navigation",
+      "source": "google-material"
+    },
+    "search": {
+      "codepoint": "U+E00C",
+      "category": "action",
+      "source": "google-material"
+    },
+    "filter": {
+      "codepoint": "U+E00D",
+      "category": "action",
+      "source": "google-material"
+    },
+    "download": {
+      "codepoint": "U+E00E",
+      "category": "action",
+      "source": "google-material"
+    },
+    "upload": {
+      "codepoint": "U+E00F",
+      "category": "action",
+      "source": "google-material"
+    },
+    "share": {
+      "codepoint": "U+E010",
+      "category": "action",
+      "source": "google-material"
+    },
+    "print": {
+      "codepoint": "U+E011",
+      "category": "action",
+      "source": "google-material"
+    },
+    "copy": {
+      "codepoint": "U+E012",
+      "category": "action",
+      "source": "google-material"
+    },
+    "edit": {
+      "codepoint": "U+E013",
+      "category": "action",
+      "source": "google-material"
+    },
+    "delete": {
+      "codepoint": "U+E014",
+      "category": "action",
+      "source": "google-material"
+    },
+    "add": {
+      "codepoint": "U+E015",
+      "category": "action",
+      "source": "google-material"
+    },
+    "refresh": {
+      "codepoint": "U+E016",
+      "category": "action",
+      "source": "google-material"
+    },
+    "save": {
+      "codepoint": "U+E017",
+      "category": "action",
+      "source": "google-material"
+    },
+    "settings": {
+      "codepoint": "U+E018",
+      "category": "action",
+      "source": "google-material"
+    },
+    "check": {
+      "codepoint": "U+E019",
+      "category": "action",
+      "source": "google-material"
+    },
+    "info": {
+      "codepoint": "U+E01A",
+      "category": "status",
+      "source": "google-material"
+    },
+    "warning": {
+      "codepoint": "U+E01B",
+      "category": "status",
+      "source": "google-material"
+    },
+    "error": {
+      "codepoint": "U+E01C",
+      "category": "status",
+      "source": "google-material"
+    },
+    "success": {
+      "codepoint": "U+E01D",
+      "category": "status",
+      "source": "google-material"
+    },
+    "help": {
+      "codepoint": "U+E01E",
+      "category": "status",
+      "source": "google-material"
+    },
+    "bell": {
+      "codepoint": "U+E01F",
+      "category": "status",
+      "source": "google-material"
+    },
+    "lock": {
+      "codepoint": "U+E020",
+      "category": "status",
+      "source": "google-material"
+    },
+    "unlock": {
+      "codepoint": "U+E021",
+      "category": "status",
+      "source": "google-material"
+    },
+    "calendar": {
+      "codepoint": "U+E022",
+      "category": "form",
+      "source": "google-material"
+    },
+    "clock": {
+      "codepoint": "U+E023",
+      "category": "form",
+      "source": "google-material"
+    },
+    "eye": {
+      "codepoint": "U+E024",
+      "category": "form",
+      "source": "google-material"
+    },
+    "eye-off": {
+      "codepoint": "U+E025",
+      "category": "form",
+      "source": "google-material"
+    },
+    "attachment": {
+      "codepoint": "U+E026",
+      "category": "form",
+      "source": "google-material"
+    },
+    "checkbox": {
+      "codepoint": "U+E027",
+      "category": "form",
+      "source": "google-material"
+    },
+    "radio": {
+      "codepoint": "U+E028",
+      "category": "form",
+      "source": "google-material"
+    },
+    "dropdown": {
+      "codepoint": "U+E029",
+      "category": "form",
+      "source": "google-material"
+    },
+    "minus": {
+      "codepoint": "U+E02A",
+      "category": "form",
+      "source": "google-material"
+    },
+    "drag-handle": {
+      "codepoint": "U+E02B",
+      "category": "form",
+      "source": "google-material"
+    },
+    "file": {
+      "codepoint": "U+E02C",
+      "category": "content",
+      "source": "google-material"
+    },
+    "folder": {
+      "codepoint": "U+E02D",
+      "category": "content",
+      "source": "google-material"
+    },
+    "image": {
+      "codepoint": "U+E02E",
+      "category": "content",
+      "source": "google-material"
+    },
+    "video": {
+      "codepoint": "U+E02F",
+      "category": "content",
+      "source": "google-material"
+    },
+    "document": {
+      "codepoint": "U+E030",
+      "category": "content",
+      "source": "google-material"
+    },
+    "list": {
+      "codepoint": "U+E031",
+      "category": "content",
+      "source": "google-material"
+    },
+    "grid": {
+      "codepoint": "U+E032",
+      "category": "content",
+      "source": "google-material"
+    },
+    "table": {
+      "codepoint": "U+E033",
+      "category": "content",
+      "source": "google-material"
+    },
+    "link": {
+      "codepoint": "U+E034",
+      "category": "content",
+      "source": "google-material"
+    },
+    "tag": {
+      "codepoint": "U+E035",
+      "category": "content",
+      "source": "google-material"
+    },
+    "user": {
+      "codepoint": "U+E036",
+      "category": "identity",
+      "source": "google-material"
+    },
+    "users": {
+      "codepoint": "U+E037",
+      "category": "identity",
+      "source": "google-material"
+    },
+    "building": {
+      "codepoint": "U+E038",
+      "category": "identity",
+      "source": "google-material"
+    },
+    "phone": {
+      "codepoint": "U+E039",
+      "category": "identity",
+      "source": "google-material"
+    },
+    "mail": {
+      "codepoint": "U+E03A",
+      "category": "identity",
+      "source": "google-material"
+    },
+    "map-pin": {
+      "codepoint": "U+E03B",
+      "category": "identity",
+      "source": "google-material"
+    },
+    "play": {
+      "codepoint": "U+E03C",
+      "category": "media",
+      "source": "google-material"
+    },
+    "pause": {
+      "codepoint": "U+E03D",
+      "category": "media",
+      "source": "google-material"
+    },
+    "volume": {
+      "codepoint": "U+E03E",
+      "category": "media",
+      "source": "google-material"
+    },
+    "fullscreen": {
+      "codepoint": "U+E03F",
+      "category": "media",
+      "source": "google-material"
+    },
+    "zoom-in": {
+      "codepoint": "U+E040",
+      "category": "media",
+      "source": "google-material"
+    },
+    "zoom-out": {
+      "codepoint": "U+E041",
+      "category": "media",
+      "source": "google-material"
+    },
+    "home": {
+      "codepoint": "U+E042",
+      "category": "domain",
+      "source": "google-material"
+    },
+    "bookmark": {
+      "codepoint": "U+E043",
+      "category": "domain",
+      "source": "google-material"
+    },
+    "star": {
+      "codepoint": "U+E044",
+      "category": "domain",
+      "source": "google-material"
+    },
+    "chart-bar": {
+      "codepoint": "U+E045",
+      "category": "domain",
+      "source": "google-material"
+    },
+    "globe": {
+      "codepoint": "U+E046",
+      "category": "domain",
+      "source": "google-material"
+    },
+    "language": {
+      "codepoint": "U+E047",
+      "category": "domain",
+      "source": "google-material"
+    }
+  }
+}

@@ -36,6 +36,7 @@
 /* skip-link은 7-utilities/sr-only.css 에서 정의 */
 @import "./breadcrumb.css";
 @import "./header.css";
+@import "./icon.css";
 @import "./main-menu.css";
 @import "./pagination.css";
 

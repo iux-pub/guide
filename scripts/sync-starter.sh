@@ -12,6 +12,8 @@
 #   - scripts/build-tokens.js → starter/scripts/
 #   - scripts/check-*.js      → starter/scripts/
 #   - contracts/             → starter/contracts/
+#   - assets/icons/          → starter/assets/icons/ (스프라이트·폰트·CSS·낱개 SVG)
+#   - scripts/check-icons.js → starter/scripts/ (+ build-icon-sheet.js, lib/svg-*.js)
 #   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
 #   - .stylelintrc.json       → starter/
@@ -64,6 +66,20 @@ rm -rf "$STARTER_DIR/tokens/presets"
 mkdir -p "$STARTER_DIR/tokens/presets"
 cp "$GUIDE_DIR/tokens/presets/"*.json "$STARTER_DIR/tokens/presets/"
 
+# 4.5. 아이콘 자산 — 프로젝트 소스 안에 통째로 들어간다(self-contained).
+# 외부에서 불러오는 것이 하나도 없어야 폐쇄망에서도 그대로 뜬다.
+echo "[4.5/8] assets/icons 동기화..."
+rm -rf "$STARTER_DIR/assets/icons"
+mkdir -p "$STARTER_DIR/assets/icons"
+cp -r "$GUIDE_DIR/assets/icons/svg" "$STARTER_DIR/assets/icons/svg"
+cp "$GUIDE_DIR/assets/icons/sprite.svg" "$STARTER_DIR/assets/icons/"
+cp "$GUIDE_DIR/assets/icons/icons.css" "$STARTER_DIR/assets/icons/"
+cp "$GUIDE_DIR/assets/icons/LICENSE-NOTICE.txt" "$STARTER_DIR/assets/icons/"
+# 폰트는 있을 때만 — 빌드 환경에 폰트 도구가 없으면 생성되지 않는다
+if [ -f "$GUIDE_DIR/assets/icons/infoux-icons.woff2" ]; then
+  cp "$GUIDE_DIR/assets/icons/infoux-icons.woff2" "$STARTER_DIR/assets/icons/"
+fi
+
 # 5. scripts + contracts
 echo "[5/8] scripts 동기화..."
 mkdir -p "$STARTER_DIR/scripts/lib"
@@ -74,6 +90,12 @@ cp "$GUIDE_DIR/scripts/check-contrast.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/lib/token-source.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/contrast.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/build-tokens-css.js" "$STARTER_DIR/scripts/lib/"
+# 아이콘 — 검사와 검수 시트는 프로젝트에서도 돌려야 한다.
+# 반입·빌드(import-icons/build-icons)는 원본 저장소의 일이므로 넘기지 않는다.
+cp "$GUIDE_DIR/scripts/check-icons.js" "$STARTER_DIR/scripts/"
+cp "$GUIDE_DIR/scripts/build-icon-sheet.js" "$STARTER_DIR/scripts/"
+cp "$GUIDE_DIR/scripts/lib/svg-path.js" "$STARTER_DIR/scripts/lib/"
+cp "$GUIDE_DIR/scripts/lib/svg-geometry.js" "$STARTER_DIR/scripts/lib/"
 mkdir -p "$STARTER_DIR/contracts"
 cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
 

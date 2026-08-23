@@ -48,9 +48,13 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
 3. 컴포넌트는 카탈로그를 먼저 본다. list_components → get_component 순으로 확인하고
    기존 스니펫을 조합한다. 카탈로그 밖 컴포넌트는 임의 생성하지 않는다.
    페이지·폼·위젯 설계나 컴포넌트 신규 생성처럼 절차가 정해진 작업은 get_workflow를 먼저 읽는다.
-4. 규칙 R-01~R-22를 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
-5. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
-6. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
+4. 아이콘도 카탈로그에서 가져온다. list_icons → get_icon 순으로 확인한다.
+   **아이콘 이름을 지어내지 않는다** — 목록에 없는 이름을 쓰면 화면에 아무것도 안 나온다.
+   필요한 아이콘이 없으면 UX팀에 요청한다 (R-27). 장식용은 aria-hidden, 의미를 담으면
+   role="img"+aria-label을 붙인다.
+5. 규칙 R-01~R-27을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
+6. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
+7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
    100% 통과가 조건이다.
 
@@ -83,6 +87,31 @@ const TOOLS = [
       type: 'object',
       properties: {
         name: { type: 'string', description: '컴포넌트 이름 (예: btn, accordion, table)' }
+      },
+      required: ['name']
+    }
+  },
+  {
+    name: 'list_icons',
+    description:
+      '쓸 수 있는 아이콘 목록을 반환한다. 아이콘이 필요하면 **반드시 먼저 확인한다** — ' +
+      '목록에 없는 이름을 지어내면 화면에 아무것도 안 나온다. query로 걸러 낼 수 있다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: '이름·분류 필터 (예: arrow, 폼, calendar)' }
+      }
+    }
+  },
+  {
+    name: 'get_icon',
+    description:
+      '아이콘 하나의 마크업과 접근성 요건을 반환한다. 장식용인지 의미를 담는지에 따라 ' +
+      'aria 처리가 달라지므로 그대로 복사해 쓴다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: '아이콘 이름 (예: search, chevron-right, calendar)' }
       },
       required: ['name']
     }
@@ -203,6 +232,92 @@ function getComponent(name) {
   const entry = manifest.snippets.find(item => item.id === name)
   if (!entry) return notFound(`컴포넌트 "${name}"`, manifest.snippets.map(i => i.id))
   return text(readData('snippets', entry.file))
+}
+
+function loadIconLedger() {
+  try {
+    return JSON.parse(readData('icons.json'))
+  } catch {
+    return null
+  }
+}
+
+function listIcons({ query } = {}) {
+  const ledger = loadIconLedger()
+  if (!ledger) return text('아이콘 카탈로그가 이 번들에 없다. npm run build:mcp로 다시 만든다.')
+
+  const all = Object.entries(ledger.icons).map(([name, meta]) => ({ name, ...meta }))
+  const needle = query ? String(query).toLowerCase() : null
+  const rows = needle
+    ? all.filter(i => i.name.includes(needle) || (i.category || '').includes(needle) || (i.label || '').includes(needle))
+    : all
+
+  if (rows.length === 0) {
+    return text(
+      `"${query}"에 해당하는 아이콘이 없다. **이름을 지어내지 말고** list_icons()로 전체 목록을 확인한다.\n` +
+      '필요한 아이콘이 카탈로그에 없으면 UX팀에 요청한다 (R-27).'
+    )
+  }
+
+  const byCat = new Map()
+  for (const r of rows) {
+    const c = r.category || '기타'
+    if (!byCat.has(c)) byCat.set(c, [])
+    byCat.get(c).push(r.name)
+  }
+
+  const lines = ['# infoUX 아이콘 카탈로그', '']
+  lines.push(query ? `"${query}" 검색 — ${rows.length}종` : `총 ${rows.length}종.`, '')
+  for (const [cat, names] of byCat) {
+    lines.push(`- **${cat}** — ${names.join(', ')}`)
+  }
+  lines.push(
+    '',
+    'get_icon(name)으로 마크업을 가져온다.',
+    '**목록에 없는 이름을 쓰지 않는다** — 화면에 아무것도 안 나온다. 필요하면 UX팀에 요청한다 (R-27).'
+  )
+  return text(lines.join('\n'))
+}
+
+function getIcon(name) {
+  const ledger = loadIconLedger()
+  if (!ledger) return text('아이콘 카탈로그가 이 번들에 없다. npm run build:mcp로 다시 만든다.')
+
+  const meta = ledger.icons[name]
+  if (!meta) {
+    const near = Object.keys(ledger.icons).filter(n => n.includes(String(name).split('-')[0])).slice(0, 8)
+    return notFound(`아이콘 "${name}"`, near.length > 0 ? near : Object.keys(ledger.icons).slice(0, 12))
+  }
+
+  const lines = [
+    `# ${name}`,
+    '',
+    `분류 ${meta.category} · 출처 ${meta.source} · 코드포인트 ${meta.codepoint}`,
+    '',
+    '## 장식용 — 옆에 텍스트가 있어 아이콘이 의미를 더하지 않을 때',
+    '',
+    '```html',
+    `<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#${name}"></use></svg>`,
+    '```',
+    '',
+    '## 의미를 담을 때 — 아이콘만으로 기능을 나타낸다',
+    '',
+    '```html',
+    `<svg class="icon" role="img" aria-label="설명"><use href="/assets/icons/sprite.svg#${name}"></use></svg>`,
+    '```',
+    '',
+    '## 크기',
+    '',
+    '`.icon`(24) · `.icon--xsmall`(16) · `.icon--small`(20) · `.icon--large`(32) · `.icon--inherit`(1em)',
+    '',
+    '## 지킬 것',
+    '',
+    '- 색을 아이콘에 넣지 않는다 — `fill: currentColor`가 부모 `color`를 따라간다 (R-01)',
+    '- 아이콘만 있는 버튼은 버튼에도 `aria-label`을 준다',
+    '- 클릭 영역은 아이콘 크기가 아니라 44×44px 이상 (R-13)',
+    '- 폰트로 쓸 때는 `.icon-font .icon-font--' + name + '` + `aria-hidden` + 텍스트 라벨 (여벌 경로)'
+  ]
+  return text(lines.join('\n'))
 }
 
 function getTokens({ query, raw } = {}) {
@@ -533,6 +648,10 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
         return listComponents()
       case 'get_component':
         return getComponent(args.name)
+      case 'list_icons':
+        return listIcons(args)
+      case 'get_icon':
+        return getIcon(args.name)
       case 'get_tokens':
         return getTokens(args)
       case 'get_rules':

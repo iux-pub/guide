@@ -155,14 +155,31 @@ test('스프라이트가 대장의 모든 아이콘을 담는다', () => {
   assert.match(sprite, /aria-hidden="true"/, '스프라이트 자체가 화면에 잡히면 안 된다')
 })
 
-test('아이콘 CSS가 폰트 클래스를 빠짐없이 낸다', () => {
+test('폰트 CSS가 대장의 코드포인트를 그대로 낸다', () => {
   const p = path.join(ROOT, 'assets/icons/icons.css')
   if (!fs.existsSync(p)) return
   const css = fs.readFileSync(p, 'utf8')
   for (const [name, meta] of Object.entries(ledger.icons)) {
     assert.ok(css.includes(`.icon-font--${name}`), `CSS에 ${name} 클래스가 없다`)
     const esc = meta.codepoint.replace('U+', '\\')
-    assert.ok(css.includes(`"${esc}"`), `CSS의 ${name} content가 대장과 다르다`)
+    assert.ok(css.includes(`"${esc}"`), `${name}의 content가 대장과 다르다 — 폰트와 CSS가 어긋나면 다른 그림이 나온다`)
+  }
+})
+
+test('스프라이트용 .icon은 컴포넌트 레이어에 있고 생성물에 없다', () => {
+  const comp = path.join(ROOT, 'src/styles/6-components/icon.css')
+  assert.ok(fs.existsSync(comp), '.icon은 손으로 관리하는 컴포넌트다')
+  const compCss = fs.readFileSync(comp, 'utf8')
+  assert.match(compCss, /\.icon\s*\{/, '.icon 정의가 없다')
+  assert.match(compCss, /fill:\s*currentColor/, 'currentColor 상속이 없으면 색이 안 따라간다')
+
+  const index = fs.readFileSync(path.join(ROOT, 'src/styles/6-components/index.css'), 'utf8')
+  assert.ok(index.includes('icon.css'), 'index.css에 등록되지 않으면 빌드에 안 들어간다')
+
+  const gen = path.join(ROOT, 'assets/icons/icons.css')
+  if (fs.existsSync(gen)) {
+    const genCss = fs.readFileSync(gen, 'utf8')
+    assert.doesNotMatch(genCss, /^\s*\.icon\s*\{/m, '생성물에 .icon이 중복 정의되면 어느 쪽이 이길지 모른다')
   }
 })
 

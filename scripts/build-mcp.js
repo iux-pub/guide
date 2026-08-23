@@ -81,6 +81,18 @@ fs.copyFileSync(path.join(ROOT, 'rules.json'), path.join(DATA_DIR, 'rules.json')
 fs.copyFileSync(path.join(ROOT, 'contracts', 'profiles.json'), path.join(DATA_DIR, 'profiles.json'))
 fs.copyFileSync(path.join(ROOT, 'contracts', 'art-direction.json'), path.join(DATA_DIR, 'art-direction.json'))
 
+// 1.5. 아이콘 대장 — 에이전트가 없는 아이콘 이름을 지어내는 것을 막는다 (R-27).
+// 이름·분류·코드포인트만 있으면 되므로 SVG 본문은 싣지 않는다 — 번들만 커진다.
+const iconLedgerPath = path.join(ROOT, 'contracts', 'icon-codepoints.json')
+if (fs.existsSync(iconLedgerPath)) {
+  const full = JSON.parse(fs.readFileSync(iconLedgerPath, 'utf8'))
+  const slim = { name: full.name, version: full.version, icons: {} }
+  for (const [name, meta] of Object.entries(full.icons)) {
+    slim.icons[name] = { codepoint: meta.codepoint, category: meta.category, source: meta.source }
+  }
+  fs.writeFileSync(path.join(DATA_DIR, 'icons.json'), JSON.stringify(slim, null, 2) + '\n')
+}
+
 // 2. 컨트랙트 본문
 fs.copyFileSync(path.join(ROOT, 'references', 'CONTRACT.md'), path.join(DATA_DIR, 'contract.md'))
 

@@ -15,7 +15,9 @@ const state = {
   filter: { q: '', category: null },
   picked: new Set(),
   svgCache: new Map(),
-  pollTimer: null
+  pollTimer: null,
+  // 만들기에 붙일 참조 SVG. 회사 심볼처럼 정해진 모양은 이게 없으면 지어낸 것이 나온다.
+  reference: null
 }
 
 // ── 공통 ──────────────────────────────────────────────
@@ -366,6 +368,14 @@ document.addEventListener('click', async (e) => {
     return
   }
 
+  if (t.closest('#ask-refclear')) {
+    state.reference = null
+    $('#ask-refcode').value = ''
+    $('#ask-file').value = ''
+    setReference(null)
+    return
+  }
+
   if (t.closest('#ask-send')) return sendAsk()
 
   const pick = t.closest('.cand__pick')
@@ -403,6 +413,31 @@ $('#sheet').addEventListener('click', (e) => {
   if (!inside) sheet.close()
 })
 
+// 참조 SVG — 파일에서 읽는다
+document.addEventListener('change', async (e) => {
+  const file = e.target.closest('#ask-file')?.files?.[0]
+  if (!file) return
+  if (file.size > 200_000) return refError('파일이 너무 큽니다 (200KB 이하)')
+  const text = await file.text()
+  if (!/<svg[\s\S]*<\/svg>/i.test(text)) return refError('SVG 파일이 아닙니다')
+  state.reference = text
+  $('#ask-refcode').value = ''
+  setReference(text, file.name)
+})
+
+// 참조 SVG — 코드로 직접 붙여넣기
+$('#ask-refcode').addEventListener('input', (e) => {
+  const v = e.target.value.trim()
+  if (!v) return setReference(null)
+  if (!/<svg[\s\S]*<\/svg>/i.test(v)) {
+    $('#ask-refstate').textContent = '아직 SVG가 아닙니다'
+    $('#ask-refpreview').hidden = true
+    return
+  }
+  state.reference = v
+  setReference(v, '붙여 넣은 코드')
+})
+
 document.addEventListener('change', (e) => {
   const pick = e.target.closest('[data-pick]')
   if (!pick) return
@@ -416,6 +451,39 @@ $('#q').addEventListener('input', (e) => {
   renderGrid()
 })
 
+/** 참조를 화면에 반영한다. 미리보기로 「제대로 들어갔나」를 눈으로 확인시킨다. */
+function setReference(svg, label) {
+  const preview = $('#ask-refpreview')
+  const stateEl = $('#ask-refstate')   // 전역 state와 이름이 겹치지 않게 한다
+  const clear = $('#ask-refclear')
+
+  if (!svg) {
+    state.reference = null
+    preview.hidden = true
+    preview.innerHTML = ''
+    stateEl.textContent = ''
+    clear.hidden = true
+    return
+  }
+
+  const sizes = [48, 24, 16]
+  preview.innerHTML = sizes
+    .map((px) => svg.replace(/<svg([^>]*)>/i, (m, attrs) => {
+      const cleaned = attrs.replace(/\s(width|height)="[^"]*"/gi, '')
+      return `<svg${cleaned} width="${px}" height="${px}">`
+    }))
+    .join('')
+  preview.hidden = false
+  stateEl.textContent = label || '참조 붙음'
+  clear.hidden = false
+}
+
+function refError(msg) {
+  const err = $('#ask-error')
+  err.textContent = msg
+  err.hidden = false
+}
+
 async function sendAsk() {
   const text = $('#ask-text').value.trim()
   const err = $('#ask-error')
@@ -428,8 +496,15 @@ async function sendAsk() {
   const btn = $('#ask-send')
   btn.disabled = true
   try {
-    await api('/api/requests', { method: 'POST', body: JSON.stringify({ text, count: 4 }) })
+    const reference = state.reference || $('#ask-refcode').value.trim() || null
+    await api('/api/requests', {
+      method: 'POST',
+      body: JSON.stringify({ text, count: 4, ...(reference ? { reference } : {}) })
+    })
     $('#ask-text').value = ''
+    $('#ask-refcode').value = ''
+    setReference(null)
+    state.reference = null
     startPolling()
   } catch (e) {
     err.textContent = e.message

@@ -191,10 +191,23 @@ const routes = {
 
     ensureQueue()
     const id = new Date().toISOString().replace(/[:.]/g, '-') + '-' + crypto.randomBytes(3).toString('hex')
+    // 참조 — 특정 로고·심볼처럼 모델이 알 수 없는 대상은 실물을 보여 줘야 한다.
+    // 없으면 그럴듯한 다른 것을 그린다.
+    let reference = null
+    if (typeof body.reference === 'string' && body.reference.trim()) {
+      const raw = body.reference.trim()
+      if (raw.length > 200_000) return json(res, 400, { error: '참조 파일이 너무 큽니다 (200KB 이하)' })
+      if (!/<svg[\s\S]*<\/svg>/i.test(raw)) {
+        return json(res, 400, { error: 'SVG가 아닙니다. <svg>로 시작하는 코드를 넣어 주세요' })
+      }
+      reference = raw
+    }
+
     const request = {
       id,
       text,
       count: Math.min(6, Math.max(1, Number(body.count) || 4)),
+      ...(reference ? { reference } : {}),
       createdAt: new Date().toISOString(),
       status: 'waiting'
     }

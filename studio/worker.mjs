@@ -118,7 +118,7 @@ function examples() {
 }
 
 /** 규격을 그대로 프롬프트에 싣는다. 사람 말로 풀어 쓰지 않는다 — 어긋나면 검사에서 걸린다. */
-function buildPrompt(text, seedNames, variant) {
+function buildPrompt(text, seedNames, variant, reference) {
   const angles = [
     '가장 일반적이고 알아보기 쉬운 형태로',
     '단순하게 — 요소를 최소로 줄여서',
@@ -129,7 +129,16 @@ function buildPrompt(text, seedNames, variant) {
 
 ## 그릴 것
 ${text}
+${reference ? `
+## 참조 — 이 형태를 아이콘으로 옮긴다
 
+아래는 실제 자산이다. **여기 없는 요소를 지어내지 말고**, 이 형태의 알아볼 수 있는
+특징을 남기면서 우리 규격(획 굵기·라이브 영역)에 맞게 단순화한다.
+
+\`\`\`svg
+${reference.length > 12000 ? reference.slice(0, 12000) + '\n<!-- (뒷부분 생략) -->' : reference}
+\`\`\`
+` : ''}
 ## 접근 방향
 ${angles[variant % angles.length]}
 
@@ -320,12 +329,12 @@ async function handle(id, request) {
   const ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'))
   const seedNames = Object.keys(ledger.icons)
 
-  console.log(`  요청 ${id} — "${request.text}" 후보 ${request.count}개`)
+  console.log(`  요청 ${id} — "${request.text}" 후보 ${request.count}개${request.reference ? ' (참조 있음)' : ''}`)
 
   // 후보는 각각 따로 부른다. 한 번에 여러 개를 시키면 서로 닮게 나오고,
   // 하나가 어긋나면 전부 못 쓴다.
   const draw = async (i) => {
-    const base = buildPrompt(request.text, seedNames, i)
+    const base = buildPrompt(request.text, seedNames, i, request.reference)
     const raw = await askClaude(base)
     const first = normalize(raw)
     const verdict = review(first.svg, first.ds, raw)

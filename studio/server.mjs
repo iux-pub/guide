@@ -85,6 +85,17 @@ function ensureQueue() {
   }
 }
 
+/** 처리가 끝난 요청을 보관함으로 옮긴다. 목록이 계속 쌓이면 화면이 일거리가 된다. */
+function archiveRequest(id) {
+  if (!/^[\w.-]+$/.test(id)) return
+  for (const dir of ['requests', 'results']) {
+    const from = path.join(QUEUE, dir, `${id}.json`)
+    if (!fs.existsSync(from)) continue
+    fs.mkdirSync(path.join(QUEUE, 'archive', dir), { recursive: true })
+    fs.renameSync(from, path.join(QUEUE, 'archive', dir, `${id}.json`))
+  }
+}
+
 function listRequests() {
   ensureQueue()
   const reqDir = path.join(QUEUE, 'requests')
@@ -336,20 +347,89 @@ const routes = {
     json(res, 201, request)
   },
 
+  // 표정 만들기 — 자체 제작 아이콘은 승인해도 기본 하나뿐이라, 볼드로 통일한
+  // 화면에 그 아이콘만 혼자 얇게 뜬다. 씨앗과 같은 자격으로 만들어 준다.
+  'POST /api/variants': async (req, res) => {
+    const body = await readBody(req)
+    const name = String(body.name || '')
+    if (!/^[a-z][a-z0-9-]*$/.test(name)) return json(res, 400, { error: '아이콘 이름이 올바르지 않습니다' })
+
+    const ledger = readJson(LEDGER, { icons: {} })
+    if (!ledger.icons[name]) return json(res, 400, { error: `대장에 없는 아이콘입니다: ${name}` })
+    if (!fs.existsSync(path.join(SVG_DIR, `${name}.svg`))) {
+      return json(res, 400, { error: '기본 표정 파일이 없습니다' })
+    }
+
+    const contract = readJson(CONTRACT, {})
+    const known = (contract.variants?.combinations || []).filter((c) => !c.default).map((c) => c.id)
+    const asked = Array.isArray(body.variants) ? body.variants.filter((v) => known.includes(v)) : known
+    if (asked.length === 0) return json(res, 400, { error: '만들 표정을 고르세요' })
+
+    // 이미 있는 것은 다시 만들지 않는다 — 덮어쓰면 사람이 고른 결과가 사라진다
+    const have = ledger.icons[name].variants || []
+    const todo = asked.filter((v) => !have.includes(v))
+    if (todo.length === 0) return json(res, 400, { error: '고른 표정은 이미 있습니다' })
+
+    ensureQueue()
+    const id = new Date().toISOString().replace(/[:.]/g, '-') + '-' + crypto.randomBytes(3).toString('hex')
+    const request = {
+      id,
+      kind: 'variants',
+      name,
+      variants: todo,
+      text: `${name} 표정 만들기 — ${todo.join('·')}`,
+      createdAt: new Date().toISOString()
+    }
+    fs.writeFileSync(path.join(QUEUE, 'requests', `${id}.json`), JSON.stringify(request, null, 2) + '\n')
+    json(res, 200, { ...request, status: 'waiting' })
+  },
+
+  // 만들어진 표정을 자산으로 들인다. 대장에도 적어야 스튜디오·MCP·검수 시트가 안다.
+  'POST /api/variants/adopt': async (req, res) => {
+    const body = await readBody(req)
+    const name = String(body.name || '')
+    if (!/^[a-z][a-z0-9-]*$/.test(name)) return json(res, 400, { error: '아이콘 이름이 올바르지 않습니다' })
+
+    const ledger = readJson(LEDGER, null)
+    const contract = readJson(CONTRACT, {})
+    if (!ledger?.icons?.[name]) return json(res, 400, { error: `대장에 없는 아이콘입니다: ${name}` })
+
+    const known = (contract.variants?.combinations || []).filter((c) => !c.default).map((c) => c.id)
+    const picks = Array.isArray(body.picks) ? body.picks : []
+    const taken = []
+
+    for (const pick of picks) {
+      const vid = String(pick.variant || '')
+      if (!known.includes(vid)) continue
+      const svg = String(pick.svg || '')
+      // 서버가 마지막 문지기다 — 화면을 거치지 않고 들어오는 길도 있다
+      if (!/viewBox="0 0 24 24"/.test(svg) || !/fill="currentColor"/.test(svg) || /\sstroke=/.test(svg)) {
+        return json(res, 400, { error: `${vid}: 규격에 맞지 않습니다` })
+      }
+      const dir = path.join(SVG_DIR, vid)
+      fs.mkdirSync(dir, { recursive: true })
+      fs.writeFileSync(path.join(dir, `${name}.svg`), svg.endsWith('\n') ? svg : `${svg}\n`)
+      taken.push(vid)
+    }
+
+    if (taken.length === 0) return json(res, 400, { error: '들일 표정이 없습니다' })
+
+    const have = new Set(ledger.icons[name].variants || [])
+    for (const v of taken) have.add(v)
+    // 계약이 정한 순서를 지킨다 — 파일이 매번 다르게 정렬되면 diff가 시끄럽다
+    ledger.icons[name].variants = known.filter((v) => have.has(v))
+    ledger.updatedAt = new Date().toISOString().slice(0, 10)
+    fs.writeFileSync(LEDGER, JSON.stringify(ledger, null, 2) + '\n')
+
+    if (body.requestId) archiveRequest(String(body.requestId))
+    json(res, 200, { name, taken, variants: ledger.icons[name].variants })
+  },
+
   'POST /api/approve': async (req, res) => {
     const body = await readBody(req)
     try {
       const result = approve(body)
-      // 승인이 끝난 요청은 보관함으로 옮긴다 — 목록이 계속 쌓이면 화면이 일거리가 된다
-      if (body.requestId) {
-        for (const dir of ['requests', 'results']) {
-          const from = path.join(QUEUE, dir, `${body.requestId}.json`)
-          if (fs.existsSync(from)) {
-            fs.mkdirSync(path.join(QUEUE, 'archive', dir), { recursive: true })
-            fs.renameSync(from, path.join(QUEUE, 'archive', dir, `${body.requestId}.json`))
-          }
-        }
-      }
+      if (body.requestId) archiveRequest(String(body.requestId))
       json(res, 200, result)
     } catch (err) {
       json(res, 400, { error: err.message })
@@ -531,13 +611,7 @@ const routes = {
     const body = await readBody(req)
     const id = String(body.requestId || '')
     if (!/^[\w.-]+$/.test(id)) return json(res, 400, { error: '잘못된 요청 번호입니다' })
-    for (const dir of ['requests', 'results']) {
-      const from = path.join(QUEUE, dir, `${id}.json`)
-      if (fs.existsSync(from)) {
-        fs.mkdirSync(path.join(QUEUE, 'archive', dir), { recursive: true })
-        fs.renameSync(from, path.join(QUEUE, 'archive', dir, `${id}.json`))
-      }
-    }
+    archiveRequest(id)
     json(res, 200, { ok: true })
   }
 }

@@ -329,6 +329,201 @@ function review(svg, ds, original) {
 
 // ── 처리 ──────────────────────────────────────────────
 
+// ── 표정 만들기 ────────────────────────────────────────
+//
+// 자체 제작 아이콘은 승인해도 기본 표정 하나뿐이다. 씨앗은 넷을 갖고 있으므로,
+// 볼드로 통일한 화면에 회사 심볼만 혼자 얇게 뜬다.
+//
+// 기하로 선을 굵히는(폴리곤 오프셋) 길은 곡선·모서리에서 쉽게 깨진다.
+// 대신 **원본 path를 보여 주고 다시 그리게** 한 뒤 실측으로 판정한다 —
+// 만들기와 같은 방식이다.
+
+/** 이 표정이 실제로 어떻게 생겼는지 씨앗에서 보여 준다. 말보다 예시가 통한다. */
+function variantExamples(variantId) {
+  const picks = ['calendar', 'star', 'home', 'file']
+  const out = []
+  for (const name of picks) {
+    const b = path.join(ROOT, 'assets/icons/svg', `${name}.svg`)
+    const v = path.join(ROOT, 'assets/icons/svg', variantId, `${name}.svg`)
+    if (!fs.existsSync(b) || !fs.existsSync(v)) continue
+    const bd = fs.readFileSync(b, 'utf8').match(/<path[^>]*\sd="([^"]+)"/)
+    const vd = fs.readFileSync(v, 'utf8').match(/<path[^>]*\sd="([^"]+)"/)
+    if (bd && vd) out.push(`${name}\n  기본: ${bd[1]}\n  ${variantId}: ${vd[1]}`)
+  }
+  return out
+}
+
+function variantPrompt(name, baseSvg, combo, target) {
+  const baseD = [...baseSvg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
+  const what = {
+    slim: `획을 **가늘게** 다시 그린다. 목표 굵기 ${target.strokeWeight.median} (기본의 약 ${target.areaRatio.median}배 면적).`,
+    bold: `획을 **굵게** 다시 그린다. 목표 굵기 ${target.strokeWeight.median} (기본의 약 ${target.areaRatio.median}배 면적).`,
+    fill: '속을 **채운다**. 윤곽 안쪽을 메워 덩어리로 만든다. 뜻을 전하는 데 꼭 필요한 구멍(예: 자물쇠 열쇠구멍)만 남긴다.'
+  }[combo.id] || `${combo.id} 표정으로 다시 그린다.`
+
+  return `아이콘 "${name}"의 **${combo.id} 표정**을 만든다.
+
+같은 아이콘의 다른 얼굴이다. **모양이 바뀌면 안 된다** — 무엇을 그린 것인지,
+어디에 무엇이 놓였는지가 그대로여야 하고, 굵기(또는 채움)만 달라진다.
+
+## 기본 표정 (이것을 다시 그린다)
+
+${baseD.map((d) => `  ${d}`).join('\n')}
+
+## 할 일
+
+${what}
+
+**바깥 테두리 위치는 그대로 둔다.** 아이콘이 차지하는 사각형이 기본과 거의 같아야 한다
+(최대 ${target.boundsDrift.p90} 이내). 안쪽 선만 옮겨 굵기를 바꾼다.
+
+## 씨앗의 실제 예시 — 기본이 ${combo.id}로 어떻게 바뀌는지
+
+${variantExamples(combo.id).join('\n\n') || '(예시 없음)'}
+
+## 규격 (기본과 같다)
+
+- viewBox "0 0 24 24", width·height 24, fill="currentColor"
+- <path>만 쓴다. stroke·stroke-width·transform·style·class·id 금지
+- 좌표는 소수점 2자리까지
+- 선은 면으로 그린다 — 윤곽은 두 겹(바깥 선과 안쪽 선)
+
+## 답
+
+SVG 한 덩어리만 낸다. 설명·코드펜스 없이 <svg …>…</svg> 그대로.
+${combo.id === 'fill' && '채울 면이 없는 형태(돋보기·화살표처럼 선으로만 된 것)라면 SVG 대신 NONE 한 낱말만 낸다.'}`
+}
+
+/** 표정이 규격·굵기·면적·테두리를 다 지켰는지 실측으로 본다. */
+function reviewVariant(baseSvg, svg, ds, combo, target) {
+  const notes = []
+  const baseDs = [...baseSvg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
+  const base = measure(baseDs)
+  const now = measure(ds)
+
+  // ① 같은 아이콘인가 — 테두리가 어긋나면 다른 그림을 그려 온 것이다
+  const bb = pathBounds(baseDs.join(' '))
+  const vb = pathBounds(ds.join(' '))
+  let drift = 0
+  if (bb && vb) {
+    drift = Math.max(
+      Math.abs(vb.minX - bb.minX), Math.abs(vb.minY - bb.minY),
+      Math.abs(vb.maxX - bb.maxX), Math.abs(vb.maxY - bb.maxY)
+    )
+    const limit = Math.max(1.5, target.boundsDrift.max)
+    if (drift > limit) {
+      notes.push({ level: 'bad', text: `기본과 놓인 자리가 ${drift.toFixed(1)}만큼 다릅니다 — 같은 아이콘이 아닌 것 같습니다` })
+    }
+  }
+
+  // ② 방향이 맞는가 — 슬림은 기본보다 작고, 볼드·필은 커야 한다
+  const ratio = base.area > 0 ? now.area / base.area : 0
+  const lo = target.areaRatio.min * 0.8
+  const hi = target.areaRatio.max * 1.25
+  if (ratio < lo || ratio > hi) {
+    const dir = combo.id === 'slim' ? '가늘게' : '굵게'
+    notes.push({
+      level: 'bad',
+      text: `기본 대비 ${ratio.toFixed(2)}배입니다 — ${dir} 그려야 하는데 씨앗 범위(${lo.toFixed(2)}~${hi.toFixed(2)})를 벗어납니다`
+    })
+  }
+
+  // ③ 굵기 — 필은 덩어리라 획 개념이 흐리므로 넓게 본다
+  const sw = now.strokeWeight
+  const t = target.strokeWeight
+  if (sw < t.min * 0.75) {
+    notes.push({ level: 'warn', text: `다른 ${combo.id} 아이콘보다 가늡니다 (${sw.toFixed(2)})` })
+  } else if (sw > t.max * 1.35) {
+    notes.push({ level: 'warn', text: `다른 ${combo.id} 아이콘보다 굵습니다 (${sw.toFixed(2)})` })
+  }
+
+  if (/\sstroke=/.test(svg)) {
+    notes.push({ level: 'bad', text: '선(stroke)으로 그렸습니다 — 면으로 바꿔야 합니다' })
+  }
+
+  const bad = notes.filter((n) => n.level === 'bad').length
+  if (bad === 0 && notes.length === 0) {
+    notes.push({ level: 'good', text: `기본과 같은 모양이고 ${combo.id}답게 나왔습니다` })
+  }
+  return {
+    ok: bad === 0,
+    retryWorthy: bad > 0,
+    notes,
+    metrics: { strokeWeight: Number(sw.toFixed(2)), areaRatio: Number(ratio.toFixed(2)), boundsDrift: Number(drift.toFixed(2)) }
+  }
+}
+
+async function handleVariants(id, request) {
+  const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
+  const baselineAll = JSON.parse(fs.readFileSync(BASELINE, 'utf8'))
+  const name = request.name
+  const basePath = path.join(ROOT, 'assets/icons/svg', `${name}.svg`)
+  if (!fs.existsSync(basePath)) throw new Error(`기본 표정이 없습니다: ${name}`)
+  const baseSvg = fs.readFileSync(basePath, 'utf8')
+
+  const wanted = Array.isArray(request.variants) && request.variants.length > 0
+    ? request.variants
+    : (contract.variants?.combinations || []).filter((c) => !c.default).map((c) => c.id)
+
+  console.log(`  요청 ${id} — "${name}"의 표정 ${wanted.join('·')}`)
+
+  const draw = async (vid) => {
+    const combo = (contract.variants?.combinations || []).find((c) => c.id === vid)
+    const target = baselineAll.variants?.[vid]
+    if (!combo || !target) throw new Error(`표정 기준이 없습니다: ${vid}`)
+
+    const prompt = variantPrompt(name, baseSvg, combo, target)
+    const raw = await askClaude(prompt)
+
+    // 채울 면이 없다고 답할 수 있다 — 억지로 만들면 두부처럼 뭉갠 그림이 나온다
+    if (/^\s*NONE\s*$/i.test(raw) || (!/<svg/i.test(raw) && /NONE/i.test(raw))) {
+      return { variant: vid, none: true }
+    }
+
+    const first = normalize(raw)
+    let verdict = reviewVariant(baseSvg, first.svg, first.ds, combo, target)
+    let svg = first.svg
+    let retried = false
+
+    if (verdict.retryWorthy) {
+      retried = true
+      try {
+        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes))
+        const second = normalize(raw2)
+        const v2 = reviewVariant(baseSvg, second.svg, second.ds, combo, target)
+        if (v2.ok || v2.notes.filter((n) => n.level === 'bad').length <
+                     verdict.notes.filter((n) => n.level === 'bad').length) {
+          svg = second.svg
+          verdict = v2
+        }
+      } catch {
+        // 두 번째가 실패하면 첫 번째를 그대로 보여 준다 — 판단은 사람 몫이다
+      }
+    }
+    return { variant: vid, svg, review: verdict, retried }
+  }
+
+  const settled = await Promise.all(
+    wanted.map((v) => draw(v).catch((err) => ({ variant: v, error: err.message })))
+  )
+
+  const made = settled.filter((r) => r.svg)
+  if (made.length === 0 && settled.some((r) => /인증/.test(r.error || ''))) {
+    throw new Error(settled.find((r) => r.error).error)
+  }
+
+  return {
+    id,
+    kind: 'variants',
+    status: made.length > 0 || settled.some((r) => r.none) ? 'ready' : 'failed',
+    name,
+    baseSvg,
+    results: settled,
+    failures: settled.filter((r) => r.error).map((r) => `${r.variant}: ${r.error}`),
+    finishedAt: new Date().toISOString()
+  }
+}
+
 async function handle(id, request) {
   const ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'))
   const seedNames = Object.keys(ledger.icons)
@@ -407,9 +602,16 @@ async function tick() {
     fs.writeFileSync(path.join(resDir, f), JSON.stringify({ id, status: 'working', startedAt: new Date().toISOString() }, null, 2) + '\n')
 
     try {
-      const result = await handle(id, request)
+      // 두 가지 일을 한 큐로 받는다 — 일꾼도 화면도 하나면 된다
+      const result = request.kind === 'variants'
+        ? await handleVariants(id, request)
+        : await handle(id, request)
       fs.writeFileSync(path.join(resDir, f), JSON.stringify(result, null, 2) + '\n')
-      console.log(`  → ${result.status} · 후보 ${result.candidates.length}개`)
+      console.log(
+        result.kind === 'variants'
+          ? `  → ${result.status} · 표정 ${result.results.filter((r) => r.svg).length}개`
+          : `  → ${result.status} · 후보 ${result.candidates.length}개`
+      )
     } catch (err) {
       // 인증 문제면 결과를 지워 다음 회차에 다시 시도한다
       fs.unlinkSync(path.join(resDir, f))

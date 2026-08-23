@@ -20,11 +20,13 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const { measure } = require('./lib/svg-geometry')
+const { pathBounds } = require('./lib/svg-path')
 
 const ROOT = path.join(__dirname, '..')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
 const OUT = path.join(ROOT, 'contracts/icon-metrics-baseline.json')
+const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 
 const BASELINE_SOURCE = 'google-material'
 
@@ -36,11 +38,80 @@ function quantile(sorted, q) {
   return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo)
 }
 
-function readPaths(name) {
-  const p = path.join(SVG_DIR, `${name}.svg`)
+function readPaths(name, variant) {
+  const dir = variant ? path.join(SVG_DIR, variant) : SVG_DIR
+  const p = path.join(dir, `${name}.svg`)
   if (!fs.existsSync(p)) return null
   const svg = fs.readFileSync(p, 'utf8')
   return [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
+}
+
+/** 최소·p10·중앙·p90·최대를 한 덩어리로. */
+function spread(values, digits = 3) {
+  const a = [...values].sort((x, y) => x - y)
+  const r = (n) => Number(n.toFixed(digits))
+  return {
+    min: r(a[0]),
+    p10: r(quantile(a, 0.1)),
+    median: r(quantile(a, 0.5)),
+    p90: r(quantile(a, 0.9)),
+    max: r(a[a.length - 1])
+  }
+}
+
+/**
+ * 표정별 실측 분포.
+ *
+ * 자체 제작 아이콘의 표정을 만들 때 「이 정도면 맞다」를 판정할 자다.
+ * 감으로 정하지 않고 씨앗이 실제로 어떤지를 재서 쓴다.
+ *
+ * 세 지표를 함께 보는 이유 — 하나만으로는 모자란다.
+ *   획 굵기      그 표정답게 굵은가/가는가
+ *   면적비       방향이 맞는가 (슬림은 기본보다 작고, 볼드·필은 크다)
+ *   테두리 어긋남  **같은 아이콘인가.** 표정을 만들랬더니 다른 그림을 그려 오면 여기서 걸린다
+ *
+ * 형태 유사도(jaccard)는 쓰지 않는다. 2026-08-23 실측: 같은 아이콘의 표정끼리가
+ * 0.27~0.65인데 **서로 다른 아이콘끼리가 0.20~0.84**로 겹쳐 구분이 안 된다.
+ * 테두리 어긋남은 같은 아이콘 최대 1.29 대 다른 아이콘 중앙 1.95로 갈린다.
+ */
+function variantSpreads(seedNames) {
+  const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
+  const combos = (contract.variants?.combinations || []).filter((c) => !c.default)
+  const out = {}
+
+  for (const combo of combos) {
+    const sw = []
+    const ratio = []
+    const drift = []
+
+    for (const name of seedNames) {
+      const base = readPaths(name)
+      const va = readPaths(name, combo.id)
+      if (!base || !va) continue
+
+      sw.push(measure(va).strokeWeight)
+      const ba = measure(base).area
+      if (ba > 0) ratio.push(measure(va).area / ba)
+
+      const bb = pathBounds(base.join(' '))
+      const vb = pathBounds(va.join(' '))
+      if (bb && vb) {
+        drift.push(Math.max(
+          Math.abs(vb.minX - bb.minX), Math.abs(vb.minY - bb.minY),
+          Math.abs(vb.maxX - bb.maxX), Math.abs(vb.maxY - bb.maxY)
+        ))
+      }
+    }
+
+    if (sw.length < 10) continue
+    out[combo.id] = {
+      count: sw.length,
+      strokeWeight: spread(sw),
+      areaRatio: { note: '기본 표정 대비 면적. 슬림은 1 미만, 볼드·필은 1 초과.', ...spread(ratio, 2) },
+      boundsDrift: { note: '기본 표정과 테두리가 어긋난 최대치. 같은 아이콘인지 보는 자다.', ...spread(drift, 2) }
+    }
+  }
+  return out
 }
 
 function main() {
@@ -85,6 +156,7 @@ function main() {
       p90: Number(quantile(area, 0.9).toFixed(2)),
       max: Number(area[area.length - 1].toFixed(2))
     },
+    variants: variantSpreads(rows.map((r) => r.name)),
     generatedAt: new Date().toISOString().slice(0, 10)
   }
 
@@ -94,6 +166,12 @@ function main() {
   console.log(`  씨앗 ${rows.length}종`)
   console.log(`  획 굵기  min ${baseline.strokeWeight.min} · p10 ${baseline.strokeWeight.p10} · 중앙 ${baseline.strokeWeight.median} · p90 ${baseline.strokeWeight.p90} · max ${baseline.strokeWeight.max}`)
   console.log(`  면적     min ${baseline.area.min} · 중앙 ${baseline.area.median} · max ${baseline.area.max}`)
+  for (const [id, v] of Object.entries(baseline.variants)) {
+    console.log(
+      `  ${id.padEnd(7)} ${String(v.count).padStart(2)}종 · 획 ${v.strokeWeight.p10}~${v.strokeWeight.p90}` +
+      ` · 면적비 ${v.areaRatio.p10}~${v.areaRatio.p90} · 테두리 어긋남 최대 ${v.boundsDrift.max}`
+    )
+  }
 }
 
 main()

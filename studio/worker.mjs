@@ -103,7 +103,8 @@ function askClaude(prompt) {
  * 실제 path를 보여 주면 그 결을 따라 그린다.
  */
 function examples() {
-  const picks = ['file', 'calendar', 'bell']
+  // 획 굵기가 기준(2)에 가장 가까운 것들로 고른다. 가는 예시를 주면 따라 가늘어진다.
+  const picks = ['calendar', 'user', 'bell']
   const out = []
   for (const name of picks) {
     const p = path.join(ROOT, 'assets/icons/svg', `${name}.svg`)
@@ -135,7 +136,14 @@ Google Material Symbols **Outlined**와 같은 결이다. 면으로 꽉 채운 �
 ${contract.geometry.strokeWeight} 두께의 테두리 선으로 형태를 그린 것이다.
 
 선을 stroke 속성으로 그리지 않고 **면(path)으로 변환**해 표현한다.
-예를 들어 사각 테두리는 바깥 사각형과 안쪽 사각형을 함께 그려 가운데를 비운다.
+테두리 두께는 정확히 ${contract.geometry.strokeWeight}다 — 바깥 형태에서 각 변을
+${contract.geometry.strokeWeight}씩 안으로 들인 것이 안쪽 형태다.
+
+  사각 테두리:  M4 6h16v12H4Z  M6 8h12v8H6Z     ← 각 변이 2씩 들어갔다
+  원 테두리:    바깥 반지름 10, 안쪽 반지름 8
+
+**칠해진 면적이 캔버스의 4분의 1을 넘으면 잘못 그린 것이다.** 아웃라인 아이콘은
+대부분이 빈 공간이다. 통째로 채워진 덩어리가 나오면 안쪽을 빼지 않은 것이다.
 
 <svg>에 fill-rule="evenodd"를 준다. 이게 있어야 겹친 안쪽이 구멍으로 뚫린다.
 없으면 감는 방향에 따라 통째로 칠해진다.

@@ -147,35 +147,69 @@ function perimeter(pts) {
   return p
 }
 
+/** 점이 다각형 안에 있는가 (ray casting). */
+function pointInPoly(pt, poly) {
+  let inside = false
+  for (let i = 0, j = poly.length - 2; i < poly.length - 1; j = i++) {
+    const [xi, yi] = poly[i]
+    const [xj, yj] = poly[j]
+    if ((yi > pt[1]) !== (yj > pt[1]) &&
+        pt[0] < ((xj - xi) * (pt[1] - yi)) / (yj - yi) + xi) {
+      inside = !inside
+    }
+  }
+  return inside
+}
+
+/** subpath의 대표점 — 무게중심이 형태 밖에 놓일 수 있어 첫 변의 중점을 쓴다. */
+function samplePoint(sp) {
+  if (sp.length < 2) return sp[0]
+  return [(sp[0][0] + sp[1][0]) / 2, (sp[0][1] + sp[1][1]) / 2]
+}
+
 /**
  * 아이콘 한 장의 기하 지표.
+ *
+ * 면적은 **fill-rule: evenodd 기준**으로 센다 — 우리 규격이 evenodd이기 때문이다.
+ * 부호(감는 방향)로 더하면 안 된다: 모델이 바깥·안쪽을 같은 방향으로 그려도
+ * evenodd에서는 정상적으로 뚫리는데, 부호 합산은 그걸 「꽉 찬 덩어리」로 오판한다
+ * (2026-08-23 실측: 실제로는 테두리가 제대로 그려진 아이콘을 획 4.27로 재서
+ * 여섯 번을 헛짚었다). 포함 깊이가 홀수면 칠해진 부분, 짝수면 구멍이다.
+ *
  * @returns {{area:number, perimeter:number, strokeWeight:number, subpaths:number}}
- *   area          채워진 면적 (구멍 제외)
+ *   area          칠해진 순면적 (구멍 제외)
  *   perimeter     윤곽선 총 길이
  *   strokeWeight  평균 획 굵기 근사 = 2 × area / perimeter
  */
 function measure(ds) {
-  let area = 0
-  let peri = 0
-  let count = 0
-  for (const d of ds) {
-    for (const sp of flatten(d)) {
-      area += Math.abs(signedArea(sp))
-      peri += perimeter(sp)
-      count += 1
-    }
-  }
-  // 구멍이 있는 형태(고리·도넛)는 바깥과 안쪽 넓이가 함께 더해져 실제보다 커진다.
-  // 부호를 살려 다시 더하면 구멍이 빠진 순면적이 나온다.
-  let net = 0
-  for (const d of ds) for (const sp of flatten(d)) net += signedArea(sp)
-  net = Math.abs(net)
+  const subpaths = []
+  for (const d of ds) for (const sp of flatten(d)) subpaths.push(sp)
+  if (subpaths.length === 0) return { area: 0, perimeter: 0, strokeWeight: 0, subpaths: 0 }
 
+  const areas = subpaths.map((sp) => Math.abs(signedArea(sp)))
+  const peri = subpaths.reduce((sum, sp) => sum + perimeter(sp), 0)
+
+  // 각 subpath가 다른 subpath 몇 개 안에 들어 있는지 센다.
+  // 홀수면 칠해진 영역, 짝수(0 포함)면 바깥이거나 구멍이다.
+  let net = 0
+  for (let i = 0; i < subpaths.length; i += 1) {
+    const pt = samplePoint(subpaths[i])
+    let depth = 0
+    for (let j = 0; j < subpaths.length; j += 1) {
+      if (i === j) continue
+      // 자기보다 큰 것만 감쌀 수 있다 — 같은 크기끼리의 오판을 줄인다
+      if (areas[j] <= areas[i]) continue
+      if (pointInPoly(pt, subpaths[j])) depth += 1
+    }
+    net += depth % 2 === 0 ? areas[i] : -areas[i]
+  }
+
+  const area = Math.max(0, net)
   return {
-    area: net > 0 ? net : area,
+    area,
     perimeter: peri,
-    strokeWeight: peri > 0 ? (2 * (net > 0 ? net : area)) / peri : 0,
-    subpaths: count
+    strokeWeight: peri > 0 ? (2 * area) / peri : 0,
+    subpaths: subpaths.length
   }
 }
 
@@ -212,4 +246,4 @@ function jaccard(a, b) {
   return inter / (a.size + b.size - inter)
 }
 
-module.exports = { flatten, measure, shapeCells, jaccard, signedArea, perimeter }
+module.exports = { flatten, measure, shapeCells, jaccard, signedArea, perimeter, pointInPoly }

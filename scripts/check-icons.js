@@ -199,7 +199,10 @@ function main() {
     const { min, p10, p90, max } = baseline.strokeWeight
     for (const { name, sw } of metrics) {
       if (ledger.icons[name].source === BASELINE_SOURCE) continue // 씨앗이 기준선 자신이다
-      if (sw < min || sw > max) {
+      const solidAt = p90 * (contract.optical.solidFillThreshold?.multiplier ?? 2)
+      if (sw > solidAt) {
+        fail(name, `획 굵기 ${sw.toFixed(2)} — 아웃라인이 아니라 면으로 꽉 채워 그렸다 (${solidAt.toFixed(2)} 초과)`)
+      } else if (sw < min || sw > max) {
         warn(name, `획 굵기 ${sw.toFixed(2)} — 씨앗 범위(${min}~${max}) 밖이다. ${sw < min ? '가늘어' : '굵어'} 보인다`)
       } else if (sw < p10 || sw > p90) {
         warn(name, `획 굵기 ${sw.toFixed(2)} — 씨앗 대부분(${p10}~${p90})보다 ${sw < p10 ? '가늘다' : '굵다'}`)

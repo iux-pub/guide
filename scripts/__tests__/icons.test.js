@@ -234,3 +234,41 @@ test('폰트 빌드가 결정적이다', () => {
   const src = fs.readFileSync(path.join(ROOT, 'scripts/build-icons.js'), 'utf8')
   assert.match(src, /svg2ttf\([^)]*ts:/s, '폰트 생성 시각을 고정하지 않으면 빌드가 비결정적이다')
 })
+
+test('면적은 evenodd 기준으로 센다 — 감는 방향에 휘둘리지 않는다', () => {
+  // 바깥과 안쪽을 **같은 방향**으로 그린 테두리. 우리 규격은 fill-rule=evenodd라
+  // 가운데가 정상적으로 뚫린다. 부호(감는 방향)로 면적을 더하면 둘이 합쳐져
+  // 「꽉 찬 덩어리」로 오판한다 — 2026-08-23에 이 버그로 정상 아이콘을 여섯 번
+  // 불량으로 판정했다.
+  const sameDir = measure(['M2 2h20v20H2Z M4 4h16v16H4Z'])
+  const oppDir = measure(['M2 2h20v20H2Z M4 20h16V4H4Z']) // 안쪽만 반대 방향
+
+  assert.ok(Math.abs(sameDir.strokeWeight - oppDir.strokeWeight) < 0.2,
+    `감는 방향이 달라도 같게 나와야 한다 (${sameDir.strokeWeight.toFixed(2)} vs ${oppDir.strokeWeight.toFixed(2)})`)
+
+  // 테두리 두께 2 → 획 굵기도 2 언저리여야 한다
+  assert.ok(sameDir.strokeWeight > 1.5 && sameDir.strokeWeight < 2.6,
+    `두께 2 테두리인데 ${sameDir.strokeWeight.toFixed(2)}로 나왔다`)
+
+  // 정말 꽉 찬 사각형은 확실히 커야 한다
+  const solid = measure(['M2 2h20v20H2Z'])
+  assert.ok(solid.strokeWeight > 5, `꽉 찬 사각형은 크게 나와야 한다 (${solid.strokeWeight.toFixed(2)})`)
+})
+
+test('내부 요소가 구멍 안에 있으면 다시 칠해진다', () => {
+  // 테두리(깊이 0·1) 안의 점(깊이 2)은 evenodd 홀짝 규칙상 칠해진 영역이다.
+  // 이걸 구멍으로 세면 면적이 음수로 깎여 획이 가늘게 나온다.
+  const withDots = measure(['M2 2h20v20H2Z M4 4h16v16H4Z M10 10h4v4h-4Z'])
+  const noDots = measure(['M2 2h20v20H2Z M4 4h16v16H4Z'])
+  assert.ok(withDots.area > noDots.area, '내부 점이 면적에 더해져야 한다')
+})
+
+test('기준선이 씨앗의 실제 분포를 담는다', () => {
+  const p = path.join(ROOT, 'contracts/icon-metrics-baseline.json')
+  if (!fs.existsSync(p)) return
+  const b = JSON.parse(fs.readFileSync(p, 'utf8')).strokeWeight
+  // 아웃라인 세트의 획은 2 언저리에 몰린다. 중앙값이 여기서 크게 벗어나면
+  // 측정식이나 씨앗 구성이 바뀐 것이므로 사람이 봐야 한다.
+  assert.ok(b.median > 1.5 && b.median < 2.5, `중앙값 ${b.median} — 획 굵기 2 기준에서 벗어났다`)
+  assert.ok(b.min > 1, `최솟값 ${b.min} — 구멍 있는 아이콘을 잘못 재고 있을 수 있다`)
+})

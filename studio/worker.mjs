@@ -103,8 +103,10 @@ function askClaude(prompt) {
  * 실제 path를 보여 주면 그 결을 따라 그린다.
  */
 function examples() {
-  // 획 굵기가 기준(2)에 가장 가까운 것들로 고른다. 가는 예시를 주면 따라 가늘어진다.
-  const picks = ['calendar', 'user', 'bell']
+  // 안에 격자·내부 요소가 있는 것을 고른다. 실패는 그 주제군에서 나오므로
+  // 「윤곽 두 겹 + 내부 요소」가 실제로 어떻게 생겼는지 보여 주는 것이 맞다.
+  // 획 굵기도 기준(2)에 가까운 것들이다 — 가는 예시를 주면 따라 가늘어진다.
+  const picks = ['calendar', 'table', 'grid', 'file']
   const out = []
   for (const name of picks) {
     const p = path.join(ROOT, 'assets/icons/svg', `${name}.svg`)
@@ -142,11 +144,21 @@ Google Material Symbols **Outlined**와 같은 결이다.
   틀림:    M4 6h16v12H4Z                  ← 한 겹. 통째로 까맣게 칠해진다
 
 한 겹만 그리면 그 안에 무엇을 넣어도 **까만 덩어리에 흰 구멍이 난 그림**이 된다.
-2026-08-23에 실제로 그렇게 나왔다 — 티켓 몸통이 새까맣고 QR이 흰 구멍이었다.
+실제로 그렇게 나온 적이 여러 번 있다 — 티켓 몸통이 새까맣고 QR이 흰 구멍이었다.
 우리가 원하는 것은 그 반대다: 티켓은 빈 테두리, QR은 그 안의 작은 채운 점.
 
-내부에 들어가는 작은 요소(점·막대·짧은 선)는 한 겹으로 그려 채운다.
-크기가 ${contract.geometry.strokeWeight}~4 정도로 작기 때문에 그 자체가 획 굵기다.
+## path를 역할별로 나눠 쓴다
+
+한 덩어리로 몰아 쓰면 윤곽과 내부가 섞여 실수가 난다. 반드시 이렇게 나눈다.
+
+  <path d="…바깥 윤곽 두 겹…"/>      ← 첫 번째 path. 여기가 테두리다
+  <path d="…내부 요소…"/>            ← 두 번째부터. 점·막대·짧은 선
+
+첫 번째 path 안에는 **닫힌 형태가 둘 이상** 있다(Z로 닫는다). 바깥 하나, 안쪽 하나.
+닫힌 형태가 하나뿐이면 한 겹만 그린 것이다 — 다시 본다.
+
+내부 요소는 한 겹으로 그려 채운다. 크기가 ${contract.geometry.strokeWeight}~4로 작아
+그 자체가 획 굵기다.
 
 <svg>에 fill-rule="evenodd"를 준다. 겹친 안쪽이 구멍으로 뚫리게 하는 장치다.
 
@@ -270,7 +282,8 @@ function review(svg, ds, original) {
   if (baseline) {
     const sw = measure(ds).strokeWeight
     const { min, p10, p90, max } = baseline.strokeWeight
-    if (sw > max * 1.8) {
+    const solidAt = (baseline.strokeWeight.p90 || max) * (contract.optical.solidFillThreshold?.multiplier ?? 2)
+    if (sw > solidAt) {
       // 획이 아니라 면으로 꽉 채워 그린 경우다. "굵다"고만 하면 원인을 못 찾는다.
       notes.push({ level: 'bad', text: '속이 꽉 찬 덩어리로 그려졌습니다 — 테두리만 남는 형태가 아닙니다' })
       ok = false

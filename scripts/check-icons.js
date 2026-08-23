@@ -128,6 +128,50 @@ function checkSvg(name, svg, isSeed) {
 // 이미 사람 손으로 시각 보정을 마친 것이므로 검사 대상이 아니고,
 // 자체 제작 아이콘만 그 분포와 견준다. 자세한 근거는 build-icon-baseline.js.
 
+// ── 변형 ───────────────────────────────────────────────
+
+/**
+ * 변형(fill·bold)도 같은 규격을 지켜야 한다.
+ * 다만 **굵기는 기본과 다른 것이 정상**이다 — bold는 굵으라고 만든 것이다.
+ * 그래서 규격(뷰박스·stroke·색·캔버스)만 보고 굵기 비교는 하지 않는다.
+ */
+function checkVariants(names) {
+  const combos = (contract.variants?.combinations || []).filter((c) => !c.default)
+  for (const combo of combos) {
+    const dir = path.join(SVG_DIR, combo.id)
+    if (!fs.existsSync(dir)) continue
+
+    const files = fs.readdirSync(dir).filter((f) => f.endsWith('.svg')).map((f) => f.replace(/\.svg$/, ''))
+    for (const n of files) {
+      if (!names.includes(n)) {
+        fail(`${combo.id}/${n}`, '대장에 없는 아이콘의 변형이다 — 기본이 사라졌거나 이름이 바뀌었다')
+        continue
+      }
+      const svg = fs.readFileSync(path.join(dir, `${n}.svg`), 'utf8')
+      checkSvg(`${combo.id}/${n}`, svg, true)
+    }
+
+    // 대장에 적힌 표정과 실제 파일이 어긋나면, 없는 표정을 권하게 된다 — 빈 네모가 나온다
+    for (const n of names) {
+      const listed = (ledger.icons[n].variants || []).includes(combo.id)
+      const exists = files.includes(n)
+      if (listed && !exists) {
+        fail(n, `대장은 ${combo.id}가 있다는데 파일이 없다 — npm run icons:build`)
+      } else if (!listed && exists) {
+        fail(n, `${combo.id} 파일이 있는데 대장에 없다 — npm run icons:build`)
+      }
+    }
+
+    // 변형 자산이 있으면 빌드 산출물도 있어야 한다 — 하나만 갱신되면 화면과 폰트가 어긋난다
+    if (files.length > 0) {
+      const sprite = path.join(ROOT, 'assets/icons', `sprite-${combo.id}.svg`)
+      if (fs.existsSync(path.join(ROOT, 'assets/icons/sprite.svg')) && !fs.existsSync(sprite)) {
+        fail(combo.id, `낱개는 ${files.length}종인데 sprite-${combo.id}.svg가 없다 — npm run icons:build`)
+      }
+    }
+  }
+}
+
 // ── 실행 ───────────────────────────────────────────────
 
 function main() {
@@ -193,6 +237,8 @@ function main() {
     metrics.push({ name, sw: measure(ds).strokeWeight })
     hashes.set(name, shapeCells(ds))
   }
+
+  checkVariants(names)
 
   // 획 굵기 — 기준선 분포 밖이면 세트에서 튄다는 신호다
   if (baseline) {

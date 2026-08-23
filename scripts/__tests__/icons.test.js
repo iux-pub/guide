@@ -263,12 +263,116 @@ test('내부 요소가 구멍 안에 있으면 다시 칠해진다', () => {
   assert.ok(withDots.area > noDots.area, '내부 점이 면적에 더해져야 한다')
 })
 
-test('기준선이 씨앗의 실제 분포를 담는다', () => {
+test('기준선이 계약이 정한 기본 굵기와 맞는다', () => {
   const p = path.join(ROOT, 'contracts/icon-metrics-baseline.json')
   if (!fs.existsSync(p)) return
   const b = JSON.parse(fs.readFileSync(p, 'utf8')).strokeWeight
-  // 아웃라인 세트의 획은 2 언저리에 몰린다. 중앙값이 여기서 크게 벗어나면
-  // 측정식이나 씨앗 구성이 바뀐 것이므로 사람이 봐야 한다.
-  assert.ok(b.median > 1.5 && b.median < 2.5, `중앙값 ${b.median} — 획 굵기 2 기준에서 벗어났다`)
-  assert.ok(b.min > 1, `최솟값 ${b.min} — 구멍 있는 아이콘을 잘못 재고 있을 수 있다`)
+
+  // 기준선은 기본 표정(regular)의 실측이다. 계약의 기본 굵기가 바뀌면 여기도
+  // 따라와야 한다 — 안 따라오면 자체 제작 아이콘이 옛 굵기로 판정된다.
+  // 2026-08-23: 구글 기본(wght400·획 2.0)이 24px에서 본문보다 무거워 wght300으로 내렸다.
+  const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/icon-contract.json'), 'utf8'))
+  const base = contract.variants.combinations.find((c) => c.default)
+  const expected = { 200: 1.0, 300: 1.5, 400: 2.0 }[base.weight]
+  assert.ok(expected, `기본 굵기 ${base.weight}에 대응하는 실측 기대값이 없다 — 이 표를 갱신한다`)
+  assert.ok(
+    Math.abs(b.median - expected) < 0.25,
+    `중앙값 ${b.median} — 기본 굵기 ${base.weight}이면 ${expected} 언저리여야 한다`
+  )
+  assert.ok(b.min > expected * 0.6, `최솟값 ${b.min} — 구멍 있는 아이콘을 잘못 재고 있을 수 있다`)
+})
+
+// ── 표정 ───────────────────────────────────────────────
+
+test('표정 사다리가 얇은 것부터 굵은 것 순으로 벌어진다', () => {
+  const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/icon-contract.json'), 'utf8'))
+  const combos = contract.variants.combinations.filter((c) => c.fill === 0)
+
+  // 굵기가 다른데 실측이 같으면 같은 파일을 받아 온 것이다 — 화면에서 구분이 안 된다
+  const measured = combos.map((c) => {
+    const dir = c.default ? SVG_DIR : path.join(SVG_DIR, c.id)
+    const w = fs.readdirSync(dir).filter((f) => f.endsWith('.svg')).map((f) => {
+      const svg = fs.readFileSync(path.join(dir, f), 'utf8')
+      const ds = [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
+      return measure(ds).strokeWeight
+    }).filter((x) => x > 0).sort((a, b) => a - b)
+    return { id: c.id, weight: c.weight, median: w[Math.floor(w.length / 2)] }
+  }).sort((a, b) => a.weight - b.weight)
+
+  for (let i = 1; i < measured.length; i += 1) {
+    const prev = measured[i - 1]
+    const cur = measured[i]
+    assert.ok(
+      cur.median > prev.median + 0.2,
+      `${prev.id}(${prev.median.toFixed(2)}) → ${cur.id}(${cur.median.toFixed(2)}) — 눈에 띄게 벌어지지 않는다`
+    )
+  }
+})
+
+test('대장의 표정 목록이 실제 파일과 맞는다', () => {
+  // 대장이 정본이다. 어긋나면 MCP·스튜디오가 없는 표정을 권하고 화면에 빈 네모가 나온다.
+  const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/icon-contract.json'), 'utf8'))
+  const extra = contract.variants.combinations.filter((c) => !c.default)
+
+  for (const combo of extra) {
+    const dir = path.join(SVG_DIR, combo.id)
+    const files = fs.existsSync(dir)
+      ? new Set(fs.readdirSync(dir).filter((f) => f.endsWith('.svg')).map((f) => f.replace(/\.svg$/, '')))
+      : new Set()
+
+    for (const [name, meta] of Object.entries(ledger.icons)) {
+      const listed = (meta.variants || []).includes(combo.id)
+      assert.equal(
+        listed, files.has(name),
+        `${name}의 ${combo.id} — 대장은 ${listed ? '있다' : '없다'}는데 파일은 ${files.has(name) ? '있다' : '없다'}`
+      )
+    }
+  }
+})
+
+test('표정도 기본과 같은 규격을 지킨다', () => {
+  const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/icon-contract.json'), 'utf8'))
+  for (const combo of contract.variants.combinations.filter((c) => !c.default)) {
+    const dir = path.join(SVG_DIR, combo.id)
+    if (!fs.existsSync(dir)) continue
+    for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.svg'))) {
+      const svg = fs.readFileSync(path.join(dir, f), 'utf8')
+      assert.match(svg, /viewBox="0 0 24 24"/, `${combo.id}/${f} 뷰박스`)
+      assert.match(svg, /fill="currentColor"/, `${combo.id}/${f} 색`)
+      assert.ok(!/\sstroke=/.test(svg), `${combo.id}/${f} — stroke는 면으로 변환한다`)
+    }
+  }
+})
+
+test('표정마다 스프라이트와 폰트가 함께 나온다', () => {
+  // 하나만 갱신되면 SVG로 본 것과 폰트로 나온 것이 달라진다
+  const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/icon-contract.json'), 'utf8'))
+  const out = path.join(ROOT, 'assets/icons')
+  if (!fs.existsSync(path.join(out, 'sprite.svg'))) return
+
+  for (const combo of contract.variants.combinations) {
+    const sprite = combo.default ? 'sprite.svg' : `sprite-${combo.id}.svg`
+    const font = combo.default ? 'infoux-icons.woff2' : `infoux-icons-${combo.id}.woff2`
+    assert.ok(fs.existsSync(path.join(out, sprite)), `${sprite} 없음 — npm run icons:build`)
+    assert.ok(fs.existsSync(path.join(out, font)), `${font} 없음 — npm run icons:build`)
+  }
+})
+
+test('표정 클래스가 font-family만 바꾼다 — 코드포인트는 그대로다', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'assets/icons/icons.css'), 'utf8')
+  const contract = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts/icon-contract.json'), 'utf8'))
+
+  for (const combo of contract.variants.combinations.filter((c) => !c.default)) {
+    const sample = Object.entries(ledger.icons).find(([, m]) => (m.variants || []).includes(combo.id))
+    if (!sample) continue
+    const [name] = sample
+    // 선택자를 묶어 내므로 규칙 하나만 떼어 보지 않고, 대상이 든 규칙을 찾는다
+    const target = `.icon-font--${combo.id}.icon-font--${name}`
+    const rule = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+      .find((r) => r[1].split(',').some((sel) => sel.trim() === target))
+    assert.ok(rule, `${combo.id}/${name} 규칙이 icons.css에 없다`)
+    // content(코드포인트)를 다시 정하면 대장이 두 곳으로 갈린다
+    assert.ok(!/content\s*:/.test(rule[2]), `${combo.id}/${name} — 표정이 코드포인트를 덮어쓰면 안 된다`)
+    assert.match(rule[2], /font-family/, `${combo.id}/${name} — font-family를 바꿔야 한다`)
+  }
 })

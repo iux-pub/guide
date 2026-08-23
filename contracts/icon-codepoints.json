@@ -10,9 +10,13 @@
       "source": "google-material",
       "sourceName": "chevron_left",
       "license": "Apache-2.0",
-      "sha256": "414c343826c6bdb3f355df7b40f1027fb274ccd6e3192f2d90d3a9b451a28a42",
+      "sha256": "82ad1cd6462a3c134bded6c431370f4dc8e3c32a3ccdbd3096805a8db671c70b",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "chevron-right": {
       "codepoint": "U+E001",
@@ -20,9 +24,13 @@
       "source": "google-material",
       "sourceName": "chevron_right",
       "license": "Apache-2.0",
-      "sha256": "50b42f8c5d1fb14c6d021b8695695ea781820ae9771707d41f48f7b723f4b653",
+      "sha256": "8f5653ff042ede397f141effc17118095e223a92c7ad1855e7afc17a1754bf8c",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "chevron-up": {
       "codepoint": "U+E002",
@@ -30,9 +38,13 @@
       "source": "google-material",
       "sourceName": "keyboard_arrow_up",
       "license": "Apache-2.0",
-      "sha256": "325bc644d11ae8e865e1d021be5a13b38370655ea7e9febbff953c0ee025b94c",
+      "sha256": "b1696a136597155df11aeb6e142bf2437d0a8a4fed008500716266ac49cc0a9e",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "chevron-down": {
       "codepoint": "U+E003",
@@ -40,9 +52,13 @@
       "source": "google-material",
       "sourceName": "keyboard_arrow_down",
       "license": "Apache-2.0",
-      "sha256": "bc07c87746121b2f52a99abb071347536582d2f87507cabca7d2995a44445b20",
+      "sha256": "904d2879d0b2563ca351544c6c3b039709aa5609ac7623d23467a23685e9fd2f",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "arrow-left": {
       "codepoint": "U+E004",
@@ -50,9 +66,13 @@
       "source": "google-material",
       "sourceName": "arrow_back",
       "license": "Apache-2.0",
-      "sha256": "88cb271c95e28afabe2d971d54111bf2e70ea025c548577616aca57236b624d7",
+      "sha256": "6dfe5de7c96d814a445ff1980aa6c916ac5eeb9292c658433d6e702150305672",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "arrow-right": {
       "codepoint": "U+E005",
@@ -60,9 +80,13 @@
       "source": "google-material",
       "sourceName": "arrow_forward",
       "license": "Apache-2.0",
-      "sha256": "9fae5a913b35ea68c63784e7602a11f9c622af4e35c6c11978f90b8798be0c6b",
+      "sha256": "be1c2e558b28e2994bf74123c406b98ff64d3db7d9085983afde1bdce85d6b8b",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "arrow-up": {
       "codepoint": "U+E006",
@@ -70,9 +94,13 @@
       "source": "google-material",
       "sourceName": "arrow_upward",
       "license": "Apache-2.0",
-      "sha256": "68226ce2c6a8d335f64133c89fc1352683413c74f2503dde9a6c14eced46351a",
+      "sha256": "75deff4b5ba5e877671564c419099af1856558fbcadbbf6cc27375ec5728d3b0",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "arrow-down": {
       "codepoint": "U+E007",
@@ -80,9 +108,13 @@
       "source": "google-material",
       "sourceName": "arrow_downward",
       "license": "Apache-2.0",
-      "sha256": "e5ad53b08ab2c22ea5cf8023dbd59bf48e145680d08297064f809395035c8620",
+      "sha256": "3ea537e18abf9a4cb308554c4dba64ef1f9295c9f3285f7ec7fdb7c21dc0a849",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "menu": {
       "codepoint": "U+E008",
@@ -90,9 +122,13 @@
       "source": "google-material",
       "sourceName": "menu",
       "license": "Apache-2.0",
-      "sha256": "39148a04095540631df604ffddfb9e3a5c90287dff40da772167bfe991935751",
+      "sha256": "6460a68c391f804bce7948c15787cc81ca0ca3cf0e4d08d53282e0d780eb7bd0",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "close": {
       "codepoint": "U+E009",
@@ -100,9 +136,13 @@
       "source": "google-material",
       "sourceName": "close",
       "license": "Apache-2.0",
-      "sha256": "06708b163db71775bd0d9537a90479c67dbf95faa609f9f5b04f6ddf538b9daa",
+      "sha256": "d8fecc72ed2d59b02e0a6cb170f8f3eb52be6caf669e6d148158bf4624de4f95",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "more-vertical": {
       "codepoint": "U+E00A",
@@ -110,9 +150,13 @@
       "source": "google-material",
       "sourceName": "more_vert",
       "license": "Apache-2.0",
-      "sha256": "4c54df69102cc6d982bd0a4da593d98e412c92ed2455d49edb922c932c55cc84",
+      "sha256": "a52b1196a0393d288e3fac2448432de79ad313040423a55c020bdffbd350682a",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "external-link": {
       "codepoint": "U+E00B",
@@ -120,9 +164,13 @@
       "source": "google-material",
       "sourceName": "open_in_new",
       "license": "Apache-2.0",
-      "sha256": "8e5d3e9b4f6d98f3fc04e31754214be7b3fd600fee77db7c70257945a0538b9d",
+      "sha256": "eacb0c09b8942be8112d085e16ac81f4501394feb6e2e730b449de208858b7f5",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "search": {
       "codepoint": "U+E00C",
@@ -130,9 +178,13 @@
       "source": "google-material",
       "sourceName": "search",
       "license": "Apache-2.0",
-      "sha256": "ce29437ee4ba2822cec7b5dbecad196b5b7605de18427c119d6cdff1e6930875",
+      "sha256": "361fe5daf45fbad09b57b81ec09a61061b467487ff63283567db80734cf779dc",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "filter": {
       "codepoint": "U+E00D",
@@ -140,9 +192,14 @@
       "source": "google-material",
       "sourceName": "filter_alt",
       "license": "Apache-2.0",
-      "sha256": "1fb82f59f7f75b35a3939815b04daee163379b5b2c89d00db21b5611b7966af2",
+      "sha256": "82036a8211840982d517e67d454ee07fc9ac2fd7e44810492f4a2ad224695d88",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "download": {
       "codepoint": "U+E00E",
@@ -150,9 +207,13 @@
       "source": "google-material",
       "sourceName": "download",
       "license": "Apache-2.0",
-      "sha256": "270b66af6e58d8d5bb0612bbd18b0615e7913864e29005549a0489a8e17693df",
+      "sha256": "a2aef5c52a352e6d65787df8955743d584474e25bb7ab76e507dc5fcce4f30f6",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "upload": {
       "codepoint": "U+E00F",
@@ -160,9 +221,13 @@
       "source": "google-material",
       "sourceName": "upload",
       "license": "Apache-2.0",
-      "sha256": "0adf7aafe08a93cb62c42c522d2088141afe65db486fc3eb95bab3566ea47e23",
+      "sha256": "8a5efb92a807c57ddfd72fc09fc45459c880d609f7627a2e9ce34bacac0ebe27",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "share": {
       "codepoint": "U+E010",
@@ -170,9 +235,14 @@
       "source": "google-material",
       "sourceName": "share",
       "license": "Apache-2.0",
-      "sha256": "b2278caa2346e9b33029ef92b54ea2216dba03fdeb9239f3847ddcc503962eba",
+      "sha256": "aad814b35b619853df50aec9743deecb0bd321f9116a52b59d4e59f9ebd8a4e3",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "print": {
       "codepoint": "U+E011",
@@ -180,9 +250,14 @@
       "source": "google-material",
       "sourceName": "print",
       "license": "Apache-2.0",
-      "sha256": "fe6db3b8d5cb630341fdb519676d9a48fed5aa2e30ed47da1a1d4b23396b7c94",
+      "sha256": "4f9016ca0c8c286f690542c63e03e13b58c3a5bfb850e36897ae648fa8ed69d3",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "copy": {
       "codepoint": "U+E012",
@@ -190,9 +265,14 @@
       "source": "google-material",
       "sourceName": "content_copy",
       "license": "Apache-2.0",
-      "sha256": "3879088c1e8599ed5f13fa7d06a974176fde7d0b7b949e107cf66bfedeb06c2f",
+      "sha256": "5a3280ed5b72fa22b1b549925611af889256df62946c7ea8f20ecd6f4f29ac93",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "edit": {
       "codepoint": "U+E013",
@@ -200,9 +280,14 @@
       "source": "google-material",
       "sourceName": "edit",
       "license": "Apache-2.0",
-      "sha256": "d28be6b82aefef42c5b9847b6e9ba01f6965c406fc0dfb8264214187500dcd69",
+      "sha256": "9debe2ddf22f322797d1806ae824074b8363b8e2ed1880ea8381ae6a3edb4aeb",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "delete": {
       "codepoint": "U+E014",
@@ -210,9 +295,14 @@
       "source": "google-material",
       "sourceName": "delete",
       "license": "Apache-2.0",
-      "sha256": "14d19bc2cc92f3f6144f015e34f75f7d47dd3a115d7304398c496485e75cd661",
+      "sha256": "6ffdb6fd1e8109a9e3b4806215eca7e9d3e80c90cd9d1c6521aa3f4d91844faf",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "add": {
       "codepoint": "U+E015",
@@ -220,9 +310,13 @@
       "source": "google-material",
       "sourceName": "add",
       "license": "Apache-2.0",
-      "sha256": "188568e2691303a8170c036e54b24b610117e4fb5cdbb9f36e815f036747e133",
+      "sha256": "2c17446d33187c5f9c36d84f680250f2297afff8af79ad5ae576f8e4119cccc2",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "refresh": {
       "codepoint": "U+E016",
@@ -230,9 +324,13 @@
       "source": "google-material",
       "sourceName": "refresh",
       "license": "Apache-2.0",
-      "sha256": "9886b87a3c698af66791c66f9cede3b6ac2aad2ccda0df0b798c968b7e33a004",
+      "sha256": "c850a19369dfbdd675b5fb4367a0026bee121abb60dbf0c17ff0c76914d3484b",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "save": {
       "codepoint": "U+E017",
@@ -240,9 +338,14 @@
       "source": "google-material",
       "sourceName": "save",
       "license": "Apache-2.0",
-      "sha256": "e01a3a6c861cabf540015fa3c38a646045964d83b4e0546da3daa7e706ba9e6f",
+      "sha256": "ec93b41e8ebfcb497ae32bc989f38ca3679268ecf391c3e398f2685b7e61cc5d",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "settings": {
       "codepoint": "U+E018",
@@ -250,9 +353,14 @@
       "source": "google-material",
       "sourceName": "settings",
       "license": "Apache-2.0",
-      "sha256": "5a64b019f33d8a7a1d0a0c25841701e856ea493b7622e66fb63053e05fcdd79d",
+      "sha256": "dd1a54bdbc580b05afc361ae1a901369f5a14e495823a0f330b0a969dc6a7558",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "check": {
       "codepoint": "U+E019",
@@ -260,9 +368,13 @@
       "source": "google-material",
       "sourceName": "check",
       "license": "Apache-2.0",
-      "sha256": "905e9b683072d8b966cfe6136f5916b96478f30c3836022ca569454fc595efb6",
+      "sha256": "89f2db6e6fd0d932d75145442f8e233d72d0dd05acf1c8e57c62b83e76f4d97e",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "info": {
       "codepoint": "U+E01A",
@@ -270,9 +382,14 @@
       "source": "google-material",
       "sourceName": "info",
       "license": "Apache-2.0",
-      "sha256": "bb81b8a8e4cbbbaef25ee367d82c1545b03207469dd881e8986296d173632768",
+      "sha256": "81a0ff6e26220f5ba24274150f357fa2a42672c4c2eaa30e9dfe5b8d687a996e",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "warning": {
       "codepoint": "U+E01B",
@@ -280,9 +397,14 @@
       "source": "google-material",
       "sourceName": "warning",
       "license": "Apache-2.0",
-      "sha256": "9dcc428b3273166ba0d77594a2a0b04ec2001a99ec72237244efe47c2e9b6437",
+      "sha256": "3c4b33db601f78f3fde7c0a57668de6e67e6862b5b5f7da7f3fb09a1ae53e308",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "error": {
       "codepoint": "U+E01C",
@@ -290,9 +412,14 @@
       "source": "google-material",
       "sourceName": "error",
       "license": "Apache-2.0",
-      "sha256": "0e20ab1c53567ab43dc3ee0a1339180259dba3c9d819cd8d1573a14cfe18b052",
+      "sha256": "6ab59a0b97aeadd915e6e54779f19526ae08dbece6b7e695eb02253449282172",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "success": {
       "codepoint": "U+E01D",
@@ -300,9 +427,14 @@
       "source": "google-material",
       "sourceName": "check_circle",
       "license": "Apache-2.0",
-      "sha256": "0d259b1b87b9ead3c15f2a017c84a9c1a8a42c61e41a8f3fcb394fcdae18ba70",
+      "sha256": "056da4994a301932d5b2b10f26d18e1bbfcd34bbba7e8f42d0a3fceb85920768",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "help": {
       "codepoint": "U+E01E",
@@ -310,9 +442,14 @@
       "source": "google-material",
       "sourceName": "help",
       "license": "Apache-2.0",
-      "sha256": "89cadfd6430d3c4692f9c309be62dd74a3800d7b8bbec10d027c45a2f503f5eb",
+      "sha256": "2df060823387538a5539ab7b8539c56ee17b1562a420bdd83e89a462fef80cbd",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "bell": {
       "codepoint": "U+E01F",
@@ -320,9 +457,14 @@
       "source": "google-material",
       "sourceName": "notifications",
       "license": "Apache-2.0",
-      "sha256": "4ef47b1083f2293a9a67cd2f0135f04f2018ad1ba3a466af68047e8b6cbc50ba",
+      "sha256": "bd3665a9443f9e7a6c85f02bdcc03b4b200b904cd04b66a4fdc5c75274562657",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "lock": {
       "codepoint": "U+E020",
@@ -330,9 +472,14 @@
       "source": "google-material",
       "sourceName": "lock",
       "license": "Apache-2.0",
-      "sha256": "ab826cc477efb5e5ac6afc639f63116d8b40e072c08fc4fc5162ced692ddae8c",
+      "sha256": "33580aa68b1f6a54711b69d149b324bddd0a0be47ad2e91d3fff871f213e0206",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "unlock": {
       "codepoint": "U+E021",
@@ -340,9 +487,14 @@
       "source": "google-material",
       "sourceName": "lock_open",
       "license": "Apache-2.0",
-      "sha256": "776b9d9d73cbd17afa8709f68790b3e671626373fc6208892ae3be88abdea527",
+      "sha256": "165a45c6f76278fe850cb885369b87f310b286baa3cd684c587f802d61fadeed",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "calendar": {
       "codepoint": "U+E022",
@@ -350,9 +502,14 @@
       "source": "google-material",
       "sourceName": "calendar_today",
       "license": "Apache-2.0",
-      "sha256": "acdb86078bbfc6be7ca63a557a92f62435f52d7ea438884cc80aaf38d163baa4",
+      "sha256": "43af19ced948c10a6e1b6dfa0a422fb9049311e14f5fcbcdc73d35b57f34d5da",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "clock": {
       "codepoint": "U+E023",
@@ -360,9 +517,14 @@
       "source": "google-material",
       "sourceName": "schedule",
       "license": "Apache-2.0",
-      "sha256": "9d3b97f459c81499a4ff6f676aa2553c92b00425f19cc53a31de33116a0d759a",
+      "sha256": "f027a8013d994bf8b262527bc710e826b5bc2360d68804f4f89c3ed56ba097e0",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "eye": {
       "codepoint": "U+E024",
@@ -370,9 +532,14 @@
       "source": "google-material",
       "sourceName": "visibility",
       "license": "Apache-2.0",
-      "sha256": "89e4bf15458ab6766d0b7af3570dea64690e052f2be07323f9d7c1a75da1ac23",
+      "sha256": "05e570cdc10a2cc9b883af167b9b1e0f84cd28ec64f6eb55e0d0301efa403b0d",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "eye-off": {
       "codepoint": "U+E025",
@@ -380,9 +547,14 @@
       "source": "google-material",
       "sourceName": "visibility_off",
       "license": "Apache-2.0",
-      "sha256": "09dcf954687038185df903f4222ddfdf683dcfbdf69a392d3dcc2f36cb761a9d",
+      "sha256": "4ff1ab29b9619287445006d6dba9f3afec333e49c9a80d19d199c9ea94bd4ec0",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "attachment": {
       "codepoint": "U+E026",
@@ -390,9 +562,13 @@
       "source": "google-material",
       "sourceName": "attach_file",
       "license": "Apache-2.0",
-      "sha256": "f236f46c0c8ac42702144cd144bd5af411d94c17203ca092e43f456d3eaa793f",
+      "sha256": "751bc82d3a24e106fb595e7e16578d5889d14af0eee0c4fce8c86a7666fb948f",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "checkbox": {
       "codepoint": "U+E027",
@@ -400,9 +576,14 @@
       "source": "google-material",
       "sourceName": "check_box",
       "license": "Apache-2.0",
-      "sha256": "55285ec7bfc5f00a67abc95cd8796cec122ce76960fd831583d87359002b67a6",
+      "sha256": "bac8f4ffeb88979b978826a950c0a4ce47463c347c3afe3fe5a257c372a5cd96",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "radio": {
       "codepoint": "U+E028",
@@ -410,9 +591,13 @@
       "source": "google-material",
       "sourceName": "radio_button_checked",
       "license": "Apache-2.0",
-      "sha256": "8fc206a3df11e9fb11580d139d01269a406c843ea6645eb9f640fe21276db28f",
+      "sha256": "90f9e6761fd545dba151dd738c1adff9fab37a83c5af89de354e0bc50f61040f",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "dropdown": {
       "codepoint": "U+E029",
@@ -420,9 +605,13 @@
       "source": "google-material",
       "sourceName": "arrow_drop_down",
       "license": "Apache-2.0",
-      "sha256": "e4cfdd0e203500c47eec431a2f0b64d6573390763904735fd5540b083201afc9",
+      "sha256": "7c30fc4cf054646b4543f7d8c94c3b70b0b439bf171d2b5559b33d564b8ddf62",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "minus": {
       "codepoint": "U+E02A",
@@ -430,9 +619,13 @@
       "source": "google-material",
       "sourceName": "remove",
       "license": "Apache-2.0",
-      "sha256": "4747d1ee99dbb42bd505913a13f613e363bea6c31904f902bae098f35521329e",
+      "sha256": "adc8635e9ae9d83a64747515ed45095ba4d366ee4b651340dc53c06b44b1c786",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "drag-handle": {
       "codepoint": "U+E02B",
@@ -440,9 +633,13 @@
       "source": "google-material",
       "sourceName": "drag_indicator",
       "license": "Apache-2.0",
-      "sha256": "b7d02c65e076e51a1258cedd2948d34b448aa36df71225ed5eee1304e5f3a8f2",
+      "sha256": "7b9a011a097c7b129e5d3e9619a37880e35afb37c4c0a7556c9a38c0fb92c048",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "file": {
       "codepoint": "U+E02C",
@@ -450,9 +647,14 @@
       "source": "google-material",
       "sourceName": "description",
       "license": "Apache-2.0",
-      "sha256": "9227de5dc60599ba5acdc21e78698edd8222b05a0e385bfcbe98d7a8fd005bae",
+      "sha256": "f96cf10f72cd6ad75bee4248f7a2121ce1669fa5313a49f501ef014dc3be2b7d",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "folder": {
       "codepoint": "U+E02D",
@@ -460,9 +662,14 @@
       "source": "google-material",
       "sourceName": "folder",
       "license": "Apache-2.0",
-      "sha256": "bb6e42584f49d0f3f9372a59f0d0c3edf2c9a354f737dde6d46f299de6771915",
+      "sha256": "e3b44a90fd37597a747bc48200066af09b406d133da9ecf08b1ecbf6cb64fc0d",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "image": {
       "codepoint": "U+E02E",
@@ -470,9 +677,14 @@
       "source": "google-material",
       "sourceName": "image",
       "license": "Apache-2.0",
-      "sha256": "d98a4b250c0b6e39269cea38fa9a164b22e8413d1e4ccfe860378240bf0a5123",
+      "sha256": "7c085862e6e1df74ec47e1087c5eb5d79f1416c3715fd1045b313a5092956fff",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "video": {
       "codepoint": "U+E02F",
@@ -480,9 +692,14 @@
       "source": "google-material",
       "sourceName": "videocam",
       "license": "Apache-2.0",
-      "sha256": "af3a7690b49d1b43c64fff20d860bdce26c333f3a9880dddddb09a89a74a138a",
+      "sha256": "16b09902c218579fdee71a4af941688156bec37dde039e0649f7a426686d6036",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "document": {
       "codepoint": "U+E030",
@@ -490,9 +707,14 @@
       "source": "google-material",
       "sourceName": "article",
       "license": "Apache-2.0",
-      "sha256": "494426bd5b9516a17b5bb935dac874ca79920997101ca2bc4f180b976597dd6d",
+      "sha256": "99c5dd68a35abc1fab979f311469da7aeb42e2232e7864bfdaece4136fe6b331",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "list": {
       "codepoint": "U+E031",
@@ -500,9 +722,13 @@
       "source": "google-material",
       "sourceName": "list",
       "license": "Apache-2.0",
-      "sha256": "d49d74bcb02e0f09e28df2cfa5dd28e85f9911dbdeab3b46188453e5b9c4f8f0",
+      "sha256": "a50091d9bbe0b19323852af6eef1f4c44fb1c76d531112d9b8b59b84f2f94247",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "grid": {
       "codepoint": "U+E032",
@@ -510,9 +736,14 @@
       "source": "google-material",
       "sourceName": "grid_view",
       "license": "Apache-2.0",
-      "sha256": "50ee8653ee2e3a4b46806815b27f608f20227188878bafa98973b9a0443a67e8",
+      "sha256": "0373633d4042ad15941f1cdb0482ac96bfe3c05496b001fcacf7b51584c3a968",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "table": {
       "codepoint": "U+E033",
@@ -520,9 +751,14 @@
       "source": "google-material",
       "sourceName": "table_chart",
       "license": "Apache-2.0",
-      "sha256": "8daf72e19919bb21747ff8d5a9755a6e7a916a0c63409c9d4991823412012624",
+      "sha256": "0ad9f18e8851ca9ad6dbdca295360b926660f8d15eaada1a31c3324b6115a2d4",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "link": {
       "codepoint": "U+E034",
@@ -530,9 +766,13 @@
       "source": "google-material",
       "sourceName": "link",
       "license": "Apache-2.0",
-      "sha256": "e6d3a534a0d65736afd0dfdcdd5afa3370f6e8c1463aa3332fff62ca63a86ef3",
+      "sha256": "5b2006973b771c1f6a0459a4708f2347d03e7aed0a7c099a00945988b3e41029",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "tag": {
       "codepoint": "U+E035",
@@ -540,9 +780,14 @@
       "source": "google-material",
       "sourceName": "label",
       "license": "Apache-2.0",
-      "sha256": "704040d7bb20eb89353ca86e29e99daaf4af13e20436309e2091b90ce64fe9dc",
+      "sha256": "a139f23a22ec5d6454ca4429e77cca3086bceec7d1bfcb46ed4fa428b36be96a",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "user": {
       "codepoint": "U+E036",
@@ -550,9 +795,14 @@
       "source": "google-material",
       "sourceName": "person",
       "license": "Apache-2.0",
-      "sha256": "b251ddec9d29561e138918f7a8d9bddfd143306b2ed2193601fdf78b592e3830",
+      "sha256": "a2162e564240836edbc1d787a29e16aa7bbae08079a791cd154b688f0c602a32",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "users": {
       "codepoint": "U+E037",
@@ -560,9 +810,14 @@
       "source": "google-material",
       "sourceName": "group",
       "license": "Apache-2.0",
-      "sha256": "f69ec38cbed60d093cbf5493d6360476b51d3f598773710319f6a03982c3e51f",
+      "sha256": "5318fe178616e879cff6f0864d53b6c877beb64ca5658c6a51c8f777598c92bb",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "building": {
       "codepoint": "U+E038",
@@ -570,9 +825,13 @@
       "source": "google-material",
       "sourceName": "apartment",
       "license": "Apache-2.0",
-      "sha256": "c38d1904168e438adc032f16dbe49c1634464e0be4700db6be06a6ef5bb80e4c",
+      "sha256": "0686e4c22f19f3c97d52b50ce82ba12912ede7d77c2800f31139ef63dbf7fcbe",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "phone": {
       "codepoint": "U+E039",
@@ -580,9 +839,14 @@
       "source": "google-material",
       "sourceName": "call",
       "license": "Apache-2.0",
-      "sha256": "08722ba5faf2cbf7ee36dfea35b0cfaa82f8a1b9a48b8e3f14b01a2babcac3a6",
+      "sha256": "eba74fe2a774dd0bcaa3db52fdb80c254f0bbccb3c4aa192b27f93c92a4d8221",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "mail": {
       "codepoint": "U+E03A",
@@ -590,9 +854,14 @@
       "source": "google-material",
       "sourceName": "mail",
       "license": "Apache-2.0",
-      "sha256": "1bdaab962c56d5efa63bce4cf7f2c83a3c46c042053448c203e2dbce7398bfef",
+      "sha256": "a5932addaeda86f038f9caa4937b7b7c6bc88dbef0ea78e997112793519cda15",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "map-pin": {
       "codepoint": "U+E03B",
@@ -600,9 +869,14 @@
       "source": "google-material",
       "sourceName": "place",
       "license": "Apache-2.0",
-      "sha256": "bf550e31335997bd6b6e7b20631213e3b1c2e61122c2f0d89926bcd08d5e7b67",
+      "sha256": "999a67ccd634c71ab6c7d3e638f5d271d4637e12edbddaf2d69075f0a79ea1c8",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "play": {
       "codepoint": "U+E03C",
@@ -610,9 +884,14 @@
       "source": "google-material",
       "sourceName": "play_arrow",
       "license": "Apache-2.0",
-      "sha256": "3db8e40098e3dbd31c310cf0b620853ae235564d8a18d3bff41a9e30d538229f",
+      "sha256": "f0fc9e7883efe1cdae8ba38a6ca15f8542de179179f13df46e05ad4208af104b",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "pause": {
       "codepoint": "U+E03D",
@@ -620,9 +899,14 @@
       "source": "google-material",
       "sourceName": "pause",
       "license": "Apache-2.0",
-      "sha256": "ae7c38fc8915df1feb7e5bea934efdec7708bb6a3304db8e53b9c970572b4ec8",
+      "sha256": "2419819095a7d29719efb9bf44b53968f8f639443d2f2102fe00387938b30e3b",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "volume": {
       "codepoint": "U+E03E",
@@ -630,9 +914,14 @@
       "source": "google-material",
       "sourceName": "volume_up",
       "license": "Apache-2.0",
-      "sha256": "a31b60ec9f6ab814473477e31d09dc66f34d39f3022723c6aa578f01aa04b7fc",
+      "sha256": "2e4921a305c20292480e6275ed62d4149c79400bd4843006d7751e5eabd2506d",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "fullscreen": {
       "codepoint": "U+E03F",
@@ -640,9 +929,13 @@
       "source": "google-material",
       "sourceName": "fullscreen",
       "license": "Apache-2.0",
-      "sha256": "04502d1b6d8f852ec3a52639b77a7e409bbd7680cce045f3e942da441ddabf08",
+      "sha256": "cf03cb33fc3e4701308ab1c2810df8e29dbacd13199884c9ad6ba0064b6a1944",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "zoom-in": {
       "codepoint": "U+E040",
@@ -650,9 +943,13 @@
       "source": "google-material",
       "sourceName": "zoom_in",
       "license": "Apache-2.0",
-      "sha256": "c2ad5f6be41cba3b53118ea5aaec2f110273d6d62d24a1725a54011ea94548b9",
+      "sha256": "fa8df2bf8cfb84c7d51a210fea21f58ebdd7022a4ad9e2eae9becf3fa16435ae",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "zoom-out": {
       "codepoint": "U+E041",
@@ -660,9 +957,13 @@
       "source": "google-material",
       "sourceName": "zoom_out",
       "license": "Apache-2.0",
-      "sha256": "bf9d3c84beec31639349786418bfde40a3bbbd2f1c19cacb70c3b3c17957d762",
+      "sha256": "3f533cdcedd6d80421915fa910ddb547e051ecb1e432a93f7e74692f213ba427",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "home": {
       "codepoint": "U+E042",
@@ -670,9 +971,14 @@
       "source": "google-material",
       "sourceName": "home",
       "license": "Apache-2.0",
-      "sha256": "75d69abb8e9c06164158ab186fbc51daa2c43db0d6448d6ff1ca6e3a6048be6c",
+      "sha256": "f60794d203c39cd08cb7f0bfe31ab75db5d25894a37a4938604e780b8e34f72f",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "bookmark": {
       "codepoint": "U+E043",
@@ -680,9 +986,14 @@
       "source": "google-material",
       "sourceName": "bookmark",
       "license": "Apache-2.0",
-      "sha256": "7b3eb6ea2fe5f4c4f1a290989197a21d1f718feb817d4e8e56dc6406d83fd8c6",
+      "sha256": "a9e7b134466da89733300b13d5eaaa3bd3f43a60f1e34840756327e8f3312234",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "star": {
       "codepoint": "U+E044",
@@ -690,9 +1001,14 @@
       "source": "google-material",
       "sourceName": "star",
       "license": "Apache-2.0",
-      "sha256": "1d9f3b28ee0c78218857e5e2cff027879e6a3aab05033186984caaace44cfd3b",
+      "sha256": "3548f8b4226b24d3616a66beb4b11d624ddf9706e38c1419ce5be3d3240caa11",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     },
     "chart-bar": {
       "codepoint": "U+E045",
@@ -700,9 +1016,13 @@
       "source": "google-material",
       "sourceName": "bar_chart",
       "license": "Apache-2.0",
-      "sha256": "26dbf20fc4f88dd7393ab0ca692f60cadfcf01c51bdce41de38163c69d8cea41",
+      "sha256": "8037a081138531a8b0b3e426ad5f4699ab52469d328b0e57b0cccf671ca9622b",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "globe": {
       "codepoint": "U+E046",
@@ -710,9 +1030,13 @@
       "source": "google-material",
       "sourceName": "public",
       "license": "Apache-2.0",
-      "sha256": "da37259f9dea46b4ba5b8817caa8cea574e0152a8292edefa1a312a1e20e91de",
+      "sha256": "49e4ed62fa15d7523c592cc27b5a3deb5929455c826ac0504307f889a05a034d",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     },
     "language": {
       "codepoint": "U+E047",
@@ -720,11 +1044,29 @@
       "source": "google-material",
       "sourceName": "translate",
       "license": "Apache-2.0",
-      "sha256": "fbacba714144834dcdb80baa414ef8b86e367543eee10efb7b7b1cbc9a862b16",
+      "sha256": "72f06f20592992053aabff10ef2d2b8b7712cb96947456a15b43d4c961fe3403",
       "paths": 1,
-      "addedAt": "2026-08-23"
+      "addedAt": "2026-08-23",
+      "variants": [
+        "slim",
+        "bold"
+      ]
     }
   },
   "tombstones": {},
-  "updatedAt": "2026-08-23"
+  "updatedAt": "2026-08-23",
+  "variants": {
+    "fill": {
+      "count": 40,
+      "updatedAt": "2026-08-23"
+    },
+    "bold": {
+      "count": 72,
+      "updatedAt": "2026-08-23"
+    },
+    "slim": {
+      "count": 72,
+      "updatedAt": "2026-08-23"
+    }
+  }
 }

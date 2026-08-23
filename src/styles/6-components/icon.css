@@ -7,6 +7,17 @@
  *
  * 색은 여기서 정하지 않는다 — fill: currentColor가 부모 color를 따라간다 (R-01의 아이콘판).
  * 폰트 방식(.icon-font)은 여벌이며 assets/icons/icons.css가 담당한다.
+ *
+ * 표정(슬림·레귤러·볼드·필)은 **여기에 클래스가 없다.** 두 방식이 표정을 갈아 끼우는
+ * 자리가 다르기 때문이다.
+ *
+ *   SVG   스프라이트 파일이 곧 표정이다 — sprite-slim.svg / sprite.svg / sprite-bold.svg / sprite-fill.svg
+ *         <svg class="icon"><use href="/assets/icons/sprite-bold.svg#search"></use></svg>
+ *   폰트  클래스가 font-family를 바꾼다 — .icon-font--slim 등 (icons.css가 생성)
+ *         <span class="icon-font icon-font--bold icon-font--search"></span>
+ *
+ * SVG 쪽에 .icon--bold 같은 클래스를 두면 아무 일도 하지 않는 껍데기가 된다.
+ * 표정은 href가 이미 말하고 있다.
  */
 
 @layer components {

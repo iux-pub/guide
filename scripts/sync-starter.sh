@@ -72,13 +72,17 @@ echo "[4.5/8] assets/icons 동기화..."
 rm -rf "$STARTER_DIR/assets/icons"
 mkdir -p "$STARTER_DIR/assets/icons"
 cp -r "$GUIDE_DIR/assets/icons/svg" "$STARTER_DIR/assets/icons/svg"
-cp "$GUIDE_DIR/assets/icons/sprite.svg" "$STARTER_DIR/assets/icons/"
 cp "$GUIDE_DIR/assets/icons/icons.css" "$STARTER_DIR/assets/icons/"
 cp "$GUIDE_DIR/assets/icons/LICENSE-NOTICE.txt" "$STARTER_DIR/assets/icons/"
+# 스프라이트는 표정마다 하나씩이다(sprite.svg·sprite-slim.svg…). 기본만 옮기면
+# 표정 클래스는 오는데 그림이 안 와서 프로젝트에서 빈 네모가 나온다.
+for f in "$GUIDE_DIR/assets/icons/"sprite*.svg; do
+  [ -f "$f" ] && cp "$f" "$STARTER_DIR/assets/icons/"
+done
 # 폰트는 있을 때만 — 빌드 환경에 폰트 도구가 없으면 생성되지 않는다
-if [ -f "$GUIDE_DIR/assets/icons/infoux-icons.woff2" ]; then
-  cp "$GUIDE_DIR/assets/icons/infoux-icons.woff2" "$STARTER_DIR/assets/icons/"
-fi
+for f in "$GUIDE_DIR/assets/icons/"infoux-icons*.woff2; do
+  [ -f "$f" ] && cp "$f" "$STARTER_DIR/assets/icons/"
+done
 
 # 5. scripts + contracts
 echo "[5/8] scripts 동기화..."

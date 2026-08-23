@@ -106,6 +106,11 @@ function iconCatalog() {
   const labels = new Map()
   for (const c of seed.categories) labels.set(c.id, c.label)
 
+  // 이 아이콘에 어떤 표정이 있는지는 **대장이 정본**이다 (icon-codepoints.json).
+  // 폴더를 직접 뒤지지 않는다 — 빌드를 안 거친 파일이 섞이면 없는 표정을 권하게 된다.
+  const contract = readJson(CONTRACT, {})
+  const combos = (contract.variants?.combinations || []).filter((c) => !c.default)
+
   const icons = Object.entries(ledger.icons).map(([name, meta]) => ({
     name,
     codepoint: meta.codepoint,
@@ -113,10 +118,15 @@ function iconCatalog() {
     categoryLabel: labels.get(meta.category) || meta.category,
     source: meta.source,
     own: meta.source !== 'google-material',
-    addedAt: meta.addedAt
+    addedAt: meta.addedAt,
+    variants: meta.variants || []
   }))
 
-  return { icons, categories: [...labels.entries()].map(([id, label]) => ({ id, label })) }
+  return {
+    icons,
+    categories: [...labels.entries()].map(([id, label]) => ({ id, label })),
+    variants: combos.map((c) => ({ id: c.id, note: c.note }))
+  }
 }
 
 /** 승인 — 후보 SVG를 자산으로 굳히고 대장에 올린다. 여기가 유일한 쓰기 지점이다. */
@@ -336,9 +346,14 @@ const routes = {
 function serveStatic(req, res, urlPath) {
   // 아이콘 SVG는 자산 폴더에서 바로 준다
   if (urlPath.startsWith('/icons/')) {
-    const name = path.basename(urlPath.slice('/icons/'.length))
-    const p = path.join(SVG_DIR, name)
-    if (path.dirname(p) === SVG_DIR && fs.existsSync(p)) {
+    // /icons/fill/star.svg 처럼 변형 폴더도 받는다
+    const rel = urlPath.slice('/icons/'.length)
+    const parts = rel.split('/').filter(Boolean)
+    const name = path.basename(parts.pop() || '')
+    const sub = parts.length === 1 && /^[a-z][a-z0-9-]*$/.test(parts[0]) ? parts[0] : ''
+    const base = sub ? path.join(SVG_DIR, sub) : SVG_DIR
+    const p = path.join(base, name)
+    if (path.dirname(p) === base && p.startsWith(SVG_DIR) && fs.existsSync(p)) {
       res.writeHead(200, { 'content-type': MIME['.svg'], 'cache-control': 'no-cache' })
       return res.end(fs.readFileSync(p))
     }

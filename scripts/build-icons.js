@@ -31,6 +31,27 @@ const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'))
 const CANVAS = contract.canvas.width
 
+/** 기본 + 실제로 파일이 있는 변형. 파일이 없으면 그 변형은 안 만든다. */
+function variantList() {
+  const combos = contract.variants?.combinations || [{ id: 'regular', default: true }]
+  return combos.filter((c) => {
+    if (c.default) return true
+    return fs.existsSync(path.join(SVG_DIR, c.id))
+  })
+}
+
+/** 변형의 낱개 SVG 폴더. 기본은 svg/ 그대로 — 기존 경로를 깨지 않는다. */
+function variantDir(v) {
+  return v.default ? SVG_DIR : path.join(SVG_DIR, v.id)
+}
+
+/** 그 변형에 실제 파일이 있는 아이콘만. fill이 없는 아이콘은 기본으로 대체하지 않는다. */
+function iconsFor(v, icons) {
+  if (v.default) return icons
+  const dir = variantDir(v)
+  return icons.filter((ic) => fs.existsSync(path.join(dir, `${ic.name}.svg`)))
+}
+
 /** 대장 순서 = 코드포인트 순서. 빌드 결과가 매번 같아야 diff가 읽힌다. */
 function iconList() {
   return Object.entries(ledger.icons)
@@ -38,17 +59,19 @@ function iconList() {
     .sort((a, b) => a.codepoint.localeCompare(b.codepoint))
 }
 
-function readPaths(name) {
-  const svg = fs.readFileSync(path.join(SVG_DIR, `${name}.svg`), 'utf8')
+function readPaths(name, dir = SVG_DIR) {
+  const svg = fs.readFileSync(path.join(dir, `${name}.svg`), 'utf8')
   return [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1])
 }
 
 // ── 스프라이트 ─────────────────────────────────────────
 
-function buildSprite(icons) {
-  const symbols = icons
+function buildSprite(icons, v) {
+  const dir = variantDir(v)
+  const rows = iconsFor(v, icons)
+  const symbols = rows
     .map((ic) => {
-      const body = readPaths(ic.name).map((d) => `<path d="${d}"/>`).join('')
+      const body = readPaths(ic.name, dir).map((d) => `<path d="${d}"/>`).join('')
       return `<symbol id="${ic.name}" viewBox="0 0 ${CANVAS} ${CANVAS}">${body}</symbol>`
     })
     .join('\n')
@@ -58,13 +81,14 @@ function buildSprite(icons) {
     `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">\n` +
     `${symbols}\n</svg>\n`
 
-  fs.writeFileSync(path.join(OUT_DIR, 'sprite.svg'), sprite)
-  return sprite.length
+  const file = v.default ? 'sprite.svg' : `sprite-${v.id}.svg`
+  fs.writeFileSync(path.join(OUT_DIR, file), sprite)
+  return { file, size: sprite.length, count: rows.length }
 }
 
 // ── CSS ───────────────────────────────────────────────
 
-function buildCss(icons) {
+function buildCss(icons, variants) {
   const classes = icons
     .map((ic) => {
       const cp = ic.codepoint.replace('U+', '\\')
@@ -124,16 +148,52 @@ function buildCss(icons) {
   .icon-font--inherit { font-size: 1em; }
 
 ${classes.split('\n').map((l) => `  ${l}`).join('\n')}
-}
+
+${variantCss(icons, variants)}}
 `
 
   fs.writeFileSync(path.join(OUT_DIR, 'icons.css'), css)
   return css.length
 }
 
+/**
+ * 변형 CSS — 폰트 패밀리를 갈아 끼운다.
+ *
+ * 코드포인트는 그대로 두고 글리프만 바꾼다. `.icon-font--fill`을 덧붙이면
+ * 같은 `.icon-font--search`가 채운 그림으로 그려진다 — 대장이 흔들리지 않는다.
+ *
+ * 그 변형이 없는 아이콘은 폰트에 글리프가 없어 두부가 된다. 그래서
+ * **있는 것만 목록으로 적어** 그 아이콘에만 패밀리를 바꾼다.
+ */
+function variantCss(icons, variants) {
+  const extra = variants.filter((v) => !v.default)
+  if (extra.length === 0) return ''
+
+  const blocks = extra.map((v) => {
+    const rows = iconsFor(v, icons)
+    if (rows.length === 0) return ''
+    const sel = rows.map((ic) => `.icon-font--${v.id}.icon-font--${ic.name}`).join(',\n  ')
+    return `  /* ${v.id} — ${rows.length}종. ${v.note || ''} */
+  @font-face {
+    font-family: "infoUX Icons ${v.id}";
+    src: url("./infoux-icons-${v.id}.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+
+  ${sel} {
+    font-family: "infoUX Icons ${v.id}", "infoUX Icons", sans-serif;
+  }
+`
+  })
+
+  return blocks.filter(Boolean).join('\n')
+}
+
 // ── 폰트 ──────────────────────────────────────────────
 
-async function buildFont(icons) {
+async function buildFont(icons, v) {
   let SVGIcons2SVGFontStream
   let svg2ttf
   let ttf2woff2
@@ -155,8 +215,11 @@ async function buildFont(icons) {
   // 원본 SVG를 그대로 넘기는 것이 맞다.
   const UNITS = 1000
 
+  const rows = iconsFor(v, icons)
+  if (rows.length === 0) return null
+
   const fontStream = new SVGIcons2SVGFontStream({
-    fontName: 'infoUX Icons',
+    fontName: v.default ? 'infoUX Icons' : `infoUX Icons ${v.id}`,
     fontHeight: UNITS,
     descent: 0,
     normalize: true,
@@ -171,9 +234,10 @@ async function buildFont(icons) {
     fontStream.on('end', () => resolve(acc))
     fontStream.on('error', reject)
 
-    for (const ic of icons) {
+    const dir = variantDir(v)
+    for (const ic of rows) {
       // 원본 24 좌표계 SVG를 손대지 않고 그대로 넘긴다 (위 주석 참조)
-      const glyphSvg = fs.readFileSync(path.join(SVG_DIR, `${ic.name}.svg`), 'utf8')
+      const glyphSvg = fs.readFileSync(path.join(dir, `${ic.name}.svg`), 'utf8')
 
       const stream = Readable.from([glyphSvg])
       stream.metadata = {
@@ -191,11 +255,37 @@ async function buildFont(icons) {
   const stamp = Math.floor(new Date(`${ledger.updatedAt || '2026-01-01'}T00:00:00Z`).getTime() / 1000)
   const ttf = Buffer.from(svg2ttf(svgFont, { copyright: 'INFOMIND UX', ts: stamp }).buffer)
   const woff2 = ttf2woff2(ttf)
-  fs.writeFileSync(path.join(OUT_DIR, 'infoux-icons.woff2'), woff2)
-  return woff2.length
+  const file = v.default ? 'infoux-icons.woff2' : `infoux-icons-${v.id}.woff2`
+  fs.writeFileSync(path.join(OUT_DIR, file), woff2)
+  return { file, size: woff2.length, count: rows.length }
 }
 
 // ── 실행 ───────────────────────────────────────────────
+
+/**
+ * 어느 아이콘에 어떤 표정이 있는지를 **대장에 적어 둔다.**
+ *
+ * 이걸 안 하면 MCP·스튜디오·검수 시트가 저마다 폴더를 뒤져야 하고, 그중 하나만
+ * 빠뜨려도 없는 표정을 권하게 된다 — 화면에는 빈 네모가 나온다. 대장이 정본이므로
+ * 여기 한 줄만 보면 된다. 파일과 어긋나면 check-icons가 잡는다.
+ */
+function recordVariants(icons, variants) {
+  const extra = variants.filter((v) => !v.default)
+  let changed = false
+
+  for (const icon of icons) {
+    const has = extra.filter((v) => iconsFor(v, [icon]).length > 0).map((v) => v.id)
+    const meta = ledger.icons[icon.name]
+    if (!meta) continue
+    const before = JSON.stringify(meta.variants || [])
+    if (has.length > 0) meta.variants = has
+    else delete meta.variants
+    if (before !== JSON.stringify(meta.variants || [])) changed = true
+  }
+
+  if (changed) fs.writeFileSync(LEDGER, `${JSON.stringify(ledger, null, 2)}\n`)
+  return changed
+}
 
 async function main() {
   const icons = iconList()
@@ -204,23 +294,33 @@ async function main() {
     process.exit(1)
   }
 
+  const variants = variantList()
   fs.mkdirSync(OUT_DIR, { recursive: true })
-  console.log(`아이콘 빌드 — ${icons.length}종\n`)
+  console.log(`아이콘 빌드 — ${icons.length}종 · 표정 ${variants.map((v) => v.id).join('·')}\n`)
 
-  const spriteSize = buildSprite(icons)
-  console.log(`  sprite.svg        ${(spriteSize / 1024).toFixed(1)} KB`)
+  for (const v of variants) {
+    const sp = buildSprite(icons, v)
+    console.log(`  ${sp.file.padEnd(22)} ${(sp.size / 1024).toFixed(1).padStart(5)} KB · ${sp.count}종`)
+  }
 
-  const cssSize = buildCss(icons)
-  console.log(`  icons.css         ${(cssSize / 1024).toFixed(1)} KB`)
+  const cssSize = buildCss(icons, variants)
+  console.log(`  ${'icons.css'.padEnd(22)} ${(cssSize / 1024).toFixed(1).padStart(5)} KB`)
 
   if (!NO_FONT) {
-    const fontSize = await buildFont(icons)
-    if (fontSize !== null) {
-      console.log(`  infoux-icons.woff2 ${(fontSize / 1024).toFixed(1)} KB`)
+    for (const v of variants) {
+      const f = await buildFont(icons, v)
+      if (f) console.log(`  ${f.file.padEnd(22)} ${(f.size / 1024).toFixed(1).padStart(5)} KB · ${f.count}종`)
     }
   }
 
-  console.log(`  svg/              낱개 ${icons.length}개 (원본 그대로)`)
+  console.log(`  ${'svg/'.padEnd(22)} 낱개 ${icons.length}개 (원본 그대로)`)
+  for (const v of variants.filter((x) => !x.default)) {
+    console.log(`  ${`svg/${v.id}/`.padEnd(22)} 낱개 ${iconsFor(v, icons).length}개`)
+  }
+  if (recordVariants(icons, variants)) {
+    console.log(`  ${'icon-codepoints.json'.padEnd(22)} 표정 목록 갱신`)
+  }
+
   console.log(`\n  코드포인트 ${icons[0].codepoint} ~ ${icons[icons.length - 1].codepoint}`)
 }
 

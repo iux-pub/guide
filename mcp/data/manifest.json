@@ -1,5 +1,5 @@
 {
-  "version": "ef7df5d",
+  "version": "5d647f7",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -35,7 +35,7 @@
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 35757,
+      "chars": 36585,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -219,7 +219,7 @@
     {
       "id": "icon",
       "file": "icon.md",
-      "chars": 1935,
+      "chars": 2761,
       "summary": "카탈로그에 등재된 아이콘만 쓴다. 목록은 `npm run icons:sheet`로 보거나"
     },
     {

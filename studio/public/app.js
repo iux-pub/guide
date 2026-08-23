@@ -19,7 +19,9 @@ const state = {
   // 만들기에 붙일 참조. 회사 심볼처럼 정해진 모양은 이게 없으면 지어낸 것이 나온다.
   // SVG는 코드로, 그림(PNG·JPG)은 data URL로 담는다.
   reference: null,
-  referenceImage: null
+  referenceImage: null,
+  variants: [],
+  sheetVariant: 'regular'
 }
 
 // ── 공통 ──────────────────────────────────────────────
@@ -44,11 +46,15 @@ async function api(path, options) {
 }
 
 /** 아이콘 SVG를 가져와 캐시한다. 같은 아이콘을 여러 크기로 여러 번 그린다. */
-async function loadSvg(name) {
-  if (state.svgCache.has(name)) return state.svgCache.get(name)
-  const res = await fetch(`icons/${encodeURIComponent(name)}.svg`)
+async function loadSvg(name, variant = '') {
+  const key = variant ? `${variant}/${name}` : name
+  if (state.svgCache.has(key)) return state.svgCache.get(key)
+  const p = variant
+    ? `icons/${variant}/${encodeURIComponent(name)}.svg`
+    : `icons/${encodeURIComponent(name)}.svg`
+  const res = await fetch(p)
   const text = res.ok ? await res.text() : ''
-  state.svgCache.set(name, text)
+  state.svgCache.set(key, text)
   return text
 }
 
@@ -122,21 +128,48 @@ async function renderGrid() {
 
 // ── 상세 ──────────────────────────────────────────────
 
+const VARIANT_LABEL = { regular: '기본', slim: '슬림', bold: '볼드', fill: '필' }
+
+/** 표정을 바꿔 다시 그린다. 이름과 코드포인트는 표정과 무관하게 그대로다. */
+async function renderSheet(name, variant) {
+  const icon = state.icons.find((i) => i.name === name)
+  if (!icon) return
+  const isBase = variant === 'regular'
+  const svg = await loadSvg(name, isBase ? '' : variant)
+
+  $('#sheet-preview').innerHTML = [48, 24, 20, 16].map((px) => sized(svg, px)).join('')
+
+  // 이 아이콘이 가진 표정만 보여 준다 — 없는 것을 누르면 빈 네모가 나온다
+  const avail = ['regular', ...(icon.variants || [])]
+  $('#sheet-variants').innerHTML =
+    avail.length > 1
+      ? avail
+          .map((v) => `<button type="button" class="vbtn${v === variant ? ' vbtn--on' : ''}" data-variant="${v}">${VARIANT_LABEL[v] || v}</button>`)
+          .join('')
+      : ''
+
+  // 기본은 span(폰트) 방식이다. 한 줄이라 붙여 넣기 쉽고 마크업이 짧다.
+  const vc = isBase ? '' : ` icon-font--${variant}`
+  $('#sheet-code').value = `<span class="icon-font${vc} icon-font--${name}" aria-hidden="true"></span>`
+  // SVG 방식은 스프라이트 파일이 곧 표정이다 — 클래스를 더 붙이지 않는다
+  const sprite = isBase ? 'sprite.svg' : `sprite-${variant}.svg`
+  $('#sheet-alt').value =
+    `<svg class="icon" aria-hidden="true">\n  <use href="/assets/icons/${sprite}#${name}"></use>\n</svg>`
+
+  $('#sheet-meta').textContent =
+    `${icon.categoryLabel} · ${icon.own ? '우리가 만든 것' : '구글 아이콘'} · ${icon.codepoint}` +
+    (isBase ? '' : ` · ${VARIANT_LABEL[variant] || variant}`)
+  $('#sheet-hint').textContent = ''
+  $('#sheet').dataset.variant = variant
+}
+
 async function openSheet(name) {
   const icon = state.icons.find((i) => i.name === name)
   if (!icon) return
-  const svg = await loadSvg(name)
-
-  $('#sheet-preview').innerHTML = [48, 24, 20, 16].map((px) => sized(svg, px)).join('')
+  state.sheetVariant = 'regular'
   $('#sheet-name').textContent = name
-  $('#sheet-meta').textContent =
-    `${icon.categoryLabel} · ${icon.own ? '우리가 만든 것' : '구글 아이콘'} · ${icon.codepoint}`
-  // 기본은 span(폰트) 방식이다. 한 줄이라 붙여 넣기 쉽고 마크업이 짧다.
-  $('#sheet-code').value = `<span class="icon-font icon-font--${name}" aria-hidden="true"></span>`
-  $('#sheet-alt').value =
-    `<svg class="icon" aria-hidden="true">\n  <use href="/assets/icons/sprite.svg#${name}"></use>\n</svg>`
-  $('#sheet-hint').textContent = ''
   $('#sheet').dataset.name = name
+  await renderSheet(name, 'regular')
   $('#sheet').showModal()
 }
 
@@ -306,6 +339,7 @@ async function load() {
   const data = await api('/api/catalog')
   state.icons = data.icons
   state.categories = data.categories
+  state.variants = data.variants || []
   $('#count').textContent = `${data.icons.length}종 · 우리가 만든 것 ${data.icons.filter((i) => i.own).length}종`
   renderChips()
   renderGrid()
@@ -331,6 +365,12 @@ document.addEventListener('click', async (e) => {
   const cell = t.closest('.cell')
   if (cell) return openSheet(cell.dataset.name)
 
+  const vbtn = t.closest('.vbtn')
+  if (vbtn) {
+    state.sheetVariant = vbtn.dataset.variant
+    return renderSheet($('#sheet').dataset.name, state.sheetVariant)
+  }
+
   if (t.closest('#sheet-copy')) {
     const code = $('#sheet-code')
     code.select()
@@ -345,11 +385,12 @@ document.addEventListener('click', async (e) => {
 
   if (t.closest('#sheet-svg')) {
     const name = $('#sheet').dataset.name
-    const svg = await loadSvg(name)
+    const v = $('#sheet').dataset.variant || 'regular'
+    const svg = await loadSvg(name, v === 'regular' ? '' : v)
     const blob = new Blob([svg], { type: 'image/svg+xml' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `${name}.svg`
+    a.download = v === 'regular' ? `${name}.svg` : `${name}-${v}.svg`
     document.body.appendChild(a)
     a.click()
     a.remove()

@@ -23,10 +23,13 @@ const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
 const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const OUT_DIR = path.join(ROOT, 'assets/icons/svg')
+const VARIANT_DIR = (id) => path.join(ROOT, 'assets/icons/svg', id)
 
 const argv = process.argv.slice(2)
 const FORCE = argv.includes('--force')
 const DRY = argv.includes('--dry-run')
+// --variants 를 주면 기본 외의 표정(fill·bold)까지 받는다
+const WITH_VARIANTS = argv.includes('--variants')
 
 const seed = JSON.parse(fs.readFileSync(SEED_MAP, 'utf8'))
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
@@ -126,6 +129,58 @@ function normalize(raw, name) {
   return { svg, warnings, pathCount: moved.length }
 }
 
+/**
+ * 변형(표정)을 받는다.
+ *
+ * 아이콘에 따라 그 변형이 없을 수 있다 — 돋보기는 채울 면이 없어 fill이 무의미하다.
+ * 그때 구글은 **기본과 같은 파일**을 준다. 해시가 같으면 변형이 없는 것으로 보고
+ * 저장하지 않는다. 없는 변형까지 만들면 폰트만 커지고 그림은 그대로다.
+ */
+async function importVariants(ledger, results) {
+  const combos = (contract.variants?.combinations || []).filter((c) => !c.default)
+  const axisPath = seed.source.variantAxisPath || {}
+  const tpl = seed.source.variantUrlTemplate
+  if (combos.length === 0 || !tpl) return
+
+  const seeds = Object.entries(ledger.icons).filter(([, m]) => m.source === seed.source.id)
+  console.log(`\n변형 ${combos.map((c) => c.id).join('·')} — 씨앗 ${seeds.length}종에서 찾는다`)
+
+  for (const combo of combos) {
+    const axis = axisPath[combo.id]
+    if (!axis) continue
+    const dir = VARIANT_DIR(combo.id)
+    if (!DRY) fs.mkdirSync(dir, { recursive: true })
+
+    let made = 0
+    let same = 0
+    for (const [name, meta] of seeds) {
+      const outPath = path.join(dir, `${name}.svg`)
+      if (!FORCE && fs.existsSync(outPath)) { made += 1; continue }
+
+      const url = tpl
+        .replace('{style}', seed.source.style)
+        .replace('{material}', meta.sourceName)
+        .replace('{axis}', axis)
+
+      try {
+        const raw = await fetchSvg(url)
+        const { svg } = normalize(raw, name)
+        // 기본과 같으면 이 아이콘에는 그 변형이 없다
+        if (sha256(svg) === meta.sha256) { same += 1; continue }
+        if (!DRY) fs.writeFileSync(outPath, svg)
+        made += 1
+      } catch (err) {
+        results.failed.push({ name, material: meta.sourceName, reason: `${combo.id}: ${err.message}` })
+      }
+    }
+    console.log(`  ${combo.id.padEnd(8)} ${made}종 · 변형 없음 ${same}종`)
+    if (!DRY) {
+      ledger.variants = ledger.variants || {}
+      ledger.variants[combo.id] = { count: made, updatedAt: new Date().toISOString().slice(0, 10) }
+    }
+  }
+}
+
 async function main() {
   const ledger = loadLedger()
   const results = { added: [], updated: [], skipped: [], failed: [], warned: [] }
@@ -145,9 +200,13 @@ async function main() {
       continue
     }
 
+    // 기본 굵기의 축 경로. 구글의 default(wght400)가 아니라 **우리가 정한 기본**을 받는다.
+    const baseCombo = (contract.variants?.combinations || []).find((c) => c.default)
+    const baseAxis = (seed.source.variantAxisPath || {})[baseCombo?.id || 'regular'] || 'default'
     const url = seed.source.urlTemplate
       .replace('{style}', seed.source.style)
       .replace('{material}', material)
+      .replace('{axis}', baseAxis)
 
     try {
       const raw = await fetchSvg(url)
@@ -177,6 +236,8 @@ async function main() {
       process.stdout.write(`  ✗ ${name.padEnd(16)} ${material} — ${err.message}\n`)
     }
   }
+
+  if (WITH_VARIANTS) await importVariants(ledger, results)
 
   // 대장의 다음 번호를 갱신해 둔다 (참고용 — 실제 할당은 allocateCodepoint가 한다)
   ledger.nextCodepoint = allocateCodepoint(ledger)

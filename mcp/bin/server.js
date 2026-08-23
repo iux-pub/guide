@@ -266,6 +266,7 @@ function listIcons({ query } = {}) {
     byCat.get(c).push(r.name)
   }
 
+  const withFill = all.filter((i) => (i.variants || []).includes('fill')).length
   const lines = ['# infoUX 아이콘 카탈로그', '']
   lines.push(query ? `"${query}" 검색 — ${rows.length}종` : `총 ${rows.length}종.`, '')
   for (const [cat, names] of byCat) {
@@ -273,10 +274,49 @@ function listIcons({ query } = {}) {
   }
   lines.push(
     '',
+    `표정은 슬림 · 레귤러(기본) · 볼드 · 필 네 가지다. 슬림·볼드는 전부 있고, 필은 ${withFill}종에만 있다 — ` +
+      '채울 면이 없는 형태(돋보기·화살표 등)에는 만들지 않는다. **어느 아이콘에 무엇이 있는지는 get_icon이 알려 준다.**',
+    '',
     'get_icon(name)으로 마크업을 가져온다.',
     '**목록에 없는 이름을 쓰지 않는다** — 화면에 아무것도 안 나온다. 필요하면 UX팀에 요청한다 (R-27).'
   )
   return text(lines.join('\n'))
+}
+
+/**
+ * 이 아이콘이 가진 표정만 알려 준다.
+ *
+ * 전부 나열하면 AI가 없는 표정을 골라 쓴다 — 화면에는 빈 네모가 나온다.
+ * 대장(icon-codepoints.json)의 variants가 정본이다.
+ */
+function iconVariantSection(name, meta) {
+  const has = Array.isArray(meta.variants) ? meta.variants : []
+  const label = { slim: '슬림(가늘게)', bold: '볼드(강조)', fill: '필(선택·활성)' }
+
+  if (has.length === 0) {
+    return [
+      '## 표정',
+      '',
+      `이 아이콘은 기본(레귤러) 하나뿐이다. \`icon-font--slim\` 같은 표정 클래스를 붙이면 빈 네모가 나온다.`,
+      ''
+    ]
+  }
+
+  return [
+    '## 표정',
+    '',
+    `이 아이콘이 가진 표정 — 레귤러(기본) · ${has.map((v) => label[v] || v).join(' · ')}`,
+    '',
+    '```html',
+    ...has.map((v) => `<span class="icon-font icon-font--${v} icon-font--${name}" aria-hidden="true"></span>`),
+    ...has.map((v) => `<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite-${v}.svg#${name}"></use></svg>`),
+    '```',
+    '',
+    '폰트는 클래스가, SVG는 스프라이트 파일이 표정을 정한다 — SVG에 `icon--bold` 같은',
+    '클래스를 붙이지 않는다(아무 일도 하지 않는다). **여기 없는 표정은 쓰지 않는다.**',
+    '한 화면에서 표정을 섞지 않는다 — 굵기가 뒤섞이면 중요도가 다른 것처럼 읽힌다.',
+    ''
+  ]
 }
 
 function getIcon(name) {
@@ -316,6 +356,7 @@ function getIcon(name) {
     `<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#${name}"></use></svg>`,
     '```',
     '',
+    ...iconVariantSection(name, meta),
     '## 크기',
     '',
     '`.icon-font`(24) · `--xsmall`(16) · `--small`(20) · `--large`(32) · `--inherit`(글자 크기)',

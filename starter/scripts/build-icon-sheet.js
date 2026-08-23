@@ -14,6 +14,7 @@ const path = require('node:path')
 
 const ROOT = path.join(__dirname, '..')
 const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
+const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const SVG_DIR = path.join(ROOT, 'assets/icons/svg')
 // dist에 낸다. 문서 사이트에는 eleventy.config.js가 /icons/ 로 복사한다 —
@@ -24,6 +25,10 @@ const OUT = path.join(ROOT, 'dist/icon-sheet.html')
 
 const seed = JSON.parse(fs.readFileSync(SEED_MAP, 'utf8'))
 const ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'))
+const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
+
+// 표정 순서는 계약이 정한 순서를 그대로 따른다 — 얇은 것부터 굵은 것, 채움은 끝
+const VARIANTS = contract.variants?.combinations || [{ id: 'regular', default: true }]
 
 /** 대장 순서를 카테고리별로 묶는다. 씨앗 맵에 없는 자체 제작분은 뒤에 따로 모은다. */
 function grouped() {
@@ -38,8 +43,9 @@ function grouped() {
   return groups
 }
 
-function readSvg(name) {
-  const p = path.join(SVG_DIR, `${name}.svg`)
+function readSvg(name, variant) {
+  const dir = variant && !variant.default ? path.join(SVG_DIR, variant.id) : SVG_DIR
+  const p = path.join(dir, `${name}.svg`)
   if (!fs.existsSync(p)) return null
   return fs.readFileSync(p, 'utf8').trim()
 }
@@ -92,6 +98,16 @@ h2 {
 }
 .cp { display: block; font-size: 9px; opacity: .6; margin-top: 2px; }
 .miss { color: var(--key); font-size: 11px; }
+
+/* 표정 줄 — 같은 아이콘의 슬림·레귤러·볼드·필을 24px로 나란히 */
+.faces {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  padding-top: 9px; border-top: 1px solid var(--line); width: 100%;
+}
+.face { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.face svg { color: var(--fg); display: block; }
+.face span { font-size: 8px; color: var(--mut); letter-spacing: .02em; }
+.face--none svg { opacity: .12; }
 `
 
 const groups = grouped()
@@ -109,6 +125,7 @@ let html = `<!doctype html>
 <h1>infoUX 아이콘 ${total}종</h1>
 <p class="lead">왼쪽부터 48 · 24 · 20 · 16px. 큰 것은 형태를, 작은 것은 뭉개짐을 본다 — 작은 크기만 보면 테두리와 내부 요소가 뭉쳐 「꽉 찬 덩어리」로 잘못 읽힌다. 점선은 24 캔버스 경계다.</p>
 <p class="lead">볼 것 — 획 굵기가 다른 것들과 같은가, 여백이 고른가, 16px에서 뭉개지지 않는가.</p>
+<p class="lead">아래 줄은 표정 ${VARIANTS.map((v) => v.id).join(' · ')}이다. 옅게 보이는 칸은 그 표정이 없다는 뜻으로, 기본을 대신 그린 것이다 — 채울 면이 없는 형태(돋보기 등)에는 필을 만들지 않는다.</p>
 `
 
 for (const g of groups) {
@@ -122,7 +139,18 @@ for (const g of groups) {
     } else {
       html += '<div class="row"><span class="miss">파일 없음</span></div>'
     }
-    html += `<div class="name">${esc(name)}<span class="cp">${esc(meta.codepoint)}</span></div></div>`
+    html += `<div class="name">${esc(name)}<span class="cp">${esc(meta.codepoint)}</span></div>`
+
+    // 표정 줄. 없는 표정은 기본을 옅게 깔아 「빈칸」과 「없음」을 구분한다
+    if (svg && VARIANTS.length > 1) {
+      const faces = VARIANTS.map((v) => {
+        const vs = readSvg(name, v)
+        const cls = vs ? 'face' : 'face face--none'
+        return `<span class="${cls}">${sized(vs || svg, 24)}<span>${esc(v.id)}</span></span>`
+      }).join('')
+      html += `<div class="faces">${faces}</div>`
+    }
+    html += '</div>'
   }
   html += '</div>'
 }

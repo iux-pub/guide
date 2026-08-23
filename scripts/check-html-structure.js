@@ -186,6 +186,26 @@ const FORBIDDEN_MODIFIER_RE = new RegExp(
   'g'
 )
 
+// 블록별 예외 — 그 블록에서는 정의된 축 이름이라 시각적 작명이 아니다.
+//
+// 아이콘의 icon-font--bold는 font-weight: bold와 같은 성격이다. 굵기 축의 이름이
+// 계약(icon-contract.json)에 값으로 박혀 있고 폰트 파일이 그 이름으로 갈린다.
+// 목록을 여기 적지 않고 계약에서 읽는 이유: 축이 바뀌면 예외도 같이 움직여야 한다.
+// 계약에 없는 이름은 그대로 걸린다.
+const ALLOWED_MODIFIER_BY_BLOCK = (() => {
+  const map = new Map()
+  try {
+    const contract = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'contracts/icon-contract.json'), 'utf8')
+    )
+    const ids = (contract.variants?.combinations || []).map((c) => c.id)
+    if (ids.length > 0) map.set('icon-font', new Set(ids))
+  } catch {
+    // 계약이 없으면 예외도 없다 — 금지어가 그대로 적용된다
+  }
+  return map
+})()
+
 // ─── HTML 코드 블록 추출 ────────────────────────────────────
 // Markdown 파일에서 ```html 블록 추출
 function extractHtmlBlocks(content) {
@@ -728,6 +748,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
       const lineNum = baseLineNum + idx
       const block = m[1]
       const word = m[2]
+      if (ALLOWED_MODIFIER_BY_BLOCK.get(block)?.has(word)) continue
       error(
         rel(filePath),
         lineNum,

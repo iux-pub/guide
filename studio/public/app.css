@@ -631,6 +631,32 @@ code {
 .sheet__meta { margin: 0; font-size: 12px; color: var(--muted); }
 .sheet__label { font-size: 12px; color: var(--muted); }
 
+.sheet__variants {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.vbtn {
+  font: inherit;
+  font-size: 12px;
+  padding: 6px 12px;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.vbtn:hover { border-color: var(--muted); }
+
+.vbtn--on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .sheet__code {
   font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
   border: 1px solid var(--line);

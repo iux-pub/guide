@@ -919,7 +919,7 @@
         "check-icons.js",
         "manual"
       ],
-      "rationale": "아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 기본 표기는 `<span class=\"icon-font icon-font--{name}\">`이고, 아이콘에는 항상 aria-hidden을 붙인다(스크린리더가 PUA 코드포인트를 오독한다). 뜻은 아이콘 밖에서 전한다 — 옆의 텍스트나 버튼의 aria-label이다. SVG 태그는 폰트를 못 쓰는 곳이나 개별 색이 필요할 때만 쓴다.",
+      "rationale": "아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 기본 표기는 `<span class=\"icon-font icon-font--{name}\">`이고, 아이콘에는 항상 aria-hidden을 붙인다(스크린리더가 PUA 코드포인트를 오독한다). 뜻은 아이콘 밖에서 전한다 — 옆의 텍스트나 버튼의 aria-label이다. SVG 태그는 폰트를 못 쓰는 곳이나 개별 색이 필요할 때만 쓴다. 표정은 슬림·레귤러·볼드·필 네 가지이고 이름과 코드포인트는 그대로 둔 채 글리프만 바뀐다 — 폰트는 `icon-font--bold` 같은 클래스가, SVG는 스프라이트 파일(`sprite-bold.svg`)이 표정을 정한다. SVG 쪽에 `icon--bold` 같은 클래스를 붙이지 않는다(아무 일도 하지 않는다). 한 화면에서 표정을 섞지 않으며, 모든 아이콘에 필이 있는 것은 아니다 — 없는 표정을 부르면 빈 네모가 나온다.",
       "bad": [
         {
           "code": "<svg viewBox=\"0 0 20 20\"><path fill=\"#333\" d=\"...\"/></svg>",
@@ -936,6 +936,14 @@
         {
           "code": "<span class=\"icon-font icon-font--magnifier\" aria-hidden=\"true\"></span>",
           "note": "대장에 없는 이름 — 아무것도 안 나온다"
+        },
+        {
+          "code": "<svg class=\"icon icon--bold\" aria-hidden=\"true\"><use href=\"/assets/icons/sprite.svg#search\"></use></svg>",
+          "note": "SVG에서 표정은 클래스가 아니라 스프라이트 파일이 정한다 — 이 클래스는 아무 일도 안 하고 기본 굵기가 나온다"
+        },
+        {
+          "code": "<span class=\"icon-font icon-font--fill icon-font--search\" aria-hidden=\"true\"></span>",
+          "note": "돋보기는 채울 면이 없어 필이 없다 — 빈 네모가 나온다. 그 아이콘이 가진 표정만 쓴다"
         }
       ],
       "good": [
@@ -950,6 +958,14 @@
         {
           "code": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/assets/icons/sprite.svg#search\"></use></svg>",
           "note": "폰트를 못 쓰는 곳이나 개별 색이 필요할 때"
+        },
+        {
+          "code": "<span class=\"icon-font icon-font--bold icon-font--search\" aria-hidden=\"true\"></span>",
+          "note": "폰트는 클래스가 표정을 바꾼다 — 표정 클래스를 이름 클래스 앞에 둔다"
+        },
+        {
+          "code": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"/assets/icons/sprite-bold.svg#search\"></use></svg>",
+          "note": "SVG는 스프라이트 파일이 곧 표정이다"
         }
       ]
     }

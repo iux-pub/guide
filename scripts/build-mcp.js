@@ -88,7 +88,9 @@ if (fs.existsSync(iconLedgerPath)) {
   const full = JSON.parse(fs.readFileSync(iconLedgerPath, 'utf8'))
   const slim = { name: full.name, version: full.version, icons: {} }
   for (const [name, meta] of Object.entries(full.icons)) {
+    // variants를 빠뜨리면 MCP가 「표정 없음」이라고 답한다 — AI가 볼드를 아예 안 쓴다
     slim.icons[name] = { codepoint: meta.codepoint, category: meta.category, source: meta.source }
+    if (meta.variants) slim.icons[name].variants = meta.variants
   }
   fs.writeFileSync(path.join(DATA_DIR, 'icons.json'), JSON.stringify(slim, null, 2) + '\n')
 }

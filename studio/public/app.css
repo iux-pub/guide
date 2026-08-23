@@ -331,6 +331,7 @@ body {
 }
 
 .ask__refpreview svg { fill: var(--ink); color: var(--ink); }
+.ask__refpreview img { object-fit: contain; }
 
 .ask__row {
   display: flex;

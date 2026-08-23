@@ -191,9 +191,15 @@ const routes = {
 
     ensureQueue()
     const id = new Date().toISOString().replace(/[:.]/g, '-') + '-' + crypto.randomBytes(3).toString('hex')
+
     // 참조 — 특정 로고·심볼처럼 모델이 알 수 없는 대상은 실물을 보여 줘야 한다.
     // 없으면 그럴듯한 다른 것을 그린다.
+    //
+    // SVG는 코드를 그대로 프롬프트에 싣고, 그림 파일(PNG·JPG)은 디스크에 풀어 두고
+    // 경로를 알려 준다 — claude가 파일을 열어 본다(2026-08-23 실측).
     let reference = null
+    let referenceImage = null
+
     if (typeof body.reference === 'string' && body.reference.trim()) {
       const raw = body.reference.trim()
       if (raw.length > 200_000) return json(res, 400, { error: '참조 파일이 너무 큽니다 (200KB 이하)' })
@@ -203,11 +209,24 @@ const routes = {
       reference = raw
     }
 
+    if (typeof body.referenceImage === 'string' && body.referenceImage.trim()) {
+      const m = body.referenceImage.match(/^data:image\/(png|jpeg|jpg|webp);base64,([A-Za-z0-9+/=]+)$/)
+      if (!m) return json(res, 400, { error: 'PNG·JPG·WebP 그림만 받습니다' })
+      const buf = Buffer.from(m[2], 'base64')
+      if (buf.length > 4_000_000) return json(res, 400, { error: '그림이 너무 큽니다 (4MB 이하)' })
+      const ext = m[1] === 'jpeg' ? 'jpg' : m[1]
+      fs.mkdirSync(path.join(QUEUE, 'refs'), { recursive: true })
+      const file = path.join(QUEUE, 'refs', `${id}.${ext}`)
+      fs.writeFileSync(file, buf)
+      referenceImage = file
+    }
+
     const request = {
       id,
       text,
       count: Math.min(6, Math.max(1, Number(body.count) || 4)),
       ...(reference ? { reference } : {}),
+      ...(referenceImage ? { referenceImage } : {}),
       createdAt: new Date().toISOString(),
       status: 'waiting'
     }

@@ -16,8 +16,10 @@ const state = {
   picked: new Set(),
   svgCache: new Map(),
   pollTimer: null,
-  // 만들기에 붙일 참조 SVG. 회사 심볼처럼 정해진 모양은 이게 없으면 지어낸 것이 나온다.
-  reference: null
+  // 만들기에 붙일 참조. 회사 심볼처럼 정해진 모양은 이게 없으면 지어낸 것이 나온다.
+  // SVG는 코드로, 그림(PNG·JPG)은 data URL로 담는다.
+  reference: null,
+  referenceImage: null
 }
 
 // ── 공통 ──────────────────────────────────────────────
@@ -369,7 +371,6 @@ document.addEventListener('click', async (e) => {
   }
 
   if (t.closest('#ask-refclear')) {
-    state.reference = null
     $('#ask-refcode').value = ''
     $('#ask-file').value = ''
     setReference(null)
@@ -417,12 +418,39 @@ $('#sheet').addEventListener('click', (e) => {
 document.addEventListener('change', async (e) => {
   const file = e.target.closest('#ask-file')?.files?.[0]
   if (!file) return
-  if (file.size > 200_000) return refError('파일이 너무 큽니다 (200KB 이하)')
-  const text = await file.text()
-  if (!/<svg[\s\S]*<\/svg>/i.test(text)) return refError('SVG 파일이 아닙니다')
-  state.reference = text
+
+  const isSvg = /\.svg$/i.test(file.name) || file.type.includes('svg')
+
+  if (isSvg) {
+    if (file.size > 200_000) return refError('SVG가 너무 큽니다 (200KB 이하)')
+    const text = await file.text()
+    if (!/<svg[\s\S]*<\/svg>/i.test(text)) return refError('SVG 파일이 아닙니다')
+    state.reference = text
+    state.referenceImage = null
+    $('#ask-refcode').value = ''
+    setReference(text, file.name)
+    return
+  }
+
+  // 그림 파일 — data URL로 담아 보내면 서버가 디스크에 풀고 모델이 열어 본다
+  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
+    return refError('SVG·PNG·JPG·WebP만 됩니다')
+  }
+  if (file.size > 4_000_000) return refError('그림이 너무 큽니다 (4MB 이하)')
+
+  const dataUrl = await new Promise((resolve, reject) => {
+    const r = new FileReader()
+    r.onload = () => resolve(r.result)
+    r.onerror = () => reject(new Error('파일을 읽지 못했습니다'))
+    r.readAsDataURL(file)
+  }).catch(() => null)
+
+  if (!dataUrl) return refError('파일을 읽지 못했습니다')
+
+  state.referenceImage = dataUrl
+  state.reference = null
   $('#ask-refcode').value = ''
-  setReference(text, file.name)
+  setReference(dataUrl, file.name, 'image')
 })
 
 // 참조 SVG — 코드로 직접 붙여넣기
@@ -435,6 +463,7 @@ $('#ask-refcode').addEventListener('input', (e) => {
     return
   }
   state.reference = v
+  state.referenceImage = null
   setReference(v, '붙여 넣은 코드')
 })
 
@@ -452,13 +481,14 @@ $('#q').addEventListener('input', (e) => {
 })
 
 /** 참조를 화면에 반영한다. 미리보기로 「제대로 들어갔나」를 눈으로 확인시킨다. */
-function setReference(svg, label) {
+function setReference(content, label, kind = 'svg') {
   const preview = $('#ask-refpreview')
   const stateEl = $('#ask-refstate')   // 전역 state와 이름이 겹치지 않게 한다
   const clear = $('#ask-refclear')
 
-  if (!svg) {
+  if (!content) {
     state.reference = null
+    state.referenceImage = null
     preview.hidden = true
     preview.innerHTML = ''
     stateEl.textContent = ''
@@ -467,12 +497,16 @@ function setReference(svg, label) {
   }
 
   const sizes = [48, 24, 16]
-  preview.innerHTML = sizes
-    .map((px) => svg.replace(/<svg([^>]*)>/i, (m, attrs) => {
-      const cleaned = attrs.replace(/\s(width|height)="[^"]*"/gi, '')
-      return `<svg${cleaned} width="${px}" height="${px}">`
-    }))
-    .join('')
+  preview.innerHTML =
+    kind === 'image'
+      ? sizes.map((px) => `<img src="${content}" width="${px}" height="${px}" alt="참조 그림 ${px}픽셀 미리보기">`).join('')
+      : sizes
+          .map((px) => content.replace(/<svg([^>]*)>/i, (m, attrs) => {
+            const cleaned = attrs.replace(/\s(width|height)="[^"]*"/gi, '')
+            return `<svg${cleaned} width="${px}" height="${px}">`
+          }))
+          .join('')
+
   preview.hidden = false
   stateEl.textContent = label || '참조 붙음'
   clear.hidden = false
@@ -497,14 +531,19 @@ async function sendAsk() {
   btn.disabled = true
   try {
     const reference = state.reference || $('#ask-refcode').value.trim() || null
+    const referenceImage = state.referenceImage || null
     await api('/api/requests', {
       method: 'POST',
-      body: JSON.stringify({ text, count: 4, ...(reference ? { reference } : {}) })
+      body: JSON.stringify({
+        text,
+        count: 4,
+        ...(reference ? { reference } : {}),
+        ...(referenceImage ? { referenceImage } : {})
+      })
     })
     $('#ask-text').value = ''
     $('#ask-refcode').value = ''
     setReference(null)
-    state.reference = null
     startPolling()
   } catch (e) {
     err.textContent = e.message

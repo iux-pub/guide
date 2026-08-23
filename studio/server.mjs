@@ -345,5 +345,5 @@ server.listen(PORT, '127.0.0.1', () => {
   const { icons } = iconCatalog()
   console.log(`아이콘 스튜디오 — http://127.0.0.1:${PORT}`)
   console.log(`  아이콘 ${icons.length}종 · 자체 제작 ${icons.filter((i) => i.own).length}종`)
-  console.log('  만들기 기능을 쓰려면 다른 창에서 npm run studio:worker 를 함께 켠다')
+  console.log('  npm run studio 로 켜면 일꾼도 함께 뜬다')
 })

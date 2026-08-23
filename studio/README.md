@@ -5,30 +5,42 @@
 
 ## 켜는 법
 
-### 상시 가동 (권장)
+저장소를 받아 **한 번만** 준비하면 됩니다.
 
 ```bash
-bash studio/install-service.sh
+git clone https://github.com/iux-pub/guide.git
+cd guide
+npm install
 ```
 
-launchd에 등록해 로그인하면 저절로 뜬다. 터미널을 켜 둘 필요가 없다.
-
-**GUI 세션으로 띄우는 것이 중요하다.** Claude 자격은 macOS 로그인 키체인에 있어
-ssh로 띄운 워커는 인증에서 막힌다.
+Claude에 한 번 로그인합니다. 「만들기」에 필요하고, 각자 자기 구독으로 돕니다.
 
 ```bash
-bash studio/install-service.sh --status   # 상태
-bash studio/install-service.sh --stop     # 멈춤
+bash scripts/setup-claude-auth.sh
 ```
 
-### 잠깐 띄울 때
+이제 켤 때는 이 한 줄입니다. 화면과 일꾼이 함께 뜨고 브라우저가 열립니다.
 
 ```bash
-npm run studio          # 화면 (http://127.0.0.1:4700)
-npm run studio:worker   # 그리는 일꾼
+npm run studio
 ```
 
-**찾기·내보내기는 일꾼 없이도 된다.** 일꾼은 「만들기」에서만 쓴다.
+멈출 때는 `Ctrl+C`. 다른 포트를 쓰려면 `PORT=4800 npm run studio`.
+
+> **찾기·내보내기는 로그인 없이도 됩니다.** 로그인은 「만들기」에서만 씁니다.
+
+### 상시로 켜 두고 싶다면
+
+자기 맥에서 늘 떠 있게 하려면 launchd에 등록합니다. 터미널을 켜 둘 필요가 없어집니다.
+
+```bash
+bash studio/install-service.sh          # 등록
+bash studio/install-service.sh --status # 상태
+bash studio/install-service.sh --stop   # 해제
+```
+
+**GUI 세션으로 띄우는 것이 중요합니다.** Claude 자격이 macOS 로그인 키체인에 있어
+ssh로 띄운 일꾼은 인증에서 막힙니다.
 
 ## 화면 셋
 

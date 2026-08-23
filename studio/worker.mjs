@@ -94,6 +94,24 @@ function askClaude(prompt) {
   })
 }
 
+/**
+ * 세트에 있는 아이콘 몇 개를 예시로 보여 준다.
+ * 말로 "아웃라인 스타일"이라고 해 봐야 안 통한다 — 2026-08-23 실측:
+ * 규격만 적어 보냈더니 후보 3개가 전부 까맣게 채워진 덩어리로 왔다.
+ * 실제 path를 보여 주면 그 결을 따라 그린다.
+ */
+function examples() {
+  const picks = ['file', 'calendar', 'bell']
+  const out = []
+  for (const name of picks) {
+    const p = path.join(ROOT, 'assets/icons/svg', `${name}.svg`)
+    if (!fs.existsSync(p)) continue
+    const d = fs.readFileSync(p, 'utf8').match(/<path[^>]*\sd="([^"]+)"/)
+    if (d) out.push(`${name}: ${d[1]}`)
+  }
+  return out
+}
+
 /** 규격을 그대로 프롬프트에 싣는다. 사람 말로 풀어 쓰지 않는다 — 어긋나면 검사에서 걸린다. */
 function buildPrompt(text, seedNames, variant) {
   const angles = [
@@ -110,17 +128,28 @@ ${text}
 ## 접근 방향
 ${angles[variant % angles.length]}
 
-## 규격 (반드시 지킨다)
+## 반드시 아웃라인(속이 빈) 아이콘이다
+Google Material Symbols **Outlined**와 같은 결이다. 면으로 꽉 채운 덩어리가 아니라,
+${contract.geometry.strokeWeight} 두께의 테두리 선으로 형태를 그린 것이다.
+
+선을 stroke 속성으로 그리지 않고 **면(path)으로 변환**해 표현한다.
+예를 들어 사각 테두리는 바깥 사각형과 안쪽 사각형을 함께 그려 가운데를 비운다.
+
+<svg>에 fill-rule="evenodd"를 준다. 이게 있어야 겹친 안쪽이 구멍으로 뚫린다.
+없으면 감는 방향에 따라 통째로 칠해진다.
+
+## 우리 세트의 실제 아이콘 — 이 결을 따른다
+${examples().map((e) => `  ${e}`).join('\n')}
+
+## 규격
 - viewBox="0 0 ${CANVAS} ${CANVAS}"
-- 형태는 중앙 ${contract.canvas.liveArea}×${contract.canvas.liveArea} 안에만 놓는다. 바깥 ${PADDING}은 비운다
-- **stroke 속성을 쓰지 않는다.** 선은 반드시 면(path)으로 변환해 그린다.
-  예: 두께 ${contract.geometry.strokeWeight}인 가로선은 <path d="M2 11h20v2H2Z"/> 처럼 사각형 면으로
-- 획 굵기는 ${contract.geometry.strokeWeight}로 일정하게 유지한다
-- fill은 루트 <svg>에 fill="currentColor" 하나만. path에는 fill을 쓰지 않는다
-- 색상값(#hex, rgb)을 절대 넣지 않는다
-- circle·rect·line·polygon 같은 도형 요소를 쓰지 않는다. path만 쓴다
+- 형태는 중앙 ${contract.canvas.liveArea}×${contract.canvas.liveArea} 안에만. 바깥 ${PADDING}은 비운다
+- 획 굵기 ${contract.geometry.strokeWeight}로 일정하게
+- 루트 <svg>에 fill="currentColor" fill-rule="evenodd" 두 개만. path에는 fill을 쓰지 않는다
+- stroke·stroke-width 속성 금지
+- 색상값(#hex, rgb) 금지
+- circle·rect·line·polygon 금지. path만 쓴다
 - 좌표는 소수점 ${contract.output.decimalPlaces}자리까지
-- Google Material Symbols Outlined와 같은 결로 그린다 (기하학적, 균일한 획, 각진 종단)
 
 ## 같은 세트에 이미 있는 아이콘 (겹치지 않게)
 ${seedNames.join(', ')}
@@ -151,7 +180,9 @@ function normalize(raw) {
   }
 
   const body = ds.map((d) => `<path d="${d}"/>`).join('')
-  svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS} ${CANVAS}" width="${CANVAS}" height="${CANVAS}" fill="currentColor">${body}</svg>\n`
+  // fill-rule은 규격이 정한다 — 모델이 빠뜨려도 여기서 붙는다
+  const rule = contract.output.fillRule ? ` fill-rule="${contract.output.fillRule}"` : ''
+  svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS} ${CANVAS}" width="${CANVAS}" height="${CANVAS}" fill="currentColor"${rule}>${body}</svg>\n`
   return { svg, ds }
 }
 
@@ -189,7 +220,11 @@ function review(svg, ds, original) {
   if (baseline) {
     const sw = measure(ds).strokeWeight
     const { min, p10, p90, max } = baseline.strokeWeight
-    if (sw < min || sw > max) {
+    if (sw > max * 1.8) {
+      // 획이 아니라 면으로 꽉 채워 그린 경우다. "굵다"고만 하면 원인을 못 찾는다.
+      notes.push({ level: 'bad', text: '속이 꽉 찬 덩어리로 그려졌습니다 — 테두리만 남는 형태가 아닙니다' })
+      ok = false
+    } else if (sw < min || sw > max) {
       notes.push({ level: 'warn', text: sw < min ? '선이 다른 아이콘보다 많이 가늡니다' : '선이 다른 아이콘보다 많이 굵습니다' })
     } else if (sw < p10 || sw > p90) {
       notes.push({ level: 'warn', text: sw < p10 ? '선이 조금 가는 편입니다' : '선이 조금 굵은 편입니다' })

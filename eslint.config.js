@@ -36,6 +36,43 @@ export default [
     }
   },
   {
+    // 스튜디오 서버·워커 (ESM, Node)
+    files: ['studio/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.node
+      }
+    },
+    rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-console': 'off',
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'eqeqeq': ['error', 'smart'],
+      'comma-dangle': ['warn', 'never']
+    }
+  },
+  {
+    // 스튜디오 화면 (브라우저)
+    files: ['studio/public/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'script',
+      globals: {
+        ...globals.browser
+      }
+    },
+    rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'eqeqeq': ['error', 'smart'],
+      'comma-dangle': ['warn', 'never']
+    }
+  },
+  {
     ignores: [
       'node_modules/**',
       'dist/**',

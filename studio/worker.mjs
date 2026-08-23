@@ -174,6 +174,38 @@ SVG 코드만 출력한다. 설명·주석·코드펜스를 붙이지 않는다.
 반드시 <svg 로 시작해 </svg> 로 끝난다.`
 }
 
+/**
+ * 다시 그리기 요청. 무엇이 잘못됐는지 구체적으로 돌려준다.
+ *
+ * 규격을 아무리 정확히 적어도 첫 시도에서 어긋나는 경우가 있다 — 특히 내부 요소가
+ * 많은 주제(QR·격자)에서 바깥 윤곽을 한 겹만 그려 덩어리가 된다. 결과를 재서
+ * 되먹이면 두 번째에는 대개 맞는다. 사람이 볼 후보의 질이 올라간다.
+ */
+function retryPrompt(basePrompt, previousSvg, notes) {
+  const problems = notes.filter((n) => n.level !== 'good').map((n) => `- ${n.text}`).join('\n')
+  return `${basePrompt}
+
+---
+
+## 방금 그린 것이 이렇게 나왔다 — 고쳐서 다시 그린다
+
+${previousSvg}
+
+### 무엇이 잘못됐나
+${problems}
+
+### 어떻게 고치나
+가장 흔한 원인은 **바깥 윤곽을 한 겹만 그린 것**이다. 한 겹이면 그 안이 통째로
+칠해지고, 안에 넣은 요소들이 흰 구멍으로 보인다.
+
+바깥 윤곽을 두 겹으로 다시 그린다 — 바깥 선과, 거기서 ${contract.geometry.strokeWeight}만큼
+안으로 들어온 선. 그 사이만 칠해지고 가운데는 빈다.
+
+내부의 작은 요소는 그대로 한 겹으로 채운다.
+
+SVG 코드만 출력한다.`
+}
+
 /** 응답에서 SVG를 꺼내 규격에 맞게 다듬는다. */
 function normalize(raw) {
   const m = raw.match(/<svg[\s\S]*?<\/svg>/i)
@@ -262,19 +294,42 @@ async function handle(id, request) {
 
   // 후보는 각각 따로 부른다. 한 번에 여러 개를 시키면 서로 닮게 나오고,
   // 하나가 어긋나면 전부 못 쓴다.
+  const draw = async (i) => {
+    const base = buildPrompt(request.text, seedNames, i)
+    const raw = await askClaude(base)
+    const first = normalize(raw)
+    const verdict = review(first.svg, first.ds, raw)
+
+    // 규격을 어겼으면 무엇이 잘못됐는지 알려 주고 한 번 더 그리게 한다.
+    // 두 번째도 어긋나면 그대로 둔다 — 판단은 사람 몫이고, 무한정 시도하면
+    // 디자이너가 기다리는 시간만 길어진다.
+    if (!verdict.ok) {
+      try {
+        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes))
+        const second = normalize(raw2)
+        const verdict2 = review(second.svg, second.ds, raw2)
+        if (verdict2.ok) return { ok: true, svg: second.svg, review: verdict2, retried: true }
+        // 둘 다 어긋났으면 덜 나쁜 쪽을 준다
+        const worse2 = verdict2.notes.filter((n) => n.level === 'bad').length
+        const worse1 = verdict.notes.filter((n) => n.level === 'bad').length
+        return worse2 <= worse1
+          ? { ok: true, svg: second.svg, review: verdict2, retried: true }
+          : { ok: true, svg: first.svg, review: verdict, retried: true }
+      } catch {
+        return { ok: true, svg: first.svg, review: verdict, retried: true }
+      }
+    }
+    return { ok: true, svg: first.svg, review: verdict, retried: false }
+  }
+
   const jobs = Array.from({ length: request.count }, (_, i) =>
-    askClaude(buildPrompt(request.text, seedNames, i))
-      .then((raw) => {
-        const { svg, ds } = normalize(raw)
-        return { ok: true, svg, review: review(svg, ds, raw) }
-      })
-      .catch((err) => ({ ok: false, error: err.message }))
+    draw(i).catch((err) => ({ ok: false, error: err.message }))
   )
 
   const settled = await Promise.all(jobs)
   const candidates = settled
     .filter((c) => c.ok)
-    .map((c, i) => ({ index: i, svg: c.svg, review: c.review }))
+    .map((c, i) => ({ index: i, svg: c.svg, review: c.review, retried: c.retried }))
   const failures = settled.filter((c) => !c.ok).map((c) => c.error)
 
   // 인증 실패는 개별 후보 문제가 아니라 워커가 못 도는 상태다 — 요청을 소진하지 않는다

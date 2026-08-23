@@ -23,7 +23,8 @@ const state = {
   variants: [],
   sheetVariant: 'regular',
   // 내보내기에 함께 담을 표정. 기본은 늘 들어가므로 목록에 두지 않는다
-  exportVariants: new Set()
+  exportVariants: new Set(),
+  jobs: []
 }
 
 // ── 공통 ──────────────────────────────────────────────
@@ -148,12 +149,16 @@ async function renderSheet(name, variant) {
 
   // 이 아이콘이 가진 표정만 보여 준다 — 없는 것을 누르면 빈 네모가 나온다
   const avail = ['regular', ...(icon.variants || [])]
+  const missing = state.variants.map((v) => v.id).filter((v) => !avail.includes(v))
+  // 우리가 만든 아이콘만 표정을 더 만들 수 있다 — 씨앗은 구글에서 받아 온다
+  const canMake = icon.own && missing.length > 0
   $('#sheet-variants').innerHTML =
-    avail.length > 1
-      ? avail
-          .map((v) => `<button type="button" class="vbtn${v === variant ? ' vbtn--on' : ''}" data-variant="${v}">${VARIANT_LABEL[v] || v}</button>`)
-          .join('')
-      : ''
+    avail
+      .map((v) => `<button type="button" class="vbtn${v === variant ? ' vbtn--on' : ''}" data-variant="${v}">${VARIANT_LABEL[v] || v}</button>`)
+      .join('') +
+    (canMake
+      ? `<button type="button" class="vbtn vbtn--make" data-make-variants="${name}">+ ${missing.map((v) => VARIANT_LABEL[v] || v).join('·')} 만들기</button>`
+      : '')
 
   // 기본은 span(폰트) 방식이다. 한 줄이라 붙여 넣기 쉽고 마크업이 짧다.
   const vc = isBase ? '' : ` icon-font--${variant}`
@@ -232,6 +237,7 @@ function renderJobs(jobs) {
     .map((job) => {
       const when = new Date(job.createdAt).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       const cands = job.result?.candidates || []
+      const isVariant = job.kind === 'variants' || job.result?.kind === 'variants'
       return `<article class="job">
         <div class="job__head">
           <p class="job__text">${esc(job.text)}</p>
@@ -240,10 +246,62 @@ function renderJobs(jobs) {
           </span>
         </div>
         ${statusLine(job)}
+        ${isVariant ? variantCard(job) : ''}
         ${cands.length > 0 ? `<div class="cands">${cands.map((c) => candCard(job, c)).join('')}</div>` : ''}
       </article>`
     })
     .join('')
+}
+
+/**
+ * 표정 결과 카드.
+ *
+ * 기본을 맨 왼쪽에 두고 만든 표정을 그 옆에 붙인다 — **나란히 놓지 않으면
+ * 「같은 아이콘인가」를 눈으로 볼 수 없다.** 실측 수치도 함께 적는다.
+ * 통과한 것만 미리 체크해 두고, 막힌 것도 지우지 않고 보여 준다 —
+ * 기계가 「이상하다」고는 해도 「그러니 빼라」고 정할 수는 없다.
+ */
+function variantCard(job) {
+  const r = job.result
+  if (!r || r.status === 'working') return ''
+  const rows = r.results || []
+  if (rows.length === 0) return ''
+
+  const face = (svg, px) => sized(svg, px)
+  const cells = rows.map((x) => {
+    if (x.error) {
+      return `<div class="vres vres--fail"><span class="vres__name">${esc(VARIANT_LABEL[x.variant] || x.variant)}</span>
+        <p class="vres__note">만들지 못했습니다 — ${esc(x.error)}</p></div>`
+    }
+    if (x.none) {
+      return `<div class="vres vres--none"><span class="vres__name">${esc(VARIANT_LABEL[x.variant] || x.variant)}</span>
+        <p class="vres__note">채울 면이 없는 형태입니다. 이 아이콘에는 만들지 않습니다.</p></div>`
+    }
+    const m = x.review?.metrics || {}
+    const notes = (x.review?.notes || [])
+      .map((n) => `<span class="vres__tag vres__tag--${n.level}">${esc(n.text)}</span>`)
+      .join('')
+    return `<div class="vres">
+      <label class="vres__pick">
+        <input type="checkbox" class="vres__on" data-variant="${esc(x.variant)}" ${x.review?.ok ? 'checked' : ''}>
+        <span class="vres__name">${esc(VARIANT_LABEL[x.variant] || x.variant)}</span>
+      </label>
+      <div class="vres__art">${face(x.svg, 48)}${face(x.svg, 24)}${face(x.svg, 16)}</div>
+      <p class="vres__num">획 ${m.strokeWeight ?? '?'} · 기본의 ${m.areaRatio ?? '?'}배 · 자리 어긋남 ${m.boundsDrift ?? '?'}</p>
+      ${notes}
+    </div>`
+  }).join('')
+
+  const canTake = rows.some((x) => x.svg)
+  return `<div class="vgroup" data-job="${esc(job.id)}" data-name="${esc(r.name || '')}">
+    <div class="vres vres--base">
+      <span class="vres__name">기본</span>
+      <div class="vres__art">${face(r.baseSvg || '', 48)}${face(r.baseSvg || '', 24)}${face(r.baseSvg || '', 16)}</div>
+      <p class="vres__num">이것과 같은 모양이어야 합니다</p>
+    </div>
+    ${cells}
+    ${canTake ? '<div class="vgroup__foot"><button class="btn vgroup__take">고른 표정 넣기</button></div>' : ''}
+  </div>`
 }
 
 /**
@@ -280,6 +338,7 @@ function renderWorkerHealth(worker) {
 async function refreshJobs() {
   try {
     const { requests, worker } = await api('/api/requests')
+    state.jobs = requests
     renderJobs(requests)
     renderWorkerHealth(worker)
   } catch {
@@ -443,6 +502,12 @@ document.addEventListener('click', async (e) => {
 
   const cell = t.closest('.cell')
   if (cell) return openSheet(cell.dataset.name)
+
+  const take = t.closest('.vgroup__take')
+  if (take) return takeVariants(take.closest('.vgroup'))
+
+  const makeV = t.closest('[data-make-variants]')
+  if (makeV) return requestVariants(makeV.dataset.makeVariants)
 
   const evb = t.closest('[data-export-variant]')
   if (evb) {
@@ -705,6 +770,65 @@ function guessKeywords(prompt, name) {
     if (seg.length >= 2 && !out.includes(seg)) out.push(seg)
   }
   return out.slice(0, 8)
+}
+
+/** 이 아이콘에 없는 표정을 만들어 달라고 큐에 넣는다. */
+async function requestVariants(name) {
+  const icon = state.icons.find((i) => i.name === name)
+  if (!icon) return
+  const have = new Set(icon.variants || [])
+  const todo = state.variants.map((v) => v.id).filter((v) => !have.has(v))
+  if (todo.length === 0) return
+
+  const hint = $('#sheet-hint')
+  if (hint) hint.textContent = '표정을 만들고 있습니다 — 만들기 탭에서 진행을 봅니다. 몇 분 걸립니다.'
+
+  try {
+    await api('/api/variants', { method: 'POST', body: JSON.stringify({ name, variants: todo }) })
+    $('#sheet')?.close()
+    show('make')
+    await refreshJobs()
+  } catch (e) {
+    if (hint) hint.textContent = `표정을 만들지 못했습니다 — ${e.message}`
+  }
+}
+
+/** 체크한 표정을 자산으로 들인다. */
+async function takeVariants(group) {
+  const name = group.dataset.name
+  const btn = group.querySelector('.vgroup__take')
+  const picks = [...group.querySelectorAll('.vres__on')]
+    .filter((c) => c.checked)
+    .map((c) => c.dataset.variant)
+
+  if (picks.length === 0) {
+    btn.textContent = '넣을 표정을 고르세요'
+    setTimeout(() => { btn.textContent = '고른 표정 넣기' }, 2000)
+    return
+  }
+
+  btn.disabled = true
+  btn.textContent = '넣는 중…'
+  try {
+    const job = state.jobs?.find((j) => j.id === group.dataset.job)
+    const rows = job?.result?.results || []
+    await api('/api/variants/adopt', {
+      method: 'POST',
+      body: JSON.stringify({
+        name,
+        requestId: group.dataset.job,
+        picks: picks.map((v) => ({ variant: v, svg: rows.find((r) => r.variant === v)?.svg }))
+      })
+    })
+    // 캐시를 비우지 않으면 새 표정이 옛 그림으로 보인다
+    for (const v of picks) state.svgCache.delete(`${v}/${name}`)
+    await load()
+    await refreshJobs()
+    show('find')
+  } catch (e) {
+    btn.disabled = false
+    btn.textContent = `넣지 못했습니다 — ${e.message}`
+  }
 }
 
 async function approve(card) {

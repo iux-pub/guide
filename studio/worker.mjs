@@ -36,6 +36,9 @@ const POLL_MS = Number(process.env.POLL_MS || 4000)
 // 프롬프트에 예시 path가 들어가 응답이 길어진다. 180초에서는 3개 중 1개가
 // 시간 초과로 떨어졌다(2026-08-23 실측). 넉넉히 잡는다 — 어차피 비동기다.
 const TIMEOUT_MS = Number(process.env.TIMEOUT_MS || 300000)
+// 표정 만들기는 「이 좌표를 그대로 두되 굵기만 바꿔라」라서 새로 그리기보다 훨씬 오래 걸린다.
+// 실측(2026-08-23, bookmark slim): 251초. 300초 제한에 걸려 실패했다.
+const VARIANT_TIMEOUT_MS = Number(process.env.VARIANT_TIMEOUT_MS || 900000)
 
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width
@@ -68,7 +71,7 @@ function findClaude() {
 const CLAUDE = findClaude()
 
 /** claude --print 한 번. 실패는 던진다 — 폴백하지 않는다. */
-function askClaude(prompt) {
+function askClaude(prompt, timeoutMs = TIMEOUT_MS) {
   return new Promise((resolve, reject) => {
     const proc = spawn(CLAUDE, ['--print', prompt], {
       env: authEnv(),
@@ -78,8 +81,8 @@ function askClaude(prompt) {
     let err = ''
     const timer = setTimeout(() => {
       proc.kill('SIGKILL')
-      reject(new Error(`시간 초과 (${Math.round(TIMEOUT_MS / 1000)}초)`))
-    }, TIMEOUT_MS)
+      reject(new Error(`시간 초과 (${Math.round(timeoutMs / 1000)}초)`))
+    }, timeoutMs)
 
     proc.stdout.on('data', (d) => { out += d })
     proc.stderr.on('data', (d) => { err += d })
@@ -391,7 +394,7 @@ ${variantExamples(combo.id).join('\n\n') || '(예시 없음)'}
 ## 답
 
 SVG 한 덩어리만 낸다. 설명·코드펜스 없이 <svg …>…</svg> 그대로.
-${combo.id === 'fill' && '채울 면이 없는 형태(돋보기·화살표처럼 선으로만 된 것)라면 SVG 대신 NONE 한 낱말만 낸다.'}`
+${combo.id === 'fill' ? '\n채울 면이 없는 형태(돋보기·화살표처럼 선으로만 된 것)라면 SVG 대신 NONE 한 낱말만 낸다.' : ''}`
 }
 
 /** 표정이 규격·굵기·면적·테두리를 다 지켰는지 실측으로 본다. */
@@ -473,7 +476,7 @@ async function handleVariants(id, request) {
     if (!combo || !target) throw new Error(`표정 기준이 없습니다: ${vid}`)
 
     const prompt = variantPrompt(name, baseSvg, combo, target)
-    const raw = await askClaude(prompt)
+    const raw = await askClaude(prompt, VARIANT_TIMEOUT_MS)
 
     // 채울 면이 없다고 답할 수 있다 — 억지로 만들면 두부처럼 뭉갠 그림이 나온다
     if (/^\s*NONE\s*$/i.test(raw) || (!/<svg/i.test(raw) && /NONE/i.test(raw))) {
@@ -488,7 +491,7 @@ async function handleVariants(id, request) {
     if (verdict.retryWorthy) {
       retried = true
       try {
-        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes))
+        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes), VARIANT_TIMEOUT_MS)
         const second = normalize(raw2)
         const v2 = reviewVariant(baseSvg, second.svg, second.ds, combo, target)
         if (v2.ok || v2.notes.filter((n) => n.level === 'bad').length <

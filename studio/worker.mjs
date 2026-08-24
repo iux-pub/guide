@@ -54,6 +54,14 @@ const MAX_PARALLEL = Number(process.env.MAX_PARALLEL || 2)
 // 그림을 글로 옮기는 한 번의 호출. 그리기가 아니라 보기라 가볍다(실측 14초).
 const REFERENCE_TIMEOUT_MS = Number(process.env.REFERENCE_TIMEOUT_MS || 300000)
 
+// 참조를 옮겨 그리는 일은 **본질적으로 무겁다.** 일꾼과 같은 자리에서 잰 값(2026-08-24):
+//   참조 없는 도형   출력  5,483토큰 ·  60초
+//   참조 있는 로고   출력 56,888토큰 · 682초   ← 10배
+// 그림을 좌표로 옮기는 판단이 그만큼 많고, 특히 글자꼴은 곡선 하나하나가 판단이다.
+// 프롬프트를 줄여도 이건 안 줄었다. 제한을 넉넉히 주고 하나씩 돌리는 편이 낫다 —
+// 둘씩 돌리면 서로 굶겨 둘 다 놓친다.
+const REF_DRAW_TIMEOUT_MS = Number(process.env.REF_DRAW_TIMEOUT_MS || 1800000)
+
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width
 const PADDING = contract.canvas.padding
@@ -684,7 +692,7 @@ async function handleVariants(id, request) {
  * 늦어지는 정도가 시간 제한을 넘으면 **하나도 못 건진다** — 나눠 돌리면 적어도
  * 먼저 끝난 것은 남는다.
  */
-async function pool(items, run) {
+async function pool(items, run, limit = MAX_PARALLEL) {
   const out = new Array(items.length)
   let next = 0
   const lane = async () => {
@@ -695,7 +703,7 @@ async function pool(items, run) {
       out[i] = await run(items[i], i)
     }
   }
-  await Promise.all(Array.from({ length: Math.min(MAX_PARALLEL, items.length) }, lane))
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, lane))
   return out
 }
 
@@ -716,9 +724,12 @@ async function handle(id, request) {
     console.log(`  참조를 글로 옮겼습니다 (${refNotes.length}자)`)
   }
 
+  const heavy = Boolean(request.reference || request.referenceImage)
+  const drawTimeout = heavy ? REF_DRAW_TIMEOUT_MS : TIMEOUT_MS
+
   const draw = async (i) => {
     const base = buildPrompt(request.text, seedNames, i, request.reference, request.referenceImage, refNotes)
-    const raw = await askClaude(base)
+    const raw = await askClaude(base, drawTimeout)
     const first = normalize(raw)
     const fromRef = Boolean(request.reference || request.referenceImage)
     const verdict = review(first.svg, first.ds, raw, fromRef)
@@ -728,7 +739,7 @@ async function handle(id, request) {
     // 디자이너가 기다리는 시간만 길어진다.
     if (verdict.retryWorthy) {
       try {
-        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes))
+        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), drawTimeout)
         const second = normalize(raw2)
         const verdict2 = review(second.svg, second.ds, raw2, fromRef)
         if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
@@ -749,7 +760,9 @@ async function handle(id, request) {
 
   const settled = await pool(
     Array.from({ length: request.count }, (_, i) => i),
-    (i) => draw(i).catch((err) => ({ ok: false, error: err.message }))
+    (i) => draw(i).catch((err) => ({ ok: false, error: err.message })),
+    // 참조를 옮기는 호출은 하나만으로도 11분이다. 둘씩 돌리면 서로 굶겨 둘 다 놓친다.
+    heavy ? 1 : MAX_PARALLEL
   )
   const candidates = settled
     .filter((c) => c.ok)

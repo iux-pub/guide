@@ -51,6 +51,9 @@ const VARIANT_TIMEOUT_MS = Number(process.env.VARIANT_TIMEOUT_MS || 900000)
 // 전체 시간은 조금 길어지지만 큐가 비동기라 사람이 붙잡혀 있지 않고, 무엇보다 **끝난다**.
 const MAX_PARALLEL = Number(process.env.MAX_PARALLEL || 2)
 
+// 그림을 글로 옮기는 한 번의 호출. 그리기가 아니라 보기라 가볍다(실측 14초).
+const REFERENCE_TIMEOUT_MS = Number(process.env.REFERENCE_TIMEOUT_MS || 300000)
+
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width
 const PADDING = contract.canvas.padding
@@ -175,6 +178,43 @@ function examples() {
 
 /** 규격을 그대로 프롬프트에 싣는다. 사람 말로 풀어 쓰지 않는다 — 어긋나면 검사에서 걸린다. */
 /**
+ * 참조 그림을 글로 옮긴다 — **한 번만.**
+ *
+ * 후보마다 그림을 다시 읽으면 같은 일을 N번 한다. 게다가 그림을 보며 그리는 호출은
+ * 턴이 늘고(도구 왕복) 사고가 크게 뛴다. 한 번 읽어 글로 만들어 두면 후보들은
+ * 그림 없는 가벼운 호출이 된다.
+ *
+ * 덤이 하나 더 있다 — **이 글을 사람이 볼 수 있다.** 모델이 그림을 어떻게 이해했는지
+ * 드러나므로, 「i와 n이 이어진다」 같은 핵심을 놓쳤으면 만들기 전에 알 수 있다.
+ *
+ * 주의: claude는 **작업 디렉토리 안의 파일만** 권한 없이 읽는다. 밖에 있으면
+ * 「읽기 권한이 필요합니다」로 끝난다(2026-08-24 실측 — 이걸 일회성으로 잘못 넘겨
+ * 한참 헤맸다). 일꾼은 저장소 안에서 돌고 그림도 그 안에 두므로 괜찮다.
+ */
+async function describeReference(imagePath, text) {
+  const prompt = `${imagePath}
+
+이 그림을 24×24 단색 아이콘으로 옮기려 한다. **그리지 말고, 형태만 글로 적어라.**
+
+만들려는 것: ${text}
+
+적을 것
+- 무엇이 무엇과 **붙어 있는지** (이어진 획을 끊으면 다른 마크가 된다)
+- 각 요소의 대략적인 비율과 자리
+- 어느 부분이 없으면 딴것이 되는지
+
+색·그림자·질감은 적지 않는다. 8줄 이내, 설명하는 문장만.`
+
+  const raw = await askClaude(prompt, REFERENCE_TIMEOUT_MS)
+  const out = String(raw).trim()
+  // 못 읽었으면 글이 아니라 하소연이 온다. 그걸 프롬프트에 실으면 더 나쁘다.
+  if (!out || /권한|permission|읽지 못|열지 못|cannot read/i.test(out)) {
+    throw new Error(`참조 그림을 읽지 못했습니다 — ${out.slice(0, 120)}`)
+  }
+  return out
+}
+
+/**
  * 만들기 프롬프트.
  *
  * **짧게 쓰는 것이 곧 빠르게 만드는 것이다.** 2026-08-24 실측 — 같은 아이콘을 네 가지
@@ -195,7 +235,7 @@ function examples() {
  *   기존 이름 73개  이름 중복은 승인할 때 서버가 본다 — 모델이 외울 일이 아니다
  *   긴 실패담       「한 겹이면 까만 덩어리가 된다」는 한 줄이면 통한다
  */
-function buildPrompt(text, seedNames, variant, reference, referenceImage) {
+function buildPrompt(text, seedNames, variant, reference, referenceImage, refNotes) {
   const angles = [
     '가장 일반적이고 알아보기 쉬운 형태로',
     '단순하게 — 요소를 최소로 줄여서',
@@ -207,7 +247,7 @@ function buildPrompt(text, seedNames, variant, reference, referenceImage) {
   // 참조가 있으면 「우리 스타일로 새로 그리기」가 아니라 「저것을 옮기기」다.
   // 로고·심볼은 속이 찬 형태가 많은데 아웃라인 규칙을 씌우면 원본과 다른 그림이 된다
   // (2026-08-24: 인포마인드 로고가 가늘어지고 i의 점이 작아져 16px에서 「ln」으로 읽혔다).
-  const hasRef = Boolean(reference || referenceImage)
+  const hasRef = Boolean(reference || refNotes)
 
   return `${CANVAS}×${CANVAS} 격자에 아이콘 하나를 그린다. ${angles[variant % angles.length]}.
 
@@ -217,8 +257,9 @@ ${hasRef ? `
 ## 참조 — 이 형태를 그대로 옮긴다
 
 **원본의 생김새와 굵기를 지킨다.** 여기 없는 요소를 지어내지 않고, 있는 것을 빼지도 않는다.
-${referenceImage ? `그림 파일을 열어 본다: ${referenceImage}
-색·그러데이션만 버리고 단색으로 만든다. 형태·비율·굵기는 원본 그대로다.` : ''}${reference ? `
+${refNotes ? `원본의 형태를 옮겨 적은 것이다. 색·그러데이션은 이미 버렸다.
+
+${refNotes.split('\n').map((l) => `  ${l}`).join('\n')}` : ''}${reference ? `
 \`\`\`svg
 ${reference.length > 8000 ? reference.slice(0, 8000) + '\n<!-- (뒷부분 생략) -->' : reference}
 \`\`\`` : ''}
@@ -666,8 +707,17 @@ async function handle(id, request) {
 
   // 후보는 각각 따로 부른다. 한 번에 여러 개를 시키면 서로 닮게 나오고,
   // 하나가 어긋나면 전부 못 쓴다.
+  // 그림 참조는 **한 번만** 읽어 글로 옮긴다. 후보마다 다시 읽으면 같은 일을 N번 하고,
+  // 그림을 보며 그리는 호출은 턴이 늘어 훨씬 무겁다.
+  let refNotes = null
+  if (request.referenceImage) {
+    console.log('  참조 그림을 읽는 중…')
+    refNotes = await describeReference(request.referenceImage, request.text)
+    console.log(`  참조를 글로 옮겼습니다 (${refNotes.length}자)`)
+  }
+
   const draw = async (i) => {
-    const base = buildPrompt(request.text, seedNames, i, request.reference, request.referenceImage)
+    const base = buildPrompt(request.text, seedNames, i, request.reference, request.referenceImage, refNotes)
     const raw = await askClaude(base)
     const first = normalize(raw)
     const fromRef = Boolean(request.reference || request.referenceImage)
@@ -721,6 +771,9 @@ async function handle(id, request) {
     status: candidates.length > 0 ? 'ready' : 'failed',
     candidates,
     failures,
+    // 모델이 그림을 어떻게 이해했는지 사람이 볼 수 있게 남긴다 — 핵심을 놓쳤으면
+    // 요청문에 그 말을 보태 다시 시키면 된다
+    ...(refNotes ? { referenceNotes: refNotes } : {}),
     finishedAt: new Date().toISOString()
   }
 }

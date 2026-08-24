@@ -194,6 +194,22 @@ function elapsed(from) {
   return sec < 60 ? `${sec}초째` : `${Math.floor(sec / 60)}분 ${sec % 60}초째`
 }
 
+/**
+ * 모델이 참조 그림을 어떻게 이해했는지 보여 준다.
+ *
+ * 그림만 주면 사람 눈에 당연한 특징이 전해지지 않는다 — 인포마인드 로고에서 i와 n이
+ * 끊긴 것이 그랬다. 이 글을 보면 **만들어진 그림을 보기 전에** 무엇을 놓쳤는지 알 수 있고,
+ * 요청문에 그 말을 보태 다시 시키면 된다.
+ */
+function refNotesBlock(job) {
+  const notes = job.result?.referenceNotes
+  if (!notes) return ''
+  return `<details class="refnotes">
+    <summary>참조 그림을 이렇게 읽었습니다 — 핵심이 빠졌으면 요청문에 보태 다시 시키세요</summary>
+    <pre>${esc(notes)}</pre>
+  </details>`
+}
+
 function statusLine(job) {
   if (job.status === 'waiting') {
     return `<p class="status status--waiting"><span class="status__dot"></span>차례를 기다리는 중입니다. 창을 닫아도 됩니다.</p>`
@@ -267,6 +283,7 @@ function renderJobs(jobs) {
           </span>
         </div>
         ${statusLine(job)}
+        ${refNotesBlock(job)}
         ${isVariant ? variantCard(job) : ''}
         ${cands.length > 0 ? `<div class="cands">${cands.map((c) => candCard(job, c)).join('')}</div>` : ''}
       </article>`

@@ -684,6 +684,37 @@ code {
   color: var(--ink);
 }
 
+/* 모델이 참조 그림을 어떻게 읽었나 — 결과를 보기 전에 확인할 수 있는 자리 */
+.refnotes {
+  margin: 10px 0 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--sunken);
+}
+
+.refnotes > summary {
+  padding: 9px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+}
+
+.refnotes > summary:hover { color: var(--ink); }
+
+.refnotes pre {
+  margin: 0;
+  padding: 0 12px 12px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
 .workerdown {
   margin: 0 0 16px;
   padding: 12px 14px;

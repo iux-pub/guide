@@ -117,6 +117,7 @@
   .icon-font--chart-bar::before { content: "\E045"; }
   .icon-font--globe::before { content: "\E046"; }
   .icon-font--language::before { content: "\E047"; }
+  .icon-font--sitemap::before { content: "\E048"; }
 
   /* slim — 72종. 가늘게. 큰 크기(32px 이상)나 옅은 보조 정보에 쓴다 — 작은 크기에서는 선이 끊겨 보인다 */
   @font-face {

@@ -39,4 +39,5 @@
 <symbol id="home" viewBox="0 0 24 24"><path d="M4.5 20.5v-11.25l7.5 -5.64L19.5 9.25v11.25H13.9v-6.69h-3.81V20.5H4.5Z"/></symbol>
 <symbol id="bookmark" viewBox="0 0 24 24"><path d="M5.5 20.25v-14.94Q5.5 4.55 6.03 4.03q0.53 -0.53 1.28 -0.53h9.38Q17.45 3.5 17.98 4.03q0.53 0.53 0.53 1.28V20.25L12 17.46L5.5 20.25Z"/></symbol>
 <symbol id="star" viewBox="0 0 24 24"><path d="M6.58 19.96l1.43 -6.17l-4.79 -4.15l6.32 -0.55L12 3.28l2.46 5.82l6.32 0.55l-4.79 4.15L17.43 19.96L12 16.69L6.58 19.96Z"/></symbol>
+<symbol id="sitemap" viewBox="0 0 24 24"><path d="M8 3h8v5H8ZM2 16h7v5H2ZM15 16h7v5H15ZM11.25 8h1.5v3.25h-1.5ZM5.5 11.25h13v1.5h-13ZM4.75 12.75h1.5v3.25h-1.5ZM17.75 12.75h1.5v3.25h-1.5Z"/></symbol>
 </svg>

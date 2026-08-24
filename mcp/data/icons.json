@@ -1272,6 +1272,11 @@
       "codepoint": "U+E048",
       "category": "custom",
       "source": "infomind-original",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ],
       "keywords": [
         "사이트맵",
         "계통도",

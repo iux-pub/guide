@@ -38,7 +38,39 @@ node --test scripts/__tests__/icons.test.js scripts/__tests__/zip.test.js > /dev
 say "사이트 빌드"
 npm run build > /dev/null
 
-# ── 2. NAS 저장소 갱신 ──────────────────────────────────
+# ── 2. 스튜디오에서 만든 아이콘이 남아 있는지 ────────────────
+#
+# **이 검사가 없으면 팀원이 만든 아이콘이 배포 때 조용히 사라진다.**
+# 스튜디오는 git 체크아웃 안에 파일을 쓰는데(assets/icons/svg·contracts) 아래 3단계가
+# `git reset --hard`를 한다. NAS에는 push 권한이 없어(자격 파일이 비어 있다) 저장소로
+# 갈 길도 없다. 그러니 여기서 멈추고 사람이 가져가게 한다.
+say "스튜디오에서 만든 것 확인"
+pending=$(ssh "$HOST" "export PATH=$NAS_PATH; cd \"$STUDIO\" && git status --porcelain assets contracts" || true)
+
+if [ -n "$pending" ]; then
+  printf '\n\033[31m✗ 저장소에 없는 변경이 있습니다 — 배포하면 사라집니다.\033[0m\n\n'
+  printf '%s\n' "$pending" | sed 's/^/    /'
+  cat <<GUIDE
+
+  스튜디오에서 만든 아이콘입니다. 저장소에 넣은 뒤 다시 배포하세요.
+
+    1) 패치 받기
+       curl -sO https://footer.kr/guide/_icons/api/pending.patch
+
+    2) 내 클론에 적용하고 확인
+       git apply pending.patch && npm run icons:build && npm run check
+
+    3) 커밋·푸시한 뒤 배포
+       git add -A && git commit && git push && npm run deploy:nas
+
+  버릴 것이라면 NAS에서 지웁니다:
+    ssh $HOST 'export PATH=$NAS_PATH; cd $STUDIO && git checkout -- assets contracts'
+GUIDE
+  exit 1
+fi
+echo "  없음 — 덮어써도 잃을 것이 없습니다"
+
+# ── 3. NAS 저장소 갱신 ──────────────────────────────────
 say "NAS 저장소 갱신"
 ssh "$HOST" "export PATH=$NAS_PATH
   set -e
@@ -49,8 +81,8 @@ ssh "$HOST" "export PATH=$NAS_PATH
     printf '  %-28s %s\n' \"\$d\" \"\$(git log --oneline -1)\"
   done"
 
-# ── 3. 리다이렉트 복구 ──────────────────────────────────
-# 저장소에 없는 파일이라 2단계가 매번 지운다. 여기서 다시 쓴다.
+# ── 4. 리다이렉트 복구 ──────────────────────────────────
+# 저장소에 없는 파일이라 3단계가 매번 지운다. 여기서 다시 쓴다.
 say "루트 index.html 복구"
 ssh "$HOST" "cat > '$WEB/index.html' << 'HTML'
 <html lang=\"ko\">
@@ -67,7 +99,7 @@ ssh "$HOST" "cat > '$WEB/index.html' << 'HTML'
 HTML
   ls -la '$WEB/index.html'"
 
-# ── 4. 사이트 교체 ──────────────────────────────────────
+# ── 5. 사이트 교체 ──────────────────────────────────────
 # 먼저 옆에 다 올리고 마지막에 이름만 바꾼다. 올리는 동안 옛 사이트가 계속 뜬다.
 say "사이트 전송"
 rsync -a --delete -e ssh _site/ "$HOST:$WEB/_site.new/"
@@ -80,7 +112,7 @@ ssh "$HOST" "set -e
   mv _site.new _site
   echo '  교체 완료'"
 
-# ── 5. 확인 ────────────────────────────────────────────
+# ── 6. 확인 ────────────────────────────────────────────
 say "배포 후 확인"
 fail=0
 for u in \
@@ -101,7 +133,7 @@ if [ "$fail" -ne 0 ]; then
   exit 1
 fi
 
-# ── 6. 스튜디오 재기동 ───────────────────────────────────
+# ── 7. 스튜디오 재기동 ───────────────────────────────────
 # 저장소만 갱신하면 도는 것은 옛 코드다. 프로세스를 바꿔 끼워야 새 화면이 나온다.
 #
 # sudo가 필요하지 않다. start.sh의 `nohup setsid`가 프로세스를 새 세션으로 떼어 내므로

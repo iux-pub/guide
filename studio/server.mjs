@@ -18,6 +18,7 @@ import path from 'node:path'
 import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 import { makeZip } from './lib/zip.mjs'
+import { execFile } from 'node:child_process'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(HERE, '..')
@@ -279,10 +280,76 @@ function approve({ name, svg, category, requestedBy, model, prompt, keywords }) 
   return { name, codepoint, keywords: words }
 }
 
+// ── 저장소로 가는 길 ────────────────────────────────────
+//
+// 스튜디오는 git 체크아웃 안에 파일을 쓴다(assets/icons/svg·contracts). 그런데
+// 서버의 클론에는 push 권한이 없다 — **만든 아이콘은 여기 머물 뿐 저장소로 가지 않는다.**
+// 다음 배포가 `git reset --hard`를 하면 조용히 사라진다(2026-08-23 확인).
+//
+// 그래서 두 가지를 둔다. 배포는 남은 것이 있으면 멈추고(deploy-nas.sh),
+// 화면은 「아직 저장소에 없다」고 말하며 패치를 내준다. 사람이 자기 클론에
+// `git apply`로 옮겨 커밋한다 — 대장 번호와 검색어까지 한 번에 간다.
+
+/** NAS의 git은 PATH에 없다. 흔한 자리를 훑는다. */
+function findGit() {
+  const cands = ['/usr/local/bin/git', '/opt/homebrew/bin/git', '/usr/bin/git', 'git']
+  for (const c of cands) {
+    if (c === 'git' || fs.existsSync(c)) return c
+  }
+  return null
+}
+
+const GIT = findGit()
+
+function git(args) {
+  return new Promise((resolve) => {
+    if (!GIT) return resolve({ ok: false, out: '', err: 'git을 찾지 못했습니다' })
+    execFile(GIT, args, { cwd: ROOT, maxBuffer: 20 * 1024 * 1024 }, (err, stdout, stderr) => {
+      resolve({ ok: !err, out: stdout || '', err: (stderr || err?.message || '').trim() })
+    })
+  })
+}
+
+/** 저장소에 아직 없는 아이콘·표정·검색어가 있는가. */
+async function pendingWork() {
+  const r = await git(['status', '--porcelain', '--', 'assets/icons/svg', 'contracts'])
+  if (!r.ok) return { available: false, reason: r.err || 'git 상태를 읽지 못했습니다', icons: [], files: 0 }
+
+  const lines = r.out.split('\n').map((l) => l.trim()).filter(Boolean)
+  const icons = new Set()
+  for (const line of lines) {
+    // "?? assets/icons/svg/fill/e-ticket.svg" 같은 꼴
+    const m = line.match(/assets\/icons\/svg\/(?:([a-z][a-z0-9-]*)\/)?([a-z][a-z0-9-]*)\.svg$/)
+    if (m) icons.add(m[2])
+  }
+  return { available: true, icons: [...icons].sort(), files: lines.length, lines }
+}
+
 // ── 라우팅 ────────────────────────────────────────────
 
 const routes = {
   'GET /api/catalog': (req, res) => json(res, 200, iconCatalog()),
+
+  'GET /api/pending': async (req, res) => json(res, 200, await pendingWork()),
+
+  // 자기 클론에 `git apply`로 옮길 패치. 추적 안 되는 새 파일도 담기게 --binary와
+  // intent-to-add를 함께 쓴다 — 안 그러면 새 SVG가 통째로 빠진다.
+  'GET /api/pending.patch': async (req, res) => {
+    const pending = await pendingWork()
+    if (!pending.available) return json(res, 503, { error: pending.reason })
+    if (pending.files === 0) return json(res, 404, { error: '저장소에 없는 변경이 없습니다' })
+
+    await git(['add', '-N', '--', 'assets/icons/svg', 'contracts'])
+    const d = await git(['diff', '--binary', '--', 'assets/icons/svg', 'contracts'])
+    if (!d.ok) return json(res, 500, { error: d.err || '패치를 만들지 못했습니다' })
+
+    res.writeHead(200, {
+      'content-type': 'text/plain; charset=utf-8',
+      'content-disposition': 'attachment; filename="pending.patch"',
+      'x-icon-pending': String(pending.icons.length)
+    })
+    res.end(d.out)
+  },
 
   'GET /api/contract': (req, res) => {
     const c = readJson(CONTRACT)

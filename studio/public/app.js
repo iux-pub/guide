@@ -473,11 +473,44 @@ async function doExport() {
 
 // ── 시작 ──────────────────────────────────────────────
 
+/**
+ * 저장소에 아직 없는 아이콘을 알린다.
+ *
+ * 스튜디오는 git 체크아웃 안에 파일을 쓰는데 이 서버의 클론에는 push 권한이 없다.
+ * 만든 아이콘은 **여기 머물 뿐 저장소로 가지 않고**, 다음 배포가 `git reset --hard`를
+ * 하면 조용히 사라진다. 만든 사람이 그 사실을 모르면 애써 만든 것을 잃는다.
+ *
+ * 찾기 화면 맨 위에 둔다 — 만든 직후 돌아오는 자리다.
+ */
+async function renderPending() {
+  const box = $('#pending')
+  if (!box) return
+  try {
+    const p = await api('/api/pending')
+    if (!p.available || p.files === 0) {
+      box.hidden = true
+      return
+    }
+    const names = p.icons.length > 0
+      ? p.icons.map((n) => `<code>${esc(n)}</code>`).join(' ')
+      : `파일 ${p.files}개`
+    box.hidden = false
+    box.innerHTML =
+      `<b>${names} — 아직 저장소에 없습니다.</b> 이 서버에만 있어서 <b>다음 배포 때 사라집니다.</b><br>` +
+      '패치를 받아 자기 클론에 <code>git apply</code>로 옮긴 뒤 커밋하면 팀 전체가 씁니다 — ' +
+      '대장 번호와 검색어까지 함께 갑니다.<br>' +
+      '<button type="button" class="pending__get" id="pending-get">패치 내려받기</button>'
+  } catch {
+    box.hidden = true
+  }
+}
+
 async function load() {
   const data = await api('/api/catalog')
   state.icons = data.icons
   state.categories = data.categories
   state.variants = data.variants || []
+  renderPending()
   $('#count').textContent = `${data.icons.length}종 · 우리가 만든 것 ${data.icons.filter((i) => i.own).length}종`
   renderChips()
   renderGrid()
@@ -502,6 +535,16 @@ document.addEventListener('click', async (e) => {
 
   const cell = t.closest('.cell')
   if (cell) return openSheet(cell.dataset.name)
+
+  if (t.closest('#pending-get')) {
+    const a = document.createElement('a')
+    a.href = apiUrl('/api/pending.patch')
+    a.download = 'pending.patch'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    return
+  }
 
   const take = t.closest('.vgroup__take')
   if (take) return takeVariants(take.closest('.vgroup'))

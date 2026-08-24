@@ -631,6 +631,44 @@ code {
 .sheet__meta { margin: 0; font-size: 12px; color: var(--muted); }
 .sheet__label { font-size: 12px; color: var(--muted); }
 
+/* 저장소에 아직 없는 아이콘 — 다음 배포 때 사라진다.
+   찾기 화면 맨 위에 둔다. 만든 사람이 바로 봐야 하는 말이다. */
+.pending {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--warn);
+  border-left-width: 3px;
+  border-radius: 6px;
+  background: var(--warn-soft);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.pending b { font-weight: 600; }
+
+.pending code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--sunken);
+}
+
+.pending__get {
+  display: inline-block;
+  margin-top: 8px;
+  font: inherit;
+  font-size: 12px;
+  padding: 7px 13px;
+  min-height: 34px;
+  border: 1px solid var(--warn);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
 /* 일꾼이 멈췄을 때 — 요청을 넣기 전에 보이도록 화면 맨 위에 둔다 */
 .workerdown {
   margin: 0 0 16px;

@@ -1267,6 +1267,20 @@
         "translate",
         "locale"
       ]
+    },
+    "sitemap": {
+      "codepoint": "U+E048",
+      "category": "custom",
+      "source": "infomind-original",
+      "keywords": [
+        "사이트맵",
+        "계통도",
+        "조직도",
+        "구조",
+        "메뉴구조",
+        "sitemap",
+        "tree"
+      ]
     }
   }
 }

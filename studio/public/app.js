@@ -199,10 +199,13 @@ function statusLine(job) {
     return `<p class="status status--waiting"><span class="status__dot"></span>차례를 기다리는 중입니다. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'working') {
-    // 실측 5~7분이다. 「1~2분」이라고 적어 두면 3분째부터 고장으로 읽힌다.
+    // 실측: 참조 없이 호출당 약 6분, 참조 그림을 붙이면 약 10분. 둘씩 나눠 돌리므로
+    // 후보 4개면 두 바퀴다. 「1~2분」이라고 적어 두면 3분째부터 고장으로 읽힌다.
     const t = elapsed(job.result?.startedAt)
     const kind = job.kind === 'variants' ? '표정을 만드는' : '그리는'
-    return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>5~10분</b> 걸립니다. 창을 닫아도 됩니다.</p>`
+    const long = Boolean(job.referenceImage || job.reference)
+    const guess = long ? '15~25분' : '10~20분'
+    return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>${guess}</b> 걸립니다${long ? ' (참조 그림이 있으면 더 오래 걸립니다)' : ''}. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'failed') {
     const why = (job.result?.failures || []).join(' / ') || '알 수 없는 이유'

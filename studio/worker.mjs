@@ -43,6 +43,14 @@ const TIMEOUT_MS = Number(process.env.TIMEOUT_MS || 900000)
 // 성격이 갈릴 수 있어서다 — 지금은 같은 값이다.
 const VARIANT_TIMEOUT_MS = Number(process.env.VARIANT_TIMEOUT_MS || 900000)
 
+// 한 번에 몇 개까지 동시에 그릴까.
+//
+// claude 하나가 무겁다 — 참조 그림이 붙으면 호출당 630초다(2026-08-24 실측, 단독 실행).
+// 4코어 서버에서 넷을 한꺼번에 돌리면 서로 굶겨 **넷 다 시간 초과**로 떨어진다
+// (「인포마인드 회사 로고」가 그렇게 실패했다). 둘씩 나눠 돌리면 각자 제 속도를 낸다.
+// 전체 시간은 조금 길어지지만 큐가 비동기라 사람이 붙잡혀 있지 않고, 무엇보다 **끝난다**.
+const MAX_PARALLEL = Number(process.env.MAX_PARALLEL || 2)
+
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width
 const PADDING = contract.canvas.padding
@@ -546,9 +554,7 @@ async function handleVariants(id, request) {
     return { variant: vid, svg, review: verdict, retried }
   }
 
-  const settled = await Promise.all(
-    wanted.map((v) => draw(v).catch((err) => ({ variant: v, error: err.message })))
-  )
+  const settled = await pool(wanted, (v) => draw(v).catch((err) => ({ variant: v, error: err.message })))
 
   const made = settled.filter((r) => r.svg)
   if (made.length === 0 && settled.some((r) => /인증/.test(r.error || ''))) {
@@ -565,6 +571,28 @@ async function handleVariants(id, request) {
     failures: settled.filter((r) => r.error).map((r) => `${r.variant}: ${r.error}`),
     finishedAt: new Date().toISOString()
   }
+}
+
+/**
+ * 한 번에 MAX_PARALLEL개씩만 돌린다.
+ *
+ * Promise.all로 한꺼번에 던지면 프로세스들이 CPU를 두고 다투다 다 같이 늦어진다.
+ * 늦어지는 정도가 시간 제한을 넘으면 **하나도 못 건진다** — 나눠 돌리면 적어도
+ * 먼저 끝난 것은 남는다.
+ */
+async function pool(items, run) {
+  const out = new Array(items.length)
+  let next = 0
+  const lane = async () => {
+    for (;;) {
+      const i = next
+      next += 1
+      if (i >= items.length) return
+      out[i] = await run(items[i], i)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(MAX_PARALLEL, items.length) }, lane))
+  return out
 }
 
 async function handle(id, request) {
@@ -605,11 +633,10 @@ async function handle(id, request) {
     return { ok: true, svg: first.svg, review: verdict, retried: false, suggested: first.suggested }
   }
 
-  const jobs = Array.from({ length: request.count }, (_, i) =>
-    draw(i).catch((err) => ({ ok: false, error: err.message }))
+  const settled = await pool(
+    Array.from({ length: request.count }, (_, i) => i),
+    (i) => draw(i).catch((err) => ({ ok: false, error: err.message }))
   )
-
-  const settled = await Promise.all(jobs)
   const candidates = settled
     .filter((c) => c.ok)
     .map((c, i) => ({ index: i, svg: c.svg, review: c.review, retried: c.retried, suggested: c.suggested }))

@@ -501,10 +501,14 @@ const routes = {
       referenceImage = file
     }
 
+    const hasReference = Boolean(reference || referenceImage)
     const request = {
       id,
       text,
-      count: Math.min(6, Math.max(1, Number(body.count) || 4)),
+      // 참조를 붙이면 후보가 서로 닮는다 — 같은 형태를 옮기는 일이라 「다른 접근」이
+      // 의미가 없다. 게다가 참조가 붙으면 호출당 630초로 무거워진다(2026-08-24 실측).
+      // 넷을 그리느라 40분을 쓰느니 둘을 그려 20분에 끝내는 편이 낫다.
+      count: Math.min(6, Math.max(1, Number(body.count) || (hasReference ? 2 : 4))),
       ...(reference ? { reference } : {}),
       ...(referenceImage ? { referenceImage } : {}),
       createdAt: new Date().toISOString(),

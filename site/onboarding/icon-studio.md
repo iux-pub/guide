@@ -134,11 +134,40 @@ CSS는 Tailwind 없이 그대로 도는 순수 CSS다. 외부에서 불러오는
 
 ## 만든 아이콘을 팀에 공유하려면
 
-승인하면 자기 clone에만 들어간다. 팀 전체가 쓰려면 커밋해서 올린다.
+**만든 것은 그 서버에만 있습니다.** 저장소에 넣기 전까지는 다음 배포 때 사라집니다 —
+스튜디오가 쓰는 폴더가 저장소 사본이고, 배포가 그 사본을 원본으로 되돌리기 때문입니다.
+만들고 나면 찾기 화면 맨 위에 그 사실이 뜹니다.
+
+### NAS 스튜디오에서 만들었다면
+
+1. 찾기 화면의 **「패치 내려받기」**를 누릅니다. 또는
+
+   ```bash
+   curl -sO https://footer.kr/guide/_icons/api/pending.patch
+   ```
+
+2. 자기 clone에 옮깁니다. **SVG·표정 파일뿐 아니라 대장 번호와 검색어까지 함께 갑니다** —
+   낱개 SVG만 받으면 번호가 빠져 반쪽입니다.
+
+   ```bash
+   git apply pending.patch
+   npm run icons:build     # 스프라이트·폰트·CSS 다시 만들기
+   npm run check           # 규격 검사
+   ```
+
+3. 커밋해서 올립니다.
+
+   ```bash
+   git add -A && git commit && git push
+   ```
+
+### 내 컴퓨터에서 돌렸다면
+
+바로 2번부터 하면 됩니다.
 
 ```bash
-npm run icons:build     # 스프라이트·폰트·CSS 다시 만들기
-npm run check           # 규격 검사
+npm run icons:build
+npm run check
 git add -A && git commit && git push
 ```
 

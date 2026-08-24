@@ -339,8 +339,13 @@ const routes = {
     if (!pending.available) return json(res, 503, { error: pending.reason })
     if (pending.files === 0) return json(res, 404, { error: '저장소에 없는 변경이 없습니다' })
 
+    // `add -N`은 새 파일을 diff에 나오게 하려고 인덱스에 자리만 잡아 둔다. 그런데 그
+    // 흔적이 남으면 파일을 지운 뒤에도 `git status`가 유령 삭제(D)를 보고해 배포가
+    // 헛되이 멈춘다(2026-08-24 실측). 뽑자마자 인덱스를 되돌린다.
+    // 이 체크아웃은 배포 전용이라 일부러 staging하는 일이 없으므로 안전하다.
     await git(['add', '-N', '--', 'assets/icons/svg', 'contracts'])
     const d = await git(['diff', '--binary', '--', 'assets/icons/svg', 'contracts'])
+    await git(['reset', '-q', '--', 'assets/icons/svg', 'contracts'])
     if (!d.ok) return json(res, 500, { error: d.err || '패치를 만들지 못했습니다' })
 
     res.writeHead(200, {

@@ -104,6 +104,31 @@ curl -X POST -H 'content-type: application/json' \
 
 시간 제한은 만들기(300초)와 따로 900초를 준다. 좌표를 다시 쓰는 일이라 오래 걸린다.
 
+### 만든 아이콘이 저장소로 가는 길
+
+**스튜디오는 git 체크아웃 안에 파일을 쓴다** — `assets/icons/svg/`와 `contracts/`의
+대장·검색어. 전부 추적 대상이라 배포의 `git reset --hard`가 덮어쓴다. 서버 클론에는
+push 권한이 없으므로 **만든 것은 저장소로 갈 길이 없다.** 세 겹으로 막았다.
+
+| 겹 | 하는 일 |
+|---|---|
+| 배포 | reset 전에 미저장 변경을 보고, 있으면 목록·절차를 찍고 **실패로 끝낸다** |
+| 화면 | 찾기 맨 위에 「아직 저장소에 없습니다 — 다음 배포 때 사라집니다」 |
+| 패치 | `GET /api/pending.patch` — 자기 clone에 `git apply`로 옮긴다 |
+
+```bash
+curl -sO https://footer.kr/guide/_icons/api/pending.patch
+git apply pending.patch && npm run icons:build && npm run check
+git add -A && git commit && git push
+```
+
+패치는 `git add -N` 뒤 `--binary`로 뽑는다 — 안 그러면 추적 안 되는 새 SVG가 통째로
+빠진다. **뽑자마자 `git reset`으로 인덱스를 되돌린다**: 흔적이 남으면 파일을 지운 뒤에도
+`git status`가 유령 삭제(D)를 보고해 배포가 헛되이 멈춘다(2026-08-24 실측).
+
+근본 해결은 서버에 push 권한을 주는 것이지만 공개 저장소에 상시 쓰기 권한을 두는 일이라
+UX팀 판단이 필요하다.
+
 ### 일꾼이 멈췄는지 보기
 
 일꾼은 큐를 볼 때마다 `studio/queue/worker-heartbeat.json`에 시각을 남긴다.

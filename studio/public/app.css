@@ -677,6 +677,13 @@ code {
 }
 
 /* 일꾼이 멈췄을 때 — 요청을 넣기 전에 보이도록 화면 맨 위에 둔다 */
+/* 참조를 넣을 때 꼭 읽어야 하는 안내 — 이걸 놓치면 결과가 절반이 된다 */
+.ask__hint--key {
+  border-left: 2px solid var(--accent);
+  padding-left: 10px;
+  color: var(--ink);
+}
+
 .workerdown {
   margin: 0 0 16px;
   padding: 12px 14px;

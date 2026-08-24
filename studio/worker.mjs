@@ -174,6 +174,27 @@ function examples() {
 }
 
 /** 규격을 그대로 프롬프트에 싣는다. 사람 말로 풀어 쓰지 않는다 — 어긋나면 검사에서 걸린다. */
+/**
+ * 만들기 프롬프트.
+ *
+ * **짧게 쓰는 것이 곧 빠르게 만드는 것이다.** 2026-08-24 실측 — 같은 아이콘을 네 가지
+ * 프롬프트로 그려 시간과 출력 토큰을 쟀다.
+ *
+ *   5,081자 (씨앗 예시 4개 + 이름 73개 + 긴 설명)  195초 · 14,832토큰
+ *   1,040자 (예시 2개)                             120초 · 10,388토큰
+ *     757자 (예시 없이 **방법만** 설명)             60초 ·  5,483토큰 · 획 1.40 ✓
+ *     491자 (방법도 없음)                           39초 ·  3,381토큰 · 획 0.93 ✗
+ *
+ * 답은 410자인데 출력이 1만 5천 토큰이었다 — 거의 전부가 사고다. 씨앗의 긴 path를
+ * 보여 주고 「이 결을 따르라」고 하면 모델이 그 좌표를 해석하고 흉내 내느라 생각을 쏟는다.
+ * **어떻게 그리는지 방법을 말해 주면** 예시 없이도 굵기가 맞고 3배 빨리 끝난다.
+ * (표정 만들기에서 배운 것과 같다 — 「어느 선을 어느 쪽으로 옮겨라」가 통했다.)
+ *
+ * 걷어낸 것과 그 이유:
+ *   씨앗 예시 4개   방법 설명으로 대체. 사고의 3분의 2가 여기서 나왔다
+ *   기존 이름 73개  이름 중복은 승인할 때 서버가 본다 — 모델이 외울 일이 아니다
+ *   긴 실패담       「한 겹이면 까만 덩어리가 된다」는 한 줄이면 통한다
+ */
 function buildPrompt(text, seedNames, variant, reference, referenceImage) {
   const angles = [
     '가장 일반적이고 알아보기 쉬운 형태로',
@@ -181,86 +202,63 @@ function buildPrompt(text, seedNames, variant, reference, referenceImage) {
     '조금 다른 은유로 — 같은 뜻을 다른 사물로',
     '세부를 하나 더해 구체적으로'
   ]
-  return `너는 아이콘 디자이너다. 아래 규격을 정확히 지켜 SVG 아이콘 하나를 그린다.
+  const w = contract.geometry.strokeWeight
+  const live = contract.canvas.liveArea
+  // 참조가 있으면 「우리 스타일로 새로 그리기」가 아니라 「저것을 옮기기」다.
+  // 로고·심볼은 속이 찬 형태가 많은데 아웃라인 규칙을 씌우면 원본과 다른 그림이 된다
+  // (2026-08-24: 인포마인드 로고가 가늘어지고 i의 점이 작아져 16px에서 「ln」으로 읽혔다).
+  const hasRef = Boolean(reference || referenceImage)
+
+  return `${CANVAS}×${CANVAS} 격자에 아이콘 하나를 그린다. ${angles[variant % angles.length]}.
 
 ## 그릴 것
 ${text}
-${reference || referenceImage ? `
-## 참조 — 이 형태를 아이콘으로 옮긴다
+${hasRef ? `
+## 참조 — 이 형태를 그대로 옮긴다
 
-아래는 실제 자산이다. **여기 없는 요소를 지어내지 말고**, 이 형태의 알아볼 수 있는
-특징을 남기면서 우리 규격(획 굵기·라이브 영역)에 맞게 단순화한다.
-${referenceImage ? `
-그림 파일을 열어 본다: ${referenceImage}
-
-색·그러데이션·질감은 옮기지 않는다 — 우리 아이콘은 단색 아웃라인이다.
-형태의 뼈대만 가져온다.` : ''}${reference ? `
+**원본의 생김새와 굵기를 지킨다.** 여기 없는 요소를 지어내지 않고, 있는 것을 빼지도 않는다.
+${referenceImage ? `그림 파일을 열어 본다: ${referenceImage}
+색·그러데이션만 버리고 단색으로 만든다. 형태·비율·굵기는 원본 그대로다.` : ''}${reference ? `
 \`\`\`svg
-${reference.length > 12000 ? reference.slice(0, 12000) + '\n<!-- (뒷부분 생략) -->' : reference}
+${reference.length > 8000 ? reference.slice(0, 8000) + '\n<!-- (뒷부분 생략) -->' : reference}
 \`\`\`` : ''}
-` : ''}
-## 접근 방향
-${angles[variant % angles.length]}
 
-## 반드시 아웃라인(속이 빈) 아이콘이다
+**아래 아웃라인 규칙을 억지로 적용하지 않는다.** 로고·심볼·글자꼴은 대개 속이 찬 형태이고,
+그 두께가 곧 그 형태의 정체다. 속이 찼으면 찬 채로 옮긴다 — 굳이 테두리만 남기면
+원본과 다른 그림이 된다.
 
-Google Material Symbols **Outlined**와 같은 결이다.
+원본에 점·구멍처럼 도드라지는 부분이 있으면 **원본에서 차지하던 비중 그대로** 옮긴다.
+작게 줄이면 24px에서 사라지고 16px에서는 다른 글자로 읽힌다.
+` : `
+## 아웃라인으로 그린다 — 속이 빈 도형
 
-**바깥 윤곽은 반드시 두 겹으로 그린다.** 바깥 선 하나, 그보다 ${contract.geometry.strokeWeight}만큼
-안으로 들어온 선 하나. 이 둘 사이만 칠해지고 가운데는 빈다.
+도형 하나에 **선 두 개**를 쓴다. 바깥 테두리 하나, 그보다 ${w} 안쪽으로 하나.
+그 사이 간격 ${w}가 곧 획 굵기다.
 
-  올바름:  M4 6h16v12H4Z M6 8h12v8H6Z    ← 두 겹. 가운데가 뚫린 테두리
-  틀림:    M4 6h16v12H4Z                  ← 한 겹. 통째로 까맣게 칠해진다
+  M4 6h16v12H4Z M${4 + w} ${6 + w}h${16 - w * 2}v${12 - w * 2}H${4 + w}Z    ← 바깥, 안쪽. 가운데가 뚫린 테두리
+  M4 6h16v12H4Z                       ← 한 겹뿐. 통째로 까맣게 칠해진다
 
-한 겹만 그리면 그 안에 무엇을 넣어도 **까만 덩어리에 흰 구멍이 난 그림**이 된다.
-실제로 그렇게 나온 적이 여러 번 있다 — 티켓 몸통이 새까맣고 QR이 흰 구멍이었다.
-우리가 원하는 것은 그 반대다: 티켓은 빈 테두리, QR은 그 안의 작은 채운 점.
+한 겹만 그리면 무엇을 넣어도 **까만 덩어리에 흰 구멍**이 된다. 우리가 원하는 것은
+그 반대다 — 빈 테두리와 그 안의 작은 채운 점.
 
-## path를 역할별로 나눠 쓴다
+연결선·막대처럼 가는 요소는 굵기 ${w}짜리 얇은 직사각형으로 한 겹만 그려 채운다.
 
-한 덩어리로 몰아 쓰면 윤곽과 내부가 섞여 실수가 난다. 반드시 이렇게 나눈다.
-
-  <path d="…바깥 윤곽 두 겹…"/>      ← 첫 번째 path. 여기가 테두리다
-  <path d="…내부 요소…"/>            ← 두 번째부터. 점·막대·짧은 선
-
-첫 번째 path 안에는 **닫힌 형태가 둘 이상** 있다(Z로 닫는다). 바깥 하나, 안쪽 하나.
-닫힌 형태가 하나뿐이면 한 겹만 그린 것이다 — 다시 본다.
-
-내부 요소는 한 겹으로 그려 채운다. 크기가 ${contract.geometry.strokeWeight}~4로 작아
-그 자체가 획 굵기다.
-
-<svg>에 fill-rule="evenodd"를 준다. 겹친 안쪽이 구멍으로 뚫리게 하는 장치다.
-
-**자가 점검**: 다 그린 뒤 칠해진 면적이 캔버스의 4분의 1을 넘으면 바깥 윤곽을
-한 겹만 그린 것이다. 다시 그린다.
-
-## 우리 세트의 실제 아이콘 — 이 결을 따른다
-${examples().map((e) => `  ${e}`).join('\n')}
-
+바깥 윤곽은 첫 번째 path에, 내부 요소는 그다음 path에 나눠 쓴다.
+`}
 ## 규격
-- viewBox="0 0 ${CANVAS} ${CANVAS}"
-- 형태는 중앙 ${contract.canvas.liveArea}×${contract.canvas.liveArea} 안에만. 바깥 ${PADDING}은 비운다
-- 획 굵기 ${contract.geometry.strokeWeight}로 일정하게
-- 루트 <svg>에 fill="currentColor" fill-rule="evenodd" 두 개만. path에는 fill을 쓰지 않는다
-- stroke·stroke-width 속성 금지
-- 색상값(#hex, rgb) 금지
-- circle·rect·line·polygon 금지. path만 쓴다
+${hasRef ? '- 굵기는 원본을 따른다. 우리 획 굵기 규칙보다 원본의 생김새가 먼저다\n' : ''}- viewBox="0 0 ${CANVAS} ${CANVAS}", 루트 <svg>에 fill="currentColor" fill-rule="evenodd"
+- 형태는 중앙 ${live}×${live} 안에. 바깥 ${PADDING}은 비운다
+- <path>만. stroke·색상값·circle·rect·line·polygon 금지. path에 fill을 쓰지 않는다
 - 좌표는 소수점 ${contract.output.decimalPlaces}자리까지
 
-## 같은 세트에 이미 있는 아이콘 (겹치지 않게)
-${seedNames.join(', ')}
-
-## 출력 형식
-아래 두 줄만 출력한다. 설명·주석·코드펜스를 붙이지 않는다.
+## 답
+설명·코드펜스 없이 아래 두 줄만.
 
   name: <영문 이름>
   <svg …></svg>
 
-이름은 kebab-case로 **뜻을 담아** 짓는다 — 색·크기 같은 겉모습 단어를 넣지 않는다.
-요청이 한글이어도 이름은 영문이다. 이미 있는 이름과 겹치지 않게 한다.
-
-  좋음: e-ticket, duty-free-limit, tour-course
-  나쁨: ticket-blue(색), big-icon(크기), icon-ticket(icon 중복)`
+이름은 kebab-case로 뜻을 담아 짓는다 — 색·크기 같은 겉모습 단어는 넣지 않는다.
+요청이 한글이어도 이름은 영문이다.`
 }
 
 /**
@@ -328,7 +326,13 @@ function normalize(raw) {
 }
 
 /** 사람이 보고 판단할 수 있는 말로만 적는다. viewBox·stroke 같은 용어를 쓰지 않는다. */
-function review(svg, ds, original) {
+/**
+ * @param {boolean} fromReference 참조를 보고 옮긴 것인가.
+ *   참조가 있으면 굵기는 원본을 따르는 것이 맞다. 그걸 「굵다/가늘다」로 나무라면
+ *   프롬프트와 판정이 서로 다른 말을 하게 되고, 쓰는 사람은 경고를 무시하는 법부터 배운다.
+ *   「속이 꽉 찼다」도 로고·심볼에서는 정상이다.
+ */
+function review(svg, ds, original, fromReference = false) {
   const notes = []
   let ok = true
   // 규격 위반은 아니지만 다시 그려 볼 값어치가 있는 상태 —
@@ -365,6 +369,16 @@ function review(svg, ds, original) {
     const sw = measure(ds).strokeWeight
     const { min, p10, p90, max } = baseline.strokeWeight
     const solidAt = (baseline.strokeWeight.p90 || max) * (contract.optical.solidFillThreshold?.multiplier ?? 2)
+
+    // 참조를 옮긴 것이면 굵기 판정을 건너뛴다 — 원본을 따르라고 시켜 놓고 나무랄 수 없다.
+    // 대신 실측만 알려 준다. 세트와 얼마나 다른지는 사람이 보고 정한다.
+    if (fromReference) {
+      notes.push({
+        level: 'good',
+        text: `원본을 옮긴 것이라 굵기는 따로 보지 않습니다 (실측 ${sw.toFixed(2)}, 세트 기준 ${p10}~${p90})`
+      })
+      return { ok: notes.every((n) => n.level !== 'bad'), notes, retryWorthy: notes.some((n) => n.level === 'bad') }
+    }
     if (sw > solidAt) {
       // 획이 아니라 면으로 꽉 채워 그린 경우다. "굵다"고만 하면 원인을 못 찾는다.
       notes.push({ level: 'bad', text: '속이 꽉 찬 덩어리로 그려졌습니다 — 테두리만 남는 형태가 아닙니다' })
@@ -649,7 +663,8 @@ async function handle(id, request) {
     const base = buildPrompt(request.text, seedNames, i, request.reference, request.referenceImage)
     const raw = await askClaude(base)
     const first = normalize(raw)
-    const verdict = review(first.svg, first.ds, raw)
+    const fromRef = Boolean(request.reference || request.referenceImage)
+    const verdict = review(first.svg, first.ds, raw, fromRef)
 
     // 규격을 어겼으면 무엇이 잘못됐는지 알려 주고 한 번 더 그리게 한다.
     // 두 번째도 어긋나면 그대로 둔다 — 판단은 사람 몫이고, 무한정 시도하면
@@ -658,7 +673,7 @@ async function handle(id, request) {
       try {
         const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes))
         const second = normalize(raw2)
-        const verdict2 = review(second.svg, second.ds, raw2)
+        const verdict2 = review(second.svg, second.ds, raw2, fromRef)
         if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
         // 둘 다 어긋났으면 덜 나쁜 쪽을 준다
         const score = (v) => v.notes.filter((n) => n.level === 'bad').length * 10 +

@@ -1051,10 +1051,21 @@
         "slim",
         "bold"
       ]
+    },
+    "sitemap": {
+      "codepoint": "U+E048",
+      "category": "custom",
+      "source": "infomind-original",
+      "license": "proprietary",
+      "sha256": "d8f6acd21f3e518fcd691aa0054f1ff985ac29727e6ee863076d40509cc4099b",
+      "paths": 2,
+      "addedAt": "2026-08-24",
+      "model": "claude",
+      "prompt": "사이트맵 — 위쪽 한 칸에서 아래 두 칸으로 갈라지는 계통도"
     }
   },
   "tombstones": {},
-  "updatedAt": "2026-08-23",
+  "updatedAt": "2026-08-24",
   "variants": {
     "fill": {
       "count": 40,

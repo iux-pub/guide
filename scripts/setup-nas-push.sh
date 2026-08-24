@@ -1,24 +1,32 @@
 #!/bin/sh
-# 스튜디오 서버에 저장소 쓰기 권한을 준다.
+# 스튜디오 서버에 저장소 쓰기 권한을 준다 — 배포 키(SSH) 방식.
 #
 #   ssh -t footer-nas 'cd ~/icon-studio && sh scripts/setup-nas-push.sh'
 #
 # 왜 필요한가: 스튜디오는 git 체크아웃 안에 파일을 쓴다(assets/icons/svg·contracts).
 # push 권한이 없으면 만든 아이콘이 저장소로 갈 길이 없고, 다음 배포의
-# `git reset --hard`에 사라진다. 권한이 있으면 만든 자리에서 바로 올릴 수 있다.
+# `git reset --hard`에 사라진다.
 #
-# **토큰은 이 창에 찍지 않는다.** 무음으로 받아 파일에만 쓰고, 확인은 끝 4자리로만 한다.
-# (2026-08-23에 토큰이 채팅창에 노출돼 재발급한 일이 있다.)
+# **왜 토큰(PAT)이 아니라 배포 키인가** (2026-08-24에 토큰으로 시도했다가 옮겼다):
+#
+#   ① 만료가 없다. fine-grained PAT은 iux-pub 조직이 366일을 넘기지 못하게 막고,
+#      넘기면 「Permission denied」만 뜨고 이유는 안 알려 준다. 짧게 잡아도
+#      만료될 때마다 사람이 다시 발급해야 한다.
+#   ② 비밀이 사람 손을 안 거친다. 개인키는 이 서버에서 만들어져 여기만 있고,
+#      바깥으로 나가는 것은 **공개키**뿐이다 — 채팅·화면에 찍혀도 무해하다.
+#      (2026-08-23에 토큰이 채팅창에 노출돼 재발급한 일이 있다.)
+#   ③ 범위가 좁다. 저장소 하나에만 붙는다. 계정 전체가 아니다.
+#
+# 거둘 때는 GitHub의 저장소 → Settings → Deploy keys에서 지운다.
 
 set -u
 
-REPO_URL="https://github.com/iux-pub/guide.git"
-CRED="$HOME/.git-credentials"
+REPO_SSH="git@github.com:iux-pub/guide.git"
+KEY="$HOME/.ssh/icon-studio-deploy"
 
 die() { echo "✗ $*" >&2; exit 1; }
 ok()  { echo "✓ $*"; }
 
-# git 찾기 — Synology는 PATH에 없다
 for c in /usr/local/bin/git /opt/homebrew/bin/git /usr/bin/git; do
   [ -x "$c" ] && GIT="$c" && break
 done
@@ -26,112 +34,83 @@ done
 
 [ -d .git ] || die "저장소 안에서 실행하세요 (cd ~/icon-studio)"
 
-cat <<'GUIDE'
-
-── 토큰 만들기 ─────────────────────────────────────────
-
-  https://github.com/settings/personal-access-tokens/new
-
-  Repository access  →  Only select repositories  →  iux-pub/guide
-  Permissions        →  Repository permissions  →  Contents: Read and write
-  Expiration         →  **366일 이하** (그 이상이면 조직이 막습니다)
-
-  Contents 하나면 됩니다. 다른 권한은 주지 마세요 — 이 서버는
-  아이콘 파일을 커밋하는 일만 합니다.
-
-  ※ 수명을 「No expiration」이나 1년 초과로 두면 토큰은 만들어지지만
-     iux-pub 저장소에는 접근이 막힙니다. 90일을 권합니다.
-
-GUIDE
-
-printf '토큰을 붙여 넣으세요 (화면에 보이지 않습니다): '
-stty -echo 2>/dev/null
-read -r TOKEN
-stty echo 2>/dev/null
-echo
-
-[ -n "$TOKEN" ] || die "입력이 비었습니다"
-case "$TOKEN" in
-  github_pat_*|ghp_*) : ;;
-  *) die "GitHub 토큰 형식이 아닙니다 (github_pat_… 또는 ghp_…)" ;;
-esac
-
-LEN=$(printf '%s' "$TOKEN" | wc -c | tr -d ' ')
-TAIL=$(printf '%s' "$TOKEN" | tail -c 4)
-echo "받았습니다 — ${LEN}자, 끝 4자리 …${TAIL}"
-
-# ── 저장 ───────────────────────────────────────────────
-# 사용자 이름은 아무 값이나 되지만, 토큰 인증임을 알아보게 x-access-token을 쓴다.
-umask 077
-printf 'https://x-access-token:%s@github.com\n' "$TOKEN" > "$CRED"
-chmod 600 "$CRED"
-unset TOKEN
-ok "저장: $CRED (권한 600)"
-
-"$GIT" config credential.helper store
-"$GIT" remote set-url origin "$REPO_URL"
-ok "credential.helper store · origin $REPO_URL"
+# ── 1. 키 ──────────────────────────────────────────────
+# 암호를 걸지 않는다. 사람이 없는 서버가 자동으로 쓰는 키라, 암호를 걸면
+# 어차피 그 암호를 어딘가 평문으로 두게 된다. 대신 파일 권한과 범위로 지킨다.
+if [ -f "$KEY" ]; then
+  ok "키가 이미 있습니다: $KEY"
+else
+  mkdir -p "$HOME/.ssh"
+  chmod 700 "$HOME/.ssh"
+  ssh-keygen -t ed25519 -N '' -C "infoux-icon-studio@$(hostname)" -f "$KEY" > /dev/null \
+    || die "키를 만들지 못했습니다"
+  chmod 600 "$KEY"
+  ok "키를 만들었습니다: $KEY (개인키는 이 서버 밖으로 나가지 않습니다)"
+fi
 
 # 커밋에 남을 이름. 사람 계정과 구분되게 서버임을 밝힌다.
 "$GIT" config user.name "infoUX Icon Studio"
 "$GIT" config user.email "infomindemail8@gmail.com"
 ok "커밋 작성자: infoUX Icon Studio"
 
-# ── 확인 ───────────────────────────────────────────────
+# ── 2. 공개키 ──────────────────────────────────────────
 #
-# git의 거절 문구는 이유를 안 알려 준다 — 「Permission to … denied to <계정>」이 전부라
-# 권한이 모자란 건지, 저장소를 안 골랐는지, 조직 정책에 막힌 건지 알 수 없다.
-# GitHub API는 이유를 그대로 준다(2026-08-24: 「조직이 366일 넘는 토큰을 금지한다」였다).
-# 그래서 API로 먼저 묻고, 그 다음 실제로 밀어 본다.
+# 원격을 SSH로 바꾸는 것은 **인증이 되는 것을 확인한 뒤**다(아래 4단계).
+# 먼저 바꿔 두면 키를 등록하기 전까지 fetch조차 안 돼 배포가 통째로 멈춘다.
+echo
+echo "── 아래 공개키를 GitHub에 등록하세요 (비밀이 아닙니다) ──"
+echo
+cat "$KEY.pub" | sed 's/^/    /'
+echo
+cat <<'GUIDE'
+    https://github.com/iux-pub/guide/settings/keys/new
+
+    Title             →  infoUX Icon Studio (NAS)
+    Allow write access →  체크  ← 이걸 빼면 읽기만 됩니다
+
+GUIDE
+
+# ── 3. 확인 ────────────────────────────────────────────
+printf '등록을 마쳤으면 Enter를 누르세요 (건너뛰려면 Ctrl+C): '
+read -r _ || true
 echo
 echo "── 권한 확인 (아무것도 올리지 않습니다) ──"
 
-# 토큰은 파일에서 바로 읽어 쓴다. 변수에 담아 화면에 흘리지 않는다.
-API=$(sed -E 's#https://[^:]+:([^@]+)@.*#\1#' "$CRED" \
-  | { read -r t; curl -s -H "Authorization: Bearer $t" https://api.github.com/repos/iux-pub/guide; })
-
-WHO=$(sed -E 's#https://[^:]+:([^@]+)@.*#\1#' "$CRED" \
-  | { read -r t; curl -s -H "Authorization: Bearer $t" https://api.github.com/user; } \
-  | sed -n 's/.*"login": *"\([^"]*\)".*/\1/p' | head -1)
-
-[ -n "$WHO" ] && echo "    토큰 주인: $WHO"
-
-case "$API" in
-  *'"full_name"'*)
-    echo "    저장소 접근: 가능"
+AUTH=$(ssh -i "$KEY" -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new \
+        -o ConnectTimeout=10 -T git@github.com 2>&1)
+case "$AUTH" in
+  *"successfully authenticated"*)
+    printf '    %s\n' "$AUTH" | head -1
     ;;
   *)
-    MSG=$(printf '%s' "$API" | sed -n 's/.*"message": *"\([^"]*\)".*/\1/p' | head -1)
+    printf '    %s\n' "$AUTH" | head -2
     echo
-    echo "    GitHub가 알려 준 이유:"
-    printf '      %s\n' "${MSG:-알 수 없음}"
-    echo
-    case "$MSG" in
-      *'lifetime'*|*'366'*)
-        echo "    → 토큰 수명이 너무 깁니다. 위 링크에서 366일 이하(90일 권장)로 줄이고"
-        echo "      이 스크립트를 다시 실행하세요."
-        ;;
-      *'Not Found'*)
-        echo "    → 토큰이 iux-pub/guide를 못 봅니다. Repository access에서"
-        echo "      그 저장소를 골랐는지 확인하세요."
-        ;;
-    esac
-    die "설정을 끝내지 못했습니다"
+    echo "    → 「Deploy keys are disabled」로 등록이 안 됐다면 조직 설정에서 켭니다:"
+    echo "      https://github.com/organizations/iux-pub/settings/member_privileges"
+    echo "      아래쪽 Deploy keys → Enabled"
+    die "GitHub가 이 키를 모릅니다"
     ;;
 esac
 
+# ── 4. 원격 전환 ───────────────────────────────────────
+# 인증이 되는 것을 본 뒤에 바꾼다.
+"$GIT" config core.sshCommand "ssh -i $KEY -o IdentitiesOnly=yes"
+"$GIT" remote set-url origin "$REPO_SSH"
+ok "origin $REPO_SSH · 이 저장소만 이 키를 씁니다"
+
+"$GIT" fetch -q origin || die "저장소를 읽지 못했습니다"
 if "$GIT" push --dry-run origin HEAD:refs/heads/main 2>&1 | sed 's/^/    /'; then
   ok "push 권한 확인"
 else
-  die "저장소는 보이는데 쓰기가 안 됩니다 — 토큰의 Contents를 Read and write로 두었는지 확인하세요"
+  die "읽기는 되는데 쓰기가 안 됩니다 — 배포 키의 「Allow write access」를 켜세요"
 fi
 
 cat <<'DONE'
 
-✓ 준비 끝
+✓ 준비 끝 — 만료 없음
 
   이제 스튜디오에서 만든 아이콘을 그 자리에서 저장소로 올릴 수 있습니다.
   찾기 화면 위쪽의 「저장소에 올리기」를 누르세요.
 
-  토큰을 거둘 때:  rm ~/.git-credentials
+  거둘 때: GitHub → 저장소 Settings → Deploy keys에서 지웁니다.
 DONE

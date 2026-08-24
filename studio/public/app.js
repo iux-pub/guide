@@ -514,6 +514,7 @@ async function renderPending() {
       : `<b>${names} — 아직 저장소에 없습니다.</b> 이 서버에만 있어서 <b>다음 배포 때 사라집니다.</b><br>` +
         '패치를 받아 자기 클론에 <code>git apply</code>로 옮긴 뒤 커밋하면 팀 전체가 씁니다 — ' +
         '대장 번호와 검색어까지 함께 갑니다.<br>' +
+        (p.pushBlocked ? `<span class="pending__state">서버가 직접 올리지 못하는 이유 — ${esc(p.pushBlocked)}</span><br>` : '') +
         '<button type="button" class="pending__get" id="pending-get">패치 내려받기</button>'
   } catch {
     box.hidden = true

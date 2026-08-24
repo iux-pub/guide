@@ -318,7 +318,24 @@ function git(args) {
  */
 async function canPush() {
   const r = await git(['push', '--dry-run', 'origin', 'HEAD:refs/heads/main'])
-  return r.ok
+  if (r.ok) return { ok: true }
+
+  // git의 거절 문구는 이유를 안 알려 준다 — 「Permission to … denied to <계정>」이 전부라
+  // 권한이 모자란 건지, 저장소를 안 골랐는지, 조직 정책에 막힌 건지 알 수 없다.
+  // 자격 파일이 아예 없으면 「아직 안 했다」는 뜻이고, 있는데 막히면 그 이유를 짚어야
+  // 쓰는 사람이 무엇을 고칠지 안다(2026-08-24: 「조직이 366일 넘는 토큰을 금지한다」였다).
+  const raw = (r.err || '') + (r.out || '')
+  if (/could not read Username|terminal prompts disabled|Authentication failed/i.test(raw)) {
+    return { ok: false, reason: '아직 권한을 주지 않았습니다', how: 'setup' }
+  }
+  if (/denied|403/i.test(raw)) {
+    return {
+      ok: false,
+      reason: '토큰이 이 저장소에 쓸 수 없습니다 — 수명이 366일을 넘거나 저장소를 안 골랐을 수 있습니다',
+      how: 'setup'
+    }
+  }
+  return { ok: false, reason: (raw.split('\n').find(Boolean) || '이유를 알 수 없습니다').slice(0, 200) }
 }
 
 /** 저장소에 아직 없는 아이콘·표정·검색어가 있는가. */
@@ -343,8 +360,11 @@ const routes = {
 
   'GET /api/pending': async (req, res) => {
     const w = await pendingWork()
-    // push가 되면 화면이 「올리기」를 내주고, 안 되면 패치를 받아 가라고 한다
-    w.canPush = await canPush()
+    // push가 되면 화면이 「올리기」를 내주고, 안 되면 패치를 받아 가라고 한다.
+    // 막혔다면 왜 막혔는지도 함께 준다 — 「권한 없음」만으로는 무엇을 고칠지 모른다.
+    const allowed = await canPush()
+    w.canPush = allowed.ok
+    if (!allowed.ok) w.pushBlocked = allowed.reason
     json(res, 200, w)
   },
 
@@ -354,8 +374,11 @@ const routes = {
     const pending = await pendingWork()
     if (!pending.available) return json(res, 503, { error: pending.reason })
     if (pending.files === 0) return json(res, 400, { error: '올릴 것이 없습니다' })
-    if (!(await canPush())) {
-      return json(res, 403, { error: '이 서버에 저장소 쓰기 권한이 없습니다 — scripts/setup-nas-push.sh를 먼저 실행하세요' })
+    const allowed = await canPush()
+    if (!allowed.ok) {
+      return json(res, 403, {
+        error: `${allowed.reason} — scripts/setup-nas-push.sh를 실행하면 이유를 짚어 줍니다`
+      })
     }
 
     // 남이 먼저 올린 것이 있으면 먼저 받아 얹는다. 안 그러면 push가 거절된다.

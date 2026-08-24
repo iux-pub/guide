@@ -325,13 +325,20 @@ async function canPush() {
   // 자격 파일이 아예 없으면 「아직 안 했다」는 뜻이고, 있는데 막히면 그 이유를 짚어야
   // 쓰는 사람이 무엇을 고칠지 안다(2026-08-24: 「조직이 366일 넘는 토큰을 금지한다」였다).
   const raw = (r.err || '') + (r.out || '')
-  if (/could not read Username|terminal prompts disabled|Authentication failed/i.test(raw)) {
+
+  // **뒤처진 것은 권한 문제가 아니다.** 이 클론이 origin보다 뒤에 있으면 dry-run이
+  // 「rejected (fetch first)」로 떨어지는데, 그건 인증이 되고 ref 갱신 단계까지
+  // 갔다는 뜻이다 — 올릴 때 fetch·rebase를 하므로 그대로 올릴 수 있다.
+  // 이 둘을 섞으면 멀쩡한 권한을 「없다」고 말한다(2026-08-24 실측).
+  if (/fetch first|non-fast-forward|rejected/i.test(raw)) return { ok: true, behind: true }
+
+  if (/could not read Username|terminal prompts disabled|Authentication failed|Permission denied \(publickey\)/i.test(raw)) {
     return { ok: false, reason: '아직 권한을 주지 않았습니다', how: 'setup' }
   }
-  if (/denied|403/i.test(raw)) {
+  if (/denied to|403|read-only|write access/i.test(raw)) {
     return {
       ok: false,
-      reason: '토큰이 이 저장소에 쓸 수 없습니다 — 수명이 366일을 넘거나 저장소를 안 골랐을 수 있습니다',
+      reason: '이 저장소에 쓸 수 없습니다 — 배포 키의 쓰기 허용을 확인하세요',
       how: 'setup'
     }
   }

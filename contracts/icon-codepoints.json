@@ -1061,7 +1061,12 @@
       "paths": 2,
       "addedAt": "2026-08-24",
       "model": "claude",
-      "prompt": "사이트맵 — 위쪽 한 칸에서 아래 두 칸으로 갈라지는 계통도"
+      "prompt": "사이트맵 — 위쪽 한 칸에서 아래 두 칸으로 갈라지는 계통도",
+      "variants": [
+        "slim",
+        "bold",
+        "fill"
+      ]
     }
   },
   "tombstones": {},

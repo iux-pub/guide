@@ -187,12 +187,22 @@ async function openSheet(name) {
 
 // ── 만들기 ────────────────────────────────────────────
 
+/** 시작한 지 얼마나 됐는지. 오래 걸리는 일이라 「멈춘 건가」를 묻지 않게 한다. */
+function elapsed(from) {
+  if (!from) return ''
+  const sec = Math.max(0, Math.round((Date.now() - new Date(from).getTime()) / 1000))
+  return sec < 60 ? `${sec}초째` : `${Math.floor(sec / 60)}분 ${sec % 60}초째`
+}
+
 function statusLine(job) {
   if (job.status === 'waiting') {
     return `<p class="status status--waiting"><span class="status__dot"></span>차례를 기다리는 중입니다. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'working') {
-    return `<p class="status status--working"><span class="status__dot"></span>그리는 중입니다 — 보통 1~2분 걸립니다. 창을 닫아도 됩니다.</p>`
+    // 실측 5~7분이다. 「1~2분」이라고 적어 두면 3분째부터 고장으로 읽힌다.
+    const t = elapsed(job.result?.startedAt)
+    const kind = job.kind === 'variants' ? '표정을 만드는' : '그리는'
+    return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>5~10분</b> 걸립니다. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'failed') {
     const why = (job.result?.failures || []).join(' / ') || '알 수 없는 이유'
@@ -495,11 +505,16 @@ async function renderPending() {
       ? p.icons.map((n) => `<code>${esc(n)}</code>`).join(' ')
       : `파일 ${p.files}개`
     box.hidden = false
-    box.innerHTML =
-      `<b>${names} — 아직 저장소에 없습니다.</b> 이 서버에만 있어서 <b>다음 배포 때 사라집니다.</b><br>` +
-      '패치를 받아 자기 클론에 <code>git apply</code>로 옮긴 뒤 커밋하면 팀 전체가 씁니다 — ' +
-      '대장 번호와 검색어까지 함께 갑니다.<br>' +
-      '<button type="button" class="pending__get" id="pending-get">패치 내려받기</button>'
+    box.innerHTML = p.canPush
+      // 권한이 있으면 여기서 끝낼 수 있다. 「사라진다」는 겁을 주지 않는다 — 한 번 누르면 되니까.
+      ? `<b>${names} — 아직 저장소에 없습니다.</b> 올리면 팀 전체가 씁니다 ` +
+        '(대장 번호와 검색어까지 함께 갑니다).<br>' +
+        '<button type="button" class="pending__get" id="pending-push">저장소에 올리기</button>' +
+        '<span class="pending__state" id="pending-state"></span>'
+      : `<b>${names} — 아직 저장소에 없습니다.</b> 이 서버에만 있어서 <b>다음 배포 때 사라집니다.</b><br>` +
+        '패치를 받아 자기 클론에 <code>git apply</code>로 옮긴 뒤 커밋하면 팀 전체가 씁니다 — ' +
+        '대장 번호와 검색어까지 함께 갑니다.<br>' +
+        '<button type="button" class="pending__get" id="pending-get">패치 내려받기</button>'
   } catch {
     box.hidden = true
   }
@@ -535,6 +550,23 @@ document.addEventListener('click', async (e) => {
 
   const cell = t.closest('.cell')
   if (cell) return openSheet(cell.dataset.name)
+
+  const pushBtn = t.closest('#pending-push')
+  if (pushBtn) {
+    const state = $('#pending-state')
+    pushBtn.disabled = true
+    pushBtn.textContent = '올리는 중…'
+    try {
+      const r = await api('/api/push', { method: 'POST', body: JSON.stringify({}) })
+      if (state) state.textContent = ` 올렸습니다 — ${r.commit}`
+      await renderPending()
+    } catch (e) {
+      pushBtn.disabled = false
+      pushBtn.textContent = '저장소에 올리기'
+      if (state) state.textContent = ` 올리지 못했습니다 — ${e.message}`
+    }
+    return
+  }
 
   if (t.closest('#pending-get')) {
     const a = document.createElement('a')

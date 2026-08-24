@@ -35,9 +35,12 @@ const AUTH_ENV = path.join(os.homedir(), '.config/icon-studio/auth.env')
 const POLL_MS = Number(process.env.POLL_MS || 4000)
 // 프롬프트에 예시 path가 들어가 응답이 길어진다. 180초에서는 3개 중 1개가
 // 시간 초과로 떨어졌다(2026-08-23 실측). 넉넉히 잡는다 — 어차피 비동기다.
-const TIMEOUT_MS = Number(process.env.TIMEOUT_MS || 300000)
-// 표정 만들기는 「이 좌표를 그대로 두되 굵기만 바꿔라」라서 새로 그리기보다 훨씬 오래 걸린다.
-// 실측(2026-08-23, bookmark slim): 251초. 300초 제한에 걸려 실패했다.
+// 아이콘 하나를 그리는 데 걸리는 시간. 실측(2026-08-24, NAS): 전체 프롬프트 1회 359초.
+// 300초로 두었더니 「인포마인드 로고」 요청이 후보 4개 전부 시간 초과로 떨어졌다.
+// 좌표를 정확히 놓는 일이라 원래 느리다 — 큐가 비동기이므로 넉넉히 준다.
+const TIMEOUT_MS = Number(process.env.TIMEOUT_MS || 900000)
+// 표정 만들기도 같은 정도로 느리다(실측 251초). 따로 두는 이유는 앞으로 둘의
+// 성격이 갈릴 수 있어서다 — 지금은 같은 값이다.
 const VARIANT_TIMEOUT_MS = Number(process.env.VARIANT_TIMEOUT_MS || 900000)
 
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))

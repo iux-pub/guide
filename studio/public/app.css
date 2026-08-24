@@ -655,6 +655,13 @@ code {
   background: var(--sunken);
 }
 
+.pending__state {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .pending__get {
   display: inline-block;
   margin-top: 8px;

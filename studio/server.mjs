@@ -310,6 +310,17 @@ function git(args) {
   })
 }
 
+/**
+ * 이 서버가 저장소에 올릴 수 있는가.
+ *
+ * 실제로 밀어 보지 않으면 알 수 없다 — 자격 파일이 있어도 토큰이 만료됐거나
+ * 권한이 모자랄 수 있다. 아무것도 바꾸지 않는 dry-run으로 묻는다.
+ */
+async function canPush() {
+  const r = await git(['push', '--dry-run', 'origin', 'HEAD:refs/heads/main'])
+  return r.ok
+}
+
 /** 저장소에 아직 없는 아이콘·표정·검색어가 있는가. */
 async function pendingWork() {
   const r = await git(['status', '--porcelain', '--', 'assets/icons/svg', 'contracts'])
@@ -330,7 +341,61 @@ async function pendingWork() {
 const routes = {
   'GET /api/catalog': (req, res) => json(res, 200, iconCatalog()),
 
-  'GET /api/pending': async (req, res) => json(res, 200, await pendingWork()),
+  'GET /api/pending': async (req, res) => {
+    const w = await pendingWork()
+    // push가 되면 화면이 「올리기」를 내주고, 안 되면 패치를 받아 가라고 한다
+    w.canPush = await canPush()
+    json(res, 200, w)
+  },
+
+  // 만든 것을 그 자리에서 저장소에 올린다. push 권한이 있을 때만 된다
+  // (scripts/setup-nas-push.sh). 없으면 패치를 받아 사람이 옮긴다.
+  'POST /api/push': async (req, res) => {
+    const pending = await pendingWork()
+    if (!pending.available) return json(res, 503, { error: pending.reason })
+    if (pending.files === 0) return json(res, 400, { error: '올릴 것이 없습니다' })
+    if (!(await canPush())) {
+      return json(res, 403, { error: '이 서버에 저장소 쓰기 권한이 없습니다 — scripts/setup-nas-push.sh를 먼저 실행하세요' })
+    }
+
+    // 남이 먼저 올린 것이 있으면 먼저 받아 얹는다. 안 그러면 push가 거절된다.
+    const fetched = await git(['fetch', '-q', 'origin'])
+    if (!fetched.ok) return json(res, 502, { error: `저장소를 읽지 못했습니다 — ${fetched.err}` })
+
+    const add = await git(['add', '--', 'assets/icons/svg', 'contracts'])
+    if (!add.ok) return json(res, 500, { error: add.err })
+
+    const names = pending.icons.length > 0 ? pending.icons.join(', ') : `파일 ${pending.files}개`
+    const body = String((await readBody(req)).message || '').trim()
+    const message =
+      `feat(icons): ${names} 추가\n\n` +
+      (body ? `${body}\n\n` : '') +
+      '아이콘 스튜디오에서 만들어 그 자리에서 올린 것이다.\n' +
+      'SVG·표정 파일과 함께 대장 번호·검색어가 같이 간다.\n\n' +
+      'Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>'
+
+    // 훅은 이 서버에 없다(개발 의존성을 깔지 않는다). --no-verify로 건너뛴다 —
+    // 대신 서버가 승인·채택 때 규격을 이미 봤고, CI가 올라간 뒤 다시 본다.
+    const commit = await git(['commit', '--no-verify', '-m', message])
+    if (!commit.ok) return json(res, 500, { error: `커밋하지 못했습니다 — ${commit.err || commit.out}` })
+
+    // rebase로 얹는다. merge면 서버가 만든 병합 커밋이 이력에 남는다.
+    const rebase = await git(['rebase', 'origin/main'])
+    if (!rebase.ok) {
+      await git(['rebase', '--abort'])
+      return json(res, 409, {
+        error: '저장소에 먼저 올라온 변경과 부딪힙니다 — 패치를 받아 사람이 정리해야 합니다'
+      })
+    }
+
+    const push = await git(['push', 'origin', 'HEAD:main'])
+    if (!push.ok) {
+      return json(res, 502, { error: `올리지 못했습니다 — ${push.err}` })
+    }
+
+    const head = await git(['log', '--oneline', '-1'])
+    json(res, 200, { ok: true, icons: pending.icons, commit: head.out.trim() })
+  },
 
   // 자기 클론에 `git apply`로 옮길 패치. 추적 안 되는 새 파일도 담기게 --binary와
   // intent-to-add를 함께 쓴다 — 안 그러면 새 SVG가 통째로 빠진다.

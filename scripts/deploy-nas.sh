@@ -139,6 +139,15 @@ fi
 # sudo가 필요하지 않다. start.sh의 `nohup setsid`가 프로세스를 새 세션으로 떼어 내므로
 # ssh가 끊겨도 화면·일꾼·일꾼이 띄우는 claude가 함께 죽지 않는다(2026-08-23 실측).
 # 한동안 rc.d를 root로 불러야 하는 줄 알고 배포마다 사람에게 비밀번호를 물었다.
+#
+# 도는 중인 요청이 있으면 알려 준다. 죽여도 일꾼이 새로 뜰 때 되살리지만,
+# 5~10분짜리 일을 다시 시작하게 만드는 것이므로 모르고 넘어갈 일은 아니다.
+working=$(ssh "$HOST" "grep -l '\"status\": \"working\"' \"$STUDIO\"/studio/queue/results/*.json 2>/dev/null | wc -l" || echo 0)
+if [ "${working:-0}" -gt 0 ]; then
+  printf '\n\033[33m※ 아이콘 %s건이 만들어지는 중입니다.\033[0m 재기동하면 처음부터 다시 시작합니다\n' "$working"
+  printf '  (일꾼이 새로 뜰 때 자동으로 되살립니다 — 잃지는 않습니다)\n'
+fi
+
 say "스튜디오 재기동"
 ssh "$HOST" "$STUDIO_SVC/stop.sh > /dev/null 2>&1 || true
   sleep 1

@@ -689,12 +689,75 @@ function beat(state) {
   }
 }
 
+/**
+ * 하다 만 일을 되살린다.
+ *
+ * 일꾼이 일하는 중에 죽으면(배포 재기동·서버 재부팅) 결과 파일이 「하는 중」으로 굳는다.
+ * tick은 결과 파일이 있으면 건너뛰므로 그 요청은 **영원히 끝나지 않는다** —
+ * 화면에는 「55분째 만드는 중」이 뜬 채로 남는다(2026-08-24 실측).
+ *
+ * 새로 뜰 때 그런 것을 찾아 결과를 지운다. 다음 회차가 다시 집는다.
+ * 다만 무한정은 아니다 — 일꾼을 죽이는 요청이면 되살릴 때마다 또 죽는다.
+ * 두 번까지만 되살리고 그 뒤에는 실패로 적어 사람이 보게 한다.
+ */
+function recoverStale() {
+  const reqDir = path.join(QUEUE, 'requests')
+  const resDir = path.join(QUEUE, 'results')
+  fs.mkdirSync(reqDir, { recursive: true })
+  fs.mkdirSync(resDir, { recursive: true })
+
+  const MAX_RETRY = 2
+  let revived = 0
+  let gaveUp = 0
+
+  for (const f of fs.readdirSync(resDir).filter((n) => n.endsWith('.json'))) {
+    let result
+    try {
+      result = JSON.parse(fs.readFileSync(path.join(resDir, f), 'utf8'))
+    } catch {
+      continue
+    }
+    if (result.status !== 'working') continue
+
+    const reqPath = path.join(reqDir, f)
+    if (!fs.existsSync(reqPath)) {
+      // 요청이 없으면 되살릴 수 없다. 남겨 두면 화면에 영원히 뜬다.
+      fs.unlinkSync(path.join(resDir, f))
+      continue
+    }
+
+    const request = JSON.parse(fs.readFileSync(reqPath, 'utf8'))
+    const tries = (request.restarts || 0) + 1
+
+    if (tries > MAX_RETRY) {
+      fs.writeFileSync(path.join(resDir, f), JSON.stringify({
+        id: result.id,
+        kind: request.kind,
+        status: 'failed',
+        failures: [`${MAX_RETRY}번 되살렸는데 매번 도중에 끊겼습니다 — 일꾼이 이 요청을 처리하다 멈춥니다`],
+        finishedAt: new Date().toISOString()
+      }, null, 2) + '\n')
+      gaveUp += 1
+      continue
+    }
+
+    request.restarts = tries
+    fs.writeFileSync(reqPath, JSON.stringify(request, null, 2) + '\n')
+    fs.unlinkSync(path.join(resDir, f))
+    revived += 1
+  }
+
+  if (revived > 0) console.log(`  하다 만 요청 ${revived}건을 다시 집습니다`)
+  if (gaveUp > 0) console.log(`  ${gaveUp}건은 반복해서 끊겨 실패로 적었습니다`)
+}
+
 async function main() {
   console.log('아이콘 워커 시작')
   console.log(`  claude: ${CLAUDE}`)
   console.log(`  장기 토큰: ${fs.existsSync(AUTH_ENV) ? '있음' : '없음 (세션 자격으로 시도)'}`)
   console.log(`  ${POLL_MS / 1000}초마다 큐를 봅니다. Ctrl+C로 멈춥니다.\n`)
 
+  recoverStale()
   beat('시작')
   for (;;) {
     try {

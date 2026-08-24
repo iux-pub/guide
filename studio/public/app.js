@@ -208,8 +208,16 @@ function statusLine(job) {
     return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>${guess}</b> 걸립니다${long ? ' (참조 그림이 있으면 더 오래 걸립니다)' : ''}. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'failed') {
-    const why = (job.result?.failures || []).join(' / ') || '알 수 없는 이유'
-    return `<p class="status status--failed"><span class="status__dot"></span>만들지 못했습니다 — ${esc(why)}</p>`
+    const raw = (job.result?.failures || []).join(' / ')
+    // 같은 이유가 후보 수만큼 되풀이돼 「시간 초과 / 시간 초과 / 시간 초과」로 뜬다.
+    const seen = [...new Set((job.result?.failures || []).map((f) => String(f)))]
+    const why = seen.join(' / ') || '알 수 없는 이유'
+    // 서버 사정은 우리가 고칠 것이 없다 — 무엇을 하면 되는지만 말한다
+    const busy = /529|Overloaded|붐빕|rate.?limit/i.test(raw)
+    const hint = busy
+      ? ' 클로드 서버가 잠시 붐빈 것이라 우리 쪽 문제가 아닙니다. 조금 뒤 다시 눌러 보세요.'
+      : ''
+    return `<p class="status status--failed"><span class="status__dot"></span>만들지 못했습니다 — ${esc(why)}${hint}</p>`
   }
   return ''
 }

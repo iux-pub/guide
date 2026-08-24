@@ -82,7 +82,19 @@ function findClaude() {
 const CLAUDE = findClaude()
 
 /** claude --print 한 번. 실패는 던진다 — 폴백하지 않는다. */
-function askClaude(prompt, timeoutMs = TIMEOUT_MS) {
+/**
+ * 잠시 뒤 다시 하면 되는 오류인가.
+ *
+ * claude는 이런 오류를 **stdout으로** 뱉고 종료코드 1로 끝난다 — stderr만 보면
+ * 이유를 통째로 잃고 「종료코드 1」만 남는다(2026-08-24 실측: 「API Error: 529
+ * Overloaded ... usually temporary — try again in a moment」였는데 화면에는
+ * 「claude 종료코드 1」로 떴다).
+ */
+function transient(text) {
+  return /\b(429|500|502|503|529)\b|Overloaded|rate.?limit|temporarily|try again/i.test(text)
+}
+
+function runClaude(prompt, timeoutMs) {
   return new Promise((resolve, reject) => {
     const proc = spawn(CLAUDE, ['--print', prompt], {
       env: authEnv(),
@@ -104,10 +116,40 @@ function askClaude(prompt, timeoutMs = TIMEOUT_MS) {
       if (/Not logged in|OAuth session expired|Failed to authenticate/i.test(out + err)) {
         return reject(new Error('Claude 인증이 필요합니다 — setup-claude-auth.sh를 실행하세요'))
       }
-      if (code !== 0) return reject(new Error(err.trim() || `claude 종료코드 ${code}`))
+      if (code !== 0) {
+        // 이유는 stdout에 오는 일이 많다. 둘 다 보지 않으면 「종료코드 1」만 남는다.
+        const why = err.trim() || out.trim() || `claude 종료코드 ${code}`
+        const e = new Error(why.split('\n').find(Boolean).slice(0, 300))
+        e.transient = transient(why)
+        return reject(e)
+      }
       resolve(out)
     })
   })
+}
+
+/**
+ * 붐비면 기다렸다 다시 부른다.
+ *
+ * 529는 서버가 잠시 바쁘다는 뜻이고 「잠시 뒤 다시 하라」고 스스로 적어 준다.
+ * 그런데 한 번 만나면 후보 하나가 통째로 날아갔다 — 5~10분짜리 일을 다시 시켜야 했다.
+ * 사람이 기다리는 시간이 아니라 큐가 기다리는 시간이므로, 여기서 참는 편이 낫다.
+ */
+async function askClaude(prompt, timeoutMs = TIMEOUT_MS) {
+  const waits = [20000, 60000, 150000]
+  let last
+  for (let i = 0; i <= waits.length; i += 1) {
+    try {
+      return await runClaude(prompt, timeoutMs)
+    } catch (err) {
+      last = err
+      // 규격 위반이나 인증 문제는 다시 불러도 같다 — 붐빌 때만 기다린다
+      if (!err.transient || i === waits.length) throw err
+      console.log(`    붐빕니다(${err.message.slice(0, 60)}) — ${waits[i] / 1000}초 뒤 다시`)
+      await new Promise((r) => setTimeout(r, waits[i]))
+    }
+  }
+  throw last
 }
 
 /**
@@ -642,9 +684,14 @@ async function handle(id, request) {
     .map((c, i) => ({ index: i, svg: c.svg, review: c.review, retried: c.retried, suggested: c.suggested }))
   const failures = settled.filter((c) => !c.ok).map((c) => c.error)
 
-  // 인증 실패는 개별 후보 문제가 아니라 워커가 못 도는 상태다 — 요청을 소진하지 않는다
+  // 하나도 못 건졌는데 원인이 「이 요청」이 아니라 「지금 상황」이면 요청을 소진하지
+  // 않는다. 인증이 그렇고(워커가 못 도는 상태), 서버가 붐비는 것도 그렇다 —
+  // 던져 두면 tick이 결과를 지우고 다음 회차에 다시 집는다.
   if (candidates.length === 0 && failures.some((f) => /인증/.test(f))) {
     throw new Error(failures[0])
+  }
+  if (candidates.length === 0 && failures.length > 0 && failures.every((f) => /529|Overloaded|붐빕|rate.?limit/i.test(f))) {
+    throw new Error(`클로드 서버가 붐빕니다 — ${failures[0]}`)
   }
 
   return {
@@ -683,13 +730,35 @@ async function tick() {
           : `  → ${result.status} · 후보 ${result.candidates.length}개`
       )
     } catch (err) {
-      // 인증 문제면 결과를 지워 다음 회차에 다시 시도한다
-      fs.unlinkSync(path.join(resDir, f))
       console.error(`  ✗ ${err.message}`)
+
       if (/인증/.test(err.message)) {
+        // 워커가 못 도는 상태다. 결과를 지워 두면 인증을 고치고 켤 때 이어서 한다.
+        fs.unlinkSync(path.join(resDir, f))
         console.error('    워커를 멈춥니다. 인증을 고친 뒤 다시 켜세요.')
         process.exit(1)
       }
+
+      // 「이 요청」이 아니라 「지금 상황」이 문제면 다시 집는다. 다만 끝은 있어야 한다 —
+      // 서버가 오래 붐비면 5~10분짜리 생성을 무한정 되풀이하게 된다.
+      const MAX_ATTEMPTS = 3
+      const attempts = (request.attempts || 0) + 1
+      if (attempts >= MAX_ATTEMPTS) {
+        fs.writeFileSync(path.join(resDir, f), JSON.stringify({
+          id,
+          kind: request.kind,
+          status: 'failed',
+          failures: [`${MAX_ATTEMPTS}번 시도했지만 안 됐습니다 — ${err.message}`],
+          finishedAt: new Date().toISOString()
+        }, null, 2) + '\n')
+        console.error(`    ${MAX_ATTEMPTS}번째라 실패로 적습니다`)
+        continue
+      }
+
+      request.attempts = attempts
+      fs.writeFileSync(path.join(reqDir, f), JSON.stringify(request, null, 2) + '\n')
+      fs.unlinkSync(path.join(resDir, f))
+      console.error(`    ${attempts}번째 — 다음 회차에 다시 집습니다`)
     }
   }
 }

@@ -51,6 +51,22 @@ const VARIANT_TIMEOUT_MS = Number(process.env.VARIANT_TIMEOUT_MS || 900000)
 // 전체 시간은 조금 길어지지만 큐가 비동기라 사람이 붙잡혀 있지 않고, 무엇보다 **끝난다**.
 const MAX_PARALLEL = Number(process.env.MAX_PARALLEL || 2)
 
+// **속도를 가르는 손잡이.** claude가 얼마나 오래 생각할지를 정한다.
+//
+// 재 보고 알았다(2026-08-24). 같은 프롬프트, 같은 자리:
+//   effort 미지정(기본)  195초 · 출력 14,832토큰
+//   --effort low           8초 · 출력    224토큰   ← 24배 빠르다
+//
+// 답은 400자짜리 SVG인데 기본 설정이 1만 5천 토큰을 생각하고 있었다. 아이콘 하나
+// 그리는 데 그만한 숙고가 필요하지 않다 — low로도 획 1.44(씨앗 중앙 1.45), 규격 4/4다.
+//
+// 모델은 opus 그대로다. sonnet은 low·medium 모두 획이 0.26~0.29로 나와 못 쓴다 —
+// 빠른 것이 문제가 아니라 우리 결을 못 맞춘다.
+const EFFORT = process.env.CLAUDE_EFFORT || 'low'
+
+// 참조를 옮기는 일은 판단이 더 필요할 수 있어 따로 둔다. 값은 실측으로 정한다.
+const REF_EFFORT = process.env.CLAUDE_REF_EFFORT || 'low'
+
 // 그림을 글로 옮기는 한 번의 호출. 그리기가 아니라 보기라 가볍다(실측 14초).
 const REFERENCE_TIMEOUT_MS = Number(process.env.REFERENCE_TIMEOUT_MS || 300000)
 
@@ -105,9 +121,12 @@ function transient(text) {
   return /\b(429|500|502|503|529)\b|Overloaded|rate.?limit|temporarily|try again/i.test(text)
 }
 
-function runClaude(prompt, timeoutMs) {
+function runClaude(prompt, timeoutMs, effort = EFFORT) {
   return new Promise((resolve, reject) => {
-    const proc = spawn(CLAUDE, ['--print', prompt], {
+    const args = ['--print']
+    if (effort) args.push('--effort', effort)
+    args.push(prompt)
+    const proc = spawn(CLAUDE, args, {
       env: authEnv(),
       stdio: ['ignore', 'pipe', 'pipe']
     })
@@ -146,12 +165,12 @@ function runClaude(prompt, timeoutMs) {
  * 그런데 한 번 만나면 후보 하나가 통째로 날아갔다 — 5~10분짜리 일을 다시 시켜야 했다.
  * 사람이 기다리는 시간이 아니라 큐가 기다리는 시간이므로, 여기서 참는 편이 낫다.
  */
-async function askClaude(prompt, timeoutMs = TIMEOUT_MS) {
+async function askClaude(prompt, timeoutMs = TIMEOUT_MS, effort = EFFORT) {
   const waits = [20000, 60000, 150000]
   let last
   for (let i = 0; i <= waits.length; i += 1) {
     try {
-      return await runClaude(prompt, timeoutMs)
+      return await runClaude(prompt, timeoutMs, effort)
     } catch (err) {
       last = err
       // 규격 위반이나 인증 문제는 다시 불러도 같다 — 붐빌 때만 기다린다
@@ -219,7 +238,7 @@ async function describeReference(imagePath, text) {
 
 색·그림자·질감은 적지 않는다. 8줄 이내, 설명하는 문장만.`
 
-  const raw = await askClaude(prompt, REFERENCE_TIMEOUT_MS)
+  const raw = await askClaude(prompt, REFERENCE_TIMEOUT_MS, 'low')
   const out = String(raw).trim()
   // 못 읽었으면 글이 아니라 하소연이 온다. 그걸 프롬프트에 실으면 더 나쁘다.
   if (!out || /권한|permission|읽지 못|열지 못|cannot read/i.test(out)) {
@@ -645,7 +664,7 @@ async function handleVariants(id, request) {
     if (!combo || !target) throw new Error(`표정 기준이 없습니다: ${vid}`)
 
     const prompt = variantPrompt(name, baseSvg, combo, target)
-    const raw = await askClaude(prompt, VARIANT_TIMEOUT_MS)
+    const raw = await askClaude(prompt, VARIANT_TIMEOUT_MS, EFFORT)
 
     // 채울 면이 없다고 답할 수 있다 — 억지로 만들면 두부처럼 뭉갠 그림이 나온다
     if (/^\s*NONE\s*$/i.test(raw) || (!/<svg/i.test(raw) && /NONE/i.test(raw))) {
@@ -660,7 +679,7 @@ async function handleVariants(id, request) {
     if (verdict.retryWorthy) {
       retried = true
       try {
-        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes), VARIANT_TIMEOUT_MS)
+        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes), VARIANT_TIMEOUT_MS, 'medium')
         const second = normalize(raw2)
         const v2 = reviewVariant(baseSvg, second.svg, second.ds, combo, target)
         if (v2.ok || v2.notes.filter((n) => n.level === 'bad').length <
@@ -735,10 +754,11 @@ async function handle(id, request) {
 
   const heavy = Boolean(request.reference || request.referenceImage)
   const drawTimeout = heavy ? REF_DRAW_TIMEOUT_MS : TIMEOUT_MS
+  const effort = heavy ? REF_EFFORT : EFFORT
 
   const draw = async (i) => {
     const base = buildPrompt(request.text, seedNames, i, request.reference, request.referenceImage, refNotes)
-    const raw = await askClaude(base, drawTimeout)
+    const raw = await askClaude(base, drawTimeout, effort)
     const first = normalize(raw)
     const fromRef = Boolean(request.reference || request.referenceImage)
     const verdict = review(first.svg, first.ds, raw, fromRef)
@@ -748,7 +768,8 @@ async function handle(id, request) {
     // 디자이너가 기다리는 시간만 길어진다.
     if (verdict.retryWorthy) {
       try {
-        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), drawTimeout)
+        // 다시 그릴 때는 한 단 올린다 — 처음 것이 어긋났으니 조금 더 생각할 값어치가 있다
+        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), drawTimeout, 'medium')
         const second = normalize(raw2)
         const verdict2 = review(second.svg, second.ds, raw2, fromRef)
         if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
@@ -948,6 +969,7 @@ async function main() {
   console.log('아이콘 워커 시작')
   console.log(`  claude: ${CLAUDE}`)
   console.log(`  장기 토큰: ${fs.existsSync(AUTH_ENV) ? '있음' : '없음 (세션 자격으로 시도)'}`)
+  console.log(`  사고량: ${EFFORT} (참조 ${REF_EFFORT}) · 한 번에 ${MAX_PARALLEL}개`)
   console.log(`  ${POLL_MS / 1000}초마다 큐를 봅니다. Ctrl+C로 멈춥니다.\n`)
 
   recoverStale()

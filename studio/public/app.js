@@ -219,8 +219,9 @@ function statusLine(job) {
     // 후보 4개면 두 바퀴다. 「1~2분」이라고 적어 두면 3분째부터 고장으로 읽힌다.
     const t = elapsed(job.result?.startedAt)
     const kind = job.kind === 'variants' ? '표정을 만드는' : '그리는'
+    // 실측: 참조 없는 도형 1분, 참조 있는 로고·글자꼴 11분(호출 하나당). 후보 수만큼 곱한다.
     const long = Boolean(job.referenceImage || job.reference)
-    const guess = long ? '15~25분' : '10~20분'
+    const guess = long ? '20~40분' : '5~15분'
     return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>${guess}</b> 걸립니다${long ? ' (참조 그림이 있으면 더 오래 걸립니다)' : ''}. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'failed') {

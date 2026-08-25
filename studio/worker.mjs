@@ -85,8 +85,26 @@ const CANVAS = contract.canvas.width
 const PADDING = contract.canvas.padding
 
 /** 장기 토큰이 있으면 환경에 싣는다. 없으면 세션 자격으로 시도한다. */
+/**
+ * claude를 부를 환경.
+ *
+ * **장기 토큰을 기본으로 넣지 않는다 — 같은 일이 열 배 넘게 느려진다.**
+ * 같은 프롬프트를 교차로 재 본 값(2026-08-24):
+ *
+ *   세션 자격   10초 · 12초
+ *   장기 토큰  137초 · 155초
+ *
+ * 왜 그런지는 우리가 알 수 없지만(자격에 따라 처리 경로가 다른 듯하다), 재현이 분명하다.
+ * 토큰을 넣으려고 만든 이유는 「세션이 만료되면 헤드리스 워커가 조용히 멈춘다」였는데,
+ * 그건 이제 박동으로 잡는다 — 멈추면 화면이 말한다. 열 배를 내주면서 살 보험이 아니다.
+ *
+ * 그래도 필요하면 `USE_AUTH_TOKEN=1`로 켠다. 세션 자격이 아예 안 되는 환경
+ * (맥의 비대화 셸처럼 키체인에 못 닿는 경우)이 그렇다.
+ */
 function authEnv() {
   const env = { ...process.env }
+  if (process.env.USE_AUTH_TOKEN !== '1') return env
+
   if (fs.existsSync(AUTH_ENV)) {
     for (const line of fs.readFileSync(AUTH_ENV, 'utf8').split('\n')) {
       const m = line.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/)
@@ -970,7 +988,8 @@ function recoverStale() {
 async function main() {
   console.log('아이콘 워커 시작')
   console.log(`  claude: ${CLAUDE}`)
-  console.log(`  장기 토큰: ${fs.existsSync(AUTH_ENV) ? '있음' : '없음 (세션 자격으로 시도)'}`)
+  const usingToken = process.env.USE_AUTH_TOKEN === '1'
+  console.log(`  자격: ${usingToken ? '장기 토큰 (느립니다 — 실측 10배)' : '세션'}${fs.existsSync(AUTH_ENV) ? ' · 토큰 파일 있음' : ''}`)
   console.log(`  사고량: ${EFFORT} (참조 ${REF_EFFORT}) · 한 번에 ${MAX_PARALLEL}개`)
   console.log(`  ${POLL_MS / 1000}초마다 큐를 봅니다. Ctrl+C로 멈춥니다.\n`)
 

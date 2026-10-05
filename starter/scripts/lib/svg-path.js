@@ -118,6 +118,80 @@ function transformPath(d, { scale, dx = 0, dy = 0, decimals = 2 }) {
   return parts.join('').replace(/\s+([MmLlHhVvCcSsQqTtAaZz])/g, '$1')
 }
 
+/**
+ * 호(A) 한 구간을 점들로 편다. 시작점 (x1, y1)에서 끝점 (x2, y2)까지, 시작점은 넣지 않는다.
+ *
+ * SVG의 호는 끝점과 반지름·플래그로만 적혀 있어 중심을 직접 구해야 한다
+ * (SVG 1.1 부록 F.6.5의 끝점→중심 변환). 모델은 원을 `a8.5 8.5 0 1 0 0 17` 두 번으로 그린다 —
+ * 호의 끝점만 보면 이 원은 지름 양끝의 두 점이 되어 면적이 사라지고, 굵기를 재면 실제 1.5가 0.36으로,
+ * 영역을 재면 가로 범위가 한 점으로 나온다(2026-10-05 실측, 소넷 5.5의 귤).
+ *
+ * @param {number} stepsPerQuarter 90도당 쪼갤 등분 수 (기본 8 — 베지어와 같은 정밀도)
+ * @returns {number[][]} [[x, y], ...]
+ */
+function arcPoints(x1, y1, rx, ry, rotationDeg, largeArc, sweep, x2, y2, stepsPerQuarter = 8) {
+  // 같은 점이면 호가 없다. 반지름이 0이면 직선이다 (SVG 규격)
+  if (x1 === x2 && y1 === y2) return []
+  rx = Math.abs(rx)
+  ry = Math.abs(ry)
+  if (rx === 0 || ry === 0) return [[x2, y2]]
+
+  const phi = (rotationDeg * Math.PI) / 180
+  const cosPhi = Math.cos(phi)
+  const sinPhi = Math.sin(phi)
+
+  // 1단계: 타원 좌표계로 옮긴 중점 기준 좌표
+  const dx = (x1 - x2) / 2
+  const dy = (y1 - y2) / 2
+  const x1p = cosPhi * dx + sinPhi * dy
+  const y1p = -sinPhi * dx + cosPhi * dy
+
+  // 반지름이 너무 작아 두 점을 못 잇는 경우 — 규격대로 키운다 (반원이 된다)
+  const lambda = (x1p * x1p) / (rx * rx) + (y1p * y1p) / (ry * ry)
+  if (lambda > 1) {
+    const k = Math.sqrt(lambda)
+    rx *= k
+    ry *= k
+  }
+
+  // 2단계: 중심
+  const rx2 = rx * rx
+  const ry2 = ry * ry
+  const denom = rx2 * y1p * y1p + ry2 * x1p * x1p
+  const sign = Boolean(largeArc) === Boolean(sweep) ? -1 : 1
+  const coef = denom === 0 ? 0 : sign * Math.sqrt(Math.max(0, (rx2 * ry2 - denom) / denom))
+  const cxp = (coef * rx * y1p) / ry
+  const cyp = (-coef * ry * x1p) / rx
+  const cx = cosPhi * cxp - sinPhi * cyp + (x1 + x2) / 2
+  const cy = sinPhi * cxp + cosPhi * cyp + (y1 + y2) / 2
+
+  // 3단계: 시작 각도와 쓸고 가는 각도
+  const angle = (ux, uy, vx, vy) => {
+    const dot = ux * vx + uy * vy
+    const len = Math.hypot(ux, uy) * Math.hypot(vx, vy)
+    let a = Math.acos(Math.max(-1, Math.min(1, dot / len)))
+    if (ux * vy - uy * vx < 0) a = -a
+    return a
+  }
+  const theta1 = angle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry)
+  let delta = angle((x1p - cxp) / rx, (y1p - cyp) / ry, (-x1p - cxp) / rx, (-y1p - cyp) / ry)
+  // sweep=0은 각도가 줄어드는 방향, 1은 늘어나는 방향
+  if (!sweep && delta > 0) delta -= 2 * Math.PI
+  if (sweep && delta < 0) delta += 2 * Math.PI
+
+  const steps = Math.max(2, Math.ceil((Math.abs(delta) / (Math.PI / 2)) * stepsPerQuarter))
+  const pts = []
+  for (let i = 1; i <= steps; i += 1) {
+    const t = theta1 + (delta * i) / steps
+    const ex = rx * Math.cos(t)
+    const ey = ry * Math.sin(t)
+    pts.push([cosPhi * ex - sinPhi * ey + cx, sinPhi * ex + cosPhi * ey + cy])
+  }
+  // 마지막 점은 부동소수 오차 없이 끝점 그대로 — 닫힌 도형의 이음매가 어긋나지 않게
+  pts[pts.length - 1] = [x2, y2]
+  return pts
+}
+
 /** path가 차지하는 좌표 범위. 라이브 영역을 벗어났는지 확인하는 용도(제어점 포함 근사값). */
 function pathBounds(d) {
   const segs = parsePath(d)
@@ -150,8 +224,12 @@ function pathBounds(d) {
 
     // 좌표쌍을 순서대로 훑는다. A는 끝점만 좌표다.
     if (upper === 'A') {
-      x = isAbs ? args[5] : x + args[5]
-      y = isAbs ? args[6] : y + args[6]
+      const ex = isAbs ? args[5] : x + args[5]
+      const ey = isAbs ? args[6] : y + args[6]
+      // 끝점만 보면 반원 두 개로 그린 원의 가로 범위가 한 점이 되어 캔버스를 넘어도 못 잡는다
+      for (const [px, py] of arcPoints(x, y, args[0], args[1], args[2], args[3], args[4], ex, ey)) hit(px, py)
+      x = ex
+      y = ey
       hit(x, y)
       continue
     }
@@ -171,4 +249,4 @@ function pathBounds(d) {
   return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY - minY }
 }
 
-module.exports = { parsePath, parseNumbers, transformPath, pathBounds }
+module.exports = { parsePath, parseNumbers, transformPath, pathBounds, arcPoints }

@@ -13,7 +13,7 @@
 //   긴 띠(길이 L, 두께 T)의 면적은 L×T, 둘레는 2L+2T ≈ 2L이므로 위 식이 성립한다.
 //   이 값은 형태가 단순하든 복잡하든 획이 같으면 같게 나온다.
 
-const { parsePath } = require('./svg-path')
+const { parsePath, arcPoints } = require('./svg-path')
 
 /** 베지어를 직선으로 쪼갤 등분 수. 크면 정확하고 느리다. 아이콘 크기에는 8이면 충분하다. */
 const CURVE_STEPS = 8
@@ -120,8 +120,11 @@ function flatten(d) {
     }
 
     if (up === 'A') {
-      // 호는 끝점까지 직선으로 근사한다. 아이콘의 호는 대부분 짧아 영향이 작다.
-      push([abs ? args[5] : cur[0] + args[5], abs ? args[6] : cur[1] + args[6]])
+      // 호는 중심을 구해 점으로 편다. 끝점까지 직선으로 근사하던 때는 반원 두 개로 그린 원이
+      // 선분 하나가 되어 면적이 0이 됐다 — 굵기 1.5짜리 고리가 0.36으로 재어졌다 (2026-10-05).
+      const end = [abs ? args[5] : cur[0] + args[5], abs ? args[6] : cur[1] + args[6]]
+      for (const p of arcPoints(cur[0], cur[1], args[0], args[1], args[2], args[3], args[4], end[0], end[1])) push(p)
+      if (cur[0] !== end[0] || cur[1] !== end[1]) push(end)
       prevCubicCtrl = prevQuadCtrl = null
     }
   }

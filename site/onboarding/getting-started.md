@@ -27,7 +27,7 @@ npm run build           # 토큰 + Tailwind v4 CSS 한 번에
 
 > **가이드 문서 열람:** [https://github.com/iux-pub/guide](https://github.com/iux-pub/guide) 저장소의 문서 사이트 참조
 
-> **AI 도구 사용 시:** [infoUX MCP를 등록](/onboarding/mcp/)해 두면 발화 없이 기준이 적용된다.
+> **AI 도구 사용 시:** [infoUX MCP를 연결](/onboarding/mcp/)하면 AI 도구가 작업 중 기준을 직접 조회해 적용한다.
 
 ---
 

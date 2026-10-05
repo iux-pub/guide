@@ -282,7 +282,7 @@ npm run build:mcp      → MCP 번들 갱신 (팀원은 등록만으로 최신 �
 | **다중 LLM 컨트랙트** (Cursor · Aider · Codex · Hermes 등) | [`AGENTS.md`](AGENTS.md) |
 | **Claude Code 자동 컨텍스트** | [`CLAUDE.md`](CLAUDE.md) |
 | 신규 컴포넌트 작성 가이드 | `references/snippet-template.md` |
-| HTML 구조 매핑 (28종 × Root/ARIA/키보드) | `references/html-semantics.md` |
+| HTML 구조 매핑 (32종 × Root/ARIA/키보드) | `references/html-semantics.md` |
 | 토큰 카탈로그 | `references/krds-tokens.md` |
 | 컴포넌트 카탈로그 | `references/krds-components.md` |
 | Tailwind v4 매핑 | `references/tailwind-mapping.md` |

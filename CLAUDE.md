@@ -235,9 +235,9 @@ src/styles/
 |------|---------|
 | A — 폼/액션 | `btn` · `check-radio` · `file-upload` · `form` · `select` · `switch` |
 | B — 컨테이너/레이아웃 | `accordion` · `card` · `disclosure` · `modal` · `side-panel` · `tab` |
-| C — 내비게이션 | `breadcrumb` · `header` · `main-menu` · `pagination` |
-| D — 피드백 | `alert` · `badge` · `progress` · `spinner` · `step-indicator` · `tag` · `toast` · `tooltip` |
-| E — 콘텐츠/표현 | `calendar` · `carousel` · `list` · `table` |
+| C — 내비게이션 | `breadcrumb` · `footer` · `header` · `main-menu` · `mobile-menu` · `pagination` |
+| D — 피드백 | `alert` · `badge` · `notice-bar` · `progress` · `spinner` · `step-indicator` · `tag` · `toast` · `tooltip` |
+| E — 콘텐츠/표현 | `calendar` · `carousel` · `error-page` · `list` · `table` |
 
 각 컴포넌트는 다음 4종 자료가 동일한 BEM Block명으로 정렬되어 있다 — CSS(`src/styles/6-components/{name}.css`) · 스니펫(`src/snippets/{name}.md`) · 플레이그라운드(`src/playground/{name}.html`) · 문서(`site/components/{name}.md`).
 

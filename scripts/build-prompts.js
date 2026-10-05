@@ -140,9 +140,9 @@ function buildDesignPrompt() {
   const groups = {
     A: ['btn', 'check-radio', 'file-upload', 'form', 'select', 'switch'],
     B: ['accordion', 'card', 'disclosure', 'modal', 'side-panel', 'tab'],
-    C: ['breadcrumb', 'header', 'main-menu', 'pagination'],
-    D: ['alert', 'badge', 'progress', 'spinner', 'step-indicator', 'tag', 'toast', 'tooltip'],
-    E: ['calendar', 'carousel', 'list', 'table']
+    C: ['breadcrumb', 'footer', 'header', 'main-menu', 'mobile-menu', 'pagination'],
+    D: ['alert', 'badge', 'notice-bar', 'progress', 'spinner', 'step-indicator', 'tag', 'toast', 'tooltip'],
+    E: ['calendar', 'carousel', 'error-page', 'list', 'table']
   }
   const groupLabels = {
     A: '폼/액션', B: '컨테이너/레이아웃', C: '내비게이션', D: '피드백', E: '콘텐츠/표현'
@@ -385,9 +385,9 @@ function buildContextPrompt() {
   const groups = {
     A: ['btn', 'check-radio', 'file-upload', 'form', 'select', 'switch'],
     B: ['accordion', 'card', 'disclosure', 'modal', 'side-panel', 'tab'],
-    C: ['breadcrumb', 'header', 'main-menu', 'pagination'],
-    D: ['alert', 'badge', 'progress', 'spinner', 'step-indicator', 'tag', 'toast', 'tooltip'],
-    E: ['calendar', 'carousel', 'list', 'table']
+    C: ['breadcrumb', 'footer', 'header', 'main-menu', 'mobile-menu', 'pagination'],
+    D: ['alert', 'badge', 'notice-bar', 'progress', 'spinner', 'step-indicator', 'tag', 'toast', 'tooltip'],
+    E: ['calendar', 'carousel', 'error-page', 'list', 'table']
   }
   const componentLines = Object.entries(groups).map(([k, names]) => {
     const valid = names.filter(n => components.includes(n))

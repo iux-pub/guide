@@ -5,7 +5,7 @@ layout: layouts/page.njk
 section: components
 ---
 
-INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트 목록입니다. 모든 컴포넌트는 BEM 네이밍 규칙을 따르고 KRDS 토큰을 사용하며 KWCAG/WCAG 2.1 AA를 준수합니다. **카탈로그 외 임의 신설은 금지**입니다.
+INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트와 infoUX 확장 4종(푸터·모바일 메뉴·공지 띠·오류 페이지) 목록입니다. 모든 컴포넌트는 BEM 네이밍 규칙을 따르고 KRDS 토큰을 사용하며 KWCAG/WCAG 2.1 AA를 준수합니다. **카탈로그 외 임의 신설은 금지**입니다.
 
 ## 그룹 A — 폼/액션
 
@@ -34,8 +34,10 @@ INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트 목록입니
 | 컴포넌트 | 설명 | CSS |
 |----------|------|-----|
 | [브레드크럼](/components/breadcrumb/) | 페이지 경로, 모바일 축약 | `breadcrumb.css` |
+| [푸터](/components/footer/) | 푸터 메뉴·정책 링크·연락처·패밀리 사이트 (infoUX 확장) | `footer.css` |
 | [헤더](/components/header/) | 사이트 헤더, GNB 컨테이너 | `header.css` |
-| [메인 메뉴](/components/main-menu/) | GNB 메뉴 컴포넌트 | `main-menu.css` |
+| [메인 메뉴](/components/main-menu/) | GNB 메뉴, 드롭다운·메가 (disclosure 패턴) | `main-menu.css` |
+| [모바일 메뉴](/components/mobile-menu/) | 전체 화면 메뉴, 포커스 트랩 (infoUX 확장) | `mobile-menu.css` |
 | [페이지네이션](/components/pagination/) | 페이지 이동, 모바일 숨김 | `pagination.css` |
 
 ## 그룹 D — 피드백
@@ -44,6 +46,7 @@ INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트 목록입니
 |----------|------|-----|
 | [알림](/components/alert/) | success/warning/danger/info | `alert.css` |
 | [배지](/components/badge/) | 상태 표시 작은 라벨 | `badge.css` |
+| [공지 띠](/components/notice-bar/) | 페이지 최상단 사이트 공지 (infoUX 확장) | `notice-bar.css` |
 | [진행](/components/progress/) | 진행률 표시 | `progress.css` |
 | [스피너](/components/spinner/) | 비동기 로딩 표시 | `spinner.css` |
 | [단계 표시](/components/step-indicator/) | 다단계 진행 안내 | `step-indicator.css` |
@@ -57,6 +60,7 @@ INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트 목록입니
 |----------|------|-----|
 | [캘린더](/components/calendar/) | 날짜 선택·표시 | `calendar.css` |
 | [캐러셀](/components/carousel/) | 슬라이드 콘텐츠 | `carousel.css` |
+| [오류 페이지](/components/error-page/) | 404·403·500·점검 화면 (infoUX 확장) | `error-page.css` |
 | [목록](/components/list/) | 글머리·번호·설명 목록 | `list.css` |
 | [테이블](/components/table/) | 기본·반응형 | `table.css` |
 
@@ -74,6 +78,6 @@ INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트 목록입니
 3. CSS는 `src/styles/6-components/{name}.css`에 정의되어 있다 — 빌드 결과 `dist/css/style.css`로 발행
 4. 새 컴포넌트 신설은 UX팀 결정 → `references/krds-components.md` 등재 후 사용
 
-## 카탈로그 (전체 28종 BEM·접근성·토큰 매핑)
+## 카탈로그 (전체 32종 BEM·접근성·토큰 매핑)
 
 [references/krds-components.md](https://github.com/iux-pub/guide/blob/main/references/krds-components.md) — 가장 권위 있는 단일 소스

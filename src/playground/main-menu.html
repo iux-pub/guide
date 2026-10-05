@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주 메뉴 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__note {
+      font-size: 1.5rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      color: var(--color-text-subtle);
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__preview--flush {
+      padding: 0;
+      overflow: visible;
+    }
+
+    .pg__preview--tall {
+      min-height: 40rem;
+    }
+
+    .pg__code {
+      background-color: var(--color-bg-subtler);
+      border: 1px solid var(--color-border-light);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">주 메뉴 (Main Menu)</h1>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">드롭다운</h2>
+      <p class="pg__note">버튼 클릭(Enter/Space)으로 열고, Esc로 닫고 토글 버튼으로 초점이 돌아옵니다. 방향키 운용은 없고 Tab이 링크를 순서대로 지납니다.</p>
+      <div class="pg__preview pg__preview--flush pg__preview--tall">
+        <header id="pg-header-dropdown" class="site-header">
+          <div class="container site-header__inner">
+            <a class="site-header__brand" href="#">기관명</a>
+            <nav class="main-menu" aria-label="주 메뉴 (드롭다운)">
+              <ul class="main-menu__list">
+                <li class="main-menu__item">
+                  <a class="main-menu__link" href="#">소개</a>
+                </li>
+                <li class="main-menu__item">
+                  <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-submenu-services">
+                    서비스
+                    <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
+                  </button>
+                  <ul id="pg-submenu-services" class="main-menu__submenu" hidden>
+                    <li><a href="#">서비스 A</a></li>
+                    <li><a href="#">서비스 B</a></li>
+                    <li><a href="#" aria-current="page">서비스 C</a></li>
+                  </ul>
+                </li>
+                <li class="main-menu__item">
+                  <a class="main-menu__link" href="#">문의</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;header id="header" class="site-header"&gt;
+  &lt;div class="container site-header__inner"&gt;
+    &lt;a class="site-header__brand" href="/"&gt;기관명&lt;/a&gt;
+    &lt;nav class="main-menu" aria-label="주 메뉴 (드롭다운)"&gt;
+      &lt;ul class="main-menu__list"&gt;
+        &lt;li class="main-menu__item"&gt;
+          &lt;a class="main-menu__link" href="/about"&gt;소개&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="main-menu__item"&gt;
+          &lt;button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-submenu-services"&gt;
+            서비스
+            &lt;svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#chevron-down"&gt;&lt;/use&gt;&lt;/svg&gt;
+          &lt;/button&gt;
+          &lt;ul id="pg-submenu-services" class="main-menu__submenu" hidden&gt;
+            &lt;li&gt;&lt;a href="/service-a"&gt;서비스 A&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="/service-b"&gt;서비스 B&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="/service-c" aria-current="page"&gt;서비스 C&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li class="main-menu__item"&gt;
+          &lt;a class="main-menu__link" href="/contact"&gt;문의&lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">메가 메뉴 (--mega)</h2>
+      <p class="pg__note">패널이 헤더 전체 폭으로 열립니다. 한 번에 하나만 열리고, Tab으로 항목 밖으로 나가면 닫힙니다.</p>
+      <div class="pg__preview pg__preview--flush pg__preview--tall">
+        <header id="pg-header-mega" class="site-header">
+          <div class="container site-header__inner">
+            <a class="site-header__brand" href="#">기관명</a>
+            <nav class="main-menu main-menu--mega" aria-label="주 메뉴 (메가)">
+              <ul class="main-menu__list">
+                <li class="main-menu__item">
+                  <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-mega-service">
+                    민원 서비스
+                    <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
+                  </button>
+                  <div id="pg-mega-service" class="main-menu__panel" hidden>
+                    <div class="container main-menu__groups">
+                      <div class="main-menu__group">
+                        <p class="main-menu__group-title" id="pg-mega-service-apply">신청</p>
+                        <ul class="main-menu__group-list" aria-labelledby="pg-mega-service-apply">
+                          <li><a class="main-menu__sublink" href="#">허가 신청</a></li>
+                          <li><a class="main-menu__sublink" href="#">신고</a></li>
+                          <li><a class="main-menu__sublink" href="#">증명서 발급</a></li>
+                        </ul>
+                      </div>
+                      <div class="main-menu__group">
+                        <p class="main-menu__group-title" id="pg-mega-service-lookup">조회</p>
+                        <ul class="main-menu__group-list" aria-labelledby="pg-mega-service-lookup">
+                          <li><a class="main-menu__sublink" href="#" aria-current="page">처리 현황</a></li>
+                          <li><a class="main-menu__sublink" href="#">신청 내역</a></li>
+                        </ul>
+                      </div>
+                      <div class="main-menu__group">
+                        <p class="main-menu__group-title" id="pg-mega-service-guide">안내</p>
+                        <ul class="main-menu__group-list" aria-labelledby="pg-mega-service-guide">
+                          <li><a class="main-menu__sublink" href="#">이용 방법</a></li>
+                          <li><a class="main-menu__sublink" href="#">수수료 안내</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="main-menu__item">
+                  <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-mega-info">
+                    정보마당
+                    <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
+                  </button>
+                  <div id="pg-mega-info" class="main-menu__panel" hidden>
+                    <div class="container main-menu__groups">
+                      <div class="main-menu__group">
+                        <p class="main-menu__group-title" id="pg-mega-info-news">알림</p>
+                        <ul class="main-menu__group-list" aria-labelledby="pg-mega-info-news">
+                          <li><a class="main-menu__sublink" href="#">공지사항</a></li>
+                          <li><a class="main-menu__sublink" href="#">보도자료</a></li>
+                        </ul>
+                      </div>
+                      <div class="main-menu__group">
+                        <p class="main-menu__group-title" id="pg-mega-info-data">자료</p>
+                        <ul class="main-menu__group-list" aria-labelledby="pg-mega-info-data">
+                          <li><a class="main-menu__sublink" href="#">통계</a></li>
+                          <li><a class="main-menu__sublink" href="#">발간물</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="main-menu__item">
+                  <a class="main-menu__link" href="#">문의</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;header id="header" class="site-header"&gt;
+  &lt;div class="container site-header__inner"&gt;
+    &lt;a class="site-header__brand" href="/"&gt;기관명&lt;/a&gt;
+    &lt;nav class="main-menu main-menu--mega" aria-label="주 메뉴 (메가)"&gt;
+      &lt;ul class="main-menu__list"&gt;
+        &lt;li class="main-menu__item"&gt;
+          &lt;button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-mega-service"&gt;
+            민원 서비스
+            &lt;svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#chevron-down"&gt;&lt;/use&gt;&lt;/svg&gt;
+          &lt;/button&gt;
+          &lt;div id="pg-mega-service" class="main-menu__panel" hidden&gt;
+            &lt;div class="container main-menu__groups"&gt;
+              &lt;div class="main-menu__group"&gt;
+                &lt;p class="main-menu__group-title" id="pg-mega-service-apply"&gt;신청&lt;/p&gt;
+                &lt;ul class="main-menu__group-list" aria-labelledby="pg-mega-service-apply"&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/permit"&gt;허가 신청&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/report"&gt;신고&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/certificate"&gt;증명서 발급&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+              &lt;div class="main-menu__group"&gt;
+                &lt;p class="main-menu__group-title" id="pg-mega-service-lookup"&gt;조회&lt;/p&gt;
+                &lt;ul class="main-menu__group-list" aria-labelledby="pg-mega-service-lookup"&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/status" aria-current="page"&gt;처리 현황&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/history"&gt;신청 내역&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+              &lt;div class="main-menu__group"&gt;
+                &lt;p class="main-menu__group-title" id="pg-mega-service-guide"&gt;안내&lt;/p&gt;
+                &lt;ul class="main-menu__group-list" aria-labelledby="pg-mega-service-guide"&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/guide"&gt;이용 방법&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/fee"&gt;수수료 안내&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li class="main-menu__item"&gt;
+          &lt;button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-mega-info"&gt;
+            정보마당
+            &lt;svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#chevron-down"&gt;&lt;/use&gt;&lt;/svg&gt;
+          &lt;/button&gt;
+          &lt;div id="pg-mega-info" class="main-menu__panel" hidden&gt;
+            &lt;div class="container main-menu__groups"&gt;
+              &lt;div class="main-menu__group"&gt;
+                &lt;p class="main-menu__group-title" id="pg-mega-info-news"&gt;알림&lt;/p&gt;
+                &lt;ul class="main-menu__group-list" aria-labelledby="pg-mega-info-news"&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/notice"&gt;공지사항&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/press"&gt;보도자료&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+              &lt;div class="main-menu__group"&gt;
+                &lt;p class="main-menu__group-title" id="pg-mega-info-data"&gt;자료&lt;/p&gt;
+                &lt;ul class="main-menu__group-list" aria-labelledby="pg-mega-info-data"&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/stats"&gt;통계&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a class="main-menu__sublink" href="/publications"&gt;발간물&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li class="main-menu__item"&gt;
+          &lt;a class="main-menu__link" href="/contact"&gt;문의&lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+  <script src="../js/disclosure-nav.js"></script>
+</body>
+</html>

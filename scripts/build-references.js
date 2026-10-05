@@ -206,9 +206,9 @@ function buildKrdsComponentsMd() {
   const groups = {
     'A — 폼/액션': ['btn', 'check-radio', 'file-upload', 'form', 'select', 'switch'],
     'B — 컨테이너/레이아웃': ['accordion', 'card', 'disclosure', 'modal', 'side-panel', 'tab'],
-    'C — 내비게이션': ['breadcrumb', 'header', 'main-menu', 'pagination'],
-    'D — 피드백': ['alert', 'badge', 'progress', 'spinner', 'step-indicator', 'tag', 'toast', 'tooltip'],
-    'E — 콘텐츠/표현': ['calendar', 'carousel', 'icon', 'list', 'table']
+    'C — 내비게이션': ['breadcrumb', 'footer', 'header', 'main-menu', 'mobile-menu', 'pagination'],
+    'D — 피드백': ['alert', 'badge', 'notice-bar', 'progress', 'spinner', 'step-indicator', 'tag', 'toast', 'tooltip'],
+    'E — 콘텐츠/표현': ['calendar', 'carousel', 'error-page', 'icon', 'list', 'table']
   }
 
   // 인덱스

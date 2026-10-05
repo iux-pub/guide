@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>푸터 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__note {
+      font-size: 1.5rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      color: var(--color-text-subtle);
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__preview--flush {
+      padding: 0;
+      overflow: visible;
+    }
+
+    .pg__preview--tall {
+      min-height: 40rem;
+    }
+
+    .pg__code {
+      background-color: var(--color-bg-subtler);
+      border: 1px solid var(--color-border-light);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">푸터 (Site Footer)</h1>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">기본 (푸터 메뉴 + 하단 고지 + 패밀리 사이트)</h2>
+      <p class="pg__note">일반사이트·공공기관. 패밀리 사이트는 native details라 JS 없이 동작합니다.</p>
+      <div class="pg__preview pg__preview--flush">
+        <footer id="pg-footer-default" class="site-footer">
+          <div class="container">
+            <div class="site-footer__top">
+              <a class="site-footer__brand" href="#">기관명</a>
+              <nav class="site-footer__nav" aria-label="푸터 메뉴">
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-about">소개</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-about">
+                    <li><a class="site-footer__link" href="#">인사말</a></li>
+                    <li><a class="site-footer__link" href="#">연혁</a></li>
+                    <li><a class="site-footer__link" href="#">오시는 길</a></li>
+                  </ul>
+                </div>
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-program">프로그램</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-program">
+                    <li><a class="site-footer__link" href="#">전시</a></li>
+                    <li><a class="site-footer__link" href="#">공연</a></li>
+                    <li><a class="site-footer__link" href="#">교육</a></li>
+                  </ul>
+                </div>
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-news">알림마당</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-news">
+                    <li><a class="site-footer__link" href="#">공지사항</a></li>
+                    <li><a class="site-footer__link" href="#">보도자료</a></li>
+                  </ul>
+                </div>
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-help">이용 안내</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-help">
+                    <li><a class="site-footer__link" href="#">자주 묻는 질문</a></li>
+                    <li><a class="site-footer__link" href="#">사이트맵</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+
+            <div class="site-footer__bottom">
+              <div class="site-footer__info">
+                <nav class="site-footer__legal" aria-label="약관 및 정책">
+                  <ul class="site-footer__legal-list">
+                    <li><a class="site-footer__link site-footer__link--important" href="#">개인정보처리방침</a></li>
+                    <li><a class="site-footer__link" href="#">이용약관</a></li>
+                    <li><a class="site-footer__link" href="#">저작권 정책</a></li>
+                  </ul>
+                </nav>
+                <address class="site-footer__address">
+                  제주특별자치도 제주시 한라로 100<br>
+                  대표전화 064-123-4567 · 이메일 contact@example.org
+                </address>
+                <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+              </div>
+
+              <details class="site-footer__family">
+                <summary class="site-footer__family-summary">
+                  패밀리 사이트
+                  <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
+                </summary>
+                <ul class="site-footer__family-list">
+                  <li><a class="site-footer__family-link" href="#">미술관</a></li>
+                  <li><a class="site-footer__family-link" href="#">도서관</a></li>
+                </ul>
+              </details>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;footer id="footer" class="site-footer"&gt;
+  &lt;div class="container"&gt;
+    &lt;div class="site-footer__top"&gt;
+      &lt;a class="site-footer__brand" href="/"&gt;기관명&lt;/a&gt;
+      &lt;nav class="site-footer__nav" aria-label="푸터 메뉴"&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-about"&gt;소개&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-about"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/greeting"&gt;인사말&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/history"&gt;연혁&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/location"&gt;오시는 길&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-program"&gt;프로그램&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-program"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/exhibition"&gt;전시&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/performance"&gt;공연&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/education"&gt;교육&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-news"&gt;알림마당&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-news"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/notice"&gt;공지사항&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/press"&gt;보도자료&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-help"&gt;이용 안내&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-help"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/faq"&gt;자주 묻는 질문&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/sitemap"&gt;사이트맵&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+
+    &lt;div class="site-footer__bottom"&gt;
+      &lt;div class="site-footer__info"&gt;
+        &lt;nav class="site-footer__legal" aria-label="약관 및 정책"&gt;
+          &lt;ul class="site-footer__legal-list"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link site-footer__link--important" href="/privacy"&gt;개인정보처리방침&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/terms"&gt;이용약관&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/copyright"&gt;저작권 정책&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/nav&gt;
+        &lt;address class="site-footer__address"&gt;
+          제주특별자치도 제주시 한라로 100&lt;br&gt;
+          대표전화 064-123-4567 · 이메일 contact@example.org
+        &lt;/address&gt;
+        &lt;small class="site-footer__copy"&gt;© 2026 기관명. All rights reserved.&lt;/small&gt;
+      &lt;/div&gt;
+
+      &lt;details class="site-footer__family"&gt;
+        &lt;summary class="site-footer__family-summary"&gt;
+          패밀리 사이트
+          &lt;svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#chevron-down"&gt;&lt;/use&gt;&lt;/svg&gt;
+        &lt;/summary&gt;
+        &lt;ul class="site-footer__family-list"&gt;
+          &lt;li&gt;&lt;a class="site-footer__family-link" href="/museum"&gt;미술관&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="site-footer__family-link" href="/library"&gt;도서관&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">반전 (--inverse)</h2>
+      <p class="pg__note">일반사이트·커머스 표현형 한정. 어두운 바탕에서도 본문 대비 4.5:1 이상을 유지합니다.</p>
+      <div class="pg__preview pg__preview--flush">
+        <footer id="pg-footer-inverse" class="site-footer site-footer--inverse">
+          <div class="container">
+            <div class="site-footer__top">
+              <a class="site-footer__brand" href="#">기관명</a>
+              <nav class="site-footer__nav" aria-label="푸터 메뉴">
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-inv-about">소개</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-inv-about">
+                    <li><a class="site-footer__link" href="#">인사말</a></li>
+                    <li><a class="site-footer__link" href="#">연혁</a></li>
+                    <li><a class="site-footer__link" href="#">오시는 길</a></li>
+                  </ul>
+                </div>
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-inv-program">프로그램</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-inv-program">
+                    <li><a class="site-footer__link" href="#">전시</a></li>
+                    <li><a class="site-footer__link" href="#">공연</a></li>
+                    <li><a class="site-footer__link" href="#">교육</a></li>
+                  </ul>
+                </div>
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-inv-news">알림마당</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-inv-news">
+                    <li><a class="site-footer__link" href="#">공지사항</a></li>
+                    <li><a class="site-footer__link" href="#">보도자료</a></li>
+                  </ul>
+                </div>
+                <div class="site-footer__group">
+                  <h2 class="site-footer__heading" id="pg-footer-inv-help">이용 안내</h2>
+                  <ul class="site-footer__list" aria-labelledby="pg-footer-inv-help">
+                    <li><a class="site-footer__link" href="#">자주 묻는 질문</a></li>
+                    <li><a class="site-footer__link" href="#">사이트맵</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+
+            <div class="site-footer__bottom">
+              <div class="site-footer__info">
+                <nav class="site-footer__legal" aria-label="약관 및 정책">
+                  <ul class="site-footer__legal-list">
+                    <li><a class="site-footer__link site-footer__link--important" href="#">개인정보처리방침</a></li>
+                    <li><a class="site-footer__link" href="#">이용약관</a></li>
+                    <li><a class="site-footer__link" href="#">저작권 정책</a></li>
+                  </ul>
+                </nav>
+                <address class="site-footer__address">
+                  제주특별자치도 제주시 한라로 100<br>
+                  대표전화 064-123-4567 · 이메일 contact@example.org
+                </address>
+                <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+              </div>
+
+              <details class="site-footer__family">
+                <summary class="site-footer__family-summary">
+                  패밀리 사이트
+                  <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
+                </summary>
+                <ul class="site-footer__family-list">
+                  <li><a class="site-footer__family-link" href="#">미술관</a></li>
+                  <li><a class="site-footer__family-link" href="#">도서관</a></li>
+                </ul>
+              </details>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;footer id="footer" class="site-footer site-footer--inverse"&gt;
+  &lt;div class="container"&gt;
+    &lt;div class="site-footer__top"&gt;
+      &lt;a class="site-footer__brand" href="/"&gt;기관명&lt;/a&gt;
+      &lt;nav class="site-footer__nav" aria-label="푸터 메뉴"&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-inv-about"&gt;소개&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-inv-about"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/greeting"&gt;인사말&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/history"&gt;연혁&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/location"&gt;오시는 길&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-inv-program"&gt;프로그램&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-inv-program"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/exhibition"&gt;전시&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/performance"&gt;공연&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/education"&gt;교육&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-inv-news"&gt;알림마당&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-inv-news"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/notice"&gt;공지사항&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/press"&gt;보도자료&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class="site-footer__group"&gt;
+          &lt;h2 class="site-footer__heading" id="pg-footer-inv-help"&gt;이용 안내&lt;/h2&gt;
+          &lt;ul class="site-footer__list" aria-labelledby="pg-footer-inv-help"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/faq"&gt;자주 묻는 질문&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/sitemap"&gt;사이트맵&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+
+    &lt;div class="site-footer__bottom"&gt;
+      &lt;div class="site-footer__info"&gt;
+        &lt;nav class="site-footer__legal" aria-label="약관 및 정책"&gt;
+          &lt;ul class="site-footer__legal-list"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link site-footer__link--important" href="/privacy"&gt;개인정보처리방침&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/terms"&gt;이용약관&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/copyright"&gt;저작권 정책&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/nav&gt;
+        &lt;address class="site-footer__address"&gt;
+          제주특별자치도 제주시 한라로 100&lt;br&gt;
+          대표전화 064-123-4567 · 이메일 contact@example.org
+        &lt;/address&gt;
+        &lt;small class="site-footer__copy"&gt;© 2026 기관명. All rights reserved.&lt;/small&gt;
+      &lt;/div&gt;
+
+      &lt;details class="site-footer__family"&gt;
+        &lt;summary class="site-footer__family-summary"&gt;
+          패밀리 사이트
+          &lt;svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#chevron-down"&gt;&lt;/use&gt;&lt;/svg&gt;
+        &lt;/summary&gt;
+        &lt;ul class="site-footer__family-list"&gt;
+          &lt;li&gt;&lt;a class="site-footer__family-link" href="/museum"&gt;미술관&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a class="site-footer__family-link" href="/library"&gt;도서관&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">소형 (--compact)</h2>
+      <p class="pg__note">공공서비스·관리자 화면. 상단 메뉴 없이 정책 링크와 저작권만 둡니다.</p>
+      <div class="pg__preview pg__preview--flush">
+        <footer id="pg-footer-compact" class="site-footer site-footer--compact">
+          <div class="container">
+            <div class="site-footer__bottom">
+              <div class="site-footer__info">
+                <nav class="site-footer__legal" aria-label="약관 및 정책">
+                  <ul class="site-footer__legal-list">
+                    <li><a class="site-footer__link site-footer__link--important" href="#">개인정보처리방침</a></li>
+                    <li><a class="site-footer__link" href="#">이용약관</a></li>
+                  </ul>
+                </nav>
+                <small class="site-footer__copy">© 2026 기관명</small>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;footer id="footer" class="site-footer site-footer--compact"&gt;
+  &lt;div class="container"&gt;
+    &lt;div class="site-footer__bottom"&gt;
+      &lt;div class="site-footer__info"&gt;
+        &lt;nav class="site-footer__legal" aria-label="약관 및 정책"&gt;
+          &lt;ul class="site-footer__legal-list"&gt;
+            &lt;li&gt;&lt;a class="site-footer__link site-footer__link--important" href="/privacy"&gt;개인정보처리방침&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a class="site-footer__link" href="/terms"&gt;이용약관&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/nav&gt;
+        &lt;small class="site-footer__copy"&gt;© 2026 기관명&lt;/small&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

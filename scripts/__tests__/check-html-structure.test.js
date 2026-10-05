@@ -384,3 +384,157 @@ test('다른 블록의 modifier를 컴포넌트 root로 오인하지 않는다 (
   assert.equal(result.status, 0, result.stderr)
   assert.doesNotMatch(result.stderr, /\[R-15\]/, '아이콘 클래스를 컴포넌트로 잡으면 안 된다')
 })
+
+// ─── 내비게이션 · 공지 · 푸터 (disclosure 패턴) ────────────────────────
+
+function pageWith(shellHeader, body, footer = '<footer id="footer" class="site-footer"><div class="container">푸터</div></footer>') {
+  return `<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  ${shellHeader}
+  <main id="main">
+    <section class="section section--content" aria-labelledby="t">
+      <div class="container">
+        <h1 id="t">제목</h1>
+        ${body}
+      </div>
+    </section>
+  </main>
+  ${footer}
+</body>
+</html>`
+}
+
+const PLAIN_HEADER = '<header id="header"><div class="container">브랜드</div></header>'
+
+test('disclosure 토글(aria-expanded + aria-controls)을 갖춘 메가 메뉴는 통과한다', () => {
+  const result = runCheck(pageWith(PLAIN_HEADER, `
+    <nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+      <ul class="main-menu__list">
+        <li class="main-menu__item">
+          <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-a">서비스</button>
+          <div id="mega-a" class="main-menu__panel" hidden>
+            <div class="container main-menu__groups">
+              <div class="main-menu__group">
+                <p class="main-menu__group-title" id="mega-a-g1">신청</p>
+                <ul class="main-menu__group-list" aria-labelledby="mega-a-g1">
+                  <li><a class="main-menu__sublink" href="/apply">허가 신청</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>`))
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.doesNotMatch(result.stderr, /main-menu__toggle/)
+})
+
+test('main-menu__toggle에 aria-controls가 없거나 대상 id가 없으면 R-16으로 실패한다', () => {
+  const noControls = runCheck(pageWith(PLAIN_HEADER, `
+    <nav class="main-menu" aria-label="주 메뉴">
+      <button type="button" class="main-menu__toggle" aria-expanded="false">서비스</button>
+    </nav>`))
+  assert.equal(noControls.status, 2)
+  assert.match(noControls.stderr, /\[R-16\] main-menu__toggle/)
+
+  const brokenTarget = runCheck(pageWith(PLAIN_HEADER, `
+    <nav class="main-menu" aria-label="주 메뉴">
+      <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="missing">서비스</button>
+    </nav>`))
+  assert.equal(brokenTarget.status, 2)
+  assert.match(brokenTarget.stderr, /\[R-16\] main-menu__toggle/)
+})
+
+test('main-menu__toggle에 aria-haspopup을 붙이면 경고한다 (차단 없음)', () => {
+  const result = runCheck(pageWith(PLAIN_HEADER, `
+    <nav class="main-menu" aria-label="주 메뉴">
+      <button type="button" class="main-menu__toggle" aria-haspopup="true" aria-expanded="false" aria-controls="sub-a">서비스</button>
+      <ul id="sub-a" class="main-menu__submenu" hidden><li><a href="/a">A</a></li></ul>
+    </nav>`))
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /aria-haspopup/)
+})
+
+test('모바일 메뉴 햄버거: aria-controls가 data-mobile-menu-open과 짝이면 통과한다', () => {
+  const result = runCheck(pageWith(`
+    <header id="header" class="site-header">
+      <div class="container">
+        <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">메뉴</button>
+      </div>
+    </header>`, ''))
+
+  assert.equal(result.status, 0, result.stderr)
+})
+
+test('모바일 메뉴 햄버거: aria-expanded가 없거나 aria-controls가 어긋나면 R-16으로 실패한다', () => {
+  const noExpanded = runCheck(pageWith(`
+    <header id="header" class="site-header">
+      <div class="container">
+        <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">메뉴</button>
+      </div>
+    </header>`, ''))
+  assert.equal(noExpanded.status, 2)
+  assert.match(noExpanded.stderr, /\[R-16\] 모바일 메뉴 햄버거/)
+
+  const mismatch = runCheck(pageWith(`
+    <header id="header" class="site-header">
+      <div class="container">
+        <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="other" data-mobile-menu-open="mobile-menu">메뉴</button>
+      </div>
+    </header>`, ''))
+  assert.equal(mismatch.status, 2)
+  assert.match(mismatch.stderr, /\[R-16\] 모바일 메뉴 햄버거/)
+})
+
+test('mobile-menu 패널에 dialog 역할 속성이 빠지면 R-16으로 실패한다', () => {
+  const ok = runCheck(pageWith(PLAIN_HEADER, `
+    <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mm-title" hidden>
+      <p id="mm-title">전체 메뉴</p>
+    </div>`))
+  assert.equal(ok.status, 0, ok.stderr)
+
+  const missing = runCheck(pageWith(PLAIN_HEADER, `
+    <div id="mobile-menu" class="mobile-menu" hidden>
+      <p id="mm-title">전체 메뉴</p>
+    </div>`))
+  assert.equal(missing.status, 2)
+  assert.match(missing.stderr, /\[R-16\]/)
+})
+
+test('notice-bar는 aria-label이 있어야 하고 section이 아니면 R-15 경고한다', () => {
+  const ok = runCheck(pageWith(PLAIN_HEADER, `
+    <section class="notice-bar notice-bar--info" aria-label="사이트 공지">
+      <div class="container notice-bar__inner">
+        <p class="notice-bar__message">10월 12일 시스템 점검 안내</p>
+      </div>
+    </section>`))
+  assert.equal(ok.status, 0, ok.stderr)
+
+  const noLabel = runCheck(pageWith(PLAIN_HEADER, `
+    <section class="notice-bar">
+      <div class="container notice-bar__inner">
+        <p class="notice-bar__message">10월 12일 시스템 점검 안내</p>
+      </div>
+    </section>`))
+  assert.equal(noLabel.status, 2)
+  assert.match(noLabel.stderr, /\[R-16\]/)
+
+  const wrongTag = runCheck(pageWith(PLAIN_HEADER, `
+    <div class="notice-bar" aria-label="사이트 공지">
+      <div class="container notice-bar__inner"><p class="notice-bar__message">점검 안내</p></div>
+    </div>`))
+  assert.equal(wrongTag.status, 0, wrongTag.stderr)
+  assert.match(wrongTag.stderr, /\[R-15\] "notice-bar"/)
+})
+
+test('site-footer 루트가 footer가 아니면 R-15 경고한다 (차단 없음)', () => {
+  const result = runCheck(pageWith(PLAIN_HEADER, `
+    <div class="site-footer"><div class="container">푸터</div></div>`))
+
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-15\] "site-footer"/)
+})

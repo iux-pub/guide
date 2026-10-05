@@ -25,7 +25,9 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/header.md`이며
 
     <div class="site-header__actions">
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -36,7 +38,8 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/header.md`이며
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
 - 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label="메뉴 열기/닫기"` + `aria-expanded` 상태 토글
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](/components/mobile-menu/) 패널 id를 연결한다
+- 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
 ## 파일

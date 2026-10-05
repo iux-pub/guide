@@ -1,0 +1,87 @@
+/**
+ * Error Page — 오류 페이지 (404 · 403 · 500 · 점검)
+ *
+ * 요청한 페이지를 보여줄 수 없을 때 한 화면으로 보여주는 패턴.
+ * 오류 화면은 사이트 표현 등급과 무관하게 utility~restrained 수위로 쓴다 — 사용자는
+ * 이 화면을 구경하러 온 것이 아니라 빠져나가러 왔다. 장식보다 탈출 경로가 먼저다.
+ *
+ * 구조 (main > section > .container 안에서):
+ *   <div class="error-page">
+ *     <p class="error-page__code">404</p>
+ *     <h1 class="error-page__title" id="error-title">요청하신 페이지를 찾을 수 없습니다</h1>
+ *     <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다.</p>
+ *     <div class="error-page__actions">
+ *       <a class="btn btn--primary" href="/">홈으로 이동</a>
+ *     </div>
+ *     <form class="error-page__search" role="search" action="/search">...</form>
+ *     <nav class="error-page__help" aria-labelledby="error-help-title">
+ *       <h2 class="error-page__help-title" id="error-help-title">많이 찾는 페이지</h2>
+ *       <ul class="error-page__help-list">
+ *         <li><a class="error-page__help-link" href="/notice">공지사항</a></li>
+ *       </ul>
+ *     </nav>
+ *     <p class="error-page__contact">...</p>
+ *   </div>
+ */
+
+@layer components {
+  .error-page {
+    @apply flex flex-col items-start gap-[2.4rem] max-w-[64rem] mx-auto py-[4.8rem] tablet:py-[8rem];
+  }
+
+  /* 선택 요소 — 장식 일러스트. 일반사이트·커머스 표현형에서만 한 점 */
+  .error-page__visual {
+    @apply w-full max-w-[32rem] h-auto;
+  }
+
+  /* 선택 요소 — 상태 코드. 문의 접수 때 확인용으로 필요할 때만 쓴다 */
+  .error-page__code {
+    @apply m-0 text-[4.8rem] pc:text-[7.2rem] font-bold leading-[1.3] text-[var(--color-primary)] [font-variant-numeric:tabular-nums];
+  }
+
+  .error-page__title {
+    @apply m-0 text-[2.8rem] pc:text-[3.6rem] font-bold leading-[1.4] text-[var(--color-text)] [word-break:keep-all];
+  }
+
+  .error-page__desc {
+    @apply m-0 text-[1.7rem] leading-[1.7] text-[var(--color-text-subtle)] [word-break:keep-all];
+  }
+
+  .error-page__actions {
+    @apply flex flex-wrap gap-[1.2rem];
+  }
+
+  .error-page__search {
+    @apply flex w-full gap-[0.8rem];
+  }
+
+  .error-page__search .input {
+    @apply flex-1 min-w-0;
+  }
+
+  /* 바로가기 — 길을 잃은 사용자가 다음 단계를 고르는 목록 */
+  .error-page__help {
+    @apply w-full pt-[2.4rem] border-t border-[var(--color-border-light)];
+  }
+
+  .error-page__help-title {
+    @apply m-0 mb-[0.8rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text)];
+  }
+
+  .error-page__help-list {
+    @apply flex flex-col list-none m-0 p-0 tablet:grid tablet:grid-cols-2 tablet:gap-x-[2.4rem];
+  }
+
+  /* 본문 링크는 primary-pressed 로 대비를 확보하고 밑줄로 링크임을 전한다 */
+  .error-page__help-link {
+    @apply inline-flex items-center min-h-[4.4rem] text-[1.7rem] text-[var(--color-primary-pressed)] underline underline-offset-[0.3rem];
+  }
+
+  .error-page__help-link:hover {
+    @apply text-[var(--color-primary-hover)];
+  }
+
+  .error-page__contact {
+    @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)] [word-break:keep-all];
+  }
+}

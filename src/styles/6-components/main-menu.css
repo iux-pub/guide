@@ -1,15 +1,42 @@
 /**
- * Main Menu — KRDS Main menu (드롭다운형 주 메뉴)
+ * Main Menu — KRDS Main menu (드롭다운형·메가형 주 메뉴)
+ *
+ * 하위 메뉴 트리거는 disclosure 패턴이다 — <button aria-expanded aria-controls>.
+ * role="menu" · aria-haspopup 은 쓰지 않는다. 링크 목록을 열고 닫을 뿐이라
+ * 메뉴 위젯 역할을 선언하면 스크린리더가 화살표 키 운용을 기대한다.
  *
  * 구조 (#header 안에서 사용):
  *   <nav class="main-menu" aria-label="주 메뉴">
  *     <ul class="main-menu__list">
  *       <li class="main-menu__item">
- *         <a class="main-menu__link" href="/about" aria-haspopup="true" aria-expanded="false">소개</a>
- *         <ul class="main-menu__submenu" hidden>
+ *         <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="submenu-about">
+ *           소개<svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+ *         </button>
+ *         <ul id="submenu-about" class="main-menu__submenu" hidden>
  *           <li><a href="/about/intro">개요</a></li>
  *           <li><a href="/about/history">연혁</a></li>
  *         </ul>
+ *       </li>
+ *     </ul>
+ *   </nav>
+ *
+ * 메가 메뉴 (.main-menu--mega) — 패널이 헤더 전체 폭으로 열린다.
+ * 패널은 가장 가까운 위치 지정 조상(헤더 .site-header, sticky)을 기준으로 놓이므로
+ * 헤더 밖에서 쓰려면 기준 조상을 직접 지정해야 한다.
+ *   <nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+ *     <ul class="main-menu__list">
+ *       <li class="main-menu__item">
+ *         <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">...</button>
+ *         <div id="mega-service" class="main-menu__panel" hidden>
+ *           <div class="container main-menu__groups">
+ *             <div class="main-menu__group">
+ *               <p class="main-menu__group-title" id="mega-service-apply">신청</p>
+ *               <ul class="main-menu__group-list" aria-labelledby="mega-service-apply">
+ *                 <li><a class="main-menu__sublink" href="/apply/a">...</a></li>
+ *               </ul>
+ *             </div>
+ *           </div>
+ *         </div>
  *       </li>
  *     </ul>
  *   </nav>
@@ -29,10 +56,12 @@
     @apply relative;
   }
 
-  .main-menu__link {
+  .main-menu__link,
+  .main-menu__toggle {
     @apply inline-flex items-center gap-[0.4rem] h-[4.8rem] px-[1.2rem] text-[var(--color-text)] text-[1.7rem] font-bold leading-none no-underline bg-transparent border-0 cursor-pointer [transition:color_0.15s_ease-in-out];
   }
 
+  /* 구형 마크업 호환 — aria-haspopup 트리거의 화살표. 신규 마크업은 .main-menu__toggle 을 쓴다 */
   .main-menu__link[aria-haspopup="true"]::after {
     @apply content-[''] w-[1.2rem] h-[1.2rem] [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='12'_height='12'_viewBox='0_0_12_12'_fill='none'><path_d='M3_4.5L6_7.5L9_4.5'_stroke='%231E2124'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:transform_0.15s_ease-in-out];
   }
@@ -41,8 +70,20 @@
     @apply rotate-180;
   }
 
-  .main-menu__link:hover { @apply [color:var(--color-primary)]; }
-  .main-menu__link[aria-current="page"] { @apply [color:var(--color-primary)]; }
+  .main-menu__link:hover,
+  .main-menu__toggle:hover { @apply [color:var(--color-primary)]; }
+
+  .main-menu__link[aria-current="page"],
+  .main-menu__toggle[aria-current="true"] { @apply [color:var(--color-primary)]; }
+
+  /* 토글 화살표 — 아이콘 카탈로그의 chevron-down 스프라이트를 쓰고 펼침 상태에서 뒤집는다 */
+  .main-menu__icon {
+    @apply [transition:transform_0.15s_ease-in-out];
+  }
+
+  .main-menu__toggle[aria-expanded="true"] .main-menu__icon {
+    @apply rotate-180;
+  }
 
   /* 서브메뉴 (드롭다운) */
   .main-menu__submenu {
@@ -66,5 +107,45 @@
 
   .main-menu__submenu a[aria-current="page"] {
     @apply text-[var(--color-primary)] bg-[var(--color-surface-primary-subtler)];
+  }
+
+  /* ── 메가 메뉴 (--mega) — 헤더 전체 폭 패널. item 의 위치 기준을 풀어 패널이 헤더를 기준으로 놓이게 한다 ── */
+  .main-menu--mega .main-menu__item {
+    @apply static;
+  }
+
+  .main-menu__panel {
+    @apply absolute inset-x-0 top-full bg-[var(--color-surface)] border-y border-[var(--color-border-light)] shadow-[0_0.8rem_1.6rem_0_#0000001f] z-[1000];
+  }
+
+  .main-menu__panel[hidden] { @apply [display:none]; }
+
+  .main-menu__groups {
+    @apply grid grid-cols-2 gap-x-[3.2rem] gap-y-[2.4rem] py-[3.2rem] tablet:grid-cols-3 pc:grid-cols-4;
+  }
+
+  .main-menu__group-title {
+    @apply m-0 mb-[0.8rem] pb-[0.8rem] border-b border-[var(--color-border-light)] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text)];
+  }
+
+  .main-menu__group-list {
+    @apply flex flex-col list-none m-0 p-0;
+  }
+
+  .main-menu__sublink {
+    @apply flex items-center min-h-[4.4rem] px-[0.8rem] text-[1.6rem] leading-[1.5] text-[var(--color-text)] no-underline [transition:background-color_0.15s_ease-in-out];
+  }
+
+  .main-menu__sublink:hover {
+    @apply bg-[var(--color-bg-subtler)] underline;
+  }
+
+  .main-menu__sublink[aria-current="page"] {
+    @apply font-bold text-[var(--color-primary)];
+  }
+
+  /* 칸을 꽉 채우는 링크는 바깥 외곽선이 잘리므로 안쪽에 그린다 */
+  .main-menu__sublink:focus-visible {
+    @apply [outline-offset:-0.4rem];
   }
 }

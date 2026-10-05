@@ -1,0 +1,125 @@
+/**
+ * Mobile Menu — 전체 화면 모바일 메뉴
+ *
+ * 헤더 햄버거(.site-header__toggle)로 여는 전체 화면 다이얼로그. 화면 전체를 덮으므로
+ * 모달처럼 초점을 가두고 Esc 로 닫는다. 하위 메뉴는 native <details> 라 JS 없이 열고 닫힌다.
+ * PC(1280px 이상)에서는 주 메뉴(.main-menu)가 대신하므로 이 패널은 보이지 않는다.
+ *
+ * 구조:
+ *   <button type="button" class="site-header__toggle" aria-label="전체 메뉴"
+ *           aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+ *     <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
+ *   </button>
+ *
+ *   <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true"
+ *        aria-labelledby="mobile-menu-title" hidden>
+ *     <div class="mobile-menu__header">
+ *       <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
+ *       <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+ *         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
+ *       </button>
+ *     </div>
+ *     <nav class="mobile-menu__nav" aria-label="주 메뉴">
+ *       <ul class="mobile-menu__list">
+ *         <li class="mobile-menu__item"><a class="mobile-menu__link" href="/about">소개</a></li>
+ *         <li class="mobile-menu__item">
+ *           <details class="mobile-menu__group">
+ *             <summary class="mobile-menu__summary">서비스
+ *               <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+ *             </summary>
+ *             <ul class="mobile-menu__sublist">
+ *               <li><a class="mobile-menu__sublink" href="/services/a">서비스 A</a></li>
+ *             </ul>
+ *           </details>
+ *         </li>
+ *       </ul>
+ *     </nav>
+ *   </div>
+ */
+
+@layer components {
+  /* 헤더(1020)보다 위, 모달(1040)보다 아래 */
+  .mobile-menu {
+    @apply fixed inset-0 z-[1030] flex flex-col bg-[var(--color-surface)] pc:hidden;
+  }
+
+  .mobile-menu[hidden] { @apply [display:none]; }
+
+  .mobile-menu__header {
+    @apply flex items-center justify-between gap-[1.6rem] shrink-0 h-[6.4rem] px-[1.6rem] tablet:px-[2.4rem] border-b border-[var(--color-border-light)];
+  }
+
+  .mobile-menu__title {
+    @apply m-0 text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text)];
+  }
+
+  .mobile-menu__close {
+    @apply shrink-0 inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border)] rounded-[0.6rem] text-[var(--color-text)] cursor-pointer;
+  }
+
+  .mobile-menu__close:hover {
+    @apply bg-[var(--color-bg-subtler)];
+  }
+
+  /* 항목이 많아도 헤더는 고정하고 목록만 스크롤한다 */
+  .mobile-menu__nav {
+    @apply flex-1 overflow-y-auto overscroll-contain;
+  }
+
+  .mobile-menu__list {
+    @apply list-none m-0 p-0;
+  }
+
+  .mobile-menu__item {
+    @apply border-b border-[var(--color-border-light)];
+  }
+
+  .mobile-menu__link,
+  .mobile-menu__summary {
+    @apply flex items-center justify-between gap-[1.6rem] min-h-[5.6rem] px-[1.6rem] tablet:px-[2.4rem] text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline cursor-pointer list-none;
+  }
+
+  /* native marker 제거 */
+  .mobile-menu__summary::-webkit-details-marker { @apply [display:none]; }
+  .mobile-menu__summary::marker { @apply [content:""]; }
+
+  .mobile-menu__link:hover,
+  .mobile-menu__summary:hover {
+    @apply bg-[var(--color-bg-subtler)];
+  }
+
+  .mobile-menu__link[aria-current="page"] {
+    @apply text-[var(--color-primary)];
+  }
+
+  .mobile-menu__icon {
+    @apply [transition:transform_0.15s_ease-in-out];
+  }
+
+  .mobile-menu__group[open] .mobile-menu__icon {
+    @apply rotate-180;
+  }
+
+  .mobile-menu__sublist {
+    @apply list-none m-0 pt-0 pb-[0.8rem] px-0 bg-[var(--color-bg-subtler)];
+  }
+
+  .mobile-menu__sublink {
+    @apply flex items-center min-h-[4.8rem] px-[2.4rem] tablet:px-[3.2rem] text-[1.7rem] leading-[1.5] text-[var(--color-text)] no-underline;
+  }
+
+  .mobile-menu__sublink:hover {
+    @apply underline;
+  }
+
+  .mobile-menu__sublink[aria-current="page"] {
+    @apply font-bold text-[var(--color-primary)];
+  }
+
+  /* 스크롤 영역 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 안쪽에 그린다 */
+  .mobile-menu__link:focus-visible,
+  .mobile-menu__summary:focus-visible,
+  .mobile-menu__sublink:focus-visible {
+    @apply [outline-offset:-0.4rem];
+  }
+}

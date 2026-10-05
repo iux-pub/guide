@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오류 페이지 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .pg__note {
+      font-size: 1.5rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      color: var(--color-text-subtle);
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__preview--flush {
+      padding: 0;
+      overflow: visible;
+    }
+
+    .pg__preview--tall {
+      min-height: 40rem;
+    }
+
+    .pg__code {
+      background-color: var(--color-bg-subtler);
+      border: 1px solid var(--color-border-light);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .pg__code pre {
+      margin: 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    .pg__code code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">오류 페이지 (Error Page)</h1>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">404 — 기본 (검색 + 바로가기)</h2>
+      <p class="pg__note">공공서비스·공공기관의 기본형. 탈출 경로(홈·검색·바로가기)가 먼저고 장식은 없습니다.</p>
+      <div class="pg__preview">
+        <div class="error-page">
+          <h1 class="error-page__title">요청하신 페이지를 찾을 수 없습니다</h1>
+          <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 방법으로 원하시는 내용을 찾아보세요.</p>
+
+          <div class="error-page__actions">
+            <a class="btn btn--primary" href="#">홈으로 이동</a>
+            <a class="btn btn--tertiary" href="#">사이트맵 보기</a>
+          </div>
+
+          <form class="error-page__search" role="search" action="#" method="get">
+            <label class="sr-only" for="pg-error-search">검색어</label>
+            <input class="input" type="search" id="pg-error-search" name="q" autocomplete="off">
+            <button type="submit" class="btn btn--secondary">검색</button>
+          </form>
+
+          <nav class="error-page__help" aria-labelledby="pg-error-help-title">
+            <h2 class="error-page__help-title" id="pg-error-help-title">많이 찾는 페이지</h2>
+            <ul class="error-page__help-list">
+              <li><a class="error-page__help-link" href="#">공지사항</a></li>
+              <li><a class="error-page__help-link" href="#">신청하기</a></li>
+              <li><a class="error-page__help-link" href="#">처리 현황 조회</a></li>
+              <li><a class="error-page__help-link" href="#">자주 묻는 질문</a></li>
+            </ul>
+          </nav>
+
+          <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+        </div>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;div class="error-page"&gt;
+  &lt;h1 class="error-page__title"&gt;요청하신 페이지를 찾을 수 없습니다&lt;/h1&gt;
+  &lt;p class="error-page__desc"&gt;주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 방법으로 원하시는 내용을 찾아보세요.&lt;/p&gt;
+
+  &lt;div class="error-page__actions"&gt;
+    &lt;a class="btn btn--primary" href="/"&gt;홈으로 이동&lt;/a&gt;
+    &lt;a class="btn btn--tertiary" href="/sitemap"&gt;사이트맵 보기&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;form class="error-page__search" role="search" action="/search" method="get"&gt;
+    &lt;label class="sr-only" for="pg-error-search"&gt;검색어&lt;/label&gt;
+    &lt;input class="input" type="search" id="pg-error-search" name="q" autocomplete="off"&gt;
+    &lt;button type="submit" class="btn btn--secondary"&gt;검색&lt;/button&gt;
+  &lt;/form&gt;
+
+  &lt;nav class="error-page__help" aria-labelledby="pg-error-help-title"&gt;
+    &lt;h2 class="error-page__help-title" id="pg-error-help-title"&gt;많이 찾는 페이지&lt;/h2&gt;
+    &lt;ul class="error-page__help-list"&gt;
+      &lt;li&gt;&lt;a class="error-page__help-link" href="/notice"&gt;공지사항&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="error-page__help-link" href="/apply"&gt;신청하기&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="error-page__help-link" href="/lookup"&gt;처리 현황 조회&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="error-page__help-link" href="/faq"&gt;자주 묻는 질문&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;p class="error-page__contact"&gt;계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">503 — 점검</h2>
+      <p class="pg__note">점검 일시는 확인된 값만 씁니다. 이 예시는 일시를 지어내지 않고 공지로 연결합니다.</p>
+      <div class="pg__preview">
+        <div class="error-page">
+          <h1 class="error-page__title">서비스 점검 중입니다</h1>
+          <p class="error-page__desc">안정적인 서비스를 위해 시스템을 점검하고 있습니다. 점검이 끝나면 다시 이용하실 수 있습니다.</p>
+          <div class="error-page__actions">
+            <a class="btn btn--primary" href="#">점검 공지 보기</a>
+          </div>
+          <p class="error-page__contact">급한 문의는 대표전화 064-123-4567(평일 09:00~18:00)로 연락해 주세요.</p>
+        </div>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;div class="error-page"&gt;
+  &lt;h1 class="error-page__title"&gt;서비스 점검 중입니다&lt;/h1&gt;
+  &lt;p class="error-page__desc"&gt;안정적인 서비스를 위해 시스템을 점검하고 있습니다. 점검이 끝나면 다시 이용하실 수 있습니다.&lt;/p&gt;
+  &lt;div class="error-page__actions"&gt;
+    &lt;a class="btn btn--primary" href="/notice"&gt;점검 공지 보기&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;p class="error-page__contact"&gt;급한 문의는 대표전화 064-123-4567(평일 09:00~18:00)로 연락해 주세요.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">상태 코드 표기 (선택 요소 __code)</h2>
+      <p class="pg__note">문의 접수 때 확인용으로 필요할 때만 씁니다. 대민 서비스는 생략을 권장합니다.</p>
+      <div class="pg__preview">
+        <div class="error-page">
+          <p class="error-page__code">404</p>
+          <h1 class="error-page__title">요청하신 페이지를 찾을 수 없습니다</h1>
+          <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다.</p>
+          <div class="error-page__actions">
+            <a class="btn btn--primary" href="#">홈으로 이동</a>
+          </div>
+        </div>
+      </div>
+      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+<pre><code>&lt;div class="error-page"&gt;
+  &lt;p class="error-page__code"&gt;404&lt;/p&gt;
+  &lt;h1 class="error-page__title"&gt;요청하신 페이지를 찾을 수 없습니다&lt;/h1&gt;
+  &lt;p class="error-page__desc"&gt;주소가 바뀌었거나 삭제된 페이지일 수 있습니다.&lt;/p&gt;
+  &lt;div class="error-page__actions"&gt;
+    &lt;a class="btn btn--primary" href="/"&gt;홈으로 이동&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

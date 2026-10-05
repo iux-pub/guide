@@ -1,0 +1,74 @@
+/**
+ * Notice Bar — 사이트 공지 띠
+ *
+ * 페이지 최상단(건너뛰기 링크 다음, header 앞)에 놓이는 사이트 전체 공지.
+ * 페이지 안의 상태 메시지(alert)나 동작 결과 알림(toast)과 다르다 — 사이트 방문자 모두에게
+ * 한 번 알리는 정적 안내이며, 스스로 바뀌거나 굴러가지 않는다.
+ *
+ * 구조:
+ *   <section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+ *     <div class="container notice-bar__inner">
+ *       <span class="notice-bar__label">공지</span>
+ *       <p class="notice-bar__message">
+ *         <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 시스템 점검 안내</a>
+ *       </p>
+ *       <button type="button" class="notice-bar__close" aria-label="공지 닫기">
+ *         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
+ *       </button>
+ *     </div>
+ *   </section>
+ */
+
+@layer components {
+  .notice-bar {
+    @apply bg-[var(--color-info-surface)] border-b border-[var(--color-information-20)] text-[var(--color-text)];
+  }
+
+  .notice-bar[hidden] { @apply [display:none]; }
+
+  .notice-bar__inner {
+    @apply flex items-center gap-[1.2rem] min-h-[4.8rem] py-[0.4rem];
+  }
+
+  .notice-bar__label {
+    @apply shrink-0 inline-flex items-center h-[2.4rem] px-[0.8rem] rounded-[0.4rem] bg-[var(--color-information-60)] text-[var(--color-text-inverse)] text-[1.4rem] font-bold leading-[1.5];
+  }
+
+  .notice-bar__message {
+    @apply flex-1 min-w-0 m-0 text-[1.6rem] leading-[1.5];
+  }
+
+  /* 색만으로 링크를 구분하지 않는다(WCAG 1.4.1) — 밑줄을 기본으로 둔다 */
+  .notice-bar__link {
+    @apply inline-flex items-center min-h-[4.4rem] text-[var(--color-text)] underline underline-offset-[0.3rem];
+  }
+
+  .notice-bar__link:hover {
+    @apply text-[var(--color-primary-hover)];
+  }
+
+  .notice-bar__close {
+    @apply shrink-0 inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border-0 rounded-[0.4rem] text-[var(--color-text)] cursor-pointer;
+  }
+
+  .notice-bar__close:hover {
+    @apply bg-[var(--color-bg)];
+  }
+
+  /* 톤 — 의미 기반. 색만으로 의미를 전하지 않도록 라벨 텍스트("점검", "긴급")를 함께 쓴다 */
+  .notice-bar--warning {
+    @apply bg-[var(--color-warning-surface)] border-[var(--color-warning-20)];
+  }
+
+  .notice-bar--warning .notice-bar__label {
+    @apply bg-[var(--color-warning-60)];
+  }
+
+  .notice-bar--danger {
+    @apply bg-[var(--color-danger-surface)] border-[var(--color-danger-20)];
+  }
+
+  .notice-bar--danger .notice-bar__label {
+    @apply bg-[var(--color-danger-60)];
+  }
+}

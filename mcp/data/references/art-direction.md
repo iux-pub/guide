@@ -172,7 +172,7 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 5. 근거 없는 통계 히어로·가짜 후기 캐러셀. [owner: art-direction / 수치 근거는 수동 검수]
 6. 직역 마케팅 카피 — "지금 시작하세요"·"당신"·느낌표 남발. [owner: microcopy — 세부 위임]
 7. 어두운 오버레이+중앙 흰 문구+스크롤 화살표 히어로. [owner: art-direction]
-8. 무한 롤링 로고 마키·scroll-jacking·overshoot easing·500ms 초과 장식 모션. [owner: interaction-timing / R-22]
+8. 무한 롤링 로고 마키·scroll-jacking·500ms 초과 장식 모션·**장식/스크롤 진입 모션의** overshoot easing. 모달·토스트·인풋 전환 같은 컴포넌트 피드백 모션의 Spring 프리셋은 이 금지의 대상이 아니다 — interaction-timing 소유(등급 무관, `contracts/profiles.json` 모션 note). [owner: interaction-timing / R-22]
 9. 요구에 없는 다크모드 토글 — infoUX는 high-contrast 2모드 체계다. [owner: tokens]
 10. weight 700 남발·영문 display 폰트의 한글 fallback 미설계. [owner: art-direction hangul / R-26]
 

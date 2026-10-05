@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: e106ba4
+> 빌드: 113663a
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -12,9 +12,9 @@
 
 - **그룹 A — 폼/액션**: [btn](#btn) · [check-radio](#check-radio) · [file-upload](#file-upload) · [form](#form) · [select](#select) · [switch](#switch)
 - **그룹 B — 컨테이너/레이아웃**: [accordion](#accordion) · [card](#card) · [disclosure](#disclosure) · [modal](#modal) · [side-panel](#side-panel) · [tab](#tab)
-- **그룹 C — 내비게이션**: [breadcrumb](#breadcrumb) · [header](#header) · [main-menu](#main-menu) · [pagination](#pagination)
-- **그룹 D — 피드백**: [alert](#alert) · [badge](#badge) · [progress](#progress) · [spinner](#spinner) · [step-indicator](#step-indicator) · [tag](#tag) · [toast](#toast) · [tooltip](#tooltip)
-- **그룹 E — 콘텐츠/표현**: [calendar](#calendar) · [carousel](#carousel) · [icon](#icon) · [list](#list) · [table](#table)
+- **그룹 C — 내비게이션**: [breadcrumb](#breadcrumb) · [footer](#footer) · [header](#header) · [main-menu](#main-menu) · [mobile-menu](#mobile-menu) · [pagination](#pagination)
+- **그룹 D — 피드백**: [alert](#alert) · [badge](#badge) · [notice-bar](#notice-bar) · [progress](#progress) · [spinner](#spinner) · [step-indicator](#step-indicator) · [tag](#tag) · [toast](#toast) · [tooltip](#tooltip)
+- **그룹 E — 콘텐츠/표현**: [calendar](#calendar) · [carousel](#carousel) · [error-page](#error-page) · [icon](#icon) · [list](#list) · [table](#table)
 
 ---
 
@@ -694,6 +694,160 @@ trigger.addEventListener('click', () => {
 
 ---
 
+##### 푸터 (Site Footer) — infoUX {#footer}
+
+페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 구성 요소를 덜어 쓰는 패턴이라, 모든 요소를 채우는 것이 목표가 아니다.
+
+#### 기본 마크업
+
+```html
+<footer id="footer" class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <a class="site-footer__brand" href="/">
+        <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
+      </a>
+      <nav class="site-footer__nav" aria-label="푸터 메뉴">
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-about">재단 소개</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-about">
+            <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
+            <li><a class="site-footer__link" href="/about/history">연혁</a></li>
+            <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-program">프로그램</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-program">
+            <li><a class="site-footer__link" href="/program/exhibition">전시</a></li>
+            <li><a class="site-footer__link" href="/program/performance">공연</a></li>
+            <li><a class="site-footer__link" href="/program/education">교육</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-news">알림마당</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-news">
+            <li><a class="site-footer__link" href="/news/notice">공지사항</a></li>
+            <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-help">이용 안내</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-help">
+            <li><a class="site-footer__link" href="/help/faq">자주 묻는 질문</a></li>
+            <li><a class="site-footer__link" href="/help/sitemap">사이트맵</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="site-footer__bottom">
+      <div class="site-footer__info">
+        <nav class="site-footer__legal" aria-label="약관 및 정책">
+          <ul class="site-footer__legal-list">
+            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
+            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
+            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
+          </ul>
+        </nav>
+        <address class="site-footer__address">
+          제주특별자치도 제주시 한라로 100<br>
+          대표전화 064-123-4567 · 이메일 contact@example.org
+        </address>
+        <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+      </div>
+
+      <details class="site-footer__family">
+        <summary class="site-footer__family-summary">
+          패밀리 사이트
+          <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+        </summary>
+        <ul class="site-footer__family-list">
+          <li><a class="site-footer__family-link" href="https://example.org/museum">미술관</a></li>
+          <li><a class="site-footer__family-link" href="https://example.org/library">도서관</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</footer>
+```
+
+#### 시맨틱 구조
+
+- **Root 태그**: `<footer id="footer" class="site-footer">` — 페이지에 하나, `main` 바깥 (R-15 page shell)
+- **자식**: `.container` → `__top`(브랜드 + 푸터 메뉴) → `__bottom`(정책 링크·연락처·저작권·패밀리 사이트)
+- **내비게이션**: 푸터 안 `nav`가 둘 이상이면 각각 `aria-label`로 구분한다 (`푸터 메뉴`, `약관 및 정책`)
+- **연락처**: `<address>`는 이 사이트의 연락처에만 쓴다. 임의의 주소 문장에 쓰지 않는다
+- **저작권**: `<small>` — 부가 고지임을 나타낸다
+
+> 상세: `references/html-semantics.md#site-footer`
+
+#### Variant
+
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| 기본 | `.site-footer` | 푸터 메뉴 + 하단 고지. 일반사이트·공공기관 |
+| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면 |
+| 반전 | `.site-footer--inverse` | 어두운 바탕. 일반사이트·커머스 표현형 한정 |
+
+```html
+<!-- 소형: 상단 메뉴 없이 정책 링크와 저작권만 -->
+<footer id="footer" class="site-footer site-footer--compact">
+  <div class="container">
+    <div class="site-footer__bottom">
+      <div class="site-footer__info">
+        <nav class="site-footer__legal" aria-label="약관 및 정책">
+          <ul class="site-footer__legal-list">
+            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
+            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
+          </ul>
+        </nav>
+        <small class="site-footer__copy">© 2026 기관명</small>
+      </div>
+    </div>
+  </div>
+</footer>
+```
+
+#### 사이트 유형별 구성
+
+| 유형 | 변형 | 구성 | 비고 |
+|------|------|------|------|
+| 일반사이트 | 기본 / 반전 | 푸터 메뉴 + 정책 링크 + 연락처 + 저작권 (+ 패밀리 사이트) | 표현형이라 브랜드 톤을 푸터에서 가장 크게 연다 |
+| 공공서비스 | 소형 | 정책 링크 + 저작권 | 과업 화면을 방해하지 않는다. 기관 식별자는 발주처 지침이 확인된 경우에만 |
+| 공공기관 | 기본 | 푸터 메뉴 + 정책 링크 + 연락처 + 저작권 + 패밀리 사이트 | 공공 푸터 필수 링크는 과업지시서·기관 정책 확인 후 추가 |
+| CMS·관리자 | 소형 | 저작권·버전 표기 정도 | utility 등급. 장식 없음 |
+| 커머스·예약 | 기본 / 반전 | 약관·환불·개인정보 링크 + 사업자 정보 | 법정 표기 항목은 발주처·법무 확인 후 채운다 |
+
+#### 사용 조건
+
+- 푸터 메뉴는 사이트맵을 복제하는 곳이 아니다 — 자주 찾는 경로만 3~5개 그룹으로 추린다
+- 한 그룹의 링크는 5개 안팎으로 둔다. 길어지면 그룹을 나눈다
+- 정책 링크 중 가장 중요한 하나(개인정보처리방침 등)에만 `--important`를 준다
+- 패밀리 사이트는 **링크 클릭으로만** 이동한다. `<select>` 선택만으로 페이지가 바뀌지 않게 한다 (WCAG 3.2.2)
+- 사업자 정보·법정 고지 문구는 지어내지 않는다 — 발주처가 확인해 준 값만 쓴다 (R-23)
+
+#### 접근성
+
+- 랜드마크: `<footer>`는 `contentinfo`로 노출된다. 페이지에 하나만 둔다
+- 푸터 `nav`가 여럿이면 `aria-label`이 서로 달라야 한다
+- 그룹 제목은 `h2` + 목록 `aria-labelledby`로 연결해 스크린리더가 그룹 이름을 읽게 한다
+- 링크 터치 영역 44×44px 이상 (R-13) — `__link`는 `min-h-[4.4rem]`를 포함한다
+- 패밀리 사이트 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
+- 반전 변형: 일반 텍스트 4.5:1 이상을 유지한다 (`--color-gray-20` on `--color-bg-inverse`)
+- 외부 사이트 링크는 새 창을 열지 않는다. 새 창이 필요하면 링크 텍스트나 `aria-label`에 "새 창"을 밝힌다
+- 초점 외곽선: 칸을 꽉 채우는 링크(`__family-link`)는 `outline-offset`을 음수로 두어 안쪽에 그린다
+
+#### 출처
+
+- 색상은 `--color-bg-subtler` · `--color-text` · `--color-text-subtle` · 반전은 `--color-bg-inverse` · `--color-text-inverse` · `--color-gray-20`
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- CSS: `src/styles/6-components/footer.css`
+- 아이콘: `chevron-down` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
+
+
+---
+
 ##### 사이트 헤더 (Site Header) {#header}
 
 사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
@@ -718,7 +872,9 @@ trigger.addEventListener('click', () => {
 
     <div class="site-header__actions">
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -726,7 +882,7 @@ trigger.addEventListener('click', () => {
 
 #### 동작
 
-- 모바일/태블릿 (< 1280px): 주 메뉴 숨김 + 햄버거 토글 노출
+- 모바일/태블릿 (< 1280px): 주 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
 - PC (≥ 1280px): 주 메뉴 노출 + 햄버거 숨김
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
 
@@ -735,7 +891,8 @@ trigger.addEventListener('click', () => {
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
 - 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label="메뉴 열기/닫기"` + `aria-expanded` 상태 토글
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
 #### 조건부 공공/정부 요소
@@ -756,7 +913,7 @@ trigger.addEventListener('click', () => {
 
 ##### 주 메뉴 (Main Menu) — KRDS {#main-menu}
 
-드롭다운형 주 내비게이션. 헤더 안에서 사용.
+드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다.
 
 #### 기본 마크업
 
@@ -768,8 +925,9 @@ trigger.addEventListener('click', () => {
     </li>
 
     <li class="main-menu__item">
-      <button type="button" class="main-menu__link" aria-haspopup="true" aria-expanded="false" aria-controls="submenu-services">
+      <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="submenu-services">
         서비스
+        <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
       </button>
       <ul id="submenu-services" class="main-menu__submenu" hidden>
         <li><a href="/services/a">서비스 A</a></li>
@@ -785,24 +943,193 @@ trigger.addEventListener('click', () => {
 </nav>
 ```
 
+#### 시맨틱 구조
+
+- **Root 태그**: `<nav class="main-menu" aria-label="주 메뉴">`
+- **자식**: `ul.main-menu__list` → `li.main-menu__item` → `a.main-menu__link`(이동) 또는 `button.main-menu__toggle`(하위 패널 열기)
+- **필수 ARIA**: `nav`에 `aria-label` · 토글 버튼에 `aria-expanded` + `aria-controls` · 현재 페이지에 `aria-current="page"`
+- **쓰지 않는 것**: `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 펼치는 것일 뿐 애플리케이션 메뉴가 아니다
+
+> 상세: `references/html-semantics.md#main-menu`
+
+#### Variant
+
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| 드롭다운 | (기본) | 항목 아래 작은 목록. 하위 링크가 한 줄로 끝나는 메뉴 |
+| 메가 | `.main-menu--mega` | 헤더 전체 폭 패널에 그룹별로 나눈 링크. 하위 링크가 많거나 그룹이 있는 메뉴 |
+
+##### 메가 메뉴
+
+패널이 헤더 전체 폭으로 열린다. 그룹 제목은 링크가 아니라 텍스트이고, 목록은 `aria-labelledby`로 그룹 이름을 받는다.
+
+```html
+<nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+  <ul class="main-menu__list">
+    <li class="main-menu__item">
+      <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">
+        민원 서비스
+        <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+      </button>
+      <div id="mega-service" class="main-menu__panel" hidden>
+        <div class="container main-menu__groups">
+          <div class="main-menu__group">
+            <p class="main-menu__group-title" id="mega-service-apply">신청</p>
+            <ul class="main-menu__group-list" aria-labelledby="mega-service-apply">
+              <li><a class="main-menu__sublink" href="/apply/permit">허가 신청</a></li>
+              <li><a class="main-menu__sublink" href="/apply/report">신고</a></li>
+              <li><a class="main-menu__sublink" href="/apply/certificate">증명서 발급</a></li>
+            </ul>
+          </div>
+          <div class="main-menu__group">
+            <p class="main-menu__group-title" id="mega-service-lookup">조회</p>
+            <ul class="main-menu__group-list" aria-labelledby="mega-service-lookup">
+              <li><a class="main-menu__sublink" href="/lookup/status" aria-current="page">처리 현황</a></li>
+              <li><a class="main-menu__sublink" href="/lookup/history">신청 내역</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="main-menu__item">
+      <a class="main-menu__link" href="/notice">공지사항</a>
+    </li>
+  </ul>
+</nav>
+```
+
 #### 동작 (JS)
 
-- 드롭다운 토글: `aria-haspopup` 가진 `<button>` 클릭 → 해당 `aria-controls` 서브메뉴 hidden 토글 + `aria-expanded` 토글
-- 외부 클릭 시 닫기
-- ESC 키로 닫기 + 트리거 버튼으로 포커스 복귀
-- 키보드: 화살표로 항목 이동, Enter/Space로 선택
+`src/js/disclosure-nav.js` — 드롭다운·메가 공통.
+
+- 토글 버튼 클릭(`Enter`/`Space`) → 해당 `aria-controls` 패널의 `hidden` 토글 + `aria-expanded` 갱신. 다른 패널은 닫는다
+- `Esc` → 열린 패널을 닫고 **초점을 토글 버튼으로 되돌린다**
+- 메뉴 바깥 클릭 → 닫기
+- `Tab`으로 열린 항목 밖으로 초점이 나가면 닫기
+- 방향키 운용은 하지 않는다 — 링크는 `Tab`으로 순서대로 지난다
+- 마우스를 올리는 것만으로는 열지 않는다(클릭 전용). 호버로 열리면 WCAG 1.4.13(호버 콘텐츠)을 따로 만족시켜야 한다
 
 #### 접근성
 
-- 서브메뉴 트리거는 `<button>` 권장 (`<a>` 아님 — 링크가 아니므로)
-- `aria-haspopup="true"` + `aria-expanded` 상태값
-- `aria-controls`로 서브메뉴 id 연결
-- 서브메뉴 `<ul>`은 `hidden` 속성으로 노출 제어
-- 현재 페이지: `aria-current="page"`
+- 하위 메뉴 트리거는 `<button>` (링크가 아니므로 `<a>` 쓰지 않는다)
+- `aria-expanded`(`true`/`false`) + `aria-controls`(패널 id) — 연결 대상 id가 실제로 존재해야 한다
+- 패널은 `hidden` 속성으로 노출을 제어한다 — 닫힌 패널의 링크는 Tab 순서에서 빠진다
+- 현재 페이지는 `aria-current="page"`. 패널 안에 현재 페이지가 있어도 토글 버튼은 그대로 둔다
+- 링크 터치 영역 44px 이상 — 패널 링크는 `min-h-[4.4rem]`를 포함한다
+- 초점 외곽선: 칸을 꽉 채우는 패널 링크는 `outline-offset`을 음수로 두어 안쪽에 그린다
+- 아이콘은 장식 — `aria-hidden="true"`, 의미는 옆 텍스트가 전한다
+- 메가 패널이 열려 있어도 본문 스크롤을 막지 않는다. 포커스 트랩이 없다(모달이 아니다)
 
 #### 출처
 
+- WAI-ARIA APG: Disclosure Navigation Menu (https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
 - CSS: `src/styles/6-components/main-menu.css`
+- JS: `src/js/disclosure-nav.js`
+- 아이콘: `chevron-down` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
+
+
+---
+
+##### 모바일 메뉴 (Mobile Menu) — infoUX {#mobile-menu}
+
+헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [주 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
+
+#### 기본 마크업
+
+헤더의 햄버거 버튼과 패널은 **한 쌍**이다. 패널은 `header` 바깥(페이지 shell의 `body` 직계)에 둔다.
+
+```html
+<header id="header" class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__brand" href="/">
+      <img src="/logo.svg" alt="기관명">
+    </a>
+    <div class="site-header__actions">
+      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
+  <div class="mobile-menu__header">
+    <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
+    <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
+    </button>
+  </div>
+
+  <nav class="mobile-menu__nav" aria-label="주 메뉴">
+    <ul class="mobile-menu__list">
+      <li class="mobile-menu__item">
+        <a class="mobile-menu__link" href="/about">소개</a>
+      </li>
+      <li class="mobile-menu__item">
+        <details class="mobile-menu__group">
+          <summary class="mobile-menu__summary">
+            서비스
+            <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+          </summary>
+          <ul class="mobile-menu__sublist">
+            <li><a class="mobile-menu__sublink" href="/services/apply">신청</a></li>
+            <li><a class="mobile-menu__sublink" href="/services/lookup" aria-current="page">조회</a></li>
+            <li><a class="mobile-menu__sublink" href="/services/guide">이용 안내</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="mobile-menu__item">
+        <a class="mobile-menu__link" href="/notice">공지사항</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+```
+
+#### 시맨틱 구조
+
+- **Root 태그**: `<div class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="…" hidden>`
+- **자식**: `__header`(제목 + 닫기 버튼) → `nav.mobile-menu__nav` → `ul.mobile-menu__list`
+- **하위 메뉴**: native `<details>/<summary>` — 열고 닫는 상태를 브라우저가 관리한다. ARIA를 덧붙이지 않는다
+- **필수 ARIA**: 패널에 `role="dialog"` + `aria-modal="true"` + `aria-labelledby` · 햄버거에 `aria-expanded` + `aria-controls`
+
+> 상세: `references/html-semantics.md#mobile-menu`
+
+#### 동작 (JS)
+
+`src/js/mobile-menu.js`
+
+- 열기: 햄버거(`data-mobile-menu-open="패널 id"`) 클릭 → `hidden` 제거 + 햄버거 `aria-expanded="true"` + 본문 스크롤 잠금 + 첫 포커스 가능 요소(닫기 버튼)로 초점 이동
+- 닫기: 닫기 버튼(`data-mobile-menu-close`) 또는 `Esc` → `hidden` 복원 + `aria-expanded="false"` + **햄버거로 초점 복귀**
+- 포커스 트랩: `Tab`/`Shift+Tab`이 패널 안에서만 순환한다. 닫힌 `details` 안의 링크는 순환에서 빠진다
+- 같은 페이지 앵커(`href="#…"`)를 누르면 메뉴를 닫는다
+- 화면이 1280px 이상으로 넓어지면 열려 있던 패널을 정리한다 (주 메뉴가 대신한다)
+
+#### 사용 조건
+
+- 하위 단계는 한 단계까지 — `details` 안에 `details`를 또 넣지 않는다. 더 깊으면 메뉴 구조를 다시 짠다
+- 패널 안에 검색·로그인 같은 유틸리티를 둘 수 있다. 이 경우에도 닫기 버튼이 항상 첫 번째 포커스 대상이다
+- 패널 타이틀은 "전체 메뉴"처럼 기능 이름을 쓴다. 기관 홍보 문구를 넣지 않는다
+- 장식 애니메이션은 쓰지 않는다. 열림은 즉시 나타나는 것이 기본이다 (필요하면 fade 150~200ms, `prefers-reduced-motion` 가드 필수 · R-22)
+
+#### 접근성
+
+- 패널 열림 중 뒤쪽 콘텐츠는 `aria-modal="true"`로 스크린리더 탐색에서 빠진다
+- 햄버거 `aria-label`은 **고정**한다 (`전체 메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
+- 닫기 버튼 `aria-label="전체 메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
+- 아이콘은 모두 장식 — `aria-hidden="true"`. 햄버거·닫기 모양의 텍스트 기호로 아이콘을 대신하지 않는다 (R-27)
+- 터치 영역: 햄버거·닫기 44×44px, 항목 56px / 하위 항목 48px (R-13)
+- 초점 외곽선: 스크롤 영역(`overflow-y: auto`) 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 `outline-offset`을 음수로 두어 안쪽에 그린다
+- 현재 페이지는 `aria-current="page"`
+- 키보드: `Tab` 순환 · `Enter`/`Space`로 `summary` 토글 · `Esc` 닫기
+
+#### 출처
+
+- WAI-ARIA APG: Dialog (Modal) — https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+- CSS: `src/styles/6-components/mobile-menu.css`
+- JS: `src/js/mobile-menu.js`
+- 아이콘: `menu` · `close` · `chevron-down` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
 
 
 ---
@@ -924,6 +1251,95 @@ trigger.addEventListener('click', () => {
 #### 출처
 
 - CSS: `src/styles/6-components/badge.css`
+
+
+---
+
+##### 공지 띠 (Notice Bar) — infoUX {#notice-bar}
+
+페이지 최상단에서 사이트 방문자 모두에게 한 번 알리는 공지. 점검·휴무·운영 변경처럼 **기간이 있는 안내**에 쓴다.
+
+#### 기본 마크업
+
+페이지 shell에서 **건너뛰기 링크(`.skip-to-content`) 다음, `header#header` 앞**에 둔다.
+
+```html
+<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+  <div class="container notice-bar__inner">
+    <span class="notice-bar__label">점검</span>
+    <p class="notice-bar__message">
+      <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다</a>
+    </p>
+    <button type="button" class="notice-bar__close" aria-label="공지 닫기">
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
+    </button>
+  </div>
+</section>
+```
+
+#### 시맨틱 구조
+
+- **Root 태그**: `<section class="notice-bar" aria-label="사이트 공지">` — 이름 있는 영역(region)이 되어 스크린리더 랜드마크 탐색에 잡힌다
+- **자식**: `.container` → `__label`(분류 텍스트) · `__message`(문장 + 링크) · `__close`(닫기 버튼)
+- **필수 ARIA**: `aria-label` (영역 이름) · 닫기 버튼 `aria-label="공지 닫기"`
+- **라이브 영역을 쓰지 않는다**: `role="alert"` · `aria-live`는 붙이지 않는다. 페이지 로드 때 이미 있는 정적 안내이고, 낭독을 강제하면 매 페이지마다 방해가 된다
+
+> 상세: `references/html-semantics.md#notice-bar`
+
+#### Variant
+
+| Variant | 클래스 | 용도 | 라벨 예 |
+|---------|--------|------|---------|
+| 정보 | `.notice-bar--info` | 일반 안내 (기본) | 공지 |
+| 주의 | `.notice-bar--warning` | 점검·휴무·일정 변경 | 점검 |
+| 긴급 | `.notice-bar--danger` | 서비스 중단·장애·재난 | 긴급 |
+
+톤은 색만으로 전하지 않는다 — 라벨 텍스트가 같은 뜻을 전한다 (WCAG 1.4.1).
+
+#### 동작 (JS)
+
+`src/js/notice-bar.js`
+
+- 닫기 버튼 → 띠에 `hidden` 부여. `data-notice-id`가 있으면 `localStorage`에 닫은 기록을 남긴다
+- 다음 방문에는 같은 `data-notice-id`의 띠를 로드 때 숨긴다. **공지 내용이 바뀌면 `data-notice-id`도 바꾼다** — 그래야 새 공지가 다시 보인다
+- 닫은 뒤 초점은 헤더의 첫 링크·버튼으로 옮긴다 (사라진 버튼에 초점이 남지 않게)
+- 저장소를 못 쓰는 환경(시크릿 모드·차단)에서도 닫기 자체는 동작한다. 다음 방문에 다시 보일 뿐이다
+
+#### 사용 조건
+
+- **한 번에 하나만** 둔다. 여러 공지가 있으면 가장 중요한 하나를 띄우고 나머지는 공지사항 목록으로 안내한다
+- **자동으로 넘어가거나 굴러가는 형태(롤링·마키)로 만들지 않는다.** 5초 넘게 움직이는 콘텐츠는 멈출 수 있어야 하고(WCAG 2.2.2), 읽기 어려운 사용자를 만든다
+- 장문의 본문을 띠에 넣지 않는다. 한 줄 요약 + 상세 페이지 링크로 둔다
+- 만료일이 지난 공지는 내린다. 기간 없는 상시 안내(약관 변경 등)에 쓰지 않는다
+- 쿠키·개인정보 동의 배너와 다르다 — 동의 요청은 이 컴포넌트로 만들지 않는다
+- 사이트 유형: 공공서비스·공공기관·일반사이트·커머스에서 쓴다. CMS·관리자는 시스템 공지를 `alert`로 화면 안에 둔다
+
+##### 다른 알림 컴포넌트와의 구분
+
+| | 공지 띠 | Alert | Toast |
+|---|---------|-------|-------|
+| 위치 | 페이지 최상단 | 해당 콘텐츠 영역 안 | 화면 모서리 |
+| 성격 | 사이트 전체 안내 (정적) | 이 화면의 상태 메시지 | 방금 한 동작의 결과 |
+| 사라짐 | 사용자가 닫음 | 상태가 바뀔 때 | 몇 초 뒤 자동 |
+| 라이브 영역 | 쓰지 않음 | `role="alert"`/`status` | `role="status"`/`alert` |
+
+#### 접근성
+
+- 영역 이름 `aria-label="사이트 공지"` — 페이지에 비슷한 영역이 더 있으면 서로 다른 이름으로 구분한다
+- 링크는 밑줄로 구분한다. 색 차이만으로 링크임을 전하지 않는다
+- 닫기 버튼은 아이콘만 있으므로 `aria-label` 필수. 아이콘은 `aria-hidden="true"`
+- 터치 영역: 닫기 버튼 44×44px, 링크 `min-h-[4.4rem]` (R-13)
+- 대비: 본문 텍스트 `--color-text`, 라벨은 `--color-text-inverse` on `--color-information-60`/`--color-warning-60`/`--color-danger-60` (4.5:1 이상)
+- 닫은 뒤 초점이 문서 처음으로 날아가지 않도록 헤더로 옮긴다 (WCAG 2.4.3)
+- 동적으로 삽입하는 긴급 안내(장애 발생 직후 등)는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
+
+#### 출처
+
+- 색상은 `--color-info-surface` · `--color-information-20` · `--color-information-60` (톤별 warning/danger 동일 구조)
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- CSS: `src/styles/6-components/notice-bar.css`
+- JS: `src/js/notice-bar.js`
+- 아이콘: `close` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
 
 
 ---
@@ -1285,6 +1701,117 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 #### 출처
 
 - CSS: `src/styles/6-components/carousel.css`
+
+
+---
+
+##### 오류 페이지 (Error Page) — infoUX {#error-page}
+
+요청한 페이지를 보여줄 수 없을 때(404 · 403 · 500 · 점검) 한 화면으로 보여주는 패턴. 사용자는 이 화면을 구경하러 온 것이 아니라 **빠져나가러** 왔다. 장식보다 탈출 경로가 먼저다.
+
+#### 기본 마크업
+
+페이지 shell(skip link · `header#header` · `main#main` · `footer#footer`)은 그대로 두고 `main` 안에 한 섹션으로 넣는다.
+
+```html
+<section class="section section--content" aria-labelledby="error-title">
+  <div class="container">
+    <div class="error-page">
+      <h1 class="error-page__title" id="error-title">요청하신 페이지를 찾을 수 없습니다</h1>
+      <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 방법으로 원하시는 내용을 찾아보세요.</p>
+
+      <div class="error-page__actions">
+        <a class="btn btn--primary" href="/">홈으로 이동</a>
+        <a class="btn btn--tertiary" href="/sitemap">사이트맵 보기</a>
+      </div>
+
+      <form class="error-page__search" role="search" action="/search" method="get">
+        <label class="sr-only" for="error-search">검색어</label>
+        <input class="input" type="search" id="error-search" name="q" autocomplete="off">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+
+      <nav class="error-page__help" aria-labelledby="error-help-title">
+        <h2 class="error-page__help-title" id="error-help-title">많이 찾는 페이지</h2>
+        <ul class="error-page__help-list">
+          <li><a class="error-page__help-link" href="/notice">공지사항</a></li>
+          <li><a class="error-page__help-link" href="/apply">신청하기</a></li>
+          <li><a class="error-page__help-link" href="/lookup">처리 현황 조회</a></li>
+          <li><a class="error-page__help-link" href="/faq">자주 묻는 질문</a></li>
+        </ul>
+      </nav>
+
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+    </div>
+  </div>
+</section>
+```
+
+#### 시맨틱 구조
+
+- **Root 태그**: `<div class="error-page">` — `main > section > .container` 안의 컴포넌트 루트
+- **자식**: `h1.__title` → `p.__desc` → `div.__actions` → (선택) `form.__search` → `nav.__help` → (선택) `p.__contact`
+- **제목**: 오류 화면의 `h1`은 하나다. 섹션 이름은 `aria-labelledby`로 이 `h1`에 연결한다
+- **검색 폼**: `role="search"` + `<label>`. 시각적으로 레이블을 숨기려면 `.sr-only`를 쓴다 (placeholder만으로 레이블을 대신하지 않는다)
+- **바로가기**: `nav` + `aria-labelledby`로 이름을 받는다. 페이지에 nav가 여럿이므로 이름이 서로 달라야 한다
+
+> 상세: `references/html-semantics.md#error-page`
+
+#### 오류 유형별 문안
+
+[마이크로카피 3-Part 공식](/design/microcopy/) — **무엇이 잘못됐는지 + (왜) + 어떻게 해결하는지**. 사용자를 탓하지 않고, 내부 오류 코드를 문장에 노출하지 않는다.
+
+| 유형 | 제목 예 | 안내 예 | 주 행동 |
+|------|---------|---------|---------|
+| 404 없는 페이지 | 요청하신 페이지를 찾을 수 없습니다 | 주소가 바뀌었거나 삭제된 페이지일 수 있습니다. | 홈 · 검색 · 바로가기 |
+| 403 접근 권한 없음 | 이 페이지를 볼 수 있는 권한이 없습니다 | 로그인이 필요하거나 접근이 제한된 페이지입니다. | 로그인 · 권한 신청 |
+| 500 서버 오류 | 일시적으로 페이지를 보여드릴 수 없습니다 | 잠시 뒤에 다시 시도해 주세요. 문제가 계속되면 문의해 주세요. | 새로고침 · 문의 |
+| 503 점검 | 서비스 점검 중입니다 | 점검 시간 안내(확인된 일시만) | 점검 종료 후 이동 · 공지 |
+
+- 점검 문안의 **일시·기간은 확인된 값만** 쓴다. 지어내거나 "곧 완료됩니다" 같은 추측을 쓰지 않는다 (R-23)
+- 제목에 "에러", "Error 404", 기술 용어를 쓰지 않는다. 상태 코드가 필요하면 `__code`를 작게 따로 둔다
+
+#### 사이트 유형별 수위
+
+오류 화면은 사이트의 표현 등급과 무관하게 **utility~restrained**다 (art-direction §1 원칙 3 — 페이지 단위 강등).
+
+| 유형 | 수위 | 허용 | 쓰지 않는 것 |
+|------|------|------|--------------|
+| 공공서비스 | restrained | 제목 · 안내 · 홈/검색/바로가기 · 문의 | 일러스트 · 큰 상태 코드 |
+| 공공기관 | restrained | 위와 동일 + 기관 대표 연락처 | 일러스트 · 유머 문구 |
+| CMS·관리자 | utility | 제목 · 안내 · 이전 화면/대시보드로 이동 | 일러스트 · 장식 전부 |
+| 일반사이트 | restrained | 위 + **장식 일러스트 한 점**(`__visual`, `alt=""`) · 상태 코드 | 게임 · 글리치 · 3D · 움직이는 장식 |
+| 커머스·예약 | restrained | 위 + 상품 추천 링크 | 프로모션 배너 · 쿠폰 팝업 |
+
+404 화면을 눈에 띄는 연출로 만드는 갤러리 사례가 많지만, 공공 사이트에서는 **재미보다 탈출 경로**가 먼저다. 연출이 필요하면 일반사이트에서 일러스트 한 점으로 끝낸다.
+
+#### 서버 · 문서 측 요건
+
+HTML만으로 끝나지 않는다. 아래는 구현팀과 함께 확인한다.
+
+- **HTTP 상태 코드를 실제 값으로 응답한다** (404는 404). 화면만 오류 문구이고 상태가 200이면 검색 엔진·보조기기가 오류를 알 수 없다(soft 404)
+- 없는 주소를 **홈으로 자동 이동(redirect)시키지 않는다.** 사용자가 어디서 길을 잃었는지 알 수 없게 된다
+- `<title>`에 오류를 밝힌다: `페이지를 찾을 수 없습니다 | 사이트명`
+- 검색 엔진에 색인되지 않도록 `<meta name="robots" content="noindex">`를 둔다
+- 오류 화면에서도 전체 페이지 shell(헤더 · 메뉴 · 푸터)을 유지한다 — 일반 내비게이션이 길 찾기의 첫 수단이다
+
+#### 접근성
+
+- 페이지 `h1`은 오류 제목 하나다. 바로가기 제목은 `h2`
+- 제목·안내는 `role="alert"`로 낭독시키지 않는다. 사용자가 직접 이 주소로 들어온 화면이고, 페이지 제목(`<title>`)과 `h1`이 상황을 전한다
+- 검색 입력에는 `<label>`이 필요하다. `autocomplete="off"`는 검색어 재입력 보호용이며 선택이다
+- 링크는 밑줄로 구분하고 본문 링크 대비 4.5:1 이상(`--color-primary-pressed`)
+- 터치 영역 44×44px 이상 (R-13): 바로가기 링크 `min-h-[4.4rem]`, 버튼은 `btn` 기본 크기(48px)
+- 상태 코드(`__code`)는 장식이 아니라 정보다. 크게 쓰더라도 `aria-hidden`을 주지 않는다
+- 움직이는 요소를 두지 않는다. 장식 일러스트는 정지 이미지이며 `alt=""`
+
+#### 출처
+
+- 색상은 `--color-primary` · `--color-primary-pressed` · `--color-text` · `--color-text-subtle` · `--color-border-light`
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- CSS: `src/styles/6-components/error-page.css`
+- 문안 기준: `site/design/microcopy.md` (에러 메시지 3-Part 공식)
+- 수위 기준: `references/art-direction.md` §1 (페이지 단위 강등)
 
 
 ---

@@ -54,9 +54,9 @@ ChatGPT, Gemini, Claude 웹
 
 - **폼/액션** — btn, check-radio, file-upload, form, select, switch
 - **컨테이너** — accordion, card, disclosure, modal, side-panel, tab
-- **내비** — breadcrumb, header, main-menu, pagination
-- **피드백** — alert, badge, progress, spinner, step-indicator, tag, toast, tooltip
-- **콘텐츠** — calendar, carousel, list, table
+- **내비** — breadcrumb, footer, header, main-menu, mobile-menu, pagination
+- **피드백** — alert, badge, notice-bar, progress, spinner, step-indicator, tag, toast, tooltip
+- **콘텐츠** — calendar, carousel, error-page, list, table
 
 > 각 컴포넌트의 BEM·접근성·토큰 매핑 — `references/krds-components.md`
 

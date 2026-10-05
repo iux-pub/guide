@@ -1,0 +1,175 @@
+/**
+ * Site Footer — 사이트 푸터
+ *
+ * 공통 푸터 패턴. 사이트 유형에 따라 구성 요소를 덜어 쓴다.
+ * 공공 푸터 필수 링크·운영기관 식별자는 과업지시서나 기관 정책이 확인된 경우에만 추가한다.
+ *
+ * 구조:
+ *   <footer id="footer" class="site-footer">
+ *     <div class="container">
+ *       <div class="site-footer__top">
+ *         <a class="site-footer__brand" href="/">
+ *           <img class="site-footer__logo" src="/logo.svg" alt="기관명">
+ *         </a>
+ *         <nav class="site-footer__nav" aria-label="푸터 메뉴">
+ *           <div class="site-footer__group">
+ *             <h2 class="site-footer__heading" id="footer-group-service">서비스</h2>
+ *             <ul class="site-footer__list" aria-labelledby="footer-group-service">
+ *               <li><a class="site-footer__link" href="/service">서비스 안내</a></li>
+ *             </ul>
+ *           </div>
+ *         </nav>
+ *       </div>
+ *       <div class="site-footer__bottom">
+ *         <div class="site-footer__info">
+ *           <nav class="site-footer__legal" aria-label="약관 및 정책">
+ *             <ul class="site-footer__legal-list">
+ *               <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
+ *             </ul>
+ *           </nav>
+ *           <address class="site-footer__address">...</address>
+ *           <small class="site-footer__copy">...</small>
+ *         </div>
+ *         <details class="site-footer__family">
+ *           <summary class="site-footer__family-summary">패밀리 사이트</summary>
+ *           <ul class="site-footer__family-list">...</ul>
+ *         </details>
+ *       </div>
+ *     </div>
+ *   </footer>
+ */
+
+@layer components {
+  .site-footer {
+    @apply bg-[var(--color-bg-subtler)] text-[var(--color-text)] border-t border-[var(--color-border-light)];
+  }
+
+  /* 상단 — 브랜드 + 푸터 메뉴 */
+  .site-footer__top {
+    @apply flex flex-col gap-[3.2rem] py-[4rem] pc:flex-row pc:justify-between pc:py-[6.4rem];
+  }
+
+  .site-footer__brand {
+    @apply inline-flex items-center self-start min-h-[4.4rem] min-w-[4.4rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
+  }
+
+  .site-footer__logo {
+    @apply h-[3.2rem] w-auto;
+  }
+
+  .site-footer__nav {
+    @apply grid grid-cols-2 gap-x-[2.4rem] gap-y-[3.2rem] tablet:grid-cols-4 pc:max-w-[72rem] pc:flex-1;
+  }
+
+  .site-footer__heading {
+    @apply m-0 mb-[1.2rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text)];
+  }
+
+  .site-footer__list {
+    @apply flex flex-col list-none m-0 p-0;
+  }
+
+  /* 링크 — 목록 안에서 44px 터치 영역을 확보한다 */
+  .site-footer__link {
+    @apply inline-flex items-center min-h-[4.4rem] min-w-[4.4rem] text-[1.6rem] leading-[1.5] text-[var(--color-text-subtle)] no-underline [transition:color_0.15s_ease-in-out];
+  }
+
+  .site-footer__link:hover {
+    @apply text-[var(--color-text)] underline;
+  }
+
+  /* 법적 고지 링크처럼 눈에 먼저 닿아야 하는 링크 */
+  .site-footer__link--important {
+    @apply font-bold text-[var(--color-text)];
+  }
+
+  /* 하단 — 정책 링크 · 연락처 · 저작권 · 패밀리 사이트 */
+  .site-footer__bottom {
+    @apply flex flex-col gap-[2.4rem] py-[3.2rem] border-t border-[var(--color-border-light)] pc:flex-row pc:items-start pc:justify-between;
+  }
+
+  .site-footer__info {
+    @apply flex flex-col gap-[1.2rem];
+  }
+
+  .site-footer__legal-list {
+    @apply flex flex-wrap gap-x-[2.4rem] list-none m-0 p-0;
+  }
+
+  .site-footer__address {
+    @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)] not-italic;
+  }
+
+  .site-footer__copy {
+    @apply text-[1.4rem] leading-[1.6] text-[var(--color-text-subtle)];
+  }
+
+  /* 패밀리 사이트 — native details. 이동은 링크 클릭으로만 일어난다(선택만으로 이동하지 않는다) */
+  .site-footer__family {
+    @apply w-full tablet:w-[28rem];
+  }
+
+  .site-footer__family-summary {
+    @apply flex items-center justify-between gap-[0.8rem] min-h-[4.8rem] px-[1.6rem] bg-[var(--color-surface)] text-[var(--color-text)] text-[1.6rem] border border-[var(--color-border)] rounded-[0.6rem] cursor-pointer list-none;
+  }
+
+  /* native marker 제거 */
+  .site-footer__family-summary::-webkit-details-marker { @apply [display:none]; }
+  .site-footer__family-summary::marker { @apply [content:""]; }
+
+  .site-footer__family-icon {
+    @apply [transition:transform_0.15s_ease-in-out];
+  }
+
+  .site-footer__family[open] .site-footer__family-icon {
+    @apply rotate-180;
+  }
+
+  .site-footer__family-list {
+    @apply flex flex-col list-none m-0 mt-[0.4rem] py-[0.8rem] px-0 bg-[var(--color-surface)] border border-[var(--color-border-light)] rounded-[0.6rem];
+  }
+
+  .site-footer__family-link {
+    @apply flex items-center min-h-[4.4rem] px-[1.6rem] text-[1.6rem] text-[var(--color-text)] no-underline;
+  }
+
+  .site-footer__family-link:hover {
+    @apply bg-[var(--color-bg-subtler)] underline;
+  }
+
+  /* 목록 칸을 꽉 채우는 링크는 바깥 외곽선이 잘리므로 안쪽에 그린다 */
+  .site-footer__family-link:focus-visible {
+    @apply [outline-offset:-0.4rem];
+  }
+
+  /* 소형 — 상단 메뉴 없이 하단만 쓰는 푸터 (공공서비스·관리자 화면) */
+  .site-footer--compact .site-footer__bottom {
+    @apply border-t-0 py-[2.4rem];
+  }
+
+  /* 반전 — 어두운 바탕 (일반사이트·커머스 표현형) */
+  .site-footer--inverse {
+    @apply bg-[var(--color-bg-inverse)] text-[var(--color-text-inverse)] border-t-0;
+  }
+
+  .site-footer--inverse .site-footer__brand,
+  .site-footer--inverse .site-footer__heading {
+    @apply text-[var(--color-text-inverse)];
+  }
+
+  .site-footer--inverse .site-footer__link,
+  .site-footer--inverse .site-footer__address,
+  .site-footer--inverse .site-footer__copy {
+    @apply text-[var(--color-gray-20)];
+  }
+
+  /* 같은 우선순위에서는 뒤에 오는 규칙이 이기므로 일반 링크 규칙 다음에 둔다 */
+  .site-footer--inverse .site-footer__link:hover,
+  .site-footer--inverse .site-footer__link--important {
+    @apply text-[var(--color-text-inverse)];
+  }
+
+  .site-footer--inverse .site-footer__bottom {
+    @apply border-[var(--color-gray-70)];
+  }
+}

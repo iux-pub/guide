@@ -33,7 +33,7 @@ INFOUX는 Tailwind v4 `@theme`에 색상과 폰트만 공개한다.
 | `bg-danger-{5..95}` | `--color-danger-*` |
 | `bg-warning-{5..95}` | `--color-warning-*` |
 | `bg-success-{5..95}` | `--color-success-*` |
-| `bg-info-{5..95}` | `--color-info-*` |
+| `bg-information-{5..95}` | `--color-information-*` |
 
 ## 폰트 유틸리티
 

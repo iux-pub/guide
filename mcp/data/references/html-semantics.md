@@ -1,6 +1,6 @@
-# HTML 구조 매핑 — KRDS 컴포넌트 28종
+# HTML 구조 매핑 — KRDS 컴포넌트 28종 + infoUX 확장 4종
 
-> **단일 소스(SoT).** 28개 컴포넌트의 Root 태그 · 자식 시맨틱 · 필수 ARIA · 키보드 패턴을 KRDS 표준에 따라 명시한다.
+> **단일 소스(SoT).** 28개 KRDS 컴포넌트와 infoUX 확장 4종(`footer` · `mobile-menu` · `notice-bar` · `error-page`)의 Root 태그 · 자식 시맨틱 · 필수 ARIA · 키보드 패턴을 KRDS 표준에 따라 명시한다.
 > 출처: KRDS-uiux v1.0.0 / WAI-ARIA 1.2 Authoring Practices / `src/snippets/*.md` 실측.
 > 본 문서의 매핑과 다른 마크업은 **R-15 위반**으로 자동 차단된다.
 
@@ -77,6 +77,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | `check-radio` | `.check`, `.radio` | 두 변형이 같은 카테고리, 각자 BEM Block |
 | `form` | `.form-field` | 폼 필드 한 단위가 BEM Block |
 | `header` | `.site-header` | 사이트 헤더 — semantic의 `<header>`와 구분 |
+| `footer` | `.site-footer` | 사이트 푸터 — semantic의 `<footer>`와 구분 |
 | `tooltip` | `.tooltip` (요소), `.tooltip-trigger` (트리거), `.tooltip-wrap` (래퍼) | 세 BEM Block의 협업 |
 | `toast` | `.toast` (개별), `.toast-stack` (컨테이너) | 두 BEM Block |
 | `table` | `.table` (요소), `.table-wrap` (반응형 래퍼) | 두 BEM Block |
@@ -210,7 +211,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 ---
 
-## 3. 그룹 C — 내비게이션 (4종)
+## 3. 그룹 C — 내비게이션 (6종)
 
 ### `breadcrumb` — 빵부스러기
 
@@ -230,14 +231,35 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 필수 ARIA | 페이지에 nav가 여러 개면 각 nav에 `aria-label` 필수 |
 | 키보드 | Tab 흐름 자연스럽게 (브랜드 → 메뉴 → 유틸) |
 
+### `footer` — 사이트 푸터
+
+| 항목 | 값 |
+|------|-----|
+| Root 태그 | `<footer id="footer" class="site-footer">` (페이지에 하나, `main` 바깥) |
+| 자식 시맨틱 | `.container` → `div.site-footer__top`(`a.site-footer__brand` · `nav.site-footer__nav aria-label="푸터 메뉴"` → `div.site-footer__group` → `h2.site-footer__heading` + `ul.site-footer__list aria-labelledby`) → `div.site-footer__bottom`(`nav.site-footer__legal aria-label="약관 및 정책"` · `address.site-footer__address` · `small.site-footer__copy` · `details.site-footer__family`) |
+| 필수 ARIA | 푸터 안 `nav`가 여럿이면 각각 `aria-label` · 그룹 목록은 제목 id로 `aria-labelledby` |
+| 키보드 | 네이티브 (Tab) · 패밀리 사이트 `details`는 `Enter`/`Space`로 열고 닫는다 |
+| 금지 | 패밀리 사이트를 `<select>` 선택만으로 이동시키지 않는다(WCAG 3.2.2) · 법정 고지 문구를 지어내지 않는다(R-23) |
+
 ### `main-menu` — 주 메뉴
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<nav class="main-menu" aria-label="주 메뉴">` |
-| 자식 시맨틱 | `<ul class="main-menu__list">` → `<li class="main-menu__item">` → `<a class="main-menu__link">` / 하위 메뉴 트리거는 `<button aria-expanded aria-haspopup="true" aria-controls="submenu-id">` |
-| 필수 ARIA | `<nav aria-label>` · 드롭다운 트리거에 `aria-expanded` + `aria-haspopup` + `aria-controls` · 현재 페이지에 `aria-current="page"` |
-| 키보드 | `←→` 또는 `↑↓` 메뉴 이동 · `Esc` 서브메뉴 닫기 · `Enter`/`Space` 서브메뉴 열기 |
+| Root 태그 | `<nav class="main-menu" aria-label="주 메뉴">` (메가형은 `.main-menu--mega` 추가) |
+| 자식 시맨틱 | `<ul class="main-menu__list">` → `<li class="main-menu__item">` → `<a class="main-menu__link">` / 하위 패널 트리거는 `<button class="main-menu__toggle" aria-expanded aria-controls="panel-id">`. 패널은 드롭다운 `ul.main-menu__submenu` 또는 메가 `div.main-menu__panel` → `.container.main-menu__groups` → `div.main-menu__group` → `p.main-menu__group-title` + `ul.main-menu__group-list aria-labelledby` |
+| 필수 ARIA | `<nav aria-label>` · 하위 패널 트리거에 `aria-expanded` + `aria-controls`(대상 id 실존) · 현재 페이지에 `aria-current="page"` |
+| 쓰지 않는 것 | `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 여닫는 disclosure 패턴이라 메뉴 위젯 역할을 선언하지 않는다(APG Disclosure Navigation). 선언하면 스크린리더가 방향키 운용을 기대한다 |
+| 키보드 | `Enter`/`Space` 패널 열기·닫기 · `Esc` 패널 닫기 + 토글로 초점 복귀 · `Tab`이 링크를 순서대로 지난다. 방향키 운용은 없다 |
+
+### `mobile-menu` — 모바일 메뉴
+
+| 항목 | 값 |
+|------|-----|
+| Root 태그 | `<div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>` (`header` 바깥) |
+| 자식 시맨틱 | `div.mobile-menu__header`(`p.mobile-menu__title#mobile-menu-title` · `button.mobile-menu__close aria-label`) → `nav.mobile-menu__nav aria-label="주 메뉴"` → `ul.mobile-menu__list` → `li.mobile-menu__item` → `a.mobile-menu__link` / `details.mobile-menu__group` → `summary.mobile-menu__summary` + `ul.mobile-menu__sublist` |
+| 트리거 | `<button class="site-header__toggle" aria-label="전체 메뉴" aria-expanded aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">` — 라벨은 고정, 열림은 `aria-expanded`가 전한다 |
+| 필수 ARIA | 패널 `role="dialog"` + `aria-modal="true"` + `aria-labelledby` · 트리거 `aria-expanded` + `aria-controls`(= `data-mobile-menu-open` 값) · 닫기 버튼 `aria-label` |
+| 키보드 | 열림 시 닫기 버튼으로 초점 이동 · `Tab`/`Shift+Tab` 패널 안 순환(포커스 트랩) · `Esc` 닫기 + 트리거로 초점 복귀 · `summary`는 `Enter`/`Space` |
 
 ### `pagination` — 페이지네이션
 
@@ -250,7 +272,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 ---
 
-## 4. 그룹 D — 피드백 (8종)
+## 4. 그룹 D — 피드백 (9종)
 
 ### `alert` — 알림
 
@@ -260,6 +282,17 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 자식 시맨틱 | `<div class="alert__icon" aria-hidden="true">` (장식 아이콘) → `<div class="alert__body">` → `<button class="alert__close" aria-label="닫기">` (선택) |
 | 필수 ARIA | `role="alert"` (assertive) 또는 `role="status"` (polite) · 장식 아이콘에 `aria-hidden="true"` · 닫기 버튼에 `aria-label` |
 | 키보드 | 닫기 버튼 Tab 가능, Enter/Space로 닫기 |
+
+### `notice-bar` — 공지 띠
+
+| 항목 | 값 |
+|------|-----|
+| Root 태그 | `<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="…">` (건너뛰기 링크 다음, `header#header` 앞) |
+| 자식 시맨틱 | `.container.notice-bar__inner` → `span.notice-bar__label`(분류 텍스트) → `p.notice-bar__message` → `a.notice-bar__link` → `button.notice-bar__close aria-label="공지 닫기"` |
+| 필수 ARIA | `section`의 `aria-label` · 닫기 버튼 `aria-label` · 장식 아이콘 `aria-hidden="true"` |
+| 쓰지 않는 것 | `role="alert"` · `aria-live` — 로드 때 이미 있는 정적 안내라 낭독을 강제하지 않는다. 동적으로 삽입하는 긴급 안내는 `alert`를 쓴다 |
+| 금지 | 자동 전환·롤링·마키(WCAG 2.2.2) · 동시에 둘 이상 노출 · 색만으로 톤 전달(라벨 텍스트 병기) |
+| 키보드 | 링크·닫기 버튼 Tab 가능, Enter/Space로 닫기. 닫은 뒤 초점은 헤더의 첫 링크·버튼으로 옮긴다 |
 
 ### `badge` — 뱃지
 
@@ -323,7 +356,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 ---
 
-## 5. 그룹 E — 콘텐츠/표현 (4종)
+## 5. 그룹 E — 콘텐츠/표현 (5종)
 
 ### `calendar` — 달력
 
@@ -343,6 +376,17 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 필수 ARIA | `aria-roledescription="carousel"` · 각 슬라이드에 `aria-roledescription="slide"` + `aria-label="N of M"` · 컨트롤 `aria-label` · 자동재생 시 일시정지 버튼 필수(WCAG 2.2.2) |
 | 자동 재생 금지 (KRDS) | 사용자가 명시 활성화 안 했으면 OFF. 활성화 시 일시정지 버튼 필수 |
 | 키보드 | `←→` 슬라이드 이동 · `Esc` 또는 일시정지 버튼으로 정지 |
+
+### `error-page` — 오류 페이지
+
+| 항목 | 값 |
+|------|-----|
+| Root 태그 | `<div class="error-page">` — `main > section > .container` 안의 컴포넌트 루트 (section은 `aria-labelledby`로 `h1`에 연결) |
+| 자식 시맨틱 | `h1.error-page__title`(페이지 `h1` 하나) → `p.error-page__desc` → `div.error-page__actions` → (선택) `form.error-page__search role="search"` → `nav.error-page__help aria-labelledby`(`h2.error-page__help-title` + `ul.error-page__help-list`) → (선택) `p.error-page__contact` · 선택 요소 `.error-page__code` · `.error-page__visual` |
+| 필수 ARIA | 검색 입력에 `<label>` · 바로가기 `nav`에 `aria-labelledby` · 장식 일러스트 `alt=""` |
+| 쓰지 않는 것 | 제목·안내의 `role="alert"` · 움직이는 장식 · 내부 오류 코드를 문장에 노출 |
+| 서버 측 | 실제 HTTP 상태 코드로 응답(soft 404 금지) · 없는 주소를 홈으로 자동 이동하지 않는다 · `<title>`에 오류 명시 + `noindex` |
+| 수위 | 사이트 등급과 무관하게 utility~restrained (art-direction §1 원칙 3) |
 
 ### `list` — 목록
 
@@ -399,9 +443,9 @@ ARIA로 연결되는 ID는 충돌 방지를 위해 다음 패턴:
 - 톤: `--info`, `--success`, `--warning`, `--danger`, `--inverse`
 - 레이아웃: `--horizontal`, `--vertical`, `--block`, `--inline`
 
-### 6.4 키보드 트랩 — modal/side-panel만
+### 6.4 키보드 트랩 — modal/side-panel/mobile-menu만
 
-`<dialog>` 또는 `role="dialog" aria-modal="true"`에서만 포커스 트랩. 그 외 컴포넌트는 자연스러운 Tab 흐름 유지.
+`<dialog>` 또는 `role="dialog" aria-modal="true"`에서만 포커스 트랩. 화면 전체를 덮는 모바일 메뉴(`mobile-menu`)도 이에 해당한다. 그 외 컴포넌트(`main-menu` 패널 포함)는 자연스러운 Tab 흐름 유지.
 
 ### 6.5 라이브 영역 (`aria-live`) 선택 가이드
 
@@ -455,7 +499,7 @@ ARIA로 연결되는 ID는 충돌 방지를 위해 다음 패턴:
 
 1. **R-14/R-15** — page shell의 skip link, `header#header`, `main#main`, `footer#footer`, `main > section > .container`, section 접근 이름
 2. **R-15** — 컴포넌트 BEM Block(`.card`/`.modal` 등) 사용 시 root 태그가 매핑과 일치하는지
-3. **R-16** — 인터랙티브 컴포넌트(`modal`/`tab`/`accordion`/`tooltip`/`disclosure`/`carousel`/`calendar`)는 필수 ARIA 속성 누락 시 error
+3. **R-16** — 인터랙티브 컴포넌트(`modal`/`tab`/`accordion`/`tooltip`/`disclosure`/`carousel`/`calendar`/`mobile-menu`/`notice-bar`)와 disclosure 내비게이션(`main-menu__toggle` · `data-mobile-menu-open` 햄버거)은 필수 ARIA 속성 누락 시 error. 토글에 `aria-haspopup`/`role="menu"`를 붙이면 warn
 4. **R-17** — `.is-*`/`.has-*` 비-BEM 상태 클래스 사용 시 warn → 1개월 후 error 승급
 5. **R-18** — § 6.3 금지 단어 modifier 사용 시 error
 

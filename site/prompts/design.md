@@ -240,9 +240,9 @@ INFOUX 표준 브레이크포인트. Tailwind v4 variant는 `mobile:` / `tablet:
 |------|---------|
 | A — 폼/액션 | `btn` · `check-radio` · `file-upload` · `form` · `select` · `switch` |
 | B — 컨테이너/레이아웃 | `accordion` · `card` · `disclosure` · `modal` · `side-panel` · `tab` |
-| C — 내비게이션 | `breadcrumb` · `header` · `main-menu` · `pagination` |
-| D — 피드백 | `alert` · `badge` · `progress` · `spinner` · `step-indicator` · `tag` · `toast` · `tooltip` |
-| E — 콘텐츠/표현 | `calendar` · `carousel` · `list` · `table` |
+| C — 내비게이션 | `breadcrumb` · `footer` · `header` · `main-menu` · `mobile-menu` · `pagination` |
+| D — 피드백 | `alert` · `badge` · `notice-bar` · `progress` · `spinner` · `step-indicator` · `tag` · `toast` · `tooltip` |
+| E — 콘텐츠/표현 | `calendar` · `carousel` · `error-page` · `list` · `table` |
 
 > 각 컴포넌트의 BEM·접근성·토큰 매핑 — `references/krds-components.md`
 > 마크업 스니펫 — `src/snippets/{name}.md`

@@ -82,11 +82,14 @@ const COMPONENT_ROOT_MAPPING = {
   // 그룹 C — 내비게이션
   'breadcrumb': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 경로"' },
   'site-header': { allowedTags: ['header'], note: '사이트 헤더' },
+  'site-footer': { allowedTags: ['footer'], note: '페이지 shell의 footer#footer 랜드마크' },
   'main-menu': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="주 메뉴"' },
+  'mobile-menu': { allowedTags: ['div', 'dialog'], note: 'div 사용 시 role="dialog" aria-modal="true" aria-labelledby 필수' },
   'pagination': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 내비게이션"' },
 
   // 그룹 D — 피드백
   'alert': { allowedTags: ['div'], requireRoleAlertOrStatus: true, note: 'role="alert" 또는 role="status"' },
+  'notice-bar': { allowedTags: ['section'], requireAriaLabel: true, note: 'section에 aria-label="사이트 공지" — 라이브 영역(role/aria-live)은 쓰지 않는다' },
   'badge': { allowedTags: ['span'], note: 'dot(텍스트 없음)은 aria-label 필수' },
   'progress': { allowedTags: ['div'], note: '내부 progress 또는 div[role=progressbar]' },
   'spinner': { allowedTags: ['span'], requireRoleStatus: true, note: 'role="status" + aria-label' },
@@ -101,6 +104,7 @@ const COMPONENT_ROOT_MAPPING = {
   'calendar': { allowedTags: ['div'], requireRoleApplication: true, note: 'role="application" aria-label' },
   'carousel': { allowedTags: ['div'], requireAriaRoledescription: true, note: 'aria-roledescription="carousel" aria-label' },
   'list': { allowedTags: ['ul', 'ol', 'dl'], note: '의미에 따라 ul/ol/dl' },
+  'error-page': { allowedTags: ['div'], note: 'main > section > .container 안의 컴포넌트 루트. h1은 오류 제목 하나' },
   'table-wrap': { allowedTags: ['div'], note: '반응형 스크롤 래퍼' },
   'table': { allowedTags: ['table'], note: 'caption 또는 aria-label 필수' }
 }
@@ -137,6 +141,14 @@ const REQUIRED_ARIA = {
   'main-menu': {
     requireAll: [/aria-label=/],
     desc: 'aria-label (메뉴 설명)'
+  },
+  'mobile-menu': {
+    requireAll: ['role="dialog"', 'aria-modal="true"', /aria-labelledby=|aria-label=/],
+    desc: 'role="dialog" + aria-modal="true" + aria-labelledby/aria-label'
+  },
+  'notice-bar': {
+    requireAll: [/aria-label=/],
+    desc: 'aria-label (공지 영역 이름)'
   },
   'pagination': {
     requireAll: [/aria-label=/],
@@ -442,6 +454,57 @@ function checkAccordionPattern(root, filePath, baseLineNum) {
   }
 }
 
+// ─── R-16: disclosure 내비게이션 (메가·드롭다운 토글, 모바일 메뉴 햄버거) ───
+// 링크 목록을 열고 닫는 버튼은 disclosure 패턴이다 — aria-expanded + aria-controls.
+// role="menu"/aria-haspopup 은 애플리케이션 메뉴 위젯 선언이라 화살표 키 운용을 기대하게 만든다.
+
+function checkDisclosureNavPattern(root, filePath, baseLineNum) {
+  const toggles = findNodes(root, node => hasClass(node, 'main-menu__toggle'))
+
+  for (const toggle of toggles) {
+    const controls = toggle.attrs['aria-controls']
+    if (toggle.tag !== 'button' || !['true', 'false'].includes(toggle.attrs['aria-expanded']) || !controls || !findById(root, controls)) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, toggle),
+        '[R-16] main-menu__toggle 은 button이며 aria-expanded="true|false", aria-controls와 유효한 패널 id가 필요합니다.',
+        toggle.raw.slice(0, 120),
+        'R-16'
+      )
+    }
+    if (toggle.attrs['aria-haspopup'] || toggle.attrs.role === 'menu') {
+      warn(
+        rel(filePath),
+        nodeLine(baseLineNum, toggle),
+        '[R-16] disclosure 토글에 aria-haspopup/role="menu"를 쓰지 않습니다. 링크 목록을 여는 버튼은 aria-expanded + aria-controls만으로 충분합니다.',
+        toggle.raw.slice(0, 120),
+        'R-16'
+      )
+    }
+  }
+
+  // 모바일 메뉴 햄버거: aria-expanded 와 aria-controls(= data-mobile-menu-open 값)가 짝이어야 한다.
+  // 패널은 헤더 바깥에 있어 같은 코드 블록에 없을 수 있으므로 패널 존재는 요구하지 않는다.
+  const openers = findNodes(root, node => node.attrs['data-mobile-menu-open'] !== undefined)
+  for (const opener of openers) {
+    const target = opener.attrs['data-mobile-menu-open']
+    if (
+      opener.tag !== 'button' ||
+      !['true', 'false'].includes(opener.attrs['aria-expanded']) ||
+      !target ||
+      opener.attrs['aria-controls'] !== target
+    ) {
+      error(
+        rel(filePath),
+        nodeLine(baseLineNum, opener),
+        '[R-16] 모바일 메뉴 햄버거는 button이며 aria-expanded="true|false"와, data-mobile-menu-open 값과 같은 aria-controls가 필요합니다.',
+        opener.raw.slice(0, 120),
+        'R-16'
+      )
+    }
+  }
+}
+
 // ─── R-25: 섹션 리듬 ────────────────────────────────────────
 // "중앙 제목 + 카드 그리드" 반복이 규정 준수형 무개성의 최빈 패턴이다.
 // ① 형제 section 시퀀스에서 동일 archetype(section--X) 3연속 — error
@@ -721,6 +784,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   checkFormLabels(root, filePath, baseLineNum)
   checkTabPattern(root, filePath, baseLineNum)
   checkAccordionPattern(root, filePath, baseLineNum)
+  checkDisclosureNavPattern(root, filePath, baseLineNum)
   checkSectionRhythm(root, filePath, baseLineNum)
 
   // R-17: 비-BEM 상태 클래스

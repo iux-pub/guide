@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `tokens/foundation.json` + `tokens/brand.json` (합성 결과)
-> 빌드: e106ba4
+> 빌드: 113663a
 
 색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.
 
@@ -98,17 +98,17 @@
 
 | 단계 | 토큰 | hex |
 |------|------|-----|
-| 5 | `--color-info-5` | `#e7f4fe` |
-| 10 | `--color-info-10` | `#d3ebfd` |
-| 20 | `--color-info-20` | `#9ed2fa` |
-| 30 | `--color-info-30` | `#5fb5f7` |
-| 40 | `--color-info-40` | `#2098f3` |
-| 50 | `--color-info-50` | `#0b78cb` |
-| 60 | `--color-info-60` | `#096ab3` |
-| 70 | `--color-info-70` | `#085691` |
-| 80 | `--color-info-80` | `#053961` |
-| 90 | `--color-info-90` | `#03253f` |
-| 95 | `--color-info-95` | `#021a2c` |
+| 5 | `--color-information-5` | `#e7f4fe` |
+| 10 | `--color-information-10` | `#d3ebfd` |
+| 20 | `--color-information-20` | `#9ed2fa` |
+| 30 | `--color-information-30` | `#5fb5f7` |
+| 40 | `--color-information-40` | `#2098f3` |
+| 50 | `--color-information-50` | `#0b78cb` |
+| 60 | `--color-information-60` | `#096ab3` |
+| 70 | `--color-information-70` | `#085691` |
+| 80 | `--color-information-80` | `#053961` |
+| 90 | `--color-information-90` | `#03253f` |
+| 95 | `--color-information-95` | `#021a2c` |
 
 ### Point (강조 — 빨강)
 

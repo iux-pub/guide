@@ -334,7 +334,57 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 12. 파일 업로드 (File Upload) — KRDS
+## 12. 오류 페이지 (Error Page) — infoUX
+
+### 기본 마크업
+
+```html
+<section class="section section--content" aria-labelledby="error-title">
+  <div class="container">
+    <div class="error-page">
+      <h1 class="error-page__title" id="error-title">요청하신 페이지를 찾을 수 없습니다</h1>
+      <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 방법으로 원하시는 내용을 찾아보세요.</p>
+
+      <div class="error-page__actions">
+        <a class="btn btn--primary" href="/">홈으로 이동</a>
+        <a class="btn btn--tertiary" href="/sitemap">사이트맵 보기</a>
+      </div>
+
+      <form class="error-page__search" role="search" action="/search" method="get">
+        <label class="sr-only" for="error-search">검색어</label>
+        <input class="input" type="search" id="error-search" name="q" autocomplete="off">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+
+      <nav class="error-page__help" aria-labelledby="error-help-title">
+        <h2 class="error-page__help-title" id="error-help-title">많이 찾는 페이지</h2>
+        <ul class="error-page__help-list">
+          <li><a class="error-page__help-link" href="/notice">공지사항</a></li>
+          <li><a class="error-page__help-link" href="/apply">신청하기</a></li>
+          <li><a class="error-page__help-link" href="/lookup">처리 현황 조회</a></li>
+          <li><a class="error-page__help-link" href="/faq">자주 묻는 질문</a></li>
+        </ul>
+      </nav>
+
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+    </div>
+  </div>
+</section>
+```
+
+### 접근성
+
+- 페이지 `h1`은 오류 제목 하나다. 바로가기 제목은 `h2`
+- 제목·안내는 `role="alert"`로 낭독시키지 않는다. 사용자가 직접 이 주소로 들어온 화면이고, 페이지 제목(`<title>`)과 `h1`이 상황을 전한다
+- 검색 입력에는 `<label>`이 필요하다. `autocomplete="off"`는 검색어 재입력 보호용이며 선택이다
+- 링크는 밑줄로 구분하고 본문 링크 대비 4.5:1 이상(`--color-primary-pressed`)
+- 터치 영역 44×44px 이상 (R-13): 바로가기 링크 `min-h-[4.4rem]`, 버튼은 `btn` 기본 크기(48px)
+- 상태 코드(`__code`)는 장식이 아니라 정보다. 크게 쓰더라도 `aria-hidden`을 주지 않는다
+- 움직이는 요소를 두지 않는다. 장식 일러스트는 정지 이미지이며 `alt=""`
+
+---
+
+## 13. 파일 업로드 (File Upload) — KRDS
 
 ### 기본 마크업
 
@@ -355,7 +405,104 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 13. 폼 필드 (Form Field) — KRDS
+## 14. 푸터 (Site Footer) — infoUX
+
+### 기본 마크업
+
+```html
+<footer id="footer" class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <a class="site-footer__brand" href="/">
+        <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
+      </a>
+      <nav class="site-footer__nav" aria-label="푸터 메뉴">
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-about">재단 소개</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-about">
+            <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
+            <li><a class="site-footer__link" href="/about/history">연혁</a></li>
+            <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-program">프로그램</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-program">
+            <li><a class="site-footer__link" href="/program/exhibition">전시</a></li>
+            <li><a class="site-footer__link" href="/program/performance">공연</a></li>
+            <li><a class="site-footer__link" href="/program/education">교육</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-news">알림마당</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-news">
+            <li><a class="site-footer__link" href="/news/notice">공지사항</a></li>
+            <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
+          </ul>
+        </div>
+        <div class="site-footer__group">
+          <h2 class="site-footer__heading" id="footer-group-help">이용 안내</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-help">
+            <li><a class="site-footer__link" href="/help/faq">자주 묻는 질문</a></li>
+            <li><a class="site-footer__link" href="/help/sitemap">사이트맵</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="site-footer__bottom">
+      <div class="site-footer__info">
+        <nav class="site-footer__legal" aria-label="약관 및 정책">
+          <ul class="site-footer__legal-list">
+            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
+            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
+            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
+          </ul>
+        </nav>
+        <address class="site-footer__address">
+          제주특별자치도 제주시 한라로 100<br>
+          대표전화 064-123-4567 · 이메일 contact@example.org
+        </address>
+        <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+      </div>
+
+      <details class="site-footer__family">
+        <summary class="site-footer__family-summary">
+          패밀리 사이트
+          <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+        </summary>
+        <ul class="site-footer__family-list">
+          <li><a class="site-footer__family-link" href="https://example.org/museum">미술관</a></li>
+          <li><a class="site-footer__family-link" href="https://example.org/library">도서관</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</footer>
+```
+
+### Variant / Size
+
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| 기본 | `.site-footer` | 푸터 메뉴 + 하단 고지. 일반사이트·공공기관 |
+| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면 |
+| 반전 | `.site-footer--inverse` | 어두운 바탕. 일반사이트·커머스 표현형 한정 |
+
+### 접근성
+
+- 랜드마크: `<footer>`는 `contentinfo`로 노출된다. 페이지에 하나만 둔다
+- 푸터 `nav`가 여럿이면 `aria-label`이 서로 달라야 한다
+- 그룹 제목은 `h2` + 목록 `aria-labelledby`로 연결해 스크린리더가 그룹 이름을 읽게 한다
+- 링크 터치 영역 44×44px 이상 (R-13) — `__link`는 `min-h-[4.4rem]`를 포함한다
+- 패밀리 사이트 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
+- 반전 변형: 일반 텍스트 4.5:1 이상을 유지한다 (`--color-gray-20` on `--color-bg-inverse`)
+- 외부 사이트 링크는 새 창을 열지 않는다. 새 창이 필요하면 링크 텍스트나 `aria-label`에 "새 창"을 밝힌다
+- 초점 외곽선: 칸을 꽉 채우는 링크(`__family-link`)는 `outline-offset`을 음수로 두어 안쪽에 그린다
+
+---
+
+## 15. 폼 필드 (Form Field) — KRDS
 
 ### 기본 마크업
 
@@ -380,7 +527,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 14. 사이트 헤더 (Site Header)
+## 16. 사이트 헤더 (Site Header)
 
 ### 기본 마크업
 
@@ -402,7 +549,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
     <div class="site-header__actions">
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -413,12 +562,13 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
 - 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label="메뉴 열기/닫기"` + `aria-expanded` 상태 토글
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
 ---
 
-## 15. 히어로 블리드 (Hero Bleed) — 풀블리드 인트로 패턴
+## 17. 히어로 블리드 (Hero Bleed) — 풀블리드 인트로 패턴
 
 ### 기본 마크업
 
@@ -446,7 +596,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 16. 아이콘 (Icon) — infoUX
+## 18. 아이콘 (Icon) — infoUX
 
 ### 기본 마크업
 
@@ -473,7 +623,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 17. 목록 (List) — KRDS Text list / Structured list
+## 19. 목록 (List) — KRDS Text list / Structured list
 
 ### 기본 마크업
 
@@ -503,7 +653,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 18. 주 메뉴 (Main Menu) — KRDS
+## 20. 주 메뉴 (Main Menu) — KRDS
 
 ### 기본 마크업
 
@@ -515,8 +665,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
     </li>
 
     <li class="main-menu__item">
-      <button type="button" class="main-menu__link" aria-haspopup="true" aria-expanded="false" aria-controls="submenu-services">
+      <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="submenu-services">
         서비스
+        <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
       </button>
       <ul id="submenu-services" class="main-menu__submenu" hidden>
         <li><a href="/services/a">서비스 A</a></li>
@@ -532,17 +683,92 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 </nav>
 ```
 
+### Variant / Size
+
+| Variant | 클래스 | 용도 |
+|---------|--------|------|
+| 드롭다운 | (기본) | 항목 아래 작은 목록. 하위 링크가 한 줄로 끝나는 메뉴 |
+| 메가 | `.main-menu--mega` | 헤더 전체 폭 패널에 그룹별로 나눈 링크. 하위 링크가 많거나 그룹이 있는 메뉴 |
+
 ### 접근성
 
-- 서브메뉴 트리거는 `<button>` 권장 (`<a>` 아님 — 링크가 아니므로)
-- `aria-haspopup="true"` + `aria-expanded` 상태값
-- `aria-controls`로 서브메뉴 id 연결
-- 서브메뉴 `<ul>`은 `hidden` 속성으로 노출 제어
-- 현재 페이지: `aria-current="page"`
+- 하위 메뉴 트리거는 `<button>` (링크가 아니므로 `<a>` 쓰지 않는다)
+- `aria-expanded`(`true`/`false`) + `aria-controls`(패널 id) — 연결 대상 id가 실제로 존재해야 한다
+- 패널은 `hidden` 속성으로 노출을 제어한다 — 닫힌 패널의 링크는 Tab 순서에서 빠진다
+- 현재 페이지는 `aria-current="page"`. 패널 안에 현재 페이지가 있어도 토글 버튼은 그대로 둔다
+- 링크 터치 영역 44px 이상 — 패널 링크는 `min-h-[4.4rem]`를 포함한다
+- 초점 외곽선: 칸을 꽉 채우는 패널 링크는 `outline-offset`을 음수로 두어 안쪽에 그린다
+- 아이콘은 장식 — `aria-hidden="true"`, 의미는 옆 텍스트가 전한다
+- 메가 패널이 열려 있어도 본문 스크롤을 막지 않는다. 포커스 트랩이 없다(모달이 아니다)
 
 ---
 
-## 19. 모달 (Modal / Dialog) — KRDS
+## 21. 모바일 메뉴 (Mobile Menu) — infoUX
+
+### 기본 마크업
+
+```html
+<header id="header" class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__brand" href="/">
+      <img src="/logo.svg" alt="기관명">
+    </a>
+    <div class="site-header__actions">
+      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
+  <div class="mobile-menu__header">
+    <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
+    <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
+    </button>
+  </div>
+
+  <nav class="mobile-menu__nav" aria-label="주 메뉴">
+    <ul class="mobile-menu__list">
+      <li class="mobile-menu__item">
+        <a class="mobile-menu__link" href="/about">소개</a>
+      </li>
+      <li class="mobile-menu__item">
+        <details class="mobile-menu__group">
+          <summary class="mobile-menu__summary">
+            서비스
+            <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+          </summary>
+          <ul class="mobile-menu__sublist">
+            <li><a class="mobile-menu__sublink" href="/services/apply">신청</a></li>
+            <li><a class="mobile-menu__sublink" href="/services/lookup" aria-current="page">조회</a></li>
+            <li><a class="mobile-menu__sublink" href="/services/guide">이용 안내</a></li>
+          </ul>
+        </details>
+      </li>
+      <li class="mobile-menu__item">
+        <a class="mobile-menu__link" href="/notice">공지사항</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+```
+
+### 접근성
+
+- 패널 열림 중 뒤쪽 콘텐츠는 `aria-modal="true"`로 스크린리더 탐색에서 빠진다
+- 햄버거 `aria-label`은 **고정**한다 (`전체 메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
+- 닫기 버튼 `aria-label="전체 메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
+- 아이콘은 모두 장식 — `aria-hidden="true"`. 햄버거·닫기 모양의 텍스트 기호로 아이콘을 대신하지 않는다 (R-27)
+- 터치 영역: 햄버거·닫기 44×44px, 항목 56px / 하위 항목 48px (R-13)
+- 초점 외곽선: 스크롤 영역(`overflow-y: auto`) 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 `outline-offset`을 음수로 두어 안쪽에 그린다
+- 현재 페이지는 `aria-current="page"`
+- 키보드: `Tab` 순환 · `Enter`/`Space`로 `summary` 토글 · `Esc` 닫기
+
+---
+
+## 22. 모달 (Modal / Dialog) — KRDS
 
 ### 기본 마크업
 
@@ -577,7 +803,45 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 20. 페이지네이션 (Pagination) — KRDS
+## 23. 공지 띠 (Notice Bar) — infoUX
+
+### 기본 마크업
+
+```html
+<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+  <div class="container notice-bar__inner">
+    <span class="notice-bar__label">점검</span>
+    <p class="notice-bar__message">
+      <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다</a>
+    </p>
+    <button type="button" class="notice-bar__close" aria-label="공지 닫기">
+      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
+    </button>
+  </div>
+</section>
+```
+
+### Variant / Size
+
+| Variant | 클래스 | 용도 | 라벨 예 |
+|---------|--------|------|---------|
+| 정보 | `.notice-bar--info` | 일반 안내 (기본) | 공지 |
+| 주의 | `.notice-bar--warning` | 점검·휴무·일정 변경 | 점검 |
+| 긴급 | `.notice-bar--danger` | 서비스 중단·장애·재난 | 긴급 |
+
+### 접근성
+
+- 영역 이름 `aria-label="사이트 공지"` — 페이지에 비슷한 영역이 더 있으면 서로 다른 이름으로 구분한다
+- 링크는 밑줄로 구분한다. 색 차이만으로 링크임을 전하지 않는다
+- 닫기 버튼은 아이콘만 있으므로 `aria-label` 필수. 아이콘은 `aria-hidden="true"`
+- 터치 영역: 닫기 버튼 44×44px, 링크 `min-h-[4.4rem]` (R-13)
+- 대비: 본문 텍스트 `--color-text`, 라벨은 `--color-text-inverse` on `--color-information-60`/`--color-warning-60`/`--color-danger-60` (4.5:1 이상)
+- 닫은 뒤 초점이 문서 처음으로 날아가지 않도록 헤더로 옮긴다 (WCAG 2.4.3)
+- 동적으로 삽입하는 긴급 안내(장애 발생 직후 등)는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
+
+---
+
+## 24. 페이지네이션 (Pagination) — KRDS
 
 ### 기본 마크업
 
@@ -604,7 +868,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 21. 진행률 (Progress) — KRDS
+## 25. 진행률 (Progress) — KRDS
 
 ### 기본 마크업
 
@@ -626,7 +890,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 22. 섹션 미디어 (Section Media) — 이미지-텍스트 교차 패턴
+## 26. 섹션 미디어 (Section Media) — 이미지-텍스트 교차 패턴
 
 ### 기본 마크업
 
@@ -659,7 +923,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 23. 셀렉트 (Select) — KRDS
+## 27. 셀렉트 (Select) — KRDS
 
 ### 기본 마크업
 
@@ -682,7 +946,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 24. 사이드 패널 (Side Panel) — KRDS Help panel 응용
+## 28. 사이드 패널 (Side Panel) — KRDS Help panel 응용
 
 ### 기본 마크업
 
@@ -712,7 +976,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 25. 시그니처 요소 (Signature) — 실물 3패턴
+## 29. 시그니처 요소 (Signature) — 실물 3패턴
 
 ### 기본 마크업
 
@@ -733,7 +997,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 26. 스피너 (Spinner) — KRDS
+## 30. 스피너 (Spinner) — KRDS
 
 ### 기본 마크업
 
@@ -748,7 +1012,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 27. 단계 표시기 (Step Indicator) — KRDS
+## 31. 단계 표시기 (Step Indicator) — KRDS
 
 ### 기본 마크업
 
@@ -777,7 +1041,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 28. 토글 스위치 (Switch) — KRDS
+## 32. 토글 스위치 (Switch) — KRDS
 
 ### 기본 마크업
 
@@ -797,7 +1061,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 29. 탭 (Tab) — KRDS
+## 33. 탭 (Tab) — KRDS
 
 ### 기본 마크업
 
@@ -835,7 +1099,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 30. 표 (Table) — KRDS
+## 34. 표 (Table) — KRDS
 
 ### 기본 마크업
 
@@ -873,7 +1137,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 31. 태그 (Tag) — KRDS
+## 35. 태그 (Tag) — KRDS
 
 ### 기본 마크업
 
@@ -901,7 +1165,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 32. 토스트 (Toast) — KRDS
+## 36. 토스트 (Toast) — KRDS
 
 ### 기본 마크업
 
@@ -923,7 +1187,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 33. 툴팁 (Tooltip) — KRDS
+## 37. 툴팁 (Tooltip) — KRDS
 
 ### 기본 마크업
 

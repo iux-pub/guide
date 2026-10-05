@@ -132,7 +132,7 @@ const TOOLS = [
   {
     name: 'get_rules',
     description:
-      'infoUX 코딩 규칙 R-01~R-22를 반환한다. CSS·BEM·HTML·접근성 규칙과 위반 예시가 들어 있다.',
+      'infoUX 코딩 규칙 R-01~R-27을 반환한다. CSS·BEM·HTML·접근성 규칙과 위반 예시가 들어 있다.',
     inputSchema: {
       type: 'object',
       properties: {

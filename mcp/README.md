@@ -9,10 +9,10 @@ INFOMIND UX팀의 퍼블리싱 기준(infoUX)을 MCP로 제공한다. 팀원이 
 | 도구 | 용도 |
 |---|---|
 | `get_contract` | infoUX 작업 컨트랙트 전문. UI 작업 시작 전에 한 번 읽는다 |
-| `list_components` | 컴포넌트 카탈로그 29종 |
+| `list_components` | 컴포넌트 카탈로그 (KRDS 28종 + infoUX 확장 — 푸터·모바일 메뉴·공지 띠·오류 페이지 등) |
 | `get_component` | 컴포넌트 마크업 스니펫 + 접근성 요건 |
 | `get_tokens` | 색상·폰트·브레이크포인트 토큰. `query`로 필터, `raw`로 tokens.css 원본 |
-| `get_rules` | 코딩 규칙 R-01~R-22 (위반·준수 예시 포함) |
+| `get_rules` | 코딩 규칙 R-01~R-27 (위반·준수 예시 포함) |
 | `get_reference` | 접근성·금지패턴·Tailwind 매핑·HTML 시맨틱·사이트 유형 프로필 |
 | `get_profile` | 사이트 유형 프리셋 — section 흐름·우선 컴포넌트·밀도·표현 등급 |
 | `get_workflow` | 작업 절차 — 페이지·폼·위젯 설계, 컴포넌트 생성, 토큰 변경, UI 리뷰, 프로젝트 초기화 |

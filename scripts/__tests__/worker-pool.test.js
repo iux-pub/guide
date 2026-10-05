@@ -73,3 +73,27 @@ test('참조 그림으로 로고를 옮기는 길은 없다', () => {
     assert.doesNotMatch(code, legacy, `${file}에 참조 그림 경로가 남아 있다`)
   }
 })
+
+test('워커의 모델·사고량 설정은 Claude 앱의 환경변수와 겹치지 않는다', () => {
+  // Claude Code 데스크톱 앱은 세션마다 CLAUDE_EFFORT를 자기 값(xhigh 등)으로 둔다.
+  // 같은 이름을 읽으면 Claude 세션 안에서 워커를 띄울 때 우리 기본값(medium)이 무시되고
+  // 앱의 사고량이 적용된다 — 2026-10-05 측정 중 medium이어야 할 호출이 xhigh로 돌아 187초가 걸렸다.
+  const worker = fs.readFileSync(path.join(ROOT, 'studio/worker.mjs'), 'utf8')
+  assert.doesNotMatch(worker, /process\.env\.CLAUDE_(EFFORT|MODEL|RETRY_EFFORT)/)
+  assert.match(worker, /process\.env\.ICON_STUDIO_EFFORT \|\| 'medium'/)
+  assert.match(worker, /process\.env\.ICON_STUDIO_MODEL \?\? 'claude-sonnet-5-5'/)
+})
+
+test('모델은 claude 호출에 명시해 넘긴다', () => {
+  // 지정하지 않으면 계정 기본 모델이 쓰여 같은 요청이 사람마다 다른 모델로 그려진다
+  const worker = fs.readFileSync(path.join(ROOT, 'studio/worker.mjs'), 'utf8')
+  assert.match(worker, /if \(MODEL\) args\.push\('--model', MODEL\)/)
+})
+
+test('다시 그릴 때는 기본보다 높은 사고량을 쓴다', () => {
+  // 기본이 medium이 되면서 예전의 하드코딩된 'medium'은 재시도가 기본과 같아지는 퇴보가 된다
+  const worker = fs.readFileSync(path.join(ROOT, 'studio/worker.mjs'), 'utf8')
+  assert.equal((worker.match(/, 'medium'\)/g) || []).length, 0, "askClaude(..., 'medium') 하드코딩이 남아 있다")
+  assert.equal((worker.match(/RETRY_EFFORT\)/g) || []).length, 2, '표정·새 아이콘 재시도 두 곳 모두 RETRY_EFFORT를 써야 한다')
+  assert.match(worker, /ICON_STUDIO_RETRY_EFFORT \|\| 'high'/)
+})

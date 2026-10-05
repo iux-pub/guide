@@ -62,9 +62,28 @@ const MAX_PARALLEL = Number(process.env.MAX_PARALLEL || 1)
 // 답은 400자짜리 SVG인데 기본 설정이 1만 5천 토큰을 생각하고 있었다. 아이콘 하나
 // 그리는 데 그만한 숙고가 필요하지 않다 — low로도 획 1.44(씨앗 중앙 1.45), 규격 4/4다.
 //
-// 모델은 opus 그대로다. sonnet은 low·medium 모두 획이 0.26~0.29로 나와 못 쓴다 —
-// 빠른 것이 문제가 아니라 우리 결을 못 맞춘다.
-const EFFORT = process.env.CLAUDE_EFFORT || 'low'
+// 모델 — 2026-08-24에는 소넷이 low·medium 모두 획 0.26~0.29로 나와 못 썼다(우리 결을 못 맞췄다).
+// 2026-10-05에 소넷 5.5로 다시 쟀다. 같은 프롬프트(요청 2개 × 후보 2개), 한 번씩:
+//
+//                              호출당        획 굵기(세트 기준 1.26~1.64)
+//   계정 기본 모델 · low       23~33초       0.37 · 0.38 · 1.25 · 1.36   (전자티켓 하나는 까만 직사각형 덩어리)
+//   소넷 5.5 · medium           6~8초        1.45 · 1.47 · 1.30 · 1.38   (전부 기준 안, 티켓은 QR이 읽힌다)
+//
+// 표본이 작다(4개). 그래도 방향은 분명해서 소넷 5.5 + medium으로 정했다. 달라지면 환경변수로 되돌린다.
+//
+// 환경변수 이름에 CLAUDE_를 쓰지 않는다. Claude Code 데스크톱 앱이 세션마다 CLAUDE_EFFORT를
+// 자기 값(예: xhigh)으로 설정해 두므로, 같은 이름을 읽으면 Claude 세션 안에서 워커를 띄울 때
+// 우리 기본값이 조용히 무시되고 앱의 사고량이 적용된다(2026-10-05 측정 중 발견 —
+// 기본 medium이어야 할 호출이 xhigh로 돌아 187초가 걸렸다).
+const EFFORT = process.env.ICON_STUDIO_EFFORT || 'medium'
+
+// 모델. 2026-10-05에 소넷 5.5로 정했다(사용자 결정). 지정하지 않으면 계정 기본 모델이 쓰이는데,
+// 그건 계정 설정에 따라 바뀐다 — 같은 요청이 사람마다 다른 모델로 그려지지 않게 못 박는다.
+// 빈 문자열(ICON_STUDIO_MODEL=)을 주면 --model을 넘기지 않는다(예전 동작, 비교 측정용).
+const MODEL = process.env.ICON_STUDIO_MODEL ?? 'claude-sonnet-5-5'
+
+// 규격을 어겨 다시 그릴 때는 기본보다 한 단 올린다 — 처음 것이 어긋났으니 더 생각할 값어치가 있다.
+const RETRY_EFFORT = process.env.ICON_STUDIO_RETRY_EFFORT || 'high'
 
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width
@@ -130,6 +149,7 @@ function transient(text) {
 function runClaude(prompt, timeoutMs, effort = EFFORT) {
   return new Promise((resolve, reject) => {
     const args = ['--print']
+    if (MODEL) args.push('--model', MODEL)
     if (effort) args.push('--effort', effort)
     args.push(prompt)
     const proc = spawn(CLAUDE, args, {
@@ -573,7 +593,7 @@ async function handleVariants(id, request) {
     if (verdict.retryWorthy) {
       retried = true
       try {
-        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes), VARIANT_TIMEOUT_MS, 'medium')
+        const raw2 = await askClaude(retryPrompt(prompt, first.svg, verdict.notes), VARIANT_TIMEOUT_MS, RETRY_EFFORT)
         const second = normalize(raw2)
         const v2 = reviewVariant(baseSvg, second.svg, second.ds, combo, target)
         if (v2.ok || v2.notes.filter((n) => n.level === 'bad').length <
@@ -648,8 +668,7 @@ async function handle(id, request) {
     // 디자이너가 기다리는 시간만 길어진다.
     if (verdict.retryWorthy) {
       try {
-        // 다시 그릴 때는 한 단 올린다 — 처음 것이 어긋났으니 조금 더 생각할 값어치가 있다
-        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), TIMEOUT_MS, 'medium')
+        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), TIMEOUT_MS, RETRY_EFFORT)
         const second = normalize(raw2)
         const verdict2 = review(second.svg, second.ds, raw2)
         if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
@@ -845,7 +864,7 @@ async function main() {
   console.log(`  claude: ${CLAUDE}`)
   const usingToken = process.env.USE_AUTH_TOKEN === '1'
   console.log(`  자격: ${usingToken ? '장기 토큰 (느립니다 — 실측 10배)' : '세션'}${fs.existsSync(AUTH_ENV) ? ' · 토큰 파일 있음' : ''}`)
-  console.log(`  사고량: ${EFFORT} · 한 번에 ${MAX_PARALLEL}개`)
+  console.log(`  모델: ${MODEL || '(계정 기본)'} · 사고량: ${EFFORT} (재시도 ${RETRY_EFFORT}) · 한 번에 ${MAX_PARALLEL}개`)
   console.log(`  ${POLL_MS / 1000}초마다 큐를 봅니다. Ctrl+C로 멈춥니다.\n`)
 
   recoverStale()

@@ -530,10 +530,12 @@ function statusLine(job) {
     return `<p class="status status--waiting"><span class="status__dot"></span>차례를 기다리는 중입니다. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'working') {
-    // 실측(--effort low): 도형 하나 8초~1분. 후보 4개를 차례로 그리므로 1~2분이다.
+    // 실측(2026-10-05, 소넷 5.5·medium): 후보 하나 7~20초(귤 2개 15초, 한라산 4개 79초 — 모양이 복잡할수록 길다).
+    // 표정은 하나 5~15초(볼드·필 5~6초, 슬림은 재시도가 걸려 13~16초), 셋을 차례로 만들어 1분 안쪽이다.
     const t = elapsed(job.result?.startedAt)
-    const kind = job.kind === 'variants' ? '표정을 만드는' : '그리는'
-    return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>1~2분</b> 걸립니다. 창을 닫아도 됩니다.</p>`
+    const isVariants = job.kind === 'variants'
+    const guess = isVariants ? '<b>1분 안에</b> 끝납니다' : '<b>1분 안팎</b>(복잡한 모양은 2분까지) 걸립니다'
+    return `<p class="status status--working"><span class="status__dot"></span>${isVariants ? '표정을 만드는' : '그리는'} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 보통 ${guess}. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'failed') {
     const raw = (job.result?.failures || []).join(' / ')
@@ -1125,7 +1127,7 @@ async function requestVariants(name) {
   if (todo.length === 0) return
 
   const hint = $('#sheet-hint')
-  if (hint) hint.textContent = '표정을 만들고 있습니다 — 만들기 탭에서 진행을 봅니다. 몇 분 걸립니다.'
+  if (hint) hint.textContent = '표정을 만들고 있습니다 — 만들기 탭에서 진행을 봅니다. 보통 1분 안에 끝납니다.'
 
   try {
     await api('/api/variants', { method: 'POST', body: JSON.stringify({ name, variants: todo }) })

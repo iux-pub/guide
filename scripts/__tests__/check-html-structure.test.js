@@ -538,3 +538,31 @@ test('site-footer 루트가 footer가 아니면 R-15 경고한다 (차단 없음
   assert.equal(result.status, 0, result.stderr)
   assert.match(result.stderr, /\[R-15\] "site-footer"/)
 })
+
+// ─── 템플릿 조각(site/_includes)은 page shell 대상이 아니다 ─────────────
+// 파일을 지정해 돌리면(pre-commit 훅) <main>·skip-to-content 가 든 레이아웃이 완전한 페이지로 판정돼
+// 레이아웃을 고칠 때마다 커밋이 막혔다. 전체 검사 모드에서는 원래 요구하지 않던 것이다.
+
+const LAYOUT_FRAGMENT = `<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <main id="main">{% block content %}{% endblock %}</main>
+</body>
+</html>`
+
+test('site/_includes 의 레이아웃 조각은 page shell 을 요구받지 않는다', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-layout-'))
+  const file = path.join(dir, 'site', '_includes', 'layouts', 'base.njk')
+  fs.mkdirSync(path.dirname(file), { recursive: true })
+  fs.writeFileSync(file, LAYOUT_FRAGMENT)
+
+  const result = spawnSync(process.execPath, [CHECK_HTML, file], { cwd: ROOT, encoding: 'utf8' })
+  assert.equal(result.status, 0, result.stderr)
+})
+
+test('같은 내용이라도 조각이 아닌 페이지(경로가 _includes 밖)는 page shell 을 요구받는다', () => {
+  const result = runCheck(LAYOUT_FRAGMENT)
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-15\]/)
+})

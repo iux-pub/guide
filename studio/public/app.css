@@ -173,6 +173,18 @@ body {
 
 .chip:hover { border-color: var(--muted); }
 
+/* 카탈로그는 분류가 18개라 좁은 화면에서 줄바꿈하면 결과가 화면 밖으로 밀린다 — 한 줄로 밀어 넘긴다 */
+@media (max-width: 760px) {
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: -24px;
+    padding: 0 24px 6px;
+  }
+
+  .chip { flex: none; }
+}
+
 .chip--on {
   border-color: var(--accent);
   color: var(--accent);
@@ -274,64 +286,6 @@ body {
 }
 
 .ask textarea:focus-visible { outline-offset: 0; }
-
-.ask__ref {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 10px 13px;
-  background: var(--bg);
-}
-
-.ask__ref summary {
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-}
-
-.ask__ref summary:hover { color: var(--ink); }
-.ask__ref[open] summary { margin-bottom: 10px; }
-.ask__ref > *:not(summary) { margin-bottom: 10px; }
-.ask__ref > *:last-child { margin-bottom: 0; }
-
-.ask__reftools {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.filebtn {
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 14px;
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--ink);
-  cursor: pointer;
-}
-
-.filebtn:hover { border-color: var(--muted); }
-
-.ask__refstate { font-size: 12px; color: var(--accent); }
-
-.ask__refpreview {
-  display: flex;
-  align-items: flex-end;
-  gap: 16px;
-  padding: 14px;
-  background: var(--surface);
-  border-radius: 4px;
-}
-
-.ask__refpreview svg { fill: var(--ink); color: var(--ink); }
-.ask__refpreview img { object-fit: contain; }
 
 .ask__row {
   display: flex;
@@ -677,44 +631,6 @@ code {
 }
 
 /* 일꾼이 멈췄을 때 — 요청을 넣기 전에 보이도록 화면 맨 위에 둔다 */
-/* 참조를 넣을 때 꼭 읽어야 하는 안내 — 이걸 놓치면 결과가 절반이 된다 */
-.ask__hint--key {
-  border-left: 2px solid var(--accent);
-  padding-left: 10px;
-  color: var(--ink);
-}
-
-/* 모델이 참조 그림을 어떻게 읽었나 — 결과를 보기 전에 확인할 수 있는 자리 */
-.refnotes {
-  margin: 10px 0 0;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--sunken);
-}
-
-.refnotes > summary {
-  padding: 9px 12px;
-  font-size: 12px;
-  color: var(--muted);
-  cursor: pointer;
-  min-height: 34px;
-  display: flex;
-  align-items: center;
-}
-
-.refnotes > summary:hover { color: var(--ink); }
-
-.refnotes pre {
-  margin: 0;
-  padding: 0 12px 12px;
-  font: inherit;
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--ink);
-  white-space: pre-wrap;
-  word-break: keep-all;
-}
-
 .workerdown {
   margin: 0 0 16px;
   padding: 12px 14px;
@@ -892,3 +808,200 @@ code {
 .sheet__more .btn { width: 100%; justify-content: center; }
 
 .sheet__hint { margin: 0; font-size: 11.5px; color: var(--muted); min-height: 1.6em; }
+
+/* ── 찾는 범위: 세트 / 카탈로그 ─────────────── */
+
+.scope {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.scope__btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  min-height: 34px;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.scope__btn:hover { background: var(--sunken); color: var(--ink); }
+
+.scope__btn--on,
+.scope__btn--on:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.scope__n {
+  margin-left: 3px;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.scopenote {
+  margin: -6px 0 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.scopenote b { color: var(--ink); font-weight: 600; }
+
+/* 이미 세트에 있다는 표시 — 색만으로 말하지 않고 글자도 둔다 */
+.badge,
+.cell__badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.6;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.cell__badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+/* 격자가 overflow:hidden이라 바깥으로 그린 초점 외곽선은 가장자리 칸에서 잘린다 — 안쪽으로 그린다 */
+.cell:focus-visible { outline-offset: -3px; }
+
+.cell--lib { gap: 6px; padding: 14px 8px 10px; }
+
+.cell__label {
+  max-width: 100%;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.cell--lib .cell__name { font-size: 10.5px; }
+
+.cell--in { background: var(--accent-soft); }
+.cell--in:hover { background: var(--accent-soft); filter: brightness(0.97); }
+.cell--in .cell__name { color: var(--accent); }
+
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 0 4px;
+}
+
+.more[hidden] { display: none; }
+.more__n { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ── 만들기 전에 이미 있는 것 ───────────────── */
+
+.suggest {
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.suggest[hidden] { display: none; }
+
+.suggest__label {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.suggest__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* ── 세트에 넣기 ─────────────────────────── */
+
+.sheet--adopt { max-width: 560px; }
+
+.adopt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+}
+
+.adopt .sheet__name { padding-right: 40px; font-family: inherit; }
+
+.faces {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 520px) {
+  .faces { grid-template-columns: repeat(2, 1fr); }
+}
+
+.face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  min-height: 96px;
+  background: var(--bg);
+  border-radius: var(--radius);
+}
+
+.face__art {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  min-height: 40px;
+  color: var(--ink);
+}
+
+.face__art svg { fill: currentColor; }
+.face__label { font-size: 11.5px; color: var(--muted); }
+.face__note { font-size: 10.5px; color: var(--muted); }
+
+.adopt__warn {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: 12px;
+}
+
+.adopt__warn[hidden] { display: none; }
+
+.adopt__form { display: flex; flex-direction: column; gap: 12px; }
+
+.adopt__rule { margin: 0; font-size: 12px; color: var(--warn); }
+.adopt__rule:empty { display: none; }
+
+.namefield select {
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 7px 9px;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 36px;
+}

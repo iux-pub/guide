@@ -66,20 +66,6 @@ const MAX_PARALLEL = Number(process.env.MAX_PARALLEL || 1)
 // 빠른 것이 문제가 아니라 우리 결을 못 맞춘다.
 const EFFORT = process.env.CLAUDE_EFFORT || 'low'
 
-// 참조를 옮기는 일은 판단이 더 필요할 수 있어 따로 둔다. 값은 실측으로 정한다.
-const REF_EFFORT = process.env.CLAUDE_REF_EFFORT || 'low'
-
-// 그림을 글로 옮기는 한 번의 호출. 그리기가 아니라 보기라 가볍다(실측 14초).
-const REFERENCE_TIMEOUT_MS = Number(process.env.REFERENCE_TIMEOUT_MS || 300000)
-
-// 참조를 옮겨 그리는 일은 **본질적으로 무겁다.** 일꾼과 같은 자리에서 잰 값(2026-08-24):
-//   참조 없는 도형   출력  5,483토큰 ·  60초
-//   참조 있는 로고   출력 56,888토큰 · 682초   ← 10배
-// 그림을 좌표로 옮기는 판단이 그만큼 많고, 특히 글자꼴은 곡선 하나하나가 판단이다.
-// 프롬프트를 줄여도 이건 안 줄었다. 제한을 넉넉히 주고 하나씩 돌리는 편이 낫다 —
-// 둘씩 돌리면 서로 굶겨 둘 다 놓친다.
-const REF_DRAW_TIMEOUT_MS = Number(process.env.REF_DRAW_TIMEOUT_MS || 1800000)
-
 const contract = JSON.parse(fs.readFileSync(CONTRACT, 'utf8'))
 const CANVAS = contract.canvas.width
 const PADDING = contract.canvas.padding
@@ -203,71 +189,6 @@ async function askClaude(prompt, timeoutMs = TIMEOUT_MS, effort = EFFORT) {
 }
 
 /**
- * 세트에 있는 아이콘 몇 개를 예시로 보여 준다.
- * 말로 "아웃라인 스타일"이라고 해 봐야 안 통한다 — 2026-08-23 실측:
- * 규격만 적어 보냈더니 후보 3개가 전부 까맣게 채워진 덩어리로 왔다.
- * 실제 path를 보여 주면 그 결을 따라 그린다.
- */
-function examples() {
-  // 안에 격자·내부 요소가 있는 것을 고른다. 실패는 그 주제군에서 나오므로
-  // 「윤곽 두 겹 + 내부 요소」가 실제로 어떻게 생겼는지 보여 주는 것이 맞다.
-  // 획 굵기가 기준(기본 표정)에 가까운 것들이다 — 예시가 곧 굵기 지시다.
-  const picks = ['calendar', 'table', 'grid', 'file']
-  const out = []
-  for (const name of picks) {
-    const p = path.join(ROOT, 'assets/icons/svg', `${name}.svg`)
-    if (!fs.existsSync(p)) continue
-    const d = fs.readFileSync(p, 'utf8').match(/<path[^>]*\sd="([^"]+)"/)
-    if (d) out.push(`${name}: ${d[1]}`)
-  }
-  return out
-}
-
-/** 규격을 그대로 프롬프트에 싣는다. 사람 말로 풀어 쓰지 않는다 — 어긋나면 검사에서 걸린다. */
-/**
- * 참조 그림에서 **무엇이 중요한지** 먼저 읽어 둔다 — 한 번만, 45초쯤.
- *
- * 처음에는 이걸로 그림을 대신하려 했다(후보마다 그림을 다시 읽는 것이 낭비로 보였다).
- * **재 보니 반대였다** — 그림을 빼면 두 배 느려진다.
- *
- *   그림 참조      출력  56,888토큰 ·   682초
- *   글 설명만      출력 124,565토큰 ·  1,536초
- *
- * 보면서 그리면 확신이 있는데, 글만 주면 「이 설명을 어떻게 좌표로 옮기지」를 훨씬
- * 오래 고민한다. 그래서 그림은 그대로 두고 이 글을 **함께** 싣는다.
- *
- * 그럼 이 단계가 왜 필요한가 — **사람이 볼 수 있어서다.** 모델이 그림을 어떻게
- * 이해했는지 드러나므로, 「i와 n이 이어진다」 같은 핵심을 놓쳤으면 만들어진 그림을
- * 보기 전에 알 수 있다. 실제로 그 문장을 정확히 잡아 냈다.
- *
- * 주의: claude는 **작업 디렉토리 안의 파일만** 권한 없이 읽는다. 밖에 있으면
- * 「읽기 권한이 필요합니다」로 끝난다(2026-08-24 실측 — 이걸 일회성으로 잘못 넘겨
- * 한참 헤맸다). 일꾼은 저장소 안에서 돌고 그림도 그 안에 두므로 괜찮다.
- */
-async function describeReference(imagePath, text) {
-  const prompt = `${imagePath}
-
-이 그림을 24×24 단색 아이콘으로 옮기려 한다. **그리지 말고, 형태만 글로 적어라.**
-
-만들려는 것: ${text}
-
-적을 것
-- 무엇이 무엇과 **붙어 있는지** (이어진 획을 끊으면 다른 마크가 된다)
-- 각 요소의 대략적인 비율과 자리
-- 어느 부분이 없으면 딴것이 되는지
-
-색·그림자·질감은 적지 않는다. 8줄 이내, 설명하는 문장만.`
-
-  const raw = await askClaude(prompt, REFERENCE_TIMEOUT_MS, 'low')
-  const out = String(raw).trim()
-  // 못 읽었으면 글이 아니라 하소연이 온다. 그걸 프롬프트에 실으면 더 나쁘다.
-  if (!out || /권한|permission|읽지 못|열지 못|cannot read/i.test(out)) {
-    throw new Error(`참조 그림을 읽지 못했습니다 — ${out.slice(0, 120)}`)
-  }
-  return out
-}
-
-/**
  * 만들기 프롬프트.
  *
  * **짧게 쓰는 것이 곧 빠르게 만드는 것이다.** 2026-08-24 실측 — 같은 아이콘을 네 가지
@@ -288,7 +209,7 @@ async function describeReference(imagePath, text) {
  *   기존 이름 73개  이름 중복은 승인할 때 서버가 본다 — 모델이 외울 일이 아니다
  *   긴 실패담       「한 겹이면 까만 덩어리가 된다」는 한 줄이면 통한다
  */
-function buildPrompt(text, seedNames, variant, reference, referenceImage, refNotes) {
+function buildPrompt(text, seedNames, variant) {
   const angles = [
     '가장 일반적이고 알아보기 쉬운 형태로',
     '단순하게 — 요소를 최소로 줄여서',
@@ -297,43 +218,11 @@ function buildPrompt(text, seedNames, variant, reference, referenceImage, refNot
   ]
   const w = contract.geometry.strokeWeight
   const live = contract.canvas.liveArea
-  // 참조가 있으면 「우리 스타일로 새로 그리기」가 아니라 「저것을 옮기기」다.
-  // 로고·심볼은 속이 찬 형태가 많은데 아웃라인 규칙을 씌우면 원본과 다른 그림이 된다
-  // (2026-08-24: 인포마인드 로고가 가늘어지고 i의 점이 작아져 16px에서 「ln」으로 읽혔다).
-  const hasRef = Boolean(reference || referenceImage || refNotes)
-
   return `${CANVAS}×${CANVAS} 격자에 아이콘 하나를 그린다. ${angles[variant % angles.length]}.
 
 ## 그릴 것
 ${text}
-${hasRef ? `
-## 참조 — 이 형태를 그대로 옮긴다
 
-**원본의 생김새와 굵기를 지킨다.** 여기 없는 요소를 지어내지 않고, 있는 것을 빼지도 않는다.
-${referenceImage ? `그림 파일을 열어 본다: ${referenceImage}
-색·그러데이션만 버리고 단색으로 만든다. 형태·비율·굵기는 원본 그대로다.` : ''}${refNotes ? `
-
-**이 그림에서 무엇이 중요한지 먼저 읽어 둔 것이다. 그림과 함께 본다.**
-
-${refNotes.split('\n').map((l) => `  ${l}`).join('\n')}` : ''}${reference ? `
-\`\`\`svg
-${reference.length > 8000 ? reference.slice(0, 8000) + '\n<!-- (뒷부분 생략) -->' : reference}
-\`\`\`` : ''}
-
-**아래 아웃라인 규칙을 억지로 적용하지 않는다.** 로고·심볼·글자꼴은 대개 속이 찬 형태이고,
-그 두께가 곧 그 형태의 정체다. 속이 찼으면 찬 채로 옮긴다 — 굳이 테두리만 남기면
-원본과 다른 그림이 된다.
-
-원본에 점·구멍처럼 도드라지는 부분이 있으면 **원본에서 차지하던 비중 그대로** 옮긴다.
-작게 줄이면 24px에서 사라지고 16px에서는 다른 글자로 읽힌다.
-
-**획이 이어져 있으면 이어진 채로 둔다.** 로고에서 두 요소가 하나로 흐르는 것은 대개
-그 마크의 정체다 — 보기 좋게 정리하려고 끊으면 다른 회사 로고가 된다.
-반대로 떨어져 있는 것을 붙이지도 않는다.
-
-**단순화는 요소를 빼는 것이지 구조를 바꾸는 것이 아니다.** 색·그림자·질감은 버리되,
-무엇이 무엇과 붙어 있고 어느 것이 더 큰지는 원본 그대로 둔다.
-` : `
 ## 아웃라인으로 그린다 — 속이 빈 도형
 
 도형 하나에 **선 두 개**를 쓴다. 바깥 테두리 하나, 그보다 ${w} 안쪽으로 하나.
@@ -348,9 +237,9 @@ ${reference.length > 8000 ? reference.slice(0, 8000) + '\n<!-- (뒷부분 생략
 연결선·막대처럼 가는 요소는 굵기 ${w}짜리 얇은 직사각형으로 한 겹만 그려 채운다.
 
 바깥 윤곽은 첫 번째 path에, 내부 요소는 그다음 path에 나눠 쓴다.
-`}
+
 ## 규격
-${hasRef ? '- 굵기는 원본을 따른다. 우리 획 굵기 규칙보다 원본의 생김새가 먼저다\n' : ''}- viewBox="0 0 ${CANVAS} ${CANVAS}", 루트 <svg>에 fill="currentColor" fill-rule="evenodd"
+- viewBox="0 0 ${CANVAS} ${CANVAS}", 루트 <svg>에 fill="currentColor" fill-rule="evenodd"
 - 형태는 중앙 ${live}×${live} 안에. 바깥 ${PADDING}은 비운다
 - <path>만. stroke·색상값·circle·rect·line·polygon 금지. path에 fill을 쓰지 않는다
 - 좌표는 소수점 ${contract.output.decimalPlaces}자리까지
@@ -430,13 +319,7 @@ function normalize(raw) {
 }
 
 /** 사람이 보고 판단할 수 있는 말로만 적는다. viewBox·stroke 같은 용어를 쓰지 않는다. */
-/**
- * @param {boolean} fromReference 참조를 보고 옮긴 것인가.
- *   참조가 있으면 굵기는 원본을 따르는 것이 맞다. 그걸 「굵다/가늘다」로 나무라면
- *   프롬프트와 판정이 서로 다른 말을 하게 되고, 쓰는 사람은 경고를 무시하는 법부터 배운다.
- *   「속이 꽉 찼다」도 로고·심볼에서는 정상이다.
- */
-function review(svg, ds, original, fromReference = false) {
+function review(svg, ds, original) {
   const notes = []
   let ok = true
   // 규격 위반은 아니지만 다시 그려 볼 값어치가 있는 상태 —
@@ -474,15 +357,6 @@ function review(svg, ds, original, fromReference = false) {
     const { min, p10, p90, max } = baseline.strokeWeight
     const solidAt = (baseline.strokeWeight.p90 || max) * (contract.optical.solidFillThreshold?.multiplier ?? 2)
 
-    // 참조를 옮긴 것이면 굵기 판정을 건너뛴다 — 원본을 따르라고 시켜 놓고 나무랄 수 없다.
-    // 대신 실측만 알려 준다. 세트와 얼마나 다른지는 사람이 보고 정한다.
-    if (fromReference) {
-      notes.push({
-        level: 'good',
-        text: `원본을 옮긴 것이라 굵기는 따로 보지 않습니다 (실측 ${sw.toFixed(2)}, 세트 기준 ${p10}~${p90})`
-      })
-      return { ok: notes.every((n) => n.level !== 'bad'), notes, retryWorthy: notes.some((n) => n.level === 'bad') }
-    }
     if (sw > solidAt) {
       // 획이 아니라 면으로 꽉 채워 그린 경우다. "굵다"고만 하면 원인을 못 찾는다.
       notes.push({ level: 'bad', text: '속이 꽉 찬 덩어리로 그려졌습니다 — 테두리만 남는 형태가 아닙니다' })
@@ -759,29 +633,15 @@ async function handle(id, request) {
   const ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'))
   const seedNames = Object.keys(ledger.icons)
 
-  console.log(`  요청 ${id} — "${request.text}" 후보 ${request.count}개${request.reference ? ' (SVG 참조)' : ''}${request.referenceImage ? ' (그림 참조)' : ''}`)
+  console.log(`  요청 ${id} — "${request.text}" 후보 ${request.count}개`)
 
   // 후보는 각각 따로 부른다. 한 번에 여러 개를 시키면 서로 닮게 나오고,
   // 하나가 어긋나면 전부 못 쓴다.
-  // 그림 참조는 **한 번만** 읽어 글로 옮긴다. 후보마다 다시 읽으면 같은 일을 N번 하고,
-  // 그림을 보며 그리는 호출은 턴이 늘어 훨씬 무겁다.
-  let refNotes = null
-  if (request.referenceImage) {
-    console.log('  참조 그림을 읽는 중…')
-    refNotes = await describeReference(request.referenceImage, request.text)
-    console.log(`  참조를 글로 옮겼습니다 (${refNotes.length}자)`)
-  }
-
-  const heavy = Boolean(request.reference || request.referenceImage)
-  const drawTimeout = heavy ? REF_DRAW_TIMEOUT_MS : TIMEOUT_MS
-  const effort = heavy ? REF_EFFORT : EFFORT
-
   const draw = async (i) => {
-    const base = buildPrompt(request.text, seedNames, i, request.reference, request.referenceImage, refNotes)
-    const raw = await askClaude(base, drawTimeout, effort)
+    const base = buildPrompt(request.text, seedNames, i)
+    const raw = await askClaude(base, TIMEOUT_MS, EFFORT)
     const first = normalize(raw)
-    const fromRef = Boolean(request.reference || request.referenceImage)
-    const verdict = review(first.svg, first.ds, raw, fromRef)
+    const verdict = review(first.svg, first.ds, raw)
 
     // 규격을 어겼으면 무엇이 잘못됐는지 알려 주고 한 번 더 그리게 한다.
     // 두 번째도 어긋나면 그대로 둔다 — 판단은 사람 몫이고, 무한정 시도하면
@@ -789,9 +649,9 @@ async function handle(id, request) {
     if (verdict.retryWorthy) {
       try {
         // 다시 그릴 때는 한 단 올린다 — 처음 것이 어긋났으니 조금 더 생각할 값어치가 있다
-        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), drawTimeout, 'medium')
+        const raw2 = await askClaude(retryPrompt(base, first.svg, verdict.notes), TIMEOUT_MS, 'medium')
         const second = normalize(raw2)
-        const verdict2 = review(second.svg, second.ds, raw2, fromRef)
+        const verdict2 = review(second.svg, second.ds, raw2)
         if (!verdict2.retryWorthy) return { ok: true, svg: second.svg, review: verdict2, retried: true, suggested: second.suggested ?? first.suggested }
         // 둘 다 어긋났으면 덜 나쁜 쪽을 준다
         const score = (v) => v.notes.filter((n) => n.level === 'bad').length * 10 +
@@ -810,9 +670,7 @@ async function handle(id, request) {
 
   const settled = await pool(
     Array.from({ length: request.count }, (_, i) => i),
-    (i) => draw(i).catch((err) => ({ ok: false, error: err.message })),
-    // 참조를 옮기는 호출은 하나만으로도 11분이다. 둘씩 돌리면 서로 굶겨 둘 다 놓친다.
-    heavy ? 1 : MAX_PARALLEL
+    (i) => draw(i).catch((err) => ({ ok: false, error: err.message }))
   )
   const candidates = settled
     .filter((c) => c.ok)
@@ -834,9 +692,6 @@ async function handle(id, request) {
     status: candidates.length > 0 ? 'ready' : 'failed',
     candidates,
     failures,
-    // 모델이 그림을 어떻게 이해했는지 사람이 볼 수 있게 남긴다 — 핵심을 놓쳤으면
-    // 요청문에 그 말을 보태 다시 시키면 된다
-    ...(refNotes ? { referenceNotes: refNotes } : {}),
     finishedAt: new Date().toISOString()
   }
 }
@@ -990,7 +845,7 @@ async function main() {
   console.log(`  claude: ${CLAUDE}`)
   const usingToken = process.env.USE_AUTH_TOKEN === '1'
   console.log(`  자격: ${usingToken ? '장기 토큰 (느립니다 — 실측 10배)' : '세션'}${fs.existsSync(AUTH_ENV) ? ' · 토큰 파일 있음' : ''}`)
-  console.log(`  사고량: ${EFFORT} (참조 ${REF_EFFORT}) · 한 번에 ${MAX_PARALLEL}개`)
+  console.log(`  사고량: ${EFFORT} · 한 번에 ${MAX_PARALLEL}개`)
   console.log(`  ${POLL_MS / 1000}초마다 큐를 봅니다. Ctrl+C로 멈춥니다.\n`)
 
   recoverStale()

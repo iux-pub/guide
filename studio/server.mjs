@@ -19,6 +19,12 @@ import crypto from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 import { makeZip } from './lib/zip.mjs'
 import { execFile } from 'node:child_process'
+import { createRequire } from 'node:module'
+
+// 검색·채택은 CLI(npm run icons:adopt)와 같은 코드를 쓴다 — 화면과 터미널의 결과가 달라지지 않게
+const require = createRequire(import.meta.url)
+const { search } = require('../scripts/lib/icon-search.js')
+const { adopt, fetchExpressions, adoptedMap } = require('../scripts/lib/icon-adopt.js')
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(HERE, '..')
@@ -30,6 +36,8 @@ const KEYWORDS = path.join(ROOT, 'contracts/icon-keywords.json')
 const LEDGER = path.join(ROOT, 'contracts/icon-codepoints.json')
 const CONTRACT = path.join(ROOT, 'contracts/icon-contract.json')
 const SEED_MAP = path.join(ROOT, 'contracts/icon-seed-map.json')
+const LIBRARY = path.join(HERE, 'library/library.json')
+const PREVIEW_CACHE = path.join(ROOT, '.cache/icon-library/preview')
 
 const PORT = Number(process.env.PORT || 4700)
 // 기본은 이 기계에서만 열린다. 사내 서버에 올려 팀이 함께 볼 때만 HOST=0.0.0.0을 준다.
@@ -140,6 +148,88 @@ function workerHealth() {
     }
   }
   return { alive: true, lastBeat: beat.at, ageSec: Math.round(ageMs / 1000), state: beat.state }
+}
+
+// ── 카탈로그(구글 전량) ─────────────────────────────────
+//
+// 카탈로그는 찾고 미리 보는 용도다. 번호(코드포인트)가 없다. 채택(adopt)해야 대장에 올라 세트가 된다.
+// 색인은 1.7MB라 파일이 바뀔 때만 다시 읽는다.
+
+let libraryCache = { mtime: 0, data: null }
+
+function library() {
+  try {
+    const mtime = fs.statSync(LIBRARY).mtimeMs
+    if (libraryCache.mtime !== mtime) libraryCache = { mtime, data: JSON.parse(fs.readFileSync(LIBRARY, 'utf8')) }
+    return libraryCache.data
+  } catch {
+    return null
+  }
+}
+
+/** 화면에 내줄 한 줄. 영문 태그(t)는 검색에만 쓰고 보내지 않는다. */
+function libraryRow(icon, taken, via = '') {
+  return {
+    m: icon.m,
+    n: icon.n,
+    ...(icon.x ? { x: icon.x } : {}),
+    ...(icon.s ? { s: icon.s } : {}),
+    c: icon.c,
+    ko: icon.ko,
+    ...(icon.k?.length ? { k: icon.k } : {}),
+    ...(taken.has(icon.m) ? { a: taken.get(icon.m) } : {}),
+    ...(via ? { via } : {})
+  }
+}
+
+function libraryMeta() {
+  const lib = library()
+  if (!lib) return { available: false }
+  const ledger = readJson(LEDGER, { icons: {} })
+  const taken = adoptedMap(ledger)
+  const counts = new Map()
+  for (const i of lib.icons) counts.set(i.c, (counts.get(i.c) || 0) + 1)
+  return {
+    available: true,
+    count: lib.icons.length,
+    adopted: taken.size,
+    categories: lib.categories.map((c) => ({ id: c.id, label: c.label, ours: c.ours, count: counts.get(c.id) || 0 })),
+    source: lib.source
+  }
+}
+
+function librarySearch(params) {
+  const lib = library()
+  if (!lib) return { total: 0, rows: [] }
+  const ledger = readJson(LEDGER, { icons: {} })
+  const taken = adoptedMap(ledger)
+  const only = params.get('scope') === 'adopted' ? new Set(taken.keys()) : null
+  const offset = Math.max(0, Number(params.get('offset')) || 0)
+  const limit = Math.min(300, Math.max(1, Number(params.get('limit')) || 120))
+
+  const all = search(lib, params.get('q') || '', {
+    limit: Number.MAX_SAFE_INTEGER,
+    category: params.get('category') || null,
+    only
+  })
+  return {
+    total: all.length,
+    rows: all.slice(offset, offset + limit).map((r) => libraryRow(r.icon, taken, r.via))
+  }
+}
+
+/** 채택하기 전에 네 표정을 미리 본다. 채택과 같은 코드가 받아 옮기므로 보이는 것이 들어오는 것이다. */
+async function libraryPreview(material) {
+  const lib = library()
+  const icon = lib?.icons.find((i) => i.m === material)
+  if (!icon) throw new Error('카탈로그에 없는 아이콘입니다')
+  const contract = readJson(CONTRACT)
+  const seed = readJson(SEED_MAP)
+  const name = icon.n || icon.s || icon.m.replace(/_/g, '-')
+  const r = await fetchExpressions({ material, name, contract, seed, cacheDir: PREVIEW_CACHE })
+  const out = { regular: r.base.svg, slim: null, bold: null, fill: null }
+  for (const v of r.variants) out[v.id] = v.svg
+  return { m: material, expressions: out, warnings: r.warnings }
 }
 
 // ── 아이콘 ────────────────────────────────────────────
@@ -365,6 +455,43 @@ async function pendingWork() {
 const routes = {
   'GET /api/catalog': (req, res) => json(res, 200, iconCatalog()),
 
+  // 카탈로그(구글 전량) — 찾기 화면이 쓴다
+  'GET /api/library/meta': (req, res) => json(res, 200, libraryMeta()),
+
+  'GET /api/library/search': (req, res) => {
+    const url = new URL(req.url, 'http://localhost')
+    json(res, 200, librarySearch(url.searchParams))
+  },
+
+  'GET /api/library/preview': async (req, res) => {
+    const url = new URL(req.url, 'http://localhost')
+    const m = String(url.searchParams.get('m') || '')
+    if (!/^[a-z0-9_]+$/.test(m)) return json(res, 400, { error: '아이콘 이름이 올바르지 않습니다' })
+    try {
+      json(res, 200, await libraryPreview(m))
+    } catch (err) {
+      json(res, 400, { error: err.message })
+    }
+  },
+
+  // 채택 — 카탈로그의 아이콘을 세트에 넣는다. 대장에 번호가 영구히 붙는다.
+  // 만들기의 승인(approve)과 같은 자리에 쓴다: 파일·대장·씨앗 지도·검색어.
+  'POST /api/adopt': async (req, res) => {
+    const body = await readBody(req)
+    try {
+      const result = await adopt({
+        material: String(body.material || ''),
+        name: body.name ? String(body.name) : undefined,
+        category: body.category ? String(body.category) : undefined,
+        keywords: Array.isArray(body.keywords) ? body.keywords : undefined,
+        root: ROOT
+      })
+      json(res, 200, result)
+    } catch (err) {
+      json(res, 400, { error: err.message })
+    }
+  },
+
   'GET /api/pending': async (req, res) => {
     const w = await pendingWork()
     // push가 되면 화면이 「올리기」를 내주고, 안 되면 패치를 받아 가라고 한다.
@@ -472,45 +599,13 @@ const routes = {
     ensureQueue()
     const id = new Date().toISOString().replace(/[:.]/g, '-') + '-' + crypto.randomBytes(3).toString('hex')
 
-    // 참조 — 특정 로고·심볼처럼 모델이 알 수 없는 대상은 실물을 보여 줘야 한다.
-    // 없으면 그럴듯한 다른 것을 그린다.
-    //
-    // SVG는 코드를 그대로 프롬프트에 싣고, 그림 파일(PNG·JPG)은 디스크에 풀어 두고
-    // 경로를 알려 준다 — claude가 파일을 열어 본다(2026-08-23 실측).
-    let reference = null
-    let referenceImage = null
-
-    if (typeof body.reference === 'string' && body.reference.trim()) {
-      const raw = body.reference.trim()
-      if (raw.length > 200_000) return json(res, 400, { error: '참조 파일이 너무 큽니다 (200KB 이하)' })
-      if (!/<svg[\s\S]*<\/svg>/i.test(raw)) {
-        return json(res, 400, { error: 'SVG가 아닙니다. <svg>로 시작하는 코드를 넣어 주세요' })
-      }
-      reference = raw
-    }
-
-    if (typeof body.referenceImage === 'string' && body.referenceImage.trim()) {
-      const m = body.referenceImage.match(/^data:image\/(png|jpeg|jpg|webp);base64,([A-Za-z0-9+/=]+)$/)
-      if (!m) return json(res, 400, { error: 'PNG·JPG·WebP 그림만 받습니다' })
-      const buf = Buffer.from(m[2], 'base64')
-      if (buf.length > 4_000_000) return json(res, 400, { error: '그림이 너무 큽니다 (4MB 이하)' })
-      const ext = m[1] === 'jpeg' ? 'jpg' : m[1]
-      fs.mkdirSync(path.join(QUEUE, 'refs'), { recursive: true })
-      const file = path.join(QUEUE, 'refs', `${id}.${ext}`)
-      fs.writeFileSync(file, buf)
-      referenceImage = file
-    }
-
-    const hasReference = Boolean(reference || referenceImage)
+    // 참조 그림으로 로고·심볼을 옮겨 그리는 기능은 없앴다(2026-10-05). 참조를 붙인 요청 8건
+    // (2026-08-24 기록) 가운데 5건이 실패하고 2건은 끝나지 않았으며, 후보를 낸 1건도 1개뿐이었다.
+    // 정해진 모양은 디자이너가 만든 SVG를 그대로 쓰는 편이 맞다 — 모델에게 좌표로 옮기게 하지 않는다.
     const request = {
       id,
       text,
-      // 참조를 붙이면 후보가 서로 닮는다 — 같은 형태를 옮기는 일이라 「다른 접근」이
-      // 의미가 없다. 게다가 참조가 붙으면 호출당 630초로 무거워진다(2026-08-24 실측).
-      // 넷을 그리느라 40분을 쓰느니 둘을 그려 20분에 끝내는 편이 낫다.
-      count: Math.min(6, Math.max(1, Number(body.count) || (hasReference ? 2 : 4))),
-      ...(reference ? { reference } : {}),
-      ...(referenceImage ? { referenceImage } : {}),
+      count: Math.min(6, Math.max(1, Number(body.count) || 4)),
       createdAt: new Date().toISOString(),
       status: 'waiting'
     }
@@ -672,6 +767,13 @@ const routes = {
     // 이 묶음에 실제로 든 아이콘만 담은 CSS. 원본 icons.css를 통째로 주면
     // 없는 아이콘의 클래스까지 따라가 쓰는 사람이 헷갈린다.
     const guideCss = path.join(OUT_ICONS, 'icons.css')
+
+    // 폰트는 마지막 빌드(npm run icons:build) 때 만들어진다. 그 뒤에 세트에 들인 아이콘은
+    // 스프라이트·낱개 SVG로는 쓰이지만 폰트에는 글자가 없다 — 폰트 방식으로 쓰면 빈 칸이 나온다.
+    // 조용히 넘기면 받은 사람이 프로젝트에서 처음 보고서야 알게 되므로 묶음에 적어 둔다.
+    const builtCss = fs.existsSync(guideCss) ? fs.readFileSync(guideCss, 'utf8') : ''
+    const unbuilt = builtCss ? kept.filter((n) => !builtCss.includes(`.icon-font--${n}::before`)) : []
+
     if (fs.existsSync(guideCss) && kept.length > 0) {
       const full = fs.readFileSync(guideCss, 'utf8')
       const head = full.split('@layer components {')[0]
@@ -736,13 +838,20 @@ const routes = {
     if (fs.existsSync(notice)) files.push({ name: 'LICENSE-NOTICE.txt', data: fs.readFileSync(notice, 'utf8') })
 
     const extra = combos.filter((c) => !c.default)
-    const sample = kept[0] || 'search'
+    // 예시는 폰트에 있는 아이콘으로 든다 — 안내문 그대로 붙였는데 빈 칸이면 안내가 거짓말이 된다
+    const sample = kept.find((n) => !unbuilt.includes(n)) || kept[0] || 'search'
     files.push({
       name: 'README.txt',
       data:
         `infoUX 아이콘 묶음 — ${kept.length}종\n` +
         `표정 ${combos.map((c) => c.id).join(' · ')}\n` +
         `${new Date().toISOString().slice(0, 10)} 생성\n\n` +
+        (unbuilt.length > 0
+          ? `※ 폰트에 아직 없는 아이콘 ${unbuilt.length}종: ${unbuilt.join(', ')}\n` +
+            `  세트에 들였지만 저장소에서 폰트를 다시 빌드하기 전이라 글자가 없다.\n` +
+            `  이 아이콘들은 폰트(span) 방식으로 쓰면 빈 칸이 나온다 — 아래 SVG 방식으로 쓴다.\n` +
+            `  저장소에 반영해 빌드한 뒤 다시 받으면 폰트에도 들어 있다.\n\n`
+          : '') +
         `이 폴더 내용을 프로젝트의 assets/icons/ 에 그대로 넣는다. 폰트도 들어 있다.\n\n` +
         `쓰는 법 — 폰트(기본)\n` +
         `  <span class="icon-font icon-font--${sample}" aria-hidden="true"></span>\n\n` +
@@ -773,6 +882,7 @@ const routes = {
       'content-length': zip.length,
       'x-icon-count': String(kept.length),
       'x-icon-missing': String(missing),
+      'x-icon-unbuilt': String(unbuilt.length),
       'x-icon-files': String(files.length)
     })
     res.end(zip)
@@ -841,6 +951,8 @@ server.listen(PORT, HOST, () => {
   if (HOST === '0.0.0.0') {
     console.log('  ⚠ 바깥에 열려 있습니다 — 로그인이 없으므로 닿을 수 있는 사람은 누구나 씁니다')
   }
-  console.log(`  아이콘 ${icons.length}종 · 자체 제작 ${icons.filter((i) => i.own).length}종`)
+  console.log(`  세트 ${icons.length}종 · 자체 제작 ${icons.filter((i) => i.own).length}종`)
+  const lib = library()
+  console.log(lib ? `  카탈로그 ${lib.icons.length}종 (구글 Material Symbols)` : '  카탈로그 없음 — npm run icons:library 로 만든다')
   console.log('  npm run studio 로 켜면 일꾼도 함께 뜬다')
 })

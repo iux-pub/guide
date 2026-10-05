@@ -63,8 +63,13 @@ test('빈 목록에도 멈추지 않는다', async () => {
   assert.deepEqual(await pool([], async () => 'x'), [])
 })
 
-test('참조가 붙으면 후보를 줄인다', () => {
-  // 같은 형태를 옮기는 일이라 「다른 접근」이 의미가 없고, 호출이 무겁다
-  const server = fs.readFileSync(path.join(ROOT, 'studio/server.mjs'), 'utf8')
-  assert.match(server, /hasReference \? 2 : 4/, '참조 있을 때 기본 후보 수가 줄어야 한다')
+test('참조 그림으로 로고를 옮기는 길은 없다', () => {
+  // 2026-10-05에 걷어냈다. 참조를 붙인 요청 8건 가운데 5건이 실패하고 2건은 끝나지 않았으며
+  // 후보를 낸 1건도 1개뿐이었다. 정해진 모양은 원본 SVG를 그대로 쓴다.
+  // 어디선가 되살아나면 요청이 다시 몇십 분씩 걸리고 일꾼이 한 건에 묶인다.
+  const legacy = /referenceImage|hasReference|describeReference|REF_DRAW_TIMEOUT_MS|fromReference/
+  for (const file of ['studio/server.mjs', 'studio/worker.mjs', 'studio/public/app.js', 'studio/public/index.html']) {
+    const code = fs.readFileSync(path.join(ROOT, file), 'utf8')
+    assert.doesNotMatch(code, legacy, `${file}에 참조 그림 경로가 남아 있다`)
+  }
 })

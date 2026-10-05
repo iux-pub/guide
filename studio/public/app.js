@@ -16,10 +16,16 @@ const state = {
   picked: new Set(),
   svgCache: new Map(),
   pollTimer: null,
-  // 만들기에 붙일 참조. 회사 심볼처럼 정해진 모양은 이게 없으면 지어낸 것이 나온다.
-  // SVG는 코드로, 그림(PNG·JPG)은 data URL로 담는다.
-  reference: null,
-  referenceImage: null,
+  // 찾는 범위: 'set'(우리가 채택한 것) | 'catalog'(구글 전량 — 아직 번호가 없다)
+  scope: 'set',
+  lib: {
+    meta: null,          // 카탈로그 요약 (없으면 {available:false})
+    rows: [],            // 지금 화면에 올라온 카탈로그 줄
+    total: 0,            // 검색에 걸린 전체 수 (더 보기 판단용)
+    byM: new Map(),      // 구글 이름 → 줄. 눌렀을 때 꺼내 쓴다
+    seq: 0               // 늦게 온 옛 응답을 버리려는 번호
+  },
+  suggestSeq: 0,
   variants: [],
   sheetVariant: 'regular',
   // 내보내기에 함께 담을 표정. 기본은 늘 들어가므로 목록에 두지 않는다
@@ -85,21 +91,66 @@ function show(view) {
 }
 
 // ── 찾기 ──────────────────────────────────────────────
+//
+// 찾는 범위는 둘이다.
+//   세트      우리가 채택한 아이콘. 번호가 붙어 있어 바로 쓴다.
+//   카탈로그  구글 Material Symbols 전량. 찾고 미리 볼 뿐 번호가 없다 —
+//             「세트에 넣기」를 해야 쓸 수 있다.
+// 전량을 세트로 두지 않는 까닭: 쓰지도 않을 아이콘만큼 스프라이트·폰트·스타터가 커진다.
+
+const PAGE = 120
+
+const catalogOn = () => Boolean(state.lib.meta?.available)
+
+function renderScope() {
+  $$('.scope__btn').forEach((b) => {
+    const on = b.dataset.scope === state.scope
+    b.classList.toggle('scope__btn--on', on)
+    if (on) b.setAttribute('aria-current', 'true')
+    else b.removeAttribute('aria-current')
+  })
+  // 카탈로그를 못 받았으면 버튼 자체를 감춘다 — 눌러도 빈 화면만 나온다
+  $('[data-scope="catalog"]').hidden = !catalogOn()
+  $('#scope-set-n').textContent = state.icons.length
+  $('#scope-cat-n').textContent = catalogOn() ? state.lib.meta.count.toLocaleString('ko-KR') : ''
+}
+
+function setScope(scope) {
+  if (scope === 'catalog' && !catalogOn()) return
+  state.scope = scope
+  state.filter.category = null
+  renderScope()
+  renderChips()
+  renderGrid()
+}
 
 function renderChips() {
-  const chips = [
-    { id: null, label: `전체 ${state.icons.length}` },
-    { id: '__own', label: `우리가 만든 것 ${state.icons.filter((i) => i.own).length}` },
-    ...state.categories.map((c) => ({
-      id: c.id,
-      label: `${c.label} ${state.icons.filter((i) => i.category === c.id).length}`
-    }))
-  ]
+  let chips
+  if (state.scope === 'catalog') {
+    const meta = state.lib.meta
+    chips = [
+      { id: null, label: `전체 ${meta.count.toLocaleString('ko-KR')}` },
+      ...meta.categories.map((c) => ({ id: c.id, label: `${c.label} ${c.count.toLocaleString('ko-KR')}` }))
+    ]
+  } else {
+    chips = [
+      { id: null, label: `전체 ${state.icons.length}` },
+      { id: '__own', label: `우리가 만든 것 ${state.icons.filter((i) => i.own).length}` },
+      ...state.categories.map((c) => ({
+        id: c.id,
+        label: `${c.label} ${state.icons.filter((i) => i.category === c.id).length}`
+      }))
+    ]
+  }
   $('#chips').innerHTML = chips
-    .map((c) => `<button class="chip${state.filter.category === c.id ? ' chip--on' : ''}" data-cat="${c.id ?? ''}">${esc(c.label)}</button>`)
+    .map((c) => {
+      const on = state.filter.category === c.id
+      return `<button type="button" class="chip${on ? ' chip--on' : ''}" data-cat="${c.id ?? ''}"${on ? ' aria-current="true"' : ''}>${esc(c.label)}</button>`
+    })
     .join('')
 }
 
+/** 세트 안에서 거른다. 이름은 영어인데 쓰는 사람은 한국어로 생각한다 — 검색어 사전이 그 다리다. */
 function filtered() {
   const q = state.filter.q.trim().toLowerCase()
   const cat = state.filter.category
@@ -107,7 +158,6 @@ function filtered() {
     if (cat === '__own' && !i.own) return false
     if (cat && cat !== '__own' && i.category !== cat) return false
     if (!q) return true
-    // 이름은 영어인데 쓰는 사람은 한국어로 생각한다 — 검색어 사전이 그 다리다
     return (
       i.name.includes(q) ||
       (i.categoryLabel || '').includes(q) ||
@@ -116,13 +166,33 @@ function filtered() {
   })
 }
 
-async function renderGrid() {
+function announce(text) {
+  $('#find-live').textContent = text
+}
+
+function renderGrid() {
+  if (state.scope === 'catalog') return searchCatalog({ reset: true })
+  renderSetGrid()
+}
+
+function renderSetGrid() {
   const rows = filtered()
   const grid = $('#grid')
-  $('#find-empty').hidden = rows.length > 0
+  const q = state.filter.q.trim()
+  $('#more').hidden = true
+
+  const empty = $('#find-empty')
+  empty.hidden = rows.length > 0
+  if (rows.length === 0) {
+    empty.innerHTML =
+      (q ? `세트에 “${esc(q)}”에 맞는 아이콘이 없습니다. ` : '세트가 비어 있습니다. ') +
+      (catalogOn() ? '<button type="button" class="linkbtn" data-scope-go="catalog">카탈로그에서 찾아보기</button> ' : '') +
+      '<button type="button" class="linkbtn" data-goto="make">만들기로 넘어가기</button>'
+  }
+  announce(q ? `세트에서 ${rows.length}종을 찾았습니다` : '')
 
   grid.innerHTML = rows
-    .map((i) => `<button class="cell${i.own ? ' cell--own' : ''}" data-name="${esc(i.name)}">
+    .map((i) => `<button type="button" class="cell${i.own ? ' cell--own' : ''}" data-name="${esc(i.name)}">
       <span class="cell__svg" data-svg="${esc(i.name)}"></span>
       <span class="cell__name">${esc(i.name)}</span>
     </button>`)
@@ -132,6 +202,103 @@ async function renderGrid() {
   for (const holder of grid.querySelectorAll('[data-svg]')) {
     loadSvg(holder.dataset.svg).then((svg) => { holder.innerHTML = svg })
   }
+  scheduleCatalogNote()
+}
+
+/** 세트에서 찾는 중에도 카탈로그에 몇 종이 있는지 알려 준다 — 못 찾고 돌아서지 않게. */
+let noteTimer = null
+function scheduleCatalogNote() {
+  const note = $('#scope-note')
+  clearTimeout(noteTimer)
+  const q = state.filter.q.trim()
+  if (state.scope !== 'set' || !q || !catalogOn()) {
+    if (state.scope === 'set') note.hidden = true
+    return
+  }
+  noteTimer = setTimeout(async () => {
+    try {
+      const data = await api(`/api/library/search?q=${encodeURIComponent(q)}&limit=1`)
+      // 그 사이 범위나 검색어가 바뀌었으면 버린다
+      if (state.scope !== 'set' || state.filter.q.trim() !== q) return
+      if (data.total === 0) {
+        note.hidden = true
+        return
+      }
+      note.hidden = false
+      note.innerHTML = `카탈로그에서는 “${esc(q)}”가 <b>${data.total.toLocaleString('ko-KR')}종</b> 찾아집니다. <button type="button" class="linkbtn" data-scope-go="catalog">카탈로그에서 보기</button>`
+    } catch {
+      note.hidden = true
+    }
+  }, 250)
+}
+
+// ── 카탈로그 ──
+
+function libCell(r) {
+  const mine = Boolean(r.a)
+  const label = r.ko || r.m.replace(/_/g, ' ')
+  return `<button type="button" class="cell cell--lib${mine ? ' cell--in' : ''}" data-m="${esc(r.m)}">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="library/sprite.svg#${esc(r.m)}"></use></svg>
+      <span class="cell__label">${esc(label)}</span>
+      <span class="cell__name">${esc(r.m)}</span>
+      ${mine ? '<span class="cell__badge">세트</span>' : ''}
+    </button>`
+}
+
+async function searchCatalog({ reset = false } = {}) {
+  const lib = state.lib
+  const seq = ++lib.seq
+  const q = state.filter.q.trim()
+  const params = new URLSearchParams({ q, offset: String(reset ? 0 : lib.rows.length), limit: String(PAGE) })
+  if (state.filter.category) params.set('category', state.filter.category)
+
+  let data
+  try {
+    data = await api(`/api/library/search?${params}`)
+  } catch (e) {
+    if (seq !== lib.seq) return
+    $('#find-empty').hidden = false
+    $('#find-empty').textContent = `카탈로그를 불러오지 못했습니다 — ${e.message}`
+    return
+  }
+  // 더 새로운 검색이 이미 나갔으면 이 응답은 버린다 — 늦게 온 옛 결과가 화면을 덮지 않게
+  if (seq !== lib.seq) return
+
+  if (reset) lib.rows = []
+  lib.rows.push(...data.rows)
+  lib.total = data.total
+  for (const r of data.rows) lib.byM.set(r.m, r)
+
+  const grid = $('#grid')
+  const html = data.rows.map(libCell).join('')
+  if (reset) grid.innerHTML = html
+  else grid.insertAdjacentHTML('beforeend', html)
+
+  const empty = $('#find-empty')
+  empty.hidden = lib.rows.length > 0
+  if (lib.rows.length === 0) {
+    empty.innerHTML =
+      `카탈로그에도 “${esc(q)}”에 맞는 아이콘이 없습니다. 영어 이름으로도 찾아 보세요. ` +
+      '<button type="button" class="linkbtn" data-goto="make">없으면 만들기로 넘어가기</button>'
+  }
+
+  const note = $('#scope-note')
+  note.hidden = false
+  note.innerHTML =
+    `구글 Material Symbols <b>${lib.total.toLocaleString('ko-KR')}종</b>${q ? ` 중 “${esc(q)}”` : ''}. ` +
+    '번호가 없어 아직 쓸 수 없습니다 — 눌러서 <b>세트에 넣으면</b> 씁니다. <span class="badge">세트</span> 표시는 이미 있는 것입니다.'
+
+  $('#more').hidden = lib.rows.length >= lib.total
+  $('#more-n').textContent = `${lib.rows.length.toLocaleString('ko-KR')} / ${lib.total.toLocaleString('ko-KR')}`
+  announce(reset ? `카탈로그에서 ${lib.total.toLocaleString('ko-KR')}종을 찾았습니다` : `${data.rows.length}종을 더 불러왔습니다`)
+}
+
+/** 카탈로그의 한 아이콘을 눌렀을 때. 이미 세트에 있으면 상세, 없으면 채택 시트. */
+function openCatalogCell(m) {
+  const r = state.lib.byM.get(m)
+  if (!r) return
+  if (r.a) return openSheet(r.a)
+  return openAdopt(r)
 }
 
 // ── 상세 ──────────────────────────────────────────────
@@ -185,7 +352,171 @@ async function openSheet(name) {
   $('#sheet').showModal()
 }
 
+// ── 카탈로그 아이콘을 세트에 넣기 ──────────────────────────
+//
+// 미리 보는 것과 들어오는 것은 같다 — 서버가 채택할 때와 같은 코드로 받아 옮긴 그림을 미리보기로 준다.
+// 「미리 본 것과 들어온 것이 다르다」가 이 도구에서 가장 나쁜 일이다.
+
+const FACES = ['regular', 'slim', 'bold', 'fill']
+
+/** 서버가 주는 변환 경고를 쓰는 사람이 읽을 말로 바꾼다. 모르는 경고는 보이지 않는다. */
+function plainWarning(w) {
+  if (/^라이브 영역/.test(w)) return '가장자리 여백이 다른 아이콘보다 조금 좁습니다. 구글 원본이 그렇습니다.'
+  return ''
+}
+
+function renderFaces(expr) {
+  $('#adopt-faces').innerHTML = FACES
+    .map((id) => {
+      const svg = expr?.[id]
+      const label = VARIANT_LABEL[id] || id
+      if (!svg) {
+        // 채울 면이 없는 형태(돋보기 등)는 그 표정이 기본과 같다. 만들지 않고 비워 둔다
+        return `<div class="face face--none"><span class="face__art">${expr ? '' : '…'}</span><span class="face__label">${label}</span>${expr ? '<span class="face__note">기본과 같음</span>' : ''}</div>`
+      }
+      return `<div class="face"><span class="face__art">${sized(svg, 40)}${sized(svg, 20)}</span><span class="face__label">${label}</span></div>`
+    })
+    .join('')
+}
+
+async function openAdopt(r) {
+  const dlg = $('#adopt')
+  dlg.dataset.m = r.m
+  const meta = state.lib.meta
+  const cat = meta?.categories.find((c) => c.id === r.c)
+
+  $('#adopt-title').textContent = r.ko || r.m.replace(/_/g, ' ')
+  $('#adopt-meta').textContent = `${r.m}${cat ? ` · ${cat.label}` : ''} · 구글 Material Symbols`
+  $('#adopt-name').value = r.n || r.s || ''
+  $('#adopt-kw').value = [r.ko, ...(r.k || [])].filter(Boolean).join(', ')
+  $('#adopt-error').hidden = true
+  $('#adopt-warn').hidden = true
+  $('#adopt-go').disabled = false
+  $('#adopt-go').textContent = '세트에 넣기'
+
+  // 이름이 규칙에 어긋나면 이유와 제안을 붙인다. 제안은 출발점이지 확정이 아니다.
+  $('#adopt-rule').textContent = r.x
+    ? `${r.x}${r.s ? ` — 제안한 이름: ${r.s}` : ' — 직접 지어 주세요.'}`
+    : ''
+
+  const sel = $('#adopt-cat')
+  sel.innerHTML = state.categories.map((c) => `<option value="${esc(c.id)}">${esc(c.label)}</option>`).join('')
+  const ours = cat?.ours
+  sel.value = state.categories.some((c) => c.id === ours) ? ours : 'domain'
+
+  renderFaces(null)
+  dlg.showModal()
+
+  try {
+    const data = await api(`/api/library/preview?m=${encodeURIComponent(r.m)}`)
+    if (dlg.dataset.m !== r.m) return // 그 사이 다른 아이콘을 열었다
+    renderFaces(data.expressions)
+    const notes = [...new Set((data.warnings || []).map(plainWarning).filter(Boolean))]
+    if (notes.length > 0) {
+      $('#adopt-warn').hidden = false
+      $('#adopt-warn').textContent = notes.join(' ')
+    }
+  } catch (e) {
+    if (dlg.dataset.m !== r.m) return
+    $('#adopt-faces').innerHTML = ''
+    $('#adopt-error').hidden = false
+    $('#adopt-error').textContent = `미리 보지 못했습니다 — ${e.message}. 넣기는 그대로 시도할 수 있습니다.`
+  }
+}
+
+async function submitAdopt(e) {
+  e.preventDefault()
+  const dlg = $('#adopt')
+  const m = dlg.dataset.m
+  const name = $('#adopt-name').value.trim()
+  const err = $('#adopt-error')
+  err.hidden = true
+
+  if (!name) {
+    err.hidden = false
+    err.textContent = '이름을 정해 주세요. 영문 소문자와 붙임표만 씁니다 (예: shopping-cart).'
+    $('#adopt-name').focus()
+    return
+  }
+
+  const btn = $('#adopt-go')
+  btn.disabled = true
+  btn.textContent = '넣는 중…'
+  try {
+    const keywords = $('#adopt-kw').value.split(',').map((k) => k.trim()).filter(Boolean)
+    const r = await api('/api/adopt', {
+      method: 'POST',
+      body: JSON.stringify({ material: m, name, category: $('#adopt-cat').value, keywords })
+    })
+
+    dlg.close()
+    // 카탈로그 쪽 표시를 바꾼다 — 다시 검색하면 쪽수와 자리가 날아가므로 화면의 칸만 고친다
+    const row = state.lib.byM.get(m)
+    if (row) row.a = r.name
+    if (state.lib.meta) state.lib.meta.adopted += 1
+    for (const cell of $$(`.cell--lib[data-m="${m}"]`)) {
+      cell.outerHTML = libCell(state.lib.byM.get(m))
+    }
+
+    await load()
+    await openSheet(r.name)
+    $('#sheet-hint').textContent = '세트에 넣었습니다. 위 코드를 붙여 넣으세요. 저장소에 올리기 전까지는 이 서버에만 있습니다.'
+  } catch (e2) {
+    err.hidden = false
+    err.textContent = e2.message
+    btn.disabled = false
+    btn.textContent = '세트에 넣기'
+  }
+}
+
 // ── 만들기 ────────────────────────────────────────────
+
+/**
+ * 만들기 전에 이미 있는 것을 보여 준다.
+ *
+ * 만드는 데는 몇 분이 걸리고 결과는 구글 아이콘보다 못한 경우가 많다. 쓰는 사람이
+ * 카탈로그에 있는 줄 모르고 만들어 달라고 하는 일이 가장 흔한 낭비라서, 요청문에서
+ * 말을 뽑아 카탈로그를 먼저 뒤진다. 단어마다 따로 찾아 번갈아 담는다 — 문장 통째로는 안 걸린다.
+ */
+let suggestTimer = null
+
+async function renderSuggest() {
+  const box = $('#ask-suggest')
+  if (!catalogOn()) {
+    box.hidden = true
+    return
+  }
+  const words = guessKeywords($('#ask-text').value, '').slice(0, 4)
+  if (words.length === 0) {
+    box.hidden = true
+    return
+  }
+
+  const seq = ++state.suggestSeq
+  const results = await Promise.all(
+    words.map((w) => api(`/api/library/search?q=${encodeURIComponent(w)}&limit=6`).catch(() => ({ rows: [] })))
+  )
+  if (seq !== state.suggestSeq) return
+
+  // 적게 걸리는 말이 구체적인 말이다 — 「모바일」은 수십 종에 걸리지만 「영수증」은 몇 종뿐이다.
+  // 구체적인 말을 앞에 세워 번갈아 담으면 흔한 말이 자리를 채우지 못한다.
+  const ranked = results.filter((r) => r.total > 0).sort((a, b) => a.total - b.total)
+
+  const picked = []
+  const seen = new Set()
+  for (let i = 0; i < 6 && picked.length < 8; i += 1) {
+    for (const res of ranked) {
+      const row = res.rows[i]
+      if (row && !seen.has(row.m) && picked.length < 8) {
+        seen.add(row.m)
+        picked.push(row)
+        state.lib.byM.set(row.m, row)
+      }
+    }
+  }
+  box.hidden = picked.length === 0
+  $('#ask-suggest-list').innerHTML = picked.map(libCell).join('')
+}
 
 /** 시작한 지 얼마나 됐는지. 오래 걸리는 일이라 「멈춘 건가」를 묻지 않게 한다. */
 function elapsed(from) {
@@ -194,36 +525,15 @@ function elapsed(from) {
   return sec < 60 ? `${sec}초째` : `${Math.floor(sec / 60)}분 ${sec % 60}초째`
 }
 
-/**
- * 모델이 참조 그림을 어떻게 이해했는지 보여 준다.
- *
- * 그림만 주면 사람 눈에 당연한 특징이 전해지지 않는다 — 인포마인드 로고에서 i와 n이
- * 끊긴 것이 그랬다. 이 글을 보면 **만들어진 그림을 보기 전에** 무엇을 놓쳤는지 알 수 있고,
- * 요청문에 그 말을 보태 다시 시키면 된다.
- */
-function refNotesBlock(job) {
-  const notes = job.result?.referenceNotes
-  if (!notes) return ''
-  return `<details class="refnotes">
-    <summary>참조 그림을 이렇게 읽었습니다 — 핵심이 빠졌으면 요청문에 보태 다시 시키세요</summary>
-    <pre>${esc(notes)}</pre>
-  </details>`
-}
-
 function statusLine(job) {
   if (job.status === 'waiting') {
     return `<p class="status status--waiting"><span class="status__dot"></span>차례를 기다리는 중입니다. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'working') {
-    // 실측: 참조 없이 호출당 약 6분, 참조 그림을 붙이면 약 10분. 둘씩 나눠 돌리므로
-    // 후보 4개면 두 바퀴다. 「1~2분」이라고 적어 두면 3분째부터 고장으로 읽힌다.
+    // 실측(--effort low): 도형 하나 8초~1분. 후보 4개를 차례로 그리므로 1~2분이다.
     const t = elapsed(job.result?.startedAt)
     const kind = job.kind === 'variants' ? '표정을 만드는' : '그리는'
-    // 실측: 참조 없는 도형 1분, 참조 있는 로고·글자꼴 11분(호출 하나당). 후보 수만큼 곱한다.
-    // 실측(--effort low): 참조 없는 도형 8초, 참조 있는 로고 221초. 후보 수만큼 곱한다.
-    const long = Boolean(job.referenceImage || job.reference)
-    const guess = long ? '4~10분' : '1~2분'
-    return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>${guess}</b> 걸립니다${long ? ' (참조 그림이 있으면 더 오래 걸립니다)' : ''}. 창을 닫아도 됩니다.</p>`
+    return `<p class="status status--working"><span class="status__dot"></span>${kind} 중입니다${t ? ` — ${t}` : ''}. 좌표를 하나씩 놓는 일이라 <b>1~2분</b> 걸립니다. 창을 닫아도 됩니다.</p>`
   }
   if (job.status === 'failed') {
     const raw = (job.result?.failures || []).join(' / ')
@@ -285,7 +595,6 @@ function renderJobs(jobs) {
           </span>
         </div>
         ${statusLine(job)}
-        ${refNotesBlock(job)}
         ${isVariant ? variantCard(job) : ''}
         ${cands.length > 0 ? `<div class="cands">${cands.map((c) => candCard(job, c)).join('')}</div>` : ''}
       </article>`
@@ -489,6 +798,7 @@ async function doExport() {
     const count = Number(res.headers.get('x-icon-count') || 0)
     const missing = Number(res.headers.get('x-icon-missing') || 0)
     const fileCount = Number(res.headers.get('x-icon-files') || 0)
+    const unbuilt = Number(res.headers.get('x-icon-unbuilt') || 0)
 
     const blob = await res.blob()
     const a = document.createElement('a')
@@ -503,7 +813,8 @@ async function doExport() {
     note.textContent =
       `infoux-icons.zip 내려받았습니다 — ${count}종 · 파일 ${fileCount}개 · ${kb}KB.` +
       (missing ? ` (${missing}개는 파일이 없어 빠졌습니다)` : '') +
-      ' 풀어서 assets/icons/ 에 그대로 넣으세요.'
+      ' 풀어서 assets/icons/ 에 그대로 넣으세요.' +
+      (unbuilt ? ` 단, ${unbuilt}종은 폰트에 아직 없어 SVG 방식으로만 쓸 수 있습니다 (README.txt에 이름이 있습니다).` : '')
   } catch (e) {
     note.textContent = `내려받지 못했습니다 — ${e.message}`
   } finally {
@@ -557,9 +868,21 @@ async function load() {
   state.categories = data.categories
   state.variants = data.variants || []
   renderPending()
-  $('#count').textContent = `${data.icons.length}종 · 우리가 만든 것 ${data.icons.filter((i) => i.own).length}종`
-  renderChips()
-  renderGrid()
+  $('#count').textContent = `세트 ${data.icons.length}종 · 우리가 만든 것 ${data.icons.filter((i) => i.own).length}종`
+  renderScope()
+  // 카탈로그를 보는 중이면 건드리지 않는다 — 다시 그리면 쪽수와 자리가 날아간다
+  if (state.scope === 'set') {
+    renderChips()
+    renderGrid()
+  }
+}
+
+async function loadLibraryMeta() {
+  try {
+    state.lib.meta = await api('/api/library/meta')
+  } catch {
+    state.lib.meta = { available: false }
+  }
 }
 
 document.addEventListener('click', async (e) => {
@@ -571,6 +894,14 @@ document.addEventListener('click', async (e) => {
   const goto = t.closest('[data-goto]')
   if (goto) return show(goto.dataset.goto)
 
+  const scopeBtn = t.closest('.scope__btn')
+  if (scopeBtn) return setScope(scopeBtn.dataset.scope)
+
+  const scopeGo = t.closest('[data-scope-go]')
+  if (scopeGo) return setScope(scopeGo.dataset.scopeGo)
+
+  if (t.closest('#more-btn')) return searchCatalog({ reset: false })
+
   const chip = t.closest('.chip')
   if (chip) {
     state.filter.category = chip.dataset.cat || null
@@ -578,6 +909,9 @@ document.addEventListener('click', async (e) => {
     renderGrid()
     return
   }
+
+  const libCellEl = t.closest('.cell--lib')
+  if (libCellEl) return openCatalogCell(libCellEl.dataset.m)
 
   const cell = t.closest('.cell')
   if (cell) return openSheet(cell.dataset.name)
@@ -669,13 +1003,6 @@ document.addEventListener('click', async (e) => {
     return
   }
 
-  if (t.closest('#ask-refclear')) {
-    $('#ask-refcode').value = ''
-    $('#ask-file').value = ''
-    setReference(null)
-    return
-  }
-
   if (t.closest('#ask-send')) return sendAsk()
 
   const pick = t.closest('.cand__pick')
@@ -713,59 +1040,6 @@ $('#sheet').addEventListener('click', (e) => {
   if (!inside) sheet.close()
 })
 
-// 참조 SVG — 파일에서 읽는다
-document.addEventListener('change', async (e) => {
-  const file = e.target.closest('#ask-file')?.files?.[0]
-  if (!file) return
-
-  const isSvg = /\.svg$/i.test(file.name) || file.type.includes('svg')
-
-  if (isSvg) {
-    if (file.size > 200_000) return refError('SVG가 너무 큽니다 (200KB 이하)')
-    const text = await file.text()
-    if (!/<svg[\s\S]*<\/svg>/i.test(text)) return refError('SVG 파일이 아닙니다')
-    state.reference = text
-    state.referenceImage = null
-    $('#ask-refcode').value = ''
-    setReference(text, file.name)
-    return
-  }
-
-  // 그림 파일 — data URL로 담아 보내면 서버가 디스크에 풀고 모델이 열어 본다
-  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
-    return refError('SVG·PNG·JPG·WebP만 됩니다')
-  }
-  if (file.size > 4_000_000) return refError('그림이 너무 큽니다 (4MB 이하)')
-
-  const dataUrl = await new Promise((resolve, reject) => {
-    const r = new FileReader()
-    r.onload = () => resolve(r.result)
-    r.onerror = () => reject(new Error('파일을 읽지 못했습니다'))
-    r.readAsDataURL(file)
-  }).catch(() => null)
-
-  if (!dataUrl) return refError('파일을 읽지 못했습니다')
-
-  state.referenceImage = dataUrl
-  state.reference = null
-  $('#ask-refcode').value = ''
-  setReference(dataUrl, file.name, 'image')
-})
-
-// 참조 SVG — 코드로 직접 붙여넣기
-$('#ask-refcode').addEventListener('input', (e) => {
-  const v = e.target.value.trim()
-  if (!v) return setReference(null)
-  if (!/<svg[\s\S]*<\/svg>/i.test(v)) {
-    $('#ask-refstate').textContent = '아직 SVG가 아닙니다'
-    $('#ask-refpreview').hidden = true
-    return
-  }
-  state.reference = v
-  state.referenceImage = null
-  setReference(v, '붙여 넣은 코드')
-})
-
 document.addEventListener('change', (e) => {
   const pick = e.target.closest('[data-pick]')
   if (!pick) return
@@ -774,48 +1048,23 @@ document.addEventListener('change', (e) => {
   renderTree()
 })
 
+let findTimer = null
 $('#q').addEventListener('input', (e) => {
   state.filter.q = e.target.value
-  renderGrid()
+  if (state.scope === 'set') return renderSetGrid()
+  // 카탈로그는 서버에 묻는다 — 키마다 묻지 않고 멈추면 묻는다
+  clearTimeout(findTimer)
+  findTimer = setTimeout(() => searchCatalog({ reset: true }), 160)
 })
 
-/** 참조를 화면에 반영한다. 미리보기로 「제대로 들어갔나」를 눈으로 확인시킨다. */
-function setReference(content, label, kind = 'svg') {
-  const preview = $('#ask-refpreview')
-  const stateEl = $('#ask-refstate')   // 전역 state와 이름이 겹치지 않게 한다
-  const clear = $('#ask-refclear')
+$('#ask-text').addEventListener('input', () => {
+  clearTimeout(suggestTimer)
+  suggestTimer = setTimeout(renderSuggest, 350)
+})
 
-  if (!content) {
-    state.reference = null
-    state.referenceImage = null
-    preview.hidden = true
-    preview.innerHTML = ''
-    stateEl.textContent = ''
-    clear.hidden = true
-    return
-  }
-
-  const sizes = [48, 24, 16]
-  preview.innerHTML =
-    kind === 'image'
-      ? sizes.map((px) => `<img src="${content}" width="${px}" height="${px}" alt="참조 그림 ${px}픽셀 미리보기">`).join('')
-      : sizes
-          .map((px) => content.replace(/<svg([^>]*)>/i, (m, attrs) => {
-            const cleaned = attrs.replace(/\s(width|height)="[^"]*"/gi, '')
-            return `<svg${cleaned} width="${px}" height="${px}">`
-          }))
-          .join('')
-
-  preview.hidden = false
-  stateEl.textContent = label || '참조 붙음'
-  clear.hidden = false
-}
-
-function refError(msg) {
-  const err = $('#ask-error')
-  err.textContent = msg
-  err.hidden = false
-}
+$('#adopt-form').addEventListener('submit', submitAdopt)
+// 이름을 고치기 시작하면 처음 이름에 붙었던 규칙 안내는 더 맞지 않는다
+$('#adopt-name').addEventListener('input', () => { $('#adopt-rule').textContent = '' })
 
 async function sendAsk() {
   const text = $('#ask-text').value.trim()
@@ -829,20 +1078,9 @@ async function sendAsk() {
   const btn = $('#ask-send')
   btn.disabled = true
   try {
-    const reference = state.reference || $('#ask-refcode').value.trim() || null
-    const referenceImage = state.referenceImage || null
-    await api('/api/requests', {
-      method: 'POST',
-      body: JSON.stringify({
-        text,
-        count: 4,
-        ...(reference ? { reference } : {}),
-        ...(referenceImage ? { referenceImage } : {})
-      })
-    })
+    await api('/api/requests', { method: 'POST', body: JSON.stringify({ text, count: 4 }) })
     $('#ask-text').value = ''
-    $('#ask-refcode').value = ''
-    setReference(null)
+    $('#ask-suggest').hidden = true
     startPolling()
   } catch (e) {
     err.textContent = e.message
@@ -977,9 +1215,7 @@ async function approve(card) {
     show('find')
     $('#q').value = name
     state.filter.q = name
-    state.filter.category = null
-    renderChips()
-    renderGrid()
+    setScope('set')
   } catch (e) {
     const err = $('#ask-error')
     err.textContent = e.message
@@ -988,7 +1224,7 @@ async function approve(card) {
   }
 }
 
-load().catch((e) => {
+loadLibraryMeta().then(load).catch((e) => {
   document.querySelector('#main').innerHTML =
     `<p class="empty">아이콘 목록을 불러오지 못했습니다 — ${esc(e.message)}</p>`
 })

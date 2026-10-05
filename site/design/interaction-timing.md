@@ -23,6 +23,8 @@ order: 3
 
 **원칙**: 등장은 Ease Out, 퇴장은 Ease In을 사용한다. 모달과 토스트는 Spring으로 생동감을 부여한다.
 
+**적용 범위**: Spring은 **컴포넌트 피드백 모션**(모달·토스트·인풋 전환)에만 쓴다. 장식 모션과 스크롤 진입 모션은 [아트 디렉션](/design/art-direction/) 표현 등급의 fade·translate 이징을 따르고 overshoot(목표를 넘었다 돌아오는 이징)를 쓰지 않는다(안티패턴 8).
+
 ## 컴포넌트별 전환 매핑
 
 | 컴포넌트 | 전환 유형 | Duration | Easing | 비고 |

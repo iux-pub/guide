@@ -2,7 +2,9 @@
 # guide → starter 동기화 (INFOUX + Tailwind v4 시스템)
 # 사용법:
 #   npm run sync:starter       # 로컬 starter/만 갱신
-#   npm run sync:starter:push  # 로컬 갱신 후 iux-pub/starter 푸시
+#   npm run sync:starter:push  # 로컬 갱신 후 iux-pub/starter 푸시 (작업 사본에서 설치·빌드·검사 통과 시에만)
+#   DRY_RUN=1 npm run sync:starter:push   # 빌드·검사까지 하고 커밋·푸시 직전에 변경 요약만 본다
+#   STARTER_SYNC_DIR=<경로>               # 푸시용 작업 사본 위치(기본 /tmp/starter-sync)
 #
 # 동기화 대상:
 #   - src/styles/             → starter/src/styles/
@@ -132,7 +134,9 @@ if [ "$PUSH_REMOTE" != true ]; then
 fi
 
 # 7. iux-pub/starter 원격 저장소로 push (개발팀 clone 대상)
-STARTER_REPO="/tmp/starter-sync"
+#    작업 사본 위치는 STARTER_SYNC_DIR 로 바꿀 수 있다(기본 /tmp/starter-sync).
+#    DRY_RUN=1 이면 빌드·검사까지 하고 커밋·푸시 직전에 멈춘 뒤 변경 요약만 보여 준다.
+STARTER_REPO="${STARTER_SYNC_DIR:-/tmp/starter-sync}"
 echo "[8/8] iux-pub/starter 원격 저장소 동기화..."
 rm -rf "$STARTER_REPO"
 git clone https://github.com/iux-pub/starter.git "$STARTER_REPO" 2>&1 | tail -3
@@ -141,18 +145,38 @@ git clone https://github.com/iux-pub/starter.git "$STARTER_REPO" 2>&1 | tail -3
 find "$STARTER_REPO" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} + 2>/dev/null
 cp -R "$STARTER_DIR/." "$STARTER_REPO/"
 
+# 7.5. dist/ 는 커밋 대상이다 — npm 을 안 쓰는 수동 개발자에게 완성 CSS를 함께 전달하기 위함.
+#      guide 저장소는 루트 .gitignore 가 dist/ 를 무시하므로 starter/ 사본에는 dist 가 없다.
+#      위에서 기존 내용을 모두 지웠으니 여기서 다시 만들지 않으면 원격의 dist 가 사라진다.
+#      starter 자체로 설치·빌드·검사가 돌아야 개발팀이 clone 해서 바로 쓸 수 있으므로
+#      이 단계가 실패하면 푸시하지 않는다(set -e).
+echo "[8/8] starter 작업 사본에서 설치·빌드·검사..."
+(
+  cd "$STARTER_REPO"
+  if [ -f package-lock.json ]; then npm ci --no-audit --no-fund 2>&1 | tail -2; else npm install --no-audit --no-fund 2>&1 | tail -2; fi
+  npm run build 2>&1 | tail -3
+  npm run check 2>&1 | tail -8
+)
+[ -f "$STARTER_REPO/dist/css/style.css" ] || { echo "dist/css/style.css 가 만들어지지 않았다 — 푸시를 중단한다"; exit 1; }
+
 cd "$STARTER_REPO"
 git add -A 2>&1 | tail -3
 if git diff --cached --quiet; then
   echo "  변경 없음 — 이미 최신"
+elif [ "${DRY_RUN:-}" = "1" ]; then
+  echo "  DRY_RUN=1 — 커밋·푸시하지 않는다. 변경 요약:"
+  git diff --cached --stat | tail -4
+  git diff --cached --name-status | awk '{print $1}' | sort | uniq -c | sed 's/^/    /'
+  echo "  dist/css/style.css: $(git diff --cached --name-status -- dist/css/style.css | awk '{print $1}')"
 else
-  git commit -m "sync: KRDS + Tailwind v4 시스템 동기화 (guide repo에서)" 2>&1 | tail -3
+  GUIDE_SHA="$(git -C "$GUIDE_DIR" rev-parse --short HEAD)"
+  git commit -m "sync: KRDS + Tailwind v4 시스템 동기화 (guide repo ${GUIDE_SHA}에서)" 2>&1 | tail -3
   git push 2>&1 | tail -3
   echo "  ✓ iux-pub/starter 푸시 완료"
 fi
 
 cd "$GUIDE_DIR"
-rm -rf "$STARTER_REPO"
+[ "${DRY_RUN:-}" = "1" ] || rm -rf "$STARTER_REPO"
 
 echo ""
 echo "=== 완료 ==="

@@ -1,0 +1,130 @@
+{% extends "layouts/base.njk" %}
+
+{% block pagetitle %}{{ site.title }} — 디자인·퍼블리싱 기준{% endblock %}
+
+{% block content %}
+<div class="home">
+
+  <section class="home-hero" aria-labelledby="home-title">
+    <p class="home-hero__eyebrow">INFOMIND UX TEAM</p>
+    <h1 class="home-hero__title" id="home-title">INFOMIND UX Guide</h1>
+    <p class="home-hero__lead">KRDS(범정부 UI/UX 디자인 시스템)의 접근성·구조 원칙과 INFOMIND 실무 표준을 하나로 모은 디자인·퍼블리싱 기준입니다. 디자인 토큰, 컴포넌트, 코딩 규칙, 점검 기준을 단일 소스에서 발행합니다.</p>
+    <div class="home-hero__actions">
+      <a class="btn btn--primary btn--large" href="/components/">컴포넌트 카탈로그</a>
+      <a class="btn btn--tertiary btn--large" href="/onboarding/getting-started/">시작 가이드</a>
+      <a class="btn btn--text btn--large" href="https://github.com/iux-pub/guide">GitHub 저장소</a>
+    </div>
+  </section>
+
+  <dl class="home-stats" aria-label="기준 현황">
+    <div class="home-stats__item">
+      <dt class="home-stats__label">컴포넌트</dt>
+      <dd class="home-stats__value">{{ home.components }}</dd>
+    </div>
+    <div class="home-stats__item">
+      <dt class="home-stats__label">코딩 규칙</dt>
+      <dd class="home-stats__value">{{ home.rules }}</dd>
+    </div>
+    <div class="home-stats__item">
+      <dt class="home-stats__label">사이트 유형</dt>
+      <dd class="home-stats__value">{{ home.profiles }}</dd>
+    </div>
+    <div class="home-stats__item">
+      <dt class="home-stats__label">WCAG 2.1 접근성 등급</dt>
+      <dd class="home-stats__value">AA</dd>
+    </div>
+  </dl>
+
+  <section class="home-section" aria-labelledby="home-scope">
+    <h2 class="home-section__title" id="home-scope">제공 기준</h2>
+    <ul class="home-cards">
+      <li class="home-card">
+        <h3 class="home-card__title"><a class="home-card__link" href="/tokens/color/">디자인 토큰</a></h3>
+        <p class="home-card__desc">색상·폰트·브레이크포인트 토큰을 불변 계층(foundation)과 프로젝트 교체 계층(brand)으로 나누어 관리합니다.</p>
+      </li>
+      <li class="home-card">
+        <h3 class="home-card__title"><a class="home-card__link" href="/components/">컴포넌트</a></h3>
+        <p class="home-card__desc">마크업, CSS, 접근성 요건, 키보드 동작을 갖춘 BEM 컴포넌트 카탈로그입니다.</p>
+      </li>
+      <li class="home-card">
+        <h3 class="home-card__title"><a class="home-card__link" href="/conventions/">코딩 규칙</a></h3>
+        <p class="home-card__desc">BEM 네이밍, 토큰 사용, 시맨틱 마크업, 접근성 규칙을 정의하고 CI에서 자동으로 검출합니다.</p>
+      </li>
+      <li class="home-card">
+        <h3 class="home-card__title"><a class="home-card__link" href="/accessibility/checklist/">접근성</a></h3>
+        <p class="home-card__desc">WCAG 2.1 AA와 KWCAG 기준의 점검 항목, 키보드·스크린리더 검증 절차를 제공합니다.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="home-section home-integration" aria-labelledby="home-ai">
+    <div class="home-integration__body">
+      <h2 class="home-section__title" id="home-ai">AI 도구 연동</h2>
+      <p class="home-section__lead">infoUX MCP 서버를 등록하면 AI 코딩 도구가 작업 중에 토큰, 컴포넌트, 규칙, 작업 절차를 직접 조회합니다. 어떤 도구를 쓰더라도 같은 기준이 적용됩니다.</p>
+      <ul class="home-integration__list">
+        <li>색상은 토큰만 사용하며 raw hex·rgb·hsl을 작성하지 않습니다.</li>
+        <li>카탈로그의 컴포넌트를 우선 사용하고, 카탈로그 밖 패턴은 UX팀 검토를 거칩니다.</li>
+        <li>페이지 골격(<code>skip-to-content</code>, <code>header#header</code>, <code>main#main</code>, <code>footer#footer</code>)과 section 접근 이름을 유지합니다.</li>
+        <li>BEM 네이밍과 접근성(ARIA·키보드·색상 대비) 규칙을 준수합니다.</li>
+        <li>규칙 위반을 발견하면 작업을 중단하고 보고합니다.</li>
+      </ul>
+    </div>
+    <div class="home-integration__aside">
+      <pre class="language-bash"><code class="language-bash">claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp</code></pre>
+      <p class="home-integration__note">Codex, Cursor, Claude Desktop 등록은 <a href="/onboarding/mcp/">AI 도구 연결(MCP)</a>에서 안내합니다. MCP를 연결할 수 없는 환경에는 <a href="/llms.txt">/llms.txt</a>로 문서 전문을 제공할 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section class="home-section" aria-labelledby="home-roles">
+    <h2 class="home-section__title" id="home-roles">역할별 시작</h2>
+    <dl class="home-defs">
+      <div class="home-defs__row">
+        <dt class="home-defs__term">디자인·기획</dt>
+        <dd class="home-defs__desc"><a href="/design-qa/checklist/">디자인 QA</a>, <a href="/onboarding/handoff/">디자인 전달 체크리스트</a>, <a href="/accessibility/checklist/">접근성 체크리스트</a> 순으로 확인합니다.</dd>
+      </div>
+      <div class="home-defs__row">
+        <dt class="home-defs__term">퍼블리셔</dt>
+        <dd class="home-defs__desc"><a href="/components/">컴포넌트 카탈로그</a>의 마크업을 기준으로 작성합니다. <a href="/onboarding/mcp/">MCP를 연결</a>하면 규칙이 작업 중에 자동으로 적용됩니다.</dd>
+      </div>
+      <div class="home-defs__row">
+        <dt class="home-defs__term">리뷰어</dt>
+        <dd class="home-defs__desc"><a href="/accessibility/checklist/">접근성 체크리스트</a>로 시각·키보드 동작을 검증합니다. 규칙 위반은 CI가 검출하므로 사용성과 요구사항 충족 여부에 집중합니다.</dd>
+      </div>
+      <div class="home-defs__row">
+        <dt class="home-defs__term">신규 팀원</dt>
+        <dd class="home-defs__desc"><a href="/onboarding/getting-started/">시작 가이드</a>부터 진행합니다.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="home-section" aria-labelledby="home-governance">
+    <h2 class="home-section__title" id="home-governance">운영 기준</h2>
+    <dl class="home-defs">
+      <div class="home-defs__row">
+        <dt class="home-defs__term">컴포넌트 신설</dt>
+        <dd class="home-defs__desc">카탈로그에 없는 패턴이 필요하면 UX팀이 프로젝트 패턴으로 둘지, 공통 컴포넌트로 확장할지 결정합니다.</dd>
+      </div>
+      <div class="home-defs__row">
+        <dt class="home-defs__term">토큰 변경</dt>
+        <dd class="home-defs__desc">색상·타이포 토큰의 추가와 변경은 UX팀과 협의합니다. 프로젝트에서는 브랜드 계층(brand)만 수정합니다.</dd>
+      </div>
+      <div class="home-defs__row">
+        <dt class="home-defs__term">자동 검증</dt>
+        <dd class="home-defs__desc">규칙 위반은 CI에서 차단됩니다. 실패 메시지의 규칙 번호와 위치를 기준으로 수정합니다.</dd>
+      </div>
+      <div class="home-defs__row">
+        <dt class="home-defs__term">코드 리뷰</dt>
+        <dd class="home-defs__desc">규칙 번호를 대조하기보다 사용성과 요구사항 충족 여부를 확인합니다.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="home-section" aria-labelledby="home-start">
+    <h2 class="home-section__title" id="home-start">새 프로젝트 시작</h2>
+    <p class="home-section__lead">스타터 킷은 KRDS, Tailwind v4, 컴포넌트 CSS, 토큰 2계층이 포함된 최소 구성입니다.</p>
+    <pre class="language-bash"><code class="language-bash">npx create-infomind-ux my-project</code></pre>
+    <p class="home-section__note">자세한 절차는 <a href="/onboarding/getting-started/">시작 가이드</a> 또는 <a href="https://github.com/iux-pub/guide">GitHub 저장소</a>를 참고하십시오.</p>
+  </section>
+
+</div>
+{% endblock %}

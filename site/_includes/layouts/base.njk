@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }} | {{ site.title }}</title>
+  <title>{% block pagetitle %}{{ title }} | {{ site.title }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ '/dist/css/style.css' | url }}">
   <link rel="stylesheet" href="{{ '/dist/css/docs.css' | url }}">
   <link href="{{ '/pagefind/pagefind-ui.css' | url }}" rel="stylesheet">

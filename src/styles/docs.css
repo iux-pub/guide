@@ -362,6 +362,16 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { @apply [background:var(
 
 }
 
+/* 마크다운이 만든 목록(클래스 없는 ul·ol) — Tailwind 리셋이 지운 글머리표와 번호를 되살린다.
+   아래 li::marker 색 지정은 마커가 보인다는 전제다. 클래스가 있는 목록은 각자 모양을 정한다. */
+.docs-layout__content ul:not([class]) {
+  @apply list-disc;
+}
+
+.docs-layout__content ol:not([class]) {
+  @apply list-decimal;
+}
+
 .docs-layout__content li {
   @apply mb-[0.4rem] leading-[1.5];
 }
@@ -486,4 +496,155 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { @apply [background:var(
 
 .docs-nav-prev-next__title {
   @apply text-[1.7rem] font-bold text-[var(--color-text-bolder)] leading-[1.4];
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 홈 — 랜딩 구성 (layouts/home.njk)
+ *
+ * 본문 영역의 기본 h1·h2·p·ul 규칙(위 .docs-layout__content ...)이 먼저 걸리므로
+ * 홈 전용 요소는 .docs-layout__content 를 앞에 붙여 우선순위를 확보한다.
+ * ═══════════════════════════════════════════════════════ */
+
+.home {
+  @apply flex flex-col gap-[6.4rem] pc:gap-[8rem];
+}
+
+/* 히어로 */
+.home-hero {
+  @apply flex flex-col items-start gap-[2.4rem] pb-[4rem] pc:pb-[5.6rem] border-b border-[var(--color-border-light)];
+}
+
+.docs-layout__content .home-hero__eyebrow {
+  @apply m-0 text-[1.4rem] font-bold leading-[1.5] tracking-[0.08em] text-[var(--color-primary-pressed)];
+}
+
+.docs-layout__content .home-hero__title {
+  @apply m-0 p-0 border-0 text-[4rem] pc:text-[5.6rem] font-bold leading-[1.25] tracking-[-0.02em] text-[var(--color-text-bolder)];
+}
+
+.docs-layout__content .home-hero__lead {
+  @apply m-0 max-w-[68rem] text-[1.8rem] pc:text-[2rem] leading-[1.7] text-[var(--color-text-subtle)];
+}
+
+.home-hero__actions {
+  @apply flex flex-wrap gap-[1.2rem] mt-[0.8rem];
+}
+
+/* 수치 — 1px 틈으로 칸 구분선을 만든다 */
+.docs-layout__content .home-stats {
+  @apply grid grid-cols-2 gap-px m-0 p-0 overflow-hidden rounded-[0.8rem] border border-[var(--color-border-light)] bg-[var(--color-border-light)] pc:grid-cols-4;
+}
+
+.home-stats__item {
+  @apply flex flex-col-reverse justify-end gap-[0.4rem] p-[2rem_2.4rem] bg-[var(--color-surface)];
+}
+
+.docs-layout__content .home-stats__label {
+  @apply m-0 text-[1.4rem] font-bold leading-[1.5] text-[var(--color-text-subtle)];
+}
+
+.docs-layout__content .home-stats__value {
+  @apply m-0 text-[2.8rem] pc:text-[3.2rem] font-bold leading-[1.3] text-[var(--color-text-bolder)] [font-variant-numeric:tabular-nums];
+}
+
+/* 섹션 공통 */
+.home-section {
+  @apply flex flex-col gap-[1.6rem];
+}
+
+.docs-layout__content .home-section__title {
+  @apply m-0 p-0 border-0 mb-[0.8rem] text-[2.8rem] pc:text-[3.2rem] font-bold leading-[1.4] text-[var(--color-text-bolder)];
+}
+
+.docs-layout__content .home-section__lead {
+  @apply m-0 max-w-[72rem] text-[1.7rem] leading-[1.7] text-[var(--color-text)];
+}
+
+.docs-layout__content .home-section__note {
+  @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)];
+}
+
+/* 제공 기준 카드 */
+.docs-layout__content .home-cards {
+  @apply grid grid-cols-1 gap-[1.6rem] list-none m-0 p-0 tablet:grid-cols-2;
+}
+
+.docs-layout__content .home-card {
+  @apply relative flex flex-col gap-[0.8rem] m-0 p-[2.4rem] border border-[var(--color-border-light)] rounded-[0.8rem] bg-[var(--color-surface)] [transition:border-color_0.15s_ease-in-out];
+}
+
+.home-card:hover {
+  @apply border-[var(--color-border-primary)];
+}
+
+.docs-layout__content .home-card__title {
+  @apply m-0 p-0 border-0 text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text-bolder)];
+}
+
+.home-card__link {
+  @apply no-underline text-[var(--color-text-bolder)];
+}
+
+.home-card__link:hover {
+  @apply underline;
+}
+
+/* 카드 어디를 눌러도 이동한다 — 터치 영역이 카드 전체로 넓어진다 */
+.home-card__link::after {
+  @apply absolute inset-0 content-[''];
+}
+
+/* 초점 외곽선은 링크 글자가 아니라 카드 전체에 그린다 */
+.home-card__link:focus-visible {
+  @apply [outline:0];
+}
+
+.home-card__link:focus-visible::after {
+  @apply rounded-[0.8rem] [outline:0.4rem_solid_var(--color-border-primary)] [outline-offset:0.2rem];
+}
+
+.docs-layout__content .home-card__desc {
+  @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)];
+}
+
+/* AI 도구 연동 — 설명 | 등록 명령 */
+.home-integration {
+  @apply grid items-start gap-[3.2rem] pc:grid-cols-2 pc:gap-[4.8rem];
+}
+
+.home-integration__body {
+  @apply flex flex-col gap-[1.6rem] min-w-0;
+}
+
+.docs-layout__content .home-integration__list {
+  @apply m-0 list-disc;
+}
+
+.home-integration__aside {
+  @apply flex flex-col gap-[1.6rem] min-w-0;
+}
+
+.docs-layout__content .home-integration__aside pre {
+  @apply m-0;
+}
+
+.docs-layout__content .home-integration__note {
+  @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)];
+}
+
+/* 정의 목록 — 역할별 시작 · 운영 기준 */
+.docs-layout__content .home-defs {
+  @apply m-0 p-0 border-t border-[var(--color-border)];
+}
+
+.home-defs__row {
+  @apply grid gap-[0.8rem] py-[2rem] border-b border-[var(--color-border-light)] pc:grid-cols-[20rem_1fr] pc:gap-[3.2rem];
+}
+
+.docs-layout__content .home-defs__term {
+  @apply m-0 text-[1.7rem] font-bold leading-[1.6] text-[var(--color-text-bolder)];
+}
+
+.docs-layout__content .home-defs__desc {
+  @apply m-0 text-[1.6rem] leading-[1.7] text-[var(--color-text)];
 }

@@ -59,6 +59,8 @@ requireSame('scripts/lib/svg-path.js', 'starter/scripts/lib/svg-path.js')
 requireSame('scripts/lib/svg-geometry.js', 'starter/scripts/lib/svg-geometry.js')
 requireSame('scripts/lib/token-source.js', 'starter/scripts/lib/token-source.js')
 requireSame('scripts/lib/contrast.js', 'starter/scripts/lib/contrast.js')
+// MCP는 저장소의 scripts/를 볼 수 없어 검색 코드를 복사해 싣는다. 어긋나면 AI와 사람이 다르게 찾는다
+requireSame('scripts/lib/icon-search.js', 'mcp/bin/icon-search.js')
 requireSame('scripts/lib/build-tokens-css.js', 'starter/scripts/lib/build-tokens-css.js')
 // 브랜드 계층은 프로젝트가 갈아끼우는 파일이라 값 동일성을 요구하지 않는다.
 // 다만 스타터가 세 파일을 모두 갖추지 못하면 브랜드 교체 구조 자체가 성립하지 않는다.

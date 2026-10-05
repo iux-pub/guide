@@ -98,9 +98,25 @@ if (fs.existsSync(iconLedgerPath)) {
     slim.icons[name] = { codepoint: meta.codepoint, category: meta.category, source: meta.source }
     if (meta.variants) slim.icons[name].variants = meta.variants
     if (keywords[name]) slim.icons[name].keywords = keywords[name]
+    // 구글 이름 — 카탈로그 검색 결과가 「이미 세트에 있다」를 알아보는 다리다
+    if (meta.sourceName) slim.icons[name].material = meta.sourceName
   }
   fs.writeFileSync(path.join(DATA_DIR, 'icons.json'), JSON.stringify(slim, null, 2) + '\n')
 }
+
+// 1.6. 아이콘 카탈로그 색인 — 구글 Material Symbols 전량. 세트에 없는 아이콘도 AI가 찾고,
+// 「채택하면 쓴다」고 사용자에게 안내할 수 있어야 한다. 이게 없으면 AI는 세트 밖 아이콘을 모른 채
+// 「없다」고 답하거나 이름을 지어낸다 (R-27). 정본은 studio/library/library.json
+// (npm run icons:library로 만든다)이다 — 여기서 고치지 않는다.
+const iconLibraryPath = path.join(ROOT, 'studio', 'library', 'library.json')
+if (fs.existsSync(iconLibraryPath)) {
+  // 한 줄 포맷 그대로 복사한다 — 다시 직렬화하면 diff가 시끄럽다
+  fs.copyFileSync(iconLibraryPath, path.join(DATA_DIR, 'icon-library.json'))
+}
+
+// 검색 코드는 스튜디오·CLI와 같아야 한다 — 복사해서 싣고 check-harness가 같은지 지킨다.
+// 정본은 scripts/lib/icon-search.js다. MCP 패키지는 이 저장소의 scripts/를 볼 수 없다.
+fs.copyFileSync(path.join(ROOT, 'scripts', 'lib', 'icon-search.js'), path.join(ROOT, 'mcp', 'bin', 'icon-search.js'))
 
 // 2. 컨트랙트 본문
 fs.copyFileSync(path.join(ROOT, 'references', 'CONTRACT.md'), path.join(DATA_DIR, 'contract.md'))

@@ -19,6 +19,10 @@ const {
   ListToolsRequestSchema
 } = require('@modelcontextprotocol/sdk/types.js')
 
+// 아이콘 검색은 아이콘 스튜디오·CLI와 같은 코드다(scripts/lib/icon-search.js의 복사본).
+// 사람이 스튜디오에서 찾는 결과와 AI가 여기서 찾는 결과가 달라지지 않게 한다 — check-harness가 지킨다.
+const { search: searchIcons } = require('./icon-search.js')
+
 const DATA_DIR = path.resolve(__dirname, '..', 'data')
 
 function readData(...segments) {
@@ -48,10 +52,12 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
 3. 컴포넌트는 카탈로그를 먼저 본다. list_components → get_component 순으로 확인하고
    기존 스니펫을 조합한다. 카탈로그 밖 컴포넌트는 임의 생성하지 않는다.
    페이지·폼·위젯 설계나 컴포넌트 신규 생성처럼 절차가 정해진 작업은 get_workflow를 먼저 읽는다.
-4. 아이콘도 카탈로그에서 가져온다. list_icons → get_icon 순으로 확인한다.
+4. 아이콘도 카탈로그에서 가져온다. list_icons(query) → get_icon(name) 순으로 확인한다.
    **아이콘 이름을 지어내지 않는다** — 목록에 없는 이름을 쓰면 화면에 아무것도 안 나온다.
-   필요한 아이콘이 없으면 UX팀에 요청한다 (R-27). 장식용은 aria-hidden, 의미를 담으면
-   role="img"+aria-label을 붙인다.
+   구글 Material Symbols 전량을 한국어·영어로 찾을 수 있고, 결과는 둘로 나뉜다 —
+   「세트에 있음」은 바로 쓰고, 「카탈로그에만 있음」은 사용자가 세트에 넣어야(채택) 쓸 수 있다.
+   카탈로그에도 없으면 UX팀에 요청한다 (R-27). 세트에 없는 아이콘을 SVG로 직접 넣지 않는다.
+   장식용은 aria-hidden, 의미를 담으면 role="img"+aria-label을 붙인다.
 5. 규칙 R-01~R-27을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
 6. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
 7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
@@ -94,12 +100,13 @@ const TOOLS = [
   {
     name: 'list_icons',
     description:
-      '쓸 수 있는 아이콘 목록을 반환한다. 아이콘이 필요하면 **반드시 먼저 확인한다** — ' +
-      '목록에 없는 이름을 지어내면 화면에 아무것도 안 나온다. query로 걸러 낼 수 있다.',
+      '아이콘을 찾는다. 아이콘이 필요하면 **반드시 먼저 확인한다** — 목록에 없는 이름을 지어내면 ' +
+      '화면에 아무것도 안 나온다. query 없이 부르면 세트 목록, query를 주면 구글 Material Symbols 전량을 ' +
+      '한국어·영어로 찾아 「세트에 있음」(바로 쓴다)과 「카탈로그에만 있음」(채택해야 쓴다)으로 나눠 준다.',
     inputSchema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: '이름·분류 필터 (예: arrow, 폼, calendar)' }
+        query: { type: 'string', description: '찾는 말 (예: 장바구니, 영수증, arrow, calendar). 띄어 쓰면 모두 걸려야 한다' }
       }
     }
   },
@@ -107,11 +114,11 @@ const TOOLS = [
     name: 'get_icon',
     description:
       '아이콘 하나의 마크업과 접근성 요건을 반환한다. 장식용인지 의미를 담는지에 따라 ' +
-      'aria 처리가 달라지므로 그대로 복사해 쓴다.',
+      'aria 처리가 달라지므로 그대로 복사해 쓴다. 카탈로그에만 있는 아이콘이면 마크업 대신 채택 방법을 알려 준다.',
     inputSchema: {
       type: 'object',
       properties: {
-        name: { type: 'string', description: '아이콘 이름 (예: search, chevron-right, calendar)' }
+        name: { type: 'string', description: '아이콘 이름 (예: search, chevron-right, calendar). 구글 이름(shopping_cart)도 받는다' }
       },
       required: ['name']
     }
@@ -242,9 +249,91 @@ function loadIconLedger() {
   }
 }
 
+// 카탈로그 색인(구글 Material Symbols 전량). 없으면 null — 세트 목록만으로 예전처럼 답한다.
+let iconLibrary
+function loadIconLibrary() {
+  if (iconLibrary !== undefined) return iconLibrary
+  try {
+    iconLibrary = JSON.parse(readData('icon-library.json'))
+  } catch {
+    iconLibrary = null
+  }
+  return iconLibrary
+}
+
+/** 구글 이름 → 세트에서 쓰는 우리 이름. 이름이 달라져도(keyboard_arrow_up → chevron-up) 이어 준다. */
+function adoptedByMaterial(ledger) {
+  const map = new Map()
+  for (const [name, meta] of Object.entries(ledger.icons)) if (meta.material) map.set(meta.material, name)
+  return map
+}
+
+/** 세트·카탈로그를 한꺼번에 찾아 「바로 쓴다」와 「채택해야 쓴다」로 나눠 보여 준다. */
+function searchAllIcons(query, ledger, library) {
+  const taken = adoptedByMaterial(ledger)
+  const hits = searchIcons(library, query, { limit: Number.MAX_SAFE_INTEGER })
+
+  const inSet = []
+  const onlyCatalog = []
+  const seen = new Set()
+  for (const { icon } of hits) {
+    const ours = taken.get(icon.m)
+    if (ours) {
+      inSet.push({ name: ours, ko: icon.ko, material: icon.m })
+      seen.add(ours)
+    } else {
+      onlyCatalog.push(icon)
+    }
+  }
+
+  // 세트에는 있는데 카탈로그 색인에 없는 것(자체 제작·씨앗 밖)은 이름과 검색어로 따로 찾는다
+  const needle = String(query).toLowerCase()
+  for (const [name, meta] of Object.entries(ledger.icons)) {
+    if (seen.has(name) || meta.material) continue
+    const words = (meta.keywords || []).map(k => String(k).toLowerCase())
+    if (name.includes(needle) || words.some(k => k.includes(needle))) inSet.push({ name, ko: (meta.keywords || [])[0] || '' })
+  }
+
+  const lines = ['# infoUX 아이콘 검색', '']
+  lines.push(`"${query}" — 세트 ${inSet.length}종 · 카탈로그에만 ${onlyCatalog.length}종 (카탈로그 ${library.icons.length.toLocaleString('en-US')}종 가운데)`, '')
+
+  if (inSet.length > 0) {
+    lines.push('## 세트에 있음 — 바로 쓴다', '')
+    for (const i of inSet.slice(0, 30)) lines.push(`- \`${i.name}\`${i.ko ? ` — ${i.ko}` : ''}`)
+    if (inSet.length > 30) lines.push(`- …외 ${inSet.length - 30}종 (검색어를 좁힌다)`)
+    lines.push('', 'get_icon(name)으로 마크업을 가져온다.', '')
+  }
+
+  if (onlyCatalog.length > 0) {
+    lines.push('## 카탈로그에만 있음 — 채택해야 쓴다', '')
+    for (const i of onlyCatalog.slice(0, 20)) {
+      const name = i.n || (i.s ? `이름 제안 ${i.s}` : '이름을 정해야 함')
+      lines.push(`- \`${i.m}\`${i.ko ? ` — ${i.ko}` : ''} (${i.n ? `채택하면 ${name}` : name})`)
+    }
+    if (onlyCatalog.length > 20) lines.push(`- …외 ${onlyCatalog.length - 20}종 (검색어를 좁힌다)`)
+    lines.push(
+      '',
+      '이 아이콘들은 아직 세트에 없어 코드포인트·스프라이트가 없다. **지금 마크업에 쓰면 화면에 아무것도 안 나온다.**',
+      'get_icon(구글 이름)이 채택 방법을 알려 준다. 사용자에게 채택을 요청하고, SVG를 직접 붙이지 않는다 (R-27).',
+      ''
+    )
+  }
+
+  if (inSet.length === 0 && onlyCatalog.length === 0) {
+    lines.push(
+      '세트에도 카탈로그에도 없다. **이름을 지어내지 않는다.**',
+      '다른 말로 한 번 더 찾아 본다(동의어·영어 이름·더 짧은 단어). 그래도 없으면 UX팀에 제작을 요청한다 (R-27).'
+    )
+  }
+  return text(lines.join('\n'))
+}
+
 function listIcons({ query } = {}) {
   const ledger = loadIconLedger()
   if (!ledger) return text('아이콘 카탈로그가 이 번들에 없다. npm run build:mcp로 다시 만든다.')
+
+  const library = loadIconLibrary()
+  if (query && String(query).trim() && library) return searchAllIcons(String(query).trim(), ledger, library)
 
   const all = Object.entries(ledger.icons).map(([name, meta]) => ({ name, ...meta }))
   const needle = query ? String(query).toLowerCase() : null
@@ -275,7 +364,7 @@ function listIcons({ query } = {}) {
 
   const withFill = all.filter((i) => (i.variants || []).includes('fill')).length
   const lines = ['# infoUX 아이콘 카탈로그', '']
-  lines.push(query ? `"${query}" 검색 — ${rows.length}종` : `총 ${rows.length}종.`, '')
+  lines.push(query ? `"${query}" 검색 — ${rows.length}종` : `세트 ${rows.length}종.`, '')
   if (needle) {
     // 이름에 없는 말로 걸린 것은 왜 걸렸는지 밝힌다 — 엉뚱한 결과처럼 보이지 않게
     const via = rows
@@ -292,9 +381,12 @@ function listIcons({ query } = {}) {
       '채울 면이 없는 형태(돋보기·화살표 등)에는 만들지 않는다. **어느 아이콘에 무엇이 있는지는 get_icon이 알려 준다.**',
     '',
     'get_icon(name)으로 마크업을 가져온다.',
+    library
+      ? `세트에 없는 아이콘은 list_icons(query)로 카탈로그 ${library.icons.length.toLocaleString('en-US')}종에서 찾는다 — 채택하면 쓸 수 있다.`
+      : '',
     '**목록에 없는 이름을 쓰지 않는다** — 화면에 아무것도 안 나온다. 필요하면 UX팀에 요청한다 (R-27).'
   )
-  return text(lines.join('\n'))
+  return text(lines.filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n'))
 }
 
 /**
@@ -333,12 +425,72 @@ function iconVariantSection(name, meta) {
   ]
 }
 
+/**
+ * 카탈로그에만 있는 아이콘 — 마크업을 주지 않고 채택 방법을 알려 준다.
+ *
+ * 마크업을 만들어 주면 AI는 그대로 쓴다. 그런데 이 이름의 클래스·스프라이트·코드포인트가
+ * 프로젝트에 없어 화면에 아무것도 안 나온다. SVG를 직접 붙이는 것도 R-27 위반이다.
+ */
+function catalogOnlyIcon(row, library) {
+  const label = library.categories?.find(c => c.id === row.c)?.label
+  const ours = row.n || row.s
+  const lines = [
+    `# ${row.m} — 카탈로그에만 있음`,
+    '',
+    `${row.ko ? `한국어 이름 ${row.ko} · ` : ''}${label ? `분류 ${label} · ` : ''}구글 Material Symbols. **이 세트에는 아직 없다** (코드포인트·스프라이트 없음).`,
+    ...(row.k && row.k.length > 0 ? ['', `이 아이콘을 부르는 말 — ${row.k.join(' · ')}`] : []),
+    '',
+    '## 쓰려면 채택해야 한다',
+    ''
+  ]
+  if (row.n) {
+    lines.push(`채택하면 \`${row.n}\`(으)로 쓴다.`)
+  } else {
+    lines.push(`이름 규칙에 맞지 않아 이름을 정해야 한다 — ${row.x}.${row.s ? ` 제안: \`${row.s}\`.` : ''}`)
+  }
+  lines.push(
+    '',
+    '1. 아이콘 스튜디오 → 찾기 → 카탈로그 전체 → 이 아이콘을 눌러 「세트에 넣기」',
+    `2. 저장소가 있으면: \`npm run icons:adopt -- ${row.m}${row.n ? '' : ` --as ${ours || '<이름>'}`} --build\``,
+    `3. 채택해 저장소에 반영된 뒤에 get_icon("${ours || '<채택한 이름>'}")이 마크업을 준다.`,
+    '',
+    '**채택하기 전에는 이 이름으로 마크업을 쓰지 않는다** — 화면에 아무것도 안 나온다.',
+    'SVG를 직접 붙여 넣는 것도 안 된다 (R-27). 사용자에게 채택을 요청한다.'
+  )
+  return text(lines.join('\n'))
+}
+
 function getIcon(name) {
   const ledger = loadIconLedger()
   if (!ledger) return text('아이콘 카탈로그가 이 번들에 없다. npm run build:mcp로 다시 만든다.')
 
   const meta = ledger.icons[name]
   if (!meta) {
+    const library = loadIconLibrary()
+    // 구글 이름(shopping_cart)이나 하이픈으로 바꾼 꼴(shopping-cart)로 물어도 알아듣는다
+    const key = String(name || '').trim().toLowerCase()
+    const row = library?.icons.find(i => i.m === key || i.m === key.replace(/-/g, '_'))
+    if (row) {
+      const ours = adoptedByMaterial(ledger).get(row.m)
+      if (ours) {
+        const inner = getIcon(ours).content[0].text
+        return text(`"${name}"은(는) 구글 이름이다. 이 세트에서 쓰는 이름 — \`${ours}\`\n\n${inner}`)
+      }
+      return catalogOnlyIcon(row, library)
+    }
+
+    // 가까운 후보 — 카탈로그까지 훑는다. 세트에 있는 것과 채택해야 하는 것을 구분해 보인다
+    if (library) {
+      const taken = adoptedByMaterial(ledger)
+      const label = (icon) => (taken.has(icon.m) ? `${taken.get(icon.m)}(세트)` : `${icon.m}(카탈로그에만)`)
+      const words = key.split(/[-_\s]+/).filter(Boolean)
+      // 마디를 모두 만족하는 것을 먼저, 없으면 마디 하나씩 — 철자가 틀린 이름이나 지어낸 이름도 단서를 준다
+      let near = searchIcons(library, words.join(' '), { limit: 8 }).map(({ icon }) => label(icon))
+      for (let w = 0; near.length === 0 && w < words.length; w += 1) {
+        near = searchIcons(library, words[w], { limit: 8 }).map(({ icon }) => label(icon))
+      }
+      if (near.length > 0) return notFound(`아이콘 "${name}"`, near)
+    }
     const near = Object.keys(ledger.icons).filter(n => n.includes(String(name).split('-')[0])).slice(0, 8)
     return notFound(`아이콘 "${name}"`, near.length > 0 ? near : Object.keys(ledger.icons).slice(0, 12))
   }

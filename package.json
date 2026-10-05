@@ -17,6 +17,8 @@
     "icons:import:force": "node scripts/import-icons.js --force",
     "icons:sheet": "node scripts/build-icon-sheet.js",
     "icons:build": "node scripts/build-icons.js",
+    "icons:library": "node scripts/build-icon-library.js",
+    "icons:adopt": "node scripts/adopt-icon.js",
     "icons:baseline": "node scripts/build-icon-baseline.js",
     "check:icons": "node scripts/check-icons.js",
     "studio": "node studio/start.mjs",

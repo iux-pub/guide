@@ -17,7 +17,8 @@
         "화살괄호",
         "back",
         "prev"
-      ]
+      ],
+      "material": "chevron_left"
     },
     "chevron-right": {
       "codepoint": "U+E001",
@@ -34,7 +35,8 @@
         "화살괄호",
         "next",
         "more"
-      ]
+      ],
+      "material": "chevron_right"
     },
     "chevron-up": {
       "codepoint": "U+E002",
@@ -50,7 +52,8 @@
         "위로",
         "collapse",
         "up"
-      ]
+      ],
+      "material": "keyboard_arrow_up"
     },
     "chevron-down": {
       "codepoint": "U+E003",
@@ -67,7 +70,8 @@
         "더보기",
         "expand",
         "down"
-      ]
+      ],
+      "material": "keyboard_arrow_down"
     },
     "arrow-left": {
       "codepoint": "U+E004",
@@ -84,7 +88,8 @@
         "돌아가기",
         "화살표",
         "back"
-      ]
+      ],
+      "material": "arrow_back"
     },
     "arrow-right": {
       "codepoint": "U+E005",
@@ -101,7 +106,8 @@
         "화살표",
         "forward",
         "go"
-      ]
+      ],
+      "material": "arrow_forward"
     },
     "arrow-up": {
       "codepoint": "U+E006",
@@ -117,7 +123,8 @@
         "화살표",
         "상승",
         "정렬"
-      ]
+      ],
+      "material": "arrow_upward"
     },
     "arrow-down": {
       "codepoint": "U+E007",
@@ -133,7 +140,8 @@
         "화살표",
         "하락",
         "정렬"
-      ]
+      ],
+      "material": "arrow_downward"
     },
     "menu": {
       "codepoint": "U+E008",
@@ -150,7 +158,8 @@
         "네비게이션",
         "hamburger",
         "nav"
-      ]
+      ],
+      "material": "menu"
     },
     "close": {
       "codepoint": "U+E009",
@@ -168,7 +177,8 @@
         "x",
         "cancel",
         "dismiss"
-      ]
+      ],
+      "material": "close"
     },
     "more-vertical": {
       "codepoint": "U+E00A",
@@ -185,7 +195,8 @@
         "옵션",
         "kebab",
         "options"
-      ]
+      ],
+      "material": "more_vert"
     },
     "external-link": {
       "codepoint": "U+E00B",
@@ -203,7 +214,8 @@
         "팝업",
         "new-window",
         "popup"
-      ]
+      ],
+      "material": "open_in_new"
     },
     "search": {
       "codepoint": "U+E00C",
@@ -220,7 +232,8 @@
         "조회",
         "find",
         "magnifier"
-      ]
+      ],
+      "material": "search"
     },
     "filter": {
       "codepoint": "U+E00D",
@@ -238,7 +251,8 @@
         "조건",
         "깔때기",
         "sort"
-      ]
+      ],
+      "material": "filter_alt"
     },
     "download": {
       "codepoint": "U+E00E",
@@ -254,7 +268,8 @@
         "저장",
         "받기",
         "save"
-      ]
+      ],
+      "material": "download"
     },
     "upload": {
       "codepoint": "U+E00F",
@@ -270,7 +285,8 @@
         "첨부",
         "등록",
         "attach"
-      ]
+      ],
+      "material": "upload"
     },
     "share": {
       "codepoint": "U+E010",
@@ -286,7 +302,8 @@
         "보내기",
         "퍼가기",
         "sns"
-      ]
+      ],
+      "material": "share"
     },
     "print": {
       "codepoint": "U+E011",
@@ -301,7 +318,8 @@
         "인쇄",
         "출력",
         "프린트"
-      ]
+      ],
+      "material": "print"
     },
     "copy": {
       "codepoint": "U+E012",
@@ -318,7 +336,8 @@
         "클립보드",
         "duplicate",
         "clipboard"
-      ]
+      ],
+      "material": "content_copy"
     },
     "edit": {
       "codepoint": "U+E013",
@@ -337,7 +356,8 @@
         "작성",
         "pencil",
         "modify"
-      ]
+      ],
+      "material": "edit"
     },
     "delete": {
       "codepoint": "U+E014",
@@ -356,7 +376,8 @@
         "제거",
         "trash",
         "remove"
-      ]
+      ],
+      "material": "delete"
     },
     "add": {
       "codepoint": "U+E015",
@@ -374,7 +395,8 @@
         "플러스",
         "plus",
         "new"
-      ]
+      ],
+      "material": "add"
     },
     "refresh": {
       "codepoint": "U+E016",
@@ -391,7 +413,8 @@
         "초기화",
         "reload",
         "reset"
-      ]
+      ],
+      "material": "refresh"
     },
     "save": {
       "codepoint": "U+E017",
@@ -407,7 +430,8 @@
         "보관",
         "디스크",
         "플로피"
-      ]
+      ],
+      "material": "save"
     },
     "settings": {
       "codepoint": "U+E018",
@@ -427,7 +451,8 @@
         "gear",
         "config",
         "preferences"
-      ]
+      ],
+      "material": "settings"
     },
     "check": {
       "codepoint": "U+E019",
@@ -446,7 +471,8 @@
         "tick",
         "done",
         "ok"
-      ]
+      ],
+      "material": "check"
     },
     "info": {
       "codepoint": "U+E01A",
@@ -464,7 +490,8 @@
         "도움",
         "느낌표",
         "notice"
-      ]
+      ],
+      "material": "info"
     },
     "warning": {
       "codepoint": "U+E01B",
@@ -482,7 +509,8 @@
         "위험",
         "caution",
         "alert"
-      ]
+      ],
+      "material": "warning"
     },
     "error": {
       "codepoint": "U+E01C",
@@ -499,7 +527,8 @@
         "실패",
         "문제",
         "fail"
-      ]
+      ],
+      "material": "error"
     },
     "success": {
       "codepoint": "U+E01D",
@@ -518,7 +547,8 @@
         "정상",
         "done",
         "complete"
-      ]
+      ],
+      "material": "check_circle"
     },
     "help": {
       "codepoint": "U+E01E",
@@ -536,7 +566,8 @@
         "안내",
         "faq",
         "question"
-      ]
+      ],
+      "material": "help"
     },
     "bell": {
       "codepoint": "U+E01F",
@@ -554,7 +585,8 @@
         "소식",
         "notification",
         "alarm"
-      ]
+      ],
+      "material": "notifications"
     },
     "lock": {
       "codepoint": "U+E020",
@@ -573,7 +605,8 @@
         "비밀번호",
         "secure",
         "private"
-      ]
+      ],
+      "material": "lock"
     },
     "unlock": {
       "codepoint": "U+E021",
@@ -590,7 +623,8 @@
         "공개",
         "해제",
         "open"
-      ]
+      ],
+      "material": "lock_open"
     },
     "calendar": {
       "codepoint": "U+E022",
@@ -609,7 +643,8 @@
         "캘린더",
         "date",
         "schedule"
-      ]
+      ],
+      "material": "calendar_today"
     },
     "clock": {
       "codepoint": "U+E023",
@@ -628,7 +663,8 @@
         "최근",
         "time",
         "recent"
-      ]
+      ],
+      "material": "schedule"
     },
     "eye": {
       "codepoint": "U+E024",
@@ -648,7 +684,8 @@
         "view",
         "preview",
         "show"
-      ]
+      ],
+      "material": "visibility"
     },
     "eye-off": {
       "codepoint": "U+E025",
@@ -666,7 +703,8 @@
         "눈감김",
         "hide",
         "hidden"
-      ]
+      ],
+      "material": "visibility_off"
     },
     "attachment": {
       "codepoint": "U+E026",
@@ -682,7 +720,8 @@
         "파일첨부",
         "붙임",
         "clip"
-      ]
+      ],
+      "material": "attach_file"
     },
     "checkbox": {
       "codepoint": "U+E027",
@@ -699,7 +738,8 @@
         "다중선택",
         "네모",
         "동의"
-      ]
+      ],
+      "material": "check_box"
     },
     "radio": {
       "codepoint": "U+E028",
@@ -715,7 +755,8 @@
         "동그라미",
         "택일",
         "option"
-      ]
+      ],
+      "material": "radio_button_checked"
     },
     "dropdown": {
       "codepoint": "U+E029",
@@ -733,7 +774,8 @@
         "세모",
         "select",
         "caret"
-      ]
+      ],
+      "material": "arrow_drop_down"
     },
     "minus": {
       "codepoint": "U+E02A",
@@ -750,7 +792,8 @@
         "축소",
         "minus",
         "remove"
-      ]
+      ],
+      "material": "remove"
     },
     "drag-handle": {
       "codepoint": "U+E02B",
@@ -768,7 +811,8 @@
         "drag",
         "reorder",
         "handle"
-      ]
+      ],
+      "material": "drag_indicator"
     },
     "file": {
       "codepoint": "U+E02C",
@@ -785,7 +829,8 @@
         "서류",
         "자료",
         "doc"
-      ]
+      ],
+      "material": "description"
     },
     "folder": {
       "codepoint": "U+E02D",
@@ -802,7 +847,8 @@
         "분류",
         "보관함",
         "directory"
-      ]
+      ],
+      "material": "folder"
     },
     "image": {
       "codepoint": "U+E02E",
@@ -820,7 +866,8 @@
         "사진첨부",
         "photo",
         "picture"
-      ]
+      ],
+      "material": "image"
     },
     "video": {
       "codepoint": "U+E02F",
@@ -837,7 +884,8 @@
         "비디오",
         "캠",
         "movie"
-      ]
+      ],
+      "material": "videocam"
     },
     "document": {
       "codepoint": "U+E030",
@@ -856,7 +904,8 @@
         "내용",
         "article",
         "text"
-      ]
+      ],
+      "material": "article"
     },
     "list": {
       "codepoint": "U+E031",
@@ -872,7 +921,8 @@
         "줄",
         "나열",
         "게시판"
-      ]
+      ],
+      "material": "list"
     },
     "grid": {
       "codepoint": "U+E032",
@@ -890,7 +940,8 @@
         "카드보기",
         "갤러리",
         "tile"
-      ]
+      ],
+      "material": "grid_view"
     },
     "table": {
       "codepoint": "U+E033",
@@ -908,7 +959,8 @@
         "통계",
         "행렬",
         "chart"
-      ]
+      ],
+      "material": "table_chart"
     },
     "link": {
       "codepoint": "U+E034",
@@ -924,7 +976,8 @@
         "주소",
         "url",
         "체인"
-      ]
+      ],
+      "material": "link"
     },
     "tag": {
       "codepoint": "U+E035",
@@ -942,7 +995,8 @@
         "분류",
         "label",
         "keyword"
-      ]
+      ],
+      "material": "label"
     },
     "user": {
       "codepoint": "U+E036",
@@ -962,7 +1016,8 @@
         "person",
         "account",
         "profile"
-      ]
+      ],
+      "material": "person"
     },
     "users": {
       "codepoint": "U+E037",
@@ -982,7 +1037,8 @@
         "group",
         "team",
         "members"
-      ]
+      ],
+      "material": "group"
     },
     "building": {
       "codepoint": "U+E038",
@@ -1000,7 +1056,8 @@
         "사업장",
         "office",
         "company"
-      ]
+      ],
+      "material": "apartment"
     },
     "phone": {
       "codepoint": "U+E039",
@@ -1018,7 +1075,8 @@
         "수화기",
         "call",
         "tel"
-      ]
+      ],
+      "material": "call"
     },
     "mail": {
       "codepoint": "U+E03A",
@@ -1037,7 +1095,8 @@
         "문의",
         "email",
         "contact"
-      ]
+      ],
+      "material": "mail"
     },
     "map-pin": {
       "codepoint": "U+E03B",
@@ -1057,7 +1116,8 @@
         "map",
         "location",
         "place"
-      ]
+      ],
+      "material": "place"
     },
     "play": {
       "codepoint": "U+E03C",
@@ -1073,7 +1133,8 @@
         "시작",
         "플레이",
         "세모"
-      ]
+      ],
+      "material": "play_arrow"
     },
     "pause": {
       "codepoint": "U+E03D",
@@ -1089,7 +1150,8 @@
         "멈춤",
         "정지",
         "휴지"
-      ]
+      ],
+      "material": "pause"
     },
     "volume": {
       "codepoint": "U+E03E",
@@ -1107,7 +1169,8 @@
         "볼륨",
         "sound",
         "audio"
-      ]
+      ],
+      "material": "volume_up"
     },
     "fullscreen": {
       "codepoint": "U+E03F",
@@ -1123,7 +1186,8 @@
         "확대",
         "전체보기",
         "expand"
-      ]
+      ],
+      "material": "fullscreen"
     },
     "zoom-in": {
       "codepoint": "U+E040",
@@ -1139,7 +1203,8 @@
         "돋보기",
         "줌인",
         "enlarge"
-      ]
+      ],
+      "material": "zoom_in"
     },
     "zoom-out": {
       "codepoint": "U+E041",
@@ -1155,7 +1220,8 @@
         "돋보기",
         "줌아웃",
         "shrink"
-      ]
+      ],
+      "material": "zoom_out"
     },
     "home": {
       "codepoint": "U+E042",
@@ -1174,7 +1240,8 @@
         "첫화면",
         "main",
         "index"
-      ]
+      ],
+      "material": "home"
     },
     "bookmark": {
       "codepoint": "U+E043",
@@ -1193,7 +1260,8 @@
         "스크랩",
         "favorite",
         "scrap"
-      ]
+      ],
+      "material": "bookmark"
     },
     "star": {
       "codepoint": "U+E044",
@@ -1212,7 +1280,8 @@
         "추천",
         "favorite",
         "rating"
-      ]
+      ],
+      "material": "star"
     },
     "chart-bar": {
       "codepoint": "U+E045",
@@ -1231,7 +1300,8 @@
         "실적",
         "graph",
         "stats"
-      ]
+      ],
+      "material": "bar_chart"
     },
     "globe": {
       "codepoint": "U+E046",
@@ -1249,7 +1319,8 @@
         "공개",
         "world",
         "public"
-      ]
+      ],
+      "material": "public"
     },
     "language": {
       "codepoint": "U+E047",
@@ -1266,7 +1337,8 @@
         "외국어",
         "translate",
         "locale"
-      ]
+      ],
+      "material": "translate"
     },
     "sitemap": {
       "codepoint": "U+E048",

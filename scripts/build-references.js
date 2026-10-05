@@ -95,9 +95,10 @@ function buildKrdsTokensMd() {
     w('')
     w('| 단계 | 토큰 | hex |')
     w('|------|------|-----|')
-    const tokenGroup = cat === 'information' ? 'info' : cat
+    // 단계 토큰의 실제 이름은 --color-<분류>-<단계> 이고 정보색의 분류는 information 이다.
+    // 시맨틱 별칭(--color-info, --color-info-surface, --color-info-text)만 info 를 쓴다.
     for (const [stage, t] of Object.entries(foundation.primitive.color.light[cat])) {
-      w(`| ${stage} | \`--color-${tokenGroup}-${stage}\` | \`${t.value}\` |`)
+      w(`| ${stage} | \`--color-${cat}-${stage}\` | \`${t.value}\` |`)
     }
     w('')
   }

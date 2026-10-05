@@ -9,6 +9,8 @@
 
 const fs = require('fs')
 const path = require('path')
+const { loadTokenSource } = require('./lib/token-source')
+const { buildTokensCss } = require('./lib/build-tokens-css')
 
 const ROOT = path.resolve(__dirname, '..')
 const STYLES_DIR = path.join(ROOT, 'src/styles')
@@ -134,6 +136,41 @@ const R24_EXEMPT_CSS = /(?:^|\/)(?:badge|tag|btn)\.css$/
 
 // ─── 검사 함수 ────────────────────────────────────────
 
+// 토큰 이름이 지켜야 하는 접두 — 이 접두의 var(--…)는 토큰 소스에 실제로 있어야 한다.
+// 문서의 표기가 틀렸거나 이름을 지어내도 var() 형식은 맞으므로 R-01 만으로는 통과한다.
+// 그러면 값이 비어 렌더만 조용히 깨진다(2026-10-05 공지 띠: --color-info-60 은 없고 --color-information-60 이 실제).
+const TOKEN_NAMESPACES = /^--(?:color|font|breakpoint)-/
+const VAR_REF = /var\(\s*(--[a-z0-9-]+)\s*([,)])/gi
+let definedTokensCache = null
+
+/** 토큰 소스에서 만든 CSS 의 정의 + src/styles 안의 지역 선언을 합친 집합 */
+function getDefinedTokens() {
+  if (definedTokensCache) return definedTokensCache
+  const defined = new Set()
+  try {
+    const css = buildTokensCss(loadTokenSource(ROOT))
+    for (const m of css.matchAll(/(--[a-z0-9-]+)\s*:/gi)) defined.add(m[1])
+  } catch {
+    // 토큰 소스를 못 읽으면 이 검사만 건너뛴다(null). 다른 검사는 계속한다.
+    definedTokensCache = null
+    return null
+  }
+  const stack = [STYLES_DIR]
+  while (stack.length) {
+    const dir = stack.pop()
+    if (!fs.existsSync(dir)) continue
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) stack.push(full)
+      else if (entry.name.endsWith('.css')) {
+        for (const m of fs.readFileSync(full, 'utf-8').matchAll(/(--[a-z0-9-]+)\s*:/gi)) defined.add(m[1])
+      }
+    }
+  }
+  definedTokensCache = defined
+  return defined
+}
+
 function checkCssFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.split('\n')
@@ -155,6 +192,9 @@ function checkCssFile(filePath) {
     error(relPath, null, '[R-19] 스타일 CSS는 Tailwind v4 @apply를 우선 사용해야 한다. 토큰이 필요한 값은 var(--token)으로 유지하되 레이아웃/상태 유틸은 @apply로 작성.')
   }
 
+  // 이 파일 안에서 직접 선언한 커스텀 프로퍼티는 정의된 것으로 본다
+  const localDeclared = new Set([...content.matchAll(/(--[a-z0-9-]+)\s*:/gi)].map(m => m[1]))
+
   lines.forEach((line, i) => {
     const lineNum = i + 1
     const trimmed = line.replace(/\/\*.*?\*\//g, '').trim()
@@ -169,6 +209,16 @@ function checkCssFile(filePath) {
     }
     if (SCSS_VAR.test(trimmed)) {
       error(relPath, lineNum, '[R-03] SCSS 변수 ($var) 금지. CSS 커스텀 프로퍼티 사용.', trimmed)
+    }
+
+    // 정의되지 않은 토큰 참조 (R-01) — 대체값(var(--x, 값))이 있으면 없을 수 있음을 알고 쓴 것이므로 넘긴다
+    const defined = getDefinedTokens()
+    if (defined) {
+      for (const m of trimmed.matchAll(VAR_REF)) {
+        const name = m[1]
+        if (m[2] === ',' || !TOKEN_NAMESPACES.test(name) || defined.has(name) || localDeclared.has(name)) continue
+        error(relPath, lineNum, `[R-01] 정의되지 않은 토큰 var(${name}). tokens/ 에 없는 이름이다 — get_tokens 문서가 아니라 tokens/build/tokens.css 의 실제 이름을 확인한다.`, trimmed)
+      }
     }
 
     // 옛 토큰명 — info-design 컨트랙트 점검 (R-01: 토큰 시스템)

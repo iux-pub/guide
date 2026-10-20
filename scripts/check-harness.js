@@ -190,6 +190,16 @@ requireSame('.codex/hooks.json', 'starter/.codex/hooks.json')
 requireSame('scripts/hooks/post-edit.js', 'starter/scripts/hooks/post-edit.js')
 requireSame('scripts/lib/page-scope.js', 'starter/scripts/lib/page-scope.js')
 requireSame('scripts/lib/visual-signature.js', 'starter/scripts/lib/visual-signature.js')
+// 카피 검사(R-23·R-43) — 라이브러리와 판정 자료가 스타터와 같아야 파생 프로젝트가 같은 기준으로 검사한다
+requireSame('scripts/lib/html-tree.js', 'starter/scripts/lib/html-tree.js')
+requireSame('scripts/lib/copy-rules.js', 'starter/scripts/lib/copy-rules.js')
+requireSame('contracts/fake-content.json', 'starter/contracts/fake-content.json')
+requireSame('contracts/copy-lexicon.json', 'starter/contracts/copy-lexicon.json')
+// 스타터 index.html은 틀 표시를 달고 나간다 — 없으면 자리값 제목이 납품 오류로 잡히고, create는 지울 표시가 없다
+const starterIndex = read('starter/index.html')
+if (starterIndex && !/<meta\s+name=["']infoux:template["']/.test(starterIndex)) {
+  fail('starter/index.html에 <meta name="infoux:template"> 틀 표시가 없습니다(R-23 템플릿 범위).')
+}
 
 // 스타터 푸시 단계가 검사 실패를 파이프로 삼키지 않게 한다(npm run check | tail 은 pipefail 없이는 늘 성공)
 const syncScript = read('scripts/sync-starter.sh')

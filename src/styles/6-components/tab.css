@@ -4,11 +4,11 @@
  * 구조 (WAI-ARIA tabs pattern):
  *   <div class="tab">
  *     <div class="tab__list" role="tablist">
- *       <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">탭 1</button>
- *       <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">탭 2</button>
+ *       <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">공지사항</button>
+ *       <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">보도자료</button>
  *     </div>
- *     <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">콘텐츠 1</div>
- *     <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>콘텐츠 2</div>
+ *     <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">공지사항 목록</div>
+ *     <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>보도자료 목록</div>
  *   </div>
  */
 

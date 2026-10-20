@@ -12,7 +12,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/tooltip.md`이�
   도움말
 </button>
 <div id="tip-1" class="tooltip" role="tooltip" hidden>
-  도움말 설명 텍스트
+  영문, 숫자, 특수문자를 섞어 9자 이상으로 정합니다.
 </div>
 ```
 

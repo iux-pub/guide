@@ -17,6 +17,7 @@
 //   src/snippets/**/*.md                      check-violations + check-html-structure
 //   site/**/*.{md,njk,html}                   check-violations + check-html-structure
 //   src/playground/**/*.html                  check-violations + check-html-structure
+//   src/js/**/*.js                            check-violations (placeholder 이미지 핫링크 R-23)
 //   references/**/*.md, prompts/**/*.md       check-html-structure (금지 예시를 서술한 문장은 R-23 대상이 아니다)
 //   납품 페이지(루트 *.html, pages/**, infoux.json pages)   check-violations + check-html-structure
 // 이 프로젝트 밖의 파일은, 그 파일이 속한 다른 infoUX 프로젝트(예: 저장소 안의 starter/)의 훅에 넘긴다.
@@ -44,6 +45,7 @@ const ROUTES = [
   { re: /^src\/snippets\/.+\.md$/i, run: ['check-violations', 'check-html-structure'] },
   { re: /^site\/.+\.(md|njk|html)$/i, run: ['check-violations', 'check-html-structure'] },
   { re: /^src\/playground\/.+\.html$/i, run: ['check-violations', 'check-html-structure'] },
+  { re: /^src\/js\/.+\.js$/i, run: ['check-violations'] },
   { re: /^(references|prompts)\/.+\.md$/i, run: ['check-html-structure'] }
 ]
 

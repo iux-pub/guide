@@ -18,6 +18,7 @@
 #   - scripts/check-icons.js → starter/scripts/ (+ build-icon-sheet.js, lib/svg-*.js)
 #   - scripts/hooks/         → starter/scripts/hooks/ (편집 직후 검사 훅 — HX-06)
 #   - scripts/lib/page-scope.js → starter/scripts/lib/ (납품 페이지 범위 — HX-06)
+#   - scripts/lib/{visual-signature,html-tree,copy-rules}.js → starter/scripts/lib/ (시각 서명·카피 검사)
 #   - .claude/settings.json, .codex/hooks.json → starter/ (루트와 같은 훅 — check-harness가 정합을 본다)
 #   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
@@ -117,6 +118,9 @@ cp "$GUIDE_DIR/scripts/lib/svg-geometry.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/page-scope.js" "$STARTER_DIR/scripts/lib/"
 # 시각 서명 검사(R-01 색·R-34 장식 효과·R-36 이모지·R-37 기본 스케일)
 cp "$GUIDE_DIR/scripts/lib/visual-signature.js" "$STARTER_DIR/scripts/lib/"
+# 카피 검사(R-23 가짜·자리 콘텐츠·R-43 카피 톤) — 판정 자료는 contracts/fake-content.json·copy-lexicon.json(아래 contracts 복사)
+cp "$GUIDE_DIR/scripts/lib/html-tree.js" "$STARTER_DIR/scripts/lib/"
+cp "$GUIDE_DIR/scripts/lib/copy-rules.js" "$STARTER_DIR/scripts/lib/"
 rm -rf "$STARTER_DIR/scripts/hooks"
 cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
 mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"

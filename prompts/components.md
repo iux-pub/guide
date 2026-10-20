@@ -83,10 +83,10 @@ KRDS 순서: 레이블 → 보조설명 → 입력 → 시스템 메시지. 오�
 ```html
 <article class="card">
   <header class="card__header">
-    <h3 class="card__title">제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
   <div class="card__body">
-    <p>내용</p>
+    <p>매주 월요일과 법정 공휴일에는 휴관합니다. 휴관일에도 무인 반납함은 이용할 수 있습니다.</p>
   </div>
   <footer class="card__footer">
     <button type="button" class="btn btn--primary">확인</button>
@@ -101,10 +101,10 @@ KRDS 순서: 레이블 → 보조설명 → 입력 → 시스템 메시지. 오�
   <div class="modal__overlay"></div>
   <div class="modal__content modal__content--medium">
     <header class="modal__header">
-      <h2 class="modal__title" id="modal-title">제목</h2>
+      <h2 class="modal__title" id="modal-title">작성 내용 임시 저장</h2>
       <button type="button" class="modal__close" data-modal-close aria-label="닫기">×</button>
     </header>
-    <div class="modal__body">내용</div>
+    <div class="modal__body"><p>작성 중인 내용을 임시 저장합니다. 임시 저장한 글은 30일 동안 보관합니다.</p></div>
     <footer class="modal__footer">
       <button type="button" class="btn btn--primary">확인</button>
     </footer>

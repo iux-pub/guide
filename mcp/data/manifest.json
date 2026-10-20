@@ -1,5 +1,5 @@
 {
-  "version": "8271e90",
+  "version": "6ea2066",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -11,7 +11,7 @@
     {
       "id": "art-direction",
       "file": "art-direction.md",
-      "chars": 14066,
+      "chars": 14251,
       "summary": "brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디까지 열지 판단하는 기준. 수치 정본은 `contracts/art-direction.json`, 팔레트 hex 정본은 `tokens/presets/`이며, 이 문서의 표는 build-art-direct..."
     },
     {
@@ -23,7 +23,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 13326,
+      "chars": 15588,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -35,13 +35,13 @@
     {
       "id": "html-semantics",
       "file": "html-semantics.md",
-      "chars": 26915,
+      "chars": 26913,
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
     },
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 69169,
+      "chars": 69574,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -59,7 +59,7 @@
     {
       "id": "project-profiles",
       "file": "project-profiles.md",
-      "chars": 8144,
+      "chars": 8142,
       "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
     },
     {
@@ -71,7 +71,7 @@
     {
       "id": "snippet-template",
       "file": "snippet-template.md",
-      "chars": 4173,
+      "chars": 4181,
       "summary": "```markdown"
     },
     {
@@ -135,7 +135,7 @@
     {
       "id": "accordion",
       "file": "accordion.md",
-      "chars": 1260,
+      "chars": 1521,
       "summary": "native `<details>`/`<summary>` 활용 — JS 없이 동작."
     },
     {
@@ -153,7 +153,7 @@
     {
       "id": "boilerplate",
       "file": "boilerplate.md",
-      "chars": 3858,
+      "chars": 3861,
       "summary": "기본 마크업은 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약 모두에 적용 가능한 공통 골격이다. 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 사이트 유형 판정에서 적용 대상이 확인된 경우에만 추가한다."
     },
     {
@@ -177,7 +177,7 @@
     {
       "id": "card",
       "file": "card.md",
-      "chars": 1205,
+      "chars": 1251,
       "summary": "```html"
     },
     {
@@ -261,7 +261,7 @@
     {
       "id": "modal",
       "file": "modal.md",
-      "chars": 1552,
+      "chars": 1596,
       "summary": "```html"
     },
     {
@@ -297,7 +297,7 @@
     {
       "id": "side-panel",
       "file": "side-panel.md",
-      "chars": 1783,
+      "chars": 1807,
       "summary": "우측에서 슬라이드 인하는 보조 패널. 모달과 달리 본문 스크롤을 차단하지 않는다."
     },
     {
@@ -351,7 +351,7 @@
     {
       "id": "tooltip",
       "file": "tooltip.md",
-      "chars": 788,
+      "chars": 818,
       "summary": "짧은 보조 설명 팝업. **JS 트리거 변형 권장** (키보드/터치 호환)."
     }
   ]

@@ -35,7 +35,7 @@
 \`\`\`html
 <article class="card">
   <header class="card__header">
-    <h3 class="card__title">제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
 </article>
 \`\`\`

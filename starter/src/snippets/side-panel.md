@@ -11,7 +11,7 @@
     <button type="button" class="side-panel__close" aria-label="닫기">×</button>
   </header>
   <div class="side-panel__body">
-    <p>패널 본문 내용</p>
+    <p>접수 번호, 처리 상태, 담당 부서를 확인할 수 있습니다.</p>
   </div>
   <footer class="side-panel__footer">
     <button type="button" class="btn btn--tertiary">닫기</button>

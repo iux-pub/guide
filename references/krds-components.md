@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 8271e90
+> 빌드: 6ea2066
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -341,25 +341,27 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 ```html
 <div class="accordion">
   <details class="accordion__item">
-    <summary class="accordion__summary">자주 묻는 질문 1</summary>
+    <summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
     <div class="accordion__panel">
-      <p>답변 1 내용</p>
+      <p>민원 종류마다 다릅니다. 신청 화면의 처리 기간 항목에서 확인할 수 있습니다.</p>
     </div>
   </details>
   <details class="accordion__item">
-    <summary class="accordion__summary">자주 묻는 질문 2</summary>
+    <summary class="accordion__summary">신청한 뒤에 내용을 고칠 수 있나요?</summary>
     <div class="accordion__panel">
-      <p>답변 2 내용</p>
+      <p>처리 상태가 접수 대기일 때만 고칠 수 있습니다. 나의 민원에서 해당 신청을 열어 고칩니다.</p>
     </div>
   </details>
   <details class="accordion__item" open>
-    <summary class="accordion__summary">기본 열린 항목</summary>
+    <summary class="accordion__summary">첨부 파일은 몇 개까지 올릴 수 있나요?</summary>
     <div class="accordion__panel">
-      <p><code>open</code> 속성으로 초기 열림 상태</p>
+      <p>파일은 5개까지, 하나에 10MB까지 올릴 수 있습니다.</p>
     </div>
   </details>
 </div>
 ```
+
+세 번째 항목처럼 `open` 속성을 주면 처음부터 펼친 상태로 보인다. 질문은 실제 문의에서 가져온다 — "자주 묻는 질문 1"·"답변 1 내용" 같은 자리 문구는 납품 페이지에서 R-23 오류다.
 
 #### 단일 열림 (한 번에 하나만)
 
@@ -367,8 +369,8 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
 ```html
 <div class="accordion">
-  <details class="accordion__item" name="faq"><summary class="accordion__summary">Q1</summary>...</details>
-  <details class="accordion__item" name="faq"><summary class="accordion__summary">Q2</summary>...</details>
+  <details class="accordion__item" name="faq"><summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>...</details>
+  <details class="accordion__item" name="faq"><summary class="accordion__summary">신청한 뒤에 내용을 고칠 수 있나요?</summary>...</details>
 </div>
 ```
 
@@ -392,10 +394,10 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 ```html
 <article class="card">
   <header class="card__header">
-    <h3 class="card__title">카드 제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
   <div class="card__body">
-    <p>카드 본문 내용</p>
+    <p>매주 월요일과 법정 공휴일에는 휴관합니다. 휴관일에도 무인 반납함은 이용할 수 있습니다.</p>
   </div>
   <footer class="card__footer">
     <button type="button" class="btn btn--text btn--small">자세히</button>
@@ -496,11 +498,11 @@ trigger.addEventListener('click', () => {
   <div class="modal__overlay"></div>
   <div class="modal__content modal__content--medium">
     <header class="modal__header">
-      <h2 id="modal-title" class="modal__title">제목</h2>
+      <h2 id="modal-title" class="modal__title">작성 내용 임시 저장</h2>
       <button type="button" class="modal__close" aria-label="닫기">×</button>
     </header>
     <div class="modal__body">
-      <p>모달 본문 내용</p>
+      <p>작성 중인 내용을 임시 저장합니다. 임시 저장한 글은 30일 동안 보관합니다.</p>
     </div>
     <footer class="modal__footer">
       <button type="button" class="btn btn--tertiary">취소</button>
@@ -558,7 +560,7 @@ trigger.addEventListener('click', () => {
     <button type="button" class="side-panel__close" aria-label="닫기">×</button>
   </header>
   <div class="side-panel__body">
-    <p>패널 본문 내용</p>
+    <p>접수 번호, 처리 상태, 담당 부서를 확인할 수 있습니다.</p>
   </div>
   <footer class="side-panel__footer">
     <button type="button" class="btn btn--tertiary">닫기</button>
@@ -1654,7 +1656,7 @@ native `<progress>` + 시각 커스텀.
   도움말
 </button>
 <div id="tip-1" class="tooltip" role="tooltip" hidden>
-  도움말 설명 텍스트
+  영문, 숫자, 특수문자를 섞어 9자 이상으로 정합니다.
 </div>
 ```
 
@@ -1665,7 +1667,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 ```html
 <span class="tooltip-wrap">
   <button type="button" aria-label="도움말">?</button>
-  <span class="tooltip" role="tooltip">설명 텍스트</span>
+  <span class="tooltip" role="tooltip">생년월일 6자리를 입력합니다.</span>
 </span>
 ```
 
@@ -1935,7 +1937,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
         </ul>
       </nav>
 
-      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-000-0000(평일 09:00~18:00)로 알려 주세요.</p>
     </div>
   </div>
 </section>

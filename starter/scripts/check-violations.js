@@ -5,6 +5,7 @@
 // 가짜 콘텐츠(R-23), 한글 조판 하한(R-24) 검출.
 // 시각 서명(lib/visual-signature.js): R-01 색 확장(선언 단위·Tailwind·style 속성), R-34 장식 효과,
 // R-36 이모지, R-37 Tailwind 기본 스케일 — CSS·class·style·<style>·마크다운 펜스와 본문.
+// 카피(lib/copy-rules.js): R-23 가짜·자리 콘텐츠, R-43 카피 톤 — 요소 트리로 보고 범위(납품·템플릿·스니펫·문서)별 심각도.
 //
 // 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
 //   STRICT=1 환경변수 설정 시 경고도 1로 실패 처리
@@ -17,6 +18,13 @@ const { buildTokensCss } = require('./lib/build-tokens-css')
 let VISUAL = null
 try {
   VISUAL = require('./lib/visual-signature')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
+// 카피 규칙(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 없으면 옛 줄 단위 R-23 검사로 돌아간다
+let COPY = null
+try {
+  COPY = require('./lib/copy-rules')
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
@@ -191,6 +199,26 @@ function getVisualCtx() {
   return visualCtxCache
 }
 
+// 카피 문맥: 사이트 유형(공공서비스는 느낌표 error)과 프로젝트가 허용한 고유 문구(infoux.json copyAllow)
+let copyCtxCache = null
+function getCopyCtx() {
+  if (copyCtxCache) return copyCtxCache
+  let profile = null
+  let copyAllow = []
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
+    if (typeof config.profile === 'string') profile = config.profile
+    if (Array.isArray(config.copyAllow)) copyAllow = config.copyAllow.filter(s => typeof s === 'string' && s.trim())
+  } catch {
+    // infoux.json이 없으면 사이트 유형 미정 — 느낌표는 제목·버튼만 경고한다
+  }
+  copyCtxCache = { profile, copyAllow, copy: COPY.loadCopyContracts(ROOT) }
+  for (const name of copyCtxCache.copy.missing) {
+    warn(`contracts/${name}`, null, '[R-23] 카피 규칙 계약 파일을 읽지 못해 기본값으로 검사했다(번역투 어휘 R-43 없음) — 스타터를 갱신한다.')
+  }
+  return copyCtxCache
+}
+
 function reportVisual(relPath, findings, baseLine = 0) {
   for (const f of findings) {
     const line = f.line ? baseLine + f.line : null
@@ -282,7 +310,13 @@ function checkCssFile(filePath) {
     }))
   }
 
-  const isEntryFile = /\/src\/styles\/(?:style|docs)\.css$/.test(posixPath) ||
+  // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
+  if (COPY) {
+    const noComments = VISUAL ? VISUAL.stripCssComments(content) : content
+    reportVisual(relPath, COPY.scanTextHotlinks(noComments, getCopyCtx()))
+  }
+
+  const isEntryFile =/\/src\/styles\/(?:style|docs)\.css$/.test(posixPath) ||
                       /\/src\/styles\/6-components\/index\.css$/.test(posixPath) ||
                       /\/src\/styles\/3-generic\/reset\.css$/.test(posixPath)
 
@@ -434,7 +468,8 @@ function shouldSkipHtmlFile(filePath) {
   return HTML_SKIP_PATTERNS.some(re => re.test(relPosix(filePath)))
 }
 
-function checkHtmlFile(filePath) {
+// opts.isPage: page-scope가 모은 납품 페이지(루트 *.html·pages/**·infoux.json pages) — 카피 규칙을 가장 엄격하게 본다
+function checkHtmlFile(filePath, opts = {}) {
   if (shouldSkipHtmlFile(filePath)) return
 
   const content = fs.readFileSync(filePath, 'utf-8')
@@ -484,6 +519,20 @@ function checkHtmlFile(filePath) {
   // 마크다운에서 마크업 규칙(R-07·R-08·Tailwind 기본 경고)은 코드 펜스와 원시 HTML 줄에만 적용한다.
   // 본문 문장('`rounded-lg`는 쓰지 않는다')이 경고로 걸리지 않게.
   const isMarkdown = filePath.endsWith('.md')
+
+  // 카피(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 요소 트리로 형제·조상·숨김을 보고 범위별 심각도를 준다
+  //   납품 페이지 > 템플릿(infoux:template 표시) > 스니펫·플레이그라운드 > 문서 순으로 엄격하다
+  if (COPY) {
+    const copyCtx = getCopyCtx()
+    // 카피 검사가 한 파일에서 실패해도 전체 검사를 멈추지 않는다 — 그 파일만 오류로 알린다
+    try {
+      const scope = COPY.copyScopeOf(posixPath, content, { isPage: !!opts.isPage, copy: copyCtx.copy })
+      const ctx = { ...copyCtx, scope }
+      reportVisual(relPath, isMarkdown ? COPY.scanMarkdownCopy(content, ctx) : COPY.scanHtmlCopy(content, ctx))
+    } catch (e) {
+      error(relPath, null, `[R-23·R-43] 카피 검사를 끝내지 못했다(${e.message}) — 이 파일의 문구는 검사되지 않았다.`)
+    }
+  }
   const markupLines = new Set()
   const counterLines = new Set() // 금지 예시 펜스(첫 줄 주석에 ❌·금지 예시·DON'T 등) — 마크업 규칙을 적용하지 않는다
   if (isMarkdown) {
@@ -541,16 +590,18 @@ function checkHtmlFile(filePath) {
       error(relPath, lineNum, '[R-10] <div>/<span> onclick 금지. <button> 또는 <a> 사용.', trimmed.slice(0, 100))
     }
 
-    // 가짜 콘텐츠 (R-23) — 마크다운 본문에서는 인라인 코드(`Lorem ipsum` 같은 규칙 설명 속 인용)를 빼고 본다
-    const copyText = trimmed
-    if (FAKE_LOREM.test(copyText)) {
-      error(relPath, lineNum, '[R-23] lorem ipsum 채움 텍스트 금지. 실제 서비스 문안 또는 task contract contentSources 기반 카피를 사용한다.', trimmed.slice(0, 100))
-    }
-    if (FAKE_FILLER_KO.test(copyText)) {
-      error(relPath, lineNum, '[R-23] 자리 채움 문구 금지. 실제 콘텐츠를 넣거나 contentSources에서 실제 용어를 가져온다.', trimmed.slice(0, 100))
-    }
-    if (FAKE_IMG_HOTLINK.test(copyText)) {
-      error(relPath, lineNum, '[R-23] placeholder 이미지 핫링크 금지. 실제 자산 경로 또는 실제 비율의 data-uri 표기를 사용한다(납품 self-contained 정책).', trimmed.slice(0, 100))
+    // 가짜 콘텐츠 (R-23) — 카피 규칙 라이브러리가 없을 때(오래된 파생 프로젝트)만 줄 단위로 본다
+    //   마크다운 본문에서는 인라인 코드(`Lorem ipsum` 같은 규칙 설명 속 인용)를 빼고 본다
+    if (!COPY) {
+      if (FAKE_LOREM.test(trimmed)) {
+        error(relPath, lineNum, '[R-23] lorem ipsum 채움 텍스트 금지. 실제 서비스 문안 또는 task contract contentSources 기반 카피를 사용한다.', trimmed.slice(0, 100))
+      }
+      if (FAKE_FILLER_KO.test(trimmed)) {
+        error(relPath, lineNum, '[R-23] 자리 채움 문구 금지. 실제 콘텐츠를 넣거나 contentSources에서 실제 용어를 가져온다.', trimmed.slice(0, 100))
+      }
+      if (FAKE_IMG_HOTLINK.test(trimmed)) {
+        error(relPath, lineNum, '[R-23] placeholder 이미지 핫링크 금지. 실제 자산 경로 또는 실제 비율의 data-uri 표기를 사용한다(납품 self-contained 정책).', trimmed.slice(0, 100))
+      }
     }
 
     // 한글 조판 하한 (R-24) — leading-none은 한글 본문에서 글줄 겹침을 만든다(클래스 이름이라 마크업 줄만)
@@ -619,6 +670,14 @@ function checkHtmlFile(filePath) {
   })
 }
 
+// ─── 스크립트의 자리 콘텐츠 (R-23) ───────────────────────
+// img.src = 'https://picsum.photos/…' 처럼 스크립트가 넣는 자리 이미지는 외부 의존이라 오류다(주석은 빼고 본다).
+// 문자열 리터럴의 lorem은 오류, 그 밖의 채움 문구·지어낸 연락처는 경고 — JS에는 페이지 범위가 없다
+function checkJsFile(filePath) {
+  if (!COPY) return
+  reportVisual(rel(filePath), COPY.scanJsCopy(fs.readFileSync(filePath, 'utf-8'), getCopyCtx()))
+}
+
 // ─── SCSS 파일 잔재 검출 ──────────────────────────────
 
 function checkScssRemnants() {
@@ -683,6 +742,12 @@ function main() {
   console.log(`${CYAN}[check-violations]${RESET} info-design 컨트랙트 검사 시작...\n`)
 
   if (TARGET_FILES.length > 0) {
+    let isPagePath = () => false
+    try {
+      isPagePath = require('./lib/page-scope').isPagePath
+    } catch (e) {
+      if (e.code !== 'MODULE_NOT_FOUND') throw e
+    }
     for (const target of TARGET_FILES) {
       const abs = path.resolve(target)
       if (!fs.existsSync(abs)) {
@@ -690,11 +755,15 @@ function main() {
         process.exit(1)
       }
       if (abs.endsWith('.css')) checkCssFile(abs)
-      if (abs.endsWith('.html') || abs.endsWith('.njk') || abs.endsWith('.md')) checkHtmlFile(abs)
+      if (abs.endsWith('.html') || abs.endsWith('.njk') || abs.endsWith('.md')) {
+        checkHtmlFile(abs, { isPage: isPagePath(ROOT, toPosix(path.relative(ROOT, abs))) })
+      }
+      if (abs.endsWith('.js') && /^\/src\/js\//.test(relPosix(abs))) checkJsFile(abs)
     }
   } else {
     const cssFiles = collectFiles(STYLES_DIR, '.css', ['node_modules'])
     cssFiles.forEach(checkCssFile)
+    collectFiles(path.join(ROOT, 'src', 'js'), '.js', ['node_modules']).forEach(checkJsFile)
 
     // SCSS 잔재
     checkScssRemnants()
@@ -718,10 +787,11 @@ function main() {
     }
     for (const problem of pageScope.problems) error('infoux.json', null, `[HX-06] ${problem}`)
     for (const notice of pageScope.notices) warn('infoux.json', null, `[HX-06] ${notice}`)
+    const pages = new Set(pageScope.files)
     for (const page of pageScope.files) {
       if (!htmlFiles.includes(page)) htmlFiles.push(page)
     }
-    htmlFiles.forEach(checkHtmlFile)
+    htmlFiles.forEach(file => checkHtmlFile(file, { isPage: pages.has(file) }))
 
     checkComponentIndex()
   }

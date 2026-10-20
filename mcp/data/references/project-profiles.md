@@ -113,7 +113,7 @@ KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>

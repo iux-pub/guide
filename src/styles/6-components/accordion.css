@@ -4,8 +4,8 @@
  * 구조: native <details>/<summary> 활용
  *   <div class="accordion">
  *     <details class="accordion__item">
- *       <summary class="accordion__summary">질문 1</summary>
- *       <div class="accordion__panel">답변 1</div>
+ *       <summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
+ *       <div class="accordion__panel">민원 종류마다 다릅니다.</div>
  *     </details>
  *     <details class="accordion__item">...</details>
  *   </div>

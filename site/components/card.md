@@ -12,10 +12,10 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/card.md`이며, 
 ```html
 <article class="card">
   <header class="card__header">
-    <h3 class="card__title">카드 제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
   <div class="card__body">
-    <p>카드 본문 내용</p>
+    <p>매주 월요일과 법정 공휴일에는 휴관합니다. 휴관일에도 무인 반납함은 이용할 수 있습니다.</p>
   </div>
   <footer class="card__footer">
     <button type="button" class="btn btn--text btn--small">자세히</button>

@@ -23,7 +23,7 @@ HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section 
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>

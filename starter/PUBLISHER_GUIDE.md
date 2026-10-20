@@ -23,6 +23,8 @@ git init
 git remote add origin 새_프로젝트_GIT_URL
 ```
 
+그다음 `index.html`의 `<meta name="infoux:template" content="starter">` 줄(과 바로 위 안내 주석)을 지우고 `<title>`·`<h1>`의 '새 프로젝트'를 실제 페이지 제목으로 바꾼다. 표시가 남아 있으면 검사기가 자리값 제목·연락처를 경고로만 본다(R-23). 표시는 지워야 한다 — 주석 처리는 지운 것이 아니다.
+
 ### 1-2. 패키지 설치
 
 ```bash
@@ -99,7 +101,7 @@ npm run build
 <main id="main">
   <section class="section section--content" aria-labelledby="page-title">
     <div class="container">
-      <h1 id="page-title">페이지 제목</h1>
+      <h1 id="page-title">공지사항</h1>
       <!-- 페이지 콘텐츠 -->
     </div>
   </section>

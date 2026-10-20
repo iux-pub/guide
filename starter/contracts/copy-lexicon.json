@@ -1,0 +1,64 @@
+{
+  "name": "INFOUX Copy Lexicon",
+  "version": "1.0.0",
+  "policy": "카피 톤(R-43) 판정 어휘의 정본. 판정 로직은 scripts/lib/copy-rules.js, 검사는 check-violations.js. 근거: references/art-direction.md §8 카피 톤(합쇼체·사실 서술, 2인칭 '당신'·직역체 금지, 공공서비스 느낌표 금지), KRDS 버튼 동사형 레이블(component_05_02). 정규식 문자열은 JavaScript RegExp(유니코드 u 플래그)로 해석한다.",
+  "translationese": [
+    {
+      "pattern": "(?<![가-힣])당신(?:의|을|이|만의|에게|께|도)?",
+      "why": "2인칭 '당신' — 한국어 공공·서비스 화면은 주어를 생략하거나 '이용자·주민'을 쓴다"
+    },
+    {
+      "pattern": "경험(?:하세요|해\\s?보세요)",
+      "why": "직역체 마케팅(Experience …)"
+    },
+    {
+      "pattern": "만나\\s?보세요",
+      "why": "직역체 마케팅(Meet …)"
+    },
+    {
+      "pattern": "발견하세요",
+      "why": "직역체 마케팅(Discover …)"
+    },
+    {
+      "pattern": "여정을\\s?(?:시작|함께)",
+      "why": "직역체 마케팅(journey)"
+    },
+    {
+      "pattern": "함께하세요",
+      "why": "재촉형 마케팅 문구"
+    },
+    {
+      "pattern": "지금\\s?바로(?!\\s?가기)",
+      "exceptIfSentence": "십시오[.!]?$",
+      "why": "재촉형 마케팅 문구('지금 바로가기' 링크, '…하십시오'로 끝나는 공식 안내·재난 대피 문장은 제외 — 문장마다 본다)"
+    },
+    {
+      "pattern": "지금\\s?시작(?:하세요|해\\s?보세요)",
+      "why": "재촉형 직역 문구(Get started now)"
+    },
+    {
+      "pattern": "무료로\\s?시작",
+      "why": "SaaS 직역 문구(Start for free)"
+    },
+    {
+      "pattern": "새로운\\s?차원",
+      "why": "직역체(a new dimension)"
+    },
+    {
+      "pattern": "잠재력을\\s?(?:깨우|발휘)",
+      "why": "직역체(unlock your potential)"
+    }
+  ],
+  "buttonImperativeEndings": "(?:세요|십시오)\\s*[!.~！]*$",
+  "buttonImperativeNote": "버튼 이름(aria-label과 보이는 텍스트를 각각)이 '-(으)세요·-십시오'로 끝나면 재촉형 명령이다. 탭(role=tab)·목록 펼침 트리거(aria-haspopup=listbox|menu|tree|grid|true)·제목 안의 펼침 버튼(아코디언)은 제목 구실이라 보지 않는다.",
+  "exclamation": "[가-힣A-Za-z0-9)\\]~?…”’」』]\\s*[!！‼](?![=A-Za-z])",
+  "exclamationNote": "전각 '！'·'‼'과 '~!'·'?!'·'…!'도 느낌표다. '!='·'!important'·'!b'처럼 뒤에 '='나 영문자가 붙은 것은 감탄이 아니다.",
+  "allow": [
+    "당신본풀이",
+    "당신굿",
+    "당신제",
+    "당신앙",
+    "당신신앙"
+  ],
+  "allowNote": "고유명사·공식 슬로건·행사명처럼 바꿀 수 없는 문구. 여기에는 모든 프로젝트에 공통인 것(제주 무속 용어 당신(堂神) 복합어)만 두고, 프로젝트마다 다른 것은 infoux.json의 copyAllow 배열에 둔다(예: \"도민과 함께! 미래를 만나는 제주\"). 비교는 공백을 하나로 접은 뒤 하므로 줄바꿈·<br>로 나눈 슬로건도 한 줄로 적으면 된다."
+}

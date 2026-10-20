@@ -58,11 +58,12 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-09 `error` — img alt 속성 필수
 - R-10 `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
 - R-15 `error` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
-- R-23 `error` — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
+- R-23 `error` — 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 - R-29 `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
 - R-36 `error` — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
+- R-43 `error` — 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -121,7 +122,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
@@ -277,6 +278,8 @@ src/styles/
 - Tailwind 기본 스케일(`text-sm`, `leading-6`, `p-4`, `gap-2`, `max-w-md` 등) — 62.5% 루트에서 37.5% 작게 렌더된다(R-37)
 - 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·큰 블러·컬러 글로우 그림자(R-34). 사진 위 스크림과 KRDS 검정 알파 그림자만 쓴다
 - 이모지를 아이콘·불릿·배지·제목 장식으로 쓰기(R-36) — 아이콘은 카탈로그에서
+- 가짜·자리 콘텐츠(R-23) — 채움 문구, placeholder 핫링크, '자주 묻는 질문 1·2' 같은 연번 레이블, '페이지 제목' 같은 자리값 제목, 064-000-0000·○○ 같은 비실재 표기를 납품 페이지에 남기기
+- 번역투·2인칭 마케팅 카피('당신', '~을 경험하세요', '지금 바로'), '~하세요'로 끝나는 버튼, 공공 화면의 느낌표(R-43) — 합쇼체 사실 서술, 버튼은 KRDS 동사형('신청하기')
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
 - `!important` (사유 주석 없을 시)
 - 인라인 `style="..."` (CSS 변수 주입 외)

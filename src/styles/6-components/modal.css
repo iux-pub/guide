@@ -6,7 +6,7 @@
  *     <div class="modal__overlay"></div>
  *     <div class="modal__content modal__content--medium">
  *       <header class="modal__header">
- *         <h2 id="modal-title" class="modal__title">제목</h2>
+ *         <h2 id="modal-title" class="modal__title">작성 내용 임시 저장</h2>
  *         <button class="modal__close" aria-label="닫기">×</button>
  *       </header>
  *       <div class="modal__body">...</div>

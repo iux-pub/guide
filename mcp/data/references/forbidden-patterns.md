@@ -384,17 +384,17 @@ modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없
 
 ```html
 <div role="dialog" aria-modal="true" aria-labelledby="modal-title" class="modal">
-  <h2 id="modal-title">제목</h2>
+  <h2 id="modal-title">작성 내용 임시 저장</h2>
 </div>
 
 <button class="disclosure" aria-expanded="false" aria-controls="more">자세히</button>
 <div id="more" class="disclosure__panel" hidden>...</div>
 
-<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" class="tab__item">탭1</button>
+<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" class="tab__item">공지사항</button>
 <div id="panel-1" role="tabpanel" aria-labelledby="tab-1" class="tab__panel">...</div>
 
 <button class="tooltip-trigger" aria-describedby="tip-1">?</button>
-<div id="tip-1" role="tooltip" class="tooltip">설명</div>
+<div id="tip-1" role="tooltip" class="tooltip">생년월일 6자리를 입력합니다.</div>
 ```
 
 ---
@@ -501,6 +501,69 @@ modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 �
 <h3 class="feature__title">빠른 처리</h3>
 <li><svg class="icon" aria-hidden="true"><use href="assets/icons/sprite.svg#check"></use></svg>24시간 민원 접수</li>
 <p>※ 신청 기간을 확인하십시오.</p>
+```
+
+---
+
+## 13. 가짜·자리 콘텐츠 (R-23)
+
+시안의 자리 문구가 납품 페이지에 남으면 검수 신뢰가 깨진다. 범위마다 심각도가 다르다.
+
+| 항목 | 납품 페이지 | 템플릿(루트 index.html 틀 표시) | 스니펫 사본 | 플레이그라운드 |
+|------|------|------|------|------|
+| 채움 문구('카드 본문 내용', '…설명이 들어갑니다') | 오류 | 오류 | 오류 | 경고 |
+| placeholder 이미지 핫링크 | 오류 | 오류 | 오류 | 오류 |
+| '자주 묻는 질문 1·2' 같은 연번 레이블 | 오류 | 경고 | 경고 | 경고 |
+| 자리값 제목('새 프로젝트', '모달 제목') | 오류 | 경고 | 경고 | — |
+| 비실재 표기(○○, 064-000-0000, 홍길동, example 도메인) | 오류 | 경고 | 통과(K-04 형식 예시) | — |
+| 실재처럼 보이는 가짜 번호(02-1234-5678) | 오류 | 경고 | 경고 | 경고 |
+
+납품 페이지는 루트 `*.html`·`pages/**`·`infoux.json` `pages`다. 스니펫이 형식 예시로 쓰는 비실재 표기는 그대로 납품 페이지에 옮기면 그때 잡힌다. 글은 블록·제목·버튼 하나 아래 인라인 글을 이은 덩어리로 보므로 `<strong>`·`<br>`로 쪼갠 자리 문구도 잡힌다.
+
+### ❌ 금지
+
+```html
+<title>새 프로젝트</title>
+<summary class="accordion__summary">자주 묻는 질문 1</summary>
+<button class="tab__item" role="tab">탭 1</button>
+<p>카드 본문 내용</p>
+<p>대표전화 064-000-0000 · ○○시청</p>
+<img src="https://picsum.photos/400/300" alt="행사 사진">
+```
+
+### ✅ 허용
+
+```html
+<title>공지사항 | 제주특별자치도</title>
+<summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
+<button class="tab__item" role="tab">보도자료</button>
+<p>담당 김○○ 주무관</p>
+<p class="form__hint">예: 010-1234-5678</p>
+```
+
+수치 밴드(단위 붙은 값 3칸 이상, 그중 %·+·만·억·배가 하나 이상)와 마스킹 이름·별점 후기는 출처가 없으면 경고다 — `출처: …`, `2026. 9. 30. 기준`, `<cite>`를 붙이거나 뺀다. 순위·정원·건수만 이어진 운영 정보는 밴드가 아니다. 성씨 마스킹(김○○ 주무관·남궁○○님), 표 머리·레이블·폼 업로드 칸, `예:` 뒤의 형식 예시, 고유명사(홍길동전)는 대상이 아니다. 스타터 `index.html`처럼 고쳐 쓸 틀은 `<meta name="infoux:template">`를 단다 — 루트 `index.html`에서만 인정하고, 프로젝트를 시작하면 지운다(주석 처리는 지운 것이 아니다).
+
+---
+
+## 14. 카피 톤 — 번역투·재촉형 버튼·공공 화면 느낌표 (R-43)
+
+영어 마케팅 직역('당신만의 여정을 시작하세요', '새로운 차원을 경험하세요', '지금 바로 무료로 시작')은 AI 카피의 서명이다. 제목·버튼·도입부·aria-label에서 오류, 본문에서 경고다. 버튼 이름(aria-label과 보이는 글 각각)이 '-(으)세요·-십시오'로 끝나면(신청하세요·받으세요·해 주세요·하십시오) 오류 — KRDS 동사형('신청하기')을 쓴다. 탭·목록 펼침 트리거·아코디언 제목 버튼은 행동 버튼이 아니라 보지 않는다. 느낌표(！·~!·?! 포함)는 공공서비스의 제목·버튼·도입부에서 오류다. `<em>`으로 쪼갠 문구도 한 덩어리로 보고, `<html lang="en">`이어도 한글 문구는 검사한다. 바꿀 수 없는 공식 슬로건은 `infoux.json`의 `copyAllow`에 둔다.
+
+### ❌ 금지
+
+```html
+<h2>당신만의 여정을 시작하세요</h2>
+<a class="btn btn--primary" href="/apply">지금 바로 신청하세요!</a>
+<h1>신청이 완료되었습니다!</h1>
+```
+
+### ✅ 허용
+
+```html
+<h2>신청 방법</h2>
+<a class="btn btn--primary" href="/apply">신청하기</a>
+<h1>신청이 완료되었습니다</h1>
+<p>지금 바로 높은 곳으로 대피하십시오.</p>
 ```
 
 ---

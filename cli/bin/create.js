@@ -256,6 +256,22 @@ function writeProjectProfile(projectPath, profile) {
 }
 
 /** 납품본에서 사내 운영 자산을 걷어낸다. 검증에 필요한 것은 남긴다. */
+// 스타터 틀 표시를 지우고 자리값 제목을 프로젝트 이름으로 바꾼다 — 이제부터 index.html은 납품 페이지로 검사된다(R-23).
+// 표시(<meta name="infoux:template">)가 남아 있으면 자리값 제목·기관명이 경고로만 잡힌다
+function finalizeStarterPage(projectPath, projectName) {
+  const file = path.join(projectPath, 'index.html')
+  if (!fs.existsSync(file)) return false
+  const html = fs.readFileSync(file, 'utf-8')
+  const next = html
+    .replace(/^[ \t]*<!--[^\n]*스타터 틀 표시[^\n]*-->\r?\n/m, '')
+    .replace(/^[ \t]*<meta\s+name=["']infoux:template["'][^>]*>\r?\n/m, '')
+    .replace('<title>새 프로젝트</title>', `<title>${projectName}</title>`)
+    .replace(/(<h1\b[^>]*>)새 프로젝트(<\/h1>)/, `$1${projectName}$2`)
+  if (next === html) return false
+  fs.writeFileSync(file, next)
+  return true
+}
+
 function stripInternal(projectPath) {
   const removed = []
   for (const name of INTERNAL_ONLY) {
@@ -326,6 +342,9 @@ async function main() {
     delete pkg.description
     fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
   }
+
+  // 3-0. 스타터 틀 표시 제거 — 프로젝트 이름(소문자·숫자·하이픈만, validateName)으로 제목을 채운다
+  if (finalizeStarterPage(projectPath, projectName)) log('   ', 'index.html 틀 표시 제거, 제목을 프로젝트 이름으로', DIM)
 
   // 3-1. 사이트 유형 기록
   if (args.flags.profile) {
@@ -402,8 +421,13 @@ async function main() {
   console.log('')
 }
 
-main().catch((e) => {
-  console.error(`${RED}예상 못한 오류: ${e.message}${RESET}`)
-  if (process.env.DEBUG) console.error(e.stack)
-  process.exit(1)
-})
+// 단위 테스트가 require로 불러 쓸 수 있게 직접 실행할 때만 main을 돈다
+if (require.main === module) {
+  main().catch((e) => {
+    console.error(`${RED}예상 못한 오류: ${e.message}${RESET}`)
+    if (process.env.DEBUG) console.error(e.stack)
+    process.exit(1)
+  })
+}
+
+module.exports = { finalizeStarterPage }

@@ -9,6 +9,8 @@
  *   rules.json                       (규칙 원본)
  *   contracts/profiles.json          (사이트 유형 프리셋)
  *   contracts/art-direction.json     (아트 디렉션 정본 — 타이포·팔레트·한글 조판)
+ *   contracts/fake-content.json      (R-23 자리값·핫링크 호스트)
+ *   contracts/copy-lexicon.json      (R-43 번역투 어휘·버튼 어미·느낌표)
  *   references/CONTRACT.md           (작업 컨트랙트)
  *   references/*.md                  (토큰·컴포넌트·접근성 등 레퍼런스)
  *   references/workflows/*.md        (작업 절차 — 옛 스킬을 대체한다)
@@ -80,6 +82,9 @@ resetDir(DATA_DIR)
 fs.copyFileSync(path.join(ROOT, 'rules.json'), path.join(DATA_DIR, 'rules.json'))
 fs.copyFileSync(path.join(ROOT, 'contracts', 'profiles.json'), path.join(DATA_DIR, 'profiles.json'))
 fs.copyFileSync(path.join(ROOT, 'contracts', 'art-direction.json'), path.join(DATA_DIR, 'art-direction.json'))
+// 카피 규칙 판정 자료 — get_rules("R-23"·"R-43")가 자리값 목록·번역투 어휘를 함께 낸다
+fs.copyFileSync(path.join(ROOT, 'contracts', 'fake-content.json'), path.join(DATA_DIR, 'fake-content.json'))
+fs.copyFileSync(path.join(ROOT, 'contracts', 'copy-lexicon.json'), path.join(DATA_DIR, 'copy-lexicon.json'))
 
 // 1.5. 아이콘 대장 — 에이전트가 없는 아이콘 이름을 지어내는 것을 막는다 (R-27).
 // 이름·분류·코드포인트만 있으면 되므로 SVG 본문은 싣지 않는다 — 번들만 커진다.

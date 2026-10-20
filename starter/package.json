@@ -29,6 +29,7 @@
     "@tailwindcss/postcss": "^4.0.0",
     "stylelint": "^17.5.0",
     "stylelint-config-standard": "^39.0.0",
+    "stylelint-selector-bem-pattern": "^4.0.1",
     "tailwindcss": "^4.0.0"
   }
 }

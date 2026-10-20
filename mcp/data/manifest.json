@@ -1,5 +1,5 @@
 {
-  "version": "f8dc310",
+  "version": "c6bc9dc",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -11,7 +11,7 @@
     {
       "id": "art-direction",
       "file": "art-direction.md",
-      "chars": 14251,
+      "chars": 14316,
       "summary": "brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디까지 열지 판단하는 기준. 수치 정본은 `contracts/art-direction.json`, 팔레트 hex 정본은 `tokens/presets/`이며, 이 문서의 표는 build-art-direct..."
     },
     {
@@ -39,6 +39,12 @@
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
     },
     {
+      "id": "korean-web-patterns",
+      "file": "korean-web-patterns.md",
+      "chars": 54018,
+      "summary": "국내 웹사이트 96곳을 관찰해 추린 기준이다. 한국형 메인 레시피, 블록 구현 경로, 서브·헤더·푸터 관행을 다룬다. KRDS와 다르거나 애매하면 KRDS를 따른다."
+    },
+    {
       "id": "krds-components",
       "file": "krds-components.md",
       "chars": 69817,
@@ -59,7 +65,7 @@
     {
       "id": "project-profiles",
       "file": "project-profiles.md",
-      "chars": 8699,
+      "chars": 8780,
       "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
     },
     {
@@ -109,7 +115,7 @@
     {
       "id": "design-page",
       "file": "design-page.md",
-      "chars": 931,
+      "chars": 1118,
       "summary": "INFOUX 기준으로 새 페이지, 화면, 랜딩, 상세, 목록, 관리자 화면을 설계하거나 구현할 때 사용. 코드 작성 전에 사이트 유형, 사용자 핵심 과업, page shell, section 패턴과 재사용 컴포넌트를 확정한다."
     },
     {

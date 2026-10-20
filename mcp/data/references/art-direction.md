@@ -216,6 +216,7 @@ v2 검출기 후보 — 모션 수치·상태 셀렉터(이모지는 R-36, 카�
 ## 관련
 
 - 표현 등급 운용·판정 예시: `project-profiles.md`
+- 한국형 메인 레시피·서브·헤더·푸터 관행, 한국형 AI 슬롭 대응: `korean-web-patterns.md`
 - 프로필 구조·밀도·section 흐름: `contracts/profiles.json`
 - 기계 정본: `contracts/art-direction.json` / 팔레트 hex 정본: `tokens/presets/`
 - 모션 수치: site/design/interaction-timing.md / 카피 문장 공식: site/design/microcopy.md

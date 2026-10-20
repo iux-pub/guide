@@ -6,7 +6,7 @@
 
 ## 절차
 
-1. `references/project-profiles.md`에서 사이트 유형과 기본 section 흐름을 판정한다.
+1. `references/project-profiles.md`에서 사이트 유형과 기본 section 흐름을 판정한다. 메인이면 `references/korean-web-patterns.md`(`get_reference("korean-web-patterns")`) §2에서 한국형 메인 레시피를, 서브면 §4 서브 골격을 고른다. 페이지 유형은 Task Contract `pageType`과 `infoux.json` `pageTypes`에 함께 적는다.
 2. `get_art_direction(profile)`로 표현 등급, 섹션 리듬 변주, 카피 톤을 확정하고, 실제 기관 용어·콘텐츠의 출처(`contentSources`)를 확보한다. 등급 상향은 Task Contract의 `expression` 필드에 근거와 함께 기록한다.
 3. 사용자의 핵심 과업을 한 문장으로 쓴다.
 4. `references/krds-components.md`에서 재사용할 컴포넌트를 고른다.

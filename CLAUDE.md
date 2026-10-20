@@ -271,7 +271,7 @@ src/styles/
 
 `mcp/` — infoUX MCP 서버(`@infomind-ux/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 목록은 `mcp/README.md`를 참조한다. 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다.
 
-`references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
+`references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles · korean-web-patterns(한국형 메인 레시피·서브·헤더·푸터) + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
 
 ---
 

@@ -206,11 +206,11 @@ Google Stitch, Galileo, Lovable, v0
 
 | 토큰 | 값 |
 |----|----|
-| `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
-| `--font-heading` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif |
+| `--font-heading` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif |
 | `--font-mono` | 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace |
-| `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
-| `--font-heading` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif |
+| `--font-sans` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif |
+| `--font-heading` | 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif |
 | `--font-mono` | 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace |
 
 ## 직접값 사용 범위

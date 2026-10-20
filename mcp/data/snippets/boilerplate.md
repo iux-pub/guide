@@ -11,6 +11,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>페이지 제목</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
   <link rel="stylesheet" href="../../dist/css/style.css">
 </head>
 <body>

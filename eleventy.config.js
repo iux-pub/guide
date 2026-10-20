@@ -34,6 +34,8 @@ export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ 'src/js': 'js' })
   // playground 가 읽는 아이콘 스프라이트·폰트 — ../../assets/icons/ 상대경로가 문서 사이트에서도 풀리게 한다
   eleventyConfig.addPassthroughCopy({ 'assets/icons': 'assets/icons' })
+  // 서체 — fonts.css가 폰트 파일 옆에서 상대 경로로 가리키므로 폴더째 옮긴다.
+  eleventyConfig.addPassthroughCopy({ 'assets/fonts': 'assets/fonts' })
   // 아이콘 검수 시트 — npm run icons:sheet 산출물. 팀원이 /icons/ 에서 목록을 본다.
   eleventyConfig.addPassthroughCopy({ 'dist/icon-sheet.html': 'icons/index.html' })
   eleventyConfig.addPassthroughCopy({ 'node_modules/clipboard/dist/clipboard.min.js': 'assets/js/clipboard.min.js' })

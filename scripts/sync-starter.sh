@@ -86,6 +86,12 @@ for f in "$GUIDE_DIR/assets/icons/"infoux-icons*.woff2; do
   [ -f "$f" ] && cp "$f" "$STARTER_DIR/assets/icons/"
 done
 
+# 4.6. 서체 — fonts.css(@font-face)·woff2·LICENSE를 폴더째 옮긴다. fonts.css가 상대 경로로 가리킨다.
+echo "[4.6/8] assets/fonts 동기화..."
+rm -rf "$STARTER_DIR/assets/fonts"
+mkdir -p "$STARTER_DIR/assets"
+cp -r "$GUIDE_DIR/assets/fonts" "$STARTER_DIR/assets/fonts"
+
 # 5. scripts + contracts
 echo "[5/8] scripts 동기화..."
 mkdir -p "$STARTER_DIR/scripts/lib"

@@ -75,7 +75,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">메인 메뉴 (Main Menu)</h1>
 
     <div class="pg__section">
@@ -84,11 +84,11 @@
       <div class="pg__preview pg__preview--flush pg__preview--tall">
         <header id="pg-header-dropdown" class="site-header">
           <div class="container site-header__inner">
-            <a class="site-header__brand" href="#">기관명</a>
+            <a class="site-header__brand" href="/">기관명</a>
             <nav class="main-menu" aria-label="메인 메뉴 (드롭다운)">
               <ul class="main-menu__list">
                 <li class="main-menu__item">
-                  <a class="main-menu__link" href="#">소개</a>
+                  <a class="main-menu__link" href="/about">소개</a>
                 </li>
                 <li class="main-menu__item">
                   <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="pg-submenu-services">
@@ -96,20 +96,20 @@
                     <svg class="main-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
                   </button>
                   <ul id="pg-submenu-services" class="main-menu__submenu" hidden>
-                    <li><a href="#">서비스 A</a></li>
-                    <li><a href="#">서비스 B</a></li>
-                    <li><a href="#" aria-current="page">서비스 C</a></li>
+                    <li><a href="/service-a">서비스 A</a></li>
+                    <li><a href="/service-b">서비스 B</a></li>
+                    <li><a href="/service-c" aria-current="page">서비스 C</a></li>
                   </ul>
                 </li>
                 <li class="main-menu__item">
-                  <a class="main-menu__link" href="#">문의</a>
+                  <a class="main-menu__link" href="/contact">문의</a>
                 </li>
               </ul>
             </nav>
           </div>
         </header>
       </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+      <div class="pg__code" role="region" aria-label="드롭다운 메뉴 마크업 코드" tabindex="0">
 <pre><code>&lt;header id="header" class="site-header"&gt;
   &lt;div class="container site-header__inner"&gt;
     &lt;a class="site-header__brand" href="/"&gt;기관명&lt;/a&gt;
@@ -145,7 +145,7 @@
       <div class="pg__preview pg__preview--flush pg__preview--tall">
         <header id="pg-header-mega" class="site-header">
           <div class="container site-header__inner">
-            <a class="site-header__brand" href="#">기관명</a>
+            <a class="site-header__brand" href="/">기관명</a>
             <nav class="main-menu main-menu--mega" aria-label="메인 메뉴 (메가)">
               <ul class="main-menu__list">
                 <li class="main-menu__item">
@@ -158,23 +158,23 @@
                       <div class="main-menu__group">
                         <p class="main-menu__group-title" id="pg-mega-service-apply">신청</p>
                         <ul class="main-menu__group-list" aria-labelledby="pg-mega-service-apply">
-                          <li><a class="main-menu__sublink" href="#">허가 신청</a></li>
-                          <li><a class="main-menu__sublink" href="#">신고</a></li>
-                          <li><a class="main-menu__sublink" href="#">증명서 발급</a></li>
+                          <li><a class="main-menu__sublink" href="/permit">허가 신청</a></li>
+                          <li><a class="main-menu__sublink" href="/report">신고</a></li>
+                          <li><a class="main-menu__sublink" href="/certificate">증명서 발급</a></li>
                         </ul>
                       </div>
                       <div class="main-menu__group">
                         <p class="main-menu__group-title" id="pg-mega-service-lookup">조회</p>
                         <ul class="main-menu__group-list" aria-labelledby="pg-mega-service-lookup">
-                          <li><a class="main-menu__sublink" href="#" aria-current="page">처리 현황</a></li>
-                          <li><a class="main-menu__sublink" href="#">신청 내역</a></li>
+                          <li><a class="main-menu__sublink" href="/status" aria-current="page">처리 현황</a></li>
+                          <li><a class="main-menu__sublink" href="/history">신청 내역</a></li>
                         </ul>
                       </div>
                       <div class="main-menu__group">
                         <p class="main-menu__group-title" id="pg-mega-service-guide">안내</p>
                         <ul class="main-menu__group-list" aria-labelledby="pg-mega-service-guide">
-                          <li><a class="main-menu__sublink" href="#">이용 방법</a></li>
-                          <li><a class="main-menu__sublink" href="#">수수료 안내</a></li>
+                          <li><a class="main-menu__sublink" href="/guide">이용 방법</a></li>
+                          <li><a class="main-menu__sublink" href="/fee">수수료 안내</a></li>
                         </ul>
                       </div>
                     </div>
@@ -190,29 +190,29 @@
                       <div class="main-menu__group">
                         <p class="main-menu__group-title" id="pg-mega-info-news">알림</p>
                         <ul class="main-menu__group-list" aria-labelledby="pg-mega-info-news">
-                          <li><a class="main-menu__sublink" href="#">공지사항</a></li>
-                          <li><a class="main-menu__sublink" href="#">보도자료</a></li>
+                          <li><a class="main-menu__sublink" href="/notice">공지사항</a></li>
+                          <li><a class="main-menu__sublink" href="/press">보도자료</a></li>
                         </ul>
                       </div>
                       <div class="main-menu__group">
                         <p class="main-menu__group-title" id="pg-mega-info-data">자료</p>
                         <ul class="main-menu__group-list" aria-labelledby="pg-mega-info-data">
-                          <li><a class="main-menu__sublink" href="#">통계</a></li>
-                          <li><a class="main-menu__sublink" href="#">발간물</a></li>
+                          <li><a class="main-menu__sublink" href="/stats">통계</a></li>
+                          <li><a class="main-menu__sublink" href="/publications">발간물</a></li>
                         </ul>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li class="main-menu__item">
-                  <a class="main-menu__link" href="#">문의</a>
+                  <a class="main-menu__link" href="/contact">문의</a>
                 </li>
               </ul>
             </nav>
           </div>
         </header>
       </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+      <div class="pg__code" role="region" aria-label="메가 메뉴 마크업 코드" tabindex="0">
 <pre><code>&lt;header id="header" class="site-header"&gt;
   &lt;div class="container site-header__inner"&gt;
     &lt;a class="site-header__brand" href="/"&gt;기관명&lt;/a&gt;
@@ -284,7 +284,7 @@
       </div>
     </div>
 
-  </div>
+  </main>
   <script src="../js/disclosure-nav.js"></script>
 </body>
 </html>

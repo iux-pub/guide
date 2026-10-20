@@ -67,7 +67,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">폼 (Form)</h1>
 
     <!-- 텍스트 입력 -->
@@ -79,7 +79,7 @@
           <input type="text" id="input-text" class="input" placeholder="내용을 입력하세요">
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="텍스트 입력 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="input-text" class="form-field__label"&gt;이름&lt;/label&gt;
   &lt;input type="text" id="input-text" class="input" placeholder="내용을 입력하세요"&gt;
@@ -98,7 +98,7 @@
           <input type="email" id="input-required" class="input" placeholder="내용을 입력하세요" required>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="필수 입력 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="input-required" class="form-field__label"&gt;
     이메일&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
@@ -120,7 +120,7 @@
           <p id="input-error-message" class="form-field__message form-field__message--error">필수 입력 항목입니다.</p>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="에러 상태 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="input-error" class="form-field__label"&gt;
     이메일&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
@@ -144,7 +144,7 @@
           <p id="input-success-message" class="form-field__message form-field__message--success">입력이 확인되었습니다.</p>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="성공 메시지 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="input-success" class="form-field__label"&gt;이메일&lt;/label&gt;
   &lt;input type="email" id="input-success" class="input" value="user@example.com"
@@ -165,7 +165,7 @@
           <input type="text" id="input-disabled" class="input" value="비활성 입력" disabled>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="비활성 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="input-disabled" class="form-field__label"&gt;이름&lt;/label&gt;
   &lt;input type="text" id="input-disabled" class="input" value="비활성 입력" disabled&gt;
@@ -187,7 +187,7 @@
           </select>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="Select 드롭다운 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="select-demo" class="form-field__label"&gt;부서 선택&lt;/label&gt;
   &lt;select id="select-demo" class="select"&gt;
@@ -210,7 +210,7 @@
           <textarea id="textarea-demo" class="textarea" rows="4" maxlength="500" placeholder="내용을 입력하세요" aria-describedby="textarea-demo-hint"></textarea>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="Textarea 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="form-field"&gt;
   &lt;label for="textarea-demo" class="form-field__label"&gt;비고&lt;/label&gt;
   &lt;p id="textarea-demo-hint" class="form-field__hint"&gt;최대 500자까지 입력 가능합니다.&lt;/p&gt;
@@ -235,7 +235,7 @@
           <span class="check__label">마케팅 정보 수신 동의</span>
         </label>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="체크박스 마크업 코드" tabindex="0">
 <pre><code>&lt;label class="check"&gt;
   &lt;input type="checkbox" id="checkbox-1"&gt;
   &lt;span class="check__box" aria-hidden="true"&gt;&lt;/span&gt;
@@ -267,7 +267,7 @@
           </label>
         </fieldset>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="라디오 버튼 마크업 코드" tabindex="0">
 <pre><code>&lt;fieldset&gt;
   &lt;legend class="form-field__label"&gt;성별&lt;/legend&gt;
   &lt;label class="radio"&gt;
@@ -284,6 +284,6 @@
       </div>
     </div>
 
-  </div>
+  </main>
 </body>
 </html>

@@ -59,7 +59,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">테이블 (Table)</h1>
 
     <!-- 기본 테이블 -->
@@ -96,7 +96,7 @@
           </table>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 테이블 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 래퍼는 키보드로 가로 스크롤할 수 있게 tabindex="0" + role="region" + aria-labelledby(caption id) --&gt;
 &lt;div class="table-wrap" tabindex="0" role="region" aria-labelledby="user-list-caption"&gt;
   &lt;table class="table"&gt;
@@ -159,7 +159,7 @@
           </table>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="Striped 테이블 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="table-wrap" tabindex="0" role="region" aria-labelledby="role-user-caption"&gt;
   &lt;table class="table table--striped"&gt;
     &lt;caption class="table__caption" id="role-user-caption"&gt;권한별 사용자 목록&lt;/caption&gt;
@@ -207,7 +207,7 @@
           </table>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="반응형 테이블 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 많은 컬럼일 때 .table-wrap이 모바일 가로 스크롤을 담당.
      초점을 받은 래퍼는 ←→ 키로 스크롤된다 --&gt;
 &lt;div class="table-wrap" tabindex="0" role="region" aria-labelledby="project-status-caption"&gt;
@@ -219,6 +219,6 @@
       </div>
     </div>
 
-  </div>
+  </main>
 </body>
 </html>

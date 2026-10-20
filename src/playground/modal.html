@@ -63,7 +63,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">모달 (Modal)</h1>
 
     <!-- 기본 모달 -->
@@ -72,7 +72,7 @@
       <div class="pg__preview">
         <button type="button" class="btn btn--primary" data-modal-open="modal-default">모달 열기</button>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 모달 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 트리거 버튼 --&gt;
 &lt;button type="button" class="btn btn--primary" data-modal-open="modal-default"&gt;모달 열기&lt;/button&gt;
 
@@ -102,7 +102,7 @@
       <div class="pg__preview">
         <button type="button" class="btn btn--secondary" data-modal-open="modal-delete">삭제 모달 열기</button>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="삭제 확인 모달 마크업 코드" tabindex="0">
 <pre><code>&lt;button type="button" class="btn btn--secondary" data-modal-open="modal-delete"&gt;삭제 모달 열기&lt;/button&gt;
 
 &lt;div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" hidden&gt;
@@ -124,7 +124,7 @@
       </div>
     </div>
 
-  </div>
+  </main>
 
   <!-- 기본 모달 (실제 동작) -->
   <div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" hidden>

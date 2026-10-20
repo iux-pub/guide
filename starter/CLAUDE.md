@@ -64,8 +64,11 @@ npm run build:tokens   # tokens/foundation.json → tokens/build/tokens.css
 npm run build:css      # Tailwind v4 컴파일 → dist/css/style.css
 npm run watch:css      # 워치 모드
 npm run lint:css       # stylelint 검사
-npm run check          # info-design 컨트랙트 위반 검출
+npm run check          # info-design 컨트랙트 위반 검출 — 루트 *.html·pages/**(또는 infoux.json pages)는 page 계약까지
 ```
+
+- 페이지는 루트(`index.html` 등)나 `pages/` 아래에 둔다. 다른 폴더를 쓰면 `infoux.json`의 `pages`에 글롭을 더한다 — 그래야 검사가 닿는다.
+- 파일을 고치면 훅(`scripts/hooks/post-edit.js`)이 바로 검사한다. 훅을 끄거나 실패를 숨기지(`|| true`, `2>/dev/null`) 않는다.
 
 ## 하네스 부재 시 자체 검증
 

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./scripts/hooks/post-edit.js",
+            "timeout": 60,
+            "statusMessage": "info-design 검사 중 (stylelint · 컨트랙트 · HTML 구조)..."
+          }
+        ]
+      }
+    ]
+  }
+}

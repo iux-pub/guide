@@ -236,7 +236,11 @@ function writeProjectProfile(projectPath, profile) {
   fs.writeFileSync(configPath, JSON.stringify({
     profile,
     note: 'infoUX 사이트 유형. AI 도구는 이 값을 사이트 유형 판정 결과로 사용하고 다시 판정하지 않는다. 프리셋 상세는 contracts/profiles.json 또는 MCP get_profile(profile)에서 읽는다.',
-    preset: 'contracts/profiles.json'
+    preset: 'contracts/profiles.json',
+    // 납품 페이지 범위 — npm run check가 기본 범위(*.html, pages/**/*.html)와 여기 더한 글롭에 맞는 .html을
+    // page 계약(건너뛰기 링크·header·main·footer·section 이름)으로 검사한다. 기본 범위는 항상 들어간다.
+    // 페이지를 다른 폴더에 두면 글롭을 더한다('public/**/*.html'). '*'·'**'·'?'만 쓰고, 루트 밖('..')은 가리킬 수 없다.
+    pages: ['*.html', 'pages/**/*.html']
   }, null, 2) + '\n')
 
   // 에이전트 지시 파일에도 한 줄 박아 둔다. infoux.json을 안 읽는 도구도 있다.

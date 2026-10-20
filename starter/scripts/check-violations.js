@@ -64,6 +64,8 @@ function warn(file, line, msg, code) {
 const rel = (p) => path.relative(ROOT, p)
 // 경로 판정 정규식은 '/' 구분자를 가정한다. Windows의 '\' 경로도 같은 판정을 받게 한다.
 const toPosix = (p) => p.split(path.sep).join('/')
+// 경로 판정은 프로젝트 루트 기준 상대 경로로 한다 — 상위 폴더 이름(…/references/프로젝트)이 판정을 바꾸지 않게
+const relPosix = (p) => '/' + toPosix(path.relative(ROOT, p))
 
 // ─── 패턴 정의 ────────────────────────────────────────
 
@@ -200,7 +202,7 @@ function checkCssFile(filePath) {
   if (lines[0] && (lines[0].includes('AUTO-GENERATED') || lines[0].includes('자동 생성'))) return
 
   // 토큰 정의 파일 / 프로젝트 스타일 확장 파일은 raw hex 허용 (정의 자체가 raw임)
-  const posixPath = toPosix(filePath)
+  const posixPath = relPosix(filePath)
   const isTokenFile = posixPath.includes('1-settings') ||
                        posixPath.includes('_project-style') ||
                        posixPath.includes('tokens/build')
@@ -360,7 +362,7 @@ const HTML_SKIP_PATTERNS = [
 ]
 
 function shouldSkipHtmlFile(filePath) {
-  return HTML_SKIP_PATTERNS.some(re => re.test(toPosix(filePath)))
+  return HTML_SKIP_PATTERNS.some(re => re.test(relPosix(filePath)))
 }
 
 function checkHtmlFile(filePath) {
@@ -373,7 +375,7 @@ function checkHtmlFile(filePath) {
   // R-14: 페이지 진입점(<body> 포함)에 skip-to-content 필수
   // 면제: partial(_includes), playground(내부 데모), snippet(컴포넌트 마크업 조각)
   const hasBody = /<body\b/.test(content)
-  const posixPath = toPosix(filePath)
+  const posixPath = relPosix(filePath)
   const isPartial = /\/_includes\/partials\//.test(posixPath) || /\/_includes\/components\//.test(posixPath)
   const isPlayground = /\/src\/playground\//.test(posixPath)
   const isSnippet = /\/src\/snippets\//.test(posixPath)
@@ -586,6 +588,19 @@ function main() {
       ...collectFiles(SITE_DIR, '.njk', ['_site', 'node_modules']),
       ...collectFiles(path.join(ROOT, 'src/playground'), '.html')
     ]
+    // 납품 페이지(루트 *.html·pages/**·infoux.json pages) — 파생 프로젝트의 실제 화면도 검사한다(HX-06)
+    let pageScope
+    try {
+      pageScope = require('./lib/page-scope').collectPageFiles(ROOT)
+    } catch (e) {
+      if (e.code !== 'MODULE_NOT_FOUND') throw e
+      pageScope = { files: [], problems: ['scripts/lib/page-scope.js가 없어 납품 페이지를 검사하지 못했다 — 스타터를 갱신한다'], notices: [] }
+    }
+    for (const problem of pageScope.problems) error('infoux.json', null, `[HX-06] ${problem}`)
+    for (const notice of pageScope.notices) warn('infoux.json', null, `[HX-06] ${notice}`)
+    for (const page of pageScope.files) {
+      if (!htmlFiles.includes(page)) htmlFiles.push(page)
+    }
     htmlFiles.forEach(checkHtmlFile)
 
     checkComponentIndex()

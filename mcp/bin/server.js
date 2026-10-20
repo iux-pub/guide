@@ -70,6 +70,9 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
 7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
    100% 통과가 조건이다.
+8. 페이지는 프로젝트 루트(*.html)나 pages/ 아래에 둔다. 다른 폴더에 두면 infoux.json "pages"에
+   글롭을 더한다 — npm run check가 그 범위의 페이지만 page 계약으로 검사한다. 검사를 끄거나
+   실패를 숨기는 훅·스크립트(|| true, 2>/dev/null)를 만들지 않는다.
 
 기술 스택은 Tailwind v4 + 표준 CSS nesting + BEM + ITCSS 5계층이다. SCSS는 쓰지 않는다.`
 

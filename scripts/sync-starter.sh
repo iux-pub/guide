@@ -16,6 +16,9 @@
 #   - contracts/             → starter/contracts/
 #   - assets/icons/          → starter/assets/icons/ (스프라이트·폰트·CSS·낱개 SVG)
 #   - scripts/check-icons.js → starter/scripts/ (+ build-icon-sheet.js, lib/svg-*.js)
+#   - scripts/hooks/         → starter/scripts/hooks/ (편집 직후 검사 훅 — HX-06)
+#   - scripts/lib/page-scope.js → starter/scripts/lib/ (납품 페이지 범위 — HX-06)
+#   - .claude/settings.json, .codex/hooks.json → starter/ (루트와 같은 훅 — check-harness가 정합을 본다)
 #   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
 #   - .stylelintrc.json       → starter/
@@ -25,6 +28,8 @@
 # starter/README.md는 starter 전용으로 별도 관리.
 
 set -e
+# 파이프의 앞 명령이 실패해도 잡는다 — 'npm run check | tail'이 검사 실패를 삼키면 깨진 스타터가 푸시된다
+set -o pipefail
 
 PUSH_REMOTE=false
 if [ "${1:-}" = "--push" ]; then
@@ -108,6 +113,13 @@ cp "$GUIDE_DIR/scripts/check-icons.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/build-icon-sheet.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/lib/svg-path.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/svg-geometry.js" "$STARTER_DIR/scripts/lib/"
+# 납품 페이지 범위와 편집 훅 — 스타터의 index.html·pages/도 검사가 닿고, 실패를 숨기지 않는다(HX-06)
+cp "$GUIDE_DIR/scripts/lib/page-scope.js" "$STARTER_DIR/scripts/lib/"
+rm -rf "$STARTER_DIR/scripts/hooks"
+cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
+mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"
+cp "$GUIDE_DIR/.claude/settings.json" "$STARTER_DIR/.claude/settings.json"
+cp "$GUIDE_DIR/.codex/hooks.json" "$STARTER_DIR/.codex/hooks.json"
 mkdir -p "$STARTER_DIR/contracts"
 cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
 

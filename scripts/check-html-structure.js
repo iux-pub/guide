@@ -29,6 +29,18 @@ const PAGE_CONTRACT = fs.existsSync(PAGE_CONTRACT_PATH)
   ? JSON.parse(fs.readFileSync(PAGE_CONTRACT_PATH, 'utf-8'))
   : null
 
+// 납품 페이지(루트 *.html·pages/**·infoux.json pages) — 인자 없이 돌 때도 page 계약으로 검사한다(HX-06)
+const PAGE_SCOPE = (() => {
+  if (HAS_EXPLICIT_TARGETS) return { files: [], problems: [], notices: [] }
+  try {
+    return require('./lib/page-scope').collectPageFiles(ROOT)
+  } catch (e) {
+    if (e.code !== 'MODULE_NOT_FOUND') throw e
+    return { files: [], problems: ['scripts/lib/page-scope.js가 없어 납품 페이지를 검사하지 못했다 — npm run sync:starter(또는 스타터 갱신)로 받는다'], notices: [] }
+  }
+})()
+const PAGE_FILES = new Set(PAGE_SCOPE.files)
+
 // ─── 출력 헬퍼 ─────────────────────────────────────────
 
 const RESET = '\x1b[0m'
@@ -55,6 +67,8 @@ function warn(file, line, msg, code, rule) {
 const rel = (p) => path.relative(ROOT, p)
 // 경로 판정 정규식은 '/' 구분자를 가정한다. Windows의 '\' 경로도 같은 판정을 받게 한다.
 const toPosix = (p) => p.split(path.sep).join('/')
+// 경로 판정은 프로젝트 루트 기준 상대 경로로 한다 — 상위 폴더 이름(…/references/프로젝트)이 판정을 바꾸지 않게
+const relPosix = (p) => '/' + toPosix(path.relative(ROOT, p))
 
 // ─── R-15: 컴포넌트 root 태그 매핑 참고 (html-semantics.md 기준) ──────────────────────
 //
@@ -669,15 +683,17 @@ function shouldCheckPageContract(html, filePath) {
   // 건너뛰기 링크)을 요구할 대상이 아니며, check-violations.js도 같은 이유로 R-14를
   // 면제한다. 명시적으로 파일을 넘겨받는 경로(pre-commit 훅)에서도 같게 판단해야
   // 두 검사기가 어긋나지 않는다.
-  if (/\/src\/playground\//.test(toPosix(filePath))) return false
+  if (/\/src\/playground\//.test(relPosix(filePath))) return false
 
   // Nunjucks 레이아웃·파셜(site/_includes)은 페이지가 아니라 조각이다. 완성된 shell 은 렌더 결과(_site)가 갖는다.
   // 전체 검사(walk) 모드에서는 원래 page shell 을 요구하지 않았는데, 파일을 지정하면(pre-commit 훅)
   // <main>·skip-to-content 가 든 레이아웃이 완전한 페이지로 판정돼 레이아웃을 고칠 때마다 커밋이 막혔다.
-  if (/\/site\/_includes\//.test(toPosix(filePath))) return false
+  if (/\/site\/_includes\//.test(relPosix(filePath))) return false
 
   if (HAS_EXPLICIT_TARGETS) return true
 
+  // 인자 없는 검사: 납품 페이지와 페이지 골격 스니펫만 page 계약을 받는다
+  if (PAGE_FILES.has(path.resolve(filePath))) return true
   const relative = toPosix(rel(filePath))
   return relative === 'src/snippets/boilerplate.md'
 }
@@ -1072,7 +1088,7 @@ const SKIP_PATTERNS = [
 ]
 
 function isSkipped(filePath) {
-  return SKIP_PATTERNS.some(re => re.test(toPosix(filePath)))
+  return SKIP_PATTERNS.some(re => re.test(relPosix(filePath)))
 }
 
 function walk(dir, exts, accumulator) {
@@ -1101,6 +1117,9 @@ function getTargetFiles() {
   walk(SITE_DIR, ['.md', '.njk', '.html'], files)
   walk(REFERENCES_DIR, ['.md'], files)
   walk(PROMPTS_DIR, ['.md'], files)
+  for (const page of PAGE_SCOPE.files) {
+    if (!files.includes(page) && !isSkipped(page)) files.push(page)
+  }
   return files
 }
 
@@ -1108,7 +1127,11 @@ function getTargetFiles() {
 
 function main() {
   const files = getTargetFiles()
-  console.log(`${DIM}HTML 구조 검사 시작 — ${files.length}개 파일${RESET}`)
+  const checkedPages = files.filter(f => PAGE_FILES.has(f)).length
+  const pageNote = checkedPages > 0 ? ` (납품 페이지 ${checkedPages}개 포함)` : ''
+  console.log(`${DIM}HTML 구조 검사 시작 — ${files.length}개 파일${pageNote}${RESET}`)
+  for (const problem of PAGE_SCOPE.problems) error('infoux.json', null, problem, null, 'HX-06')
+  for (const notice of PAGE_SCOPE.notices) warn('infoux.json', null, notice, null, 'HX-06')
 
   for (const filePath of files) {
     const content = fs.readFileSync(filePath, 'utf-8')

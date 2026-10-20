@@ -55,7 +55,8 @@ cd <project> && npm run build && npm run check
 - ✅ INFOUX 색상/기본 폰트 토큰
 - ✅ Tailwind v4 + CSS nesting + `@apply`
 - ✅ Eleventy 문서 사이트
-- ✅ `infoux.json` — 사이트 유형 기록 (`--profile` 지정 시)
+- ✅ `infoux.json` — 사이트 유형 기록과 납품 페이지 범위 `pages`(기본 `*.html`, `pages/**/*.html`) (`--profile` 지정 시). `npm run check`가 이 범위의 페이지를 page 계약으로 검사한다
+- ✅ 편집 직후 검사 훅 — `.claude/settings.json`·`.codex/hooks.json`이 `scripts/hooks/post-edit.js`를 부른다(stylelint·컨트랙트·HTML 구조, 실패는 숨기지 않는다)
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 - ✅ pa11y-ci + axe-core 접근성 검증
 - ✅ Stylelint + check-violations.js (rules.json 규칙 전체)

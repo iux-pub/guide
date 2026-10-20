@@ -5,7 +5,7 @@ order: 7
 
 AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞는 독창적 미학을 갖도록 하기 위한 가이드. 인포마인드 디자인 시스템 위에 적용하며, 제품 UI와 랜딩/마케팅 페이지의 적용 수준을 구분한다.
 
-> **정본 관계** — KRDS(컴포넌트·패턴·타이포그래피 지침) → `contracts/art-direction.json`(MCP `get_art_direction`)·`contracts/profiles.json`(`get_profile`) → 이 문서. 충돌하면 앞선 것이 이긴다. 이 문서의 표와 예시는 참고 자료다. 표현 효과(글래스모피즘·다크 모드·강한 모션 등)의 허용 범위는 프로필 표현 등급(`profiles.json` expression)이 상한이며, 이 문서의 스타일 예시가 그 상한을 넓히지 않는다.
+> **정본 관계** — KRDS(컴포넌트·패턴·타이포그래피 지침) → `contracts/art-direction.json`(MCP `get_art_direction`)·`contracts/profiles.json`(`get_profile`) → 이 문서. 충돌하면 앞선 것이 이긴다. 이 문서의 표와 예시는 참고 자료다. 표현 요소(시그니처·모션 강도·다크 모드 등)의 허용 범위는 프로필 표현 등급(`profiles.json` expression)이 상한이며, 이 문서의 스타일 예시가 그 상한을 넓히지 않는다. 장식 효과 — 장식 그라디언트·글래스(`backdrop-filter`)·큰 블러·색 글로·글자 그라디언트 — 는 등급이 넓혀 주지 않는다(R-34, 아래 「5. 면과 깊이」). KRDS에는 글래스가 없다.
 
 ## AI 슬롭 안티패턴
 
@@ -18,9 +18,9 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 | 예측 가능한 레이아웃/컴포넌트 패턴 | 맥락 없는 틀에 박힌 구성 |
 | 매번 같은 폰트 수렴 (예: Space Grotesk) | 생성 간 다양성 부족 |
 | 맥락 무시한 쿠키커터 디자인 | 프로젝트 정체성이 없는 결과물 |
-| 단색 배경에 분위기/깊이감 없음 | 시각적 풍부함 부재 |
+| 장식 효과로 깊이감 흉내 — 그라디언트 덩어리·글래스·색 글로 | 정보 위계 대신 효과가 눈을 끌고, 뒤 배경에 따라 글자 대비가 달라진다(R-34) |
 
-**대안**: 매번 새로운 선택을 한다. 폰트, 색상, 레이아웃, 테마를 프로젝트 맥락에 맞게 변주한다.
+**대안**: 매번 새로운 선택을 한다. 폰트, 색상, 레이아웃, 테마를 프로젝트 맥락에 맞게 변주한다. 깊이와 분위기는 효과가 아니라 단색 토큰 면·KRDS 그림자 단계·사진·타이포 대비·여백으로 만든다.
 
 ### Before / After 비교: 카드 컴포넌트
 
@@ -128,15 +128,12 @@ a.card:hover,
 </section>
 ```
 
-SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 계열로 바꾼다. 자연 감성 배경도 그 브랜드 단계 색으로만 칠한다 — raw hex·`rgba()`를 쓰지 않는다(R-01).
+SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 계열로 바꾼다. 배경은 그 브랜드 단계 색 하나로 칠한 단색 면이다 — raw hex·`rgba()`를 쓰지 않고(R-01), 그라디언트로 분위기를 내지 않는다(R-34). 자연 감성은 큰 제목·여백·흙색 단색 띠로 내고, 실제 온실 사진을 깔 때는 카탈로그 `hero-bleed`의 스크림 변형(`hero-bleed--scrim`)으로 글자 대비를 확보한다.
 
 ```css
-/* SmartFarm 프로젝트 CSS */
+/* SmartFarm 프로젝트 CSS — 녹색 단색 면 + 아래 흙색 단색 띠 */
 .farm-hero {
-  @apply py-[6.4rem] bg-[var(--color-primary-5)];
-  background-image:
-    radial-gradient(ellipse at 20% 50%, var(--color-primary-10) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, var(--color-secondary-10) 0%, transparent 50%);
+  @apply py-[6.4rem] bg-[var(--color-primary-5)] border-b-[0.4rem] border-[var(--color-secondary-50)];
 }
 
 /* KRDS display medium(mobile 3.2 / pc 4.4rem) · 행간 150% · 자간 0.1rem */
@@ -146,6 +143,17 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 
 .farm-hero__desc {
   @apply text-[1.9rem] leading-[1.7] text-[var(--color-text-subtle)] mt-[0.8rem] mb-[3.2rem];
+}
+```
+
+**금지 예시** — 토큰 색으로 칠해도 그라디언트 덩어리는 장식 효과다.
+
+```css
+/* 금지 예시 — 장식 그라디언트 덩어리로 분위기를 낸다(R-34) */
+.farm-hero {
+  background-image:
+    radial-gradient(ellipse at 20% 50%, var(--color-primary-10) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, var(--color-secondary-10) 0%, transparent 50%);
 }
 ```
 
@@ -244,27 +252,37 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 - 그리드 브레이킹: 일부 요소를 의도적으로 그리드 밖에 배치한다
 - 여백 활용: 넉넉한 네거티브 스페이스 또는 통제된 밀도 -- 둘 다 유효하다
 
-### 5. 배경 깊이
+### 5. 면과 깊이
 
-단색 배경을 기본으로 사용하지 않는다. 분위기와 깊이감을 만든다.
+배경은 단색 토큰 면이 기본이다. 깊이와 분위기는 장식 효과가 아니라 면의 구분·그림자 단계·사진·타이포로 만든다(R-34).
 
-- 그라디언트 메시 / 미묘한 그라디언트
-- 노이즈 텍스처 / 그레인 오버레이
-- 기하학 패턴 / 장식적 보더
-- 레이어 투명도 / 드라마틱한 그림자
-- 커스텀 커서 등 맥락적 효과
+- **면 구분**: `--color-surface`·`--color-bg-subtle`·`--color-bg-subtler` 같은 단색 토큰 면을 번갈아 써서 구역을 나눈다
+- **높이**: KRDS 그림자 3단계만 쓴다 — 검정 알파(`#0000000d`·`#00000014`·`#0000001f`)에 위치·블러 값만 바꾼다. 색이 있는 그림자는 쓰지 않는다
+- **사진**: 사진 위 글자는 스크림(투명 → 검정 알파)으로 대비를 확보한다(`hero-bleed--scrim`). 대비 4.5:1은 스크림 위에서 실측한다
+- **강조**: 글자 크기 대비·굵기·여백으로 위계를 만든다
+- **시그니처**: 그래픽 패턴·포토 톤 통일·커스텀 일러스트 같은 요소는 표현 등급이 허용하는 개수만 쓴다(기능형 0 · 절제형 1 · 표현형 3)
+- **스크롤 힌트**: 가로로 넘치는 영역의 끝을 알리는 단색 페이드(한 가지 색 → 투명)는 쓸 수 있다
+- **포커스 링**: 블러 없이 퍼짐(spread)만 있는 `box-shadow`는 쓸 수 있다
+
+**금지 예시** — 쓰지 않는 장식 효과(R-34).
+
+- 장식 그라디언트 — 배경·글자 모두. 기능형·절제형에서는 오류, 표현형에서도 경고다. 보라·남색 계열(색상각 225~300°, 채도 0.25 이상)은 어느 등급에서도 오류다
+- 글래스 — `backdrop-filter`·`backdrop-blur-*`. KRDS에는 글래스가 없다
+- 큰 블러 — `blur` 4px 이상
+- 색 글로 — 블러가 있는 `box-shadow`·`text-shadow`·`drop-shadow`에 검정이 아닌 색
+- 글자 그라디언트 — `background-clip: text`
 
 ## INFOMIND 제품별 UI 스타일 매핑
 
 | 제품/프로젝트 | 권장 스타일 | 색상 방향 | 레이아웃 특성 | 금지 스타일 |
 |-------------|------------|----------|-------------|------------|
-| **inCMSv3** | Flat + Minimalism + Glassmorphism(모달) | Primary Blue(`--color-primary`) + 넓은 White 여백 | 사이드바 네비게이션, 12컬럼 컨텐츠 그리드 | Brutalism, Claymorphism, Cyberpunk |
-| **inPOS** | Flat + Dark Mode(선택) | 고대비 Dark(`#1a1a2e`) + Accent Green | 고밀도 POS 레이아웃, 큰 터치 타겟(48px+) | 과도한 Motion-Driven |
+| **inCMSv3** | Flat + Minimalism | Primary Blue(`--color-primary`) + 넓은 White 여백 | 사이드바 네비게이션, 12컬럼 컨텐츠 그리드. 모달은 단색 면 + KRDS 그림자 | Glassmorphism, Brutalism, Claymorphism, Cyberpunk |
+| **inPOS** | Flat + Dark Mode(선택) | 고대비 Dark(`--color-bg-inverse`) + Accent Green | 고밀도 POS 레이아웃, 큰 터치 타겟(48px+) | 과도한 Motion-Driven |
 | **in_S / inSWING** | Minimalism + Flat | Primary Blue 계열, 깔끔한 Gray 스케일 | 탑바 네비게이션, 폼 중심 레이아웃 | Neubrutalism, Y2K |
-| **BigData 플랫폼** | Data-Dense + Dark Mode + Glassmorphism | Dark Navy(`#0d1117`) + Cyan/Green 데이터 강조 | 다중 패널 대시보드, 차트 그리드 3~4열 | Organic Biophilic, Claymorphism |
+| **BigData 플랫폼** | Data-Dense + Dark Mode | Dark Navy(`#0d1117`) + Cyan/Green 데이터 강조 | 다중 패널 대시보드(패널은 단색 면으로 구분), 차트 그리드 3~4열 | Glassmorphism, Organic Biophilic, Claymorphism |
 | **SmartFarm** | Organic Biophilic + Minimalism | Green 계열(`#228738`) + Earth tone 보조 | 카드 기반 모니터링, 지도 중심 레이아웃 | Cyberpunk, HUD |
-| **면세 플랫폼** | Glassmorphism + Feature-Rich Showcase | Luxury Gold(`#b8860b`) + 깊은 Navy 배경 | 상품 그리드, 풀스크린 히어로 | Brutalism |
-| **랜딩/마케팅** | Aurora UI + Hero-Centric + Storytelling | 프로젝트별 자유, 그라디언트 적극 활용 | 풀스크린 섹션, 스크롤 스토리텔링 | (제약 없음, 맥락 우선) |
+| **면세 플랫폼** | Feature-Rich Showcase + 상품 사진 중심 | Luxury Gold(`#b8860b`) + 어두운 중성 배경(`--color-bg-inverse`) | 상품 그리드, 풀스크린 히어로(사진 + 스크림) | Glassmorphism, Brutalism |
+| **랜딩/마케팅** | Hero-Centric + Storytelling | 브랜드 단계 색의 단색 면 + 사진(스크림) | 풀스크린 섹션, 스크롤 스토리텔링 | Aurora UI, Glassmorphism, 장식 그라디언트(R-34) |
 | **WEB/SI** | Flat + Minimalism | 기관 CI 색상 기반, 토큰 오버라이드 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 — 표현 등급 상한 안에서만, 넘으면 Task Contract `exceptions`에 근거 기록 |
 
 ### 제품별 토큰 오버라이드 예시
@@ -299,11 +317,16 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 |--------|------|
 | **Flat Design** | 그림자 없음, 솔리드 컬러. 깊이감 부재는 타이포로 보완 |
 | **Minimalism** | 여백, 그리드, 타이포 중심. 지루해지지 않도록 타이포 강조 |
-| **Glassmorphism** | `backdrop-filter: blur`, 반투명 레이어. 저사양 기기 성능 고려. 전면 적용은 art-direction 안티패턴 4 — 등급별 허용 효과는 `contracts/profiles.json`이 정본 |
 | **Dark Mode (OLED)** | 순수 검정(#000), 고대비. 라이트 모드 대응 병행 필수 |
 | **Data-Dense Dashboard** | 정보 압축, 고밀도 레이아웃. 실시간 모니터링에 적합 |
-| **Aurora UI** | 흐르는 그라디언트, 빛 번짐. 랜딩/마케팅 전용 |
-| **Organic Biophilic** | 자연 형태, 둥근 모서리. 환경/지속가능성 제품에 적합 |
+| **Organic Biophilic** | 자연 형태, 둥근 모서리, 자연색 단색 면과 사진. 환경/지속가능성 제품에 적합 |
+
+**금지 예시** — 이름이 자주 오르내리지만 장식 효과 자체라 쓰지 않는 스타일(R-34).
+
+| 스타일 | 쓰지 않는 이유 |
+|--------|---------------|
+| **Glassmorphism** | `backdrop-filter: blur` 반투명 레이어. KRDS에 없고, 뒤 배경에 따라 글자 대비가 달라져 검증할 수 없으며, 저사양 기기에서 느리다(art-direction 안티패턴 4) |
+| **Aurora UI** | 흐르는 그라디언트와 빛 번짐 — 장식 그라디언트와 색 글로 그 자체다 |
 
 ### 인포마인드 디자인 시스템 연계
 
@@ -315,6 +338,7 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 **랜딩/마케팅/프로모션 페이지**:
 - 토큰 시스템을 기반으로 하되 독창적 미학을 얹는다
 - 디스플레이 폰트 추가, 확장 색상 팔레트, 대담한 레이아웃 등 자유도가 높다
+- 자유도는 타이포·레이아웃·사진·시그니처에서 낸다. 장식 효과(R-34)는 랜딩에서도 쓰지 않는다
 - 5가지 미학 원칙을 적극 활용한다
 
 ## 관련 문서

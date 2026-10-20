@@ -51,7 +51,7 @@ args = ["-y", "@infomind-ux/infoux-mcp"]
 1. 사이트 유형 판정 — 일반사이트 / 공공서비스 / 공공기관 / CMS·관리자 / 커머스·예약
 2. 색상은 토큰만 사용. raw hex/rgb/hsl 금지, 토큰명 임의 생성 금지
 3. 컴포넌트는 카탈로그 우선. 카탈로그 밖 컴포넌트는 임의 생성하지 않음
-4. 규칙 R-01~R-27 준수 (BEM · 접근성 · 금지 패턴)
+4. 규칙 준수 — rules.json 전체 (BEM · 접근성 · 금지 패턴)
 5. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 직접값
 
 ## 제공 도구
@@ -62,7 +62,7 @@ args = ["-y", "@infomind-ux/infoux-mcp"]
 | `list_components` · `get_component` | 컴포넌트 카탈로그와 마크업 스니펫 |
 | `list_icons` · `get_icon` | 아이콘 카탈로그 조회 (한국어 키워드 검색 지원) |
 | `get_tokens` | 색상·폰트·브레이크포인트 토큰 |
-| `get_rules` | 규칙 R-01~R-27 (위반·준수 예시 포함) |
+| `get_rules` | 코딩 규칙 전체 — rules.json (위반·준수 예시 포함) |
 | `get_reference` | 접근성 · 금지 패턴 · Tailwind 매핑 · HTML 시맨틱 · 사이트 유형 프로필 |
 | `get_profile` | 사이트 유형 프리셋 — section 흐름 · 우선 컴포넌트 · 밀도 · 표현 등급 |
 | `get_art_direction` | 프로필별 표현 등급 · 타이포 페어링 · 팔레트 프리셋 · 한글 조판 |

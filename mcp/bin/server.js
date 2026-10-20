@@ -34,6 +34,13 @@ const rules = JSON.parse(readData('rules.json'))
 const profileSpec = JSON.parse(readData('profiles.json'))
 const artDirection = JSON.parse(readData('art-direction.json'))
 
+// 규칙 범위는 번들된 rules.json에서 읽는다. 문구에 숫자를 박아 두면 규칙이 늘 때마다
+// 에이전트가 새 규칙을 모른 채 일한다(2026-10에 R-28이 생겼는데 R-27로 안내되던 것처럼).
+const RULE_IDS = (rules.rules || []).map((r) => r.id)
+const RULE_RANGE = RULE_IDS.length
+  ? `${RULE_IDS[0]}~${RULE_IDS[RULE_IDS.length - 1]}(${RULE_IDS.length}개)`
+  : 'rules.json 전체'
+
 // ─────────────────────────────────────────────────────
 // 서버 지시문 — 에이전트가 도구를 언제 써야 하는지 알려준다
 // ─────────────────────────────────────────────────────
@@ -58,7 +65,7 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    「세트에 있음」은 바로 쓰고, 「카탈로그에만 있음」은 사용자가 세트에 넣어야(채택) 쓸 수 있다.
    카탈로그에도 없으면 UX팀에 요청한다 (R-27). 세트에 없는 아이콘을 SVG로 직접 넣지 않는다.
    장식용은 aria-hidden, 의미를 담으면 role="img"+aria-label을 붙인다.
-5. 규칙 R-01~R-27을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
+5. 규칙 ${RULE_RANGE}을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
 6. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
 7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
@@ -139,7 +146,7 @@ const TOOLS = [
   {
     name: 'get_rules',
     description:
-      'infoUX 코딩 규칙 R-01~R-27을 반환한다. CSS·BEM·HTML·접근성 규칙과 위반 예시가 들어 있다.',
+      `infoUX 코딩 규칙 ${RULE_RANGE}을 반환한다. CSS·BEM·HTML·접근성 규칙과 위반 예시가 들어 있다.`,
     inputSchema: {
       type: 'object',
       properties: {

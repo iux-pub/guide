@@ -58,7 +58,7 @@ cd <project> && npm run build && npm run check
 - ✅ `infoux.json` — 사이트 유형 기록 (`--profile` 지정 시)
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
 - ✅ pa11y-ci + axe-core 접근성 검증
-- ✅ Stylelint + check-violations.js (R-01~R-20 룰)
+- ✅ Stylelint + check-violations.js (rules.json 규칙 전체)
 
 ## 다음 단계
 

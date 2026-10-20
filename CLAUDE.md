@@ -71,7 +71,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-28 `error` — 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지
 <!-- RULES_END -->
 
-> 위 표는 `rules.json`에서 자동 생성된다. 실제 적용 대상은 `src/styles/**/*.css`(R-01~R-06, R-11~R-13) + `src/snippets/**/*.md`/`site/**/*.md`(R-07~R-10, R-14).
+> 위 표는 `rules.json`에서 자동 생성된다. 규칙별 적용 대상과 검사기는 `rules.json`의 `lang`·`enforcement` 필드가 정한다(MCP `get_rules`).
 
 ---
 

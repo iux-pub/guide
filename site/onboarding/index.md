@@ -27,6 +27,6 @@ order: 1
 ## 주요 문서 링크
 
 - [토큰 개요](/tokens/) -- KRDS 정본 + INFOMIND 시맨틱 별칭
-- [컨벤션 개요](/conventions/) -- CSS 규칙(R-01~R-14), BEM, ITCSS 5레이어
+- [컨벤션 개요](/conventions/) -- CSS·HTML·접근성 규칙(rules.json 전체), BEM, ITCSS 5레이어
 - [컴포넌트 개요](/components/) -- KRDS 기반 패턴 (btn, form, card, modal 등)
 - [접근성 개요](/accessibility/) -- 체크리스트, 색상 대비, 컴포넌트별 접근성

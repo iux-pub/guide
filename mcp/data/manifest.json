@@ -1,5 +1,5 @@
 {
-  "version": "b6cdced",
+  "version": "5626ac3",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -77,7 +77,7 @@
     {
       "id": "trade-off-rules",
       "file": "trade-off-rules.md",
-      "chars": 2127,
+      "chars": 2140,
       "summary": "좋은 원칙끼리 부딪히는 순간이 실제 작업의 대부분이다. \"접근성도 중요하고 브랜드도 중요하다\"는 말은 결정을 미룰 뿐이다. 아래는 **무엇이 무엇을 이기는지**를 미리 정한 것이다."
     }
   ],

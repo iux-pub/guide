@@ -153,7 +153,7 @@ src/styles/
 코드 작성 후 검증을 실행한다.
 
 ```bash
-npm run check       # 컨트랙트 위반(R-01~R-14) 전체 스캔
+npm run check       # 컨트랙트 위반(rules.json 전체) 스캔
 npm run lint:css    # Stylelint
 ```
 

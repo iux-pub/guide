@@ -187,7 +187,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 ## 8. 작업 후 검증
 
 ```bash
-npm run check     # R-01~R-20 자동 검출
+npm run check     # rules.json 규칙 전체 자동 검출
 npm run lint      # Stylelint + ESLint
 npm run build     # 전체 빌드 (자동 생성물 갱신)
 npm run test      # 전체 CI 시뮬레이션 (check + lint + build + a11y)

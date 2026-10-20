@@ -63,7 +63,7 @@
 
   /* 구형 마크업 호환 — aria-haspopup 트리거의 화살표. 신규 마크업은 .main-menu__toggle 을 쓴다 */
   .main-menu__link[aria-haspopup="true"]::after {
-    @apply content-[''] w-[1.2rem] h-[1.2rem] [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='12'_height='12'_viewBox='0_0_12_12'_fill='none'><path_d='M3_4.5L6_7.5L9_4.5'_stroke='%231E2124'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:transform_0.15s_ease-in-out];
+    @apply content-[''] w-[1.2rem] h-[1.2rem] [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'><path%20d='M3%204.5L6%207.5L9%204.5'%20stroke='%231E2124'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:transform_0.15s_ease-in-out];
   }
 
   .main-menu__link[aria-expanded="true"]::after {
@@ -123,6 +123,11 @@
 
   .main-menu__groups {
     @apply grid grid-cols-2 gap-x-[3.2rem] gap-y-[2.4rem] py-[3.2rem] tablet:grid-cols-3 pc:grid-cols-4;
+  }
+
+  /* 메가 패널의 열 — 그리드 칸이 긴 단어에 밀려 넘치지 않게 한다 */
+  .main-menu__group {
+    @apply min-w-0;
   }
 
   .main-menu__group-title {

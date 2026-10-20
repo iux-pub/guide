@@ -87,7 +87,7 @@ a.card,
 
 a.card:hover,
 .card--link:hover {
-  @apply shadow-none [transform:none] border-[var(--color-border-primary)];
+  @apply [box-shadow:none] [transform:none] border-[var(--color-border-primary)];
 }
 ```
 
@@ -107,7 +107,7 @@ a.card:hover,
 **Before -- AI 슬롭 히어로 (금지 예시)**
 
 ```html
-<!-- 금지 예시 — 보라색 그라디언트, generic 문구, 맥락 없음, 인라인 style -->
+<!-- ❌ 금지 예시 — 보라색 그라디언트, generic 문구, 맥락 없음, 인라인 style -->
 <section style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 80px 20px; text-align: center;">
   <h1 style="color: white; font-size: 48px;">Welcome to Our Platform</h1>
   <p style="color: rgba(255,255,255,0.8);">The best solution for your needs</p>
@@ -190,11 +190,10 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 
 #### Color Track
 
-- [ ] 토큰 시스템의 Primary 색상을 프로젝트에 맞게 오버라이드했는가
-- [ ] `프로젝트별 CSS 확장`에 프로젝트 색상을 정의했는가
+- [ ] 브랜드 색을 `tokens/brand.json`의 primary·secondary·point 단계로 바꾸고 `npm run build:tokens && npm run check:contrast`를 통과했는가
+- [ ] 배경·글자·테두리 의미 토큰과 상태색(danger/warning/success/info)을 `tokens/foundation.json` 그대로 쓰는가 — 프로젝트에서 재정의하지 않는다
 - [ ] 색상 대비 4.5:1 (WCAG AA)을 검증했는가
-- [ ] 시맨틱 컬러(danger/warning/success/info)를 그대로 사용하는가, 조정이 필요한가
-- [ ] Dark Mode가 필요한 제품인가 (BigData, inPOS 등)
+- [ ] 어두운 제품 테마가 필요한가 (BigData, inPOS 등) — 필요하면 프로젝트에서 토큰을 덮지 말고 UX팀 결정을 받는다
 
 #### Layout Track
 
@@ -237,7 +236,7 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 
 - 일관된 미학을 유지한다. CSS 변수를 사용해 통일감을 확보한다
 - **지배적 색상 + 날카로운 악센트**: 하나의 주조색에 강한 포인트 색을 더하는 전략이 효과적이다
-- **인포마인드 제품 UI**: 토큰 팔레트를 우선 사용한다. 랜딩 페이지에서는 토큰 기반으로 확장된 색상 표현이 가능하다
+- **인포마인드 제품 UI**: 토큰 팔레트를 우선 사용한다. 랜딩 페이지에서도 색 표현은 브랜드 단계(primary·secondary·point 5~95) 안에서 넓힌다
 
 ### 3. 모션 집중
 
@@ -277,39 +276,54 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 | 제품/프로젝트 | 권장 스타일 | 색상 방향 | 레이아웃 특성 | 금지 스타일 |
 |-------------|------------|----------|-------------|------------|
 | **inCMSv3** | Flat + Minimalism | Primary Blue(`--color-primary`) + 넓은 White 여백 | 사이드바 네비게이션, 12컬럼 컨텐츠 그리드. 모달은 단색 면 + KRDS 그림자 | Glassmorphism, Brutalism, Claymorphism, Cyberpunk |
-| **inPOS** | Flat + Dark Mode(선택) | 고대비 Dark(`--color-bg-inverse`) + Accent Green | 고밀도 POS 레이아웃, 큰 터치 타겟(48px+) | 과도한 Motion-Driven |
+| **inPOS** | Flat + Dark Mode(선택 — UX팀 결정) | 고대비 Dark(`--color-bg-inverse`) + Accent Green | 고밀도 POS 레이아웃, 큰 터치 타겟(48px+) | 과도한 Motion-Driven |
 | **in_S / inSWING** | Minimalism + Flat | Primary Blue 계열, 깔끔한 Gray 스케일 | 탑바 네비게이션, 폼 중심 레이아웃 | Neubrutalism, Y2K |
-| **BigData 플랫폼** | Data-Dense + Dark Mode | Dark Navy(`#0d1117`) + Cyan/Green 데이터 강조 | 다중 패널 대시보드(패널은 단색 면으로 구분), 차트 그리드 3~4열 | Glassmorphism, Organic Biophilic, Claymorphism |
+| **BigData 플랫폼** | Data-Dense + Dark Mode(UX팀 결정) | Dark Navy(`#0d1117`) + Cyan/Green 데이터 강조 | 다중 패널 대시보드(패널은 단색 면으로 구분), 차트 그리드 3~4열 | Glassmorphism, Organic Biophilic, Claymorphism |
 | **SmartFarm** | Organic Biophilic + Minimalism | Green 계열(`#228738`) + Earth tone 보조 | 카드 기반 모니터링, 지도 중심 레이아웃 | Cyberpunk, HUD |
 | **면세 플랫폼** | Feature-Rich Showcase + 상품 사진 중심 | Luxury Gold(`#b8860b`) + 어두운 중성 배경(`--color-bg-inverse`) | 상품 그리드, 풀스크린 히어로(사진 + 스크림) | Glassmorphism, Brutalism |
 | **랜딩/마케팅** | Hero-Centric + Storytelling | 브랜드 단계 색의 단색 면 + 사진(스크림) | 풀스크린 섹션, 스크롤 스토리텔링 | Aurora UI, Glassmorphism, 장식 그라디언트(R-34) |
-| **WEB/SI** | Flat + Minimalism | 기관 CI 색상 기반, 토큰 오버라이드 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 — 표현 등급 상한 안에서만, 넘으면 Task Contract `exceptions`에 근거 기록 |
+| **WEB/SI** | Flat + Minimalism | 기관 CI 색상을 `brand.json` 브랜드 단계로 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 — 표현 등급 상한 안에서만, 넘으면 Task Contract `exceptions`에 근거 기록 |
 
-### 제품별 토큰 오버라이드 예시
+### 제품별 브랜드 색 바꾸기
 
-`tokens/foundation.json` 또는 별도 CSS 파일에서 INFOMIND 시맨틱 별칭을 프로젝트별 색상으로 재정의한다.
+프로젝트가 바꿀 수 있는 색은 `tokens/brand.json`의 브랜드 단계 — primary·secondary·point 각 5~95 — 뿐이다. 배경·글자·테두리·입력 의미 토큰, 상태색(danger·warning·success·information), gray 스케일은 `tokens/foundation.json`(불변 계층)이 소유하므로 프로젝트에서 재정의하지 않는다. CSS `:root`에서 `--color-*`를 다시 정의하는 방법도 쓰지 않는다 — `tokens/` 밖 CSS의 raw 색은 R-01 위반이고 대비 검사도 거치지 않는다.
 
-```css
-/* BigData 플랫폼 — :root 오버라이드 */
-:root {
-  --color-primary: #00b4d8;          /* 또는 KRDS 토큰 가리키기 */
-  --color-bg: #0d1117;
-  --color-bg-secondary: #161b22;
-  --color-text: #e6edf3;
-  --color-text-secondary: #8b949e;
-  --color-border: #30363d;
-  --color-border-light: #21262d;
-}
+SmartFarm 예 — primary를 녹색 계열로 바꾼다(`--color-primary`는 primary 50 단계를 가리킨다).
 
-/* SmartFarm */
-:root {
-  --color-primary: #228738;
-  --color-bg: #fafdf7;
-  --color-bg-secondary: #f0f7f0;
+```json
+{
+  "primitive": {
+    "color": {
+      "light": {
+        "primary": {
+          "50": { "value": "#228738", "type": "color" }
+        }
+      }
+    }
+  }
 }
 ```
 
-> 가능하면 raw hex 대신 `--color-primary-*` 단계 색상을 사용한다.
+위는 대표 단계 하나만 보인 발췌다. 실제로는 primary 5~95 열한 단계를 모두 바꾸고 `high-contrast` 모드 값도 함께 채운다 — 빠지면 `build:tokens`가 실패한다. 바꾼 뒤 토큰을 다시 만들고 대비를 검사한다.
+
+```bash
+npm run build:tokens && npm run check:contrast
+```
+
+`check:contrast`가 WCAG 2.1 AA 위반을 알리면 단계 값을 고친다. `tokens/contrast-baseline.json`에 항목을 더해 새 위반을 덮지 않는다.
+
+BigData·inPOS처럼 **어두운 제품 테마**가 필요하면 배경·글자·테두리 의미 토큰을 바꿔야 하므로 프로젝트 안에서 해결하지 않는다 — UX팀 결정이 필요하다. infoUX는 light·high-contrast 두 모드 체계다(art-direction 안티패턴 9).
+
+**금지 예시** — CSS에서 의미 토큰을 raw 색으로 덮는다.
+
+```css
+/* 금지 예시 — foundation이 소유한 의미 토큰을 :root에서 raw hex로 덮는다(R-01) */
+:root {
+  --color-bg: #0d1117;
+  --color-text: #e6edf3;
+  --color-border: #30363d;
+}
+```
 
 ### 주요 스타일 설명
 
@@ -317,7 +331,7 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 |--------|------|
 | **Flat Design** | 그림자 없음, 솔리드 컬러. 깊이감 부재는 타이포로 보완 |
 | **Minimalism** | 여백, 그리드, 타이포 중심. 지루해지지 않도록 타이포 강조 |
-| **Dark Mode (OLED)** | 순수 검정(#000), 고대비. 라이트 모드 대응 병행 필수 |
+| **Dark Mode (OLED)** | 어두운 바탕, 고대비. 배경·글자 의미 토큰을 바꿔야 하므로 프로젝트에서 덮지 않고 UX팀 결정을 받는다 |
 | **Data-Dense Dashboard** | 정보 압축, 고밀도 레이아웃. 실시간 모니터링에 적합 |
 | **Organic Biophilic** | 자연 형태, 둥근 모서리, 자연색 단색 면과 사진. 환경/지속가능성 제품에 적합 |
 
@@ -337,7 +351,7 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 
 **랜딩/마케팅/프로모션 페이지**:
 - 토큰 시스템을 기반으로 하되 독창적 미학을 얹는다
-- 디스플레이 폰트 추가, 확장 색상 팔레트, 대담한 레이아웃 등 자유도가 높다
+- 디스플레이 폰트 추가, 브랜드 단계 색의 폭넓은 활용, 대담한 레이아웃 등 자유도가 높다
 - 자유도는 타이포·레이아웃·사진·시그니처에서 낸다. 장식 효과(R-34)는 랜딩에서도 쓰지 않는다
 - 5가지 미학 원칙을 적극 활용한다
 

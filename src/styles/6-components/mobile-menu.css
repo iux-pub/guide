@@ -93,7 +93,7 @@
   }
 
   .mobile-menu__icon {
-    @apply [transition:transform_0.15s_ease-in-out];
+    @apply [transition:rotate_0.15s_ease-in-out];
   }
 
   .mobile-menu__group[open] .mobile-menu__icon {

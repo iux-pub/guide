@@ -35,7 +35,7 @@ preview_height: 640
           <li><a class="site-footer__link" href="/sitemap">사이트맵</a></li>
         </ul>
       </div>
-      <nav class="site-footer__legal" aria-label="약관 및 정책">
+      <nav aria-label="약관 및 정책">
         <ul class="site-footer__legal-list">
           <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
           <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>

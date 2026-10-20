@@ -5,7 +5,7 @@ layout: layouts/page.njk
 section: components
 ---
 
-INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트와 infoUX 확장 4종(푸터·모바일 메뉴·공지 띠·오류 페이지) 목록입니다. 모든 컴포넌트는 BEM 네이밍 규칙을 따르고 KRDS 토큰을 사용하며 KWCAG/WCAG 2.1 AA를 준수합니다. **카탈로그 외 임의 신설은 금지**입니다.
+INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트와 infoUX 확장 4종(푸터·모바일 메뉴·긴급 공지·오류 페이지) 목록입니다. 모든 컴포넌트는 BEM 네이밍 규칙을 따르고 KRDS 토큰을 사용하며 KWCAG/WCAG 2.1 AA를 준수합니다. **카탈로그 외 임의 신설은 금지**입니다.
 
 ## 그룹 A — 폼/액션
 
@@ -46,7 +46,7 @@ INFOMIND UX 가이드 시스템이 발행하는 KRDS 28컴포넌트와 infoUX �
 |----------|------|-----|
 | [알림](/components/alert/) | success/warning/danger/info | `alert.css` |
 | [배지](/components/badge/) | 상태 표시 작은 라벨 | `badge.css` |
-| [공지 띠](/components/notice-bar/) | 페이지 최상단 사이트 공지 (infoUX 확장) | `notice-bar.css` |
+| [긴급 공지](/components/notice-bar/) | 본문 첫 요소의 긴급 공지 띠 — KRDS 긴급 공지 기준, 닫기 없음 | `notice-bar.css` |
 | [진행](/components/progress/) | 진행률 표시 | `progress.css` |
 | [스피너](/components/spinner/) | 비동기 로딩 표시 | `spinner.css` |
 | [단계 표시](/components/step-indicator/) | 다단계 진행 안내 | `step-indicator.css` |

@@ -38,6 +38,14 @@
       margin-bottom: 16px;
     }
 
+    /* 데모 전용: 선택지(.check·.radio) 사이 간격 — 선택지 묶음 간격 클래스가 컴포넌트에 없어 미리보기에서만 지정 */
+    .pg__choices {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.8rem 2.4rem;
+    }
+
     .pg__code {
       background-color: var(--color-bg-subtler);
       border: 1px solid var(--color-border-light);
@@ -66,15 +74,15 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">텍스트 입력</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label" for="input-text">이름</label>
-          <input type="text" id="input-text" class="form__input" placeholder="내용을 입력하세요">
+        <div class="form-field">
+          <label for="input-text" class="form-field__label">이름</label>
+          <input type="text" id="input-text" class="input" placeholder="내용을 입력하세요">
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label" for="input-text"&gt;이름&lt;/label&gt;
-  &lt;input type="text" id="input-text" class="form__input" placeholder="내용을 입력하세요"&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="input-text" class="form-field__label"&gt;이름&lt;/label&gt;
+  &lt;input type="text" id="input-text" class="input" placeholder="내용을 입력하세요"&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
@@ -83,15 +91,19 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">필수 입력</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label form__label--required" for="input-required">이메일</label>
-          <input type="email" id="input-required" class="form__input" placeholder="내용을 입력하세요" required aria-required="true">
+        <div class="form-field">
+          <label for="input-required" class="form-field__label">
+            이메일<span class="form-field__required" aria-label="필수">*</span>
+          </label>
+          <input type="email" id="input-required" class="input" placeholder="내용을 입력하세요" required>
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label form__label--required" for="input-required"&gt;이메일&lt;/label&gt;
-  &lt;input type="email" id="input-required" class="form__input" placeholder="내용을 입력하세요" required aria-required="true"&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="input-required" class="form-field__label"&gt;
+    이메일&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;input type="email" id="input-required" class="input" placeholder="내용을 입력하세요" required&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
@@ -100,39 +112,46 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">에러 상태</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label form__label--required" for="input-error">이메일</label>
-          <input type="email" id="input-error" class="form__input form__input--error" placeholder="내용을 입력하세요" aria-invalid="true" aria-describedby="error-msg">
-          <span id="error-msg" class="form__message form__message--error" role="alert">필수 입력 항목입니다.</span>
+        <div class="form-field">
+          <label for="input-error" class="form-field__label">
+            이메일<span class="form-field__required" aria-label="필수">*</span>
+          </label>
+          <input type="email" id="input-error" class="input input--error" placeholder="내용을 입력하세요" required aria-invalid="true" aria-describedby="input-error-message">
+          <p id="input-error-message" class="form-field__message form-field__message--error">필수 입력 항목입니다.</p>
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label form__label--required" for="input-error"&gt;이메일&lt;/label&gt;
-  &lt;input type="email" id="input-error" class="form__input form__input--error"
-    placeholder="내용을 입력하세요" aria-invalid="true" aria-describedby="error-msg"&gt;
-  &lt;span id="error-msg" class="form__message form__message--error" role="alert"&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="input-error" class="form-field__label"&gt;
+    이메일&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;input type="email" id="input-error" class="input input--error" placeholder="내용을 입력하세요"
+    required aria-invalid="true" aria-describedby="input-error-message"&gt;
+  &lt;p id="input-error-message" class="form-field__message form-field__message--error"&gt;
     필수 입력 항목입니다.
-  &lt;/span&gt;
+  &lt;/p&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
 
-    <!-- 성공 상태 -->
+    <!-- 성공 메시지 — 입력박스에는 성공 변형이 없고, 시스템메시지만 성공 색을 쓴다 -->
     <div class="pg__section">
-      <h2 class="pg__subtitle">성공 상태</h2>
+      <h2 class="pg__subtitle">성공 메시지</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label" for="input-success">이메일</label>
-          <input type="email" id="input-success" class="form__input form__input--success" value="user@example.com">
-          <span class="form__message form__message--success">입력이 확인되었습니다.</span>
+        <div class="form-field">
+          <label for="input-success" class="form-field__label">이메일</label>
+          <input type="email" id="input-success" class="input" value="user@example.com" aria-describedby="input-success-message">
+          <p id="input-success-message" class="form-field__message form-field__message--success">입력이 확인되었습니다.</p>
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label" for="input-success"&gt;이메일&lt;/label&gt;
-  &lt;input type="email" id="input-success" class="form__input form__input--success" value="user@example.com"&gt;
-  &lt;span class="form__message form__message--success"&gt;입력이 확인되었습니다.&lt;/span&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="input-success" class="form-field__label"&gt;이메일&lt;/label&gt;
+  &lt;input type="email" id="input-success" class="input" value="user@example.com"
+    aria-describedby="input-success-message"&gt;
+  &lt;p id="input-success-message" class="form-field__message form-field__message--success"&gt;
+    입력이 확인되었습니다.
+  &lt;/p&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
@@ -141,15 +160,15 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">비활성 (Disabled)</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label" for="input-disabled">이름</label>
-          <input type="text" id="input-disabled" class="form__input" value="비활성 입력" disabled>
+        <div class="form-field">
+          <label for="input-disabled" class="form-field__label">이름</label>
+          <input type="text" id="input-disabled" class="input" value="비활성 입력" disabled>
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label" for="input-disabled"&gt;이름&lt;/label&gt;
-  &lt;input type="text" id="input-disabled" class="form__input" value="비활성 입력" disabled&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="input-disabled" class="form-field__label"&gt;이름&lt;/label&gt;
+  &lt;input type="text" id="input-disabled" class="input" value="비활성 입력" disabled&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
@@ -158,9 +177,9 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">Select 드롭다운</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label" for="select-demo">부서 선택</label>
-          <select id="select-demo" class="form__select">
+        <div class="form-field">
+          <label for="select-demo" class="form-field__label">부서 선택</label>
+          <select id="select-demo" class="select">
             <option value="">선택하세요</option>
             <option value="ux">UX팀</option>
             <option value="dev">개발팀</option>
@@ -169,9 +188,9 @@
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label" for="select-demo"&gt;부서 선택&lt;/label&gt;
-  &lt;select id="select-demo" class="form__select"&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="select-demo" class="form-field__label"&gt;부서 선택&lt;/label&gt;
+  &lt;select id="select-demo" class="select"&gt;
     &lt;option value=""&gt;선택하세요&lt;/option&gt;
     &lt;option value="ux"&gt;UX팀&lt;/option&gt;
     &lt;option value="dev"&gt;개발팀&lt;/option&gt;
@@ -181,21 +200,22 @@
       </div>
     </div>
 
-    <!-- Textarea -->
+    <!-- Textarea — KRDS 순서: 레이블 → 보조설명 → 입력박스 -->
     <div class="pg__section">
       <h2 class="pg__subtitle">Textarea</h2>
       <div class="pg__preview">
-        <div class="form__group">
-          <label class="form__label" for="textarea-demo">비고</label>
-          <textarea id="textarea-demo" class="form__textarea" placeholder="내용을 입력하세요"></textarea>
-          <span class="form__help">최대 500자까지 입력 가능합니다.</span>
+        <div class="form-field">
+          <label for="textarea-demo" class="form-field__label">비고</label>
+          <p id="textarea-demo-hint" class="form-field__hint">최대 500자까지 입력 가능합니다.</p>
+          <textarea id="textarea-demo" class="textarea" rows="4" maxlength="500" placeholder="내용을 입력하세요" aria-describedby="textarea-demo-hint"></textarea>
         </div>
       </div>
       <div class="pg__code">
-<pre><code>&lt;div class="form__group"&gt;
-  &lt;label class="form__label" for="textarea-demo"&gt;비고&lt;/label&gt;
-  &lt;textarea id="textarea-demo" class="form__textarea" placeholder="내용을 입력하세요"&gt;&lt;/textarea&gt;
-  &lt;span class="form__help"&gt;최대 500자까지 입력 가능합니다.&lt;/span&gt;
+<pre><code>&lt;div class="form-field"&gt;
+  &lt;label for="textarea-demo" class="form-field__label"&gt;비고&lt;/label&gt;
+  &lt;p id="textarea-demo-hint" class="form-field__hint"&gt;최대 500자까지 입력 가능합니다.&lt;/p&gt;
+  &lt;textarea id="textarea-demo" class="textarea" rows="4" maxlength="500" placeholder="내용을 입력하세요"
+    aria-describedby="textarea-demo-hint"&gt;&lt;/textarea&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
@@ -203,50 +223,64 @@
     <!-- 체크박스 -->
     <div class="pg__section">
       <h2 class="pg__subtitle">체크박스</h2>
-      <div class="pg__preview">
-        <label class="form__checkbox">
-          <input type="checkbox" class="form__checkbox-input" id="checkbox-1">
-          <span class="form__checkbox-label">이용약관에 동의합니다</span>
+      <div class="pg__preview pg__choices">
+        <label class="check">
+          <input type="checkbox" id="checkbox-1">
+          <span class="check__box" aria-hidden="true"></span>
+          <span class="check__label">이용약관에 동의합니다</span>
         </label>
-        <label class="form__checkbox">
-          <input type="checkbox" class="form__checkbox-input" id="checkbox-2" checked>
-          <span class="form__checkbox-label">마케팅 정보 수신 동의</span>
+        <label class="check">
+          <input type="checkbox" id="checkbox-2" checked>
+          <span class="check__box" aria-hidden="true"></span>
+          <span class="check__label">마케팅 정보 수신 동의</span>
         </label>
       </div>
       <div class="pg__code">
-<pre><code>&lt;label class="form__checkbox"&gt;
-  &lt;input type="checkbox" class="form__checkbox-input" id="checkbox-1"&gt;
-  &lt;span class="form__checkbox-label"&gt;이용약관에 동의합니다&lt;/span&gt;
+<pre><code>&lt;label class="check"&gt;
+  &lt;input type="checkbox" id="checkbox-1"&gt;
+  &lt;span class="check__box" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="check__label"&gt;이용약관에 동의합니다&lt;/span&gt;
 &lt;/label&gt;
-&lt;label class="form__checkbox"&gt;
-  &lt;input type="checkbox" class="form__checkbox-input" id="checkbox-2" checked&gt;
-  &lt;span class="form__checkbox-label"&gt;마케팅 정보 수신 동의&lt;/span&gt;
+&lt;label class="check"&gt;
+  &lt;input type="checkbox" id="checkbox-2" checked&gt;
+  &lt;span class="check__box" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="check__label"&gt;마케팅 정보 수신 동의&lt;/span&gt;
 &lt;/label&gt;</code></pre>
       </div>
     </div>
 
-    <!-- 라디오 버튼 -->
+    <!-- 라디오 버튼 — 그룹은 fieldset + legend로 묶는다 -->
     <div class="pg__section">
       <h2 class="pg__subtitle">라디오 버튼</h2>
       <div class="pg__preview">
-        <label class="form__radio">
-          <input type="radio" class="form__radio-input" name="gender" id="radio-1" checked>
-          <span class="form__radio-label">남성</span>
-        </label>
-        <label class="form__radio">
-          <input type="radio" class="form__radio-input" name="gender" id="radio-2">
-          <span class="form__radio-label">여성</span>
-        </label>
+        <fieldset class="pg__choices">
+          <legend class="form-field__label">성별</legend>
+          <label class="radio">
+            <input type="radio" name="gender" id="radio-1" value="male" checked>
+            <span class="radio__box" aria-hidden="true"></span>
+            <span class="radio__label">남성</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="gender" id="radio-2" value="female">
+            <span class="radio__box" aria-hidden="true"></span>
+            <span class="radio__label">여성</span>
+          </label>
+        </fieldset>
       </div>
       <div class="pg__code">
-<pre><code>&lt;label class="form__radio"&gt;
-  &lt;input type="radio" class="form__radio-input" name="gender" id="radio-1" checked&gt;
-  &lt;span class="form__radio-label"&gt;남성&lt;/span&gt;
-&lt;/label&gt;
-&lt;label class="form__radio"&gt;
-  &lt;input type="radio" class="form__radio-input" name="gender" id="radio-2"&gt;
-  &lt;span class="form__radio-label"&gt;여성&lt;/span&gt;
-&lt;/label&gt;</code></pre>
+<pre><code>&lt;fieldset&gt;
+  &lt;legend class="form-field__label"&gt;성별&lt;/legend&gt;
+  &lt;label class="radio"&gt;
+    &lt;input type="radio" name="gender" id="radio-1" value="male" checked&gt;
+    &lt;span class="radio__box" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;span class="radio__label"&gt;남성&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;label class="radio"&gt;
+    &lt;input type="radio" name="gender" id="radio-2" value="female"&gt;
+    &lt;span class="radio__box" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;span class="radio__label"&gt;여성&lt;/span&gt;
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
       </div>
     </div>
 

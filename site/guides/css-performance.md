@@ -14,10 +14,10 @@ CSS 파일 크기와 선택자 효율이 페이지 렌더링 성능에 직접 �
 ```css
 // DO: BEM 플랫 선택자 (1단계)
 .card__title { ... }
-.card__title--highlight { ... }
+.card--elevated { ... }
 
-// DO: 최대 3단계 (부득이한 경우)
-.card__body .table__cell { ... }
+// DO: 최대 3단계 (부득이한 경우 — 변형이 자식 모양을 바꿀 때)
+.card--inverse .card__title { ... }
 
 // DON'T: 4단계 이상
 .site-header .nav .menu .menu__item .menu__link { ... }
@@ -67,15 +67,15 @@ npm install purgecss --save-dev
 ```js
 // purgecss.config.js
 module.exports = {
-  content: ['src/**/*.html', 'site/**/*.njk', 'site/**/*.md'],
+  content: ['src/**/*.html', 'src/js/**/*.js', 'site/**/*.njk', 'site/**/*.md'],
   css: ['dist/css/*.css'],
-  safelist: {
-    // 동적으로 추가되는 클래스 보호
-    standard: ['is-active', 'is-open', 'is-visible'],
-    greedy: [/^js-/]
-  }
+  // 상태는 클래스가 아니라 ARIA·hidden 속성으로 그린다(R-17).
+  // JS가 실행 중에 바꾸는 속성의 선택자([aria-expanded="true"] 등)를 지우지 않게 지정한다
+  dynamicAttributes: ['aria-expanded', 'aria-selected', 'aria-current', 'aria-invalid', 'hidden']
 }
 ```
+
+> `.is-active`·`.is-open` 같은 상태 클래스를 safelist에 올리지 않는다 — 상태 클래스 자체를 쓰지 않는다(R-17). JS가 잡는 대상도 클래스가 아니라 `data-*` 속성이다.
 
 ### 방법 3: Stylelint no-duplicate-selectors
 

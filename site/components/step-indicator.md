@@ -13,7 +13,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/step-indicator.m
     <span class="step-indicator__num" aria-hidden="true">1</span>
     <span class="step-indicator__label">정보 입력</span>
   </li>
-  <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+  <li class="step-indicator__item" aria-current="step">
     <span class="step-indicator__num" aria-hidden="true">2</span>
     <span class="step-indicator__label">확인</span>
   </li>

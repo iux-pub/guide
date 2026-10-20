@@ -8,8 +8,8 @@
 <header id="header" class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <img src="/logo.svg" alt="기관명">
-      <span class="site-header__brand-name">기관명</span>
+      <img src="/logo.svg" alt=""><!-- 바로 뒤 텍스트가 이름을 전하므로 로고는 장식 -->
+      <span>기관명</span>
     </a>
 
     <nav class="site-header__nav" aria-label="메인 메뉴">

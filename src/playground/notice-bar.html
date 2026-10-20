@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>공지 띠 컴포넌트 - 미리보기</title>
+  <title>긴급 공지 컴포넌트 - 미리보기</title>
   <link rel="stylesheet" href="../../dist/css/style.css">
   <style>
     /* 플레이그라운드 전용 스타일 */
@@ -50,10 +50,6 @@
       overflow: visible;
     }
 
-    .pg__preview--tall {
-      min-height: 40rem;
-    }
-
     .pg__code {
       background-color: var(--color-bg-subtler);
       border: 1px solid var(--color-border-light);
@@ -76,101 +72,103 @@
 </head>
 <body>
   <div class="pg">
-    <h1 class="pg__title">공지 띠 (Notice Bar)</h1>
+    <h1 class="pg__title">긴급 공지 (Notice Bar)</h1>
+    <p class="pg__note">KRDS 긴급 공지 — 본문 콘텐츠의 첫 요소(main#main의 첫 section, 메인 메뉴 다음·히어로 앞)에 화면 폭 전체로 하나만 둡니다. 닫기·숨기기 버튼이 없고, 상황이 끝나면 운영자가 내립니다. 긴급도는 라벨 텍스트(긴급·예고·안내)로도 전합니다.</p>
 
     <div class="pg__section">
-      <h2 class="pg__subtitle">정보 (--info, 기본)</h2>
-      <p class="pg__note">닫기 버튼을 누르면 띠가 사라지고 초점은 헤더로 옮겨집니다. 이 미리보기에는 data-notice-id가 없어 닫은 기록을 남기지 않습니다.</p>
+      <h2 class="pg__subtitle" id="pg-level-high">긴급도 상 — 재난·비상, 갑작스러운 장애 (--danger)</h2>
       <div class="pg__preview pg__preview--flush">
-        <section class="notice-bar notice-bar--info" aria-label="사이트 공지 (정보)">
+        <section class="notice-bar notice-bar--danger" aria-label="사이트 공지 (긴급도 상 예시)">
           <div class="container notice-bar__inner">
-            <span class="notice-bar__label">공지</span>
-            <p class="notice-bar__message">
-              <a class="notice-bar__link" href="#">10월 정기 휴관일 안내</a>
-            </p>
-            <button type="button" class="notice-bar__close" aria-label="공지 닫기">
-              <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#close"></use></svg>
-            </button>
-          </div>
-        </section>
-      </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
-<pre><code>&lt;section class="notice-bar notice-bar--info" aria-label="사이트 공지 (정보)"&gt;
-  &lt;div class="container notice-bar__inner"&gt;
-    &lt;span class="notice-bar__label"&gt;공지&lt;/span&gt;
-    &lt;p class="notice-bar__message"&gt;
-      &lt;a class="notice-bar__link" href="/notice"&gt;10월 정기 휴관일 안내&lt;/a&gt;
-    &lt;/p&gt;
-    &lt;button type="button" class="notice-bar__close" aria-label="공지 닫기"&gt;
-      &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#close"&gt;&lt;/use&gt;&lt;/svg&gt;
-    &lt;/button&gt;
-  &lt;/div&gt;
-&lt;/section&gt;</code></pre>
-      </div>
-    </div>
-
-    <div class="pg__section">
-      <h2 class="pg__subtitle">주의 (--warning)</h2>
-      <div class="pg__preview pg__preview--flush">
-        <section class="notice-bar notice-bar--warning" aria-label="사이트 공지 (주의)">
-          <div class="container notice-bar__inner">
-            <span class="notice-bar__label">점검</span>
-            <p class="notice-bar__message">
-              <a class="notice-bar__link" href="#">10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다</a>
-            </p>
-            <button type="button" class="notice-bar__close" aria-label="공지 닫기">
-              <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#close"></use></svg>
-            </button>
-          </div>
-        </section>
-      </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
-<pre><code>&lt;section class="notice-bar notice-bar--warning" aria-label="사이트 공지 (주의)"&gt;
-  &lt;div class="container notice-bar__inner"&gt;
-    &lt;span class="notice-bar__label"&gt;점검&lt;/span&gt;
-    &lt;p class="notice-bar__message"&gt;
-      &lt;a class="notice-bar__link" href="/notice"&gt;10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다&lt;/a&gt;
-    &lt;/p&gt;
-    &lt;button type="button" class="notice-bar__close" aria-label="공지 닫기"&gt;
-      &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#close"&gt;&lt;/use&gt;&lt;/svg&gt;
-    &lt;/button&gt;
-  &lt;/div&gt;
-&lt;/section&gt;</code></pre>
-      </div>
-    </div>
-
-    <div class="pg__section">
-      <h2 class="pg__subtitle">긴급 (--danger)</h2>
-      <p class="pg__note">톤은 색만으로 전하지 않습니다. 라벨 텍스트(공지·점검·긴급)가 같은 뜻을 전합니다.</p>
-      <div class="pg__preview pg__preview--flush">
-        <section class="notice-bar notice-bar--danger" aria-label="사이트 공지 (긴급)">
-          <div class="container notice-bar__inner">
+            <svg class="notice-bar__icon icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#error"></use></svg>
             <span class="notice-bar__label">긴급</span>
             <p class="notice-bar__message">
-              <a class="notice-bar__link" href="#">태풍 영향으로 전 시설을 임시 휴관합니다</a>
+              <a class="notice-bar__link" href="#pg-level-high">태풍으로 10월 12일 전 시설을 임시 휴관합니다</a>
             </p>
-            <button type="button" class="notice-bar__close" aria-label="공지 닫기">
-              <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#close"></use></svg>
-            </button>
           </div>
         </section>
       </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
-<pre><code>&lt;section class="notice-bar notice-bar--danger" aria-label="사이트 공지 (긴급)"&gt;
+      <div class="pg__code" role="region" aria-label="긴급도 상 마크업 코드" tabindex="0">
+<pre><code>&lt;section class="notice-bar notice-bar--danger" aria-label="사이트 공지"&gt;
   &lt;div class="container notice-bar__inner"&gt;
+    &lt;svg class="notice-bar__icon icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#error"&gt;&lt;/use&gt;&lt;/svg&gt;
     &lt;span class="notice-bar__label"&gt;긴급&lt;/span&gt;
     &lt;p class="notice-bar__message"&gt;
-      &lt;a class="notice-bar__link" href="/notice"&gt;태풍 영향으로 전 시설을 임시 휴관합니다&lt;/a&gt;
+      &lt;a class="notice-bar__link" href="/notice/typhoon-closure"&gt;태풍으로 10월 12일 전 시설을 임시 휴관합니다&lt;/a&gt;
     &lt;/p&gt;
-    &lt;button type="button" class="notice-bar__close" aria-label="공지 닫기"&gt;
-      &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#close"&gt;&lt;/use&gt;&lt;/svg&gt;
-    &lt;/button&gt;
   &lt;/div&gt;
 &lt;/section&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle" id="pg-level-mid">긴급도 중 — 서비스 중단 사전 예고 (--warning)</h2>
+      <div class="pg__preview pg__preview--flush">
+        <section class="notice-bar notice-bar--warning" aria-label="사이트 공지 (긴급도 중 예시)">
+          <div class="container notice-bar__inner">
+            <svg class="notice-bar__icon icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#warning"></use></svg>
+            <span class="notice-bar__label">예고</span>
+            <p class="notice-bar__message">
+              <a class="notice-bar__link" href="#pg-level-mid">10월 12일 0~6시 점검으로 온라인 신청 중단</a>
+            </p>
+          </div>
+        </section>
+      </div>
+      <div class="pg__code" role="region" aria-label="긴급도 중 마크업 코드" tabindex="0">
+<pre><code>&lt;section class="notice-bar notice-bar--warning" aria-label="사이트 공지"&gt;
+  &lt;div class="container notice-bar__inner"&gt;
+    &lt;svg class="notice-bar__icon icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#warning"&gt;&lt;/use&gt;&lt;/svg&gt;
+    &lt;span class="notice-bar__label"&gt;예고&lt;/span&gt;
+    &lt;p class="notice-bar__message"&gt;
+      &lt;a class="notice-bar__link" href="/notice/maintenance"&gt;10월 12일 0~6시 점검으로 온라인 신청 중단&lt;/a&gt;
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle" id="pg-level-low">긴급도 하 — 큰 영향 없는 안내 (기본)</h2>
+      <p class="pg__note">자세한 안내 페이지가 없으면 링크 없이 문장만 씁니다. 링크는 하나까지입니다.</p>
+      <div class="pg__preview pg__preview--flush">
+        <section class="notice-bar" aria-label="사이트 공지 (긴급도 하 예시)">
+          <div class="container notice-bar__inner">
+            <svg class="notice-bar__icon icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#info"></use></svg>
+            <span class="notice-bar__label">안내</span>
+            <p class="notice-bar__message">10월 9일 한글날은 정상 운영합니다</p>
+          </div>
+        </section>
+      </div>
+      <div class="pg__code" role="region" aria-label="긴급도 하 마크업 코드" tabindex="0">
+<pre><code>&lt;section class="notice-bar" aria-label="사이트 공지"&gt;
+  &lt;div class="container notice-bar__inner"&gt;
+    &lt;svg class="notice-bar__icon icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#info"&gt;&lt;/use&gt;&lt;/svg&gt;
+    &lt;span class="notice-bar__label"&gt;안내&lt;/span&gt;
+    &lt;p class="notice-bar__message"&gt;10월 9일 한글날은 정상 운영합니다&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle" id="pg-placement">배치 — 본문의 첫 요소</h2>
+      <p class="pg__note">header#header 다음, main#main의 첫 section으로 둡니다. header 앞이나 건너뛰기 링크 앞에 두면 건너뛰기 링크가 공지를 건너뜁니다. 한 번에 하나만 둡니다.</p>
+      <div class="pg__code" role="region" aria-label="배치 마크업 코드" tabindex="0">
+<pre><code>&lt;a href="#main" class="skip-to-content"&gt;본문 바로가기&lt;/a&gt;
+
+&lt;header id="header" class="site-header"&gt;...&lt;/header&gt;
+
+&lt;main id="main"&gt;
+  &lt;!-- 긴급 공지: main의 첫 section (메인 메뉴 다음, 히어로 앞) --&gt;
+  &lt;section class="notice-bar notice-bar--warning" aria-label="사이트 공지"&gt;
+    &lt;div class="container notice-bar__inner"&gt;...&lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class="hero-bleed" aria-labelledby="intro-title"&gt;...&lt;/section&gt;
+&lt;/main&gt;</code></pre>
       </div>
     </div>
 
   </div>
-  <script src="../js/notice-bar.js"></script>
 </body>
 </html>

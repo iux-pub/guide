@@ -11,8 +11,8 @@ order: 11
 
 | 속성 | 대상 요소 | 값 | 설명 |
 |------|----------|-----|------|
-| `aria-label="현재 위치"` | `<nav>` | 텍스트 | 브레드크럼 네비게이션의 목적을 명시 |
-| `aria-current="page"` | 마지막 항목 (현재 페이지) | `page` | 현재 보고 있는 페이지임을 스크린리더에 전달 |
+| `aria-label="브레드크럼"` | `<nav>` | 텍스트 | 구획 제목을 제공한다. KRDS는 브레드크럼 목록을 `<nav>`로 감싸고 `aria-label="브레드크럼"`을 주도록 정한다 |
+| `aria-current="page"` | 마지막 `li.breadcrumb__item` (현재 페이지) | `page` | 현재 보고 있는 페이지임을 스크린리더에 전달. 링크 없이 텍스트만 둔다 |
 
 ## 구분자 처리
 
@@ -23,17 +23,11 @@ order: 11
 ### Do (올바른 예)
 
 ```html
-<nav class="breadcrumb" aria-label="현재 위치">
+<nav class="breadcrumb" aria-label="브레드크럼">
   <ol class="breadcrumb__list">
-    <li class="breadcrumb__item">
-      <a href="/" class="breadcrumb__link">홈</a>
-    </li>
-    <li class="breadcrumb__item">
-      <a href="/board" class="breadcrumb__link">게시판</a>
-    </li>
-    <li class="breadcrumb__item">
-      <span class="breadcrumb__current" aria-current="page">공지사항</span>
-    </li>
+    <li class="breadcrumb__item"><a href="/">홈</a></li>
+    <li class="breadcrumb__item"><a href="/board">게시판</a></li>
+    <li class="breadcrumb__item" aria-current="page">공지사항</li>
   </ol>
 </nav>
 ```
@@ -41,7 +35,7 @@ order: 11
 ### Don't (잘못된 예)
 
 ```html
-<!-- nav 없음, 구분자가 DOM에 직접 삽입 -->
+<!-- 금지 예시: nav 없음, 구분자가 DOM에 직접 삽입 -->
 <div class="breadcrumb">
   <a href="/">홈</a>
   <span>></span>

@@ -137,18 +137,22 @@ src/styles/
 .block__element {}           /* Block + Element */
 .block__element--modifier {} /* Block + Element + Modifier */
 
-/* 예시 */
+/* 예시 — card.css에 실제로 있는 클래스 */
 .card {}
-.card--featured {}
+.card--elevated {}
 .card__title {}
-.card__action--primary {}
+.card__footer {}
 ```
 
 **금지 패턴:**
 - `.btn-primary` → `.btn--primary` (modifier에는 `--` 사용)
 - `.card-header` → `.card__header` (element에는 `__` 사용)
 - `.card__header__title` → `.card__title` (2단계 element 중첩 금지, 평탄화)
-- 시각적 modifier (`.btn--blue`, `.btn--gray` 등) → 의미적 이름
+- 시각적 modifier (`.btn--blue`, `.btn--gray` 등) → `contracts/class-naming.json` 허용 어휘의 의미적 이름 (R-18)
+- CSS에 없는 변형·부품 지어내기 (`.card--featured`, `.card__media` 등) → 카탈로그 CSS에 정의된 클래스만 쓴다 (R-29)
+- `.is-active`·`.has-error` 같은 상태 클래스 → 상태는 ARIA·hidden 속성 먼저(`aria-current`, `aria-expanded`, `hidden`), ARIA로 표현할 수 없을 때만 BEM modifier (R-17)
+
+이름을 정하는 순서는 [클래스 이름 짓기](https://github.com/iux-pub/guide/blob/main/references/class-naming.md) 한 장 규칙을 따른다.
 
 코드 작성 후 검증을 실행한다.
 

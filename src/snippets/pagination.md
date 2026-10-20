@@ -9,7 +9,7 @@
   <button type="button" class="pagination__nav" aria-label="이전 페이지">‹</button>
   <ol class="pagination__list">
     <li><a class="pagination__item" href="?p=1">1</a></li>
-    <li><a class="pagination__item pagination__item--current" href="?p=2" aria-current="page">2</a></li>
+    <li><a class="pagination__item" href="?p=2" aria-current="page">2</a></li>
     <li><a class="pagination__item" href="?p=3">3</a></li>
     <li><a class="pagination__item" href="?p=4">4</a></li>
     <li><a class="pagination__item" href="?p=5">5</a></li>
@@ -26,7 +26,7 @@
 ## 비활성 (첫/마지막 페이지)
 
 ```html
-<button class="pagination__nav" aria-label="이전 페이지" aria-disabled="true" disabled>‹</button>
+<button type="button" class="pagination__nav" aria-label="이전 페이지" aria-disabled="true" disabled>‹</button>
 ```
 
 ## 접근성

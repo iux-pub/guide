@@ -40,8 +40,8 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 <!-- DON'T: 스타일 목적으로 heading 선택 -->
 <h4>서비스 소개</h4>    <!-- h1이어야 하지만 작게 보이려고 h4 사용 -->
 
-<!-- DO: CSS로 크기 조정 -->
-<h1 class="page__title--sm">서비스 소개</h1>
+<!-- DO: 의미대로 h1을 쓰고, 작게 보여야 하면 크기는 CSS에서 조정한다 (태그 레벨을 바꾸지 않는다) -->
+<h1>서비스 소개</h1>
 ```
 
 ## 시맨틱 섹셔닝 태그
@@ -97,7 +97,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
   </ul>
 </nav>
 
-<!-- DO: 보조 네비게이션 (aria-label로 구분) -->
+<!-- DO: 보조 네비게이션 (aria-label로 구분 — 브레드크럼은 KRDS대로 "브레드크럼") -->
 <nav aria-label="브레드크럼">
   <ol>
     <li><a href="/">홈</a></li>
@@ -108,12 +108,20 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 ```
 
 ```html
-<!-- DON'T: 모든 링크 목록에 nav 사용 -->
+<!-- DON'T: 이름 없는 nav가 여럿 — 랜드마크 목록에 「내비게이션」만 반복돼 서로 구분할 수 없다 -->
 <nav>
-  <a href="/terms/">이용약관</a>
-  <a href="/privacy/">개인정보 처리방침</a>
+  <ul>
+    <li><a href="/">홈</a></li>
+    <li><a href="/about/">소개</a></li>
+  </ul>
 </nav>
-<!-- 푸터 링크는 nav 없이 ul/li로 충분하다 -->
+<nav>
+  <ul>
+    <li><a href="/terms/">이용약관</a></li>
+    <li><a href="/privacy/">개인정보 처리방침</a></li>
+  </ul>
+</nav>
+<!-- 페이지에 nav가 둘 이상이면 각각 aria-label로 이름을 준다 (예: 푸터 정책 링크는 aria-label="약관 및 정책") -->
 ```
 
 ### aside
@@ -145,7 +153,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 <body>
   <a href="#main" class="skip-to-content">본문 바로가기</a>
   <header id="header" class="site-header">
-    <h1 class="site-header__logo">사이트명</h1>
+    <a class="site-header__brand" href="/">사이트명</a><!-- 로고는 링크 — h1은 페이지 제목에 쓴다 -->
     <nav aria-label="메인 메뉴">...</nav>
   </header>
 

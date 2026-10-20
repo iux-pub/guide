@@ -16,8 +16,9 @@ order: 6
 | `autoFocus` | 데스크탑 단일 입력에만 사용. 모바일에서는 사용 금지 |
 
 ```css
-/* 모달/드로어 */
-.modal__container {
+/* 모달/드로어 — 스크롤되는 본문 영역에 적용 */
+.modal__body,
+.side-panel__body {
   overscroll-behavior: contain;
 }
 

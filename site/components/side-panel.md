@@ -29,7 +29,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/side-panel.md`�
 - 닫기 버튼 `aria-label="닫기"` 필수
 - ESC 키 닫기 권장
 - 포커스 트랩은 선택 (모달과 달리 본문 인터랙션 허용)
-- `aria-hidden` 토글로 스크린리더 노출 제어
+- 열림·닫힘은 `aria-hidden="false"`/`"true"` 토글 하나로 표현한다(R-17). 닫힌 패널은 CSS(`visibility: hidden`)가 Tab 순서·스크린리더에서 함께 뺀다. `.side-panel--open`은 납품 호환 별칭이라 새 마크업에 쓰지 않는다
 
 ## 파일
 

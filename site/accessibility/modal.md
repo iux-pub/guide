@@ -15,7 +15,7 @@ order: 9
 | `aria-modal="true"` | 모달 컨테이너 | `true` | 모달 뒤의 콘텐츠가 비활성임을 전달 |
 | `aria-labelledby` | 모달 컨테이너 | 제목 요소의 id | 모달의 목적을 제목으로 전달 |
 | `aria-describedby` | 모달 컨테이너 | 설명 요소의 id | (선택) 모달 내용 요약 연결 |
-| `aria-hidden` | 모달 컨테이너 | `true` / `false` | 닫힌 상태에서 스크린리더 접근 차단 |
+| `hidden` | 모달 컨테이너 | 속성 유무 | 닫힌 상태에서 화면과 스크린리더 모두에서 제거. 열 때 걷어 낸다 (`aria-hidden`으로 대신하지 않는다) |
 | `aria-label="닫기"` | 닫기 버튼 | 텍스트 | 아이콘만 있는 닫기 버튼에 필수 |
 
 ## 키보드 상호작용
@@ -42,23 +42,20 @@ order: 9
 
 ```html
 <div class="modal" role="dialog" aria-modal="true"
-     aria-labelledby="modal-title" aria-hidden="true">
-  <div class="modal__backdrop" data-modal-close></div>
-  <div class="modal__container">
-    <div class="modal__header">
+     aria-labelledby="modal-title" hidden>
+  <div class="modal__overlay"></div>
+  <div class="modal__content modal__content--medium">
+    <header class="modal__header">
       <h2 id="modal-title" class="modal__title">회원 정보 수정</h2>
-      <button type="button" class="modal__close" data-modal-close
-              aria-label="닫기">
-        <svg>...</svg>
-      </button>
-    </div>
+      <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
+    </header>
     <div class="modal__body">
       <!-- 모달 내용 -->
     </div>
-    <div class="modal__footer">
+    <footer class="modal__footer">
       <button type="button" class="btn btn--secondary" data-modal-close>취소</button>
       <button type="button" class="btn btn--primary">저장</button>
-    </div>
+    </footer>
   </div>
 </div>
 ```
@@ -66,12 +63,13 @@ order: 9
 ### Don't (잘못된 예)
 
 ```html
-<!-- role/aria 속성 없음 -->
-<div class="modal" style="display:none;">
-  <div class="modal__container">
+<!-- 금지 예시: role="dialog"·aria-modal·aria-labelledby 없음
+     스크린리더가 대화상자로 인식하지 못하고, 뒤쪽 콘텐츠와 구분하지 못한다 -->
+<div class="modal" hidden>
+  <div class="modal__content">
     <h2>알림</h2>
     <p>저장되었습니다.</p>
-    <button onclick="closeModal()">확인</button>
+    <button type="button" class="btn btn--primary">확인</button>
   </div>
 </div>
 ```

@@ -43,7 +43,7 @@ order: 5
 ```html
 <!-- 아이콘 버튼에 aria-label 제공 -->
 <button type="button" class="btn btn--text" aria-label="검색">
-  <svg>...</svg>
+  <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#search"></use></svg>
 </button>
 
 <!-- 토글 버튼에 상태 표시 -->
@@ -55,15 +55,15 @@ order: 5
 ### Don't (잘못된 예)
 
 ```html
-<!-- div를 버튼으로 사용 -->
+<!-- 금지 예시: div를 버튼으로 사용 -->
 <div class="btn btn--primary" onclick="save()">저장</div>
 
-<!-- a 태그를 버튼처럼 사용 -->
+<!-- 금지 예시: 이동할 곳이 없는 a 태그(href="#")를 버튼처럼 사용 -->
 <a href="#" class="btn" onclick="deleteItem()">삭제</a>
 
-<!-- 아이콘 버튼에 대체 텍스트 없음 -->
+<!-- 금지 예시: 아이콘 버튼에 접근 가능한 이름(aria-label) 없음 -->
 <button type="button" class="btn btn--text">
-  <svg>...</svg>
+  <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#delete"></use></svg>
 </button>
 ```
 

@@ -51,7 +51,7 @@ const GOOD_PAGE = `<!DOCTYPE html>
       <div class="container"><h1 id="t">기관 소개</h1></div>
     </section>
   </main>
-  <footer id="footer" class="site-footer"><div class="container">주소</div></footer>
+  <footer id="footer" class="site-footer"><div class="container">주소 <a href="/privacy">개인정보 처리방침</a></div></footer>
 </body>
 </html>
 `

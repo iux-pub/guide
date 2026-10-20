@@ -20,7 +20,10 @@ HTML 마크업 작성 규칙이다.
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, manual |
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | check-html-structure.js |
+| R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | check-html-structure.js |
 | R-36 | 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27) | error | check-violations.js |
+| R-40 | 공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다 | error | check-html-structure.js |
+| R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
 
 ---
@@ -263,6 +266,30 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
+## R-32 — 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> KRDS component_02_04는 개인정보 처리방침을 반드시 공개하고 반드시 '개인정보 처리방침'이라는 명칭을 쓰라고 한다(붙여 쓴 표기도 인정). 납품 페이지와 boilerplate 스니펫의 footer#footer를 본다(scripts/lib/page-rules.js). (1) 글이 '개인정보 처리방침'인 링크가 없거나 모두 주소가 비었으면(#·javascript:) 오류 — sr-only '(새 창)' 안내는 붙어도 된다. (2) 푸터 링크의 옛 명칭(개인정보취급방침·개인정보 보호정책·Privacy Policy)은 오류. (3) site-footer__link--important가 다른 링크에 붙으면 경고. (4) infoux.json profile이 commerce-reservation이면 이용약관 링크·상호·대표자·사업자등록번호·통신판매업 신고가 없을 때 경고(전자상거래 여부는 검사기가 모른다). 한국어가 아닌 lang의 푸터, 푸터 없는 조각, 사이트 문서의 '...' 골격은 대상이 아니다. 법정 값이 진짜인지는 R-23이 본다.
+
+**금지 예시**
+
+```html
+<footer id="footer"><div class="container"><small>© 2026 제주특별자치도</small></div></footer>   // 정책 링크 없음
+<a href="#">개인정보 처리방침</a>   // 주소 없음
+<a href="/privacy">개인정보취급방침</a>   // 옛 명칭
+```
+
+**올바른 형식**
+
+```html
+<nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>   // KRDS 명칭 + 실제 주소 + 강조 하나
+```
+
+**참고:** src/snippets/footer.md, scripts/lib/page-rules.js
+
+---
+
 ## R-36 — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
 
 **심각도:** `error` &nbsp; **검증:** check-violations.js
@@ -287,6 +314,52 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** references/class-naming.md, scripts/lib/visual-signature.js
+
+---
+
+## R-40 — 공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> KRDS 검색 패턴의 [필수] 문단은 '서비스 내 모든 화면에서 통합 검색 기능을 실행할 수 있도록 한다'이다. infoux.json profile이 public-service·public-institution이면 header#header가 있는 납품 페이지에서 헤더 안에 search 요소, form[role=search], input[type=search], 또는 접근 가능한 이름(aria-label·sr-only 포함)이 '검색·통합검색·Search'인 버튼·링크가 없을 때 오류다(아이콘만 있는 검색 버튼도 이름이 있으면 인정 — KRDS 헤더 지침). 헤더 없는 팝업 창은 대상이 아니다. 메인 첫 화면의 과업 진입(검색·공지·자주 찾는 서비스)과 마케팅 템플릿 섹션(후기·요금 플랜) 판정은 페이지 유형(pageType)을 선언하는 K-16 뒤에 켠다.
+
+**금지 예시**
+
+```html
+<header id="header"><div class="container"><a href="/">제주특별자치도</a></div></header>   // 공공 화면 헤더에 검색 진입 없음
+```
+
+**올바른 형식**
+
+```html
+<form role="search" action="/search"><label for="q">통합검색</label><input id="q" type="search" name="q"><button type="submit">검색</button></form>   // 헤더 통합검색
+```
+
+**참고:** src/snippets/header.md, scripts/lib/page-rules.js
+
+---
+
+## R-41 — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> KRDS component_03_01은 본문 바로가기 목적지 안에 사이드 메뉴·브레드크럼·페이지 유틸리티를 두지 말라고 한다. 목적지는 skip 링크 href가 가리키는 요소(없으면 main)다 — 브레드크럼을 main의 형제로 두거나(#main), main 안이라도 목적지(#contents) 밖이면 통과한다. 타이틀 밴드 안에 브레드크럼을 넣는 관행은 오류다. main 안의 첫 제목(대화상자·hidden·template·aria-hidden 안 제외)이 h1이 아니거나 h1이 없으면 오류 — 헤더 로고를 h1로 쓰고 본문을 h2로 시작하는 옛 구조다. 깊이 3 이상 서브 페이지의 브레드크럼 필수와 서브 첫 섹션의 비주얼 히어로 금지는 페이지 유형·깊이 선언(K-16) 뒤에 켠다.
+
+**금지 예시**
+
+```html
+<main id="main"><section class="section section--intro"><div class="container"><nav class="breadcrumb" aria-label="페이지 경로">…</nav><h1>공지사항</h1></div></section></main>   // 브레드크럼이 목적지 안
+<main id="main"><section><div class="container"><h2>알림마당</h2></div></section></main>   // main 첫 제목이 h2
+```
+
+**올바른 형식**
+
+```html
+<nav class="breadcrumb" aria-label="페이지 경로">…</nav>
+<main id="main"><section class="section section--content"><div class="container"><h1>공지사항</h1></div></section></main>   // 브레드크럼은 main의 형제, main은 h1로 시작
+```
+
+**참고:** src/snippets/breadcrumb.md, scripts/lib/page-rules.js
 
 ---
 

@@ -29,7 +29,9 @@ HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section 
   </section>
 </main>
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 

@@ -62,7 +62,10 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 - R-29 `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
+- R-32 `error` — 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만
 - R-36 `error` — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
+- R-40 `error` — 공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다
+- R-41 `error` — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다
 - R-43 `error` — 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지
 
 ### 접근성 규칙
@@ -129,7 +132,9 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 

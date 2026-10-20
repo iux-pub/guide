@@ -568,6 +568,27 @@ modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 �
 
 ---
 
+## 15. 한국형 페이지 골격 (R-32 · R-40 · R-41)
+
+납품 페이지의 KRDS 필수 골격이다. 푸터에는 '개인정보 처리방침' 링크를 실제 주소로 두고 옛 명칭을 쓰지 않는다(R-32). 공공 화면은 모든 페이지 헤더에 통합검색을 둔다(R-40). 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다(R-41).
+
+### ❌ 금지
+
+```html
+<footer id="footer"><div class="container"><a href="#">개인정보취급방침</a></div></footer>
+<main id="main"><section class="section section--intro"><div class="container"><nav class="breadcrumb" aria-label="브레드크럼">…</nav><h2>알림마당</h2></div></section></main>
+```
+
+### ✅ 허용
+
+```html
+<nav class="breadcrumb" aria-label="브레드크럼">…</nav>
+<main id="main"><section class="section section--content"><div class="container"><h1>공지사항</h1></div></section></main>
+<footer id="footer"><div class="container"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></div></footer>
+```
+
+---
+
 ## 위반 발견 시 보고 형식
 
 ```

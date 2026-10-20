@@ -39,7 +39,11 @@ tags: component
 
   <footer id="footer" class="site-footer">
     <div class="container">
-      <!-- 푸터 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
     </div>
   </footer>
 </body>

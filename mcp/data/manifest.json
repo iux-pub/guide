@@ -1,5 +1,5 @@
 {
-  "version": "6ea2066",
+  "version": "208173d",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -23,7 +23,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 15588,
+      "chars": 16409,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -35,13 +35,13 @@
     {
       "id": "html-semantics",
       "file": "html-semantics.md",
-      "chars": 26913,
+      "chars": 27037,
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
     },
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 69574,
+      "chars": 69817,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -59,7 +59,7 @@
     {
       "id": "project-profiles",
       "file": "project-profiles.md",
-      "chars": 8142,
+      "chars": 8266,
       "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
     },
     {
@@ -153,13 +153,13 @@
     {
       "id": "boilerplate",
       "file": "boilerplate.md",
-      "chars": 3861,
+      "chars": 4107,
       "summary": "기본 마크업은 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약 모두에 적용 가능한 공통 골격이다. 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 사이트 유형 판정에서 적용 대상이 확인된 경우에만 추가한다."
     },
     {
       "id": "breadcrumb",
       "file": "breadcrumb.md",
-      "chars": 751,
+      "chars": 992,
       "summary": "페이지 경로 표시. 사용자의 현재 위치를 보여주고 상위 페이지로 빠르게 이동할 수 있게 한다."
     },
     {

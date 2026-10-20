@@ -23,8 +23,6 @@ order: 1
 | R-01 | 색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37) | error | [CSS 규칙](/conventions/css-rules/) |
 | R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | [CSS 규칙](/conventions/css-rules/) |
 | R-03 | SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용 | error | [CSS 규칙](/conventions/css-rules/) |
-| R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | [CSS 규칙](/conventions/css-rules/) |
-| R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-04 | BEM 사용 (5-objects, 6-components 레이어에만 적용) | info | [BEM 네이밍](/conventions/bem/) |
 | R-05 | element 2단계 중첩 금지 — 평탄화 | error | [BEM 네이밍](/conventions/bem/) |
 | R-06 | 시각적 modifier 금지 — 의미적 이름 사용 | error | [BEM 네이밍](/conventions/bem/) |
@@ -40,6 +38,8 @@ order: 1
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-17 | 상태는 ARIA·hidden 속성을 먼저 — ARIA로 표현할 수 없을 때만 BEM modifier, .is-* / .has-* 금지 | error | [BEM 네이밍](/conventions/bem/) |
 | R-18 | modifier 이름은 허용 어휘(contracts/class-naming.json)에서 — 시각적 단어 금지 | error | [BEM 네이밍](/conventions/bem/) |
+| R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | [CSS 규칙](/conventions/css-rules/) |
+| R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | [접근성 규칙](/conventions/a11y-rules/) |
 | R-23 | 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
@@ -49,9 +49,12 @@ order: 1
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-28 | 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-34 | 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-36 | 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27) | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-37 | Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다 | error | [CSS 규칙](/conventions/css-rules/) |
+| R-40 | 공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 <!-- RULES_TABLE_END -->
 

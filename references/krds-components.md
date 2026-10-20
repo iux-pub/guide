@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 6ea2066
+> 빌드: 208173d
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -703,6 +703,12 @@ KRDS 탭(component_04_10) — 같은 영역 안에서 상호배타적인 콘텐�
   </ol>
 </nav>
 ```
+
+#### 배치
+
+본문 바로가기 목적지 밖에 둔다(KRDS component_03_01, R-41). `<main id="main">`의 형제로 header와 main 사이에 두고, 타이틀 밴드(`section--intro`) 안에 넣지 않는다. 깊이 2 이하 사이트는 생략할 수 있다.
+
+순서: `header#header` → `nav.breadcrumb` → `main#main`(첫 제목 h1) → `footer#footer`.
 
 #### 접근성
 

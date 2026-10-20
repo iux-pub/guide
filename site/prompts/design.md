@@ -267,7 +267,9 @@ INFOUX 표준 브레이크포인트(KRDS 표준형 small/medium/large/xlarge). T
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 

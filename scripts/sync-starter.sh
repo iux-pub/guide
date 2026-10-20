@@ -121,6 +121,8 @@ cp "$GUIDE_DIR/scripts/lib/visual-signature.js" "$STARTER_DIR/scripts/lib/"
 # 카피 검사(R-23 가짜·자리 콘텐츠·R-43 카피 톤) — 판정 자료는 contracts/fake-content.json·copy-lexicon.json(아래 contracts 복사)
 cp "$GUIDE_DIR/scripts/lib/html-tree.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/copy-rules.js" "$STARTER_DIR/scripts/lib/"
+# 한국형 페이지 골격(R-32 푸터·R-40 공공 통합검색·R-41 서브 골격) — check-html-structure.js가 쓴다
+cp "$GUIDE_DIR/scripts/lib/page-rules.js" "$STARTER_DIR/scripts/lib/"
 rm -rf "$STARTER_DIR/scripts/hooks"
 cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
 mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"

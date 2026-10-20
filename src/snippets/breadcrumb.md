@@ -14,6 +14,12 @@
 </nav>
 ```
 
+## 배치
+
+본문 바로가기 목적지 밖에 둔다(KRDS component_03_01, R-41). `<main id="main">`의 형제로 header와 main 사이에 두고, 타이틀 밴드(`section--intro`) 안에 넣지 않는다. 깊이 2 이하 사이트는 생략할 수 있다.
+
+순서: `header#header` → `nav.breadcrumb` → `main#main`(첫 제목 h1) → `footer#footer`.
+
 ## 접근성
 
 - `<nav aria-label="브레드크럼">` 필수 — KRDS가 정한 구획 제목이다(스크린리더 랜드마크 이름). 다른 이름으로 바꾸지 않는다

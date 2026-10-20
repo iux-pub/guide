@@ -24,10 +24,10 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 ### Before / After 비교: 카드 컴포넌트
 
-**Before -- AI 슬롭 카드 (generic)**
+**Before -- AI 슬롭 카드 (금지 예시)**
 
 ```css
-// 문제: 토큰 미사용, 하드코딩, 개성 없음
+/* 금지 예시 — 토큰 미사용, 하드코딩, 개성 없음 */
 .card {
   background: #fff;
   border-radius: 12px;
@@ -36,8 +36,8 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
   font-family: 'Inter', sans-serif;
 
   h3 {
-    font-size: 18px;         // 요소 선택자 의존
-    color: #333;             // 하드코딩 색상
+    font-size: 18px;         /* 요소 선택자 의존 */
+    color: #333;             /* 하드코딩 색상 */
     margin-bottom: 12px;
   }
 
@@ -47,8 +47,8 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
     line-height: 1.5;
   }
 
-  .btn {                     // BEM 미준수
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  // 보라색 그라디언트
+  .btn {                     /* 버튼 블록을 카드 안에서 다시 칠한다 */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* 보라색 그라디언트 */
     color: white;
     border-radius: 8px;
     padding: 12px 24px;
@@ -58,35 +58,36 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 **After -- 의도적 카드 (inCMS 대시보드용)**
 
+카탈로그 `card`를 그대로 쓴다. 카드 전체가 목록으로 가는 링크이므로 링크형 카드(`card--link`)로 만들고, 안에 버튼을 따로 두지 않는다.
+
+```html
+<a class="card card--small card--link" href="/complaints?status=pending">
+  <h3 class="card__title">처리 대기 민원</h3>
+  <p class="card__body">오늘 접수 12건 중 담당자 미지정 3건</p>
+</a>
+```
+
+대시보드 맥락에 맞는 값만 프로젝트 CSS에서 덧씌운다. 선택자는 `card.css`에 있는 전체 이름을 쓴다 — 표준 CSS nesting의 `&`는 이름을 이어 붙이지 않으므로, `.card` 안에서 `&` 뒤에 `__title`을 붙이면 `__title.card`가 되어 아무 요소에도 맞지 않는다.
+
 ```css
-// inCMS 대시보드: Flat + Minimalism, 토큰 기반
-.card {
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border-light);
-  border-radius: 0.6rem;
-  padding: 2.4rem;
-  transition: box-shadow var(--duration-fast);
+/* inCMS 대시보드 프로젝트 CSS — Flat + Minimalism */
+.card__title {
+  @apply text-[1.9rem] mb-[0.8rem];
+}
 
-  &:hover {
-    box-shadow: var(--shadow-2);
-  }
+.card__body {
+  @apply text-[1.5rem] leading-[1.6] text-[var(--color-text-subtle)];
+}
 
-  &__title {
-    font-size: var(--text-body-large);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text);
-    margin-bottom: 0.8rem;
-  }
+/* Flat — 링크형 카드는 그림자·들어 올리기 대신 테두리 색으로 반응한다 */
+a.card,
+.card--link {
+  @apply [transition:border-color_0.15s_ease-in-out];
+}
 
-  &__description {
-    font-size: var(--text-body-small);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-
-  &__action {
-    margin-top: 1.6rem;
-  }
+a.card:hover,
+.card--link:hover {
+  @apply shadow-none [transform:none] border-[var(--color-border-primary)];
 }
 ```
 
@@ -94,19 +95,19 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 | 항목 | AI 슬롭 | 의도적 설계 |
 |------|---------|------------|
-| 색상 | 하드코딩 `#333`, `#666` | 토큰 `var(--color-text)` |
-| 레이아웃 | 매직넘버 `24px`, `12px` | 토큰 `2.4rem`, `0.8rem` |
-| 네이밍 | `.btn`, `h3`, `p` | BEM `.card__title`, `.card__action` |
-| 버튼 | 보라색 그라디언트 | 제품 토큰 기반 Primary |
-| 폰트 | `Inter` 기본값 | 시스템 `PretendardGOV` |
-| 모션 | 없음 | 토큰 기반 hover 트랜지션 |
+| 색상 | 하드코딩 `#333`, `#666` | 토큰 `var(--color-text-subtle)`, `var(--color-border-primary)` |
+| 레이아웃 | 매직넘버 `24px`, `12px` | 카탈로그 크기 변형 `card--small` + rem 직접값 `0.8rem` |
+| 네이밍 | `.btn`, `h3`, `p` 요소 선택자 | `card.css`에 있는 BEM element `.card__title`, `.card__body` |
+| 행동 유도 | 보라색 그라디언트 버튼 | 카드 전체를 링크(`card--link`)로 — 버튼을 따로 칠하지 않는다 |
+| 폰트 | `Inter` 기본값 | `var(--font-sans)`(Pretendard GOV) 상속 |
+| 모션 | 없음 | 호버 시 테두리 색 0.15s 전환 — Flat이라 그림자·들어 올리기는 끈다 |
 
 ### Before / After 비교: 히어로 섹션
 
-**Before -- AI 슬롭 히어로**
+**Before -- AI 슬롭 히어로 (금지 예시)**
 
 ```html
-<!-- 문제: 보라색 그라디언트, generic 문구, 맥락 없음 -->
+<!-- 금지 예시 — 보라색 그라디언트, generic 문구, 맥락 없음, 인라인 style -->
 <section style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 80px 20px; text-align: center;">
   <h1 style="color: white; font-size: 48px;">Welcome to Our Platform</h1>
   <p style="color: rgba(255,255,255,0.8);">The best solution for your needs</p>
@@ -115,37 +116,36 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 
 **After -- SmartFarm 랜딩 히어로 (Organic Biophilic)**
 
+`.farm-hero`는 **SmartFarm 프로젝트 고유 블록 예시**다(infoUX 카탈로그에 없다). 배경 사진을 까는 풀블리드 도입부라면 카탈로그의 `hero-bleed` 패턴(`src/snippets/hero-bleed.md`)을 먼저 쓴다. 이 프로젝트에서만 쓰는 모양이므로 `hero--biophilic` 같은 변형을 만들지 않고 블록 이름에 맥락을 담는다 — 스타일 이름(`biophilic`)은 허용 modifier 어휘가 아니다(R-18).
+
 ```html
-<section class="hero hero--biophilic">
+<section class="farm-hero">
   <div class="container">
-    <h1 class="hero__title">스마트팜 통합 모니터링</h1>
-    <p class="hero__subtitle">온실 환경부터 생육 데이터까지, 한 화면에서 확인하세요</p>
+    <h1 class="farm-hero__title">스마트팜 통합 모니터링</h1>
+    <p class="farm-hero__desc">온실 환경부터 생육 데이터까지, 한 화면에서 확인하세요</p>
     <a href="#demo" class="btn btn--primary btn--xlarge">데모 체험하기</a>
   </div>
 </section>
 ```
 
+SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 계열로 바꾼다. 자연 감성 배경도 그 브랜드 단계 색으로만 칠한다 — raw hex·`rgba()`를 쓰지 않는다(R-01).
+
 ```css
-.hero {
-  &--biophilic {
-    background-color: #f0f7f0;           // 자연 감성 확장 색상
-    background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(34, 135, 56, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(37, 110, 244, 0.05) 0%, transparent 50%);
-    padding: 6.4rem 0;
-  }
+/* SmartFarm 프로젝트 CSS */
+.farm-hero {
+  @apply py-[6.4rem] bg-[var(--color-primary-5)];
+  background-image:
+    radial-gradient(ellipse at 20% 50%, var(--color-primary-10) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, var(--color-secondary-10) 0%, transparent 50%);
+}
 
-  &__title {
-    font-size: var(--text-heading-xlarge);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text);
-  }
+/* KRDS display medium(mobile 3.2 / pc 4.4rem) · 행간 150% · 자간 0.1rem */
+.farm-hero__title {
+  @apply text-[3.2rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-text)] m-0 tablet:text-[4.4rem];
+}
 
-  &__subtitle {
-    font-size: var(--text-body-large);
-    color: var(--color-text-secondary);
-    margin-top: 0.8rem;
-  }
+.farm-hero__desc {
+  @apply text-[1.9rem] leading-[1.7] text-[var(--color-text-subtle)] mt-[0.8rem] mb-[3.2rem];
 }
 ```
 

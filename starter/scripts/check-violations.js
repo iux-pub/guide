@@ -21,6 +21,13 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 글자 크기 하한(R-31 루트 글자 크기·R-38 최소 글자) — 없으면 건너뛴다
+let TYPE = null
+try {
+  TYPE = require('./lib/type-floor')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 카피 규칙(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 없으면 옛 줄 단위 R-23 검사로 돌아간다
 let COPY = null
 try {
@@ -310,6 +317,9 @@ function checkCssFile(filePath) {
     }))
   }
 
+  // 글자 크기 하한(R-31·R-38) — 문서 사이트 크롬(docs.css)은 뺀다
+  if (TYPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, TYPE.scanCssType(content))
+
   // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
   if (COPY) {
     const noComments = VISUAL ? VISUAL.stripCssComments(content) : content
@@ -519,6 +529,18 @@ function checkHtmlFile(filePath, opts = {}) {
   // 마크다운에서 마크업 규칙(R-07·R-08·Tailwind 기본 경고)은 코드 펜스와 원시 HTML 줄에만 적용한다.
   // 본문 문장('`rounded-lg`는 쓰지 않는다')이 경고로 걸리지 않게.
   const isMarkdown = filePath.endsWith('.md')
+
+  // 글자 크기 하한(R-31·R-38) — HTML의 <style>·class·style 속성, 마크다운은 html·css 펜스(금지 예시 펜스 제외)
+  if (TYPE) {
+    if (!isMarkdown) reportVisual(relPath, TYPE.scanHtmlType(content))
+    else if (VISUAL) {
+      for (const seg of VISUAL.splitMarkdown(content)) {
+        if (seg.counter) continue
+        const found = seg.lang === 'css' ? TYPE.scanCssType(seg.text) : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? TYPE.scanHtmlType(seg.text) : []
+        reportVisual(relPath, found.map(f => ({ ...f, line: seg.startLine + (f.line || 1) - 1 })))
+      }
+    }
+  }
 
   // 카피(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 요소 트리로 형제·조상·숨김을 보고 범위별 심각도를 준다
   //   납품 페이지 > 템플릿(infoux:template 표시) > 스니펫·플레이그라운드 > 문서 순으로 엄격하다

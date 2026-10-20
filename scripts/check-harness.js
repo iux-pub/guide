@@ -194,6 +194,7 @@ requireSame('scripts/lib/visual-signature.js', 'starter/scripts/lib/visual-signa
 requireSame('scripts/lib/html-tree.js', 'starter/scripts/lib/html-tree.js')
 requireSame('scripts/lib/copy-rules.js', 'starter/scripts/lib/copy-rules.js')
 requireSame('scripts/lib/page-rules.js', 'starter/scripts/lib/page-rules.js')
+requireSame('scripts/lib/type-floor.js', 'starter/scripts/lib/type-floor.js')
 requireSame('contracts/fake-content.json', 'starter/contracts/fake-content.json')
 requireSame('contracts/copy-lexicon.json', 'starter/contracts/copy-lexicon.json')
 // 스타터 index.html은 틀 표시를 달고 나간다 — 없으면 자리값 제목이 납품 오류로 잡히고, create는 지울 표시가 없다

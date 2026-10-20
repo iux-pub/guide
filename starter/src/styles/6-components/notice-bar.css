@@ -38,7 +38,7 @@
   }
 
   .notice-bar__label {
-    @apply shrink-0 inline-flex items-center h-[2.4rem] px-[0.8rem] rounded-[0.4rem] bg-[var(--color-information-60)] text-[var(--color-text-inverse)] text-[1.4rem] font-bold leading-[1.5];
+    @apply shrink-0 inline-flex items-center h-[2.4rem] px-[0.8rem] rounded-[0.4rem] bg-[var(--color-information-60)] text-[var(--color-text-inverse)] text-[1.3rem] font-bold leading-[1.5];
   }
 
   /* 문장은 한 줄 — 좁은 화면에서도 두 줄을 넘지 않게 문구를 짧게 쓴다(KRDS) */

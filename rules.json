@@ -1079,6 +1079,76 @@
       ]
     },
     {
+      "id": "R-30",
+      "category": "html",
+      "summary": "링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "국내 웹 96곳 중 javascript: 링크 55%, 빈 # 65%가 관찰된 관행이지만 WCAG 4.1.2(이름·역할·값)를 어기고 새 탭·북마크·공유가 안 된다. 이동은 실제 주소의 a, 동작(열기·닫기·토글·더보기)은 button으로 쓴다. href가 빈 값·'#'·'#none'·'#;'이거나 javascript:로 시작하면 오류다(scripts/lib/page-rules.js isDeadHref). '#top'·실제 앵커(#main)는 통과, 템플릿 식({{ url }})은 렌더할 때 정해지므로 보지 않는다. 스니펫·플레이그라운드·문서 예시까지 모든 마크업에 적용한다(반례 문서는 기존 제외 경로).",
+      "refs": [
+        "references/korean-web-patterns.md",
+        "scripts/lib/page-rules.js"
+      ],
+      "bad": [
+        {
+          "code": "<a href=\"#\" class=\"more\">더보기</a>",
+          "note": "동작을 링크로"
+        },
+        {
+          "code": "<a href=\"javascript:void(0)\">닫기</a>",
+          "note": "javascript: 링크"
+        }
+      ],
+      "good": [
+        {
+          "code": "<a href=\"/notice\">공지사항 더보기</a>",
+          "note": "이동은 실제 주소"
+        },
+        {
+          "code": "<button type=\"button\" aria-expanded=\"false\">펼치기</button>",
+          "note": "동작은 button"
+        }
+      ]
+    },
+    {
+      "id": "R-31",
+      "category": "css",
+      "summary": "루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)",
+      "severity": "warn",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "css",
+      "rationale": "infoUX의 rem 단계(1rem = 10px)는 KRDS 방식의 62.5% 루트를 전제한다. html·:root의 font-size를 다른 값으로 줄이거나 vw로 두면 사용자의 브라우저 글자 크기 설정(WCAG 1.4.4)과 rem 단계가 함께 무너진다(국내 13곳 관찰). html·:root의 font-size가 62.5%가 아니면 경고다. 글자 크기 조절 기능은 html[data-font-scale]로 두며 예외다(scripts/lib/type-floor.js).",
+      "refs": [
+        "references/krds-tokens.md",
+        "scripts/lib/type-floor.js"
+      ],
+      "bad": [
+        {
+          "code": "html { font-size: 56.25%; }",
+          "note": "루트 축소"
+        },
+        {
+          "code": ":root { font-size: calc(0.5rem + 0.5vw); }",
+          "note": "vw 스케일"
+        }
+      ],
+      "good": [
+        {
+          "code": "html { font-size: 62.5%; }",
+          "note": "고정"
+        },
+        {
+          "code": "html[data-font-scale=\"large\"] { font-size: 75%; }",
+          "note": "글자 크기 조절"
+        }
+      ]
+    },
+    {
       "id": "R-32",
       "category": "html",
       "summary": "푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만",
@@ -1258,6 +1328,76 @@
         {
           "code": "<div class=\"w-full h-auto mx-auto p-0 max-w-prose\">",
           "note": "스케일과 무관한 유틸"
+        }
+      ]
+    },
+    {
+      "id": "R-38",
+      "category": "css",
+      "summary": "KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "css",
+      "rationale": "KRDS 타이포 최소 단계는 13px, 본문은 16px이다. 62.5% 루트에서 1rem = 10px이므로 1.3rem 미만은 오류, body는 1.6rem 미만이면 오류, 설명·본문 성격 element(__desc·__description·__body·__lead·__excerpt·__content)는 1.5rem 미만이면 오류다. 1.3~1.5rem 사이(1.4rem 등)는 KRDS 단계 밖이라 경고, p·li·td·dd·blockquote의 1.3rem은 주석·각주 허용이라 경고다. CSS 선언(font-size·font 단축), @apply의 text-[N]·[font-size:N], HTML <style>·class의 text-[N]·style 속성을 본다(scripts/lib/type-floor.js). 아이콘 글리프(__icon·__close·__remove·__arrow·__mark·__dot, .icon, icon-font), 기호만 그리는 ::before·::after, 코드(pre·code·kbd·samp·monospace), em·%처럼 rem으로 바꿀 수 없는 값은 보지 않는다(clamp는 최솟값). Tailwind 기본 text-xs~xl은 R-37이 본다.",
+      "refs": [
+        "references/krds-tokens.md",
+        "scripts/lib/type-floor.js"
+      ],
+      "bad": [
+        {
+          "code": ".board__count { @apply text-[1.2rem]; }",
+          "note": "12px"
+        },
+        {
+          "code": "body { @apply text-[1.5rem]; }",
+          "note": "body 15px"
+        },
+        {
+          "code": ".card__desc { font-size: 1.4rem; }",
+          "note": "설명 14px"
+        }
+      ],
+      "good": [
+        {
+          "code": ".badge__text { @apply text-[1.3rem]; }",
+          "note": "배지 최소 단계"
+        },
+        {
+          "code": ".card__desc { @apply text-[1.5rem]; }",
+          "note": "설명 15px"
+        }
+      ]
+    },
+    {
+      "id": "R-39",
+      "category": "html",
+      "summary": "main 안 h1은 하나, 제목 단계를 건너뛰지 않는다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "페이지 제목 h1은 하나이고 제목은 한 단계씩 내려간다(accessibility.md 제목 구조, WCAG 1.3.1). 납품 페이지·boilerplate의 main 안 제목 수열(h1~h6, role=heading aria-level — 대화상자·숨김·template·nav 안은 제외)에서 h1이 2개 이상이거나 h2 다음 h4처럼 2단계 이상 깊어지면 오류다. 크기는 클래스로 정하고 제목 단계로 정하지 않는다. main 밖 h1(헤더 로고)은 경고, aria-label 없는 섹션의 이름이 카드·목록 항목 안 제목뿐이면 경고다. main 안 h1 없음·첫 제목이 h1이 아님은 R-41이 본다(사이드 메뉴 nav의 제목은 앞에 와도 된다 — KRDS D1).",
+      "refs": [
+        "references/accessibility.md",
+        "scripts/lib/page-rules.js"
+      ],
+      "bad": [
+        {
+          "code": "<h1>공지사항</h1><h3>필터</h3>",
+          "note": "h2 건너뜀"
+        },
+        {
+          "code": "<header><h1 class=\"site-header__logo\">기관명</h1></header>",
+          "note": "로고 h1(경고)"
+        }
+      ],
+      "good": [
+        {
+          "code": "<h1>공지사항</h1><h2>목록</h2><h3>필터</h3>",
+          "note": "한 단계씩"
         }
       ]
     },

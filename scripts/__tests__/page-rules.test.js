@@ -143,6 +143,27 @@ test('page-scope: pageTypes 선언을 읽고 잘못된 유형·깊이·글롭은
   assert.equal(readPageTypes(dir).problems.length, 3)
 })
 
+// ─── R-30·R-39 ───────────────────────────────────────
+
+test('R-30: 빈 값·#·#none·#;·javascript: 링크는 오류, #top·실제 앵커·템플릿 식은 통과', () => {
+  const { deadLinkFindings } = require('../lib/page-rules')
+  for (const href of ['', '#', '#none', '#;', 'javascript:void(0)', 'javascript:;']) assert.equal(deadLinkFindings(`<a href="${href}">자세히</a>`).length, 1, href)
+  for (const src of ['<a href="#top">맨 위로</a>', '<a href="#main">본문 바로가기</a>', '<a href="/notice">공지</a>', '<a href="{{ page.url }}">이전</a>', '<a>앵커</a>']) assert.equal(deadLinkFindings(src).length, 0, src)
+})
+
+test('R-39: main 안 h1 하나, 단계 건너뛰기 금지, main 밖 h1 경고, 카드 제목으로 섹션 이름 대신 경고', () => {
+  const sec = inner => `<section class="section section--content"><div class="container">${inner}</div></section>`
+  assert.ok(none(scanPageRules(page({ main: sec('<h1>공지사항</h1><h2>목록</h2><h3>필터</h3>') })), 'R-39'))
+  assert.ok(has(scanPageRules(page({ main: sec('<h1>공지사항</h1>') + sec('<h1>또 다른 제목</h1>') })), 'R-39'))
+  assert.ok(has(scanPageRules(page({ main: sec('<h1>공지사항</h1><h3>필터</h3>') })), 'R-39'))
+  assert.ok(has(scanPageRules(page({ header: `<h1 class="site-header__logo">제주특별자치도</h1>${SEARCH}` })), 'R-39', 'warn'))
+  const cards = '<section class="section section--list"><div class="container"><ul class="card-grid"><li class="card"><h2>도서관 휴관일 안내</h2></li><li class="card"><h2>프로그램 접수</h2></li></ul></div></section>'
+  assert.ok(has(scanPageRules(page({ main: sec('<h1>알림마당</h1>') + cards })), 'R-39', 'warn'))
+  // 사이드 메뉴 nav의 h2는 제목 수열에서 뺀다(KRDS D1)
+  const side = '<nav class="side-navigation" aria-label="알림마당"><h2>알림마당</h2></nav>'
+  assert.ok(none(scanPageRules(page({ main: sec(`${side}<h1>공지사항</h1>`) })), 'R-39'))
+})
+
 // ─── 검사기 통합 ─────────────────────────────────────
 
 test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문서 골격에는 닿지 않는다', () => {

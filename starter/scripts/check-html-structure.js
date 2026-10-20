@@ -986,6 +986,10 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   const root = parseHtmlTree(html)
 
   checkPageContract(html, filePath, baseLineNum)
+  // R-30 실제 목적지 없는 링크 — 스니펫·플레이그라운드·문서 예시까지 모든 마크업
+  if (PAGE_RULES) {
+    for (const f of PAGE_RULES.deadLinkFindings(html)) error(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+  }
   checkHtmlLang(html, filePath, baseLineNum)
   checkViewportZoom(html, filePath, baseLineNum)
   checkClassExistence(html, filePath, baseLineNum)

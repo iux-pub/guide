@@ -20,8 +20,10 @@ HTML 마크업 작성 규칙이다.
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, manual |
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | check-html-structure.js |
+| R-30 | 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지 | error | check-html-structure.js |
 | R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | check-html-structure.js |
 | R-36 | 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27) | error | check-violations.js |
+| R-39 | main 안 h1은 하나, 제목 단계를 건너뛰지 않는다 | error | check-html-structure.js |
 | R-40 | 공공 화면은 모든 페이지 헤더에 통합검색을 두고, 공공 메인은 첫 화면에 과업 진입을 두며 마케팅 템플릿 섹션을 쓰지 않는다 | error | check-html-structure.js |
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
@@ -266,6 +268,30 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
+## R-30 — 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> 국내 웹 96곳 중 javascript: 링크 55%, 빈 # 65%가 관찰된 관행이지만 WCAG 4.1.2(이름·역할·값)를 어기고 새 탭·북마크·공유가 안 된다. 이동은 실제 주소의 a, 동작(열기·닫기·토글·더보기)은 button으로 쓴다. href가 빈 값·'#'·'#none'·'#;'이거나 javascript:로 시작하면 오류다(scripts/lib/page-rules.js isDeadHref). '#top'·실제 앵커(#main)는 통과, 템플릿 식({{ url }})은 렌더할 때 정해지므로 보지 않는다. 스니펫·플레이그라운드·문서 예시까지 모든 마크업에 적용한다(반례 문서는 기존 제외 경로).
+
+**금지 예시**
+
+```html
+<a href="#" class="more">더보기</a>   // 동작을 링크로
+<a href="javascript:void(0)">닫기</a>   // javascript: 링크
+```
+
+**올바른 형식**
+
+```html
+<a href="/notice">공지사항 더보기</a>   // 이동은 실제 주소
+<button type="button" aria-expanded="false">펼치기</button>   // 동작은 button
+```
+
+**참고:** references/korean-web-patterns.md, scripts/lib/page-rules.js
+
+---
+
 ## R-32 — 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만
 
 **심각도:** `error` &nbsp; **검증:** check-html-structure.js
@@ -314,6 +340,29 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** references/class-naming.md, scripts/lib/visual-signature.js
+
+---
+
+## R-39 — main 안 h1은 하나, 제목 단계를 건너뛰지 않는다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> 페이지 제목 h1은 하나이고 제목은 한 단계씩 내려간다(accessibility.md 제목 구조, WCAG 1.3.1). 납품 페이지·boilerplate의 main 안 제목 수열(h1~h6, role=heading aria-level — 대화상자·숨김·template·nav 안은 제외)에서 h1이 2개 이상이거나 h2 다음 h4처럼 2단계 이상 깊어지면 오류다. 크기는 클래스로 정하고 제목 단계로 정하지 않는다. main 밖 h1(헤더 로고)은 경고, aria-label 없는 섹션의 이름이 카드·목록 항목 안 제목뿐이면 경고다. main 안 h1 없음·첫 제목이 h1이 아님은 R-41이 본다(사이드 메뉴 nav의 제목은 앞에 와도 된다 — KRDS D1).
+
+**금지 예시**
+
+```html
+<h1>공지사항</h1><h3>필터</h3>   // h2 건너뜀
+<header><h1 class="site-header__logo">기관명</h1></header>   // 로고 h1(경고)
+```
+
+**올바른 형식**
+
+```html
+<h1>공지사항</h1><h2>목록</h2><h3>필터</h3>   // 한 단계씩
+```
+
+**참고:** references/accessibility.md, scripts/lib/page-rules.js
 
 ---
 

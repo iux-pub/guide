@@ -18,8 +18,10 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | check-violations.js |
 | R-24 | 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고 | error | check-violations.js |
 | R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | build-tokens.js |
+| R-31 | 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고) | warn | check-violations.js |
 | R-34 | 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자 | error | check-violations.js |
 | R-37 | Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다 | error | check-violations.js |
+| R-38 | KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고 | error | check-violations.js |
 
 ---
 
@@ -209,6 +211,30 @@ body {
 
 ---
 
+## R-31 — 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)
+
+**심각도:** warn &nbsp; **검증:** check-violations.js
+
+> infoUX의 rem 단계(1rem = 10px)는 KRDS 방식의 62.5% 루트를 전제한다. html·:root의 font-size를 다른 값으로 줄이거나 vw로 두면 사용자의 브라우저 글자 크기 설정(WCAG 1.4.4)과 rem 단계가 함께 무너진다(국내 13곳 관찰). html·:root의 font-size가 62.5%가 아니면 경고다. 글자 크기 조절 기능은 html[data-font-scale]로 두며 예외다(scripts/lib/type-floor.js).
+
+**금지 예시**
+
+```css
+html { font-size: 56.25%; }   // 루트 축소
+:root { font-size: calc(0.5rem + 0.5vw); }   // vw 스케일
+```
+
+**올바른 형식**
+
+```css
+html { font-size: 62.5%; }   // 고정
+html[data-font-scale="large"] { font-size: 75%; }   // 글자 크기 조절
+```
+
+**참고:** references/krds-tokens.md, scripts/lib/type-floor.js
+
+---
+
 ## R-34 — 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자
 
 **심각도:** `error` &nbsp; **검증:** check-violations.js
@@ -262,5 +288,30 @@ focus-visible:shadow-[0_0_0_0.4rem_var(--color-border-primary)]   // spread만 �
 ```
 
 **참고:** references/tailwind-mapping.md, references/krds-source.md, scripts/lib/visual-signature.js
+
+---
+
+## R-38 — KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고
+
+**심각도:** `error` &nbsp; **검증:** check-violations.js
+
+> KRDS 타이포 최소 단계는 13px, 본문은 16px이다. 62.5% 루트에서 1rem = 10px이므로 1.3rem 미만은 오류, body는 1.6rem 미만이면 오류, 설명·본문 성격 element(__desc·__description·__body·__lead·__excerpt·__content)는 1.5rem 미만이면 오류다. 1.3~1.5rem 사이(1.4rem 등)는 KRDS 단계 밖이라 경고, p·li·td·dd·blockquote의 1.3rem은 주석·각주 허용이라 경고다. CSS 선언(font-size·font 단축), @apply의 text-[N]·[font-size:N], HTML <style>·class의 text-[N]·style 속성을 본다(scripts/lib/type-floor.js). 아이콘 글리프(__icon·__close·__remove·__arrow·__mark·__dot, .icon, icon-font), 기호만 그리는 ::before·::after, 코드(pre·code·kbd·samp·monospace), em·%처럼 rem으로 바꿀 수 없는 값은 보지 않는다(clamp는 최솟값). Tailwind 기본 text-xs~xl은 R-37이 본다.
+
+**금지 예시**
+
+```css
+.board__count { @apply text-[1.2rem]; }   // 12px
+body { @apply text-[1.5rem]; }   // body 15px
+.card__desc { font-size: 1.4rem; }   // 설명 14px
+```
+
+**올바른 형식**
+
+```css
+.badge__text { @apply text-[1.3rem]; }   // 배지 최소 단계
+.card__desc { @apply text-[1.5rem]; }   // 설명 15px
+```
+
+**참고:** references/krds-tokens.md, scripts/lib/type-floor.js
 
 ---

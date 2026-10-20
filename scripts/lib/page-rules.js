@@ -159,11 +159,52 @@ function r41(root, ctx, out) {
     }
   }
 
-  const headings = els(main, n => /^h[1-6]$/.test(n.tag) && !inHiddenRegion(n))
+  const headings = headingsIn(main)
   if (!headings.length || headings[0].tag !== 'h1') {
     const first = headings[0]
     out.push({ rule: 'R-41', severity: 'error', line: first ? first.line : main.line, message: first ? `main의 첫 제목이 <${first.tag}>다 — 페이지 제목 h1을 main 안 맨 앞 제목으로 둔다.` : 'main 안에 h1이 없다 — 페이지 제목은 main 안 h1이다.', code: first ? norm(T.textOf(first)).slice(0, 120) : '<main>' })
   }
+}
+
+// 제목 수열 — h1~h6과 role=heading(aria-level). 대화상자·숨김·template·nav(사이드 메뉴 제목) 안은 뺀다
+const levelOf = n => (/^h[1-6]$/.test(n.tag) ? +n.tag[1] : n.attrs?.role === 'heading' ? +(n.attrs['aria-level'] || 2) : 0)
+const headingsIn = scope => els(scope, n => levelOf(n) > 0 && !inHiddenRegion(n) && !T.ancestors(n).some(a => a.tag === 'nav'))
+  .map(n => Object.assign(n, { level: levelOf(n) }))
+
+// R-39 — main 안 h1은 하나, 제목 단계를 건너뛰지 않는다, 섹션 이름을 카드 안 제목으로 대신하지 않는다
+function r39(root, ctx, out) {
+  const main = T.find(root, n => n.tag === 'main')
+  if (!main) return
+  const hs = headingsIn(main)
+  const h1s = hs.filter(h => h.level === 1)
+  if (h1s.length > 1) out.push({ rule: 'R-39', severity: 'error', line: h1s[1].line, message: `main 안에 h1이 ${h1s.length}개다 — 페이지 제목 h1은 하나다.`, code: norm(T.textOf(h1s[1])).slice(0, 120) })
+  for (let i = 1; i < hs.length; i++) {
+    if (hs[i].level > hs[i - 1].level + 1) {
+      out.push({ rule: 'R-39', severity: 'error', line: hs[i].line, message: `제목 단계를 건너뛰었다(h${hs[i - 1].level} 다음 h${hs[i].level}) — 한 단계씩 내려간다. 크기는 클래스로 정한다.`, code: norm(T.textOf(hs[i])).slice(0, 120) })
+    }
+  }
+  const outsideH1 = els(root, n => levelOf(n) === 1 && !inside(n, main) && !inHiddenRegion(n))
+  if (outsideH1.length) out.push({ rule: 'R-39', severity: 'warn', line: outsideH1[0].line, message: 'main 밖에 h1이 있다(헤더 로고 등) — 로고는 h1이 아니다. 페이지 제목 h1은 main 안에 하나만 둔다.', code: norm(T.textOf(outsideH1[0])).slice(0, 120) })
+  for (const section of (main.children || []).filter(c => c.tag === 'section')) {
+    if (section.attrs['aria-label'] || section.attrs['aria-labelledby']) continue
+    const first = headingsIn(section)[0]
+    if (!first) continue
+    const holder = T.ancestors(first).find(a => a === section ? false : hasClass(a, 'card') || a.tag === 'li' || (a.tag === 'article' && (a.parent.children || []).filter(s => s.tag === 'article').length > 1))
+    if (holder && inside(holder, section)) out.push({ rule: 'R-39', severity: 'warn', line: first.line, message: '섹션 이름이 카드·목록 항목 안 제목뿐이다 — 섹션 제목(h2)을 따로 두거나 aria-label로 이름을 준다.', code: norm(T.textOf(first)).slice(0, 120) })
+  }
+}
+
+// R-30 — 링크는 실제 목적지가 있어야 한다(빈 값·#·#none·#;·javascript:). '#top'은 맨 위 이동이라 예외.
+// 이동은 실제 URL의 a, 동작은 button이다. page 계약과 무관하게 모든 마크업에 쓴다
+function deadLinkFindings(html) {
+  const out = []
+  T.walk(T.parseHtml(html), n => {
+    if (n.tag !== 'a' || !('href' in (n.attrs || {}))) return
+    // 공백만 남은 href는 템플릿 식({{ url }})을 지운 자리다 — 값이 렌더할 때 정해진다
+    if (/^\s+$/.test(n.attrs.href)) return
+    if (isDeadHref(n.attrs.href)) out.push({ rule: 'R-30', severity: 'error', line: n.line, message: `링크 href="${n.attrs.href}"에 실제 목적지가 없다 — 이동은 실제 주소의 a, 동작(열기·닫기·토글)은 button으로 쓴다.`, code: (n.src || '').replace(/\s+/g, ' ').slice(0, 120) })
+  })
+  return out
 }
 
 // ctx: { profile }
@@ -174,7 +215,8 @@ function scanPageRules(html, ctx = {}) {
   r40(root, ctx, out)
   r40Main(root, ctx, out)
   r41(root, ctx, out)
+  r39(root, ctx, out)
   return out.sort((a, b) => (a.line || 0) - (b.line || 0))
 }
 
-module.exports = { scanPageRules, isDeadHref }
+module.exports = { scanPageRules, deadLinkFindings, isDeadHref }

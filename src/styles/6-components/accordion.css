@@ -30,7 +30,7 @@
 
   /* 화살표 indicator */
   .accordion__summary::after {
-    @apply content-[''] shrink-0 w-[1.6rem] h-[1.6rem] [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'><path%20d='M4%206L8%2010L12%206'%20stroke='%2333363D'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:transform_0.4s_ease-in-out];
+    @apply content-[''] shrink-0 w-[1.6rem] h-[1.6rem] [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'><path%20d='M4%206L8%2010L12%206'%20stroke='%2333363D'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:rotate_0.4s_ease-in-out];
   }
 
   .accordion__item[open] > .accordion__summary {

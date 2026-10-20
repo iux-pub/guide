@@ -128,7 +128,7 @@
   .site-footer__family-summary::marker { @apply [content:""]; }
 
   .site-footer__family-icon {
-    @apply [transition:transform_0.15s_ease-in-out];
+    @apply [transition:rotate_0.15s_ease-in-out];
   }
 
   .site-footer__family[open] .site-footer__family-icon {

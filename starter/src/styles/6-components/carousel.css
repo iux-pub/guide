@@ -1,23 +1,27 @@
 /**
- * Carousel — KRDS Carousel
+ * Carousel — KRDS 캐러셀 (component_04_09)
  *
- * 구조 (스크롤 스냅 기반):
- *   <div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">
- *     <div class="carousel__viewport">
- *       <ol class="carousel__track">
- *         <li class="carousel__slide" aria-roledescription="slide" aria-label="1 / 3">...</li>
- *         <li class="carousel__slide" aria-roledescription="slide" aria-label="2 / 3">...</li>
- *       </ol>
- *     </div>
+ * 구조 (스크롤 스냅 기반, 컨트롤이 슬라이드보다 먼저 온다):
+ *   <div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel data-carousel-autoplay="6000">
  *     <div class="carousel__controls">
- *       <button class="carousel__nav carousel__nav--prev" aria-label="이전 슬라이드">‹</button>
- *       <button class="carousel__nav carousel__nav--next" aria-label="다음 슬라이드">›</button>
+ *       <button class="carousel__toggle" data-carousel-toggle>…<span class="sr-only">자동 넘김 정지</span></button>  ← 첫 상호작용 요소
+ *       <button class="carousel__nav" data-carousel-prev>…<span class="sr-only">이전 슬라이드</span></button>
+ *       <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>3</span></p>
+ *       <div class="carousel__dots" role="group" aria-label="슬라이드 선택">
+ *         <button class="carousel__dot" data-carousel-goto="0" aria-current="true"><span class="sr-only">1번 슬라이드</span></button>
+ *       </div>
+ *       <button class="carousel__nav" data-carousel-next>…<span class="sr-only">다음 슬라이드</span></button>
  *     </div>
- *     <div class="carousel__indicators" role="tablist">
- *       <button class="carousel__dot" role="tab" aria-selected="true" aria-label="1번 슬라이드"></button>
- *       <button class="carousel__dot" role="tab" aria-selected="false" aria-label="2번 슬라이드"></button>
+ *     <div class="carousel__viewport">
+ *       <ul class="carousel__track" aria-live="off">
+ *         <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">…</li>
+ *       </ul>
  *     </div>
  *   </div>
+ *
+ * KRDS: 슬라이드 5개 이내 · 1023px 미만은 분수형(1/3), 1024px 이상은 도형형(점) 식별자 ·
+ * 컨트롤이 항목을 가리지 않는다 · 텍스트 이미지를 슬라이드로 쓰지 않는다.
+ * 동작(정지 우선·초점 진입 시 정지·가려진 슬라이드 제외)은 src/js/carousel.js.
  */
 
 @layer components {
@@ -25,50 +29,102 @@
     @apply relative;
   }
 
+  /* 컨트롤 막대 — 슬라이드 위(문서 순서 = 초점 순서 = 보이는 순서) */
+  .carousel__controls {
+    @apply flex items-center justify-end gap-[0.8rem] mb-[1.2rem];
+  }
+
+  .carousel__controls[hidden] {
+    @apply hidden;
+  }
+
+  /* 정지/재생·이전·다음 — 터치 영역 44px(R-13) */
+  .carousel__toggle,
+  .carousel__nav {
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] p-0 bg-[var(--color-surface)] border border-[var(--color-border-control)] rounded-full text-[var(--color-text)] cursor-pointer [transition:background-color_0.15s_ease-in-out];
+  }
+
+  .carousel__toggle:hover,
+  .carousel__nav:hover {
+    @apply bg-[var(--color-bg-subtler)];
+  }
+
+  .carousel__toggle[hidden] {
+    @apply hidden;
+  }
+
+  /* 분수형 식별자 — 1023px 미만 (KRDS) */
+  .carousel__counter {
+    @apply m-0 min-w-[4.8rem] text-center text-[1.5rem] leading-[1.5] text-[var(--color-text-subtle)] [font-variant-numeric:tabular-nums] laptop:hidden;
+  }
+
+  /* 도형형 식별자 — 1024px 이상, 버튼으로 제공 (KRDS) */
+  .carousel__dots {
+    @apply hidden items-center laptop:flex;
+  }
+
+  .carousel__dot {
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] p-0 bg-transparent border-0 cursor-pointer;
+  }
+
+  /* 시각 크기는 작게, 누르는 영역은 44px. 현재 위치는 색에 더해 길이로도 구분한다(WCAG 1.4.1) */
+  .carousel__dot::before {
+    @apply content-[''] block w-[1rem] h-[1rem] rounded-full bg-[var(--color-border-control)] [transition:width_0.15s_ease-in-out,background-color_0.15s_ease-in-out];
+  }
+
+  .carousel__dot[aria-current="true"]::before {
+    @apply w-[2.4rem] bg-[var(--color-primary)];
+  }
+
   .carousel__viewport {
     @apply overflow-hidden rounded-[0.6rem];
   }
 
   .carousel__track {
-    @apply flex list-none m-0 p-0 overflow-x-auto [scroll-snap-type:x_mandatory] scroll-smooth;
+    @apply flex list-none m-0 p-0 overflow-x-auto [scroll-snap-type:x_mandatory] scroll-smooth [scrollbar-width:none];
+  }
+
+  .carousel__track::-webkit-scrollbar {
+    @apply hidden;
   }
 
   .carousel__slide {
     @apply [flex:0_0_100%] snap-start;
   }
 
-  /* Prev/Next 버튼 */
-  .carousel__nav {
-    @apply absolute w-[4.4rem] h-[4.4rem] flex items-center justify-center bg-[var(--color-surface)] border border-[var(--color-border-control)] rounded-full text-[var(--color-text)] text-[2rem] cursor-pointer shadow-[0_0_0.2rem_0_#0000000d,_0_0.4rem_0.8rem_0_#00000014] top-[50%] [transform:translateY(-50%)];
-
-
-
-
-  }
-  .carousel__nav--prev { @apply [left:1.2rem]; }
-  .carousel__nav--next { @apply [right:1.2rem]; }
-
-  .carousel__nav:hover {
-    @apply bg-[var(--color-bg-subtler)];
+  /* 슬라이드 내용 — 문구는 HTML 텍스트(1~2줄), 이미지는 장식 배경 */
+  .carousel__link {
+    @apply flex flex-col h-full text-[var(--color-text)] no-underline bg-[var(--color-bg-subtler)];
   }
 
-  /* 인디케이터 (점) */
-  .carousel__indicators {
-    @apply flex justify-center gap-[0.8rem] mt-[1.6rem];
+  .carousel__image {
+    @apply block w-full [aspect-ratio:16/9] object-cover;
   }
 
-  .carousel__dot {
-    @apply w-[1.0rem] h-[1.0rem] rounded-full border-0 bg-[var(--color-border-control)] cursor-pointer p-0 [transition:background-color_0.15s_ease-in-out];
+  .carousel__body {
+    @apply flex flex-col gap-[0.4rem] p-[1.6rem] tablet:p-[2.4rem];
   }
 
-  .carousel__dot[aria-selected="true"] {
-    @apply bg-[var(--color-primary)];
+  .carousel__title {
+    @apply m-0 text-[1.9rem] font-bold leading-[1.5];
   }
 
-  /* prefers-reduced-motion 대응 — 자동 재생 시 정지 권장 */
+  .carousel__meta {
+    @apply m-0 text-[1.5rem] leading-[1.5] text-[var(--color-text-subtle)];
+  }
+
+  .carousel__link:hover .carousel__title {
+    @apply underline;
+  }
+
+  /* 움직임 줄이기 — 부드러운 스크롤을 끈다(자동 회전은 JS가 시작하지 않는다) */
   @media (prefers-reduced-motion: reduce) {
     .carousel__track {
       @apply scroll-auto;
+    }
+
+    .carousel__dot::before {
+      @apply [transition:none];
     }
   }
 }

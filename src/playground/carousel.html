@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>캐러셀 컴포넌트 - 미리보기</title>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+  <style>
+    /* 플레이그라운드 전용 스타일 */
+    .pg {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .pg__title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .pg__section {
+      margin-bottom: 48px;
+    }
+
+    .pg__subtitle {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .pg__preview {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pg__note {
+      font-size: 1.5rem;
+      line-height: 1.5;
+      color: var(--color-text-subtle);
+    }
+  </style>
+</head>
+<body>
+  <div class="pg">
+    <h1 class="pg__title">캐러셀 (Carousel)</h1>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">자동 회전 — 정지 버튼이 첫 상호작용 요소</h2>
+      <div class="pg__preview">
+        <div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel data-carousel-autoplay="5000">
+          <div class="carousel__controls">
+            <button type="button" class="carousel__toggle" data-carousel-toggle>
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#pause"></use></svg>
+              <span class="sr-only">자동 넘김 정지</span>
+            </button>
+            <button type="button" class="carousel__nav" data-carousel-prev>
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-left"></use></svg>
+              <span class="sr-only">이전 슬라이드</span>
+            </button>
+            <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>3</span></p>
+            <div class="carousel__dots" role="group" aria-label="슬라이드 선택">
+              <button type="button" class="carousel__dot" data-carousel-goto="0" aria-current="true"><span class="sr-only">1번 슬라이드</span></button>
+              <button type="button" class="carousel__dot" data-carousel-goto="1"><span class="sr-only">2번 슬라이드</span></button>
+              <button type="button" class="carousel__dot" data-carousel-goto="2"><span class="sr-only">3번 슬라이드</span></button>
+            </div>
+            <button type="button" class="carousel__nav" data-carousel-next>
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg>
+              <span class="sr-only">다음 슬라이드</span>
+            </button>
+          </div>
+          <div class="carousel__viewport">
+            <ul class="carousel__track" aria-live="off">
+              <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+                <a class="carousel__link" href="#pg-slide-1">
+                  <span class="carousel__body">
+                    <span class="carousel__title">2026년 하반기 청년 창업 지원 사업 공모</span>
+                    <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
+                  </span>
+                </a>
+              </li>
+              <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+                <a class="carousel__link" href="#pg-slide-2">
+                  <span class="carousel__body">
+                    <span class="carousel__title">겨울철 도로 결빙 구간 안내</span>
+                    <span class="carousel__meta">2026.12.01부터 적용</span>
+                  </span>
+                </a>
+              </li>
+              <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+                <a class="carousel__link" href="#pg-slide-3">
+                  <span class="carousel__body">
+                    <span class="carousel__title">민원 처리 시스템 점검으로 일시 중단</span>
+                    <span class="carousel__meta">2026.11.15 02:00 ~ 06:00</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p class="pg__note">Tab으로 들어오면 자동 넘김이 멈추고 버튼 문구가 「자동 넘김 시작」으로 바뀝니다. 재생 버튼을 누르기 전에는 다시 돌지 않습니다. 1024px 미만에서는 점 대신 「1 / 3」이 보입니다. 가려진 슬라이드의 링크는 Tab으로 닿지 않습니다.</p>
+    </div>
+
+    <div class="pg__section">
+      <h2 class="pg__subtitle">수동 넘김 — 정지 버튼 없음</h2>
+      <div class="pg__preview">
+        <div class="carousel" role="region" aria-roledescription="carousel" aria-label="추천 여행지" data-carousel>
+          <div class="carousel__controls">
+            <button type="button" class="carousel__nav" data-carousel-prev>
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-left"></use></svg>
+              <span class="sr-only">이전 슬라이드</span>
+            </button>
+            <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>2</span></p>
+            <button type="button" class="carousel__nav" data-carousel-next>
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg>
+              <span class="sr-only">다음 슬라이드</span>
+            </button>
+          </div>
+          <div class="carousel__viewport">
+            <ul class="carousel__track" aria-live="polite">
+              <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 2">
+                <a class="carousel__link" href="#pg-trip-1">
+                  <span class="carousel__body">
+                    <span class="carousel__title">한라산 영실 탐방로</span>
+                    <span class="carousel__meta">왕복 약 3시간 · 입산 통제 시간 확인</span>
+                  </span>
+                </a>
+              </li>
+              <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 2">
+                <a class="carousel__link" href="#pg-trip-2">
+                  <span class="carousel__body">
+                    <span class="carousel__title">우도 해안 순환 코스</span>
+                    <span class="carousel__meta">도항선 운항 시간 확인 · 전기자전거 대여</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/carousel.js"></script>
+</body>
+</html>

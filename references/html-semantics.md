@@ -371,11 +371,12 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">` |
-| 자식 시맨틱 | `<div class="carousel__viewport">` → `<ol class="carousel__track">` → `<li class="carousel__slide" aria-roledescription="slide" aria-label="3 of 5">` → 컨트롤 `<button aria-label="이전 슬라이드">` / `<button aria-label="일시정지">` / `<button aria-label="다음 슬라이드">` |
-| 필수 ARIA | `aria-roledescription="carousel"` · 각 슬라이드에 `aria-roledescription="slide"` + `aria-label="N of M"` · 컨트롤 `aria-label` · 자동재생 시 일시정지 버튼 필수(WCAG 2.2.2) |
-| 자동 재생 금지 (KRDS) | 사용자가 명시 활성화 안 했으면 OFF. 활성화 시 일시정지 버튼 필수 |
-| 키보드 | `←→` 슬라이드 이동 · `Esc` 또는 일시정지 버튼으로 정지 |
+| Root 태그 | `<div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel>` |
+| 자식 시맨틱 | `div.carousel__controls`(슬라이드보다 앞) → `button.carousel__toggle`(자동 회전일 때, **첫 상호작용 요소**) · `button.carousel__nav`(이전) · `p.carousel__counter aria-hidden` · `div.carousel__dots role="group"` → `button.carousel__dot aria-current` · `button.carousel__nav`(다음) → `div.carousel__viewport` → `ul.carousel__track aria-live` → `li.carousel__slide role="group" aria-roledescription="slide" aria-label="N / 총수"` |
+| 필수 ARIA | `aria-roledescription="carousel"` + `aria-label` · 슬라이드 `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"` · 아이콘 버튼은 `sr-only` 이름 · 현재 점 `aria-current="true"` · 현재 밖 슬라이드 `inert` + `aria-hidden="true"` |
+| 자동 회전 (KRDS) | 지정할 때만 켠다. 정지/재생 버튼이 첫 상호작용 요소. 키보드 초점이 들어오면 정지하고 사용자가 재생하기 전에는 재개하지 않는다. 마우스를 올리면 멈춘다. `prefers-reduced-motion`이면 시작하지 않는다 |
+| 사용 조건 (KRDS) | 슬라이드 5개 이내(초과하면 목록). 1023px 미만 분수형·1024px 이상 점 버튼 식별자. 텍스트 이미지 슬라이드 금지 |
+| 키보드 | `Tab` 컨트롤·현재 슬라이드 순회 · `Enter`/`Space` 버튼 실행 · 점 그룹에서 `←→` 이전/다음 |
 
 ### `error-page` — 오류 페이지
 

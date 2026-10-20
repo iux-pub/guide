@@ -258,38 +258,69 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 기본 마크업
 
 ```html
-<div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">
-  <div class="carousel__viewport">
-    <ol class="carousel__track">
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="1 / 3">
-        <img src="/img1.jpg" alt="설명">
-      </li>
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="2 / 3">
-        <img src="/img2.jpg" alt="설명">
-      </li>
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="3 / 3">
-        <img src="/img3.jpg" alt="설명">
-      </li>
-    </ol>
+<div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel data-carousel-autoplay="6000">
+  <div class="carousel__controls">
+    <button type="button" class="carousel__toggle" data-carousel-toggle>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#pause"></use></svg>
+      <span class="sr-only">자동 넘김 정지</span>
+    </button>
+    <button type="button" class="carousel__nav" data-carousel-prev>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-left"></use></svg>
+      <span class="sr-only">이전 슬라이드</span>
+    </button>
+    <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>3</span></p>
+    <div class="carousel__dots" role="group" aria-label="슬라이드 선택">
+      <button type="button" class="carousel__dot" data-carousel-goto="0" aria-current="true"><span class="sr-only">1번 슬라이드</span></button>
+      <button type="button" class="carousel__dot" data-carousel-goto="1"><span class="sr-only">2번 슬라이드</span></button>
+      <button type="button" class="carousel__dot" data-carousel-goto="2"><span class="sr-only">3번 슬라이드</span></button>
+    </div>
+    <button type="button" class="carousel__nav" data-carousel-next>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+      <span class="sr-only">다음 슬라이드</span>
+    </button>
   </div>
 
-  <button type="button" class="carousel__nav carousel__nav--prev" aria-label="이전 슬라이드">‹</button>
-  <button type="button" class="carousel__nav carousel__nav--next" aria-label="다음 슬라이드">›</button>
-
-  <div class="carousel__indicators" role="tablist">
-    <button type="button" class="carousel__dot" role="tab" aria-selected="true" aria-label="1번 슬라이드"></button>
-    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="2번 슬라이드"></button>
-    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="3번 슬라이드"></button>
+  <div class="carousel__viewport">
+    <ul class="carousel__track" aria-live="off">
+      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+        <a class="carousel__link" href="/notice/view/1024">
+          <img class="carousel__image" src="/images/main/notice-01.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">2026년 하반기 청년 창업 지원 사업 공모</span>
+            <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
+          </span>
+        </a>
+      </li>
+      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+        <a class="carousel__link" href="/notice/view/1031">
+          <img class="carousel__image" src="/images/main/notice-02.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">겨울철 도로 결빙 구간 안내</span>
+            <span class="carousel__meta">2026.12.01부터 적용</span>
+          </span>
+        </a>
+      </li>
+      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+        <a class="carousel__link" href="/notice/view/1040">
+          <img class="carousel__image" src="/images/main/notice-03.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">민원 처리 시스템 점검으로 일시 중단</span>
+            <span class="carousel__meta">2026.11.15 02:00 ~ 06:00</span>
+          </span>
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
 ```
 
 ### 접근성
 
-- 자동 재생은 **기본 OFF** 권장 — 사용자 통제권 (WCAG 2.2.2)
-- 자동 재생 시: 일시정지 버튼 필수 + `prefers-reduced-motion: reduce` 시 자동 비활성
-- 인디케이터는 키보드 작동 가능
-- 슬라이드별 `aria-label="N / 총수"`로 위치 안내
+- 루트: `role="region"` + `aria-roledescription="carousel"` + `aria-label`(무엇의 캐러셀인지).
+- 슬라이드: `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"`.
+- 위치 식별자: 1023px 미만은 분수형(`.carousel__counter`), 1024px 이상은 도형형 버튼(`.carousel__dots`, 현재는 `aria-current="true"`). 현재 점은 색과 길이로 구분한다.
+- 모든 컨트롤은 44×44px 이상이다(R-13). 아이콘만 있는 버튼은 `sr-only` 텍스트로 이름을 준다.
+- 컨트롤과 식별자가 슬라이드 내용을 가리지 않는다.
 
 ---
 

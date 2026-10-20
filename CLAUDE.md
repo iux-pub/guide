@@ -35,13 +35,15 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 
 <!-- RULES_START -->
 ### CSS 규칙
-- R-01 `error` — 색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장
+- R-01 `error` — 색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37)
 - R-02 `warn` — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
 - R-03 `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - R-19 `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 - R-20 `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
 - R-24 `error` — 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고
 - R-26 `error` — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
+- R-34 `error` — 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자
+- R-37 `error` — Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다
 
 ### BEM 네이밍
 - R-04 `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
@@ -60,6 +62,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 - R-29 `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
+- R-36 `error` — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -85,7 +88,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 3. ✅ 사용할 토큰 확인: `tokens/foundation.json`(불변) + `tokens/brand.json`(프로젝트 교체)
 4. ✅ 모든 색상 = `var(--color-*)` 시맨틱 토큰
 5. ✅ 기본 폰트 = `var(--font-sans)` / 코드 폰트 = `var(--font-mono)`
-6. ✅ 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용
+6. ✅ 간격/크기/타이포 스케일은 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`, `text-[1.7rem]`) 사용 — 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `text-sm`)은 37.5% 작게 렌더된다(R-37)
 7. ✅ 표준 CSS nesting과 Tailwind v4 `@apply`를 사용해 구조를 간결하게 유지
 8. ✅ 새 컴포넌트는 `src/styles/6-components/{name}.css` 추가 + `6-components/index.css`에 `@import` 등록
 9. ✅ 작성 후: `npm run lint:css` 통과 + `npm run check` 위반 0건
@@ -172,7 +175,7 @@ MCP `get_workflow("create-component")` 절차를 따른다 — 아래 파일이 
 
 ## 디자인 토큰 위치
 
-색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(`var(--*)`)와 Tailwind `@theme` 기준을 사용하라. 간격·크기·타이포 스케일은 프로젝트 맥락에 맞는 CSS/Tailwind 직접값으로 작성한다(R-01).
+색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(`var(--*)`)와 Tailwind `@theme` 기준을 사용하라. 간격·크기·타이포 스케일은 프로젝트 맥락에 맞는 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`, `gap-[0.8rem]`, `text-[1.7rem] leading-[1.6]`)으로 작성한다(R-01). 루트 글자 크기가 62.5%(1rem = 10px)라서 Tailwind 기본 스케일(`p-4`, `gap-2`, `text-sm`, `leading-6`, `max-w-md`)은 37.5% 작게 렌더되므로 쓰지 않는다(R-37).
 
 | 단계 | 파일 | 갱신 정책 |
 |------|------|----------|
@@ -269,9 +272,11 @@ src/styles/
 ## 절대 금지 (요약 — 상세는 `references/forbidden-patterns.md`)
 
 - Raw hex/rgb/hsl 색상
-- 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
+- 간격/크기/타이포 스케일은 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`) 사용. 색상 raw 값은 금지
 - Tailwind 기본 팔레트 raw 컬러 유틸
-- Tailwind 기본 스케일은 프로젝트 기준과 충돌하지 않는지 확인
+- Tailwind 기본 스케일(`text-sm`, `leading-6`, `p-4`, `gap-2`, `max-w-md` 등) — 62.5% 루트에서 37.5% 작게 렌더된다(R-37)
+- 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·큰 블러·컬러 글로우 그림자(R-34). 사진 위 스크림과 KRDS 검정 알파 그림자만 쓴다
+- 이모지를 아이콘·불릿·배지·제목 장식으로 쓰기(R-36) — 아이콘은 카탈로그에서
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
 - `!important` (사유 주석 없을 시)
 - 인라인 `style="..."` (CSS 변수 주입 외)

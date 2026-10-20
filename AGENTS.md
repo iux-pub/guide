@@ -79,9 +79,9 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 |------|------|
 | 사이트 유형 판정 | 코드 생성 전 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 먼저 판정 |
 | 색상 | `var(--color-*)` 시맨틱 토큰 |
-| 간격/크기 | CSS/Tailwind 직접값. CMS·관리자 화면은 정보 밀도에 맞게 조정 |
+| 간격/크기 | CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`). 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `text-sm`)은 37.5% 작게 렌더돼 쓰지 않는다(R-37). CMS·관리자 화면은 정보 밀도에 맞게 조정 |
 | 폰트 | `var(--font-sans)` |
-| 폰트 사이즈 | 프로젝트 타입 계층을 우선. 토큰화하지 않음 |
+| 폰트 사이즈 | 프로젝트 타입 계층을 우선. 토큰화하지 않음. `text-[1.7rem] leading-[1.6]`처럼 rem 임의값·비율로 쓰고 `text-sm`·`leading-6` 같은 기본 스케일은 쓰지 않는다(R-37) |
 | CSS 작성 | 표준 CSS nesting 허용, Tailwind v4 `@apply`/`@theme`/`@utility` 허용 |
 | 반응형 작성 | 단순 속성 변경은 `@apply tablet:*`/`@apply pc:*` 우선, 복잡한 중첩 선택자는 관련 선택자 내부 `@media` 사용 |
 | 터치 영역 | 모바일 인터랙티브 ≥ 44×44px |
@@ -108,13 +108,15 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 > 본 섹션은 `rules.json`에서 자동 생성. `npm run build:rules`로 갱신.
 
 ### CSS 규칙
-- **R-01** `error` — 색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장
+- **R-01** `error` — 색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37)
 - **R-02** `warn` — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
 - **R-03** `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - **R-19** `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 - **R-20** `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
 - **R-24** `error` — 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고
 - **R-26** `error` — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
+- **R-34** `error` — 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자
+- **R-37** `error` — Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다
 
 ### BEM 네이밍
 - **R-04** `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
@@ -133,6 +135,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - **R-25** `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - **R-27** `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 - **R-29** `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
+- **R-36** `error` — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
 
 ### 접근성 규칙
 - **R-11** `error` — 포커스 스타일 필수 — :focus { outline: none } 금지

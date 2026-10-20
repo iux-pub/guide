@@ -189,6 +189,7 @@ requireSame('.claude/settings.json', 'starter/.claude/settings.json')
 requireSame('.codex/hooks.json', 'starter/.codex/hooks.json')
 requireSame('scripts/hooks/post-edit.js', 'starter/scripts/hooks/post-edit.js')
 requireSame('scripts/lib/page-scope.js', 'starter/scripts/lib/page-scope.js')
+requireSame('scripts/lib/visual-signature.js', 'starter/scripts/lib/visual-signature.js')
 
 // 스타터 푸시 단계가 검사 실패를 파이프로 삼키지 않게 한다(npm run check | tail 은 pipefail 없이는 늘 성공)
 const syncScript = read('scripts/sync-starter.sh')

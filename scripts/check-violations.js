@@ -3,6 +3,8 @@
 // check-violations.js — info-design 컨트랙트 자동 검출
 // raw 색상, 옛 시스템 흔적, 옛 variant, SCSS 잔재, 접근성 누락,
 // 가짜 콘텐츠(R-23), 한글 조판 하한(R-24) 검출.
+// 시각 서명(lib/visual-signature.js): R-01 색 확장(선언 단위·Tailwind·style 속성), R-34 장식 효과,
+// R-36 이모지, R-37 Tailwind 기본 스케일 — CSS·class·style·<style>·마크다운 펜스와 본문.
 //
 // 종료 코드: 0 = 통과 또는 경고만, 2 = 오류
 //   STRICT=1 환경변수 설정 시 경고도 1로 실패 처리
@@ -11,6 +13,13 @@ const fs = require('fs')
 const path = require('path')
 const { loadTokenSource } = require('./lib/token-source')
 const { buildTokensCss } = require('./lib/build-tokens-css')
+// 시각 서명(R-01 색 확장·R-34 장식 효과·R-36 이모지·R-37 기본 스케일) — 없으면(오래된 파생 프로젝트) 이 검사만 건너뛴다
+let VISUAL = null
+try {
+  VISUAL = require('./lib/visual-signature')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 
 const ROOT = path.resolve(__dirname, '..')
 const STYLES_DIR = path.join(ROOT, 'src/styles')
@@ -103,7 +112,8 @@ const TW_RAW_COLOR = /\b(?:bg|text|border|ring|divide|hover:bg|hover:text|hover:
 // 5. Tailwind 기본 폰트/사이즈/그림자/z-index/반경
 const TW_DEFAULT_TEXT_SIZE = /\btext-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\b/
 const TW_DEFAULT_FONT_WEIGHT = /\bfont-(?:thin|extralight|light|medium|semibold|extrabold|black)\b/
-const TW_DEFAULT_RADIUS = /\brounded(?:-(?:sm|md|lg|xl|2xl|3xl|none|full))?\b/
+// 끝 경계는 '-'·'['까지 막는다 — rounded-[0.6rem](임의값)이 bare rounded로 잡히던 오탐
+const TW_DEFAULT_RADIUS = /\brounded(?:-(?:sm|md|lg|xl|2xl|3xl|none|full))?(?![\w[-])/
 const TW_DEFAULT_SHADOW = /\bshadow(?:-(?:xs|sm|md|lg|xl|2xl|inner|none))\b/
 const TW_DEFAULT_ZINDEX = /\bz-(?:0|10|20|30|40|50|auto)\b/
 const TW_DEFAULT_BREAKPOINT = /\b(?:sm|md|lg|xl|2xl):/
@@ -156,6 +166,40 @@ const LINE_HEIGHT_DECL = /(?:^|[^-\w])line-height\s*:\s*(\d*\.?\d+)\s*(?:[;}\]]|
 // 단행(한 줄 고정) 컴포넌트는 낮은 line-height가 정상이다 — 하한 검사 예외 파일 목록
 const R24_EXEMPT_CSS = /(?:^|\/)(?:badge|tag|btn)\.css$/
 
+// ─── 시각 서명 문맥 ───────────────────────────────────
+// 표현 등급: infoux.json profile → contracts/profiles.json expression. 없으면 restrained(공공 기본값).
+// 토큰 색 지도: R-34 보라 판정이 var(--color-*)를 실제 색으로 풀어 본다.
+let visualCtxCache = null
+function getVisualCtx() {
+  if (visualCtxCache) return visualCtxCache
+  let grade = 'restrained'
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
+    const profiles = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+    const profile = (profiles.profiles || []).find(p => p.id === config.profile)
+    if (profile?.expression) grade = profile.expression
+  } catch {
+    // infoux.json·profiles.json이 없으면 기본 등급
+  }
+  let tokenColors = new Map()
+  try {
+    tokenColors = VISUAL.buildTokenColorMap(buildTokensCss(loadTokenSource(ROOT)))
+  } catch {
+    // 토큰 소스를 못 읽으면 이름(violet·purple…)으로만 판정한다
+  }
+  visualCtxCache = { grade, tokenColors }
+  return visualCtxCache
+}
+
+function reportVisual(relPath, findings, baseLine = 0) {
+  for (const f of findings) {
+    const line = f.line ? baseLine + f.line : null
+    const msg = `[${f.rule}] ${f.message}`
+    if (f.severity === 'error') error(relPath, line, msg, f.code)
+    else warn(relPath, line, msg, f.code)
+  }
+}
+
 // ─── 검사 함수 ────────────────────────────────────────
 
 // 토큰 이름이 지켜야 하는 접두 — 이 접두의 var(--…)는 토큰 소스에 실제로 있어야 한다.
@@ -193,19 +237,50 @@ function getDefinedTokens() {
   return defined
 }
 
+// 토큰 소스(foundation + brand)에 정의된 이름만 — 설정 계층의 재정의 판정용
+let sourceTokensCache
+function getDefinedTokensFromSource() {
+  if (sourceTokensCache !== undefined) return sourceTokensCache
+  try {
+    const css = buildTokensCss(loadTokenSource(ROOT))
+    sourceTokensCache = new Set([...css.matchAll(/(--color-[a-z0-9-]+)\s*:/gi)].map(m => m[1]))
+  } catch {
+    sourceTokensCache = null
+  }
+  return sourceTokensCache
+}
+
 function checkCssFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.split('\n')
   const relPath = rel(filePath)
 
-  // 자동 생성 파일 제외
-  if (lines[0] && (lines[0].includes('AUTO-GENERATED') || lines[0].includes('자동 생성'))) return
-
-  // 토큰 정의 파일 / 프로젝트 스타일 확장 파일은 raw hex 허용 (정의 자체가 raw임)
+  // 토큰 빌드 산출물은 정의 자체가 raw다 — 자동 생성 표시로 건너뛰는 것도 이 경로에만 허용한다
+  //   (예전에는 1-settings·_project-style 경로 전체와 '자동 생성' 첫 줄만으로 raw 색이 통과했다 — brand.json·대비 검사 우회 구멍)
   const posixPath = relPosix(filePath)
-  const isTokenFile = posixPath.includes('1-settings') ||
-                       posixPath.includes('_project-style') ||
-                       posixPath.includes('tokens/build')
+  if (posixPath.includes('/tokens/build/')) return
+
+  // 설정 계층(1-settings)은 @apply 대상이 아니다. raw 색은 문서 코드 테마의 --color-code-*만 허용한다
+  const isTokenFile = posixPath.includes('/1-settings/')
+
+  if (VISUAL) {
+    const ctx = getVisualCtx()
+    const defined = getDefinedTokensFromSource()
+    reportVisual(relPath, VISUAL.scanCss(content, {
+      ...ctx,
+      // 문서 사이트 크롬(터미널 점 등)은 장식 효과 검사에서 뺀다
+      exemptEffects: /(^|\/)src\/styles\/docs\.css$/.test(posixPath),
+      exemptDecl: (prop, value) => {
+        if (!isTokenFile) return false
+        if (/\/1-settings\/docs-code-theme\.css$/.test(posixPath) && /^--color-code-/.test(prop)) return true
+        if (defined && defined.has(prop)) {
+          error(relPath, null, `[R-01] 설정 계층에서 토큰 ${prop}을 다시 정의했다 — 색은 tokens/brand.json으로만 바꾼다(대비 검사를 우회한다).`, `${prop}:${value}`.slice(0, 120))
+          return true
+        }
+        return false
+      }
+    }))
+  }
 
   const isEntryFile = /\/src\/styles\/(?:style|docs)\.css$/.test(posixPath) ||
                       /\/src\/styles\/6-components\/index\.css$/.test(posixPath) ||
@@ -286,16 +361,10 @@ function checkCssFile(filePath) {
     }
 
     if (!isTokenFile) {
-      // raw hex (R-01)
-      if (HARDCODED_HEX.test(trimmed)) {
-        error(relPath, lineNum, '[R-01] Raw hex 색상 금지. var(--color-*) 토큰 사용.', trimmed)
-      }
-      // raw rgb/hsl (R-01)
-      if (HARDCODED_RGB.test(trimmed)) {
-        error(relPath, lineNum, '[R-01] Raw rgb/rgba 색상 금지. var(--color-*) 토큰 사용.', trimmed)
-      }
-      if (HARDCODED_HSL.test(trimmed)) {
-        error(relPath, lineNum, '[R-01] Raw hsl/hsla 색상 금지. var(--color-*) 토큰 사용.', trimmed)
+      // raw 색(R-01)은 위의 시각 서명 검사가 선언 단위로 본다(값 전체·@apply 임의값·var 폴백까지).
+      // 시각 서명 모듈이 없는 오래된 파생 프로젝트만 예전 줄 단위 판정을 쓴다.
+      if (!VISUAL && (HARDCODED_HEX.test(trimmed) || HARDCODED_RGB.test(trimmed) || HARDCODED_HSL.test(trimmed))) {
+        error(relPath, lineNum, '[R-01] Raw 색상 금지. var(--color-*) 토큰 사용.', trimmed)
       }
       // hardcoded px (R-01) — 간격/크기는 프로젝트 맥락에 따라 허용하되 반복 패턴은 토큰 권장
       const pxMatch = trimmed.match(HARDCODED_PX)
@@ -385,38 +454,79 @@ function checkHtmlFile(filePath) {
     }
   }
 
-  // <style> 블록 안의 색상 (R-01)
-  // HTML은 인라인 style 속성만 보고 있어 <style> 안의 raw 색상이 새어 나갔다.
-  // 2026-07-29 플레이그라운드 12개 파일이 이 경로로 raw hex를 유지했고,
-  // 고대비 모드에서 흰 배경 위 옅은 글씨가 되어 미리보기가 깨졌다.
-  const styleBlocks = [...content.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)]
-  for (const block of styleBlocks) {
-    const startLine = content.slice(0, block.index).split('\n').length
-    block[1].split('\n').forEach((styleLine, offset) => {
-      const t = styleLine.trim()
-      if (!t) return
-      const lineNum = startLine + offset
-      if (HARDCODED_HEX.test(t)) {
-        error(relPath, lineNum, '[R-01] <style> 블록 raw hex 색상 금지. var(--color-*) 토큰 사용.', t)
+  // 시각 서명(R-01·R-34·R-36·R-37) — class·style 속성, <style> 블록, 마크다운 html·css 펜스와 본문
+  //   <style> 블록의 raw 색은 2026-07-29 플레이그라운드 12개 파일이 새어 나간 경로다.
+  //   이모지(R-36)는 웹 콘텐츠(사이트 문서·플레이그라운드·스니펫 코드 블록·납품 페이지)에만 적용한다.
+  if (VISUAL) {
+    const ctx = getVisualCtx()
+    if (filePath.endsWith('.md')) {
+      const isSite = /^\/site\//.test(posixPath)
+      reportVisual(relPath, VISUAL.scanMarkdown(content, {
+        ...ctx,
+        prose: isSite, // 스니펫은 코드 블록만 본다
+        emoji: isSite || isSnippet
+      }))
+    } else {
+      reportVisual(relPath, VISUAL.scanHtml(content, ctx))
+    }
+  } else {
+    for (const block of content.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) {
+      const startLine = content.slice(0, block.index).split('\n').length
+      block[1].split('\n').forEach((styleLine, offset) => {
+        const t = styleLine.trim()
+        if (t && (HARDCODED_HEX.test(t) || HARDCODED_RGB.test(t) || HARDCODED_HSL.test(t))) {
+          error(relPath, startLine + offset, '[R-01] <style> 블록 raw 색상 금지. var(--color-*) 토큰 사용.', t)
+        }
+      })
+    }
+  }
+
+  // 마크다운에서 마크업 규칙(R-07·R-08·Tailwind 기본 경고)은 코드 펜스와 원시 HTML 줄에만 적용한다.
+  // 본문 문장('`rounded-lg`는 쓰지 않는다')이 경고로 걸리지 않게.
+  const isMarkdown = filePath.endsWith('.md')
+  const markupLines = new Set()
+  const counterLines = new Set() // 금지 예시 펜스(첫 줄 주석에 ❌·금지 예시·DON'T 등) — 마크업 규칙을 적용하지 않는다
+  if (isMarkdown) {
+    // 프롬프트 문서는 본문 전체를 ```markdown 펜스로 싸므로, 마크업 언어(또는 언어 표기 없음) 펜스만 마크업으로 본다
+    const PROSE_FENCE = /^(markdown|md|text|txt|plain|bash|sh|shell|console|powershell|ps1|json|jsonc|yaml|yml|diff)$/i
+    let fence = null
+    let htmlBlock = false // 원시 HTML 블록은 빈 줄까지 이어진다(CommonMark)
+    lines.forEach((l, i) => {
+      const fm = l.match(/^\s*(`{3,}|~{3,})\s*([\w-]*)/)
+      if (fm && !fence) {
+        const first = lines.slice(i + 1).find(x => x.trim()) || ''
+        fence = { marker: fm[1], prose: PROSE_FENCE.test(fm[2] || ''), counter: VISUAL ? VISUAL.isCounterFenceStart(first) : false }
+        htmlBlock = false
+        return
       }
-      if (HARDCODED_RGB.test(t) || HARDCODED_HSL.test(t)) {
-        error(relPath, lineNum, '[R-01] <style> 블록 raw rgb/hsl 색상 금지. var(--color-*) 토큰 사용.', t)
+      if (fence && l.trim().startsWith(fence.marker) && l.trim().replace(/[`~]/g, '') === '') { fence = null; return }
+      if (fence) {
+        if (fence.counter) counterLines.add(i + 1)
+        else if (!fence.prose) markupLines.add(i + 1)
+        return
       }
+      if (l.trim() === '') { htmlBlock = false; return }
+      if (/^\s*<[a-zA-Z!/]/.test(l)) htmlBlock = true
+      if (htmlBlock) markupLines.add(i + 1)
     })
   }
 
   lines.forEach((line, i) => {
     const lineNum = i + 1
-    const trimmed = line.trim()
-    if (!trimmed) return
+    const raw = line.trim()
+    if (!raw) return
+    if (counterLines.has(lineNum)) return
+    const isMarkup = !isMarkdown || markupLines.has(lineNum)
+    // 마크다운 본문 줄은 인라인 코드(`<img src>` 같은 설명 속 인용)를 빼고 본다
+    const trimmed = isMarkup ? raw : raw.replace(/`[^`]*`/g, ' ')
 
     // 인라인 스타일 (R-07) — CSS 변수 주입은 허용
-    if (INLINE_STYLE.test(trimmed) && !INLINE_STYLE_CUSTOM_PROP.test(trimmed)) {
+    if (isMarkup && INLINE_STYLE.test(trimmed) && !INLINE_STYLE_CUSTOM_PROP.test(trimmed)) {
       warn(relPath, lineNum, '[R-07] 인라인 style 금지. BEM 클래스 또는 Tailwind 유틸 사용.', trimmed.slice(0, 100))
     }
 
     // BEM 2단계 HTML (R-08)
-    const bemMatch = trimmed.match(BEM_DOUBLE_ELEMENT)
+    const bemMatch = isMarkup && trimmed.match(BEM_DOUBLE_ELEMENT)
     if (bemMatch) {
       warn(relPath, lineNum, '[R-08] BEM 2단계 element 중첩 클래스 금지.', trimmed.slice(0, 100))
     }
@@ -431,32 +541,40 @@ function checkHtmlFile(filePath) {
       error(relPath, lineNum, '[R-10] <div>/<span> onclick 금지. <button> 또는 <a> 사용.', trimmed.slice(0, 100))
     }
 
-    // 가짜 콘텐츠 (R-23)
-    if (FAKE_LOREM.test(trimmed)) {
+    // 가짜 콘텐츠 (R-23) — 마크다운 본문에서는 인라인 코드(`Lorem ipsum` 같은 규칙 설명 속 인용)를 빼고 본다
+    const copyText = trimmed
+    if (FAKE_LOREM.test(copyText)) {
       error(relPath, lineNum, '[R-23] lorem ipsum 채움 텍스트 금지. 실제 서비스 문안 또는 task contract contentSources 기반 카피를 사용한다.', trimmed.slice(0, 100))
     }
-    if (FAKE_FILLER_KO.test(trimmed)) {
+    if (FAKE_FILLER_KO.test(copyText)) {
       error(relPath, lineNum, '[R-23] 자리 채움 문구 금지. 실제 콘텐츠를 넣거나 contentSources에서 실제 용어를 가져온다.', trimmed.slice(0, 100))
     }
-    if (FAKE_IMG_HOTLINK.test(trimmed)) {
+    if (FAKE_IMG_HOTLINK.test(copyText)) {
       error(relPath, lineNum, '[R-23] placeholder 이미지 핫링크 금지. 실제 자산 경로 또는 실제 비율의 data-uri 표기를 사용한다(납품 self-contained 정책).', trimmed.slice(0, 100))
     }
 
-    // 한글 조판 하한 (R-24) — leading-none은 한글 본문에서 글줄 겹침을 만든다
-    if (LEADING_NONE.test(trimmed)) {
+    // 한글 조판 하한 (R-24) — leading-none은 한글 본문에서 글줄 겹침을 만든다(클래스 이름이라 마크업 줄만)
+    if (isMarkup && LEADING_NONE.test(trimmed)) {
       error(relPath, lineNum, '[R-24] leading-none 클래스 금지. 본문은 1.6~1.7을 지키고, 단행 UI의 행간은 컴포넌트 CSS(badge·tag·btn)가 소유한다.', trimmed.slice(0, 100))
     }
 
-    // Tailwind raw 컬러 유틸 (R-01: 토큰 시스템 우회)
-    if (TW_RAW_COLOR.test(trimmed)) {
-      const match = trimmed.match(TW_RAW_COLOR)
-      error(relPath, lineNum, `[R-01] Tailwind raw 컬러 유틸 \`${match[0]}\` 금지. KRDS 시맨틱(bg-primary/text-text/bg-danger 등) 사용.`, trimmed.slice(0, 100))
-    }
+    // 아래는 마크업 유틸 이름 경고다 — 마크다운 본문 문장에는 적용하지 않는다
+    if (!isMarkup) return
 
-    // Tailwind 기본 텍스트 사이즈 (R-01: 권장 스케일 점검)
-    if (TW_DEFAULT_TEXT_SIZE.test(trimmed)) {
-      const match = trimmed.match(TW_DEFAULT_TEXT_SIZE)
-      warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 타입 계층이면 프로젝트/INFOMIND 스케일 사용 권장.`, trimmed.slice(0, 100))
+    // Tailwind 팔레트 유틸(R-01)·기본 글자 크기(R-37)
+    //   class 속성·@apply 안은 시각 서명 검사가 토큰 단위로 본다. 그 밖(classList.add('bg-gray-50'), :class 바인딩)은
+    //   줄 단위로 보되, class 속성 값과 @apply를 지운 뒤에 봐서 같은 토큰을 두 번 알리지 않는다
+    const outsideClassAttr = VISUAL
+      ? trimmed.replace(/(?<![\w:-])class\s*=\s*(?:"[^"]*"|'[^']*')/g, ' ').replace(/@apply\b[^;]*;?/g, ' ')
+      : trimmed
+    if (TW_RAW_COLOR.test(outsideClassAttr)) {
+      const match = outsideClassAttr.match(TW_RAW_COLOR)
+      error(relPath, lineNum, `[R-01] Tailwind raw 컬러 유틸 \`${match[0]}\` 금지. KRDS 시맨틱(bg-[var(--color-primary)] 등) 사용.`, trimmed.slice(0, 100))
+    }
+    if (TW_DEFAULT_TEXT_SIZE.test(outsideClassAttr)) {
+      const match = outsideClassAttr.match(TW_DEFAULT_TEXT_SIZE)
+      if (VISUAL) error(relPath, lineNum, `[R-37] Tailwind 기본 \`${match[0]}\` — 62.5% 루트에서 37.5% 작게 렌더된다. text-[1.7rem]처럼 rem 임의값으로 쓴다.`, trimmed.slice(0, 100))
+      else warn(relPath, lineNum, `[R-01] Tailwind 기본 \`${match[0]}\` 사용. 반복되는 타입 계층이면 프로젝트/INFOMIND 스케일 사용 권장.`, trimmed.slice(0, 100))
     }
 
     // Tailwind 기본 폰트 두께 (R-01)
@@ -586,6 +704,8 @@ function main() {
       ...collectFiles(SNIPPETS_DIR, '.md'),
       ...collectFiles(SITE_DIR, '.html', ['_site', 'node_modules']),
       ...collectFiles(SITE_DIR, '.njk', ['_site', 'node_modules']),
+      // 사이트 문서의 예시 코드·원시 HTML도 시각 서명 대상이다(반례 폴더는 HTML_SKIP_PATTERNS로 빠진다)
+      ...collectFiles(SITE_DIR, '.md', ['_site', 'node_modules']),
       ...collectFiles(path.join(ROOT, 'src/playground'), '.html')
     ]
     // 납품 페이지(루트 *.html·pages/**·infoux.json pages) — 파생 프로젝트의 실제 화면도 검사한다(HX-06)

@@ -115,6 +115,8 @@ cp "$GUIDE_DIR/scripts/lib/svg-path.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/svg-geometry.js" "$STARTER_DIR/scripts/lib/"
 # 납품 페이지 범위와 편집 훅 — 스타터의 index.html·pages/도 검사가 닿고, 실패를 숨기지 않는다(HX-06)
 cp "$GUIDE_DIR/scripts/lib/page-scope.js" "$STARTER_DIR/scripts/lib/"
+# 시각 서명 검사(R-01 색·R-34 장식 효과·R-36 이모지·R-37 기본 스케일)
+cp "$GUIDE_DIR/scripts/lib/visual-signature.js" "$STARTER_DIR/scripts/lib/"
 rm -rf "$STARTER_DIR/scripts/hooks"
 cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
 mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"

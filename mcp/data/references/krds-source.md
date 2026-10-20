@@ -461,8 +461,9 @@
 | nav-depth-small-bold | 1.5rem (700) | 1.5rem (700) |
 | nav-depth-small | 1.5rem (400) | 1.5rem (400) |
 
-> letter-spacing은 Display는 1px, 그 외 기본 0px.
+> letter-spacing은 Display 전 단계와 heading xlarge·large가 1px(0.1rem), 그 외 0px다(KRDS 공식 타이포그래피 표 style_03 기준 — 2026-10-20 원문 대조로 정정). 음수 자간 값은 없다.
 > line-height는 모두 150% 일관 적용.
+> mobile→pc 글자 크기 전환은 KRDS 공식 CSS에서 768px(@media max-width 767px)이다.
 
 ---
 

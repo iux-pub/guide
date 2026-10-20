@@ -23,8 +23,8 @@
   font-family: var(--font-heading);
   font-size: 16rem;
   font-weight: 700;
-  line-height: 1; /* 단행 장식 — 본문 하한(R-24)과 무관한 display 전용 값 */
-  letter-spacing: -0.03em;
+  line-height: 1; /* 단행 장식(aria-hidden) — 읽는 텍스트가 아니므로 본문 하한(R-24)과 무관한 display 전용 값 */
+  letter-spacing: 0.1rem; /* KRDS display 자간 1px — 음수 자간은 쓰지 않는다 */
   color: var(--color-primary-5);
 }
 ```

@@ -1,5 +1,5 @@
 {
-  "version": "9e30f16",
+  "version": "e40c62e",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -11,7 +11,7 @@
     {
       "id": "art-direction",
       "file": "art-direction.md",
-      "chars": 12387,
+      "chars": 12513,
       "summary": "brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디까지 열지 판단하는 기준. 수치 정본은 `contracts/art-direction.json`, 팔레트 hex 정본은 `tokens/presets/`이며, 이 문서의 표는 build-art-direct..."
     },
     {
@@ -41,7 +41,7 @@
     {
       "id": "krds-source",
       "file": "krds-source.md",
-      "chars": 34433,
+      "chars": 34601,
       "summary": "- **시스템명**: KRDS (Korea Government Design System) — 한국명 \"범정부 UI/UX 디자인 시스템\""
     },
     {
@@ -297,7 +297,7 @@
     {
       "id": "signature",
       "file": "signature.md",
-      "chars": 3970,
+      "chars": 4037,
       "summary": "\"이 사이트만의 것\"으로 기억되는 반복 장치 3패턴이다. 등급별 상한(utility 0 · restrained 1 · expressive 3)은 `contracts/art-direction.json` expressionLevels가 정본이고, 선정·배치 원칙은 `references..."
     },
     {

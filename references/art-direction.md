@@ -41,12 +41,12 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 |------|-----|
 | word-break / overflow-wrap | `keep-all` / `break-word` |
 | 본문 line-height | 1.6~1.7 (기본 1.7, 고밀도 기본 1.6, lint 하한 1.5) |
-| 제목 line-height | 1.2~1.45 |
-| 제목 letter-spacing | -0.03em~0 (2.4rem 이상부터) |
+| 제목 line-height | 1.5~1.5 |
+| 제목 letter-spacing | 0~0.1rem (3.2rem 이상부터) |
 | 제목 최대 줄수 | 2 |
 | weight | 본문 기본 400 · 인라인 강조 상한 700 · 제목 상한 700 · 화면당 4종 이하 |
 
-> lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2.
+> lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0)은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2.
 <!-- art-direction:hangul:end -->
 
 - 본문 줄길이는 28~42자(공백 포함)를 권장한다. 게시판 목록·약관·표처럼 문서형 콘텐츠는 예외다 — 줄길이를 맞추려고 컨테이너를 쪼개지 않는다.
@@ -60,11 +60,11 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 <!-- art-direction:typography:begin — contracts/art-direction.json에서 자동 생성. 직접 수정 금지. npm run build:art-direction -->
 | id | 라벨 | 무드 | 제목 | 본문 | 등급 | 라이선스 | 파일 |
 |----|------|------|------|------|------|----------|------|
-| `standard-gov` | 표준 관청체 | 중립·신뢰·표준 | `var(--font-sans)` 600/700 · ls -0.02em · lh 1.35 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 4건 입수 완료 |
-| `product-modern` | 프로덕트 산세리프 | 친근·현대적·제품 | `'Wanted Sans', var(--font-sans)` 600/700 · ls -0.02em · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 2건 입수 완료 |
-| `formal-serif` | 격식 명조 | 격식·기록·전통 | `'Noto Serif KR', var(--font-sans)` 600 · ls -0.01em · lh 1.4 | 400/500 · lh 1.7 | restrained, expressive | OFL-1.1 | 1건 입수 완료 |
-| `retro-display` | 레트로 디스플레이 | 레트로·문화·독립 | `'Hahmlet', var(--font-sans)` 500/600 · ls 0 · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 1건 입수 완료 |
-| `technical-global` | 테크니컬 고딕 | 테크·국제·데이터 | `'IBM Plex Sans KR', var(--font-sans)` 600 · ls -0.01em · lh 1.3 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 1건 입수 완료 |
+| `standard-gov` | 표준 관청체 | 중립·신뢰·표준 | `var(--font-sans)` 600/700 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 4건 입수 완료 |
+| `product-modern` | 프로덕트 산세리프 | 친근·현대적·제품 | `'Wanted Sans', var(--font-sans)` 600/700 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 2건 입수 완료 |
+| `formal-serif` | 격식 명조 | 격식·기록·전통 | `'Noto Serif KR', var(--font-sans)` 600 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | restrained, expressive | OFL-1.1 | 1건 입수 완료 |
+| `retro-display` | 레트로 디스플레이 | 레트로·문화·독립 | `'Hahmlet', var(--font-sans)` 500/600 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 1건 입수 완료 |
+| `technical-global` | 테크니컬 고딕 | 테크·국제·데이터 | `'IBM Plex Sans KR', var(--font-sans)` 600 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 1건 입수 완료 |
 
 - **standard-gov** [warn] 단독으로는 무개성 — 크기 대비(본문 1.7rem ↔ h1 4rem)와 여백으로 위계를 만든다.
 - **standard-gov** [info] 민간 프로젝트는 일반 Pretendard도 무방. 전 프로필 안전 기본값.

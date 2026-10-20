@@ -280,7 +280,7 @@ function checkCssFile(filePath) {
     // 한글 본문 조판 하한 (R-24) — 단행 컴포넌트(badge·tag·btn) 파일은 예외
     const lhMatch = trimmed.match(LINE_HEIGHT_DECL)
     if (lhMatch && parseFloat(lhMatch[1]) < HANGUL_LINE_HEIGHT_FLOOR && !R24_EXEMPT_CSS.test(posixPath)) {
-      warn(relPath, lineNum, `[R-24] line-height ${lhMatch[1]} — 한글 조판 하한 ${HANGUL_LINE_HEIGHT_FLOOR} 미만. 본문 1.6~1.7, 제목 1.2~1.45 기준은 contracts/art-direction.json hangul 참조.`, trimmed)
+      warn(relPath, lineNum, `[R-24] line-height ${lhMatch[1]} — 한글 조판 하한 ${HANGUL_LINE_HEIGHT_FLOOR} 미만. 본문 1.6~1.7, 제목 1.5(KRDS 150%) 기준은 contracts/art-direction.json hangul 참조.`, trimmed)
     }
   })
 

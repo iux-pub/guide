@@ -281,8 +281,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   </div>
 
   <div class="carousel__viewport">
-    <ul class="carousel__track" aria-live="off">
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+    <div class="carousel__track" aria-live="off">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
         <a class="carousel__link" href="/notice/view/1024">
           <img class="carousel__image" src="/images/main/notice-01.jpg" alt="">
           <span class="carousel__body">
@@ -290,8 +290,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
             <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
           </span>
         </a>
-      </li>
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
         <a class="carousel__link" href="/notice/view/1031">
           <img class="carousel__image" src="/images/main/notice-02.jpg" alt="">
           <span class="carousel__body">
@@ -299,8 +299,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
             <span class="carousel__meta">2026.12.01부터 적용</span>
           </span>
         </a>
-      </li>
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
         <a class="carousel__link" href="/notice/view/1040">
           <img class="carousel__image" src="/images/main/notice-03.jpg" alt="">
           <span class="carousel__body">
@@ -308,8 +308,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
             <span class="carousel__meta">2026.11.15 02:00 ~ 06:00</span>
           </span>
         </a>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </div>
 ```
@@ -318,6 +318,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 - 루트: `role="region"` + `aria-roledescription="carousel"` + `aria-label`(무엇의 캐러셀인지).
 - 슬라이드: `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"`.
+- 트랙·슬라이드는 `div`다(APG carousel). 슬라이드에 `group` 역할을 주므로 `ul`/`li`로 두면 목록 항목이 사라져 목록 구조가 깨진다.
 - 위치 식별자: 1023px 미만은 분수형(`.carousel__counter`), 1024px 이상은 도형형 버튼(`.carousel__dots`, 현재는 `aria-current="true"`). 현재 점은 색과 길이로 구분한다.
 - 모든 컨트롤은 44×44px 이상이다(R-13). 아이콘만 있는 버튼은 `sr-only` 텍스트로 이름을 준다.
 - 컨트롤과 식별자가 슬라이드 내용을 가리지 않는다.

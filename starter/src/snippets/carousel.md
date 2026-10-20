@@ -39,8 +39,8 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
   </div>
 
   <div class="carousel__viewport">
-    <ul class="carousel__track" aria-live="off">
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+    <div class="carousel__track" aria-live="off">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
         <a class="carousel__link" href="/notice/view/1024">
           <img class="carousel__image" src="/images/main/notice-01.jpg" alt="">
           <span class="carousel__body">
@@ -48,8 +48,8 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
             <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
           </span>
         </a>
-      </li>
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
         <a class="carousel__link" href="/notice/view/1031">
           <img class="carousel__image" src="/images/main/notice-02.jpg" alt="">
           <span class="carousel__body">
@@ -57,8 +57,8 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
             <span class="carousel__meta">2026.12.01부터 적용</span>
           </span>
         </a>
-      </li>
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
         <a class="carousel__link" href="/notice/view/1040">
           <img class="carousel__image" src="/images/main/notice-03.jpg" alt="">
           <span class="carousel__body">
@@ -66,8 +66,8 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
             <span class="carousel__meta">2026.11.15 02:00 ~ 06:00</span>
           </span>
         </a>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </div>
 ```
@@ -93,10 +93,10 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
     </button>
   </div>
   <div class="carousel__viewport">
-    <ul class="carousel__track" aria-live="polite">
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 2">…</li>
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 2">…</li>
-    </ul>
+    <div class="carousel__track" aria-live="polite">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 2">…</div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 2">…</div>
+    </div>
   </div>
 </div>
 <script src="/js/carousel.js" defer></script>
@@ -119,6 +119,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
 
 - 루트: `role="region"` + `aria-roledescription="carousel"` + `aria-label`(무엇의 캐러셀인지).
 - 슬라이드: `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"`.
+- 트랙·슬라이드는 `div`다(APG carousel). 슬라이드에 `group` 역할을 주므로 `ul`/`li`로 두면 목록 항목이 사라져 목록 구조가 깨진다.
 - 위치 식별자: 1023px 미만은 분수형(`.carousel__counter`), 1024px 이상은 도형형 버튼(`.carousel__dots`, 현재는 `aria-current="true"`). 현재 점은 색과 길이로 구분한다.
 - 모든 컨트롤은 44×44px 이상이다(R-13). 아이콘만 있는 버튼은 `sr-only` 텍스트로 이름을 준다.
 - 컨트롤과 식별자가 슬라이드 내용을 가리지 않는다.
@@ -128,6 +129,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
 - 6개 이상 슬라이드, 「전체 보기」 모달로 많은 슬라이드를 몰아 보여 주기
 - 정지 버튼이 없거나, 이전·다음보다 뒤에 있는 자동 회전
 - 글자가 든 배너 이미지 슬라이드
+- 트랙을 `ul`, 슬라이드를 `li[role="group"]`으로 쓰기 — 목록 안에 목록 항목이 없게 된다
 - 초점이 빠진 뒤 저절로 다시 도는 자동 회전
 
 ## 출처

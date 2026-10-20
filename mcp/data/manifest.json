@@ -1,5 +1,5 @@
 {
-  "version": "907120a",
+  "version": "a6b6d72",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -29,13 +29,13 @@
     {
       "id": "html-semantics",
       "file": "html-semantics.md",
-      "chars": 24164,
+      "chars": 24504,
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
     },
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 63890,
+      "chars": 65786,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -147,7 +147,7 @@
     {
       "id": "boilerplate",
       "file": "boilerplate.md",
-      "chars": 3857,
+      "chars": 3858,
       "summary": "기본 마크업은 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약 모두에 적용 가능한 공통 골격이다. 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 사이트 유형 판정에서 적용 대상이 확인된 경우에만 추가한다."
     },
     {
@@ -207,8 +207,8 @@
     {
       "id": "footer",
       "file": "footer.md",
-      "chars": 6338,
-      "summary": "페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 구성 요소를 덜어 쓰는 패턴이라, 모든 요소를 채우는 것이 목표가 아니다."
+      "chars": 8230,
+      "summary": "KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 항목을 덜어 쓰되, **정보 순서는 바꾸지 않는다**."
     },
     {
       "id": "form",

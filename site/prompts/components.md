@@ -436,32 +436,28 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 14. 푸터 (Site Footer) — infoUX
+## 14. 푸터 (Site Footer) — KRDS
 
 ### 기본 마크업
 
 ```html
 <footer id="footer" class="site-footer">
   <div class="container">
+    <!-- 서비스 내비게이션(선택): 메인 메뉴 최상위 링크를 모두 같은 레이블로 -->
     <div class="site-footer__top">
-      <a class="site-footer__brand" href="/">
-        <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
-      </a>
       <nav class="site-footer__nav" aria-label="푸터 메뉴">
         <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-about">재단 소개</h2>
+          <h2 class="site-footer__heading" id="footer-group-about">기관 소개</h2>
           <ul class="site-footer__list" aria-labelledby="footer-group-about">
             <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
-            <li><a class="site-footer__link" href="/about/history">연혁</a></li>
             <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
           </ul>
         </div>
         <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-program">프로그램</h2>
-          <ul class="site-footer__list" aria-labelledby="footer-group-program">
-            <li><a class="site-footer__link" href="/program/exhibition">전시</a></li>
-            <li><a class="site-footer__link" href="/program/performance">공연</a></li>
-            <li><a class="site-footer__link" href="/program/education">교육</a></li>
+          <h2 class="site-footer__heading" id="footer-group-service">주요 사업</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-service">
+            <li><a class="site-footer__link" href="/service/support">지원 사업</a></li>
+            <li><a class="site-footer__link" href="/service/education">교육</a></li>
           </ul>
         </div>
         <div class="site-footer__group">
@@ -471,42 +467,49 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
             <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
           </ul>
         </div>
-        <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-help">이용 안내</h2>
-          <ul class="site-footer__list" aria-labelledby="footer-group-help">
-            <li><a class="site-footer__link" href="/help/faq">자주 묻는 질문</a></li>
-            <li><a class="site-footer__link" href="/help/sitemap">사이트맵</a></li>
-          </ul>
-        </div>
       </nav>
     </div>
 
     <div class="site-footer__bottom">
+      <!-- ① 서비스 로고 ② 연락처 ③ 유틸리티 링크 — 한 그룹 -->
       <div class="site-footer__info">
-        <nav class="site-footer__legal" aria-label="약관 및 정책">
-          <ul class="site-footer__legal-list">
-            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
-            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
-            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
-          </ul>
-        </nav>
+        <a class="site-footer__brand" href="/">
+          <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
+        </a>
+        <!-- contentSources: 주소·대표전화·운영시간 — 아래는 형식 예시다 -->
         <address class="site-footer__address">
-          제주특별자치도 제주시 한라로 100<br>
-          대표전화 064-123-4567 · 이메일 contact@example.org
+          (우)00000 제주특별자치도 제주시 ○○로 00<br>
+          대표전화 064-000-0000 · 평일 09:00~18:00
         </address>
-        <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+        <ul class="site-footer__utility" aria-label="바로가기">
+          <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+          <li><a class="site-footer__link" href="/sitemap">사이트맵</a></li>
+          <li>
+            <details class="site-footer__family">
+              <summary class="site-footer__family-summary">
+                관련 기관
+                <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+              </summary>
+              <ul class="site-footer__family-list">
+                <li><a class="site-footer__family-link" href="https://www.example.go.kr/">○○시청</a></li>
+                <li><a class="site-footer__family-link" href="https://www.example.or.kr/">○○문화재단</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
       </div>
 
-      <details class="site-footer__family">
-        <summary class="site-footer__family-summary">
-          패밀리 사이트
-          <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
-        </summary>
-        <ul class="site-footer__family-list">
-          <li><a class="site-footer__family-link" href="https://example.org/museum">미술관</a></li>
-          <li><a class="site-footer__family-link" href="https://example.org/library">도서관</a></li>
+      <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
+      <nav class="site-footer__legal" aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+          <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
+          <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
         </ul>
-      </details>
+      </nav>
+
+      <!-- ⑤ 저작권 정보 -->
+      <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
     </div>
   </div>
 </footer>
@@ -516,8 +519,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 | Variant | 클래스 | 용도 |
 |---------|--------|------|
-| 기본 | `.site-footer` | 푸터 메뉴 + 하단 고지. 일반사이트·공공기관 |
-| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면 |
+| 기본 | `.site-footer` | 서비스 내비게이션 + 하단 정보. 일반사이트·공공기관 |
+| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면. 그래도 로고·연락처·정책 링크·저작권 순서는 지킨다 |
 | 반전 | `.site-footer--inverse` | 어두운 바탕. 일반사이트·커머스 표현형 한정 |
 
 ### 접근성
@@ -526,10 +529,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 푸터 `nav`가 여럿이면 `aria-label`이 서로 달라야 한다
 - 그룹 제목은 `h2` + 목록 `aria-labelledby`로 연결해 스크린리더가 그룹 이름을 읽게 한다
 - 링크 터치 영역 44×44px 이상 (R-13) — `__link`는 `min-h-[4.4rem]`를 포함한다
-- 패밀리 사이트 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
+- 관련 기관 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
 - 반전 변형: 일반 텍스트 4.5:1 이상을 유지한다 (`--color-gray-20` on `--color-bg-inverse`)
 - 외부 사이트 링크는 새 창을 열지 않는다. 새 창이 필요하면 링크 텍스트나 `aria-label`에 "새 창"을 밝힌다
-- 초점 외곽선: 칸을 꽉 채우는 링크(`__family-link`)는 `outline-offset`을 음수로 두어 안쪽에 그린다
 
 ---
 

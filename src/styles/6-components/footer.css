@@ -1,52 +1,38 @@
 /**
- * Site Footer — 사이트 푸터
+ * Site Footer — KRDS 푸터 (component_02_04)
  *
- * 공통 푸터 패턴. 사이트 유형에 따라 구성 요소를 덜어 쓴다.
- * 공공 푸터 필수 링크·운영기관 식별자는 과업지시서나 기관 정책이 확인된 경우에만 추가한다.
+ * KRDS 정보 순서: 서비스 로고 → 연락처 → 유틸리티 링크 → 정책 링크 → 저작권 정보.
+ * 좁은 화면에서도 같은 순서로 쌓는다. 서비스 내비게이션(__top)은 선택이며,
+ * 두면 메인 메뉴 최상위 링크를 모두 같은 레이블로 넣는다.
+ * 운영기관 식별자는 공식 디지털 정부서비스일 때만 푸터 마지막 구획에 둔다.
  *
  * 구조:
  *   <footer id="footer" class="site-footer">
  *     <div class="container">
- *       <div class="site-footer__top">
- *         <a class="site-footer__brand" href="/">
- *           <img class="site-footer__logo" src="/logo.svg" alt="기관명">
- *         </a>
- *         <nav class="site-footer__nav" aria-label="푸터 메뉴">
- *           <div class="site-footer__group">
- *             <h2 class="site-footer__heading" id="footer-group-service">서비스</h2>
- *             <ul class="site-footer__list" aria-labelledby="footer-group-service">
- *               <li><a class="site-footer__link" href="/service">서비스 안내</a></li>
- *             </ul>
- *           </div>
- *         </nav>
+ *       <div class="site-footer__top">                       (선택 — 서비스 내비게이션)
+ *         <nav class="site-footer__nav" aria-label="푸터 메뉴">…</nav>
  *       </div>
  *       <div class="site-footer__bottom">
- *         <div class="site-footer__info">
- *           <nav class="site-footer__legal" aria-label="약관 및 정책">
- *             <ul class="site-footer__legal-list">
- *               <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
- *             </ul>
- *           </nav>
- *           <address class="site-footer__address">...</address>
- *           <small class="site-footer__copy">...</small>
+ *         <div class="site-footer__info">                    (로고 · 연락처 · 유틸리티 링크)
+ *           <a class="site-footer__brand" href="/"><img class="site-footer__logo" …></a>
+ *           <address class="site-footer__address">…</address>
+ *           <ul class="site-footer__utility" aria-label="바로가기">… <details class="site-footer__family">…</details></ul>
  *         </div>
- *         <details class="site-footer__family">
- *           <summary class="site-footer__family-summary">패밀리 사이트</summary>
- *           <ul class="site-footer__family-list">...</ul>
- *         </details>
+ *         <nav class="site-footer__legal" aria-label="약관 및 정책">…개인정보 처리방침(--important)…</nav>
+ *         <dl class="site-footer__biz">…</dl>                (전자상거래일 때)
+ *         <small class="site-footer__copy">…</small>
  *       </div>
  *     </div>
  *   </footer>
  */
-
 @layer components {
   .site-footer {
     @apply bg-[var(--color-bg-subtler)] text-[var(--color-text)] border-t border-[var(--color-border-light)];
   }
 
-  /* 상단 — 브랜드 + 푸터 메뉴 */
+  /* 상단 — 서비스 내비게이션(선택) */
   .site-footer__top {
-    @apply flex flex-col gap-[3.2rem] py-[4rem] pc:flex-row pc:justify-between pc:py-[6.4rem];
+    @apply py-[4rem] pc:py-[6.4rem];
   }
 
   .site-footer__brand {
@@ -58,7 +44,7 @@
   }
 
   .site-footer__nav {
-    @apply grid grid-cols-2 gap-x-[2.4rem] gap-y-[3.2rem] tablet:grid-cols-4 pc:max-w-[72rem] pc:flex-1;
+    @apply grid grid-cols-2 gap-x-[2.4rem] gap-y-[3.2rem] tablet:grid-cols-4;
   }
 
   .site-footer__heading {
@@ -83,13 +69,18 @@
     @apply font-bold text-[var(--color-text)];
   }
 
-  /* 하단 — 정책 링크 · 연락처 · 저작권 · 패밀리 사이트 */
+  /* 하단 — KRDS 순서: 정보 그룹(로고·연락처·유틸리티) → 정책 링크 → 사업자 정보 → 저작권 */
   .site-footer__bottom {
-    @apply flex flex-col gap-[2.4rem] py-[3.2rem] border-t border-[var(--color-border-light)] pc:flex-row pc:items-start pc:justify-between;
+    @apply flex flex-col gap-[2rem] py-[3.2rem] border-t border-[var(--color-border-light)];
   }
 
   .site-footer__info {
     @apply flex flex-col gap-[1.2rem];
+  }
+
+  /* 유틸리티 링크 — 오시는 길·사이트맵·관련 기관·SNS */
+  .site-footer__utility {
+    @apply flex flex-wrap items-center gap-x-[2.4rem] gap-y-[0.8rem] list-none m-0 p-0;
   }
 
   .site-footer__legal-list {
@@ -100,13 +91,27 @@
     @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)] not-italic;
   }
 
-  .site-footer__copy {
-    @apply text-[1.4rem] leading-[1.6] text-[var(--color-text-subtle)];
+  /* 사업자 정보 — 전자상거래일 때 정책 링크 뒤, 저작권 앞 */
+  .site-footer__biz {
+    @apply flex flex-wrap gap-x-[1.6rem] gap-y-[0.4rem] m-0 text-[1.5rem] leading-[1.5] text-[var(--color-text-subtle)];
   }
 
-  /* 패밀리 사이트 — native details. 이동은 링크 클릭으로만 일어난다(선택만으로 이동하지 않는다) */
+  .site-footer__biz > div {
+    @apply flex gap-[0.4rem];
+  }
+
+  .site-footer__biz dd {
+    @apply m-0;
+  }
+
+  /* 저작권 — KRDS body-small 1.5rem */
+  .site-footer__copy {
+    @apply text-[1.5rem] leading-[1.5] text-[var(--color-text-subtle)];
+  }
+
+  /* 관련 기관(패밀리 사이트) — native details. 이동은 링크 클릭으로만 일어난다(선택만으로 이동하지 않는다) */
   .site-footer__family {
-    @apply w-full tablet:w-[28rem];
+    @apply relative w-[28rem] max-w-full;
   }
 
   .site-footer__family-summary {
@@ -159,6 +164,7 @@
 
   .site-footer--inverse .site-footer__link,
   .site-footer--inverse .site-footer__address,
+  .site-footer--inverse .site-footer__biz,
   .site-footer--inverse .site-footer__copy {
     @apply text-[var(--color-gray-20)];
   }

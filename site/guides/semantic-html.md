@@ -111,7 +111,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 <!-- DON'T: 모든 링크 목록에 nav 사용 -->
 <nav>
   <a href="/terms/">이용약관</a>
-  <a href="/privacy/">개인정보처리방침</a>
+  <a href="/privacy/">개인정보 처리방침</a>
 </nav>
 <!-- 푸터 링크는 nav 없이 ul/li로 충분하다 -->
 ```

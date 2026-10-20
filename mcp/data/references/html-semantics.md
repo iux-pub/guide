@@ -236,10 +236,12 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<footer id="footer" class="site-footer">` (페이지에 하나, `main` 바깥) |
-| 자식 시맨틱 | `.container` → `div.site-footer__top`(`a.site-footer__brand` · `nav.site-footer__nav aria-label="푸터 메뉴"` → `div.site-footer__group` → `h2.site-footer__heading` + `ul.site-footer__list aria-labelledby`) → `div.site-footer__bottom`(`nav.site-footer__legal aria-label="약관 및 정책"` · `address.site-footer__address` · `small.site-footer__copy` · `details.site-footer__family`) |
+| 자식 시맨틱 | `.container` → `div.site-footer__top`(선택 — `nav.site-footer__nav aria-label="푸터 메뉴"` → `div.site-footer__group` → `h2.site-footer__heading` + `ul.site-footer__list aria-labelledby`) → `div.site-footer__bottom`(KRDS 순서: `div.site-footer__info`[`a.site-footer__brand` → `address.site-footer__address` → `ul.site-footer__utility aria-label`(+ `details.site-footer__family`)] → `nav.site-footer__legal aria-label="약관 및 정책"` → `dl.site-footer__biz`(전자상거래) → `small.site-footer__copy`) |
+| KRDS 순서 | 서비스 로고 → 연락처 → 유틸리티 링크 → 정책 링크 → 저작권. 좁은 화면에서도 같다. 운영기관 식별자는 공식 디지털 정부서비스일 때만 마지막 구획 |
 | 필수 ARIA | 푸터 안 `nav`가 여럿이면 각각 `aria-label` · 그룹 목록은 제목 id로 `aria-labelledby` |
-| 키보드 | 네이티브 (Tab) · 패밀리 사이트 `details`는 `Enter`/`Space`로 열고 닫는다 |
-| 금지 | 패밀리 사이트를 `<select>` 선택만으로 이동시키지 않는다(WCAG 3.2.2) · 법정 고지 문구를 지어내지 않는다(R-23) |
+| 필수 항목 | 「개인정보 처리방침」 링크(명칭 고정·강조) — 모든 사이트. 이용약관·사업자 정보 — 전자상거래가 있으면 |
+| 키보드 | 네이티브 (Tab) · 관련 기관 `details`는 `Enter`/`Space`로 열고 닫는다 |
+| 금지 | 관련 기관을 `<select>` 선택만으로 이동시키지 않는다(WCAG 3.2.2) · 법정 고지 문구를 지어내지 않는다(R-23) · 서비스 내비게이션을 메인 메뉴와 다른 구조·레이블로 만들지 않는다(KRDS) · 구 명칭 「개인정보취급방침」 |
 
 ### `main-menu` — 메인 메뉴
 

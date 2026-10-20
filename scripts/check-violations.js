@@ -44,6 +44,8 @@ function warn(file, line, msg, code) {
 }
 
 const rel = (p) => path.relative(ROOT, p)
+// 경로 판정 정규식은 '/' 구분자를 가정한다. Windows의 '\' 경로도 같은 판정을 받게 한다.
+const toPosix = (p) => p.split(path.sep).join('/')
 
 // ─── 패턴 정의 ────────────────────────────────────────
 
@@ -180,13 +182,14 @@ function checkCssFile(filePath) {
   if (lines[0] && (lines[0].includes('AUTO-GENERATED') || lines[0].includes('자동 생성'))) return
 
   // 토큰 정의 파일 / 프로젝트 스타일 확장 파일은 raw hex 허용 (정의 자체가 raw임)
-  const isTokenFile = filePath.includes('1-settings') ||
-                       filePath.includes('_project-style') ||
-                       filePath.includes('tokens/build')
+  const posixPath = toPosix(filePath)
+  const isTokenFile = posixPath.includes('1-settings') ||
+                       posixPath.includes('_project-style') ||
+                       posixPath.includes('tokens/build')
 
-  const isEntryFile = /\/src\/styles\/(?:style|docs)\.css$/.test(filePath) ||
-                      /\/src\/styles\/6-components\/index\.css$/.test(filePath) ||
-                      /\/src\/styles\/3-generic\/reset\.css$/.test(filePath)
+  const isEntryFile = /\/src\/styles\/(?:style|docs)\.css$/.test(posixPath) ||
+                      /\/src\/styles\/6-components\/index\.css$/.test(posixPath) ||
+                      /\/src\/styles\/3-generic\/reset\.css$/.test(posixPath)
 
   if (!isTokenFile && !isEntryFile && !content.includes('@apply')) {
     error(relPath, null, '[R-19] 스타일 CSS는 Tailwind v4 @apply를 우선 사용해야 한다. 토큰이 필요한 값은 var(--token)으로 유지하되 레이아웃/상태 유틸은 @apply로 작성.')
@@ -276,7 +279,7 @@ function checkCssFile(filePath) {
 
     // 한글 본문 조판 하한 (R-24) — 단행 컴포넌트(badge·tag·btn) 파일은 예외
     const lhMatch = trimmed.match(LINE_HEIGHT_DECL)
-    if (lhMatch && parseFloat(lhMatch[1]) < HANGUL_LINE_HEIGHT_FLOOR && !R24_EXEMPT_CSS.test(filePath)) {
+    if (lhMatch && parseFloat(lhMatch[1]) < HANGUL_LINE_HEIGHT_FLOOR && !R24_EXEMPT_CSS.test(posixPath)) {
       warn(relPath, lineNum, `[R-24] line-height ${lhMatch[1]} — 한글 조판 하한 ${HANGUL_LINE_HEIGHT_FLOOR} 미만. 본문 1.6~1.7, 제목 1.2~1.45 기준은 contracts/art-direction.json hangul 참조.`, trimmed)
     }
   })
@@ -298,7 +301,7 @@ function checkCssFile(filePath) {
 
   // R-24 ①: 본문 조판 기본값을 소유한 reset 계층 — word-break: keep-all 존재 필수 (파일 단위 멀티라인 스캔)
   //   한글 단어 중간 줄바꿈을 막는 기본값은 3-generic/reset.css 소유다. 빠지면 파생 사이트 전체가 깨진다.
-  if (/3-generic\/reset\.css$/.test(filePath) && !KEEP_ALL_DECL.test(contentNoComments)) {
+  if (/3-generic\/reset\.css$/.test(posixPath) && !KEEP_ALL_DECL.test(contentNoComments)) {
     error(relPath, null, '[R-24] reset 계층에 word-break: keep-all이 없다. 한글 조판 기본값(keep-all + overflow-wrap: break-word)은 3-generic/reset.css가 소유한다.', '')
   }
 }
@@ -312,7 +315,7 @@ const HTML_SKIP_PATTERNS = [
 ]
 
 function shouldSkipHtmlFile(filePath) {
-  return HTML_SKIP_PATTERNS.some(re => re.test(filePath))
+  return HTML_SKIP_PATTERNS.some(re => re.test(toPosix(filePath)))
 }
 
 function checkHtmlFile(filePath) {
@@ -325,9 +328,10 @@ function checkHtmlFile(filePath) {
   // R-14: 페이지 진입점(<body> 포함)에 skip-to-content 필수
   // 면제: partial(_includes), playground(내부 데모), snippet(컴포넌트 마크업 조각)
   const hasBody = /<body\b/.test(content)
-  const isPartial = /\/_includes\/partials\//.test(filePath) || /\/_includes\/components\//.test(filePath)
-  const isPlayground = /\/src\/playground\//.test(filePath)
-  const isSnippet = /\/src\/snippets\//.test(filePath)
+  const posixPath = toPosix(filePath)
+  const isPartial = /\/_includes\/partials\//.test(posixPath) || /\/_includes\/components\//.test(posixPath)
+  const isPlayground = /\/src\/playground\//.test(posixPath)
+  const isSnippet = /\/src\/snippets\//.test(posixPath)
   if (hasBody && !isPartial && !isPlayground && !isSnippet) {
     if (!/skip-to-content/.test(content)) {
       error(relPath, null, '[R-14] 건너뛰기 링크 누락. <body> 진입 직후 <a href="#main" class="skip-to-content"> 추가 필요.')

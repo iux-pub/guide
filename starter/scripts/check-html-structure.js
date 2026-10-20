@@ -50,6 +50,8 @@ function warn(file, line, msg, code, rule) {
 }
 
 const rel = (p) => path.relative(ROOT, p)
+// 경로 판정 정규식은 '/' 구분자를 가정한다. Windows의 '\' 경로도 같은 판정을 받게 한다.
+const toPosix = (p) => p.split(path.sep).join('/')
 
 // ─── R-15: 컴포넌트 root 태그 매핑 참고 (html-semantics.md 기준) ──────────────────────
 //
@@ -613,16 +615,16 @@ function shouldCheckPageContract(html, filePath) {
   // 건너뛰기 링크)을 요구할 대상이 아니며, check-violations.js도 같은 이유로 R-14를
   // 면제한다. 명시적으로 파일을 넘겨받는 경로(pre-commit 훅)에서도 같게 판단해야
   // 두 검사기가 어긋나지 않는다.
-  if (/\/src\/playground\//.test(filePath)) return false
+  if (/\/src\/playground\//.test(toPosix(filePath))) return false
 
   // Nunjucks 레이아웃·파셜(site/_includes)은 페이지가 아니라 조각이다. 완성된 shell 은 렌더 결과(_site)가 갖는다.
   // 전체 검사(walk) 모드에서는 원래 page shell 을 요구하지 않았는데, 파일을 지정하면(pre-commit 훅)
   // <main>·skip-to-content 가 든 레이아웃이 완전한 페이지로 판정돼 레이아웃을 고칠 때마다 커밋이 막혔다.
-  if (/\/site\/_includes\//.test(filePath)) return false
+  if (/\/site\/_includes\//.test(toPosix(filePath))) return false
 
   if (HAS_EXPLICIT_TARGETS) return true
 
-  const relative = rel(filePath)
+  const relative = toPosix(rel(filePath))
   return relative === 'src/snippets/boilerplate.md'
 }
 
@@ -908,7 +910,7 @@ const SKIP_PATTERNS = [
 ]
 
 function isSkipped(filePath) {
-  return SKIP_PATTERNS.some(re => re.test(filePath))
+  return SKIP_PATTERNS.some(re => re.test(toPosix(filePath)))
 }
 
 function walk(dir, exts, accumulator) {

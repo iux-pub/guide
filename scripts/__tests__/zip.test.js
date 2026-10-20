@@ -9,15 +9,18 @@ const os = require('node:os')
 const path = require('node:path')
 const zlib = require('node:zlib')
 const { execFileSync } = require('node:child_process')
+const { pathToFileURL } = require('node:url')
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
 
 const ROOT = path.resolve(__dirname, '..', '..')
 const STAMP = new Date('2026-08-23T18:30:00Z')
+// Windows 절대경로(C:\\...)는 ESM import()가 받지 않는다. file:// URL로 넘긴다.
+const ZIP_MODULE = pathToFileURL(path.join(ROOT, 'studio/lib/zip.mjs')).href
 
 let makeZip
 test('zip 모듈을 읽는다', async () => {
-  ;({ makeZip } = await import(path.join(ROOT, 'studio/lib/zip.mjs')))
+  ;({ makeZip } = await import(ZIP_MODULE))
   assert.equal(typeof makeZip, 'function')
 })
 
@@ -40,7 +43,7 @@ function namesInZip(buf) {
 }
 
 test('폴더 경로를 그대로 담는다', async () => {
-  const { makeZip: mk } = await import(path.join(ROOT, 'studio/lib/zip.mjs'))
+  const { makeZip: mk } = await import(ZIP_MODULE)
   const z = mk([
     { name: 'sprite.svg', data: '<svg/>' },
     { name: 'svg/star.svg', data: '<svg/>' },
@@ -50,7 +53,7 @@ test('폴더 경로를 그대로 담는다', async () => {
 })
 
 test('같은 입력이면 같은 zip이 나온다', async () => {
-  const { makeZip: mk } = await import(path.join(ROOT, 'studio/lib/zip.mjs'))
+  const { makeZip: mk } = await import(ZIP_MODULE)
   const entries = [{ name: 'a.txt', data: 'hello' }, { name: 'b/c.txt', data: '한글' }]
   // 시각을 밖에서 받는 이유가 이것이다 — 안에서 now()를 부르면 매번 달라져
   // 「묶음이 바뀌었는지」를 비교할 수 없다
@@ -58,7 +61,7 @@ test('같은 입력이면 같은 zip이 나온다', async () => {
 })
 
 test('줄여서 커지는 파일은 그냥 담는다', async () => {
-  const { makeZip: mk } = await import(path.join(ROOT, 'studio/lib/zip.mjs'))
+  const { makeZip: mk } = await import(ZIP_MODULE)
   // 이미 압축된 바이트(폰트가 이렇다)를 다시 줄이면 되레 커진다
   const random = require('node:crypto').randomBytes(4096)
   const z = mk([{ name: 'f.bin', data: random }], STAMP)
@@ -68,7 +71,7 @@ test('줄여서 커지는 파일은 그냥 담는다', async () => {
 })
 
 test('이진 파일이 바이트 그대로 돌아온다', async () => {
-  const { makeZip: mk } = await import(path.join(ROOT, 'studio/lib/zip.mjs'))
+  const { makeZip: mk } = await import(ZIP_MODULE)
   const font = path.join(ROOT, 'assets/icons/infoux-icons.woff2')
   if (!fs.existsSync(font)) return
   const raw = fs.readFileSync(font)
@@ -85,12 +88,14 @@ test('이진 파일이 바이트 그대로 돌아온다', async () => {
 })
 
 test('unzip이 읽을 수 있는 zip이다', async () => {
-  const { makeZip: mk } = await import(path.join(ROOT, 'studio/lib/zip.mjs'))
+  const { makeZip: mk } = await import(ZIP_MODULE)
   let unzip
   try {
     unzip = execFileSync('which', ['unzip'], { encoding: 'utf8' }).trim()
+    // Git Bash의 which는 /usr/bin/unzip 같은 MSYS 경로를 돌려준다. Node가 실제로 띄울 수 있어야 쓴다.
+    execFileSync(unzip, ['-v'], { stdio: 'pipe' })
   } catch {
-    return // unzip이 없는 환경에서는 건너뛴다
+    return // unzip이 없거나 띄울 수 없는 환경에서는 건너뛴다
   }
 
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-zip-'))

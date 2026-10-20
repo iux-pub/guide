@@ -1,0 +1,10 @@
+# 검사기·훅·생성물 비교(drift)가 LF를 전제한다. Windows 체크아웃에서도 LF로 받는다.
+* text=auto eol=lf
+*.woff2 binary
+*.woff binary
+*.ttf binary
+*.otf binary
+*.png binary
+*.jpg binary
+*.webp binary
+*.zip binary

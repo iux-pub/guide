@@ -18,6 +18,9 @@ const ROOT = path.resolve(__dirname, '..')
 const SNIPPETS_DIR = path.join(ROOT, 'src/snippets')
 const PLAYGROUND_DIR = path.join(ROOT, 'src/playground')
 const SITE_DIR = path.join(ROOT, 'site')
+// AI가 직접 읽는 컨텍스트 — MCP 번들(references)과 손으로 쓴 프롬프트(prompts)도 같은 기준으로 본다
+const REFERENCES_DIR = path.join(ROOT, 'references')
+const PROMPTS_DIR = path.join(ROOT, 'prompts')
 const PAGE_CONTRACT_PATH = path.join(ROOT, 'contracts', 'html-page-contract.json')
 
 const TARGET_FILES = process.argv.slice(2)
@@ -82,7 +85,7 @@ const COMPONENT_ROOT_MAPPING = {
   'tab': { allowedTags: ['div'], note: '내부 tablist는 role="tablist"' },
 
   // 그룹 C — 내비게이션
-  'breadcrumb': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 경로"' },
+  'breadcrumb': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="브레드크럼"(KRDS)' },
   'site-header': { allowedTags: ['header'], note: '사이트 헤더' },
   'site-footer': { allowedTags: ['footer'], note: '페이지 shell의 footer#footer 랜드마크' },
   'main-menu': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="메인 메뉴"' },
@@ -91,7 +94,7 @@ const COMPONENT_ROOT_MAPPING = {
 
   // 그룹 D — 피드백
   'alert': { allowedTags: ['div'], requireRoleAlertOrStatus: true, note: 'role="alert" 또는 role="status"' },
-  'notice-bar': { allowedTags: ['section'], requireAriaLabel: true, note: 'section에 aria-label="사이트 공지" — 라이브 영역(role/aria-live)은 쓰지 않는다' },
+  'notice-bar': { allowedTags: ['section'], requireAriaLabel: true, note: 'section에 aria-label="사이트 공지" — KRDS 긴급 공지: main#main의 첫 section(header 다음, 히어로 앞), 닫기 버튼 없음, 링크 1개, 라이브 영역(role/aria-live)은 쓰지 않는다' },
   'badge': { allowedTags: ['span'], note: 'dot(텍스트 없음)은 aria-label 필수' },
   'progress': { allowedTags: ['div'], note: '내부 progress 또는 div[role=progressbar]' },
   'spinner': { allowedTags: ['span'], requireRoleStatus: true, note: 'role="status" + aria-label' },
@@ -138,7 +141,7 @@ const REQUIRED_ARIA = {
   },
   'breadcrumb': {
     requireAll: [/aria-label=/],
-    desc: 'aria-label (페이지 경로 설명)'
+    desc: 'aria-label="브레드크럼" (KRDS)'
   },
   'main-menu': {
     requireAll: [/aria-label=/],
@@ -180,7 +183,13 @@ const NON_BEM_STATE_CLASS = /\bclass\s*=\s*["'][^"']*?\b(is|has)-[a-z][\w-]*/g
 // ─── R-18: 시각적 단어 modifier 블랙리스트 ───────────────────────
 // modifier 부분(--xxx)에서 시각적 단어 사용 검출
 
-const FORBIDDEN_MODIFIER_WORDS = [
+// 클래스 명명 계약 — 금지어·폐기 대응·면제 접두어의 정본. 없으면(오래된 파생 프로젝트) 아래 기본값을 쓴다.
+const CLASS_NAMING_PATH = path.join(ROOT, 'contracts', 'class-naming.json')
+const CLASS_NAMING = fs.existsSync(CLASS_NAMING_PATH)
+  ? JSON.parse(fs.readFileSync(CLASS_NAMING_PATH, 'utf-8'))
+  : null
+
+const FORBIDDEN_MODIFIER_WORDS = CLASS_NAMING?.forbiddenWords || [
   // 크기 — 시각적 표현
   'big', 'huge', 'tiny', 'mini',
   // 색상 — 시각적 표현
@@ -192,13 +201,58 @@ const FORBIDDEN_MODIFIER_WORDS = [
   // 기타
   'wide', 'narrow', 'thick', 'thin'
 ]
+const FORBIDDEN_WORD_SET = new Set(FORBIDDEN_MODIFIER_WORDS)
+const DEPRECATED_CLASSES = new Map((CLASS_NAMING?.deprecated || []).map(d => [d.class, d.replacement]))
+const EXEMPT_BLOCK_PREFIXES = CLASS_NAMING?.exemptBlockPrefixes || ['docs-', 'pg']
+
+// 파일 이름 ≠ 블록 이름인 컴포넌트와 흔한 오기 — AI가 header__*, form__*, table-wrapper처럼 지어내는 블록.
+// CSS에 그 이름의 블록이 없을 때만 실제 블록 이름을 알려 준다(프로젝트가 같은 이름을 정의했으면 건드리지 않는다).
+const BLOCK_ALIASES = (() => {
+  const map = new Map()
+  for (const fb of CLASS_NAMING?.fileBlocks || []) {
+    if (!fb.blocks.includes(fb.component)) map.set(fb.component, fb.blocks)
+  }
+  for (const a of CLASS_NAMING?.blockAliases || []) map.set(a.alias, [a.block])
+  return map
+})()
+
+// modifier를 '-'로 나눈 조각 중 금지어가 있으면 그 단어를 돌려준다(--gray-dark, --dark-mode 모두 잡는다)
+function forbiddenSegment(modifier) {
+  return modifier.split('-').find(seg => FORBIDDEN_WORD_SET.has(seg)) || null
+}
+
+// ─── R-29: 마크업의 BEM 클래스는 CSS에 실재해야 한다 ─────────────────
+// src/styles와 아이콘 CSS에 정의된 클래스를 모은다. 이 색인의 블록에 속한 클래스만 검사한다
+// (프로젝트 고유 블록·외부 라이브러리 클래스는 대상이 아니다).
+function collectCssClasses() {
+  const classes = new Set()
+  const files = []
+  const walk = (dir) => {
+    if (!fs.existsSync(dir)) return
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name)
+      if (fs.statSync(full).isDirectory()) walk(full)
+      else if (name.endsWith('.css')) files.push(full)
+    }
+  }
+  walk(path.join(ROOT, 'src', 'styles'))
+  const iconsCss = path.join(ROOT, 'assets', 'icons', 'icons.css')
+  if (fs.existsSync(iconsCss)) files.push(iconsCss)
+  for (const file of files) {
+    const css = fs.readFileSync(file, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '')
+    for (const m of css.matchAll(/\.([a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?(?:--[a-z0-9]+(?:-[a-z0-9]+)*)?)/g)) {
+      classes.add(m[1])
+    }
+  }
+  const blocks = new Set([...classes].map(c => c.split(/__|--/)[0]))
+  return { classes, blocks }
+}
+const CSS_INDEX = collectCssClasses()
 // 주의: --xl, --xxl은 KRDS 정의가 아님 (KRDS는 xsmall/small/medium/large/xlarge 표준)
 // 단, --xl/--xxl 이미 사용 중이면 별도 정리 필요. 일단 미검출(false negative 허용).
 
-const FORBIDDEN_MODIFIER_RE = new RegExp(
-  `\\b([a-z][\\w-]*?)--(${FORBIDDEN_MODIFIER_WORDS.join('|')})\\b`,
-  'g'
-)
+// 블록(·element)과 modifier 전체를 잡는다. 판정은 forbiddenSegment()가 조각 단위로 한다.
+const MODIFIER_TOKEN_RE = /\b([a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?)--([a-z0-9]+(?:-[a-z0-9]+)*)\b/g
 
 // 블록별 예외 — 그 블록에서는 정의된 축 이름이라 시각적 작명이 아니다.
 //
@@ -819,6 +873,67 @@ function checkViewportZoom(html, filePath, baseLineNum) {
   }
 }
 
+// R-29 + R-18(폐기): 카탈로그 블록의 클래스가 CSS에 없거나 폐기 예정이면 알린다.
+// modifier는 모양을 바꾸려고 있는 것이라 CSS가 없으면 무의미하거나 지어낸 것이다 → error.
+// element는 스타일 없는 구조 표시일 수 있어 warn — 스타일이 필요 없으면 클래스를 달지 않는다.
+// R-17 보조: ARIA·네이티브 대응이 있는 상태 modifier는 그 속성과 함께 써야 한다(색만으로 상태를 보이지 않게).
+// 키는 modifier 마지막 조각, 값은 같은 요소에 있어야 하는 속성 중 하나.
+const STATE_MODIFIER_ATTRS = {
+  current: ['aria-current'],
+  selected: ['aria-selected', 'aria-current', 'aria-pressed', 'checked'],
+  disabled: ['disabled', 'aria-disabled']
+}
+
+function checkClassExistence(html, filePath, baseLineNum) {
+  const local = new Set()
+  for (const s of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) {
+    for (const m of s[1].matchAll(/\.([a-z][\w-]*)/g)) local.add(m[1])
+  }
+  const archetypes = new Set((PAGE_CONTRACT?.sectionArchetypes || []).map(a => `section--${a}`))
+  const reported = new Set()
+  // 이스케이프된 코드 예시(&lt;div class="…"&gt;)의 클래스도 검사하도록 class 속성 단위로 훑는다.
+  // ARIA 짝 검사만 실제 태그(<…>) 안에 있을 때 그 태그의 속성을 본다.
+  for (const m of html.matchAll(/\bclass\s*=\s*(["'])([^"']*)\1/g)) {
+    const lineNum = baseLineNum + html.slice(0, m.index).split('\n').length - 1
+    const open = html.lastIndexOf('<', m.index)
+    const close = html.indexOf('>', m.index)
+    const tagText = open !== -1 && close !== -1 && !html.slice(open, m.index).includes('>') ? html.slice(open, close + 1) : null
+    for (const cls of m[2].split(/\s+/).filter(Boolean)) {
+      // 템플릿 식(Nunjucks {{ }}, JS ${ }) 조각은 실제 클래스 이름이 아니다
+      if (!/^[a-z][a-z0-9_-]*$/.test(cls)) continue
+      const block = cls.split(/__|--/)[0]
+      if (EXEMPT_BLOCK_PREFIXES.some(p => block.startsWith(p))) continue
+      if (archetypes.has(cls) || local.has(cls)) continue
+      const key = `${lineNum}:${cls}`
+      if (reported.has(key)) continue
+      reported.add(key)
+      // 파일 이름·오기로 지은 블록 — CSS에 그 블록이 없으면 실제 블록 이름을 알려 준다
+      const aliasTarget = BLOCK_ALIASES.get(block)
+      const aliasApplies = aliasTarget && !CSS_INDEX.blocks.has(block) && (/__|--/.test(cls) || block.includes('-'))
+      if (aliasApplies) {
+        error(rel(filePath), lineNum, `[R-29] CSS에 없는 블록 "${cls}". 이 컴포넌트의 블록은 ${aliasTarget.map(b => `.${b}`).join(' · ')}다(references/class-naming.md 파일↔블록 대응).`, cls, 'R-29')
+        continue
+      }
+      if (!/__|--/.test(cls)) continue
+      if (DEPRECATED_CLASSES.has(cls)) {
+        warn(rel(filePath), lineNum, `[R-18] 폐기 예정 modifier "${cls}" — ${DEPRECATED_CLASSES.get(cls)}로 바꾼다.`, cls, 'R-18')
+        continue
+      }
+      const stateWord = cls.includes('--') ? cls.split('--').pop().split('-').pop() : null
+      const needed = stateWord && STATE_MODIFIER_ATTRS[stateWord]
+      if (needed && tagText && !needed.some(attr => new RegExp(`\\s${attr}(\\s|=|>|/)`).test(tagText))) {
+        warn(rel(filePath), lineNum, `[R-17] 상태 modifier "${cls}"에 대응 속성(${needed.join(' / ')})이 없다. 상태는 속성으로 먼저 알린다 — 클래스만으로는 색으로만 보인다.`, cls, 'R-17')
+      }
+      if (!CSS_INDEX.blocks.has(block) || CSS_INDEX.classes.has(cls)) continue
+      if (cls.includes('--')) {
+        error(rel(filePath), lineNum, `[R-29] CSS에 없는 modifier "${cls}". 카탈로그 CSS에 정의된 변형만 쓴다 — 없는 변형을 지어내지 않는다. 필요하면 contracts/class-naming.json 어휘로 CSS부터 정의한다.`, cls, 'R-29')
+      } else {
+        warn(rel(filePath), lineNum, `[R-29] CSS에 없는 element "${cls}". 스타일이 필요 없는 구조 요소에는 클래스를 달지 않고, 필요하면 컴포넌트 CSS에 정의한다.`, cls, 'R-29')
+      }
+    }
+  }
+}
+
 function checkHtml(html, filePath, baseLineNum = 1) {
   const lines = html.split('\n')
   const root = parseHtmlTree(html)
@@ -826,6 +941,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   checkPageContract(html, filePath, baseLineNum)
   checkHtmlLang(html, filePath, baseLineNum)
   checkViewportZoom(html, filePath, baseLineNum)
+  checkClassExistence(html, filePath, baseLineNum)
   checkFormLabels(root, filePath, baseLineNum)
   checkTabPattern(root, filePath, baseLineNum)
   checkAccordionPattern(root, filePath, baseLineNum)
@@ -842,26 +958,31 @@ function checkHtml(html, filePath, baseLineNum = 1) {
       error(
         rel(filePath),
         lineNum,
-        `[R-17] 비-BEM 상태 클래스 "${stateName}-*" 발견. BEM modifier + ARIA 속성으로 표현하세요.`,
+        `[R-17] 비-BEM 상태 클래스 "${stateName}-*" 발견. 상태는 ARIA·hidden 속성(aria-expanded, aria-current, aria-selected, hidden, disabled)으로 표현하고, ARIA로 표현할 수 없을 때만 BEM modifier(예: --done)를 쓰세요.`,
         line.trim().slice(0, 120),
         'R-17'
       )
     }
   })
 
-  // R-18: 시각적 단어 modifier
+  // R-18: 시각적 단어 modifier — modifier를 조각으로 나눠 금지어가 하나라도 있으면 오류
   lines.forEach((line, idx) => {
-    FORBIDDEN_MODIFIER_RE.lastIndex = 0
+    MODIFIER_TOKEN_RE.lastIndex = 0
     let m
-    while ((m = FORBIDDEN_MODIFIER_RE.exec(line)) !== null) {
+    while ((m = MODIFIER_TOKEN_RE.exec(line)) !== null) {
       const lineNum = baseLineNum + idx
       const block = m[1]
-      const word = m[2]
-      if (ALLOWED_MODIFIER_BY_BLOCK.get(block)?.has(word)) continue
+      const modifier = m[2]
+      const word = forbiddenSegment(modifier)
+      if (!word) continue
+      if (EXEMPT_BLOCK_PREFIXES.some(p => block.startsWith(p))) continue
+      if (ALLOWED_MODIFIER_BY_BLOCK.get(block)?.has(modifier)) continue
+      // 폐기 예정 별칭(클래스 전체가 같을 때만)은 checkClassExistence가 대체 이름과 함께 경고한다
+      if (DEPRECATED_CLASSES.has(`${block}--${modifier}`)) continue
       error(
         rel(filePath),
         lineNum,
-        `[R-18] 시각적 단어 modifier "${block}--${word}" 발견. KRDS 의미적 어휘 사용 (예: --primary, --large, --info).`,
+        `[R-18] 시각적 단어 modifier "${block}--${modifier}" 발견("${word}"). 허용 어휘(contracts/class-naming.json)에서 의미로 짓는다 (예: --primary, --large, --info, --neutral).`,
         line.trim().slice(0, 120),
         'R-18'
       )
@@ -945,6 +1066,8 @@ const SKIP_PATTERNS = [
   /\/site\/conventions\//, // 규칙 문서 — ❌ 금지 예시 포함
   /\/site\/accessibility\//, // 접근성 가이드 — "Don't" 예시 포함
   /\/site\/testing\//, // 테스트 가이드 — 확대 차단 viewport 등 "DON'T" 예시 포함
+  /\/references\/forbidden-patterns\.md$/, // 금지 패턴 사전 — ❌ 예시가 본문
+  /\/references\/accessibility\.md$/, // 접근성 기준 — "Don't" 예시·조각 마크업 포함
   /\/src\/playground\/index\.html$/ // 색상/토큰 스케일 데모 — pg__swatch-color--gray-* 의도적 사용
 ]
 
@@ -976,6 +1099,8 @@ function getTargetFiles() {
   walk(SNIPPETS_DIR, ['.md'], files)
   walk(PLAYGROUND_DIR, ['.html'], files)
   walk(SITE_DIR, ['.md', '.njk', '.html'], files)
+  walk(REFERENCES_DIR, ['.md'], files)
+  walk(PROMPTS_DIR, ['.md'], files)
   return files
 }
 

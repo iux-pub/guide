@@ -15,7 +15,7 @@
 ## 시맨틱 구조           ← 필수 (R-15/R-16 매핑 인용)
 ## Variant               ← 선택 (variant 있을 때만)
 ## Size                  ← 선택 (size 있을 때만)
-## 상태                  ← 선택 (개별 상태가 있을 때만, BEM modifier + ARIA)
+## 상태                  ← 선택 (개별 상태가 있을 때만, ARIA·hidden 속성 먼저)
 ## 동작 (JS)             ← 선택 (JavaScript 동작 필요 시)
 ## 접근성                ← 필수 (ARIA + 키보드 + 색상 대비)
 ## 출처                  ← 필수 (KRDS 토큰명 + 참조)
@@ -103,15 +103,16 @@ KRDS 사이즈 스케일(`xsmall`/`small`/`medium`/`large`/`xlarge`)만 사용.
 
 상태가 분명히 정의된 컴포넌트(disclosure 열림/닫힘, tab 선택, modal 열림 등)만 명시.
 
-R-17에 따라 **BEM modifier + ARIA 속성**을 항상 짝지어 표기:
+R-17에 따라 **ARIA·hidden 속성을 먼저** 적고, CSS가 그 속성으로 모양을 바꾸는지 함께 표기한다. ARIA로 표현할 수 없는 상태만 modifier 칸을 채운다:
 
 ```markdown
 ## 상태
 
-| 상태 | 클래스 | ARIA |
-|------|--------|------|
-| 선택됨 | `.tab__item--selected` | `aria-selected="true"` |
-| 비활성 | (native `disabled`) | `aria-disabled="true"` |
+| 상태 | ARIA·속성 | modifier |
+|------|-----------|----------|
+| 선택됨 | `aria-selected="true"` (CSS `[aria-selected="true"]`) | — |
+| 비활성 | native `disabled` | — |
+| 완료 단계 | — (ARIA에 대응 없음) | `.step-indicator__item--done` |
 ```
 
 ### 6. `## 동작 (JS)` (선택)
@@ -159,8 +160,9 @@ KRDS 토큰 / 컴포넌트 / 외부 표준 참조.
 - [ ] 기존 컴포넌트 카탈로그(`krds-components.md`)를 먼저 확인했는가?
 - [ ] HTML 기본 골격이 `header/main/footer`, `main > section > .container` 구조와 충돌하지 않는가? (R-15)
 - [ ] 인터랙티브 컴포넌트면 필수 ARIA가 들어갔는가? (R-16)
-- [ ] modifier가 KRDS 의미적 어휘인가? (R-18 — `--blue`, `--big` 같은 시각 단어 금지)
-- [ ] 상태 클래스는 BEM modifier로만 했는가? (R-17 — `.is-*` 금지)
+- [ ] modifier가 `contracts/class-naming.json` 허용 어휘인가? (R-18 — `--blue`, `--big` 같은 시각 단어 금지)
+- [ ] 마크업에 쓴 BEM 클래스가 모두 CSS에 정의돼 있는가? (R-29 — 없는 변형·부품을 지어내지 않는다)
+- [ ] 상태는 ARIA·hidden 속성으로 먼저 표현했는가? ARIA로 표현할 수 없을 때만 BEM modifier를 썼는가? (R-17 — `.is-*`·`.has-*` 금지)
 
 ---
 

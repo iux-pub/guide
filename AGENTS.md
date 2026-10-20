@@ -64,7 +64,8 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - 색상 raw `hex`/`rgb`/`hsl` 직접 작성 (`#fff`, `rgb(0,0,0)`)
 - Tailwind 기본 팔레트 raw 컬러 유틸
 - 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open`) — R-17
-- 시각적 단어 modifier (`--blue`, `--big`, `--rounded`, `--shadow`) — R-18
+- 시각적 단어·허용 어휘 밖 modifier (`--blue`, `--big`, `--rounded`, `--shadow`) — R-18
+- CSS에 없는 BEM 클래스를 지어내기 (`.card--featured`, `.card__media`) — R-29
 - 인터랙티브 위젯(modal/tab/accordion/tooltip/disclosure/carousel/calendar)에서 필수 ARIA 누락 — R-16
 - `div/span 클릭 핸들러 패턴` (시맨틱 HTML 의무) — R-10
 - 이미지 `alt` 누락 — R-09
@@ -92,7 +93,8 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 | 조건부 정부/공공 요소 | 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 적용 대상이 확인된 경우에만 생성. 민간·사내·일반 CMS에서는 N/A |
 | 컴포넌트 root 태그 | `references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 |
-| 상태 표현 | BEM modifier (시각) + ARIA 속성 (의미) 동시 |
+| 상태 표현 | ARIA·hidden 속성 먼저 — CSS가 `[aria-selected="true"]`·`[aria-current="page"]`·`[hidden]`으로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier (R-17) |
+| modifier·클래스 | `contracts/class-naming.json` 허용 어휘에서만 고르고(R-18), 카탈로그 블록의 클래스는 CSS에 정의된 것만 쓴다(R-29). 결정 순서는 `references/class-naming.md` |
 | 색상 대비 | 일반 텍스트 4.5:1, 큰 텍스트 3:1 (WCAG 2.1 AA) |
 
 ---
@@ -118,8 +120,8 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - **R-04** `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
 - **R-05** `error` — element 2단계 중첩 금지 — 평탄화
 - **R-06** `error` — 시각적 modifier 금지 — 의미적 이름 사용
-- **R-17** `error` — 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지
-- **R-18** `error` — modifier 이름은 의미적이어야 함 — 시각적 단어 금지
+- **R-17** `error` — 상태는 ARIA·hidden 속성을 먼저 — ARIA로 표현할 수 없을 때만 BEM modifier, .is-* / .has-* 금지
+- **R-18** `error` — modifier 이름은 허용 어휘(contracts/class-naming.json)에서 — 시각적 단어 금지
 
 ### HTML/마크업 규칙
 - **R-07** `warn` — inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용
@@ -130,6 +132,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - **R-23** `error` — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
 - **R-25** `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - **R-27** `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
+- **R-29** `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
 
 ### 접근성 규칙
 - **R-11** `error` — 포커스 스타일 필수 — :focus { outline: none } 금지

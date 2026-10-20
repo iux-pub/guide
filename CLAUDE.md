@@ -47,8 +47,8 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-04 `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
 - R-05 `error` — element 2단계 중첩 금지 — 평탄화
 - R-06 `error` — 시각적 modifier 금지 — 의미적 이름 사용
-- R-17 `error` — 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지
-- R-18 `error` — modifier 이름은 의미적이어야 함 — 시각적 단어 금지
+- R-17 `error` — 상태는 ARIA·hidden 속성을 먼저 — ARIA로 표현할 수 없을 때만 BEM modifier, .is-* / .has-* 금지
+- R-18 `error` — modifier 이름은 허용 어휘(contracts/class-naming.json)에서 — 시각적 단어 금지
 
 ### HTML/마크업 규칙
 - R-07 `warn` — inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용
@@ -59,6 +59,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-23 `error` — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
+- R-29 `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지

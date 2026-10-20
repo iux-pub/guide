@@ -336,7 +336,7 @@ KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스�
 ```html
 <article class="card">...</article>
 <dialog class="modal">...</dialog>
-<nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>
+<nav class="breadcrumb" aria-label="브레드크럼"><ol>...</ol></nav>
 <nav class="main-menu" aria-label="메인 메뉴"><ul>...</ul></nav>
 <nav class="pagination" aria-label="페이지 내비게이션"><ol>...</ol></nav>
 ```
@@ -389,7 +389,7 @@ modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없
 
 ### 10.3 비-BEM 상태 클래스 (R-17)
 
-상태는 BEM modifier(시각) + ARIA 속성(의미)으로만 표현한다. `.is-*`, `.has-*` 같은 비-BEM 상태 클래스는 어느 컴포넌트의 상태인지 모호하다.
+상태는 ARIA·hidden 속성을 먼저 쓰고, CSS가 그 속성 선택자로 모양을 바꾼다. ARIA로 표현할 수 없는 상태(`step-indicator__item--done` 등)만 BEM modifier로 쓴다. `.is-*`, `.has-*` 같은 비-BEM 상태 클래스는 어느 컴포넌트의 상태인지 모호하다. 결정 순서는 `references/class-naming.md`.
 
 #### ❌ 금지
 
@@ -403,44 +403,39 @@ modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없
 #### ✅ 허용
 
 ```html
-<button class="btn" disabled aria-disabled="true">
-<div class="modal modal--open" aria-modal="true">
+<button type="button" class="btn btn--primary" disabled>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
 <input class="input input--error" aria-invalid="true">
-<li role="tab" class="tab__item tab__item--selected" aria-selected="true">
+<button type="button" role="tab" class="tab__item" aria-selected="true">
+<li class="step-indicator__item step-indicator__item--done">  <!-- ARIA에 '완료' 상태가 없어 modifier -->
 ```
 
 ---
 
 ### 10.4 시각적 단어 modifier (R-18)
 
-modifier 이름은 의미를 담아야 한다. 색·크기를 직접 명시한 이름은 디자인 변경 시 클래스명도 같이 바꿔야 하는 부채를 만든다.
+modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 이름은 디자인 변경 시 클래스명도 같이 바꿔야 하는 부채를 만든다. 금지어·허용 어휘의 정본은 `contracts/class-naming.json`이고, 표는 `references/class-naming.md`에 있다.
 
-#### ❌ 금지 — 시각적 단어 사전
+#### ❌ 금지 — 시각적 단어 (예)
 
-`--big` · `--small` · `--large` · `--xl` · `--xxl` · `--red` · `--blue` · `--green` · `--yellow` · `--rounded` · `--shadow` · `--bold` · `--italic`
+`--big` · `--huge` · `--tiny` · `--red` · `--blue` · `--gray` · `--dark` · `--rounded` · `--shadow` · `--bold` · `--wide` — 전체 목록은 `references/class-naming.md` 「금지어」. 어휘 밖 크기 줄임말(`--sm` · `--lg` · `--xl` · `--xxl`)도 쓰지 않는다.
 
 ```html
 <button class="btn btn--blue">
 <div class="card card--big">
 <span class="tag tag--rounded">
-<button class="btn btn--red">
+<span class="badge badge--gray">  <!-- 폐기 예정 별칭 — 검사는 경고, 새 마크업은 badge--neutral -->
 ```
 
-#### ✅ 허용 — KRDS 정의 어휘만
+#### ✅ 허용 — 어휘 표에서 고르고, 카탈로그 블록은 CSS에 정의된 변형만
 
-| 카테고리 | 허용 단어 |
-|---------|---------|
-| Variant | `--primary`, `--secondary`, `--tertiary`, `--text`, `--ghost` |
-| 사이즈 (KRDS 스케일) | `--xsmall`, `--small`, `--medium`, `--large`, `--xlarge` |
-| 상태 | `--selected`, `--disabled`, `--expanded`, `--loading`, `--error`, `--success`, `--current`, `--done`, `--todo` |
-| 톤 | `--info`, `--success`, `--warning`, `--danger`, `--inverse` |
-| 레이아웃 | `--horizontal`, `--vertical`, `--block`, `--inline` |
+크기 `--xsmall`~`--xlarge`(KRDS), 위계 `--primary` · `--secondary` · `--tertiary` · `--text`, 상태색 `--info` · `--success` · `--warning` · `--danger` · `--neutral` 등 — 축별 전체 어휘는 `references/class-naming.md` 「허용 modifier 어휘」.
 
 ```html
 <button class="btn btn--primary">
 <div class="card card--large">
 <span class="tag tag--info">
-<button class="btn btn--danger">
+<span class="badge badge--neutral">
 ```
 
 ---

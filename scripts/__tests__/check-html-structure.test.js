@@ -354,6 +354,92 @@ test('lang="ko"가 있는 <html>은 R-21을 통과한다', () => {
   assert.equal(result.status, 0, result.stderr)
 })
 
+// ─── R-29: 마크업 클래스 실재 · R-18 폐기 modifier ─────────────
+function fragment(body) {
+  return `<section class="section section--content" aria-labelledby="t">
+  <div class="container">
+    <h2 id="t">제목</h2>
+    ${body}
+  </div>
+</section>`
+}
+
+test('R-29: CSS에 정의된 modifier는 통과한다', () => {
+  const result = runCheck(fragment('<article class="card card--elevated"><h3 class="card__title">공지</h3></article>'))
+  assert.doesNotMatch(result.stderr, /\[R-29\]/)
+})
+
+test('R-29: 카탈로그 블록에 없는 modifier는 오류다', () => {
+  const result = runCheck(fragment('<article class="card card--featured"><h3 class="card__title">공지</h3></article>'))
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-29\][\s\S]*card--featured/)
+})
+
+test('R-29: 카탈로그 블록에 없는 element는 경고만 한다', () => {
+  const result = runCheck(fragment('<article class="card"><div class="card__media"></div><h3 class="card__title">공지</h3></article>'))
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-29\][\s\S]*card__media/)
+})
+
+test('R-29: 같은 파일 <style>에 정의한 클래스와 프로젝트 고유 블록은 검사하지 않는다', () => {
+  const result = runCheck(`<style>.card--promo { outline: 0; }</style>
+${fragment('<article class="card card--promo"><h3 class="card__title">공지</h3></article><div class="campaign__badge--new">새 소식</div>')}`)
+  assert.doesNotMatch(result.stderr, /\[R-29\]/)
+})
+
+test('R-18: 폐기 예정 modifier는 대체 이름과 함께 경고한다', () => {
+  const result = runCheck(fragment('<span class="badge badge--gray">3</span>'))
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-18\][\s\S]*badge--neutral/)
+})
+
+test('R-18: 폐기 별칭으로 시작하는 다른 modifier(badge--gray-dark)는 오류다 — 별칭 예외는 클래스 전체가 같을 때만', () => {
+  const result = runCheck(`<style>.badge--gray-dark { outline: 0; }</style>
+${fragment('<span class="badge badge--gray-dark">3</span>')}`)
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-18\][\s\S]*badge--gray-dark/)
+})
+
+test('R-18: 금지어가 뒤 조각에 있어도(card--dark-mode) 오류다', () => {
+  const result = runCheck(fragment('<article class="card card--dark-mode"><h3 class="card__title">공지</h3></article>'))
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-18\][\s\S]*card--dark-mode/)
+})
+
+test('R-18: 면제 접두어(pg) 블록은 시각 단어 검사에서 빠진다', () => {
+  const result = runCheck(`<style>.pg__swatch--gray { outline: 0; }</style>
+${fragment('<span class="pg__swatch--gray">회색 견본</span>')}`)
+  assert.doesNotMatch(result.stderr, /\[R-18\]/)
+})
+
+test('R-29: 파일 이름·오기로 지은 블록(header__*, form__*, table-wrapper)은 실제 블록을 알려 주는 오류다', () => {
+  const result = runCheck(fragment(`<div class="header__inner">기관명</div>
+<div class="form__group"><label class="form__label" for="q">검색어</label><input id="q" class="input"></div>
+<div class="table-wrapper"><table class="table"><caption class="table__caption">목록</caption><tr><th scope="col">이름</th></tr></table></div>`))
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-29\][\s\S]*header__inner[\s\S]*site-header/)
+  assert.match(result.stderr, /\[R-29\][\s\S]*form__group[\s\S]*form-field/)
+  assert.match(result.stderr, /\[R-29\][\s\S]*table-wrapper[\s\S]*table-wrap/)
+})
+
+test('R-29: 템플릿 식이 든 class 조각({{ }}, ${ })은 검사하지 않는다', () => {
+  const result = runCheck(fragment('<article class="card card--{{ variant }}"><h3 class="card__title">공지</h3></article><span class="badge badge--${tone}">새 글</span>'))
+  assert.doesNotMatch(result.stderr, /\[R-29\]/)
+})
+
+test('R-17: 대응 속성 없는 상태 modifier는 경고하고, 속성이 있으면 통과한다', () => {
+  const missing = runCheck(fragment('<ol><li class="step-indicator__item step-indicator__item--current">신청서 작성</li></ol>'))
+  assert.match(missing.stderr, /\[R-17\][\s\S]*step-indicator__item--current/)
+  const paired = runCheck(fragment('<ol><li class="step-indicator__item step-indicator__item--current" aria-current="step">신청서 작성</li></ol>'))
+  assert.doesNotMatch(paired.stderr, /\[R-17\]/)
+})
+
+test('R-18: 현재 페이지 modifier(pagination__item--current)는 aria-current로 바꾸라고 경고한다', () => {
+  const result = runCheck(fragment('<nav class="pagination" aria-label="페이지 내비게이션"><ol class="pagination__list"><li><a class="pagination__item pagination__item--current" href="?p=2" aria-current="page">2</a></li></ol></nav>'))
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-18\][\s\S]*aria-current/)
+})
+
 function pageWithViewport(content) {
   return `<!DOCTYPE html>
 <html lang="ko">
@@ -557,7 +643,7 @@ test('mobile-menu 패널에 dialog 역할 속성이 빠지면 R-16으로 실패�
 
 test('notice-bar는 aria-label이 있어야 하고 section이 아니면 R-15 경고한다', () => {
   const ok = runCheck(pageWith(PLAIN_HEADER, `
-    <section class="notice-bar notice-bar--info" aria-label="사이트 공지">
+    <section class="notice-bar notice-bar--warning" aria-label="사이트 공지">
       <div class="container notice-bar__inner">
         <p class="notice-bar__message">10월 12일 시스템 점검 안내</p>
       </div>
@@ -615,4 +701,38 @@ test('같은 내용이라도 조각이 아닌 페이지(경로가 _includes 밖)
   const result = runCheck(LAYOUT_FRAGMENT)
   assert.equal(result.status, 2)
   assert.match(result.stderr, /\[R-15\]/)
+})
+
+// ─── AI 컨텍스트(references·prompts)도 검사한다 ─────────────
+// 손으로 쓴 prompts/components.md에 유령 클래스(tab__button, modal__container 등)가 남아
+// AI가 그대로 옮겨 쓰던 경로를 막는다. 금지 예시가 본문인 문서 둘만 제외한다.
+
+const GHOST_MD = '```html\n<article class="card card--featured"><h3 class="card__title">공지</h3></article>\n```\n'
+
+function runCheckAt(relPath, source) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-ctx-'))
+  const file = path.join(dir, ...relPath.split('/'))
+  fs.mkdirSync(path.dirname(file), { recursive: true })
+  fs.writeFileSync(file, source)
+  return spawnSync(process.execPath, [CHECK_HTML, file], { cwd: ROOT, encoding: 'utf8' })
+}
+
+test('prompts/의 마크다운 html 블록도 R-29로 검사한다', () => {
+  const result = runCheckAt('prompts/components.md', GHOST_MD)
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-29\][\s\S]*card--featured/)
+})
+
+test('references/의 금지 예시 문서(forbidden-patterns·accessibility)는 검사하지 않는다', () => {
+  for (const name of ['forbidden-patterns.md', 'accessibility.md']) {
+    const result = runCheckAt(`references/${name}`, GHOST_MD)
+    assert.equal(result.status, 0, `${name}: ${result.stderr}`)
+  }
+})
+
+test('저장소의 AI 컨텍스트 마크업은 CSS에 있는 클래스만 쓴다', () => {
+  const files = ['prompts/components.md', 'references/krds-components.md', 'references/html-semantics.md']
+  const result = spawnSync(process.execPath, [CHECK_HTML, ...files.map(f => path.join(ROOT, f))], { cwd: ROOT, encoding: 'utf8' })
+  assert.equal(result.status, 0, result.stderr)
+  assert.doesNotMatch(result.stderr, /\[R-29\]/)
 })

@@ -10,6 +10,7 @@
  * 출력:
  *   references/krds-tokens.md     (자동 생성 — 토큰 카탈로그)
  *   references/krds-components.md (자동 생성 — 컴포넌트 카탈로그)
+ *   references/class-naming.md    (마커 사이 표만 — 정본 contracts/class-naming.json, 나머지는 직접 작성)
  *
  * 직접 작성하는 파일 (이 스크립트는 건드리지 않음):
  *   references/CONTRACT.md
@@ -256,8 +257,64 @@ function buildKrdsComponentsMd() {
 // 실행
 // ─────────────────────────────────────────────────────
 
-console.log('스킬 빌드 시작...')
-buildKrdsTokensMd()
-buildKrdsComponentsMd()
-console.log('완료. references/ 갱신본은 npm run build:mcp로 MCP 번들에 반영된다.')
-console.log('')
+// ─────────────────────────────────────────────────────
+// class-naming.md — contracts/class-naming.json의 표를 마커 사이에 채운다
+// ─────────────────────────────────────────────────────
+
+// 폐기 대상의 대체가 클래스면 .이름으로, 속성 조합(aria-current="page" 등)이면 그대로 적는다
+function formatReplacement(replacement) {
+  return /^[a-z][a-z0-9_-]*$/.test(replacement) ? `\`.${replacement}\`` : `\`${replacement}\``
+}
+
+// 계약 → 마커 사이 표. 파일을 쓰지 않는 순수 함수라 테스트가 현재 문서와 비교한다(손으로 고친 표가 남지 않게)
+function renderClassNamingMd(spec, doc) {
+  const vocabulary = [
+    '| 축 | 어휘 | 근거 |',
+    '|----|------|------|',
+    ...spec.vocabulary.map(a => `| ${a.label} | ${a.words.map(w => `\`--${w}\``).join(' · ')} | ${a.source} |`),
+    ...Object.entries(spec.blockModifiers || {}).map(([block, v]) => `| \`${block}\` 고유 | ${v.words.map(w => `\`--${w}\``).join(' · ')} | ${v.note} |`)
+  ].join('\n')
+
+  const forbidden = [
+    `금지어(error): ${spec.forbiddenWords.map(w => `\`${w}\``).join(' · ')}`,
+    '',
+    '| 폐기 예정 | 대신 | 메모 |',
+    '|-----------|------|------|',
+    ...(spec.deprecated || []).map(d => `| \`.${d.class}\` | ${formatReplacement(d.replacement)} | ${d.note} |`)
+  ].join('\n')
+
+  const fileBlocks = [
+    '| 컴포넌트 | 파일 | 블록 | 이유 |',
+    '|----------|------|------|------|',
+    ...spec.fileBlocks.map(f => `| \`${f.component}\` | \`${f.file}\` | ${f.blocks.map(b => `\`.${b}\``).join(' · ')} | ${f.why} |`),
+    ...(spec.blockAliases || []).map(a => `| (오기) \`${a.alias}\` | — | \`.${a.block}\` | ${a.why} |`)
+  ].join('\n')
+
+  let out = doc
+  for (const [id, body] of [['vocabulary', vocabulary], ['forbidden', forbidden], ['file-blocks', fileBlocks]]) {
+    const re = new RegExp(`(<!-- class-naming:${id}:begin[^>]*-->)[\\s\\S]*?(<!-- class-naming:${id}:end -->)`)
+    if (!re.test(out)) throw new Error(`references/class-naming.md에 class-naming:${id} 마커가 없다`)
+    out = out.replace(re, `$1\n${body}\n$2`)
+  }
+  return out
+}
+
+function buildClassNamingMd() {
+  const specPath = path.join(ROOT, 'contracts', 'class-naming.json')
+  const target = path.join(SKILL_REFS_DIR, 'class-naming.md')
+  if (!fs.existsSync(specPath) || !fs.existsSync(target)) return
+  const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'))
+  fs.writeFileSync(target, renderClassNamingMd(spec, fs.readFileSync(target, 'utf-8')))
+  console.log('✓ references/class-naming.md — 어휘·금지어·파일 대응 표')
+}
+
+module.exports = { renderClassNamingMd }
+
+if (require.main === module) {
+  console.log('스킬 빌드 시작...')
+  buildKrdsTokensMd()
+  buildKrdsComponentsMd()
+  buildClassNamingMd()
+  console.log('완료. references/ 갱신본은 npm run build:mcp로 MCP 번들에 반영된다.')
+  console.log('')
+}

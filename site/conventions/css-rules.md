@@ -87,7 +87,7 @@ $primary: #256ef4;   // SCSS 변수
 
 ```css
 /* style.css */   // .css 확장자만
-.card { &__title { color: var(--color-text); } }   // 표준 CSS nesting
+.tab__item { &[aria-selected="true"] { color: var(--color-primary); } }   // 표준 CSS nesting — 속성·의사 클래스를 잇는다(&__·&--로 이름을 잇지는 못한다, R-05)
 .btn { @apply inline-flex items-center; }   // Tailwind @apply
 @import "tailwindcss";   // Tailwind v4 import
 ```
@@ -133,7 +133,7 @@ $primary: #256ef4;   // SCSS 변수
 
 **심각도:** 🔴 error &nbsp; **검증:** check-violations.js
 
-> 공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 sibling selector, 의미적 상태 class, ARIA 속성 selector로 구현한다.
+> 공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 ARIA 속성 selector와 sibling selector로 구현한다(R-17 — 상태는 ARIA·hidden 속성이 먼저).
 
 **❌ 금지**
 
@@ -147,7 +147,7 @@ $primary: #256ef4;   // SCSS 변수
 ```css
 .field input:disabled ~ .field__label { color: var(--color-text-disabled); }   // 기존 DOM 구조에서 sibling selector 사용
 .disclosure[aria-expanded="true"] + .disclosure__panel { display: block; }   // ARIA 상태 속성으로 관계 표현
-.modal--open { display: flex; }   // BEM modifier로 시각 상태 표현
+.tab__item[aria-selected="true"] { color: var(--color-primary); }   // ARIA 상태 속성 선택자로 시각 상태 표현(R-17)
 ```
 
 **참고:** site/testing/browser-testing.md, package.json#browserslist

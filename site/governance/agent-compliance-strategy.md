@@ -125,7 +125,7 @@ Task Contract가 비어 있으면 생성 스킬은 구현 단계로 넘어가지
 
 - 사이트 유형 → Page shell과 조건부 공공 요소
 - 사용자 의도 → 페이지/section 패턴
-- UI 상태 → BEM modifier + ARIA 속성
+- UI 상태 → ARIA·hidden 속성 먼저(CSS는 속성 선택자), ARIA로 표현할 수 없을 때만 BEM modifier (R-17)
 - 시각적 요구 → semantic token
 - 새 요구 → 기존 조합 / 프로젝트 패턴 / 공통 컴포넌트 후보
 

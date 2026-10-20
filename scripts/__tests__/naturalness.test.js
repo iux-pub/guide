@@ -66,6 +66,64 @@ test('R-23: site/design/ 문서는 의도적 반례를 실어도 SKIP된다', ()
   assert.equal(result.status, 0, result.stderr)
 })
 
+// ─── R-18 modifier 어휘 (CSS) ─────────────────────────
+
+test('R-18: 허용 어휘의 modifier 정의는 통과한다', () => {
+  const result = runCheck('src/styles/6-components/promo.css', `.promo--large { @apply p-[2.4rem]; }
+.promo--inverse { @apply text-[var(--color-text-inverse)]; }
+`)
+  assert.doesNotMatch(result.stderr, /\[R-18\]/)
+})
+
+test('R-18: 시각적 단어 modifier 정의는 오류다', () => {
+  const result = runCheck('src/styles/6-components/promo.css', `.promo--blue { @apply text-[var(--color-primary)]; }
+`)
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-18\][\s\S]*promo--blue/)
+})
+
+test('R-18: 어휘 밖 modifier 정의는 경고한다', () => {
+  const result = runCheck('src/styles/6-components/promo.css', `.promo--sparkly { @apply p-[2.4rem]; }
+`)
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-18\][\s\S]*promo--sparkly/)
+})
+
+test('R-18: 폐기 예정 별칭 정의(badge--gray)는 CSS에서 허용한다', () => {
+  const result = runCheck('src/styles/6-components/badge-alias.css', `.badge--neutral,
+.badge--gray { @apply [background:var(--color-gray-60)]; }
+`)
+  assert.doesNotMatch(result.stderr, /\[R-18\]/)
+})
+
+test('R-18: 금지어가 조각으로 든 modifier(--dark-mode, --gray-dark)도 오류다 — HTML 검사와 같은 판정', () => {
+  const result = runCheck('src/styles/6-components/promo.css', `.promo--dark-mode { @apply p-[2.4rem]; }
+.badge--gray-dark { @apply p-[2.4rem]; }
+`)
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-18\][\s\S]*promo--dark-mode/)
+  assert.match(result.stderr, /\[R-18\][\s\S]*badge--gray-dark/)
+})
+
+test('R-18: 문자열·한 줄 주석 안의 --단어는 선택자가 아니다', () => {
+  const result = runCheck('src/styles/6-components/promo.css', `.promo__badge::before { content: 'promo--blue'; } /* .promo--red 예시 */
+`)
+  assert.doesNotMatch(result.stderr, /\[R-18\]/)
+})
+
+test('R-05: &__element·&--modifier nesting은 깨진 선택자라 오류다', () => {
+  const result = runCheck('src/styles/6-components/promo.css', `.promo {
+  @apply p-[2.4rem];
+
+  &__body { @apply p-[1.6rem]; }
+  &--large { @apply p-[3.2rem]; }
+}
+`)
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-05\][\s\S]*&__body/)
+  assert.match(result.stderr, /\[R-05\][\s\S]*&--large/)
+})
+
 // ─── R-24 한글 조판 하한 ──────────────────────────────
 
 test('R-24: reset 계층에 word-break: keep-all이 없으면 오류다', () => {

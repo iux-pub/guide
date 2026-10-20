@@ -35,6 +35,8 @@ HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section 
 
 버튼 KRDS variant(4종): `--primary` `--secondary` `--tertiary` `--text`. KRDS size(5종): `--xsmall`(32) `--small`(40) medium(48, 기본) `--large`(56) `--xlarge`(64). 모바일은 medium 이상 권장.
 
+클래스 이름: modifier는 허용 어휘(크기 `--xsmall`~`--xlarge`, 위계 `--primary`/`--secondary`/`--tertiary`/`--text`, 상태색 `--info`/`--success`/`--warning`/`--danger`/`--neutral` 등)에서만 고르고 `--blue`·`--big`·`--rounded` 같은 시각 단어는 쓰지 않는다. 카탈로그 블록의 클래스는 CSS에 정의된 것만 쓴다 — `card--featured`·`card__media`처럼 그럴듯한 변형·부품을 지어내지 않는다. 상태는 ARIA·hidden 속성을 먼저 쓴다(`aria-expanded`·`aria-current`·`aria-selected`·`hidden`·`disabled` — CSS가 속성 선택자로 모양을 바꾼다). ARIA로 표현할 수 없을 때만 BEM modifier(예: 단계 표시의 완료 `--done`)를 쓰고, `.is-*`·`.has-*`는 쓰지 않는다.
+
 접근성 (KWCAG/WCAG 2.1 AA): 대비 4.5:1 (큰 텍스트 3:1), 터치 ≥44×44px (모바일 medium=48px 권장), `:focus-visible` (reset.css 전역 4px primary 외곽선 — 컴포넌트에서 제거 금지), skip-to-content 필수, `<img alt>` 필수, `<label for>+id` 필수, `div/span 클릭 핸들러 패턴` 금지.
 
 하네스 없는 프로젝트의 자체 검증: 개발팀 기존 프로젝트처럼 infoUX 전용 `npm run check`, `scripts/check-violations.js`, `scripts/check-html-structure.js`가 없어도 검증을 생략하지 않는다. 먼저 프로젝트의 `package.json`, CI 설정, README에서 기존 `lint`/`build`/`test`/`a11y` 명령을 찾아 실행한다. 자동 하네스가 없으면 변경 파일을 직접 점검한다: raw 색상, Tailwind raw 컬러, SCSS 문법, `!important`, 핵심 CSS `:has()`, focus outline 제거, BEM 위반, 비-BEM 상태 클래스, 시각적 modifier, `div/span` 클릭, `alt`/`label`/ARIA 누락, skip link/page shell, 모바일 360px 터치 영역과 overflow. 최종 보고에는 자동 검증, 수동 대체 검증, 남은 수동 QA 항목을 구분해 적는다.

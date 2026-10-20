@@ -19,6 +19,7 @@ HTML 마크업 작성 규칙이다.
 | R-23 | 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크 | error | check-violations.js |
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, manual |
+| R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | check-html-structure.js |
 
 ---
 
@@ -38,7 +39,7 @@ HTML 마크업 작성 규칙이다.
 
 ```html
 <div style="--card-ratio: 16/9">   // CSS 커스텀 프로퍼티만
-<div class="card card--featured">   // 클래스로 스타일 적용
+<article class="card card--elevated">   // CSS에 정의된 변형 클래스로 스타일 적용
 ```
 
 ---
@@ -133,7 +134,7 @@ HTML 마크업 작성 규칙이다.
 </main>
 <footer id="footer"><div class="container">...</div></footer>   // 큰 영역은 단순하게 잡고 main 안은 section 단위, 각 section 안의 .container와 제목이 구조 담당
 <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">...</div>   // 기존 마크업 패턴 위에 접근성 속성 보강
-<nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>   // 기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용
+<nav class="breadcrumb" aria-label="브레드크럼"><ol>...</ol></nav>   // 기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용
 ```
 
 **참고:** 기존 인포마인드 구축 사이트 HTML, references/html-semantics.md, references/krds-components.md
@@ -228,5 +229,29 @@ HTML 마크업 작성 규칙이다.
 <span class="icon-font icon-font--bold icon-font--search" aria-hidden="true"></span>   // 폰트는 클래스가 표정을 바꾼다 — 표정 클래스를 이름 클래스 앞에 둔다
 <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite-bold.svg#search"></use></svg>   // SVG는 스프라이트 파일이 곧 표정이다
 ```
+
+---
+
+## R-29 — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
+
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
+
+> 카탈로그 블록(src/styles에 정의된 블록)의 modifier를 CSS에 없는 이름으로 쓰면 화면은 기본 모양으로 나오면서 변형인 척한다. AI가 card--featured처럼 그럴듯한 변형을 지어내는 대표적 경로다(2026-10 점검에서 playground·스니펫에 이런 유령 클래스 30개가 있었다). modifier는 모양을 바꾸려고 있는 것이라 CSS가 없으면 error, element는 스타일 없는 구조 표시일 수 있어 warn — 스타일이 필요 없으면 클래스를 달지 않는다. 같은 파일 <style>에 정의한 클래스와 section 목적 modifier(html-page-contract)는 예외다. CSS에 없는 블록은 프로젝트 고유 블록일 수 있어 보지 않지만, 파일 이름이나 흔한 오기로 지은 블록(header__*·form__*·check-radio__*·table-wrapper)은 contracts/class-naming.json 대응표로 실제 블록(site-header·form-field·check·table-wrap)을 알려 주며 오류로 잡는다.
+
+**❌ 금지**
+
+```html
+<article class="card card--featured">   // card.css에 없는 변형 — 기본 카드로 보인다
+<a class="pagination__link pagination__link--current">   // 컴포넌트 CSS와 다른 클래스 — 현재 페이지가 표시되지 않는다
+```
+
+**✅ 올바른 형식**
+
+```html
+<article class="card card--elevated">   // card.css에 정의된 변형
+<a class="pagination__item" href="?p=3" aria-current="page">3</a>   // pagination.css가 aria-current 속성 선택자로 현재 페이지를 그린다
+```
+
+**참고:** references/class-naming.md
 
 ---

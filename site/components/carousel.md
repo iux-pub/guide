@@ -36,17 +36,17 @@ KRDS 캐러셀(component_04_09) 기준 컴포넌트. 권위 있는 소스는 `sr
     </button>
   </div>
   <div class="carousel__viewport">
-    <ul class="carousel__track" aria-live="off">
-      <li class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+    <div class="carousel__track" aria-live="off">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
         <a class="carousel__link" href="/notice/view/1024">
           <span class="carousel__body">
             <span class="carousel__title">2026년 하반기 청년 창업 지원 사업 공모</span>
             <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
           </span>
         </a>
-      </li>
+      </div>
       <!-- 슬라이드 2·3 같은 구조 -->
-    </ul>
+    </div>
   </div>
 </div>
 ```
@@ -54,6 +54,7 @@ KRDS 캐러셀(component_04_09) 기준 컴포넌트. 권위 있는 소스는 `sr
 ## 접근성 핵심
 
 - 키보드 초점이 들어오면 자동 회전을 멈추고, 재생 버튼을 누르기 전에는 다시 돌지 않는다. 마우스를 올려도 멈춘다.
+- 슬라이드는 `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"`다. 그래서 트랙·슬라이드는 `ul`/`li`가 아니라 `div`로 쓴다(`li`에 group 역할을 주면 목록 구조가 깨진다).
 - 현재 슬라이드 밖은 `inert` + `aria-hidden`으로 초점·보조기기에서 뺀다.
 - 1023px 미만은 분수형(1 / 3), 1024px 이상은 점 버튼으로 위치를 보인다. 점 그룹에서 ←→로 넘긴다.
 - `prefers-reduced-motion: reduce`이면 자동 회전을 시작하지 않는다.

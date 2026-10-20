@@ -354,6 +354,56 @@ test('lang="ko"가 있는 <html>은 R-21을 통과한다', () => {
   assert.equal(result.status, 0, result.stderr)
 })
 
+function pageWithViewport(content) {
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta name="viewport" content="${content}">
+  <title>테스트</title>
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section section--content" aria-labelledby="t">
+      <div class="container"><h1 id="t">제목</h1></div>
+    </section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`
+}
+
+test('R-28: 확대 제한 없는 viewport는 통과한다', () => {
+  const result = runCheck(pageWithViewport('width=device-width, initial-scale=1'))
+  assert.equal(result.status, 0, result.stderr)
+  assert.doesNotMatch(result.stderr, /\[R-28\]/)
+})
+
+test('R-28: user-scalable=0은 오류다', () => {
+  const result = runCheck(pageWithViewport('width=device-width, initial-scale=1.0, user-scalable=0'))
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-28\]/)
+})
+
+test('R-28: maximum-scale=1.0은 오류다', () => {
+  const result = runCheck(pageWithViewport('width=device-width, initial-scale=1.0, maximum-scale=1.0'))
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-28\]/)
+})
+
+test('R-28: maximum-scale=2.0은 경고만 한다', () => {
+  const result = runCheck(pageWithViewport('width=device-width, initial-scale=1, maximum-scale=2.0'))
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stderr, /\[R-28\]/)
+})
+
+test('R-28: 공백·대소문자가 섞여도 차단을 잡는다', () => {
+  const result = runCheck(pageWithViewport('width=device-width,initial-scale=1 , User-Scalable = NO'))
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /\[R-28\]/)
+})
+
 test('다른 블록의 modifier를 컴포넌트 root로 오인하지 않는다 (R-15)', () => {
   // icon-font--calendar는 아이콘 이름이지 calendar 컴포넌트가 아니다.
   // 부분 문자열로 비교하면 걸린다 — 2026-08-23에 아이콘을 쓴 파일마다 경고가 떴다.

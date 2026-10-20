@@ -47,6 +47,7 @@ order: 1
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-28 | 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지 | error | [접근성 규칙](/conventions/a11y-rules/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

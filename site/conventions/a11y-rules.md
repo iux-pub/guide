@@ -18,6 +18,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | check-html-structure.js |
 | R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | check-violations.js, manual |
+| R-28 | 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지 | error | check-html-structure.js |
 
 ---
 
@@ -184,5 +185,29 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 ```
 
 **참고:** site/guides/css-animation.md, references/accessibility.md
+
+---
+
+## R-28 — 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지
+
+**심각도:** 🔴 error &nbsp; **검증:** check-html-structure.js
+
+> 저시력 사용자는 손가락 확대로 글자를 읽는다. viewport meta로 확대를 막으면 모바일에서 200% 확대가 불가능해 WCAG 1.4.4 텍스트 크기 조정(AA)을 어긴다. 국내 웹사이트 97곳 중 51곳이 확대를 막고 있어 관행으로 흘러들기 쉽다. maximum-scale이 2 이상 5 미만이면 경고한다 — 지정하지 않는 것이 가장 낫다. body touch-action 같은 CSS 제스처 차단은 이 규칙 범위 밖이며 리뷰에서 본다.
+
+**❌ 금지**
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">   // 확대를 완전히 막는다
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">   // user-scalable=0도 같은 차단이다
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5">   // 200% 확대에 못 미친다
+```
+
+**✅ 올바른 형식**
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1">   // 확대 제한을 두지 않는다
+```
+
+**참고:** references/accessibility.md
 
 ---

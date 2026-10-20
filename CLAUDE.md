@@ -68,6 +68,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-16 `error` — 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다
 - R-21 `error` — html lang 속성 필수 — 문서 기본 언어 명시
 - R-22 `warn` — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
+- R-28 `error` — 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지
 <!-- RULES_END -->
 
 > 위 표는 `rules.json`에서 자동 생성된다. 실제 적용 대상은 `src/styles/**/*.css`(R-01~R-06, R-11~R-13) + `src/snippets/**/*.md`/`site/**/*.md`(R-07~R-10, R-14).

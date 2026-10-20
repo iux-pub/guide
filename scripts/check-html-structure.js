@@ -782,12 +782,50 @@ function checkHtmlLang(html, filePath, baseLineNum) {
   )
 }
 
+// ─── R-28: viewport 확대 차단 ─────────────────────────────────
+// WCAG 1.4.4 — 200% 확대가 가능해야 한다. user-scalable=no·0 또는 maximum-scale 2 미만은 오류,
+// 2 이상 5 미만은 경고(지정하지 않는 것이 가장 낫다).
+const VIEWPORT_META_RE = /<meta\b[^>]*\bname\s*=\s*["']viewport["'][^>]*>/gi
+const ZOOM_WARN_CEILING = 5
+const ZOOM_MIN_SCALE = 2
+
+function parseViewportContent(tag) {
+  const m = /\bcontent\s*=\s*(["'])([\s\S]*?)\1/i.exec(tag)
+  if (!m) return {}
+  const props = {}
+  for (const part of m[2].split(/[,;]/)) {
+    const [key, value] = part.split('=').map(s => (s || '').trim().toLowerCase())
+    if (key) props[key] = value
+  }
+  return props
+}
+
+function checkViewportZoom(html, filePath, baseLineNum) {
+  VIEWPORT_META_RE.lastIndex = 0
+  let m
+  while ((m = VIEWPORT_META_RE.exec(html)) !== null) {
+    const props = parseViewportContent(m[0])
+    const lineNum = baseLineNum + html.slice(0, m.index).split('\n').length - 1
+    const code = m[0].slice(0, 160)
+    const scalable = props['user-scalable']
+    const maxScale = props['maximum-scale'] !== undefined ? parseFloat(props['maximum-scale']) : NaN
+    if (scalable === 'no' || scalable === '0') {
+      error(rel(filePath), lineNum, '[R-28] viewport가 확대를 막습니다(user-scalable). 저시력 사용자가 200% 확대할 수 있게 user-scalable을 지우세요.', code, 'R-28')
+    } else if (!Number.isNaN(maxScale) && maxScale < ZOOM_MIN_SCALE) {
+      error(rel(filePath), lineNum, `[R-28] viewport maximum-scale=${props['maximum-scale']} — 200% 확대가 불가능합니다. maximum-scale을 지우세요.`, code, 'R-28')
+    } else if (!Number.isNaN(maxScale) && maxScale < ZOOM_WARN_CEILING) {
+      warn(rel(filePath), lineNum, `[R-28] viewport maximum-scale=${props['maximum-scale']} — 확대 상한을 두지 않는 것이 가장 낫습니다.`, code, 'R-28')
+    }
+  }
+}
+
 function checkHtml(html, filePath, baseLineNum = 1) {
   const lines = html.split('\n')
   const root = parseHtmlTree(html)
 
   checkPageContract(html, filePath, baseLineNum)
   checkHtmlLang(html, filePath, baseLineNum)
+  checkViewportZoom(html, filePath, baseLineNum)
   checkFormLabels(root, filePath, baseLineNum)
   checkTabPattern(root, filePath, baseLineNum)
   checkAccordionPattern(root, filePath, baseLineNum)
@@ -906,6 +944,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
 const SKIP_PATTERNS = [
   /\/site\/conventions\//, // 규칙 문서 — ❌ 금지 예시 포함
   /\/site\/accessibility\//, // 접근성 가이드 — "Don't" 예시 포함
+  /\/site\/testing\//, // 테스트 가이드 — 확대 차단 viewport 등 "DON'T" 예시 포함
   /\/src\/playground\/index\.html$/ // 색상/토큰 스케일 데모 — pg__swatch-color--gray-* 의도적 사용
 ]
 

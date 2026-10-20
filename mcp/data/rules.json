@@ -968,6 +968,40 @@
           "note": "SVG는 스프라이트 파일이 곧 표정이다"
         }
       ]
+    },
+    {
+      "id": "R-28",
+      "category": "a11y",
+      "summary": "확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "저시력 사용자는 손가락 확대로 글자를 읽는다. viewport meta로 확대를 막으면 모바일에서 200% 확대가 불가능해 WCAG 1.4.4 텍스트 크기 조정(AA)을 어긴다. 국내 웹사이트 97곳 중 51곳이 확대를 막고 있어 관행으로 흘러들기 쉽다. maximum-scale이 2 이상 5 미만이면 경고한다 — 지정하지 않는 것이 가장 낫다. body touch-action 같은 CSS 제스처 차단은 이 규칙 범위 밖이며 리뷰에서 본다.",
+      "refs": [
+        "references/accessibility.md"
+      ],
+      "bad": [
+        {
+          "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">",
+          "note": "확대를 완전히 막는다"
+        },
+        {
+          "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=0\">",
+          "note": "user-scalable=0도 같은 차단이다"
+        },
+        {
+          "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1.5\">",
+          "note": "200% 확대에 못 미친다"
+        }
+      ],
+      "good": [
+        {
+          "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+          "note": "확대 제한을 두지 않는다"
+        }
+      ]
     }
   ]
 }

@@ -5,6 +5,8 @@ order: 7
 
 AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞는 독창적 미학을 갖도록 하기 위한 가이드. 인포마인드 디자인 시스템 위에 적용하며, 제품 UI와 랜딩/마케팅 페이지의 적용 수준을 구분한다.
 
+> **정본 관계** — KRDS(컴포넌트·패턴·타이포그래피 지침) → `contracts/art-direction.json`(MCP `get_art_direction`)·`contracts/profiles.json`(`get_profile`) → 이 문서. 충돌하면 앞선 것이 이긴다. 이 문서의 표와 예시는 참고 자료다. 표현 효과(글래스모피즘·다크 모드·강한 모션 등)의 허용 범위는 프로필 표현 등급(`profiles.json` expression)이 상한이며, 이 문서의 스타일 예시가 그 상한을 넓히지 않는다.
+
 ## AI 슬롭 안티패턴
 
 아래 패턴은 "AI가 만든 티"가 나는 대표적 징후다. 반드시 피한다.
@@ -263,7 +265,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 | **SmartFarm** | Organic Biophilic + Minimalism | Green 계열(`#228738`) + Earth tone 보조 | 카드 기반 모니터링, 지도 중심 레이아웃 | Cyberpunk, HUD |
 | **면세 플랫폼** | Glassmorphism + Feature-Rich Showcase | Luxury Gold(`#b8860b`) + 깊은 Navy 배경 | 상품 그리드, 풀스크린 히어로 | Brutalism |
 | **랜딩/마케팅** | Aurora UI + Hero-Centric + Storytelling | 프로젝트별 자유, 그라디언트 적극 활용 | 풀스크린 섹션, 스크롤 스토리텔링 | (제약 없음, 맥락 우선) |
-| **WEB/SI** | Flat + Minimalism | 기관 CI 색상 기반, 토큰 오버라이드 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 (클라이언트 확인 후) |
+| **WEB/SI** | Flat + Minimalism | 기관 CI 색상 기반, 토큰 오버라이드 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 — 표현 등급 상한 안에서만, 넘으면 Task Contract `exceptions`에 근거 기록 |
 
 ### 제품별 토큰 오버라이드 예시
 
@@ -297,7 +299,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 |--------|------|
 | **Flat Design** | 그림자 없음, 솔리드 컬러. 깊이감 부재는 타이포로 보완 |
 | **Minimalism** | 여백, 그리드, 타이포 중심. 지루해지지 않도록 타이포 강조 |
-| **Glassmorphism** | `backdrop-filter: blur`, 반투명 레이어. 저사양 기기 성능 고려 |
+| **Glassmorphism** | `backdrop-filter: blur`, 반투명 레이어. 저사양 기기 성능 고려. 전면 적용은 art-direction 안티패턴 4 — 등급별 허용 효과는 `contracts/profiles.json`이 정본 |
 | **Dark Mode (OLED)** | 순수 검정(#000), 고대비. 라이트 모드 대응 병행 필수 |
 | **Data-Dense Dashboard** | 정보 압축, 고밀도 레이아웃. 실시간 모니터링에 적합 |
 | **Aurora UI** | 흐르는 그라디언트, 빛 번짐. 랜딩/마케팅 전용 |

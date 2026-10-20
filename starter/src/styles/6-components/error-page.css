@@ -35,6 +35,7 @@
   }
 
   /* 선택 요소 — 상태 코드. 문의 접수 때 확인용으로 필요할 때만 쓴다 */
+
   /* KRDS display large(mobile 4.4 / pc 6rem) · 행간 150% · 자간 0.1rem */
   .error-page__code {
     @apply m-0 text-[4.4rem] tablet:text-[6rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-primary)] [font-variant-numeric:tabular-nums];

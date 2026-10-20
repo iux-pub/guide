@@ -15,10 +15,10 @@ brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디�
 
 | 유형 | 기본 등급 | 타이포 후보 | 팔레트 후보 | 섹션 리듬 | 카피 톤 |
 |------|-----------|-------------|-------------|-----------|---------|
-| 일반사이트 (`general-site`) | 표현형 (`expressive`) | standard-gov, product-modern, formal-serif, retro-display | coast-teal, market-terracotta | 풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용 | 합쇼체 기본. 명사형 버튼 레이블. 직역체·2인칭 '당신' 금지 |
+| 일반사이트 (`general-site`) | 표현형 (`expressive`) | standard-gov, product-modern, formal-serif, retro-display | coast-teal, market-terracotta | 풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용 | 합쇼체 기본. 버튼 레이블은 동사형(KRDS) — 완료·닫기·취소·추가·삭제 같은 일반 작업만 명사형. 직역체·2인칭 '당신' 금지 |
 | 공공서비스 (`public-service`) | 절제형 (`restrained`) | standard-gov | trust-blue, coast-teal | 과업 진입(search) 우선. 장식 hero는 화면 1/2 이하 | 합쇼체 고정. 느낌표 금지. KRDS 용어 우선 |
 | 공공기관 (`public-institution`) | 절제형 (`restrained`) | standard-gov, formal-serif | trust-blue | 기관 정체성+공지 결합형 인트로. 슬라이더는 정지 컨트롤 필수 | 합쇼체 고정. 성과 홍보 어조 금지 — 사실 서술 |
-| CMS·관리자 (`cms-admin`) | 기능형 (`utility`) | standard-gov, technical-global | trust-blue | hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터 | 명사형·개조식. 문장 최소화 |
+| CMS·관리자 (`cms-admin`) | 기능형 (`utility`) | standard-gov, technical-global | trust-blue | hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터 | 개조식. 문장 최소화. 버튼 레이블은 동사형(KRDS) — 일반 작업(완료·닫기·취소·추가·삭제)과 길이 제약이 있을 때만 명사형 |
 | 커머스·예약 (`commerce-reservation`) | 표현형 (`expressive`) | standard-gov, product-modern | market-terracotta, trust-blue | 상품·프로모션 중심, 전환 CTA 1개 원칙. 결제 플로우는 utility 강등 | 합쇼체 기본. 근거 없는 최상급 금지. 가격·기간 사실 정보 우선 |
 <!-- art-direction:expression:end -->
 
@@ -143,7 +143,7 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 
 프로필별 종결어미·금지선은 §1 프로필 기본값 표의 카피 톤 열이 정본이다. 공통 원칙:
 
-- 버튼 레이블은 명사형("신청", "다운로드")을 기본으로 한다.
+- 버튼 레이블은 실행될 기능을 예측할 수 있는 **동사형**을 기본으로 한다("신청하기", "파일 내려받기", "변경사항 저장"). 명사형은 KRDS가 정한 예외 — "완료", "닫기", "취소", "추가", "삭제" 같은 일반 작업이거나 동사로 쓰면 버튼 길이·해석에 문제가 생기는 경우 — 에만 쓴다(KRDS 버튼 component_05_02).
 - 근거 없는 최상급·성과 홍보 어조·느낌표 남발을 금지한다. 사실 서술이 기본이다.
 - 번역투 금지 — "지금 시작하세요", 2인칭 "당신", "~을 경험하세요" 류.
 - 문장 공식·에러 메시지 3-part 구조는 microcopy 소유다(site/design/microcopy.md).

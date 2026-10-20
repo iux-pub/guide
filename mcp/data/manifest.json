@@ -1,5 +1,5 @@
 {
-  "version": "e40c62e",
+  "version": "907120a",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -11,7 +11,7 @@
     {
       "id": "art-direction",
       "file": "art-direction.md",
-      "chars": 12513,
+      "chars": 12767,
       "summary": "brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디까지 열지 판단하는 기준. 수치 정본은 `contracts/art-direction.json`, 팔레트 hex 정본은 `tokens/presets/`이며, 이 문서의 표는 build-art-direct..."
     },
     {

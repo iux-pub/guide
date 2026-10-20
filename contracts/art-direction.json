@@ -409,7 +409,7 @@
         "market-terracotta"
       ],
       "rhythm": "풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용",
-      "copyTone": "합쇼체 기본. 명사형 버튼 레이블. 직역체·2인칭 '당신' 금지"
+      "copyTone": "합쇼체 기본. 버튼 레이블은 동사형(KRDS) — 완료·닫기·취소·추가·삭제 같은 일반 작업만 명사형. 직역체·2인칭 '당신' 금지"
     },
     "public-service": {
       "typography": [
@@ -442,7 +442,7 @@
         "trust-blue"
       ],
       "rhythm": "hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터",
-      "copyTone": "명사형·개조식. 문장 최소화"
+      "copyTone": "개조식. 문장 최소화. 버튼 레이블은 동사형(KRDS) — 일반 작업(완료·닫기·취소·추가·삭제)과 길이 제약이 있을 때만 명사형"
     },
     "commerce-reservation": {
       "typography": [

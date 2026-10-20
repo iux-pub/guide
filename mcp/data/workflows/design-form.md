@@ -14,7 +14,7 @@
 
 - 모든 컨트롤은 보이는 `label` 또는 동등한 접근 가능한 이름을 가진다.
 - 도움말과 오류는 고유 id로 `aria-describedby`에 연결한다.
-- 오류 상태는 BEM modifier와 `aria-invalid="true"`를 함께 사용한다.
+- 오류 상태는 `aria-invalid="true"`를 먼저 쓰고, 기존 `--error` 변형(`.input--error`·`.select--error`·`.textarea--error`)을 함께 둔다(R-17). `.has-error`는 쓰지 않는다.
 - placeholder는 label을 대체하지 않는다.
 - 제출은 native `form`과 `button type="submit"`을 사용한다.
 - 모바일 인터랙티브 영역은 44x44px 이상이다.

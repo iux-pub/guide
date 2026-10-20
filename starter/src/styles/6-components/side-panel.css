@@ -3,8 +3,12 @@
  *
  * 우측에서 슬라이드 인. 모달과 달리 본문 스크롤 차단하지 않음.
  *
+ * 상태는 aria-hidden 속성 하나로 바꾼다(R-17) — 닫힘 "true", 열림 "false".
+ * 닫힌 패널은 visibility: hidden으로 초점 순서·보조기기에서 함께 빠진다(화면 밖 버튼에 Tab이 닿지 않게).
+ * --open은 이미 납품한 마크업을 위한 별칭이다. 새 마크업에는 쓰지 않는다.
+ *
  * 구조:
- *   <aside class="side-panel" role="dialog" aria-labelledby="panel-title">
+ *   <aside class="side-panel" role="dialog" aria-labelledby="panel-title" aria-hidden="true">
  *     <header class="side-panel__header">
  *       <h2 id="panel-title" class="side-panel__title">상세 정보</h2>
  *       <button class="side-panel__close" aria-label="닫기">×</button>
@@ -18,12 +22,20 @@
 
 @layer components {
   .side-panel {
-    @apply fixed top-0 right-0 bottom-0 w-full max-w-[48rem] z-[1050] flex flex-col bg-[var(--color-surface)] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] [transform:translateX(100%)] [transition:transform_0.4s_ease-in-out];
+    @apply fixed top-0 right-0 bottom-0 w-full max-w-[48rem] z-[1050] flex flex-col bg-[var(--color-surface)] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] [transform:translateX(100%)] [visibility:hidden] [transition:transform_0.4s_ease-in-out,visibility_0.4s];
   }
 
+  /* 열림 — aria-hidden="false". --open은 납품 호환 별칭 */
   .side-panel[aria-hidden="false"],
   .side-panel--open {
-    @apply [transform:translateX(0)];
+    @apply [transform:translateX(0)] [visibility:visible];
+  }
+
+  /* prefers-reduced-motion 대응 — 슬라이드 없이 바로 열고 닫는다 (R-22) */
+  @media (prefers-reduced-motion: reduce) {
+    .side-panel {
+      @apply [transition:none];
+    }
   }
 
   .side-panel--small  { @apply [max-width:36rem]; }

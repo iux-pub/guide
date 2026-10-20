@@ -72,7 +72,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
       </div>
 
       <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
-      <nav class="site-footer__legal" aria-label="약관 및 정책">
+      <nav aria-label="약관 및 정책">
         <ul class="site-footer__legal-list">
           <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
           <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
@@ -116,7 +116,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
         <a class="site-footer__brand" href="/"><img class="site-footer__logo" src="/images/logo.svg" alt="서비스명"></a>
         <address class="site-footer__address">민원 문의 064-000-0000 · 평일 09:00~18:00</address>
       </div>
-      <nav class="site-footer__legal" aria-label="약관 및 정책">
+      <nav aria-label="약관 및 정책">
         <ul class="site-footer__legal-list">
           <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
         </ul>
@@ -132,7 +132,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 전자상거래가 있으면 이용약관과 사업자 정보를 반드시 표시한다(KRDS). 정책 링크 뒤, 저작권 앞에 둔다.
 
 ```html
-<nav class="site-footer__legal" aria-label="약관 및 정책">
+<nav aria-label="약관 및 정책">
   <ul class="site-footer__legal-list">
     <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
     <li><a class="site-footer__link" href="/terms">이용약관</a></li>

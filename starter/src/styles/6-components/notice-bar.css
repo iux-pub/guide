@@ -1,20 +1,24 @@
 /**
- * Notice Bar — 사이트 공지 띠
+ * Notice Bar — KRDS 긴급 공지 (Critical alerts)
  *
- * 페이지 최상단(건너뛰기 링크 다음, header 앞)에 놓이는 사이트 전체 공지.
- * 페이지 안의 상태 메시지(alert)나 동작 결과 알림(toast)과 다르다 — 사이트 방문자 모두에게
- * 한 번 알리는 정적 안내이며, 스스로 바뀌거나 굴러가지 않는다.
+ * 지금 대부분의 사용자가 알아야 하는 한시적 사실 하나를 본문 맨 위에 띠로 알린다.
+ * 자리는 본문 콘텐츠의 첫 요소 — main#main의 첫 section(메인 메뉴 다음, 히어로 앞)이며 폭은 화면 전체다.
+ * 페이지 안의 상태 메시지(alert)나 동작 결과 알림(toast)과 다르다. 스스로 바뀌거나 굴러가지 않고,
+ * 닫기·숨기기·접기 버튼을 두지 않는다(KRDS) — 상황이 끝나면 운영자가 내린다. JS가 없다.
+ *
+ * 긴급도(KRDS 상·중·하) ↔ 변형 — 색만으로 전하지 않도록 라벨 텍스트를 함께 쓴다(WCAG 1.4.1)
+ *   상  국가 재난·비상, 갑작스러운 서비스 장애   .notice-bar--danger    라벨 「긴급」  아이콘 error
+ *   중  서비스 중단 사전 예고                    .notice-bar--warning   라벨 「예고」  아이콘 warning
+ *   하  대부분이 알아야 하나 큰 영향은 없는 상황  (기본)                 라벨 「안내」  아이콘 info
  *
  * 구조:
- *   <section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+ *   <section class="notice-bar notice-bar--danger" aria-label="사이트 공지">
  *     <div class="container notice-bar__inner">
- *       <span class="notice-bar__label">공지</span>
+ *       <svg class="notice-bar__icon icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#error"></use></svg>
+ *       <span class="notice-bar__label">긴급</span>
  *       <p class="notice-bar__message">
- *         <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 시스템 점검 안내</a>
+ *         <a class="notice-bar__link" href="/notice/typhoon-closure">태풍으로 10월 12일 전 시설을 임시 휴관합니다</a>
  *       </p>
- *       <button type="button" class="notice-bar__close" aria-label="공지 닫기">
- *         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
- *       </button>
  *     </div>
  *   </section>
  */
@@ -24,16 +28,20 @@
     @apply bg-[var(--color-info-surface)] border-b border-[var(--color-information-20)] text-[var(--color-text)];
   }
 
-  .notice-bar[hidden] { @apply [display:none]; }
-
   .notice-bar__inner {
-    @apply flex items-center gap-[1.2rem] min-h-[4.8rem] py-[0.4rem];
+    @apply flex items-center gap-[0.8rem] min-h-[4.8rem] py-[0.4rem] tablet:gap-[1.2rem];
+  }
+
+  /* 긴급도 아이콘 — 장식(aria-hidden). 뜻은 라벨 텍스트가 전한다 */
+  .notice-bar__icon {
+    @apply text-[var(--color-information-60)];
   }
 
   .notice-bar__label {
     @apply shrink-0 inline-flex items-center h-[2.4rem] px-[0.8rem] rounded-[0.4rem] bg-[var(--color-information-60)] text-[var(--color-text-inverse)] text-[1.4rem] font-bold leading-[1.5];
   }
 
+  /* 문장은 한 줄 — 좁은 화면에서도 두 줄을 넘지 않게 문구를 짧게 쓴다(KRDS) */
   .notice-bar__message {
     @apply flex-1 min-w-0 m-0 text-[1.6rem] leading-[1.5];
   }
@@ -47,25 +55,26 @@
     @apply text-[var(--color-primary-hover)];
   }
 
-  .notice-bar__close {
-    @apply shrink-0 inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border-0 rounded-[0.4rem] text-[var(--color-text)] cursor-pointer;
-  }
-
-  .notice-bar__close:hover {
-    @apply bg-[var(--color-bg)];
-  }
-
-  /* 톤 — 의미 기반. 색만으로 의미를 전하지 않도록 라벨 텍스트("점검", "긴급")를 함께 쓴다 */
+  /* 긴급도 중 — 서비스 중단 사전 예고 */
   .notice-bar--warning {
     @apply bg-[var(--color-warning-surface)] border-[var(--color-warning-20)];
+  }
+
+  .notice-bar--warning .notice-bar__icon {
+    @apply text-[var(--color-warning-60)];
   }
 
   .notice-bar--warning .notice-bar__label {
     @apply bg-[var(--color-warning-60)];
   }
 
+  /* 긴급도 상 — 재난·비상, 갑작스러운 장애 */
   .notice-bar--danger {
     @apply bg-[var(--color-danger-surface)] border-[var(--color-danger-20)];
+  }
+
+  .notice-bar--danger .notice-bar__icon {
+    @apply text-[var(--color-danger-60)];
   }
 
   .notice-bar--danger .notice-bar__label {

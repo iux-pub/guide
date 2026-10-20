@@ -18,7 +18,7 @@
  *           <address class="site-footer__address">…</address>
  *           <ul class="site-footer__utility" aria-label="바로가기">… <details class="site-footer__family">…</details></ul>
  *         </div>
- *         <nav class="site-footer__legal" aria-label="약관 및 정책">…개인정보 처리방침(--important)…</nav>
+ *         <nav aria-label="약관 및 정책">…개인정보 처리방침(--important)…</nav>
  *         <dl class="site-footer__biz">…</dl>                (전자상거래일 때)
  *         <small class="site-footer__copy">…</small>
  *       </div>
@@ -45,6 +45,11 @@
 
   .site-footer__nav {
     @apply grid grid-cols-2 gap-x-[2.4rem] gap-y-[3.2rem] tablet:grid-cols-4;
+  }
+
+  /* 서비스 내비게이션의 열 — 그리드 칸이 긴 링크에 밀려 넘치지 않게 한다 */
+  .site-footer__group {
+    @apply min-w-0;
   }
 
   .site-footer__heading {

@@ -6,7 +6,7 @@
  *     <button class="pagination__nav" aria-label="이전 페이지">‹</button>
  *     <ol class="pagination__list">
  *       <li><a class="pagination__item" href="?p=1">1</a></li>
- *       <li><a class="pagination__item pagination__item--current" aria-current="page">2</a></li>
+ *       <li><a class="pagination__item" aria-current="page">2</a></li>
  *       <li><a class="pagination__item" href="?p=3">3</a></li>
  *     </ol>
  *     <button class="pagination__nav" aria-label="다음 페이지">›</button>
@@ -32,6 +32,7 @@
     @apply bg-[var(--color-bg-subtler)];
   }
 
+  /* 현재 페이지는 aria-current로 표시한다(R-17). --current는 이미 납품한 마크업을 위한 별칭 */
   .pagination__item--current,
   .pagination__item[aria-current="page"] {
     @apply bg-[var(--color-primary)] text-[var(--color-text-inverse)];

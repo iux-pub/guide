@@ -140,8 +140,8 @@
           "note": ".css 확장자만"
         },
         {
-          "code": ".card { &__title { color: var(--color-text); } }",
-          "note": "표준 CSS nesting"
+          "code": ".tab__item { &[aria-selected=\"true\"] { color: var(--color-primary); } }",
+          "note": "표준 CSS nesting — 속성·의사 클래스를 잇는다(&__·&--로 이름을 잇지는 못한다, R-05)"
         },
         {
           "code": ".btn { @apply inline-flex items-center; }",
@@ -195,7 +195,7 @@
       "enforcement": [
         "check-violations.js"
       ],
-      "rationale": "공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 sibling selector, 의미적 상태 class, ARIA 속성 selector로 구현한다.",
+      "rationale": "공공서비스·공공기관·일반 납품물은 최신 브라우저 기준을 따르더라도 사용자의 실제 업데이트 상태와 임베디드/모바일 브라우저 차이를 고려해야 한다. `:has()`는 강력하지만 지원되지 않는 환경에서는 선택자 블록 전체가 무시된다. 핵심 상태 표현은 ARIA 속성 selector와 sibling selector로 구현한다(R-17 — 상태는 ARIA·hidden 속성이 먼저).",
       "bad": [
         {
           "code": ".field:has(input:disabled) { opacity: .5; }",
@@ -216,8 +216,8 @@
           "note": "ARIA 상태 속성으로 관계 표현"
         },
         {
-          "code": ".modal--open { display: flex; }",
-          "note": "BEM modifier로 시각 상태 표현"
+          "code": ".tab__item[aria-selected=\"true\"] { color: var(--color-primary); }",
+          "note": "ARIA 상태 속성 선택자로 시각 상태 표현(R-17)"
         }
       ],
       "refs": [
@@ -258,7 +258,7 @@
           "note": "element: 이중 언더스코어"
         },
         {
-          "code": ".form__input { }",
+          "code": ".form-field__label { }",
           "note": "소문자 kebab"
         }
       ]
@@ -279,7 +279,7 @@
           "note": "2단계 element"
         },
         {
-          "code": ".form__group__label { }",
+          "code": ".form-field__label__required { }",
           "note": "2단계 element"
         }
       ],
@@ -289,7 +289,7 @@
           "note": "Block 기준 평탄화"
         },
         {
-          "code": ".form__label { }",
+          "code": ".form-field__required { }",
           "note": "Block 기준 평탄화"
         }
       ]
@@ -302,7 +302,7 @@
       "enforcement": [
         "check-violations.js"
       ],
-      "rationale": "브랜드 색상이 바뀌거나 디자인이 개편되면 시각적 이름(.btn--blue)은 클래스를 전부 바꿔야 한다. 의미적 이름(.btn--primary)은 디자인 변경에 독립적이다. KRDS 표준 modifier(primary/secondary/tertiary/text/xsmall~xlarge)만 사용한다.",
+      "rationale": "브랜드 색상이 바뀌거나 디자인이 개편되면 시각적 이름(.btn--blue)은 클래스를 전부 바꿔야 한다. 의미적 이름(.btn--primary)은 디자인 변경에 독립적이다. 허용 어휘·금지어의 정본은 contracts/class-naming.json이고 자동 검사는 R-18이 한다. 이 규칙은 KRDS에서 폐기된 옛 버튼 variant(btn--ghost·btn--outline·btn--link·btn--sm·btn--lg)를 따로 막는다 — 버튼은 KRDS 4 유형(primary·secondary·tertiary·text)과 5 크기(xsmall~xlarge)만 쓴다.",
       "bad": [
         {
           "code": ".btn--gray { }",
@@ -374,8 +374,8 @@
           "note": "CSS 커스텀 프로퍼티만"
         },
         {
-          "code": "<div class=\"card card--featured\">",
-          "note": "클래스로 스타일 적용"
+          "code": "<article class=\"card card--elevated\">",
+          "note": "CSS에 정의된 변형 클래스로 스타일 적용"
         }
       ]
     },
@@ -584,7 +584,7 @@
           "note": "기존 마크업 패턴 위에 접근성 속성 보강"
         },
         {
-          "code": "<nav class=\"breadcrumb\" aria-label=\"페이지 경로\"><ol>...</ol></nav>",
+          "code": "<nav class=\"breadcrumb\" aria-label=\"브레드크럼\"><ol>...</ol></nav>",
           "note": "기존 패턴이 없거나 접근성 개선이 필요한 경우 시맨틱 태그 사용"
         }
       ]
@@ -635,14 +635,15 @@
     {
       "id": "R-17",
       "category": "bem",
-      "summary": "상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지",
+      "summary": "상태는 ARIA·hidden 속성을 먼저 — ARIA로 표현할 수 없을 때만 BEM modifier, .is-* / .has-* 금지",
       "severity": "error",
       "enforcement": [
         "check-html-structure.js"
       ],
       "lang": "html",
-      "rationale": "BEM의 modifier가 상태 표현의 표준이며, `.is-active` 같은 비-BEM 클래스는 어느 컴포넌트의 상태인지 모호하다. ARIA 속성(`aria-selected`, `aria-expanded`)이 의미 표현을 담당하고, 시각 변화는 BEM modifier(`.tab__item--selected`)가 담당한다.",
+      "rationale": "상태는 먼저 ARIA·네이티브 속성(aria-expanded·aria-current·aria-selected·aria-invalid·disabled·hidden)으로 표현하고, CSS는 그 속성 선택자([aria-expanded=\"true\"], [hidden])로 모양을 바꾼다. 의미(보조기기)와 모양이 한 속성에 묶여 어긋나지 않는다. ARIA에 대응하는 상태가 없을 때(예: 단계 표시의 done)만 BEM modifier(--done)를 쓴다. 달력의 오늘은 aria-current=\"date\"가 있으므로 속성을 먼저 단다. 기존 CSS가 --current·--selected·--disabled 변형을 쓰는 곳은 같은 요소에 대응 속성을 함께 둔다(없으면 경고). .is-active 같은 비-BEM 클래스는 어느 블록의 상태인지 모호하고 의미가 보조기기에 전달되지 않는다.",
       "refs": [
+        "references/class-naming.md",
         "references/html-semantics.md#62-상태-표현-r-17"
       ],
       "bad": [
@@ -661,33 +662,38 @@
       ],
       "good": [
         {
-          "code": "<button class=\"btn\" disabled aria-disabled=\"true\">",
-          "note": "네이티브 속성 + ARIA"
+          "code": "<button class=\"btn\" disabled>",
+          "note": "네이티브 속성 — CSS는 .btn:disabled"
         },
         {
-          "code": "<div class=\"modal modal--open\" aria-modal=\"true\">",
-          "note": "BEM modifier + ARIA"
+          "code": "<div class=\"modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modal-title\" hidden>",
+          "note": "hidden 속성으로 여닫는다 — CSS는 .modal[hidden]"
         },
         {
           "code": "<input class=\"input input--error\" aria-invalid=\"true\">",
-          "note": "BEM modifier + ARIA"
+          "note": "ARIA(aria-invalid) + 기존 변형(--error)"
+        },
+        {
+          "code": "<li class=\"step-indicator__item step-indicator__item--done\">",
+          "note": "ARIA 대응이 없는 상태만 modifier"
         }
       ]
     },
     {
       "id": "R-18",
       "category": "bem",
-      "summary": "modifier 이름은 의미적이어야 함 — 시각적 단어 금지",
+      "summary": "modifier 이름은 허용 어휘(contracts/class-naming.json)에서 — 시각적 단어 금지",
       "severity": "error",
       "enforcement": [
         "check-violations.js",
         "check-html-structure.js"
       ],
       "lang": "html",
-      "rationale": "`.btn--blue`나 `.card--big` 같은 시각적 modifier는 의미가 시각 표현과 묶여 디자인 변경 시 클래스명도 같이 바꿔야 한다. 의미적 이름(`--primary`, `--large`)을 쓰면 색상·크기가 바뀌어도 클래스는 그대로 유지된다. KRDS 정의 variant/size 어휘만 허용. R-06의 자동화 버전.",
+      "rationale": "`.btn--blue`나 `.card--big` 같은 시각적 modifier는 의미가 모양에 묶여 디자인을 바꿀 때 클래스도 바꿔야 한다. 변형 이름은 contracts/class-naming.json의 어휘 — 크기(xsmall~xlarge, KRDS)·위계(primary/secondary/tertiary/text)·상태색(info/success/warning/danger)·밀도·바탕·배치·상태·역할 — 에서 고른다. CSS에 금지어 modifier를 정의하면 error, 어휘 밖이면 warn(블록 고유 변형은 blockModifiers에 등록). 폐기 예정 이름(badge--gray → badge--neutral)을 마크업에 쓰면 warn. R-06의 자동화 버전.",
       "refs": [
-        "references/html-semantics.md#63-modifier-의미성-r-06-r-18",
-        "references/krds-components.md"
+        "references/class-naming.md",
+        "contracts/class-naming.json",
+        "references/html-semantics.md#63-modifier-의미성-r-06-r-18"
       ],
       "bad": [
         {
@@ -1000,6 +1006,40 @@
         {
           "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
           "note": "확대 제한을 두지 않는다"
+        }
+      ]
+    },
+    {
+      "id": "R-29",
+      "category": "html",
+      "summary": "마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "카탈로그 블록(src/styles에 정의된 블록)의 modifier를 CSS에 없는 이름으로 쓰면 화면은 기본 모양으로 나오면서 변형인 척한다. AI가 card--featured처럼 그럴듯한 변형을 지어내는 대표적 경로다(2026-10 점검에서 playground·스니펫에 이런 유령 클래스 30개가 있었다). modifier는 모양을 바꾸려고 있는 것이라 CSS가 없으면 error, element는 스타일 없는 구조 표시일 수 있어 warn — 스타일이 필요 없으면 클래스를 달지 않는다. 같은 파일 <style>에 정의한 클래스와 section 목적 modifier(html-page-contract)는 예외다. CSS에 없는 블록은 프로젝트 고유 블록일 수 있어 보지 않지만, 파일 이름이나 흔한 오기로 지은 블록(header__*·form__*·check-radio__*·table-wrapper)은 contracts/class-naming.json 대응표로 실제 블록(site-header·form-field·check·table-wrap)을 알려 주며 오류로 잡는다.",
+      "refs": [
+        "references/class-naming.md"
+      ],
+      "bad": [
+        {
+          "code": "<article class=\"card card--featured\">",
+          "note": "card.css에 없는 변형 — 기본 카드로 보인다"
+        },
+        {
+          "code": "<a class=\"pagination__link pagination__link--current\">",
+          "note": "컴포넌트 CSS와 다른 클래스 — 현재 페이지가 표시되지 않는다"
+        }
+      ],
+      "good": [
+        {
+          "code": "<article class=\"card card--elevated\">",
+          "note": "card.css에 정의된 변형"
+        },
+        {
+          "code": "<a class=\"pagination__item\" href=\"?p=3\" aria-current=\"page\">3</a>",
+          "note": "pagination.css가 aria-current 속성 선택자로 현재 페이지를 그린다"
         }
       ]
     }

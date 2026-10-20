@@ -19,6 +19,24 @@ const SITE_DIR = path.join(ROOT, 'site')
 
 const TARGET_FILES = process.argv.slice(2)
 
+// 클래스 명명 계약 (R-18 어휘) — 없으면(오래된 파생 프로젝트) 어휘 검사를 건너뛴다
+const NAMING = (() => {
+  const file = path.join(ROOT, 'contracts', 'class-naming.json')
+  if (!fs.existsSync(file)) return null
+  const spec = JSON.parse(fs.readFileSync(file, 'utf-8'))
+  return {
+    vocabulary: new Set((spec.vocabulary || []).flatMap(axis => axis.words)),
+    byBlock: new Map(Object.entries(spec.blockModifiers || {}).map(([block, v]) => [block, new Set(v.words)])),
+    forbidden: new Set(spec.forbiddenWords || []),
+    deprecated: new Set((spec.deprecated || []).map(d => d.class)),
+    exempt: spec.exemptBlockPrefixes || []
+  }
+})()
+// 선택자 안의 .block--mod / .block__el--mod (값·주석이 아니라 클래스 선택자만)
+const CSS_MODIFIER_SELECTOR = /\.([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(__[a-z0-9]+(?:-[a-z0-9]+)*)?--([a-z0-9]+(?:-[a-z0-9]+)*)/g
+// 네이티브 CSS nesting은 &__el·&--mod를 이어 붙이지 않는다 — .a{&__b{}}는 .a__b가 아니라 __b.a가 된다
+const NESTED_BEM_SUFFIX = /&(__|--)[a-z]/
+
 // ─── 출력 헬퍼 ─────────────────────────────────────────
 
 const RESET = '\x1b[0m'
@@ -212,6 +230,33 @@ function checkCssFile(filePath) {
     }
     if (SCSS_VAR.test(trimmed)) {
       error(relPath, lineNum, '[R-03] SCSS 변수 ($var) 금지. CSS 커스텀 프로퍼티 사용.', trimmed)
+    }
+
+    // modifier 어휘 (R-18) — CSS에 정의하는 변형 이름은 class-naming 계약의 어휘에서 고른다
+    // 여러 줄 주석의 본문 줄(* …)은 예시 설명이라 검사하지 않는다
+    if (NAMING && !trimmed.startsWith('@apply') && !trimmed.startsWith('*') && !trimmed.startsWith('/*')) {
+      // 한 줄 주석과 문자열(content:'…', url("…"))은 선택자가 아니다
+      const selectorText = trimmed.replace(/\/\*.*?\*\//g, '').replace(/(["'])(?:\\.|(?!\1).)*\1/g, '')
+      for (const m of selectorText.matchAll(CSS_MODIFIER_SELECTOR)) {
+        const block = m[1]
+        const element = m[2] || ''
+        const word = m[3]
+        const cls = `${block}${element}--${word}`
+        if (NAMING.exempt.some(p => block.startsWith(p))) continue
+        if (NAMING.deprecated.has(cls)) continue // 이행 기간 별칭 — 마크업에서 쓰면 HTML 검사가 경고한다
+        // 조각 중 하나라도 금지어면 오류 — HTML 검사(check-html-structure.js)와 같은 판정
+        const forbiddenWord = word.split('-').find(seg => NAMING.forbidden.has(seg))
+        if (forbiddenWord) {
+          error(relPath, lineNum, `[R-18] 시각적 단어 modifier ".${cls}"("${forbiddenWord}"). contracts/class-naming.json 어휘(크기·위계·상태색 등)에서 고른다.`, trimmed)
+        } else if (!NAMING.vocabulary.has(word) && !NAMING.byBlock.get(block)?.has(word)) {
+          warn(relPath, lineNum, `[R-18] 허용 어휘 밖 modifier ".${cls}". contracts/class-naming.json의 어휘를 쓰거나, 블록 고유 변형이면 blockModifiers에 등록한다.`, trimmed)
+        }
+      }
+    }
+
+    // BEM 접미 nesting (R-05) — &__el / &--mod는 네이티브 nesting에서 깨진 선택자가 된다
+    if (!trimmed.startsWith('*') && !trimmed.startsWith('/*') && NESTED_BEM_SUFFIX.test(trimmed)) {
+      error(relPath, lineNum, '[R-05] &__element·&--modifier nesting 금지. 네이티브 CSS nesting은 이름을 이어 붙이지 않는다(.a{&__b{}} → __b.a). 전체 선택자(.block__element, .block--modifier)를 쓴다.', trimmed)
     }
 
     // 정의되지 않은 토큰 참조 (R-01) — 대체값(var(--x, 값))이 있으면 없을 수 있음을 알고 쓴 것이므로 넘긴다

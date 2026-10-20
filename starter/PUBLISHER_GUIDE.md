@@ -188,11 +188,12 @@ npm run build
 `src/styles/5-objects/`, `src/styles/6-components/`의 클래스는 BEM을 따른다.
 
 ```css
+/* card.css에 실제로 있는 클래스 */
 .card {}
 .card__header {}
 .card__title {}
-.card--featured {}
-.card__action--primary {}
+.card__footer {}
+.card--elevated {}
 ```
 
 금지 예시:
@@ -200,15 +201,17 @@ npm run build
 ```css
 .card__header__title {} /* element 2단계 중첩 금지 */
 .card--blue {}          /* 시각 단어 modifier 금지 */
+.card--featured {}      /* card.css에 없는 변형을 지어내기 금지 (R-29) */
 .is-active {}           /* 비-BEM 상태 클래스 금지 */
 ```
 
-상태는 의미 있는 modifier와 ARIA 속성을 함께 쓴다.
+상태는 ARIA·hidden 속성을 먼저 쓰고, CSS가 그 속성으로 모양을 바꾼다. ARIA로 표현할 수 없는 상태만 modifier로 쓴다(R-17). modifier 이름은 허용 어휘에서 고르고, 카탈로그 블록에 CSS가 없는 변형을 지어내지 않는다(R-18·R-29 — MCP `get_reference("class-naming")`).
 
 ```html
-<button class="tab__button tab__button--selected" aria-selected="true">
+<button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
   탭 제목
 </button>
+<li class="step-indicator__item step-indicator__item--done">신청서 작성</li>
 ```
 
 ### 4-4. SCSS는 쓰지 않는다

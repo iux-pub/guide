@@ -17,13 +17,15 @@
 - [ ] Tailwind v4 기본 팔레트 raw 컬러 유틸 없음
 - [ ] Tailwind 기본 스케일이 프로젝트 기준과 충돌하지 않음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등은 사용하지 않음)
 
-## BEM (R-04, R-05, R-06)
+## BEM (R-04, R-05, R-06, R-17, R-18, R-29)
 
 - [ ] 클래스명이 Block__Element--Modifier 패턴
 - [ ] Element 2단계 중첩 0건
 - [ ] Modifier에 `--` 사용 (`.btn-primary` 금지 → `.btn--primary`)
 - [ ] 요소 선택자 의존 없음 (`.card h4` 금지 → `.card__title`)
-- [ ] 시각적 modifier 없음 (`--blue`, `--gray`, `--large`(badge용 제외) 금지 → 의미적 이름)
+- [ ] modifier는 `contracts/class-naming.json` 허용 어휘 안에 있음 — 시각 단어(`--blue`, `--gray`, `--big`, `--rounded`) 금지, 크기는 KRDS 어휘(`--xsmall`~`--xlarge`)만 (`references/class-naming.md`)
+- [ ] 카탈로그 블록의 클래스는 CSS에 정의된 것만 씀 — `card--featured`·`card__media`처럼 지어낸 변형·부품 0건 (R-29)
+- [ ] 상태는 ARIA·hidden 속성 먼저 (`aria-expanded`·`aria-current`·`aria-selected`·`hidden`·`disabled`) — ARIA로 표현할 수 없을 때만 BEM modifier, `.is-*`·`.has-*` 0건 (R-17)
 - [ ] 옛 버튼 variant 이름 없음
 
 ## 토큰 (R-01)

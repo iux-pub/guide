@@ -30,7 +30,7 @@
 | **R-02** | `!important` (정당한 사유 주석 없을 시) | 토큰 시스템 우회 위험 |
 | **R-03** | SCSS 사용 (`*.scss`, `@use`, `@forward`, `$var`) | Tailwind v4 + CSS Custom Properties만 허용 |
 | **R-04** | BEM 미준수 클래스명 — `.block__element--modifier` 형식 외 | 일관성 |
-| **R-05** | BEM element 2단계 중첩 (`.card__body__title`) | 평탄화 — `.card__title` 또는 `.card__body-title` |
+| **R-05** | BEM element 2단계 중첩 (`.card__body__title`) | 평탄화 — `.card__title` |
 | **R-06** | 옛 variant 이름 사용 (`btn--ghost`, `btn--outline`, `btn--link`) | KRDS 4 variant만: `--primary` / `--secondary` / `--tertiary` / `--text` |
 | **R-07** | 인라인 `style="..."` (CSS 변수 주입 외) | 토큰 추적 불가 |
 | **R-08** | HTML 클래스 BEM 2단계 element 중첩 | R-05 HTML 적용 |
@@ -42,8 +42,9 @@
 | **R-14** | 페이지에 `.skip-to-content` 건너뛰기 링크 누락 | WCAG 2.4.1 — `<body>` 진입 직후 필수 |
 | **R-15** | 기존 인포마인드 HTML 기본 골격을 무시한 임의 구조 | 유지보수 패턴 단절 |
 | **R-16** | 인터랙티브 컴포넌트(modal/tab/accordion/tooltip/disclosure/carousel/calendar) 필수 ARIA 누락 | 스크린리더 접근 불가 |
-| **R-17** | 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open` 등) | BEM modifier + ARIA로만 표현 |
-| **R-18** | 시각적 단어 modifier (`--blue`, `--red`, `--big`, `--rounded`, `--shadow` 등) | 의미 기반 modifier만 |
+| **R-17** | 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open` 등) | 상태는 ARIA·hidden 속성을 먼저 쓴다. ARIA로 표현할 수 없을 때만 BEM modifier |
+| **R-18** | 허용 어휘 밖·시각적 단어 modifier (`--blue`, `--red`, `--big`, `--rounded`, `--shadow` 등) | `contracts/class-naming.json` 허용 어휘에서만 고른다 (`references/class-naming.md`) |
+| **R-29** | CSS에 없는 BEM 클래스 (`.card--featured`, `.card__media` 등 지어낸 변형·부품) | 카탈로그 블록의 클래스는 CSS에 정의된 것만 쓴다 |
 | — | 폼 요소 `<label>` 누락 (placeholder만 사용) | WCAG 3.3.2 |
 
 **모호한 케이스는 사용자에게 질문한다.** 자체 판단으로 우회하지 않는다.
@@ -79,8 +80,8 @@
 | Section 구조 | 각 `section`은 `.container`를 직접 포함하고 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름 제공 |
 | 컴포넌트 root 태그 | `references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 — modal `aria-modal`+`aria-labelledby`, tab `role`+`aria-selected`+`aria-controls`, accordion `aria-expanded`+`aria-controls` 등 |
-| 상태 표현 | BEM modifier (시각) + ARIA 속성 (의미) 동시 사용 — `.tab__item--selected` + `aria-selected="true"` |
-| modifier 어휘 | KRDS 정의만: variant(`--primary/--secondary/--tertiary/--text`), 사이즈(`--xsmall..--xlarge`), 상태(`--selected/--disabled/--expanded/--loading/--error/--success/--current/--done/--todo`), 톤(`--info/--success/--warning/--danger/--inverse`), 레이아웃(`--horizontal/--vertical/--block/--inline`), section archetype(`--intro/--content/--list/--form/--data/--search/--process/--notice`) |
+| 상태 표현 | ARIA·hidden 속성 먼저 — CSS가 `[aria-selected="true"]`·`[aria-current="page"]`·`[hidden]`으로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier(`.step-indicator__item--done`) (R-17) |
+| modifier 어휘 | `contracts/class-naming.json` 허용 어휘에서만 고른다 — 크기 `--xsmall..--xlarge`, 위계 `--primary/--secondary/--tertiary/--text`, 상태색 `--info/--success/--warning/--danger/--neutral` 등. 카탈로그 블록의 변형은 CSS에 정의된 것만 쓴다(R-18·R-29). section 목적 modifier(`--intro/--content/--list/--form/--data/--search/--process/--notice`)는 `html-page-contract.json`. 결정 순서는 `references/class-naming.md` |
 
 ---
 

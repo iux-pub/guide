@@ -128,7 +128,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 기본 마크업
 
 ```html
-<nav class="breadcrumb" aria-label="페이지 경로">
+<nav class="breadcrumb" aria-label="브레드크럼">
   <ol class="breadcrumb__list">
     <li class="breadcrumb__item"><a href="/">홈</a></li>
     <li class="breadcrumb__item"><a href="/services">서비스</a></li>
@@ -139,7 +139,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ### 접근성
 
-- `<nav aria-label="페이지 경로">` 필수 (스크린리더용 식별자)
+- `<nav aria-label="브레드크럼">` 필수 — KRDS가 정한 구획 제목이다(스크린리더 랜드마크 이름). 다른 이름으로 바꾸지 않는다
 - `<ol>` 사용 — 순서가 의미를 가짐
 - 현재 페이지: `aria-current="page"` + `<a>` 없이 텍스트만 (링크 아님)
 - 구분자(`›`)는 CSS `::before`로 그려서 스크린리더에 노출 안 됨 (불필요한 읽기 방지)
@@ -206,7 +206,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
           <button type="button" class="calendar__day" aria-label="2026년 4월 1일">1</button>
         </td>
         <td role="gridcell">
-          <button type="button" class="calendar__day calendar__day--today" aria-label="2026년 4월 2일 (오늘)">2</button>
+          <button type="button" class="calendar__day" aria-current="date" aria-label="2026년 4월 2일 (오늘)">2</button>
         </td>
         <td role="gridcell">
           <button type="button" class="calendar__day calendar__day--selected" aria-selected="true" aria-label="2026년 4월 3일 (선택됨)">3</button>
@@ -500,7 +500,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
       </div>
 
       <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
-      <nav class="site-footer__legal" aria-label="약관 및 정책">
+      <nav aria-label="약관 및 정책">
         <ul class="site-footer__legal-list">
           <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
           <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
@@ -544,9 +544,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   <label for="name" class="form-field__label">
     이름<span class="form-field__required" aria-label="필수">*</span>
   </label>
-  <p class="form-field__hint">사업자등록증에 기재된 대표자명</p>
-  <input type="text" id="name" class="input" placeholder="홍길동" required>
-  <p class="form-field__message">최대 20자까지 입력 가능합니다</p>
+  <p id="name-hint" class="form-field__hint">사업자등록증에 기재된 대표자명</p>
+  <input type="text" id="name" class="input" placeholder="홍길동" required aria-describedby="name-hint name-message">
+  <p id="name-message" class="form-field__message">최대 20자까지 입력 가능합니다</p>
 </div>
 ```
 
@@ -568,8 +568,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 <header id="header" class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <img src="/logo.svg" alt="기관명">
-      <span class="site-header__brand-name">기관명</span>
+      <img src="/logo.svg" alt=""><!-- 바로 뒤 텍스트가 이름을 전하므로 로고는 장식 -->
+      <span>기관명</span>
     </a>
 
     <nav class="site-header__nav" aria-label="메인 메뉴">
@@ -836,41 +836,37 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 23. 공지 띠 (Notice Bar) — infoUX
+## 23. 긴급 공지 (Notice Bar) — KRDS
 
 ### 기본 마크업
 
 ```html
-<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+<section class="notice-bar notice-bar--danger" aria-label="사이트 공지">
   <div class="container notice-bar__inner">
-    <span class="notice-bar__label">점검</span>
+    <svg class="notice-bar__icon icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#error"></use></svg>
+    <span class="notice-bar__label">긴급</span>
     <p class="notice-bar__message">
-      <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다</a>
+      <a class="notice-bar__link" href="/notice/typhoon-closure">태풍으로 10월 12일 전 시설을 임시 휴관합니다</a>
     </p>
-    <button type="button" class="notice-bar__close" aria-label="공지 닫기">
-      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
-    </button>
   </div>
 </section>
 ```
 
 ### Variant / Size
 
-| Variant | 클래스 | 용도 | 라벨 예 |
-|---------|--------|------|---------|
-| 정보 | `.notice-bar--info` | 일반 안내 (기본) | 공지 |
-| 주의 | `.notice-bar--warning` | 점검·휴무·일정 변경 | 점검 |
-| 긴급 | `.notice-bar--danger` | 서비스 중단·장애·재난 | 긴급 |
+| 긴급도 | 상황 | 클래스 | 라벨 | 아이콘 |
+|--------|------|--------|------|--------|
+| 상 | 국가 재난·비상 상황, 갑작스러운 서비스 장애 | `.notice-bar--danger` | 긴급 | `error` |
+| 중 | 서비스 중단 사전 예고 | `.notice-bar--warning` | 예고 | `warning` |
+| 하 | 대부분의 사용자가 알아야 하지만 큰 영향은 없는 상황 | (클래스 없음 — 기본) | 안내 | `info` |
 
 ### 접근성
 
-- 영역 이름 `aria-label="사이트 공지"` — 페이지에 비슷한 영역이 더 있으면 서로 다른 이름으로 구분한다
+- 영역 이름 `aria-label="사이트 공지"` — 한 번에 하나만 두므로 이름이 겹치지 않는다
 - 링크는 밑줄로 구분한다. 색 차이만으로 링크임을 전하지 않는다
-- 닫기 버튼은 아이콘만 있으므로 `aria-label` 필수. 아이콘은 `aria-hidden="true"`
-- 터치 영역: 닫기 버튼 44×44px, 링크 `min-h-[4.4rem]` (R-13)
+- 터치 영역: 링크 `min-h-[4.4rem]` (R-13)
 - 대비: 본문 텍스트 `--color-text`, 라벨은 `--color-text-inverse` on `--color-information-60`/`--color-warning-60`/`--color-danger-60` (4.5:1 이상)
-- 닫은 뒤 초점이 문서 처음으로 날아가지 않도록 헤더로 옮긴다 (WCAG 2.4.3)
-- 동적으로 삽입하는 긴급 안내(장애 발생 직후 등)는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
+- 페이지를 보는 중에 새로 생긴 긴급 안내(장애 발생 직후 등)를 동적으로 알릴 때는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
 
 ---
 
@@ -883,7 +879,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   <button type="button" class="pagination__nav" aria-label="이전 페이지">‹</button>
   <ol class="pagination__list">
     <li><a class="pagination__item" href="?p=1">1</a></li>
-    <li><a class="pagination__item pagination__item--current" href="?p=2" aria-current="page">2</a></li>
+    <li><a class="pagination__item" href="?p=2" aria-current="page">2</a></li>
     <li><a class="pagination__item" href="?p=3">3</a></li>
     <li><a class="pagination__item" href="?p=4">4</a></li>
     <li><a class="pagination__item" href="?p=5">5</a></li>
@@ -1005,7 +1001,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 닫기 버튼 `aria-label="닫기"` 필수
 - ESC 키 닫기 권장
 - 포커스 트랩은 선택 (모달과 달리 본문 인터랙션 허용)
-- `aria-hidden` 토글로 스크린리더 노출 제어
+- 열림·닫힘은 `aria-hidden="false"`/`"true"` 토글 하나로 표현한다 — 닫힌 패널은 CSS가 초점 순서에서도 뺀다
 
 ---
 
@@ -1055,7 +1051,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
     <span class="step-indicator__num" aria-hidden="true">1</span>
     <span class="step-indicator__label">정보 입력</span>
   </li>
-  <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+  <li class="step-indicator__item" aria-current="step">
     <span class="step-indicator__num" aria-hidden="true">2</span>
     <span class="step-indicator__label">확인</span>
   </li>
@@ -1100,25 +1096,25 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ```html
 <div class="tab">
-  <div class="tab__list" role="tablist" aria-label="섹션">
-    <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
-      개요
+  <div class="tab__list" role="tablist" aria-label="이용 안내">
+    <button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
+      관람 시간
     </button>
-    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" tabindex="-1">
-      상세
+    <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">
+      관람료
     </button>
-    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" tabindex="-1">
-      후기
+    <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3">
+      오시는 길
     </button>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
-    개요 내용
+    <p>화요일~일요일 09:00~18:00, 매주 월요일 휴관</p>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
-    상세 내용
+    <p>성인 2,000원, 청소년·어린이 1,000원</p>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
-    후기 내용
+    <p>제주시 ○○로 00 — 시내버스 000번 ○○ 정류장 하차</p>
   </div>
 </div>
 ```
@@ -1127,8 +1123,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 - `role="tablist"` + 각 탭에 `role="tab"`, 패널에 `role="tabpanel"`
 - 탭 ↔ 패널 연결: `aria-controls` (탭 → 패널 id), `aria-labelledby` (패널 → 탭 id)
-- 활성 표시는 `aria-selected="true"` (시각 인디케이터는 CSS가 자동 처리)
-- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적 명시 권장
+- 선택은 `aria-selected="true"` — CSS는 색에 더해 탭 바닥의 밑줄 인디케이터(`::after`)로 보인다(색만으로 구분하지 않는다)
+- 초점이 간 탭은 탭 안쪽 초점 링으로 분명히 보인다 — 밑줄·초점 링 모두 탭 상자 안에 그려 목록의 가로 스크롤에 잘리지 않는다
+- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적을 밝힌다
 
 ---
 
@@ -1137,9 +1134,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 기본 마크업
 
 ```html
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-labelledby="apply-status-caption">
   <table class="table">
-    <caption class="table__caption">2026년 1분기 신청 현황</caption>
+    <caption class="table__caption" id="apply-status-caption">2026년 1분기 신청 현황</caption>
     <thead>
       <tr>
         <th scope="col">번호</th>
@@ -1166,7 +1163,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - `<caption>`으로 표 제목 명시
 - 정렬 헤더는 `aria-sort="ascending|descending|none"`
 - 선택 행은 `aria-selected="true"`
-- 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기
+- 모바일 가로 스크롤은 `.table-wrap` 래퍼로 감싼다. 래퍼에는 `tabindex="0"` + `role="region"` + `aria-labelledby`(caption의 `id`)를 함께 둔다 — 마우스·터치 없이도 키보드 화살표로 가로 스크롤할 수 있고, 스크린리더는 표 제목으로 영역을 안내한다(KWCAG 6.1.1)
+- caption `id`는 페이지 안에서 겹치지 않게 짓는다. 한 페이지에 표가 여럿이면 표 제목(=영역 이름)도 서로 다르게 쓴다. 초점 링은 전역 `:focus-visible` 스타일이 그린다
 
 ---
 

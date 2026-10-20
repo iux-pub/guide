@@ -227,10 +227,11 @@ Google Stitch, Galileo, Lovable, v0
 | 해상도 | 범위 | 권장 시안 너비 |
 |--------|------|--------------|
 | 모바일 | 360px 기준 | 360px |
-| 태블릿 | 768px 이상 | 768px |
+| 태블릿 | 768px 이상 | 768px (글자 크기 mobile→pc 전환) |
+| 노트북 | 1024px 이상 | 1024px (메인 메뉴↔전체메뉴, 서브 LNB 2단) |
 | PC | 1280px 이상 | 1280px (콘텐츠 max-width: 1200px) |
 
-INFOUX 표준 브레이크포인트. Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용한다. 단순 반응형 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선한다.
+INFOUX 표준 브레이크포인트(KRDS 표준형 small/medium/large/xlarge). Tailwind v4 variant는 `mobile:` / `tablet:` / `laptop:` / `pc:`만 사용한다. 단순 반응형 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply laptop:*`, `@apply pc:*`를 우선한다.
 
 ---
 

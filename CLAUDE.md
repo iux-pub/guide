@@ -204,7 +204,7 @@ src/styles/
 
 ## 반응형 가이드
 
-모바일 퍼스트로 작성하고 Tailwind v4 variant `mobile:` / `tablet:` / `pc:`만 사용한다. 단순 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선한다.
+모바일 퍼스트로 작성하고 Tailwind v4 variant `mobile:` / `tablet:` / `laptop:` / `pc:`만 사용한다. 단순 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply laptop:*`, `@apply pc:*`를 우선한다.
 
 ```css
 .block {
@@ -224,7 +224,8 @@ src/styles/
 }
 ```
 
-- 브레이크포인트 — 모바일 360 기준, 태블릿 768 이상, PC 1280 이상 (INFOUX 표준)
+- 브레이크포인트 — 모바일 360 기준, 태블릿 768 이상, 노트북 1024 이상, PC 1280 이상 (KRDS 표준형 small·medium·large·xlarge)
+- 글자 크기의 mobile→pc 전환은 768(`tablet:`), 메인 메뉴↔전체메뉴·서브 LNB 2단·레이아웃 간격 전환은 1024(`laptop:`)다
 - `@media (min-width: var(--breakpoint-*))`는 표준으로 쓰지 않는다
 - 표준 CSS nesting과 Tailwind v4 `@apply` 사용 가능
 

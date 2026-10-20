@@ -16,6 +16,7 @@
   /* Breakpoints */
   --breakpoint-mobile: 360px;
   --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 1024px;
   --breakpoint-pc: 1280px;
 
   /* Semantic colors */
@@ -369,10 +370,11 @@
   --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace;
 
-  /* Tailwind responsive variants: mobile:, tablet:, pc: */
+  /* Tailwind responsive variants: mobile:, tablet:, laptop:, pc: (KRDS 표준형 small/medium/large/xlarge) */
   --breakpoint-*: initial;
   --breakpoint-mobile: 360px;
   --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 1024px;
   --breakpoint-pc: 1280px;
 
   --color-primary: var(--color-primary);

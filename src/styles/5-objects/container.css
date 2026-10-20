@@ -1,10 +1,11 @@
 /**
- * Container — INFOMIND 콘텐츠 영역
- *   - max-width 1200px (INFOMIND 기본 폭, KRDS contents-size 참고)
- *   - 브레이크포인트: mobile 360px / tablet 768px / pc 1280px
- *   - 좌우 padding: mobile 16px / tablet 24px / pc 40px
+ * Container — INFOMIND 콘텐츠 영역 (KRDS 표준형 레이아웃)
+ *   - 콘텐츠 최대 1200px + 스크린 마진 → max-width 124.8rem(border-box: 1200 + 24 × 2)
+ *   - 스크린 마진: 768px 미만 16px / 768px 이상 24px (KRDS 최소 스크린 마진 small 16·medium 24·large 24)
+ *   - 이전 값(max-width 120rem + pc 40px 여백)은 실제 콘텐츠가 1120px로 줄었다
+ *   - 브레이크포인트: mobile 360 / tablet 768 / laptop 1024 / pc 1280 (KRDS small/medium/large/xlarge)
  */
 
 .container {
-  @apply w-full max-w-[120rem] mx-auto px-[1.6rem] tablet:px-[2.4rem] pc:px-[4rem];
+  @apply w-full max-w-[124.8rem] mx-auto px-[1.6rem] tablet:px-[2.4rem];
 }

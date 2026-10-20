@@ -79,7 +79,7 @@ AI에게 컴포넌트 생성을 맡기면 MCP `get_workflow("create-component")`
 
 ## 반응형 작성
 
-모바일 퍼스트로 작성하고, 브레이크포인트는 360 / 768 / 1280 세 단계만 사용한다. SCSS 믹스인은 폐지됐으며 Tailwind v4 variant `mobile:` / `tablet:` / `pc:`를 우선한다.
+모바일 퍼스트로 작성하고, 브레이크포인트는 KRDS 표준형 360 / 768 / 1024 / 1280 네 단계만 사용한다. SCSS 믹스인은 폐지됐으며 Tailwind v4 variant `mobile:` / `tablet:` / `laptop:` / `pc:`를 우선한다. 글자 크기의 mobile→pc 전환은 768(`tablet:`), 메인 메뉴↔전체메뉴·서브 LNB 2단·레이아웃 간격은 1024(`laptop:`)다.
 
 단순 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 먼저 사용한다.
 
@@ -105,7 +105,7 @@ AI에게 컴포넌트 생성을 맡기면 MCP `get_workflow("create-component")`
 }
 ```
 
-순수 CSS `@media (min-width: var(--breakpoint-pc))`는 브라우저/빌드 체인 호환성 확인 전까지 표준으로 쓰지 않는다. 직접 `@media`가 필요하면 `768px`, `1280px` 값을 명시한다.
+순수 CSS `@media (min-width: var(--breakpoint-pc))`는 브라우저/빌드 체인 호환성 확인 전까지 표준으로 쓰지 않는다. 직접 `@media`가 필요하면 `768px`, `1024px`, `1280px` 값을 명시한다.
 
 ## 토큰 사용 패턴
 

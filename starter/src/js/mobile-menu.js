@@ -3,7 +3,8 @@
   'use strict'
 
   var FOCUSABLE = 'a[href], button:not([disabled]), summary, input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-  var PC_QUERY = '(min-width: 1280px)'
+  // 메인 메뉴↔전체메뉴 전환점 — KRDS large(1024px), tokens --breakpoint-laptop과 같다
+  var PC_QUERY = '(min-width: 1024px)'
 
   // 닫힌 details 안의 링크는 렌더되지 않으므로(getClientRects 비어 있음) 트랩 대상에서 뺀다
   function visibleFocusables(menu) {
@@ -78,7 +79,7 @@
     }
   })
 
-  // PC 폭으로 넓어지면 메인 메뉴가 대신하므로 열려 있던 패널을 정리한다
+  // 1024px 이상으로 넓어지면 메인 메뉴가 대신하므로 열려 있던 패널을 정리한다
   if (window.matchMedia) {
     var query = window.matchMedia(PC_QUERY)
     var onChange = function (e) {

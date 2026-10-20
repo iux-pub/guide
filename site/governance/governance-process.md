@@ -67,7 +67,7 @@ order: 5
 
 - **접근성**: pa11y 검사 통과 (KWCAG/WCAG AA)
 - **크로스 브라우저**: `package.json`의 `browserslist` 기준(Chrome/Safari/Firefox/Edge 최신 2개, Samsung Internet 최신, IE 미지원)
-- **반응형**: 모바일(360px~), 태블릿(768px~), PC(1280px~)
+- **반응형**: 모바일(360px~), 태블릿(768px~), 노트북(1024px~), PC(1280px~) — KRDS 표준형
 - **Stylelint**: BEM 패턴 검증 통과
 
 ### 5. stable 승격

@@ -47,9 +47,9 @@
     @apply h-[3.2rem] w-auto;
   }
 
-  /* 메인 메뉴 (PC) */
+  /* 메인 메뉴 (1024px 이상 — KRDS large, 미만은 전체메뉴) */
   .site-header__nav {
-    @apply hidden flex-1 pc:block;
+    @apply hidden flex-1 laptop:block;
   }
 
   .site-header__menu {
@@ -74,6 +74,6 @@
 
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
-    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] cursor-pointer pc:hidden;
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] cursor-pointer laptop:hidden;
   }
 }

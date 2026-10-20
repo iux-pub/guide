@@ -3,7 +3,7 @@
  *
  * 헤더 햄버거(.site-header__toggle)로 여는 전체 화면 다이얼로그. 화면 전체를 덮으므로
  * 모달처럼 초점을 가두고 Esc 로 닫는다. 하위 메뉴는 native <details> 라 JS 없이 열고 닫힌다.
- * PC(1280px 이상)에서는 메인 메뉴(.main-menu)가 대신하므로 이 패널은 보이지 않는다.
+ * 1024px 이상(KRDS large)에서는 메인 메뉴(.main-menu)가 대신하므로 이 패널은 보이지 않는다.
  *
  * 구조:
  *   <button type="button" class="site-header__toggle" aria-label="전체메뉴"
@@ -40,7 +40,7 @@
 @layer components {
   /* 헤더(1020)보다 위, 모달(1040)보다 아래 */
   .mobile-menu {
-    @apply fixed inset-0 z-[1030] flex flex-col bg-[var(--color-surface)] pc:hidden;
+    @apply fixed inset-0 z-[1030] flex flex-col bg-[var(--color-surface)] laptop:hidden;
   }
 
   .mobile-menu[hidden] { @apply [display:none]; }

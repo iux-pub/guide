@@ -87,7 +87,8 @@
 
   /* 서브메뉴 (드롭다운) */
   .main-menu__submenu {
-    @apply absolute left-0 m-0 py-[0.8rem] px-0 list-none bg-[var(--color-surface)] border border-[var(--color-border-light)] rounded-[0.6rem] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] z-[1000] top-[100%] min-w-[20rem];
+    /* KRDS 메인 메뉴: 드롭다운 영역은 뷰포트 높이의 70%를 넘지 않고, 넘으면 패널 안에서 스크롤한다 */
+    @apply absolute left-0 m-0 py-[0.8rem] px-0 list-none bg-[var(--color-surface)] border border-[var(--color-border-light)] rounded-[0.6rem] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] z-[1000] top-[100%] min-w-[20rem] max-h-[70vh] overflow-y-auto;
 
 
 
@@ -115,7 +116,7 @@
   }
 
   .main-menu__panel {
-    @apply absolute inset-x-0 top-full bg-[var(--color-surface)] border-y border-[var(--color-border-light)] shadow-[0_0.8rem_1.6rem_0_#0000001f] z-[1000];
+    @apply absolute inset-x-0 top-full bg-[var(--color-surface)] border-y border-[var(--color-border-light)] shadow-[0_0.8rem_1.6rem_0_#0000001f] z-[1000] max-h-[70vh] overflow-y-auto;
   }
 
   .main-menu__panel[hidden] { @apply [display:none]; }

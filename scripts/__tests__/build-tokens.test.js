@@ -42,7 +42,8 @@ test('foundation은 색상, 폰트, 브레이크포인트만 토큰 소스로 �
   assert.ok(source.font.family.sans.value.includes('Pretendard GOV'))
   assert.deepEqual(
     Object.values(source.breakpoint).map(token => token.value),
-    ['360px', '768px', '1280px']
+    // KRDS 표준형 small·medium·large·xlarge
+    ['360px', '768px', '1024px', '1280px']
   )
 })
 

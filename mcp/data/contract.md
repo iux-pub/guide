@@ -66,7 +66,7 @@
 | z-index | CSS/Tailwind 직접값. 레이어 의미가 보이도록 주석 또는 클래스명으로 관리 |
 | 모션 | CSS/Tailwind 직접값. 접근성 `prefers-reduced-motion` 고려 |
 | 터치 영역 | 44px 이상 — 모바일 인터랙티브 요소 강제 |
-| 브레이크포인트 | 360 / 768 / 1280 (3단계, INFOUX 표준) |
+| 브레이크포인트 | 360 / 768 / 1024 / 1280 (4단계, KRDS 표준형 small·medium·large·xlarge) — 글자 크기 전환 768, 메인 메뉴↔전체메뉴·서브 LNB 2단 1024 |
 | 컨테이너 max-width | 1200px (KRDS contents-size) |
 | BEM | `.block__element--modifier` (소문자, 하이픈) — 5-objects · 6-components 레이어에만 |
 | ITCSS | 5-layer 순서: 3-generic → 4-elements → 5-objects → 6-components → 7-utilities (`tokens/`는 외부 소스) |

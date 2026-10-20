@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `tokens/foundation.json` + `tokens/brand.json` (합성 결과)
-> 빌드: 321f53c
+> 빌드: 5f27d37
 
 색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다.
 
@@ -180,7 +180,8 @@
 | 토큰 | 값 | 용도 | Tailwind variant |
 |------|----|------|------------------|
 | `--breakpoint-mobile` | `360px` | 모바일 기준 뷰포트 | `mobile:` |
-| `--breakpoint-tablet` | `768px` | 태블릿 이상 | `tablet:` |
+| `--breakpoint-tablet` | `768px` | 태블릿 이상 — 글자 크기 mobile→pc 전환 | `tablet:` |
+| `--breakpoint-laptop` | `1024px` | 노트북 이상 — 메인 메뉴↔전체메뉴, 서브 LNB 2단, 레이아웃 간격 | `laptop:` |
 | `--breakpoint-pc` | `1280px` | PC 이상 | `pc:` |
 
 ---
@@ -190,8 +191,8 @@
 - 색상은 `--color-*` 시맨틱 토큰을 우선 사용한다.
 - 단계 색상은 예외적으로 명도가 필요한 경우에만 `--color-{group}-{step}`을 사용한다.
 - 폰트 패밀리는 `--font-sans`, `--font-heading`, `--font-mono`만 사용한다.
-- 브레이크포인트는 360 / 768 / 1280 세 단계만 사용한다.
-- Tailwind 반응형 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 사용하지 않는다.
+- 브레이크포인트는 KRDS 표준형 360 / 768 / 1024 / 1280 네 단계만 사용한다. 글자 크기의 mobile→pc 전환은 768, 메인 메뉴↔전체메뉴·서브 LNB 2단·레이아웃 간격 전환은 1024다.
+- Tailwind 반응형 variant는 `mobile:` / `tablet:` / `laptop:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 사용하지 않는다.
 - 단순 반응형 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선 사용한다.
 - 복잡한 중첩 선택자나 여러 하위 요소를 동시에 제어해야 할 때만 `@media`를 사용하고, 관련 선택자 내부에 중첩한다.
 - 파일 하단에 브레이크포인트별 `@media` 블록을 몰아두지 않는다.

@@ -23,7 +23,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - 색상은 `var(--color-*)` 시맨틱 토큰만 사용한다. raw hex/rgb/hsl 및 Tailwind 기본 팔레트 raw 컬러 유틸리티는 금지한다.
 - 간격, 크기, 폰트 사이즈, 반경, 그림자는 프로젝트 맥락에 맞는 CSS 또는 Tailwind 직접값을 허용한다.
 - CSS는 Tailwind v4 `@apply`와 표준 CSS nesting을 사용할 수 있다. SCSS 문법은 사용하지 않는다.
-- 반응형은 모바일 퍼스트로 작성하고 360 / 768 / 1280 기준만 사용한다.
+- 반응형은 모바일 퍼스트로 작성하고 KRDS 표준형 360 / 768 / 1024 / 1280 기준만 사용한다(variant `mobile:` / `tablet:` / `laptop:` / `pc:`).
 - 단순 반응형 속성 변경은 `@apply tablet:*` / `@apply pc:*`를 우선한다.
 - 복잡한 중첩 선택자나 여러 하위 요소 동시 제어만 관련 선택자 내부 `@media`로 작성한다. 파일 하단에 `@media`를 몰아두지 않는다.
 - 5-objects, 6-components 레이어의 클래스명은 BEM을 따른다.

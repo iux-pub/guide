@@ -5,7 +5,7 @@ playground_src: /playground/mobile-menu.html
 preview_height: 420
 ---
 
-헤더 햄버거로 여는 전체 화면 메뉴. 권위 있는 소스는 `src/snippets/mobile-menu.md`이며, 1280px 미만에서 [메인 메뉴](/components/main-menu/)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
+헤더 햄버거로 여는 전체 화면 메뉴. 권위 있는 소스는 `src/snippets/mobile-menu.md`이며, 1024px 미만에서 [메인 메뉴](/components/main-menu/)를 대신한다(KRDS 메인 메뉴의 모바일 형태). 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
 
 ## 기본 마크업
 
@@ -50,7 +50,7 @@ preview_height: 420
 - 열기: 햄버거 클릭 → `hidden` 제거 + `aria-expanded="true"` + 본문 스크롤 잠금 + 닫기 버튼으로 초점 이동
 - 닫기: 닫기 버튼 또는 `Esc` → **햄버거로 초점 복귀**
 - `Tab`/`Shift+Tab`이 패널 안에서만 순환한다 (닫힌 `details` 안의 링크는 제외)
-- 1280px 이상으로 넓어지면 열려 있던 패널을 정리한다
+- 1024px 이상으로 넓어지면 열려 있던 패널을 정리한다
 
 ## 접근성 핵심
 

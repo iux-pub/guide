@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 5626ac3
+> 빌드: 321f53c
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -850,7 +850,7 @@ trigger.addEventListener('click', () => {
 
 ##### 사이트 헤더 (Site Header) {#header}
 
-사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
+사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
 
 #### 기본 마크업
 
@@ -862,7 +862,7 @@ trigger.addEventListener('click', () => {
       <span class="site-header__brand-name">기관명</span>
     </a>
 
-    <nav class="site-header__nav" aria-label="주 메뉴">
+    <nav class="site-header__nav" aria-label="메인 메뉴">
       <ul class="site-header__menu">
         <li><a href="/about">소개</a></li>
         <li><a href="/services" aria-current="page">서비스</a></li>
@@ -872,7 +872,7 @@ trigger.addEventListener('click', () => {
 
     <div class="site-header__actions">
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -882,16 +882,16 @@ trigger.addEventListener('click', () => {
 
 #### 동작
 
-- 모바일/태블릿 (< 1280px): 주 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
-- PC (≥ 1280px): 주 메뉴 노출 + 햄버거 숨김
+- 모바일/태블릿 (< 1280px): 메인 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
+- PC (≥ 1280px): 메인 메뉴 노출 + 햄버거 숨김
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
 
 #### 접근성
 
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
-- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 메인 메뉴는 `<nav aria-label="메인 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
 - 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
@@ -911,14 +911,14 @@ trigger.addEventListener('click', () => {
 
 ---
 
-##### 주 메뉴 (Main Menu) — KRDS {#main-menu}
+##### 메인 메뉴 (Main Menu) — KRDS {#main-menu}
 
 드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다.
 
 #### 기본 마크업
 
 ```html
-<nav class="main-menu" aria-label="주 메뉴">
+<nav class="main-menu" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <a class="main-menu__link" href="/about">소개</a>
@@ -945,7 +945,7 @@ trigger.addEventListener('click', () => {
 
 #### 시맨틱 구조
 
-- **Root 태그**: `<nav class="main-menu" aria-label="주 메뉴">`
+- **Root 태그**: `<nav class="main-menu" aria-label="메인 메뉴">`
 - **자식**: `ul.main-menu__list` → `li.main-menu__item` → `a.main-menu__link`(이동) 또는 `button.main-menu__toggle`(하위 패널 열기)
 - **필수 ARIA**: `nav`에 `aria-label` · 토글 버튼에 `aria-expanded` + `aria-controls` · 현재 페이지에 `aria-current="page"`
 - **쓰지 않는 것**: `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 펼치는 것일 뿐 애플리케이션 메뉴가 아니다
@@ -964,7 +964,7 @@ trigger.addEventListener('click', () => {
 패널이 헤더 전체 폭으로 열린다. 그룹 제목은 링크가 아니라 텍스트이고, 목록은 `aria-labelledby`로 그룹 이름을 받는다.
 
 ```html
-<nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+<nav class="main-menu main-menu--mega" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">
@@ -1033,7 +1033,7 @@ trigger.addEventListener('click', () => {
 
 ##### 모바일 메뉴 (Mobile Menu) — infoUX {#mobile-menu}
 
-헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [주 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
+헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [메인 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
 
 #### 기본 마크업
 
@@ -1046,7 +1046,7 @@ trigger.addEventListener('click', () => {
       <img src="/logo.svg" alt="기관명">
     </a>
     <div class="site-header__actions">
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -1055,13 +1055,13 @@ trigger.addEventListener('click', () => {
 
 <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
   <div class="mobile-menu__header">
-    <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
-    <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+    <p id="mobile-menu-title" class="mobile-menu__title">전체메뉴</p>
+    <button type="button" class="mobile-menu__close" aria-label="전체메뉴 닫기" data-mobile-menu-close>
       <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
     </button>
   </div>
 
-  <nav class="mobile-menu__nav" aria-label="주 메뉴">
+  <nav class="mobile-menu__nav" aria-label="메인 메뉴">
     <ul class="mobile-menu__list">
       <li class="mobile-menu__item">
         <a class="mobile-menu__link" href="/about">소개</a>
@@ -1104,20 +1104,20 @@ trigger.addEventListener('click', () => {
 - 닫기: 닫기 버튼(`data-mobile-menu-close`) 또는 `Esc` → `hidden` 복원 + `aria-expanded="false"` + **햄버거로 초점 복귀**
 - 포커스 트랩: `Tab`/`Shift+Tab`이 패널 안에서만 순환한다. 닫힌 `details` 안의 링크는 순환에서 빠진다
 - 같은 페이지 앵커(`href="#…"`)를 누르면 메뉴를 닫는다
-- 화면이 1280px 이상으로 넓어지면 열려 있던 패널을 정리한다 (주 메뉴가 대신한다)
+- 화면이 1280px 이상으로 넓어지면 열려 있던 패널을 정리한다 (메인 메뉴가 대신한다)
 
 #### 사용 조건
 
 - 하위 단계는 한 단계까지 — `details` 안에 `details`를 또 넣지 않는다. 더 깊으면 메뉴 구조를 다시 짠다
 - 패널 안에 검색·로그인 같은 유틸리티를 둘 수 있다. 이 경우에도 닫기 버튼이 항상 첫 번째 포커스 대상이다
-- 패널 타이틀은 "전체 메뉴"처럼 기능 이름을 쓴다. 기관 홍보 문구를 넣지 않는다
+- 패널 타이틀은 "전체메뉴"처럼 기능 이름을 쓴다. 기관 홍보 문구를 넣지 않는다
 - 장식 애니메이션은 쓰지 않는다. 열림은 즉시 나타나는 것이 기본이다 (필요하면 fade 150~200ms, `prefers-reduced-motion` 가드 필수 · R-22)
 
 #### 접근성
 
 - 패널 열림 중 뒤쪽 콘텐츠는 `aria-modal="true"`로 스크린리더 탐색에서 빠진다
-- 햄버거 `aria-label`은 **고정**한다 (`전체 메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
-- 닫기 버튼 `aria-label="전체 메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
+- 햄버거 `aria-label`은 **고정**한다 (`전체메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
+- 닫기 버튼 `aria-label="전체메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
 - 아이콘은 모두 장식 — `aria-hidden="true"`. 햄버거·닫기 모양의 텍스트 기호로 아이콘을 대신하지 않는다 (R-27)
 - 터치 영역: 햄버거·닫기 44×44px, 항목 56px / 하위 항목 48px (R-13)
 - 초점 외곽선: 스크롤 영역(`overflow-y: auto`) 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 `outline-offset`을 음수로 두어 안쪽에 그린다

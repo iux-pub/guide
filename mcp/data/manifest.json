@@ -1,5 +1,5 @@
 {
-  "version": "5626ac3",
+  "version": "321f53c",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -17,7 +17,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 10600,
+      "chars": 10601,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -29,13 +29,13 @@
     {
       "id": "html-semantics",
       "file": "html-semantics.md",
-      "chars": 23716,
+      "chars": 23719,
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
     },
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 59009,
+      "chars": 59014,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -219,8 +219,8 @@
     {
       "id": "header",
       "file": "header.md",
-      "chars": 1914,
-      "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
+      "chars": 1918,
+      "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
     },
     {
       "id": "hero-bleed",
@@ -243,14 +243,14 @@
     {
       "id": "main-menu",
       "file": "main-menu.md",
-      "chars": 4419,
+      "chars": 4423,
       "summary": "드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다."
     },
     {
       "id": "mobile-menu",
       "file": "mobile-menu.md",
-      "chars": 4161,
-      "summary": "헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [주 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다."
+      "chars": 4158,
+      "summary": "헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [메인 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다."
     },
     {
       "id": "modal",

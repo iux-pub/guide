@@ -1,4 +1,4 @@
-// 주 메뉴 하위 패널 — disclosure 패턴 (드롭다운·메가 메뉴 공통)
+// 메인 메뉴 하위 패널 — disclosure 패턴 (드롭다운·메가 메뉴 공통)
 // 버튼(aria-expanded + aria-controls)이 패널을 열고 닫는다. role="menu"를 쓰지 않으므로
 // 방향키 운용은 없다 — Tab 이 링크를 순서대로 지나간다.
 ;(function () {

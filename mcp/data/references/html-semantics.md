@@ -227,7 +227,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<header class="site-header">` |
-| 자식 시맨틱 | `<a class="site-header__brand" href="/">` (로고/홈) → `<nav>` (주 메뉴, main-menu 참조) → 검색/유틸리티 영역 |
+| 자식 시맨틱 | `<a class="site-header__brand" href="/">` (로고/홈) → `<nav>` (메인 메뉴, main-menu 참조) → 검색/유틸리티 영역 |
 | 필수 ARIA | 페이지에 nav가 여러 개면 각 nav에 `aria-label` 필수 |
 | 키보드 | Tab 흐름 자연스럽게 (브랜드 → 메뉴 → 유틸) |
 
@@ -241,11 +241,11 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 키보드 | 네이티브 (Tab) · 패밀리 사이트 `details`는 `Enter`/`Space`로 열고 닫는다 |
 | 금지 | 패밀리 사이트를 `<select>` 선택만으로 이동시키지 않는다(WCAG 3.2.2) · 법정 고지 문구를 지어내지 않는다(R-23) |
 
-### `main-menu` — 주 메뉴
+### `main-menu` — 메인 메뉴
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<nav class="main-menu" aria-label="주 메뉴">` (메가형은 `.main-menu--mega` 추가) |
+| Root 태그 | `<nav class="main-menu" aria-label="메인 메뉴">` (메가형은 `.main-menu--mega` 추가) |
 | 자식 시맨틱 | `<ul class="main-menu__list">` → `<li class="main-menu__item">` → `<a class="main-menu__link">` / 하위 패널 트리거는 `<button class="main-menu__toggle" aria-expanded aria-controls="panel-id">`. 패널은 드롭다운 `ul.main-menu__submenu` 또는 메가 `div.main-menu__panel` → `.container.main-menu__groups` → `div.main-menu__group` → `p.main-menu__group-title` + `ul.main-menu__group-list aria-labelledby` |
 | 필수 ARIA | `<nav aria-label>` · 하위 패널 트리거에 `aria-expanded` + `aria-controls`(대상 id 실존) · 현재 페이지에 `aria-current="page"` |
 | 쓰지 않는 것 | `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 여닫는 disclosure 패턴이라 메뉴 위젯 역할을 선언하지 않는다(APG Disclosure Navigation). 선언하면 스크린리더가 방향키 운용을 기대한다 |
@@ -256,8 +256,8 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>` (`header` 바깥) |
-| 자식 시맨틱 | `div.mobile-menu__header`(`p.mobile-menu__title#mobile-menu-title` · `button.mobile-menu__close aria-label`) → `nav.mobile-menu__nav aria-label="주 메뉴"` → `ul.mobile-menu__list` → `li.mobile-menu__item` → `a.mobile-menu__link` / `details.mobile-menu__group` → `summary.mobile-menu__summary` + `ul.mobile-menu__sublist` |
-| 트리거 | `<button class="site-header__toggle" aria-label="전체 메뉴" aria-expanded aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">` — 라벨은 고정, 열림은 `aria-expanded`가 전한다 |
+| 자식 시맨틱 | `div.mobile-menu__header`(`p.mobile-menu__title#mobile-menu-title` · `button.mobile-menu__close aria-label`) → `nav.mobile-menu__nav aria-label="메인 메뉴"` → `ul.mobile-menu__list` → `li.mobile-menu__item` → `a.mobile-menu__link` / `details.mobile-menu__group` → `summary.mobile-menu__summary` + `ul.mobile-menu__sublist` |
+| 트리거 | `<button class="site-header__toggle" aria-label="전체메뉴" aria-expanded aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">` — 라벨은 고정, 열림은 `aria-expanded`가 전한다 |
 | 필수 ARIA | 패널 `role="dialog"` + `aria-modal="true"` + `aria-labelledby` · 트리거 `aria-expanded` + `aria-controls`(= `data-mobile-menu-open` 값) · 닫기 버튼 `aria-label` |
 | 키보드 | 열림 시 닫기 버튼으로 초점 이동 · `Tab`/`Shift+Tab` 패널 안 순환(포커스 트랩) · `Esc` 닫기 + 트리거로 초점 복귀 · `summary`는 `Enter`/`Space` |
 

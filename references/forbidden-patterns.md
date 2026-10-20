@@ -337,7 +337,7 @@ KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스�
 <article class="card">...</article>
 <dialog class="modal">...</dialog>
 <nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>
-<nav class="main-menu" aria-label="주 메뉴"><ul>...</ul></nav>
+<nav class="main-menu" aria-label="메인 메뉴"><ul>...</ul></nav>
 <nav class="pagination" aria-label="페이지 내비게이션"><ol>...</ol></nav>
 ```
 

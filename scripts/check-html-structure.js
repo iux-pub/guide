@@ -85,7 +85,7 @@ const COMPONENT_ROOT_MAPPING = {
   'breadcrumb': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 경로"' },
   'site-header': { allowedTags: ['header'], note: '사이트 헤더' },
   'site-footer': { allowedTags: ['footer'], note: '페이지 shell의 footer#footer 랜드마크' },
-  'main-menu': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="주 메뉴"' },
+  'main-menu': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="메인 메뉴"' },
   'mobile-menu': { allowedTags: ['div', 'dialog'], note: 'div 사용 시 role="dialog" aria-modal="true" aria-labelledby 필수' },
   'pagination': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 내비게이션"' },
 

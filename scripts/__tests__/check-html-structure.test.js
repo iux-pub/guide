@@ -460,7 +460,7 @@ const PLAIN_HEADER = '<header id="header"><div class="container">브랜드</div>
 
 test('disclosure 토글(aria-expanded + aria-controls)을 갖춘 메가 메뉴는 통과한다', () => {
   const result = runCheck(pageWith(PLAIN_HEADER, `
-    <nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+    <nav class="main-menu main-menu--mega" aria-label="메인 메뉴">
       <ul class="main-menu__list">
         <li class="main-menu__item">
           <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-a">서비스</button>
@@ -484,14 +484,14 @@ test('disclosure 토글(aria-expanded + aria-controls)을 갖춘 메가 메뉴�
 
 test('main-menu__toggle에 aria-controls가 없거나 대상 id가 없으면 R-16으로 실패한다', () => {
   const noControls = runCheck(pageWith(PLAIN_HEADER, `
-    <nav class="main-menu" aria-label="주 메뉴">
+    <nav class="main-menu" aria-label="메인 메뉴">
       <button type="button" class="main-menu__toggle" aria-expanded="false">서비스</button>
     </nav>`))
   assert.equal(noControls.status, 2)
   assert.match(noControls.stderr, /\[R-16\] main-menu__toggle/)
 
   const brokenTarget = runCheck(pageWith(PLAIN_HEADER, `
-    <nav class="main-menu" aria-label="주 메뉴">
+    <nav class="main-menu" aria-label="메인 메뉴">
       <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="missing">서비스</button>
     </nav>`))
   assert.equal(brokenTarget.status, 2)
@@ -500,7 +500,7 @@ test('main-menu__toggle에 aria-controls가 없거나 대상 id가 없으면 R-1
 
 test('main-menu__toggle에 aria-haspopup을 붙이면 경고한다 (차단 없음)', () => {
   const result = runCheck(pageWith(PLAIN_HEADER, `
-    <nav class="main-menu" aria-label="주 메뉴">
+    <nav class="main-menu" aria-label="메인 메뉴">
       <button type="button" class="main-menu__toggle" aria-haspopup="true" aria-expanded="false" aria-controls="sub-a">서비스</button>
       <ul id="sub-a" class="main-menu__submenu" hidden><li><a href="/a">A</a></li></ul>
     </nav>`))
@@ -513,7 +513,7 @@ test('모바일 메뉴 햄버거: aria-controls가 data-mobile-menu-open과 짝�
   const result = runCheck(pageWith(`
     <header id="header" class="site-header">
       <div class="container">
-        <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">메뉴</button>
+        <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">메뉴</button>
       </div>
     </header>`, ''))
 
@@ -524,7 +524,7 @@ test('모바일 메뉴 햄버거: aria-expanded가 없거나 aria-controls가 �
   const noExpanded = runCheck(pageWith(`
     <header id="header" class="site-header">
       <div class="container">
-        <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">메뉴</button>
+        <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">메뉴</button>
       </div>
     </header>`, ''))
   assert.equal(noExpanded.status, 2)
@@ -533,7 +533,7 @@ test('모바일 메뉴 햄버거: aria-expanded가 없거나 aria-controls가 �
   const mismatch = runCheck(pageWith(`
     <header id="header" class="site-header">
       <div class="container">
-        <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="other" data-mobile-menu-open="mobile-menu">메뉴</button>
+        <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="other" data-mobile-menu-open="mobile-menu">메뉴</button>
       </div>
     </header>`, ''))
   assert.equal(mismatch.status, 2)
@@ -543,13 +543,13 @@ test('모바일 메뉴 햄버거: aria-expanded가 없거나 aria-controls가 �
 test('mobile-menu 패널에 dialog 역할 속성이 빠지면 R-16으로 실패한다', () => {
   const ok = runCheck(pageWith(PLAIN_HEADER, `
     <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mm-title" hidden>
-      <p id="mm-title">전체 메뉴</p>
+      <p id="mm-title">전체메뉴</p>
     </div>`))
   assert.equal(ok.status, 0, ok.stderr)
 
   const missing = runCheck(pageWith(PLAIN_HEADER, `
     <div id="mobile-menu" class="mobile-menu" hidden>
-      <p id="mm-title">전체 메뉴</p>
+      <p id="mm-title">전체메뉴</p>
     </div>`))
   assert.equal(missing.status, 2)
   assert.match(missing.stderr, /\[R-16\]/)

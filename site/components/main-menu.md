@@ -1,5 +1,5 @@
 ---
-title: 주 메뉴
+title: 메인 메뉴
 order: 15
 playground_src: /playground/main-menu.html
 preview_height: 480
@@ -10,7 +10,7 @@ KRDS 정의 컴포넌트에 메가 변형을 더한 주 내비게이션. 하위 
 ## 기본 마크업
 
 ```html
-<nav class="main-menu" aria-label="주 메뉴">
+<nav class="main-menu" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <a class="main-menu__link" href="/about">소개</a>
@@ -40,7 +40,7 @@ KRDS 정의 컴포넌트에 메가 변형을 더한 주 내비게이션. 하위 
 패널이 헤더 전체 폭으로 열린다. 그룹 제목은 텍스트이고 목록은 `aria-labelledby`로 그룹 이름을 받는다.
 
 ```html
-<nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+<nav class="main-menu main-menu--mega" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">

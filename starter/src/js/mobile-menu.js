@@ -1,4 +1,4 @@
-// 모바일 전체 메뉴 컴포넌트 — 열기/닫기 + 포커스 트랩 + Esc 닫기 + 트리거로 초점 복귀
+// 모바일 전체메뉴 컴포넌트 — 열기/닫기 + 포커스 트랩 + Esc 닫기 + 트리거로 초점 복귀
 ;(function () {
   'use strict'
 
@@ -78,7 +78,7 @@
     }
   })
 
-  // PC 폭으로 넓어지면 주 메뉴가 대신하므로 열려 있던 패널을 정리한다
+  // PC 폭으로 넓어지면 메인 메뉴가 대신하므로 열려 있던 패널을 정리한다
   if (window.matchMedia) {
     var query = window.matchMedia(PC_QUERY)
     var onChange = function (e) {

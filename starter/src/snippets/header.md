@@ -1,6 +1,6 @@
 # 사이트 헤더 (Site Header)
 
-사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
+사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
 
 ## 기본 마크업
 
@@ -12,7 +12,7 @@
       <span class="site-header__brand-name">기관명</span>
     </a>
 
-    <nav class="site-header__nav" aria-label="주 메뉴">
+    <nav class="site-header__nav" aria-label="메인 메뉴">
       <ul class="site-header__menu">
         <li><a href="/about">소개</a></li>
         <li><a href="/services" aria-current="page">서비스</a></li>
@@ -22,7 +22,7 @@
 
     <div class="site-header__actions">
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -32,16 +32,16 @@
 
 ## 동작
 
-- 모바일/태블릿 (< 1280px): 주 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
-- PC (≥ 1280px): 주 메뉴 노출 + 햄버거 숨김
+- 모바일/태블릿 (< 1280px): 메인 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
+- PC (≥ 1280px): 메인 메뉴 노출 + 햄버거 숨김
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
 
 ## 접근성
 
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
-- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 메인 메뉴는 `<nav aria-label="메인 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
 - 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 

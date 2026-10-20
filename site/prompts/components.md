@@ -539,7 +539,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
       <span class="site-header__brand-name">기관명</span>
     </a>
 
-    <nav class="site-header__nav" aria-label="주 메뉴">
+    <nav class="site-header__nav" aria-label="메인 메뉴">
       <ul class="site-header__menu">
         <li><a href="/about">소개</a></li>
         <li><a href="/services" aria-current="page">서비스</a></li>
@@ -549,7 +549,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
     <div class="site-header__actions">
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -560,9 +560,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 접근성
 
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
-- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 메인 메뉴는 `<nav aria-label="메인 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
 - 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
@@ -653,12 +653,12 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 20. 주 메뉴 (Main Menu) — KRDS
+## 20. 메인 메뉴 (Main Menu) — KRDS
 
 ### 기본 마크업
 
 ```html
-<nav class="main-menu" aria-label="주 메뉴">
+<nav class="main-menu" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <a class="main-menu__link" href="/about">소개</a>
@@ -714,7 +714,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
       <img src="/logo.svg" alt="기관명">
     </a>
     <div class="site-header__actions">
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -723,13 +723,13 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
   <div class="mobile-menu__header">
-    <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
-    <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+    <p id="mobile-menu-title" class="mobile-menu__title">전체메뉴</p>
+    <button type="button" class="mobile-menu__close" aria-label="전체메뉴 닫기" data-mobile-menu-close>
       <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
     </button>
   </div>
 
-  <nav class="mobile-menu__nav" aria-label="주 메뉴">
+  <nav class="mobile-menu__nav" aria-label="메인 메뉴">
     <ul class="mobile-menu__list">
       <li class="mobile-menu__item">
         <a class="mobile-menu__link" href="/about">소개</a>
@@ -758,8 +758,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 접근성
 
 - 패널 열림 중 뒤쪽 콘텐츠는 `aria-modal="true"`로 스크린리더 탐색에서 빠진다
-- 햄버거 `aria-label`은 **고정**한다 (`전체 메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
-- 닫기 버튼 `aria-label="전체 메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
+- 햄버거 `aria-label`은 **고정**한다 (`전체메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
+- 닫기 버튼 `aria-label="전체메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
 - 아이콘은 모두 장식 — `aria-hidden="true"`. 햄버거·닫기 모양의 텍스트 기호로 아이콘을 대신하지 않는다 (R-27)
 - 터치 영역: 햄버거·닫기 44×44px, 항목 56px / 하위 항목 48px (R-13)
 - 초점 외곽선: 스크롤 영역(`overflow-y: auto`) 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 `outline-offset`을 음수로 두어 안쪽에 그린다

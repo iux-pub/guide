@@ -44,9 +44,11 @@ const PAGE_FILES = new Set(PAGE_SCOPE.files)
 // 한국형 페이지 골격(R-32 푸터 개인정보 처리방침·R-40 공공 통합검색·R-41 서브 골격) — 없으면(오래된 파생 프로젝트) 건너뛴다
 let PAGE_RULES = null
 let isPagePath = () => false
+let pageTypeOf = () => null
 try {
   PAGE_RULES = require('./lib/page-rules')
   isPagePath = require('./lib/page-scope').isPagePath
+  pageTypeOf = require('./lib/page-scope').pageTypeOf
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
@@ -787,7 +789,8 @@ function checkPageContract(html, filePath, baseLineNum = 1) {
   // 한국형 골격은 실제 페이지(납품 페이지·boilerplate 스니펫)만 — 사이트 문서의 '...' 생략 골격은 대상이 아니다
   const relative = toPosix(rel(filePath))
   if (PAGE_RULES && (PAGE_FILES.has(path.resolve(filePath)) || isPagePath(ROOT, relative) || relative === 'src/snippets/boilerplate.md')) {
-    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE })) {
+    // 페이지 유형(K-16)은 infoux.json pageTypes 선언에서만 — boilerplate 스니펫은 유형이 없다
+    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE, pageType: pageTypeOf(ROOT, relative) })) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + (f.line || 1) - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }

@@ -93,6 +93,49 @@ function readPageGlobs(root) {
   return { globs: [...base.globs, ...userGlobs], userGlobs, problems }
 }
 
+// 페이지 유형(K-16) — infoux.json "pageTypes": { "글롭": "유형" | { "type": "유형", "depth": 수 } }
+//   유형은 Task Contract pageType과 같은 열거값이다. 위에서부터 처음 맞는 글롭을 쓴다.
+//   depth는 홈을 1로 센 메뉴 단계(홈>알림마당>공지사항 = 3) — 경로로 추측하지 않는다(pages/about.html은 2단계일 수 있다)
+const PAGE_TYPES = ['main', 'sub-content', 'board-list', 'board-detail', 'form', 'search-result', 'error']
+function readPageTypes(root) {
+  const out = { entries: [], problems: [] }
+  const configPath = path.join(root, 'infoux.json')
+  if (!fs.existsSync(configPath)) return out
+  let config
+  try {
+    config = JSON.parse(fs.readFileSync(configPath, 'utf8').replace(/^\uFEFF/, ''))
+  } catch {
+    return out // 읽기 오류는 readPageGlobs가 알린다
+  }
+  if (config.pageTypes === undefined) return out
+  if (!config.pageTypes || typeof config.pageTypes !== 'object' || Array.isArray(config.pageTypes)) {
+    return { entries: [], problems: ['infoux.json의 pageTypes는 { "글롭": "유형" } 객체여야 한다'] }
+  }
+  for (const [raw, value] of Object.entries(config.pageTypes)) {
+    const g = normalizeGlob(raw)
+    if (!isSafeGlob(g) || /[{}[\]!]/.test(g)) {
+      out.problems.push(`infoux.json pageTypes의 "${raw}"는 쓸 수 없는 글롭이다 — 루트 안에서 '*', '**', '?'만 쓴다`)
+      continue
+    }
+    const spec = typeof value === 'string' ? { type: value } : value || {}
+    if (!PAGE_TYPES.includes(spec.type)) {
+      out.problems.push(`infoux.json pageTypes["${raw}"]의 유형 "${spec.type}"은 없는 값이다 — ${PAGE_TYPES.join(', ')} 중 하나`)
+      continue
+    }
+    if (spec.depth !== undefined && !(Number.isInteger(spec.depth) && spec.depth >= 1)) {
+      out.problems.push(`infoux.json pageTypes["${raw}"]의 depth는 1 이상의 정수다(홈 = 1)`)
+      continue
+    }
+    out.entries.push({ glob: g, re: globToRegExp(g), type: spec.type, depth: spec.depth })
+  }
+  return out
+}
+// 파일 하나의 선언된 유형 — 상대 경로는 '/' 구분. 없으면 null
+function pageTypeOf(root, rel) {
+  const hit = readPageTypes(root).entries.find(e => e.re.test(rel))
+  return hit ? { type: hit.type, depth: hit.depth } : null
+}
+
 // 폴더(상대 경로 조각들) 아래에서 이 글롭이 맞을 수 있는가 — 맞을 수 없는 폴더는 내려가지 않는다
 // (저장소 전체를 훑지 않도록. '*.html'이면 루트 바로 아래만 본다)
 function canDescend(dirSegments, globSegments) {
@@ -109,7 +152,8 @@ function canDescend(dirSegments, globSegments) {
 // 루트 아래 .html을 모아 글롭에 맞는 것만 돌려준다(절대 경로, 정렬)
 // notices(경고): 사용자가 더한 글롭이 아무 파일에도 맞지 않을 때 — 오타로 페이지가 검사 밖에 남지 않게
 function collectPageFiles(root) {
-  const { globs, userGlobs, problems } = readPageGlobs(root)
+  const { globs, userGlobs, problems: globProblems } = readPageGlobs(root)
+  const problems = [...globProblems, ...readPageTypes(root).problems]
   const patterns = globs.map(globToRegExp)
   const userPatterns = userGlobs.map(g => [g, globToRegExp(g)])
   const userHits = new Set()
@@ -145,4 +189,4 @@ function isPagePath(root, rel) {
   return readPageGlobs(root).globs.some(g => globToRegExp(g).test(rel))
 }
 
-module.exports = { DEFAULT_PAGE_GLOBS, EXCLUDED_SEGMENTS, globToRegExp, normalizeGlob, isSafeGlob, canDescend, readPageGlobs, collectPageFiles, isPagePath }
+module.exports = { DEFAULT_PAGE_GLOBS, EXCLUDED_SEGMENTS, PAGE_TYPES, globToRegExp, normalizeGlob, isSafeGlob, canDescend, readPageGlobs, readPageTypes, pageTypeOf, collectPageFiles, isPagePath }

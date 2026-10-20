@@ -4,8 +4,11 @@
 //   R-40 공공 통합검색 — public-service·public-institution 페이지는 헤더에 통합검색 진입을 둔다(KRDS 검색 [필수])
 //   R-41 서브 골격 — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고(KRDS component_03_01),
 //        main 안 첫 제목은 h1이다
-// 메인 첫 섹션 과업 진입·마케팅 섹션(R-40 (2)(3)), 깊이별 브레드크럼·서브 히어로(R-41 (1)(4))는
-// 페이지 유형(pageType, K-16)이 선언된 뒤에 켠다 — 지금은 판정 근거가 없다.
+// 페이지 유형(pageType, K-16 — infoux.json pageTypes)이 선언된 페이지에만:
+//   R-40 공공 메인 — 첫 콘텐츠 2개 섹션 안에 과업 진입(경고), 마케팅 템플릿 섹션 금지(오류)
+//   R-41 서브 — 3단계 이상 브레드크럼(공공 오류·그 밖 경고), 첫 섹션 비주얼 히어로 금지
+// 선언이 없으면 이 판정은 하지 않는다(경로로 유형·깊이를 추측하지 않는다).
+// ctx: { profile, pageType: { type, depth } | null }
 // 결과: { rule, severity, line, message, code }
 
 const T = require('./html-tree')
@@ -83,6 +86,47 @@ function r40(root, ctx, out) {
   if (!found) out.push({ rule: 'R-40', severity: 'error', line: header.line, message: '공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다(KRDS 검색 [필수]) — <form role="search">나 이름이 \'통합검색\'인 버튼.', code: '<header id="header">' })
 }
 
+// R-40 (2)(3) — 공공 메인(pageType main): 첫 콘텐츠 2개 섹션 안의 과업 진입, 마케팅 템플릿 섹션 금지
+const MARKETING_HEADING = /(features?|testimonials?|pricing|why\s?us|고객\s?후기|이용(?:자)?\s?후기|가격\s?플랜|요금\s?플랜|핵심\s?기능|함께하는\s?파트너)/i
+const TASK_SECTION = /(?:^|\s)section--(?:notice|search|shortcut)(?:\s|$)/
+const liveLinks = n => els(n, x => x.tag === 'a' && !isDeadHref(x.attrs.href))
+const isSearchForm = n => !!T.find(n, x => x.tag !== '#text' && (x.tag === 'search' || (x.tag === 'form' && x.attrs.role === 'search') || (x.tag === 'input' && /^search$/i.test(x.attrs.type || ''))))
+function hasTaskEntry(section) {
+  if (isSearchForm(section)) return true
+  if (TASK_SECTION.test(section.attrs.class || '') && liveLinks(section).length >= 3) return true
+  // 공지 — 목록·표에 링크 3개와 날짜 3개(time 또는 YYYY.MM.DD)
+  const DATE = /\d{4}[.-]\s?\d{1,2}[.-]\s?\d{1,2}/
+  for (const list of els(section, x => ['ul', 'ol', 'table'].includes(x.tag))) {
+    const dates = els(list, x => x.tag === 'time').length || (norm(T.textOf(list)).match(new RegExp(DATE.source, 'g')) || []).length
+    if (liveLinks(list).length >= 3 && dates >= 3) return true
+  }
+  // 자주 찾는 서비스 — 이름 있는 nav나 목록의 링크 4개 이상(카드 안 링크는 치지 않는다)
+  for (const group of els(section, x => x.tag === 'nav' || x.tag === 'ul' || x.tag === 'ol')) {
+    const named = group.tag !== 'nav' || group.attrs['aria-label'] || group.attrs['aria-labelledby']
+    const links = liveLinks(group).filter(a => !T.ancestors(a).some(p => hasClass(p, 'card') || T.classesOf(p).some(c => c.startsWith('card--'))))
+    if (named && links.length >= 4) return true
+  }
+  return false
+}
+function r40Main(root, ctx, out) {
+  if (!PUBLIC.has(ctx.profile) || ctx.pageType?.type !== 'main') return
+  const main = T.find(root, n => n.tag === 'main')
+  if (!main) return
+  const sections = (main.children || []).filter(c => c.tag === 'section')
+  const isIntro = s => /(?:^|\s)(?:section--intro|hero-bleed)(?:\s|$)/.test(s.attrs.class || '')
+  // 도입부 안에 검색을 결합했으면 그것도 과업 진입이다
+  const introWithTask = sections.filter(isIntro).some(isSearchForm)
+  const firstTwo = sections.filter(s => !isIntro(s)).slice(0, 2)
+  if (!introWithTask && !firstTwo.some(hasTaskEntry)) {
+    out.push({ rule: 'R-40', severity: 'warn', line: (firstTwo[0] || main).line, message: '공공 메인은 첫 콘텐츠 2개 섹션 안에 과업 진입(검색·공지 목록·자주 찾는 서비스)을 둔다 — KRDS 방문 패턴 [필수] "시급하거나 중요한 정보를 빠르게".', code: '<main>' })
+  }
+  for (const h of els(main, x => /^h[1-3]$/.test(x.tag))) {
+    const text = norm(T.textOf(h))
+    const m = text.match(MARKETING_HEADING)
+    if (m) out.push({ rule: 'R-40', severity: 'error', line: h.line, message: `공공 메인에 마케팅 템플릿 섹션 "${text}" — 후기·요금 플랜·핵심 기능 묶음은 공공 메인의 과업이 아니다. 공지·서비스 바로가기로 바꾼다.`, code: text })
+  }
+}
+
 function r41(root, ctx, out) {
   const main = T.find(root, n => n.tag === 'main')
   if (!main) return
@@ -95,6 +139,26 @@ function r41(root, ctx, out) {
       out.push({ rule: 'R-41', severity: 'error', line: nav.line, message: `${hasClass(nav, 'breadcrumb') ? '브레드크럼' : '사이드 메뉴'}이 본문 바로가기 목적지(#${target.attrs.id || 'main'}) 안에 있다 — KRDS는 반복 영역을 목적지 밖에 두라고 한다. main의 형제로 옮긴다.`, code: norm(nav.src || '').slice(0, 120) })
     }
   }
+  // (1)(4) — 서브 페이지(선언된 pageType이 main·error가 아닌 것)
+  const pt = ctx.pageType
+  if (pt && pt.type !== 'main' && pt.type !== 'error') {
+    const strict = PUBLIC.has(ctx.profile)
+    if (pt.depth >= 3) {
+      const crumb = T.find(root, n => n.tag === 'nav' && hasClass(n, 'breadcrumb'))
+      const ok = crumb && (crumb.attrs['aria-label'] || crumb.attrs['aria-labelledby']) && T.find(crumb, n => n.attrs?.['aria-current'] === 'page')
+      if (!ok) out.push({ rule: 'R-41', severity: strict ? 'error' : 'warn', line: (crumb || main).line, message: `${pt.depth}단계 서브 페이지에 브레드크럼이 없다 — nav.breadcrumb[aria-label]에 현재 항목 aria-current="page"를 둔다(KRDS: 3단계 이상).`, code: crumb ? norm(crumb.src || '').slice(0, 120) : '<main>' })
+    }
+    const first = (main.children || []).find(c => c.tag === 'section')
+    if (first) {
+      const cls = first.attrs.class || ''
+      if (/(?:^|\s)hero-bleed(?:\s|$)/.test(cls)) {
+        out.push({ rule: 'R-41', severity: strict || ctx.profile === 'cms-admin' ? 'error' : 'warn', line: first.line, message: '서브 페이지 첫 섹션을 비주얼 히어로(hero-bleed)로 쓰지 않는다 — hero-bleed는 메인 최상단 도입 전용이다. 타이틀 밴드와 h1로 시작한다.', code: norm(first.src || '').slice(0, 120) })
+      } else if (/(?:^|\s)(?:min-)?h-(?:screen|dvh|svh|lvh|\[\d+(?:\.\d+)?(?:vh|dvh|svh)\])(?:\s|$)|(?:^|\s)min-h-\[(?:[3-9]\d|\d{3,})(?:\.\d+)?rem\]/.test(cls)) {
+        out.push({ rule: 'R-41', severity: 'warn', line: first.line, message: '서브 페이지 첫 섹션이 화면 높이만큼 크다 — 서브 비주얼은 화면 1/3 이하로 둔다.', code: norm(first.src || '').slice(0, 120) })
+      }
+    }
+  }
+
   const headings = els(main, n => /^h[1-6]$/.test(n.tag) && !inHiddenRegion(n))
   if (!headings.length || headings[0].tag !== 'h1') {
     const first = headings[0]
@@ -108,6 +172,7 @@ function scanPageRules(html, ctx = {}) {
   const out = []
   r32(root, ctx, out)
   r40(root, ctx, out)
+  r40Main(root, ctx, out)
   r41(root, ctx, out)
   return out.sort((a, b) => (a.line || 0) - (b.line || 0))
 }

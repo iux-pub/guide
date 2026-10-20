@@ -22,8 +22,8 @@ HTML 마크업 작성 규칙이다.
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | check-html-structure.js |
 | R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | check-html-structure.js |
 | R-36 | 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27) | error | check-violations.js |
-| R-40 | 공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다 | error | check-html-structure.js |
-| R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다 | error | check-html-structure.js |
+| R-40 | 공공 화면은 모든 페이지 헤더에 통합검색을 두고, 공공 메인은 첫 화면에 과업 진입을 두며 마케팅 템플릿 섹션을 쓰지 않는다 | error | check-html-structure.js |
+| R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
 
 ---
@@ -317,11 +317,11 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-40 — 공공 화면은 모든 페이지 헤더에 통합검색 진입을 둔다
+## R-40 — 공공 화면은 모든 페이지 헤더에 통합검색을 두고, 공공 메인은 첫 화면에 과업 진입을 두며 마케팅 템플릿 섹션을 쓰지 않는다
 
 **심각도:** `error` &nbsp; **검증:** check-html-structure.js
 
-> KRDS 검색 패턴의 [필수] 문단은 '서비스 내 모든 화면에서 통합 검색 기능을 실행할 수 있도록 한다'이다. infoux.json profile이 public-service·public-institution이면 header#header가 있는 납품 페이지에서 헤더 안에 search 요소, form[role=search], input[type=search], 또는 접근 가능한 이름(aria-label·sr-only 포함)이 '검색·통합검색·Search'인 버튼·링크가 없을 때 오류다(아이콘만 있는 검색 버튼도 이름이 있으면 인정 — KRDS 헤더 지침). 헤더 없는 팝업 창은 대상이 아니다. 메인 첫 화면의 과업 진입(검색·공지·자주 찾는 서비스)과 마케팅 템플릿 섹션(후기·요금 플랜) 판정은 페이지 유형(pageType)을 선언하는 K-16 뒤에 켠다.
+> KRDS 검색 패턴의 [필수] 문단은 '서비스 내 모든 화면에서 통합 검색 기능을 실행할 수 있도록 한다', 방문 패턴의 [필수]는 '시급하거나 중요한 정보를 빠르게 인지'하게 하라는 것이다. infoux.json profile이 public-service·public-institution일 때: (1) header#header가 있는 납품 페이지의 헤더 안에 search 요소, form[role=search], input[type=search], 또는 접근 가능한 이름(aria-label·sr-only 포함)이 '검색·통합검색·Search'인 버튼·링크가 없으면 오류(아이콘 검색 버튼도 이름이 있으면 인정, 헤더 없는 팝업은 대상 아님). infoux.json pageTypes에 main으로 선언한 페이지는 (2) main의 첫 콘텐츠 2개 섹션(도입부·hero-bleed 제외, 도입부에 검색을 결합했으면 인정) 안에 검색 폼, 공지(section--notice·search·shortcut에 실제 링크 3개, 또는 목록·표에 링크 3개와 날짜 3개), 자주 찾는 서비스(이름 있는 nav·목록에 링크 4개, 카드 안 링크 제외) 중 하나가 없으면 경고, (3) h1~h3가 고객 후기·이용자 후기·Features·Testimonials·Pricing·요금 플랜·핵심 기능·함께하는 파트너면 오류다('숫자로 보는', 공공요금 '요금제', FAQ는 대상 아님). 일반·커머스 메인은 레시피(KR-MAIN-CORP·COMMERCE)가 달라 보지 않는다.
 
 **금지 예시**
 
@@ -339,11 +339,11 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-41 — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다
+## R-41 — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다
 
 **심각도:** `error` &nbsp; **검증:** check-html-structure.js
 
-> KRDS component_03_01은 본문 바로가기 목적지 안에 사이드 메뉴·브레드크럼·페이지 유틸리티를 두지 말라고 한다. 목적지는 skip 링크 href가 가리키는 요소(없으면 main)다 — 브레드크럼을 main의 형제로 두거나(#main), main 안이라도 목적지(#contents) 밖이면 통과한다. 타이틀 밴드 안에 브레드크럼을 넣는 관행은 오류다. main 안의 첫 제목(대화상자·hidden·template·aria-hidden 안 제외)이 h1이 아니거나 h1이 없으면 오류 — 헤더 로고를 h1로 쓰고 본문을 h2로 시작하는 옛 구조다. 깊이 3 이상 서브 페이지의 브레드크럼 필수와 서브 첫 섹션의 비주얼 히어로 금지는 페이지 유형·깊이 선언(K-16) 뒤에 켠다.
+> KRDS component_03_01은 본문 바로가기 목적지 안에 사이드 메뉴·브레드크럼·페이지 유틸리티를 두지 말라고 한다. 목적지는 skip 링크 href가 가리키는 요소(없으면 main)다 — 브레드크럼을 main의 형제로 두거나(#main), main 안이라도 목적지(#contents) 밖이면 통과한다. 타이틀 밴드 안에 브레드크럼을 넣는 관행은 오류다. main 안의 첫 제목(대화상자·hidden·template·aria-hidden 안 제외)이 h1이 아니거나 h1이 없으면 오류다. infoux.json pageTypes에 main·error가 아닌 유형으로 선언한 서브 페이지는 (1) depth(홈 = 1인 메뉴 단계)가 3 이상인데 nav.breadcrumb[aria-label]과 aria-current="page" 항목이 없으면 공공 프로필 오류·그 밖 경고(KRDS: 2단계 이하는 생략 가능), (4) main 첫 섹션이 hero-bleed면 공공·관리자 오류·그 밖 경고, 화면 높이(min-h-screen·dvh·vh·30rem 이상) 섹션이면 경고다. 유형·깊이는 경로로 추측하지 않는다 — 선언이 없으면 (1)(4)를 보지 않는다.
 
 **금지 예시**
 

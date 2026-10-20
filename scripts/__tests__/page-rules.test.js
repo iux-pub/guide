@@ -83,6 +83,66 @@ test('R-41: main 첫 제목은 h1 — 헤더 로고 h1·h2로 시작하는 main�
   assert.ok(none(scanPageRules(page({ main: withDialog })), 'R-41'))
 })
 
+// ─── pageType 선언(K-16) 뒤에 켜지는 판정 ───────────────
+
+const ps = { profile: 'public-service' }
+const mainOf = pageType => ({ ...ps, pageType })
+const NOTICE = '<section class="section section--notice"><div class="container"><h2>공지사항</h2><ul><li><a href="/n/3">하반기 공모 안내</a><time datetime="2026-10-15">2026.10.15</time></li><li><a href="/n/2">시스템 점검</a><time datetime="2026-10-12">2026.10.12</time></li><li><a href="/n/1">휴관 안내</a><time datetime="2026-10-08">2026.10.08</time></li></ul></div></section>'
+const INTRO = '<section class="section section--intro"><div class="container"><h1>제주 민원 포털</h1></div></section>'
+
+test('R-40 (2): 공공 메인은 첫 콘텐츠 2개 섹션 안에 과업 진입 — 공지·검색·바로가기 인정, 없으면 경고', () => {
+  const main = { type: 'main' }
+  assert.ok(none(scanPageRules(page({ main: INTRO + NOTICE }), mainOf(main)), 'R-40'))
+  // span 날짜 공지, 도입부 결합 검색, 이름 있는 바로가기 nav
+  const spanNotice = NOTICE.replace(/<time datetime="[^"]+">([^<]+)<\/time>/g, '<span>$1</span>')
+  assert.ok(none(scanPageRules(page({ main: INTRO + spanNotice }), mainOf(main)), 'R-40'))
+  assert.ok(none(scanPageRules(page({ main: `<section class="section section--intro"><div class="container"><h1>민원 포털</h1>${SEARCH}</div></section>` }), mainOf(main)), 'R-40'))
+  const quick = '<section class="section section--content"><div class="container"><h2>자주 찾는 서비스</h2><nav aria-label="자주 찾는 서비스"><ul><li><a href="/a">여권 발급</a></li><li><a href="/b">등본 발급</a></li><li><a href="/c">세금 납부</a></li><li><a href="/d">주차 신고</a></li></ul></nav></div></section>'
+  assert.ok(none(scanPageRules(page({ main: INTRO + quick }), mainOf(main)), 'R-40'))
+  const story = '<section class="section section--content"><div class="container"><h2>재단 이야기</h2><p>소개</p></div></section>'
+  const r = scanPageRules(page({ main: INTRO + story }), mainOf(main))
+  assert.ok(has(r, 'R-40', 'warn') && !has(r, 'R-40', 'error'), brief(r))
+  // 유형 선언이 없거나 서브면 보지 않는다
+  assert.ok(none(scanPageRules(page({ main: INTRO + story }), ps), 'R-40'))
+  assert.ok(none(scanPageRules(page({ main: INTRO + story }), mainOf({ type: 'sub-content' })), 'R-40'))
+})
+
+test("R-40 (3): 공공 메인의 마케팅 템플릿 섹션은 오류 — '숫자로 보는'·'요금제'·'FAQ'는 아니다", () => {
+  const sec = h => `<section class="section section--content"><div class="container"><h2>${h}</h2></div></section>`
+  for (const h of ['고객 후기', 'FEATURES', '이용자 후기', '요금 플랜']) assert.ok(has(scanPageRules(page({ main: INTRO + NOTICE + sec(h) }), mainOf({ type: 'main' })), 'R-40'), h)
+  for (const h of ['숫자로 보는 제주', '전기요금제 안내', '자주 묻는 질문']) assert.ok(none(scanPageRules(page({ main: INTRO + NOTICE + sec(h) }), mainOf({ type: 'main' })), 'R-40'), h)
+  assert.ok(none(scanPageRules(page({ main: INTRO + NOTICE + sec('고객 후기') }), { profile: 'commerce-reservation', pageType: { type: 'main' } }), 'R-40'))
+})
+
+test('R-41 (1): 선언된 3단계 이상 서브 페이지는 브레드크럼 — 공공 오류, 그 밖 경고, 2단계·메인은 통과', () => {
+  const sub = d => ({ type: 'board-list', depth: d })
+  assert.ok(has(scanPageRules(page(), { profile: 'public-institution', pageType: sub(3) }), 'R-41'))
+  const r = scanPageRules(page(), { profile: 'general-site', pageType: sub(3) })
+  assert.ok(has(r, 'R-41', 'warn') && !has(r, 'R-41', 'error'), brief(r))
+  assert.ok(none(scanPageRules(page({ beforeMain: CRUMB }), { profile: 'public-institution', pageType: sub(3) }), 'R-41'))
+  assert.ok(none(scanPageRules(page(), { profile: 'public-institution', pageType: sub(2) }), 'R-41'))
+  assert.ok(none(scanPageRules(page(), { profile: 'public-institution', pageType: { type: 'main', depth: 3 } }), 'R-41'))
+})
+
+test('R-41 (4): 서브 첫 섹션 hero-bleed는 공공·관리자 오류, 화면 높이 섹션은 경고', () => {
+  const hero = '<section class="section section--intro hero-bleed"><div class="container"><h1>알림마당</h1></div></section>'
+  assert.ok(has(scanPageRules(page({ main: hero }), { profile: 'public-institution', pageType: { type: 'sub-content' } }), 'R-41'))
+  assert.ok(has(scanPageRules(page({ main: hero }), { profile: 'general-site', pageType: { type: 'sub-content' } }), 'R-41', 'warn'))
+  const tall = '<section class="section section--intro min-h-screen"><div class="container"><h1>알림마당</h1></div></section>'
+  assert.ok(has(scanPageRules(page({ main: tall }), { profile: 'public-institution', pageType: { type: 'sub-content' } }), 'R-41', 'warn'))
+  assert.ok(none(scanPageRules(page({ main: hero }), { profile: 'public-institution', pageType: { type: 'main' } }), 'R-41'))
+})
+
+test('page-scope: pageTypes 선언을 읽고 잘못된 유형·깊이·글롭은 HX-06 문제로 낸다', () => {
+  const { readPageTypes, pageTypeOf } = require('../lib/page-scope')
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-ptype-'))
+  fs.writeFileSync(path.join(dir, 'infoux.json'), JSON.stringify({ pageTypes: { 'index.html': 'main', 'pages/notice/*.html': { type: 'board-list', depth: 3 }, 'pages/x.html': 'landing', '../a.html': 'main', 'pages/y.html': { type: 'form', depth: 0 } } }))
+  assert.deepEqual(pageTypeOf(dir, 'index.html'), { type: 'main', depth: undefined })
+  assert.deepEqual(pageTypeOf(dir, 'pages/notice/list.html'), { type: 'board-list', depth: 3 })
+  assert.equal(pageTypeOf(dir, 'pages/about.html'), null)
+  assert.equal(readPageTypes(dir).problems.length, 3)
+})
+
 // ─── 검사기 통합 ─────────────────────────────────────
 
 test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문서 골격에는 닿지 않는다', () => {
@@ -92,7 +152,7 @@ test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문�
   fs.cpSync(path.join(ROOT, 'scripts', 'lib'), path.join(dir, 'scripts', 'lib'), { recursive: true })
   fs.mkdirSync(path.join(dir, 'contracts'), { recursive: true })
   for (const name of ['html-page-contract.json', 'class-naming.json']) fs.copyFileSync(path.join(ROOT, 'contracts', name), path.join(dir, 'contracts', name))
-  fs.writeFileSync(path.join(dir, 'infoux.json'), JSON.stringify({ profile: 'public-service' }))
+  fs.writeFileSync(path.join(dir, 'infoux.json'), JSON.stringify({ profile: 'public-service', pageTypes: { 'pages/notice.html': { type: 'board-list', depth: 3 } } }))
   fs.mkdirSync(path.join(dir, 'pages'))
   fs.writeFileSync(path.join(dir, 'pages', 'notice.html'), `<!DOCTYPE html><html lang="ko">${page({ header: '', footer: '<small>© 2026</small>' })}</html>`)
   fs.mkdirSync(path.join(dir, 'site', 'guides'), { recursive: true })
@@ -102,5 +162,6 @@ test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문�
   assert.equal(r.status, 2, out)
   assert.match(out, /notice\.html[\s\S]*?\[R-32\]/)
   assert.match(out, /\[R-40\]/)
+  assert.match(out, /\[R-41\][^\n]*3단계/)
   assert.doesNotMatch(out, /shell\.md[^\n]*\n[^\n]*\[R-32\]/)
 })

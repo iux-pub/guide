@@ -26,11 +26,22 @@
     "utility": {
       "label": "기능형",
       "definition": "반복 업무 화면. 표현 요소가 과업 효율을 침해하지 않는 최소 수준.",
-      "hero": ["none", "text"],
-      "signature": { "maxCount": 0, "types": [] },
+      "hero": [
+        "none",
+        "text"
+      ],
+      "signature": {
+        "maxCount": 0,
+        "types": []
+      },
       "motion": {
-        "durationMs": [100, 200],
-        "effects": ["fade"],
+        "durationMs": [
+          100,
+          200
+        ],
+        "effects": [
+          "fade"
+        ],
         "note": "장식·스크롤 진입 모션 한정 규정이다. 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing.md 소유로 등급 무관 — Spring 프리셋 포함."
       },
       "displayFont": "body-only",
@@ -40,11 +51,29 @@
     "restrained": {
       "label": "절제형",
       "definition": "신뢰가 우선인 공공 톤. 브랜드는 색·서체 수준에서 드러나고 장식은 절제한다.",
-      "hero": ["text", "image", "carousel"],
-      "signature": { "maxCount": 1, "types": ["그래픽 패턴", "포토 톤 통일", "커스텀 일러스트"] },
+      "hero": [
+        "text",
+        "image",
+        "carousel"
+      ],
+      "signature": {
+        "maxCount": 1,
+        "types": [
+          "그래픽 패턴",
+          "포토 톤 통일",
+          "커스텀 일러스트"
+        ]
+      },
       "motion": {
-        "durationMs": [150, 300],
-        "effects": ["fade", "translate-16", "scroll-fade-in-once"],
+        "durationMs": [
+          150,
+          300
+        ],
+        "effects": [
+          "fade",
+          "translate-16",
+          "scroll-fade-in-once"
+        ],
         "note": "easing은 ease-out 계열. parallax·bounce·무한 루프 금지. 캐러셀은 수동 컨트롤과 정지 버튼 전제. 컴포넌트 피드백 모션은 interaction-timing.md 소유로 등급 무관."
       },
       "displayFont": "body-first",
@@ -54,11 +83,33 @@
     "expressive": {
       "label": "표현형",
       "definition": "브랜드 개성이 기억에 남아야 하는 사이트. 시그니처·타이포·섹션 리듬으로 정체성을 만든다.",
-      "hero": ["text", "image", "carousel", "video"],
-      "signature": { "maxCount": 3, "types": ["그래픽 패턴", "커스텀 일러스트", "포토 트리트먼트", "타이포 모티프", "커스텀 불릿·구분선"] },
+      "hero": [
+        "text",
+        "image",
+        "carousel",
+        "video"
+      ],
+      "signature": {
+        "maxCount": 3,
+        "types": [
+          "그래픽 패턴",
+          "커스텀 일러스트",
+          "포토 트리트먼트",
+          "타이포 모티프",
+          "커스텀 불릿·구분선"
+        ]
+      },
       "motion": {
-        "durationMs": [200, 400],
-        "effects": ["fade", "translate-24", "scale-2pct", "stagger-50-80"],
+        "durationMs": [
+          200,
+          400
+        ],
+        "effects": [
+          "fade",
+          "translate-24",
+          "scale-2pct",
+          "stagger-50-80"
+        ],
         "note": "scroll-jacking 금지. 무한 루프는 장식 요소 1곳 한정(로고 마키 형태 금지). 비디오 hero는 무음 자동재생 + 일시정지 컨트롤. 컴포넌트 피드백 모션은 interaction-timing.md 소유로 등급 무관."
       },
       "displayFont": "heading-pairing",
@@ -72,9 +123,23 @@
       "label": "일반사이트",
       "appliesTo": "민간 기업, 브랜드, 캠페인, 포트폴리오, 회사 홈페이지",
       "focus": "시맨틱 구조, 접근성, 색상 토큰, 반응형, 브랜드 표현",
-      "sectionFlow": ["intro", "content", "list"],
-      "sectionFlowAlt": ["intro", "content", "notice"],
-      "priorityComponents": ["header", "main-menu", "card", "list", "btn"],
+      "sectionFlow": [
+        "intro",
+        "content",
+        "list"
+      ],
+      "sectionFlowAlt": [
+        "intro",
+        "content",
+        "notice"
+      ],
+      "priorityComponents": [
+        "header",
+        "main-menu",
+        "card",
+        "list",
+        "btn"
+      ],
       "density": "comfortable",
       "expression": "expressive",
       "governmentIdentity": "excluded",
@@ -83,11 +148,27 @@
     {
       "id": "public-service",
       "label": "공공서비스",
-      "appliesTo": "중앙부처·지자체·공공기관이 시민에게 제공하는 민원, 신청, 조회, 정책, 참여 서비스",
+      "appliesTo": "중앙부처·지자체·공공기관이 시민에게 제공하는 민원, 신청, 조회, 정책, 참여 서비스, 단일 업무 시스템(청약·예약·통계·신고·데이터 포털)",
       "focus": "KRDS 접근성·컴포넌트·서비스 패턴 적극 적용. 신청/검색/로그인/알림 흐름 보강",
-      "sectionFlow": ["search", "process", "form", "notice"],
-      "sectionFlowAlt": ["intro", "process", "data", "notice"],
-      "priorityComponents": ["breadcrumb", "step-indicator", "form", "alert", "table"],
+      "sectionFlow": [
+        "search",
+        "process",
+        "form",
+        "notice"
+      ],
+      "sectionFlowAlt": [
+        "intro",
+        "process",
+        "data",
+        "notice"
+      ],
+      "priorityComponents": [
+        "breadcrumb",
+        "step-indicator",
+        "form",
+        "alert",
+        "table"
+      ],
       "density": "comfortable",
       "expression": "restrained",
       "governmentIdentity": "conditional",
@@ -96,10 +177,21 @@
     {
       "id": "public-institution",
       "label": "공공기관",
-      "appliesTo": "공기업, 출자·출연기관, 산하기관, 재단, 공공기관 대표 홈페이지",
+      "appliesTo": "공기업, 출자·출연기관, 산하기관, 재단, 공공기관 대표 홈페이지, 부처·지자체·공공기관 대표 누리집(포털형)",
       "focus": "공공 톤의 헤더/푸터, 기관 식별, 정보공개/공지/홍보 구조",
-      "sectionFlow": ["intro", "notice", "list", "content"],
-      "priorityComponents": ["header", "main-menu", "breadcrumb", "card", "pagination"],
+      "sectionFlow": [
+        "intro",
+        "notice",
+        "list",
+        "content"
+      ],
+      "priorityComponents": [
+        "header",
+        "main-menu",
+        "breadcrumb",
+        "card",
+        "pagination"
+      ],
       "density": "comfortable",
       "expression": "restrained",
       "governmentIdentity": "conditional",
@@ -110,9 +202,24 @@
       "label": "CMS·관리자",
       "appliesTo": "CMS, 관리자, 사내 업무 시스템, 운영 콘솔",
       "focus": "고밀도 정보 구조, 폼/테이블/검색/필터/상태 패턴, 접근성",
-      "sectionFlow": ["search", "data", "form"],
-      "sectionFlowAlt": ["search", "data", "notice"],
-      "priorityComponents": ["form", "select", "table", "pagination", "badge", "toast"],
+      "sectionFlow": [
+        "search",
+        "data",
+        "form"
+      ],
+      "sectionFlowAlt": [
+        "search",
+        "data",
+        "notice"
+      ],
+      "priorityComponents": [
+        "form",
+        "select",
+        "table",
+        "pagination",
+        "badge",
+        "toast"
+      ],
       "density": "compact",
       "expression": "utility",
       "governmentIdentity": "excluded",
@@ -123,9 +230,25 @@
       "label": "커머스·예약",
       "appliesTo": "쇼핑몰, 면세점, 예약, 결제, 이벤트·프로모션",
       "focus": "상품/주문/결제 접근성, 명확한 CTA, 전환 흐름",
-      "sectionFlow": ["intro", "list", "form", "notice"],
-      "sectionFlowAlt": ["intro", "list", "process", "notice"],
-      "priorityComponents": ["card", "btn", "form", "step-indicator", "alert"],
+      "sectionFlow": [
+        "intro",
+        "list",
+        "form",
+        "notice"
+      ],
+      "sectionFlowAlt": [
+        "intro",
+        "list",
+        "process",
+        "notice"
+      ],
+      "priorityComponents": [
+        "card",
+        "btn",
+        "form",
+        "step-indicator",
+        "alert"
+      ],
       "density": "comfortable",
       "expression": "expressive",
       "governmentIdentity": "excluded",

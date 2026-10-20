@@ -240,7 +240,10 @@ function writeProjectProfile(projectPath, profile) {
     // 납품 페이지 범위 — npm run check가 기본 범위(*.html, pages/**/*.html)와 여기 더한 글롭에 맞는 .html을
     // page 계약(건너뛰기 링크·header·main·footer·section 이름)으로 검사한다. 기본 범위는 항상 들어간다.
     // 페이지를 다른 폴더에 두면 글롭을 더한다('public/**/*.html'). '*'·'**'·'?'만 쓰고, 루트 밖('..')은 가리킬 수 없다.
-    pages: ['*.html', 'pages/**/*.html']
+    pages: ['*.html', 'pages/**/*.html'],
+    // 페이지 유형(K-16) — 글롭: 유형 또는 { type, depth }. 유형은 main·sub-content·board-list·board-detail·form·search-result·error,
+    // depth는 홈을 1로 센 메뉴 단계. 선언한 페이지에만 공공 메인 과업 진입(R-40)·서브 브레드크럼(R-41) 검사가 켜진다
+    pageTypes: { 'index.html': 'main' }
   }, null, 2) + '\n')
 
   // 에이전트 지시 파일에도 한 줄 박아 둔다. infoux.json을 안 읽는 도구도 있다.

@@ -26,7 +26,10 @@
 | 규칙 | 항목 | 금지 사유 |
 |------|------|----------|
 | **R-01** | 색상 raw hex/rgb/hsl 직접 작성 (`#fff`, `rgb(0,0,0)`) | KRDS 토큰만 허용 |
-| **R-01** | Tailwind 기본 팔레트 raw 컬러 유틸리티 | 색상 토큰 또는 프로젝트 색상 유틸만 |
+| **R-01** | Tailwind 기본 팔레트·흑백 유틸(`bg-gray-50`, `text-white`), 임의값·style 속성·var 폴백 안의 raw 색 | 색은 어디에 쓰든 `var(--color-*)` — 그림자의 KRDS 검정 알파 3값만 한시 허용 |
+| **R-34** | 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·4px 이상 블러·컬러 글로우 그림자 | AI 슬롭 서명(AP-3·AP-4), KRDS에 없는 효과. 스크림과 검정 알파 그림자만 |
+| **R-36** | 이모지를 아이콘·불릿·배지·제목 장식으로 사용 | 토큰·고대비를 따르지 못한다 — 아이콘은 카탈로그(R-27) |
+| **R-37** | Tailwind 기본 타입·행간·간격·컨테이너 스케일(`text-sm`, `leading-6`, `p-4`, `max-w-md`) | 62.5% 루트에서 37.5% 작게 렌더된다 — rem 임의값(`p-[1.6rem]`) |
 | **R-02** | `!important` (정당한 사유 주석 없을 시) | 토큰 시스템 우회 위험 |
 | **R-03** | SCSS 사용 (`*.scss`, `@use`, `@forward`, `$var`) | Tailwind v4 + CSS Custom Properties만 허용 |
 | **R-04** | BEM 미준수 클래스명 — `.block__element--modifier` 형식 외 | 일관성 |
@@ -57,15 +60,15 @@
 |------|------|
 | 사이트 유형 판정 | 코드 생성 전 `references/project-profiles.md` 기준으로 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 먼저 판정 |
 | 색상 | `var(--color-*)` 시맨틱 토큰만 사용 |
-| 간격/크기 | CSS/Tailwind 직접값. CMS·관리자 화면은 정보 밀도에 맞게 조정 |
+| 간격/크기 | CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`). 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `gap-2`, `max-w-md`)은 37.5% 작게 렌더돼 쓰지 않는다(R-37). CMS·관리자 화면은 정보 밀도에 맞게 조정 |
 | 폰트 | `var(--font-sans)`, `var(--font-mono)` — 직접 폰트 패밀리 작성 금지 |
-| 폰트 사이즈 | 프로젝트 타입 계층 우선. 토큰화하지 않음 |
+| 폰트 사이즈 | 프로젝트 타입 계층 우선. 토큰화하지 않음. `text-[1.7rem]`처럼 rem 임의값으로 쓰고 `text-sm` 등 기본 크기는 쓰지 않는다(R-37) |
 | CSS 작성 | 표준 CSS nesting 허용. Tailwind v4 `@apply`, `@theme`, `@utility` 사용 가능 |
 | 반응형 작성 | 단순 속성 변경은 `@apply tablet:*` / `@apply pc:*` 우선. 복잡한 중첩 선택자만 관련 선택자 내부 `@media` 사용 |
 | line-height | 한국어 가독성을 위해 1.4~1.6 권장. `line-height: 1` 금지 |
-| 반경/그림자 | CSS/Tailwind 직접값 |
-| z-index | CSS/Tailwind 직접값. 레이어 의미가 보이도록 주석 또는 클래스명으로 관리 |
-| 모션 | CSS/Tailwind 직접값. 접근성 `prefers-reduced-motion` 고려 |
+| 반경/그림자 | CSS 직접값 또는 rem 임의값(`rounded-[0.8rem]`). 그림자는 KRDS 3단계 검정 알파(`#0000000d`·`#00000014`·`#0000001f`) 조합만 — 색 있는 글로우 금지(R-34) |
+| z-index | CSS 값 또는 Tailwind 임의값(`z-[1050]`). 레이어 의미가 보이도록 주석 또는 클래스명으로 관리 |
+| 모션 | CSS 값 또는 Tailwind 임의값(`duration-[200ms]`). 접근성 `prefers-reduced-motion` 고려 |
 | 터치 영역 | 44px 이상 — 모바일 인터랙티브 요소 강제 |
 | 브레이크포인트 | 360 / 768 / 1024 / 1280 (4단계, KRDS 표준형 small·medium·large·xlarge) — 글자 크기 전환 768, 메인 메뉴↔전체메뉴·서브 LNB 2단 1024 |
 | 컨테이너 max-width | 1200px (KRDS contents-size) |

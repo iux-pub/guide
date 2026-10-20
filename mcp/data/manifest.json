@@ -1,5 +1,5 @@
 {
-  "version": "9468f34",
+  "version": "c81c787",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -11,7 +11,7 @@
     {
       "id": "art-direction",
       "file": "art-direction.md",
-      "chars": 13994,
+      "chars": 14066,
       "summary": "brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디까지 열지 판단하는 기준. 수치 정본은 `contracts/art-direction.json`, 팔레트 hex 정본은 `tokens/presets/`이며, 이 문서의 표는 build-art-direct..."
     },
     {
@@ -23,7 +23,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 10870,
+      "chars": 13326,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -41,20 +41,20 @@
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 68970,
+      "chars": 69000,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
       "id": "krds-source",
       "file": "krds-source.md",
-      "chars": 34601,
+      "chars": 34826,
       "summary": "- **시스템명**: KRDS (Korea Government Design System) — 한국명 \"범정부 UI/UX 디자인 시스템\""
     },
     {
       "id": "krds-tokens",
       "file": "krds-tokens.md",
-      "chars": 7185,
-      "summary": "색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다."
+      "chars": 7315,
+      "summary": "색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니다 — 간격·크기·타이포는 rem 임의값(`p-[1.6rem]`, Tailwind 기본 스케일은..."
     },
     {
       "id": "project-profiles",
@@ -71,13 +71,13 @@
     {
       "id": "snippet-template",
       "file": "snippet-template.md",
-      "chars": 4167,
+      "chars": 4173,
       "summary": "```markdown"
     },
     {
       "id": "tailwind-mapping",
       "file": "tailwind-mapping.md",
-      "chars": 1713,
+      "chars": 2973,
       "summary": "INFOUX는 Tailwind v4 `@theme`에 색상과 폰트만 공개한다."
     },
     {
@@ -165,7 +165,7 @@
     {
       "id": "btn",
       "file": "btn.md",
-      "chars": 2098,
+      "chars": 2104,
       "summary": "```html"
     },
     {
@@ -177,7 +177,7 @@
     {
       "id": "card",
       "file": "card.md",
-      "chars": 1199,
+      "chars": 1205,
       "summary": "```html"
     },
     {
@@ -201,7 +201,7 @@
     {
       "id": "error-page",
       "file": "error-page.md",
-      "chars": 4668,
+      "chars": 4674,
       "summary": "요청한 페이지를 보여줄 수 없을 때(404 · 403 · 500 · 점검) 한 화면으로 보여주는 패턴. 사용자는 이 화면을 구경하러 온 것이 아니라 **빠져나가러** 왔다. 장식보다 탈출 경로가 먼저다."
     },
     {
@@ -231,7 +231,7 @@
     {
       "id": "hero-bleed",
       "file": "hero-bleed.md",
-      "chars": 1506,
+      "chars": 1512,
       "summary": "화면 가로 전체를 쓰는 도입 섹션이다. section 자체에 클래스를 얹어 쓰고, 내부 `.container`가 본문 폭을 잡는다. 배경 이미지 위에 텍스트를 얹을 때는 `--scrim`을 함께 쓴다."
     },
     {
@@ -261,13 +261,13 @@
     {
       "id": "modal",
       "file": "modal.md",
-      "chars": 1546,
+      "chars": 1552,
       "summary": "```html"
     },
     {
       "id": "notice-bar",
       "file": "notice-bar.md",
-      "chars": 4551,
+      "chars": 4557,
       "summary": "KRDS 긴급 공지(Critical alerts) — 지금 대부분의 사용자가 알아야 하는 **한시적 사실 하나**를 본문 맨 위에 띠로 알린다. 블록 이름은 `notice-bar`다."
     },
     {
@@ -285,7 +285,7 @@
     {
       "id": "section-media",
       "file": "section-media.md",
-      "chars": 1974,
+      "chars": 1980,
       "summary": "동일 archetype 연속(R-25)을 끊는 변주 패턴이다. 태블릿 이상에서 이미지와 본문이 2컬럼으로 나란히 서고, `--reverse`로 좌우를 교차해 zigzag 리듬을 만든다."
     },
     {

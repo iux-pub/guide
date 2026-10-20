@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 9468f34
+> 빌드: c81c787
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -81,7 +81,7 @@
 
 - KRDS 버튼 명세: https://www.krds.go.kr/html/site/component/component_summary.html
 - 색상: `--color-button-*`, `--color-text-*`
-- 크기/간격/반경: CSS/Tailwind 직접값
+- 크기/간격/반경: CSS 값·Tailwind rem 임의값
 - CSS: `src/styles/6-components/btn.css`
 
 
@@ -433,7 +433,7 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
 #### 출처
 
-- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/card.css`
 
 
@@ -538,7 +538,7 @@ trigger.addEventListener('click', () => {
 
 #### 출처
 
-- Shape 값은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- Shape 값은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - Shadow: `--shadow-3` (KRDS modal-wrap-shadow 추상화)
 - CSS: `src/styles/6-components/modal.css`
 
@@ -1434,7 +1434,7 @@ KRDS는 긴급 공지를 메인 메뉴와 히어로 사이, **본문 콘텐츠�
 
 - 기준: KRDS 긴급 공지 https://www.krds.go.kr/html/site/component/component_04_02.html
 - 색상은 `--color-info-surface` · `--color-information-20` · `--color-information-60` (긴급도별 warning/danger 동일 구조)
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/notice-bar.css` (JS 없음)
 - 아이콘: `info` · `warning` · `error` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
 
@@ -2000,7 +2000,7 @@ HTML만으로 끝나지 않는다. 아래는 구현팀과 함께 확인한다.
 #### 출처
 
 - 색상은 `--color-primary` · `--color-primary-pressed` · `--color-text` · `--color-text-subtle` · `--color-border-light`
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/error-page.css`
 - 문안 기준: `site/design/microcopy.md` (에러 메시지 3-Part 공식)
 - 수위 기준: `references/art-direction.md` §1 (페이지 단위 강등)

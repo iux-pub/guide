@@ -46,5 +46,5 @@
 
 ## 출처
 
-- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/card.css`

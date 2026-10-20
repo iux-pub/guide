@@ -112,6 +112,6 @@ KRDS는 긴급 공지를 메인 메뉴와 히어로 사이, **본문 콘텐츠�
 
 - 기준: KRDS 긴급 공지 https://www.krds.go.kr/html/site/component/component_04_02.html
 - 색상은 `--color-info-surface` · `--color-information-20` · `--color-information-60` (긴급도별 warning/danger 동일 구조)
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/notice-bar.css` (JS 없음)
 - 아이콘: `info` · `warning` · `error` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)

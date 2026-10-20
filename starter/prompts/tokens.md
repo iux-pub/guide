@@ -21,7 +21,7 @@ tokens/foundation.json
 ```
 
 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다.
-프로젝트 화면 밀도와 사용성에 맞게 Tailwind v4 `@apply` 또는 CSS 직접값으로 작성한다.
+프로젝트 화면 밀도와 사용성에 맞게 Tailwind v4 `@apply`의 rem 임의값(`p-[2.4rem]`) 또는 CSS 직접값으로 작성한다. 루트가 62.5%(1rem = 10px)라 Tailwind 기본 스케일(`p-4`, `text-sm`)은 37.5% 작게 렌더되므로 쓰지 않는다(R-37).
 
 ## 색상 토큰
 

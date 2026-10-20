@@ -31,7 +31,7 @@ ChatGPT, Gemini, Claude (모든 AI 리뷰 용도)
 - [ ] **SCSS 사용 없음** — `.scss` 파일, `@use`, `@forward`, `$variable` 모두 0건
 - [ ] CSS는 표준 CSS nesting과 Tailwind v4 `@apply` 사용 가능 (`.css` 파일, `@import "tailwindcss"`, CSS Custom Property)
 - [ ] Tailwind v4 기본 팔레트 raw 컬러 유틸 없음
-- [ ] Tailwind 기본 스케일이 프로젝트 기준과 충돌하지 않음 (`text-base`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 등은 사용하지 않음)
+- [ ] Tailwind 기본 스케일 0건 — 62.5% 루트에서 37.5% 작게 렌더된다(R-37). `text-base`, `leading-6`, `p-4`, `gap-2`, `max-w-md`, `rounded-lg`, `shadow-md`, `z-10`, `sm:` 대신 rem 임의값(`p-[1.6rem]`)과 INFOUX 브레이크포인트를 쓴다
 
 ## BEM (R-04, R-05, R-06)
 
@@ -46,7 +46,7 @@ ChatGPT, Gemini, Claude (모든 AI 리뷰 용도)
 
 - [ ] 하드코딩 색상 0건 (`#222`, `rgb(...)` 금지 → `var(--color-*)`)
 - [ ] 공개 토큰은 색상(`--color-*`)과 기본 폰트(`--font-*`) 중심으로 유지
-- [ ] 간격/크기/반경/그림자/모션/z-index는 CSS 또는 Tailwind 값으로 직접 관리
+- [ ] 간격/크기/반경/그림자/모션/z-index는 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`)으로 직접 관리
 - [ ] 옛 시맨틱 토큰 0건
 
 ## CSS 규칙 (R-02, R-07)

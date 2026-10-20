@@ -41,48 +41,61 @@
     {
       "id": "R-01",
       "category": "css",
-      "summary": "색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장",
+      "summary": "색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37)",
       "severity": "error",
       "enforcement": [
         "check-violations.js"
       ],
-      "rationale": "색상은 브랜드·상태·접근성·테마 변경의 영향이 크므로 반드시 토큰으로 관리한다. 반면 간격·크기·타이포 스케일은 KRDS 값을 참고하되 프로젝트 성격에 맞게 조정할 수 있다. 특히 CMS/관리자 화면은 정보 밀도와 반복 작업 효율이 중요하므로 KRDS 수치 체계를 그대로 강제하지 않는다.",
+      "rationale": "색상은 브랜드·상태·접근성·테마(고대비) 변경의 영향이 크므로 반드시 토큰으로 관리한다. 검사는 줄이 아니라 선언 단위로 본다 — border·box-shadow·그라데이션 안의 raw 색, var(--x, #폴백), Tailwind 임의값(bg-[#f5f2ee], text-[white]), 팔레트·흑백 유틸(bg-gray-50, text-white, from-violet-600 — 이 프로젝트는 @theme 팔레트를 비워 CSS가 생성되지 않거나 KRDS 단계와 명도가 다르다), --커스텀 속성이 함께 있는 style 속성까지 잡는다. 색 속성에 쓴 CSS 이름 색(white 등)도 raw다(transparent·currentColor·시스템 색 제외). 그림자의 KRDS 검정 알파 3값(#0000000d·#00000014·#0000001f)은 알파 토큰이 생길 때까지 한시 허용한다. 색을 정의하는 곳은 tokens/와 문서 코드 테마(src/styles/1-settings/docs-code-theme.css의 --color-code-*)뿐이다. 간격·크기·타이포 스케일은 KRDS 값을 참고해 rem 임의값으로 쓴다(Tailwind 기본 스케일은 R-37).",
       "bad": [
         {
-          "code": "color: #256ef4;",
-          "note": "하드코딩 색상"
+          "code": ".card { border: 1px solid #ddd; box-shadow: 0 20px 50px rgba(124, 58, 237, .5); }",
+          "note": "선언 값 안의 raw 색"
         },
         {
-          "code": "background: #f8f8f8;",
-          "note": "하드코딩 색상"
+          "code": "<section class=\"section bg-[#f5f2ee] text-white\">",
+          "note": "임의값 raw 색, 흑백 유틸(CSS가 생성되지 않는다)"
         },
         {
-          "code": "color: rgb(37, 110, 244);",
-          "note": "하드코딩 색상"
+          "code": "<div style=\"--x: 1; background: #7c3aed\">",
+          "note": "커스텀 속성이 있어도 나머지 선언의 raw 색은 잡힌다"
+        },
+        {
+          "code": ".btn:focus-visible { outline: 2px solid white; }",
+          "note": "색 속성의 CSS 이름 색"
+        },
+        {
+          "code": "color: var(--color-primary, #7c3aed);",
+          "note": "var 폴백의 raw 색"
         }
       ],
       "good": [
         {
           "code": "color: var(--color-primary);",
-          "note": "INFOUX 공개 토큰"
+          "note": "토큰"
         },
         {
-          "code": "color: var(--color-primary);",
-          "note": "INFOMIND 시맨틱 별칭 (INFOUX 토큰을 가리킴)"
+          "code": "<a class=\"btn btn--primary bg-[var(--color-primary)] text-[var(--color-text-inverse)]\">",
+          "note": "임의값 안에서도 토큰"
         },
         {
-          "code": "padding: 16px;",
-          "note": "프로젝트 맥락상 명확한 간격값은 허용"
+          "code": "@apply shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f];",
+          "note": "KRDS 검정 알파 그림자(한시 허용)"
+        },
+        {
+          "code": "background: color-mix(in srgb, var(--color-primary) 10%, transparent);",
+          "note": "토큰만 섞은 color-mix"
         },
         {
           "code": "gap: 1.6rem;",
-          "note": "반복 패턴에는 INFOMIND 간격 별칭 권장"
+          "note": "간격은 rem 값"
         }
       ],
       "refs": [
         "tokens/foundation.json",
-        "tokens/foundation.json",
-        "tokens/build/tokens.css"
+        "tokens/brand.json",
+        "tokens/build/tokens.css",
+        "scripts/lib/visual-signature.js"
       ]
     },
     {
@@ -1040,6 +1053,154 @@
         {
           "code": "<a class=\"pagination__item\" href=\"?p=3\" aria-current=\"page\">3</a>",
           "note": "pagination.css가 aria-current 속성 선택자로 현재 페이지를 그린다"
+        }
+      ]
+    },
+    {
+      "id": "R-34",
+      "category": "css",
+      "summary": "장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "AI가 만든 화면을 알아보게 하는 첫 서명이 보라→파랑 그라데이션, 글래스 카드, 흐린 블롭, 색 번진 그림자다(AP-3·AP-4). KRDS에는 글래스·글로우가 없고, 공공·기관 화면의 신뢰 톤과 고대비 모드를 깨뜨린다. 그라데이션은 표현 등급(infoux.json profile → contracts/profiles.json expression, 없으면 restrained)으로 판정한다 — utility·restrained는 error, expressive는 warn. 보라·남색 계열(hue 225~300°, 채도 0.25 이상, 토큰은 실제 색으로 풀어 본다)은 등급과 상관없이 error다. 사진 위 글자 대비 스크림(투명 → 검정 알파·바탕 한 색의 선형 페이드)과 가로 스크롤 힌트는 허용하고, 무채색 그라데이션(스켈레톤 반짝임)은 warn이다. background-clip:text, backdrop-filter·backdrop-*, 4px(0.4rem) 이상 블러, blur가 있는데 색이 검정 계열이 아닌 그림자(box-shadow·text-shadow·drop-shadow·shadow-[…]·그림자 모양 커스텀 속성)는 error다. spread만 있는 포커스 링(0 0 0 0.4rem var(--color-border-primary))은 그림자가 아니라 통과한다. 문서 사이트 크롬(src/styles/docs.css)은 제외한다.",
+      "refs": [
+        "contracts/profiles.json",
+        "references/art-direction.md",
+        "scripts/lib/visual-signature.js"
+      ],
+      "bad": [
+        {
+          "code": ".cta { background: linear-gradient(90deg, var(--color-primary-50), var(--color-secondary-60)); }",
+          "note": "장식 그라데이션(restrained 이하 error)"
+        },
+        {
+          "code": "<h1 class=\"bg-clip-text text-transparent bg-linear-to-r from-violet-600 to-blue-600\">",
+          "note": "그라데이션 글자 + 보라 계열"
+        },
+        {
+          "code": "<article class=\"card backdrop-blur-xl\">",
+          "note": "글래스"
+        },
+        {
+          "code": ".card:hover { box-shadow: 0 0 4rem var(--color-primary-40); }",
+          "note": "컬러 글로우"
+        },
+        {
+          "code": ".blob { filter: blur(4rem); }",
+          "note": "흐린 장식 블롭"
+        }
+      ],
+      "good": [
+        {
+          "code": ".hero-bleed__media::after { background: linear-gradient(to bottom, transparent, var(--color-alpha-black-50)); }",
+          "note": "사진 위 글자 대비 스크림"
+        },
+        {
+          "code": "@apply shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f];",
+          "note": "KRDS 검정 알파 그림자"
+        },
+        {
+          "code": "focus-visible:shadow-[0_0_0_0.4rem_var(--color-border-primary)]",
+          "note": "spread만 있는 포커스 링"
+        },
+        {
+          "code": ".section--intro { background: var(--color-surface-primary-subtler); }",
+          "note": "단색 토큰 면"
+        }
+      ]
+    },
+    {
+      "id": "R-36",
+      "category": "html",
+      "summary": "이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고 KRDS 아이콘 대비(3:1·7:1)를 보장할 수 없다. 플랫폼마다 모양이 다르고, 국내 사이트 99곳 중 1곳만 쓴다 — 흡수할 관행이 없는 AI 슬롭 서명이다. 제목(h1~h6)·버튼·링크·label·summary·th·li·legend·caption·.badge·.tag·__title·__label·__icon 안, 이모지만 있는 텍스트, CSS content(Tailwind [content:\"…\"]·content-[…] 포함)는 error, 그 밖의 본문은 warn, alt는 이미지 속 글자 전사일 수 있어 warn이다. HTML 엔티티(`&#x1F680;`)·CSS 이스케이프(`\\1F449`)도 풀어 본다. ©·®·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니라 통과한다. 링크·버튼 끝의 → ➜ » ▶는 warn — 카탈로그 chevron + aria-hidden을 쓴다. 웹 콘텐츠(스니펫 코드 블록·플레이그라운드·사이트 문서·납품 페이지)에만 적용하고 저장소 안내 문서(README·CLAUDE.md 등)는 대상이 아니다.",
+      "refs": [
+        "references/class-naming.md",
+        "scripts/lib/visual-signature.js"
+      ],
+      "bad": [
+        {
+          "code": "<h3 class=\"feature__title\">🚀 빠른 처리</h3>",
+          "note": "제목 장식"
+        },
+        {
+          "code": "<li>✅ 24시간 민원 접수</li>",
+          "note": "불릿 대용"
+        },
+        {
+          "code": "<span class=\"badge\">✨ NEW</span>",
+          "note": "배지 장식"
+        },
+        {
+          "code": ".notice__link::before { content: \"👉\"; }",
+          "note": "CSS content 이모지"
+        }
+      ],
+      "good": [
+        {
+          "code": "<small class=\"site-footer__copy\">© 2026 기관명</small>",
+          "note": "텍스트 기호"
+        },
+        {
+          "code": "<p>※ 신청 기간을 확인하십시오.</p>",
+          "note": "텍스트 기호"
+        },
+        {
+          "code": "<svg class=\"icon\" aria-hidden=\"true\"><use href=\"assets/icons/sprite.svg#check\"></use></svg>",
+          "note": "카탈로그 아이콘"
+        }
+      ]
+    },
+    {
+      "id": "R-37",
+      "category": "css",
+      "summary": "Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "rationale": "KRDS 방식대로 루트 글자 크기가 62.5%(1rem = 10px)라, rem으로 정의된 Tailwind 기본 스케일은 의도보다 37.5% 작게 렌더된다 — text-base = 10px, p-4 = 10px, max-w-md = 280px. AI는 Tailwind 기본값을 습관처럼 쓰므로 화면 전체가 소리 없이 작아진다. 금지: text-xs~9xl(text-sm/6 단축형 포함), 숫자 행간(leading-6), 숫자 간격·크기(p·m·gap·space·w·h·min/max·size·inset·top… ·translate·scroll-m/p·indent·basis), 컨테이너 폭(w/max-w/basis/columns-md 등). rem 임의값(text-[1.7rem], p-[1.6rem], gap-[0.8rem], max-w-[56rem])을 쓴다. 0·px·full·auto·분수, 이름 행간(leading-relaxed — 단위 없는 비율), max-w-prose(ch 단위)는 통과한다. KRDS 문서의 gap-3(8px)은 여기서 gap-[0.8rem]이다. 행간 하한은 R-24가 본다. 반경(rounded-lg = 5px)도 같은 원인이지만 지금은 경고(R-01)로 둔다.",
+      "refs": [
+        "references/tailwind-mapping.md",
+        "references/krds-source.md",
+        "scripts/lib/visual-signature.js"
+      ],
+      "bad": [
+        {
+          "code": "<p class=\"text-base leading-6\">",
+          "note": "10px 글자, 15px 고정 행간"
+        },
+        {
+          "code": ".page-title { @apply text-3xl; }",
+          "note": "18.75px"
+        },
+        {
+          "code": ".btn { @apply min-h-12 gap-2; }",
+          "note": "30px·5px"
+        },
+        {
+          "code": "<div class=\"max-w-md mt-10\">",
+          "note": "280px·25px"
+        }
+      ],
+      "good": [
+        {
+          "code": "<p class=\"text-[1.7rem] leading-[1.7]\">",
+          "note": "rem 임의값 + 비율 행간"
+        },
+        {
+          "code": ".btn { @apply min-h-[4.8rem] gap-[0.4rem] px-[1.6rem]; }",
+          "note": "rem 임의값"
+        },
+        {
+          "code": "<div class=\"w-full h-auto mx-auto p-0 max-w-prose\">",
+          "note": "스케일과 무관한 유틸"
         }
       ]
     }

@@ -25,7 +25,7 @@ Google Stitch, Galileo, Lovable, v0
 
 - **코드 생성 전 사이트 유형을 먼저 판정한다.** 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약을 구분하고, 정부 아이덴티티 요소는 적용 대상이 확인된 경우에만 생성
 - **색상은 CSS Custom Property(`var(--token)`) 사용.** 하드코딩 hex/rgb/hsl 금지
-- **간격·크기·타이포 스케일은 CSS/Tailwind 직접값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
+- **간격·크기·타이포 스케일은 CSS 값·Tailwind rem 임의값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
 - **CSS는 표준 nesting + Tailwind v4 `@apply` 사용 가능**
 - **모바일 터치 영역 ≥ 44×44px**
 - **시맨틱 HTML + WCAG 2.1 AA 준수**

@@ -40,6 +40,6 @@
 
 ## 출처
 
-- 높이·간격은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 높이·간격은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/5-objects/hero-bleed.css`
 - 이미지 트리트먼트·스크림 기준: `references/art-direction.md` §7

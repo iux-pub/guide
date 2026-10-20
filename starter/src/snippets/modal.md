@@ -49,6 +49,6 @@
 
 ## 출처
 
-- Shape 값은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- Shape 값은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - Shadow: `--shadow-3` (KRDS modal-wrap-shadow 추상화)
 - CSS: `src/styles/6-components/modal.css`

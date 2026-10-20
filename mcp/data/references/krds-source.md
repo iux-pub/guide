@@ -514,6 +514,8 @@
 | gap-11 | number-18 | 64px |
 | gap-12 | number-20 | 80px |
 
+> 이 표의 `gap-N`·`padding-N`은 KRDS 토큰 이름이다. 같은 이름의 Tailwind 유틸(`gap-3` = 0.75rem)과 값이 다르고, 이 저장소는 루트가 62.5%라 Tailwind 기본 스케일을 쓰지 않는다(R-37). px 값을 rem 임의값으로 옮겨 쓴다 — KRDS `gap-3`(8px) → `gap-[0.8rem]`.
+
 ### 3.3 Semantic padding
 | 토큰 | 참조 primitive | px |
 |------|------|-----|
@@ -900,7 +902,7 @@
 ### 10.3 입력 필드 (Text input) — 핵심 명세
 
 - 구성: 레이블 → 보조설명 → 입력박스 → 시스템메시지
-- 요소 간 gap: **gap-3 (8px)**
+- 요소 간 gap: **gap-3 (8px)** — 이 저장소 표기 `gap-[0.8rem]`
 - 입력박스 내부 padding: **padding-6 (16px)**
 - 출처: KRDS 입력폼 가이드 페이지
 

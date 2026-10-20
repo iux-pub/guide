@@ -1,5 +1,5 @@
 {
-  "version": "9468f34",
+  "version": "c6cfe92",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -35,13 +35,13 @@
     {
       "id": "html-semantics",
       "file": "html-semantics.md",
-      "chars": 26913,
+      "chars": 26915,
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
     },
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 68970,
+      "chars": 69139,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -183,7 +183,7 @@
     {
       "id": "carousel",
       "file": "carousel.md",
-      "chars": 6220,
+      "chars": 6389,
       "summary": "KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작은 `src/js/carousel.js`가 맡는다."
     },
     {

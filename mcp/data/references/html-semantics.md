@@ -381,7 +381,7 @@ KRDS 「긴급 공지(Critical alerts)」에 해당한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel>` |
-| 자식 시맨틱 | `div.carousel__controls`(슬라이드보다 앞) → `button.carousel__toggle`(자동 회전일 때, **첫 상호작용 요소**) · `button.carousel__nav`(이전) · `p.carousel__counter aria-hidden` · `div.carousel__dots role="group"` → `button.carousel__dot aria-current` · `button.carousel__nav`(다음) → `div.carousel__viewport` → `ul.carousel__track aria-live` → `li.carousel__slide role="group" aria-roledescription="slide" aria-label="N / 총수"` |
+| 자식 시맨틱 | `div.carousel__controls`(슬라이드보다 앞) → `button.carousel__toggle`(자동 회전일 때, **첫 상호작용 요소**) · `button.carousel__nav`(이전) · `p.carousel__counter aria-hidden` · `div.carousel__dots role="group"` → `button.carousel__dot aria-current` · `button.carousel__nav`(다음) → `div.carousel__viewport` → `div.carousel__track aria-live` → `div.carousel__slide role="group" aria-roledescription="slide" aria-label="N / 총수"` |
 | 필수 ARIA | `aria-roledescription="carousel"` + `aria-label` · 슬라이드 `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"` · 아이콘 버튼은 `sr-only` 이름 · 현재 점 `aria-current="true"` · 현재 밖 슬라이드 `inert` + `aria-hidden="true"` |
 | 자동 회전 (KRDS) | 지정할 때만 켠다. 정지/재생 버튼이 첫 상호작용 요소. 키보드 초점이 들어오면 정지하고 사용자가 재생하기 전에는 재개하지 않는다. 마우스를 올리면 멈춘다. `prefers-reduced-motion`이면 시작하지 않는다 |
 | 사용 조건 (KRDS) | 슬라이드 5개 이내(초과하면 목록). 1023px 미만 분수형·1024px 이상 점 버튼 식별자. 텍스트 이미지 슬라이드 금지 |

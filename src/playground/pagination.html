@@ -59,14 +59,15 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">페이지네이션 (Pagination)</h1>
 
     <!-- 기본 (1~5) -->
     <div class="pg__section">
       <h2 class="pg__subtitle">기본 (1~5, 현재 3페이지)</h2>
       <div class="pg__preview">
-        <nav class="pagination" aria-label="검색 결과 페이지 탐색">
+        <!-- 한 화면에 예시가 둘이라 미리보기의 레이블만 구별한다. 실제 마크업의 레이블은 아래 코드와 같다. -->
+        <nav class="pagination" aria-label="검색 결과 페이지 탐색 (기본 예시)">
           <button type="button" class="pagination__nav" aria-label="이전 페이지">‹</button>
           <ol class="pagination__list">
             <li><a class="pagination__item" href="#pg-page-1" aria-label="1페이지">1</a></li>
@@ -78,7 +79,7 @@
           <button type="button" class="pagination__nav" aria-label="다음 페이지">›</button>
         </nav>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 페이지네이션 마크업 코드" tabindex="0">
 <pre><code>&lt;nav class="pagination" aria-label="검색 결과 페이지 탐색"&gt;
   &lt;button type="button" class="pagination__nav" aria-label="이전 페이지"&gt;‹&lt;/button&gt;
   &lt;ol class="pagination__list"&gt;
@@ -98,7 +99,7 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">첫 페이지 (이전 비활성)</h2>
       <div class="pg__preview">
-        <nav class="pagination" aria-label="검색 결과 페이지 탐색">
+        <nav class="pagination" aria-label="검색 결과 페이지 탐색 (첫 페이지 예시)">
           <button type="button" class="pagination__nav" aria-label="이전 페이지" aria-disabled="true" disabled>‹</button>
           <ol class="pagination__list">
             <li><a class="pagination__item" href="#pg-page-1" aria-current="page" aria-label="1페이지">1</a></li>
@@ -110,13 +111,13 @@
           <button type="button" class="pagination__nav" aria-label="다음 페이지">›</button>
         </nav>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="첫 페이지 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 첫 페이지: 이전 버튼에 aria-disabled="true"와 disabled를 같이 쓴다 --&gt;
 &lt;button type="button" class="pagination__nav" aria-label="이전 페이지"
   aria-disabled="true" disabled&gt;‹&lt;/button&gt;</code></pre>
       </div>
     </div>
 
-  </div>
+  </main>
 </body>
 </html>

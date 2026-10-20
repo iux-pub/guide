@@ -59,14 +59,15 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">브레드크럼 (Breadcrumb)</h1>
 
     <!-- 기본 (3단계) -->
     <div class="pg__section">
       <h2 class="pg__subtitle">기본 (3단계)</h2>
       <div class="pg__preview">
-        <nav class="breadcrumb" aria-label="브레드크럼">
+        <!-- 한 화면에 예시가 둘이라 미리보기의 레이블만 구별한다. 실제 마크업의 레이블은 아래 코드처럼 KRDS 표기 "브레드크럼"이다. -->
+        <nav class="breadcrumb" aria-label="브레드크럼 (기본 예시)">
           <ol class="breadcrumb__list">
             <li class="breadcrumb__item"><a href="#pg-home">홈</a></li>
             <li class="breadcrumb__item"><a href="#pg-components">컴포넌트</a></li>
@@ -74,7 +75,7 @@
           </ol>
         </nav>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 3단계 마크업 코드" tabindex="0">
 <pre><code>&lt;nav class="breadcrumb" aria-label="브레드크럼"&gt;
   &lt;ol class="breadcrumb__list"&gt;
     &lt;li class="breadcrumb__item"&gt;&lt;a href="/"&gt;홈&lt;/a&gt;&lt;/li&gt;
@@ -89,7 +90,7 @@
     <div class="pg__section">
       <h2 class="pg__subtitle">긴 경로 (5단계, 좁은 화면에서 줄바꿈)</h2>
       <div class="pg__preview">
-        <nav class="breadcrumb" aria-label="브레드크럼">
+        <nav class="breadcrumb" aria-label="브레드크럼 (긴 경로 예시)">
           <ol class="breadcrumb__list">
             <li class="breadcrumb__item"><a href="#pg-home">홈</a></li>
             <li class="breadcrumb__item"><a href="#pg-admin">관리자</a></li>
@@ -99,7 +100,7 @@
           </ol>
         </nav>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="긴 경로 5단계 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 경로가 길면 .breadcrumb__list가 줄바꿈된다 (항목을 숨기는 변형은 없음) --&gt;
 &lt;nav class="breadcrumb" aria-label="브레드크럼"&gt;
   &lt;ol class="breadcrumb__list"&gt;
@@ -113,6 +114,6 @@
       </div>
     </div>
 
-  </div>
+  </main>
 </body>
 </html>

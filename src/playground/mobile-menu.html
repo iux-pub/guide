@@ -75,7 +75,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">모바일 메뉴 (Mobile Menu)</h1>
 
     <div class="pg__section">
@@ -84,7 +84,7 @@
       <div class="pg__preview pg__preview--flush">
         <header id="header" class="site-header">
           <div class="container site-header__inner">
-            <a class="site-header__brand" href="#">기관명</a>
+            <a class="site-header__brand" href="/">기관명</a>
             <div class="site-header__actions">
               <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
                 <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#menu"></use></svg>
@@ -104,7 +104,7 @@
           <nav class="mobile-menu__nav" aria-label="메인 메뉴">
             <ul class="mobile-menu__list">
               <li class="mobile-menu__item">
-                <a class="mobile-menu__link" href="#">소개</a>
+                <a class="mobile-menu__link" href="/about">소개</a>
               </li>
               <li class="mobile-menu__item">
                 <details class="mobile-menu__group">
@@ -113,9 +113,9 @@
                     <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
                   </summary>
                   <ul class="mobile-menu__sublist">
-                    <li><a class="mobile-menu__sublink" href="#">신청</a></li>
-                    <li><a class="mobile-menu__sublink" href="#" aria-current="page">조회</a></li>
-                    <li><a class="mobile-menu__sublink" href="#">이용 안내</a></li>
+                    <li><a class="mobile-menu__sublink" href="/apply">신청</a></li>
+                    <li><a class="mobile-menu__sublink" href="/lookup" aria-current="page">조회</a></li>
+                    <li><a class="mobile-menu__sublink" href="/guide">이용 안내</a></li>
                   </ul>
                 </details>
               </li>
@@ -126,19 +126,19 @@
                     <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
                   </summary>
                   <ul class="mobile-menu__sublist">
-                    <li><a class="mobile-menu__sublink" href="#">공지사항</a></li>
-                    <li><a class="mobile-menu__sublink" href="#">보도자료</a></li>
+                    <li><a class="mobile-menu__sublink" href="/notice">공지사항</a></li>
+                    <li><a class="mobile-menu__sublink" href="/press">보도자료</a></li>
                   </ul>
                 </details>
               </li>
               <li class="mobile-menu__item">
-                <a class="mobile-menu__link" href="#">문의</a>
+                <a class="mobile-menu__link" href="/contact">문의</a>
               </li>
             </ul>
           </nav>
         </div>
       </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+      <div class="pg__code" role="region" aria-label="전체 화면 메뉴 마크업 코드" tabindex="0">
 <pre><code>&lt;header id="header" class="site-header"&gt;
   &lt;div class="container site-header__inner"&gt;
     &lt;a class="site-header__brand" href="/"&gt;기관명&lt;/a&gt;
@@ -197,7 +197,7 @@
       </div>
     </div>
 
-  </div>
+  </main>
   <script src="../js/mobile-menu.js"></script>
 </body>
 </html>

@@ -59,7 +59,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">탭 (Tab)</h1>
 
     <!-- 기본 탭 (3개) -->
@@ -83,7 +83,7 @@
           </div>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 탭 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="tab"&gt;
   &lt;div class="tab__list" role="tablist" aria-label="탭 예시"&gt;
     &lt;button type="button" class="tab__item" role="tab" id="tab-basic-1" aria-selected="true" aria-controls="tabpanel-basic-1"&gt;탭 1&lt;/button&gt;
@@ -136,7 +136,7 @@
           </div>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="탭 6개 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 탭은 6개 이하(KRDS). 좁은 화면에서 넘치면 .tab__list가 가로 스크롤된다 --&gt;
 &lt;div class="tab"&gt;
   &lt;div class="tab__list" role="tablist" aria-label="많은 탭"&gt;
@@ -152,7 +152,7 @@
       </div>
     </div>
 
-  </div>
+  </main>
 
   <script src="../js/tab.js"></script>
 </body>

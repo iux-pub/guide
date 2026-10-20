@@ -48,12 +48,13 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">푸터 (Site Footer) — KRDS 정보 순서</h1>
 
     <div class="pg__section">
       <h2 class="pg__subtitle">기본 — 서비스 내비게이션 + 로고 · 연락처 · 유틸리티 · 정책 · 저작권</h2>
       <p class="pg__note">서비스 내비게이션은 메인 메뉴의 최상위 링크를 모두 같은 레이블로 담는다. 하단은 KRDS 순서(로고 → 연락처 → 유틸리티 링크 → 정책 링크 → 저작권)이고 좁은 화면에서도 순서를 바꾸지 않는다. 주소·전화는 형식 예시다.</p>
+      <!-- 한 화면에 푸터 예시가 셋이라 미리보기의 정책 링크 nav 레이블만 구별한다. 실제 마크업의 레이블은 "약관 및 정책"이다. -->
       <div class="pg__preview">
         <footer id="pg-footer-default" class="site-footer">
           <div class="container">
@@ -106,7 +107,7 @@
                   </li>
                 </ul>
               </div>
-              <nav aria-label="약관 및 정책">
+              <nav aria-label="약관 및 정책 (기본형 예시)">
                 <ul class="site-footer__legal-list">
                   <li><a class="site-footer__link site-footer__link--important" href="#pg-privacy">개인정보 처리방침</a></li>
                   <li><a class="site-footer__link" href="#pg-a11y">웹 접근성 정책</a></li>
@@ -131,7 +132,7 @@
                 <a class="site-footer__brand" href="#pg-home">서비스명</a>
                 <address class="site-footer__address">민원 문의 064-000-0000 · 평일 09:00~18:00</address>
               </div>
-              <nav aria-label="약관 및 정책">
+              <nav aria-label="약관 및 정책 (소형 예시)">
                 <ul class="site-footer__legal-list">
                   <li><a class="site-footer__link site-footer__link--important" href="#pg-privacy">개인정보 처리방침</a></li>
                 </ul>
@@ -154,7 +155,7 @@
                 <a class="site-footer__brand" href="#pg-home">○○면세점</a>
                 <address class="site-footer__address">고객센터 1600-0000 · 매일 09:00~18:00</address>
               </div>
-              <nav aria-label="약관 및 정책">
+              <nav aria-label="약관 및 정책 (반전형 예시)">
                 <ul class="site-footer__legal-list">
                   <li><a class="site-footer__link site-footer__link--important" href="#pg-privacy">개인정보 처리방침</a></li>
                   <li><a class="site-footer__link" href="#pg-terms">이용약관</a></li>
@@ -172,6 +173,6 @@
         </footer>
       </div>
     </div>
-  </div>
+  </main>
 </body>
 </html>

@@ -46,7 +46,7 @@ src/styles/
 - **INFOUX 공개 토큰**:
   - 색상: `var(--color-primary)`, `var(--color-text)`, `var(--color-bg)`, `var(--color-border)`
   - 폰트: `var(--font-sans)`, `var(--font-mono)`
-  - 간격/크기/타이포 스케일/반경은 직접값 사용
+  - 간격/크기/타이포 스케일/반경은 rem 직접값 사용 — Tailwind는 `p-[2.4rem]` 같은 임의값으로 쓰고 기본 스케일(`p-4`, `text-sm`)은 쓰지 않는다(R-37)
 
 - **시맨틱 색상 토큰**:
   - 색상: `var(--color-text)`, `--color-text-secondary`, `--color-text-disabled`, `--color-bg`, `--color-bg-secondary`, `--color-border`, `--color-primary` (KRDS 토큰을 가리킴)

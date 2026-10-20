@@ -163,7 +163,7 @@ function buildDesignPrompt() {
 
 - **코드 생성 전 사이트 유형을 먼저 판정한다.** 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약을 구분하고, 정부 아이덴티티 요소는 적용 대상이 확인된 경우에만 생성
 - **색상은 CSS Custom Property(\`var(--token)\`) 사용.** 하드코딩 hex/rgb/hsl 금지
-- **간격·크기·타이포 스케일은 CSS/Tailwind 직접값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
+- **간격·크기·타이포 스케일은 CSS 값·Tailwind rem 임의값 사용.** CMS·관리자 화면은 정보 밀도에 맞게 조정
 - **CSS는 표준 nesting + Tailwind v4 \`@apply\` 사용 가능**
 - **모바일 터치 영역 ≥ 44×44px**
 - **시맨틱 HTML + WCAG 2.1 AA 준수**
@@ -425,7 +425,7 @@ function buildContextPrompt() {
 
 ## 디자인 토큰
 
-색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(\`var(--token)\`)와 Tailwind \`@theme\` 기준을 사용하라. 간격·크기·타이포 스케일은 CSS/Tailwind 직접값을 사용한다.
+색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(\`var(--token)\`)와 Tailwind \`@theme\` 기준을 사용하라. 간격·크기·타이포 스케일은 CSS 값·Tailwind rem 임의값을 사용한다.
 
 - **색상** (\`--color-*\`) — 의미 기반 토큰
 - **폰트** (\`--font-sans\`, \`--font-heading\`, \`--font-mono\`) — 전역 기본 폰트. 제목 차등 서체는 \`--font-heading\`(brand에 heading 슬롯이 없으면 sans 값으로 폴백)

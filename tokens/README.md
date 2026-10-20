@@ -61,7 +61,7 @@ npm run build:tokens
 - 브레이크포인트: `--breakpoint-mobile` / `-tablet` / `-pc`
 
 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰화하지 않는다.
-해당 값은 CSS/Tailwind 직접값으로 작성한다.
+해당 값은 CSS 값·Tailwind rem 임의값으로 작성한다.
 
 ## 사용 원칙
 

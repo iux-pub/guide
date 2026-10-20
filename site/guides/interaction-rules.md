@@ -74,10 +74,17 @@ button, a {
 | `<select>` 다크모드 | Windows에서 `background-color`와 `color` 명시적 지정 필요 |
 
 ```html
-<html lang="ko" data-theme="dark" style="color-scheme: dark">
+<html lang="ko" data-theme="dark">
 <head>
   <meta name="theme-color" content="#1a1a1a">
 </head>
+```
+
+```css
+/* color-scheme은 인라인 style이 아니라 테마 선택자에 둔다(R-07) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
 ```
 
 ## Safe Area & 레이아웃

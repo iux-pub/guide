@@ -66,7 +66,7 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    카탈로그에도 없으면 UX팀에 요청한다 (R-27). 세트에 없는 아이콘을 SVG로 직접 넣지 않는다.
    장식용은 aria-hidden, 의미를 담으면 role="img"+aria-label을 붙인다.
 5. 규칙 ${RULE_RANGE}을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
-6. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
+6. 간격·크기·타이포 스케일·반경은 토큰이 아니라 rem 임의값(p-[1.6rem])으로 쓴다 — 루트가 62.5%라 Tailwind 기본 스케일(p-4·text-sm)은 37.5% 작게 렌더된다(R-37). 모션·z-index는 CSS 값이나 Tailwind 임의값(duration-[200ms], z-[1050])으로 쓴다.
 7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
    100% 통과가 조건이다.

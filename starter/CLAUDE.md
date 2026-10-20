@@ -88,7 +88,7 @@ npm run check          # info-design 컨트랙트 위반 검출 — 루트 *.htm
 1. ✅ Task Contract의 사이트 유형·핵심 과업·재사용 패턴 확정
 2. ✅ 사용 색상 = `--color-*` 시맨틱 토큰
 3. ✅ 기본 폰트 = `--font-sans` / `--font-mono`
-4. ✅ 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용
+4. ✅ 간격/크기/타이포 스케일은 CSS 값·Tailwind rem 임의값 사용
 5. ✅ CSS는 표준 nesting과 Tailwind v4 `@apply` 사용 가능
 6. ✅ 단순 반응형은 `@apply tablet:*` / `@apply pc:*` 우선
 7. ✅ 직접 `@media`는 관련 선택자 내부에 중첩
@@ -104,9 +104,11 @@ npm run check          # info-design 컨트랙트 위반 검출 — 루트 *.htm
 ## 절대 금지 (요약 — 상세는 MCP `get_reference("forbidden-patterns")`)
 
 - Raw hex/rgb/hsl 색상
-- 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
+- 간격/크기/타이포 스케일은 CSS 값·Tailwind rem 임의값 사용. 색상 raw 값은 금지
 - Tailwind 기본 팔레트 raw 컬러 유틸
-- Tailwind 기본 스케일은 프로젝트 기준과 충돌하지 않는지 확인
+- Tailwind 기본 스케일(`text-sm`, `leading-6`, `p-4`, `gap-2`, `max-w-md` 등) — 62.5% 루트에서 37.5% 작게 렌더된다. rem 임의값(`p-[1.6rem]`)을 쓴다(R-37)
+- 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·큰 블러·컬러 글로우 그림자(R-34). 사진 위 스크림과 KRDS 검정 알파 그림자만 쓴다
+- 이모지를 아이콘·불릿·배지·제목 장식으로 쓰기(R-36) — 아이콘은 카탈로그에서
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
 - `!important` (사유 주석 없을 시)
 - 인라인 `style="..."` (CSS 변수 주입 외)

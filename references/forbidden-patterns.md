@@ -9,7 +9,7 @@
 ### ❌ 금지
 
 ```css
-/* hex/rgb/hsl 직접 작성 */
+/* 금지 — hex/rgb/hsl 직접 작성 */
 .btn { background: #256ef4; }
 .card { color: rgb(30, 33, 36); }
 .alert { border-color: hsl(220, 50%, 50%); }
@@ -64,9 +64,11 @@
 
 ---
 
-## 2. 간격/크기 — 과잉 토큰화 금지
+## 2. 간격/크기 — 과잉 토큰화·Tailwind 기본 스케일 금지 (R-37)
 
-간격, 크기, 반경, 그림자, 모션, z-index는 공개 토큰으로 만들지 않는다. 화면 밀도와 컴포넌트 맥락에 맞춰 Tailwind v4 `@apply` 또는 명확한 CSS 직접값을 사용한다.
+간격, 크기, 반경, 그림자, 모션, z-index는 공개 토큰으로 만들지 않는다. 화면 밀도와 컴포넌트 맥락에 맞춰 Tailwind v4 `@apply`의 rem 임의값 또는 명확한 CSS 직접값을 사용한다.
+
+루트 글자 크기가 62.5%(1rem = 10px)라서 Tailwind 기본 스케일은 의도보다 37.5% 작게 렌더된다(`p-4` = 10px, `min-h-12` = 30px, `max-w-md` = 280px). 숫자 간격·크기 유틸과 컨테이너 폭 유틸 대신 `p-[1.6rem]`처럼 rem 임의값을 쓴다. KRDS 간격 `gap-3`(8px)도 이 저장소에서는 `gap-[0.8rem]`이다.
 
 ### ❌ 금지
 
@@ -82,22 +84,27 @@
 }
 ```
 
+```html
+<!-- 금지 — Tailwind 기본 스케일: 62.5% 루트에서 37.5% 작게 렌더된다 (R-37) -->
+<div class="p-4 mt-10 min-h-12 gap-2 max-w-md">...</div>
+```
+
 ### ✅ 허용
 
 ```css
 .card {
-  @apply rounded-lg;
+  @apply rounded-[0.8rem];
   padding: 2.4rem;
   margin-top: 4rem;
 }
 
 .btn {
-  @apply inline-flex min-h-12 items-center gap-2 px-[2.4rem];
+  @apply inline-flex min-h-[4.8rem] items-center gap-[0.4rem] px-[2.4rem];
 }
 ```
 
 ```html
-<div class="p-[2.4rem] mt-10 min-h-12">...</div>
+<div class="p-[2.4rem] mt-[4rem] min-h-[4.8rem]">...</div>
 ```
 
 ---
@@ -110,17 +117,22 @@
 .body { font-family: "Pretendard"; }
 ```
 
+```css
+/* 금지 — Tailwind 기본 글자 크기·숫자 행간: text-3xl은 18.75px, leading-6은 15px 고정 (R-37) */
+.page-title { @apply text-3xl leading-6; }
+```
+
 ### ✅ 허용
 
 ```css
 body { font-family: var(--font-sans); }
 
 .page-title {
-  @apply text-3xl font-bold leading-tight;
+  @apply text-[3.2rem] font-bold leading-[1.5];
 }
 ```
 
-폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 Tailwind/CSS 값으로 작성한다.
+폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 정하되, 크기와 행간은 rem 임의값과 비율(`text-[1.7rem] leading-[1.6]`) 또는 CSS 직접값으로 작성한다. Tailwind 기본 글자 크기(`text-xs`~`text-9xl`)와 숫자 행간(`leading-6` 등)은 쓰지 않는다(R-37). 이름 행간(`leading-relaxed` 등)은 허용하지만 한글 본문은 1.5 이상을 지킨다(R-24).
 
 ---
 
@@ -436,6 +448,59 @@ modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 �
 <div class="card card--large">
 <span class="tag tag--info">
 <span class="badge badge--neutral">
+```
+
+---
+
+## 11. 장식 효과 — AI 슬롭 서명 금지 (R-34)
+
+보라→파랑 그라데이션, 글래스 카드, 흐린 블롭, 색 번진 그림자는 AI가 만든 화면을 알아보게 하는 첫 서명이다(AP-3·AP-4). KRDS에는 글래스·글로우가 없고, 고대비 모드에서 깨진다. 그라데이션은 표현 등급(`infoux.json` profile → `contracts/profiles.json` expression)으로 판정한다 — utility·restrained는 오류, expressive는 경고. 보라·남색 계열은 등급과 상관없이 오류다.
+
+### ❌ 금지
+
+```css
+.cta { background: linear-gradient(90deg, var(--color-primary-50), var(--color-secondary-60)); } /* 장식 그라데이션 */
+.card { backdrop-filter: blur(1.2rem); }                    /* 글래스 */
+.blob { filter: blur(4rem); }                               /* 흐린 장식 블롭 */
+.card:hover { box-shadow: 0 0 4rem var(--color-primary-40); } /* 컬러 글로우 */
+```
+
+```html
+<h1 class="bg-clip-text text-transparent bg-linear-to-r from-violet-600 to-blue-600">제목</h1>
+<article class="card backdrop-blur-xl">…</article>
+```
+
+### ✅ 허용
+
+```css
+/* 사진 위 글자 대비 스크림 — 투명에서 검정 알파 한 색으로 */
+.hero-bleed__media::after { background: linear-gradient(to bottom, transparent, var(--color-alpha-black-50)); }
+/* KRDS 그림자 — 검정 알파 */
+.card:hover { @apply shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f]; }
+/* 강조는 단색 토큰 면·타이포·간격으로 */
+.section--intro { background: var(--color-surface-primary-subtler); }
+```
+
+---
+
+## 12. 이모지 — 아이콘·장식 대용 금지 (R-36)
+
+이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고, 플랫폼마다 모양이 다르다. 국내 사이트 99곳 중 1곳만 쓴다. 제목·버튼·링크·목록·배지·CSS content의 이모지는 오류, 본문 문장 안은 경고다. ©·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니다.
+
+### ❌ 금지
+
+```html
+<h3 class="feature__title">🚀 빠른 처리</h3>
+<li>✅ 24시간 민원 접수</li>
+<span class="badge">✨ NEW</span>
+```
+
+### ✅ 허용
+
+```html
+<h3 class="feature__title">빠른 처리</h3>
+<li><svg class="icon" aria-hidden="true"><use href="assets/icons/sprite.svg#check"></use></svg>24시간 민원 접수</li>
+<p>※ 신청 기간을 확인하십시오.</p>
 ```
 
 ---

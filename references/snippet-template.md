@@ -147,7 +147,7 @@ KRDS 토큰 / 컴포넌트 / 외부 표준 참조.
 ```markdown
 ## 출처
 
-- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - WAI-ARIA: dialog pattern (https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
 ```
 

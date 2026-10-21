@@ -28,6 +28,20 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 모양·움직임(R-35 반경·그림자, R-33 마키 애니메이션) — 원형 허용 블록은 contracts/art-direction.json shape.pillBlocks
+let SHAPE = null
+let SHAPE_OPTS = {}
+try {
+  SHAPE = require('./lib/shape-motion')
+  try {
+    const ad = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'contracts', 'art-direction.json'), 'utf8'))
+    if (Array.isArray(ad.shape?.pillBlocks)) SHAPE_OPTS = { pillBlocks: ad.shape.pillBlocks }
+  } catch {
+    // 계약이 없으면 기본 허용 블록(switch·avatar)
+  }
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 카피 규칙(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 없으면 옛 줄 단위 R-23 검사로 돌아간다
 let COPY = null
 try {
@@ -128,7 +142,7 @@ const TW_RAW_COLOR = /\b(?:bg|text|border|ring|divide|hover:bg|hover:text|hover:
 const TW_DEFAULT_TEXT_SIZE = /\btext-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\b/
 const TW_DEFAULT_FONT_WEIGHT = /\bfont-(?:thin|extralight|light|medium|semibold|extrabold|black)\b/
 // 끝 경계는 '-'·'['까지 막는다 — rounded-[0.6rem](임의값)이 bare rounded로 잡히던 오탐
-const TW_DEFAULT_RADIUS = /\brounded(?:-(?:sm|md|lg|xl|2xl|3xl|none|full))?(?![\w[-])/
+const TW_DEFAULT_RADIUS = /\brounded(?:-(?:sm|md|lg|xl|2xl|3xl|none))?(?![\w[-])/
 const TW_DEFAULT_SHADOW = /\bshadow(?:-(?:xs|sm|md|lg|xl|2xl|inner|none))\b/
 const TW_DEFAULT_ZINDEX = /\bz-(?:0|10|20|30|40|50|auto)\b/
 const TW_DEFAULT_BREAKPOINT = /\b(?:sm|md|lg|xl|2xl):/
@@ -319,6 +333,8 @@ function checkCssFile(filePath) {
 
   // 글자 크기 하한(R-31·R-38) — 문서 사이트 크롬(docs.css)은 뺀다
   if (TYPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, TYPE.scanCssType(content))
+  // 반경·그림자(R-35)·마키(R-33) — 파일 이름이 블록 이름이다(switch.css → .switch)
+  if (SHAPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, SHAPE.scanCssShape(content, { ...SHAPE_OPTS, file: posixPath }))
 
   // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
   if (COPY) {
@@ -532,11 +548,13 @@ function checkHtmlFile(filePath, opts = {}) {
 
   // 글자 크기 하한(R-31·R-38) — HTML의 <style>·class·style 속성, 마크다운은 html·css 펜스(금지 예시 펜스 제외)
   if (TYPE) {
-    if (!isMarkdown) reportVisual(relPath, TYPE.scanHtmlType(content))
+    const shapeCss = t => (SHAPE ? SHAPE.scanCssShape(t, SHAPE_OPTS) : [])
+    const shapeHtml = t => (SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : [])
+    if (!isMarkdown) reportVisual(relPath, [...TYPE.scanHtmlType(content), ...shapeHtml(content)])
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {
         if (seg.counter) continue
-        const found = seg.lang === 'css' ? TYPE.scanCssType(seg.text) : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? TYPE.scanHtmlType(seg.text) : []
+        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text)] : []
         reportVisual(relPath, found.map(f => ({ ...f, line: seg.startLine + (f.line || 1) - 1 })))
       }
     }

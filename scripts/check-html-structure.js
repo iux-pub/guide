@@ -61,6 +61,16 @@ const PROFILE = (() => {
     return null
   }
 })()
+// 표현 등급 — 프로필 기본값(contracts/profiles.json expression). 프로필이 없으면 null(히어로 높이는 경고로만)
+const EXPRESSION = (() => {
+  if (!PROFILE) return null
+  try {
+    const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+    return (spec.profiles || []).find(p => p.id === PROFILE)?.expression || null
+  } catch {
+    return null
+  }
+})()
 
 // ─── 출력 헬퍼 ─────────────────────────────────────────
 
@@ -651,7 +661,7 @@ function checkSectionRhythm(root, filePath, baseLineNum) {
         error(
           rel(filePath),
           nodeLine(baseLineNum, section),
-          `[R-25] 동일 archetype "section--${archetype}" 3연속 — 연속 상한은 2입니다. section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로) 같은 변주 패턴을 사이에 끼우세요.`,
+          `[R-25] 동일 archetype "section--${archetype}" 3연속 — 연속 상한은 2입니다. section-media(이미지-텍스트 교차)·시그니처 요소 같은 변주 패턴을 사이에 끼우세요(hero-bleed는 첫 섹션 전용 — R-42).`,
           section.raw.slice(0, 120),
           'R-25'
         )
@@ -790,7 +800,7 @@ function checkPageContract(html, filePath, baseLineNum = 1) {
   const relative = toPosix(rel(filePath))
   if (PAGE_RULES && (PAGE_FILES.has(path.resolve(filePath)) || isPagePath(ROOT, relative) || relative === 'src/snippets/boilerplate.md')) {
     // 페이지 유형(K-16)은 infoux.json pageTypes 선언에서만 — boilerplate 스니펫은 유형이 없다
-    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE, pageType: pageTypeOf(ROOT, relative) })) {
+    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE, expression: EXPRESSION, pageType: pageTypeOf(ROOT, relative) })) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + (f.line || 1) - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }
@@ -988,7 +998,11 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   checkPageContract(html, filePath, baseLineNum)
   // R-30 실제 목적지 없는 링크 — 스니펫·플레이그라운드·문서 예시까지 모든 마크업
   if (PAGE_RULES) {
-    for (const f of PAGE_RULES.deadLinkFindings(html)) error(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    // R-33 자동 전환 정지·자동 재생 영상·marquee도 모든 마크업
+    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html)]) {
+      const report = f.severity === 'error' ? error : warn
+      report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
   }
   checkHtmlLang(html, filePath, baseLineNum)
   checkViewportZoom(html, filePath, baseLineNum)

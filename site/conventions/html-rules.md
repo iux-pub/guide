@@ -26,6 +26,7 @@ HTML 마크업 작성 규칙이다.
 | R-39 | main 안 h1은 하나, 제목 단계를 건너뛰지 않는다 | error | check-html-structure.js |
 | R-40 | 공공 화면은 모든 페이지 헤더에 통합검색을 두고, 공공 메인은 첫 화면에 과업 진입을 두며 마케팅 템플릿 섹션을 쓰지 않는다 | error | check-html-structure.js |
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | check-html-structure.js |
+| R-42 | 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
 
 ---
@@ -182,7 +183,7 @@ HTML 마크업 작성 규칙이다.
 
 **심각도:** `error` &nbsp; **검증:** check-html-structure.js
 
-> "중앙 제목 + 카드 그리드" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 대체 패턴은 5-objects의 section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로)와 src/snippets/signature.md의 시그니처 요소가 공급한다.
+> "중앙 제목 + 카드 그리드" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 사이에 끼울 변주는 5-objects의 section-media(이미지-텍스트 교차)와 src/snippets/signature.md의 시그니처 요소다. hero-bleed(풀블리드 인트로)는 첫 섹션 전용이라 변주로 쓰지 않는다(R-42).
 
 **금지 예시**
 
@@ -409,6 +410,29 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** src/snippets/breadcrumb.md, scripts/lib/page-rules.js
+
+---
+
+## R-42 — 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> art-direction 표현 등급은 공공·업무 화면의 hero를 화면 1/2 이하로 두고, 화면 가득한 히어로 + 튀는 화살표는 AI 히어로 서명(AP-7)이다. 납품 페이지·boilerplate의 main을 본다(scripts/lib/page-rules.js). (1) hero-bleed가 2개 이상이거나 main의 첫 섹션(앞의 notice-bar는 건너뜀)이 아니면 오류 — 사이 변주는 section-media다. (2) infoux.json profile의 표현 등급이 utility(cms-admin)인데 첫 섹션이 hero-bleed·캐러셀이면 오류. (3) 도입부(첫 섹션·section--intro·hero-bleed·hero 클래스)와 그 자손에 (min-)h-screen·dvh·svh·lvh, 50vh를 넘는 h-[Nvh]·style height가 있으면 restrained·utility 오류, expressive 경고(프로필 없으면 경고). (4) 도입부의 animate-bounce, 화살표 글리프만 있거나 이름이 '스크롤·scroll·아래로'인 링크·버튼·span(펼침 토글 제외)은 오류. (5) 도입부 btn--primary 2개 이상은 경고(전환 CTA 1개). 렌더 높이 비율 판정은 하지 않는다.
+
+**금지 예시**
+
+```html
+<section class="section section--intro h-screen">…<span class="animate-bounce" aria-hidden="true">↓</span></section>   // 화면 높이 + 스크롤 큐
+<section class="section section--content hero-bleed">…</section>   // 중간 섹션 히어로
+```
+
+**올바른 형식**
+
+```html
+<section class="section section--intro hero-bleed hero-bleed--scrim" aria-labelledby="t">…<a class="btn btn--primary btn--large" href="/program">프로그램 신청하기</a></section>   // 첫 섹션 히어로 하나, CTA 하나
+```
+
+**참고:** references/art-direction.md, src/snippets/hero-bleed.md, scripts/lib/page-rules.js
 
 ---
 

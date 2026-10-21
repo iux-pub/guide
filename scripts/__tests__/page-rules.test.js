@@ -164,6 +164,40 @@ test('R-39: main 안 h1 하나, 단계 건너뛰기 금지, main 밖 h1 경고, 
   assert.ok(none(scanPageRules(page({ main: sec(`${side}<h1>공지사항</h1>`) })), 'R-39'))
 })
 
+// ─── R-33·R-42 ───────────────────────────────────────
+
+test('R-33: 자동 전환은 정지 버튼이 첫 포커스, 자동 재생 영상은 muted·정지 수단, marquee 금지', () => {
+  const { motionFindings } = require('../lib/page-rules')
+  const ok = '<div class="carousel" data-carousel-autoplay="6000"><button type="button" class="carousel__toggle" data-carousel-toggle aria-label="자동 재생 정지"></button><ul><li><a href="/event/1">가을 축제</a></li></ul></div>'
+  assert.equal(motionFindings(ok).length, 0)
+  assert.equal(motionFindings('<div class="carousel"><button type="button" aria-label="이전 슬라이드"></button><ul><li><a href="/e/1">축제</a></li></ul></div>').length, 0)
+  assert.ok(has(motionFindings('<div class="carousel" data-autoplay="true"><ul><li><a href="/e/1">축제</a></li></ul></div>'), 'R-33'))
+  assert.ok(has(motionFindings('<div class="carousel" data-autoplay="true"><ul><li><a href="/e/1">축제</a></li></ul><button type="button" data-carousel-toggle aria-label="자동 재생 정지"></button></div>'), 'R-33'))
+  assert.ok(has(motionFindings('<div class="carousel" data-carousel-autoplay="3000"><button type="button" data-carousel-toggle aria-label="일시정지"></button></div>'), 'R-33', 'warn'))
+  assert.equal(motionFindings('<div class="carousel" data-autoplay="0"><a href="/e">축제</a></div>').length, 0)
+  assert.ok(has(motionFindings('<div class="swiper main-visual"><a class="swiper-slide" href="/e/1">행사</a></div><script>new Swiper(".main-visual", { autoplay: { delay: 3000 }, loop: true })</script>'), 'R-33'))
+  assert.ok(has(motionFindings('<section><video autoplay loop src="/v.mp4"></video></section>'), 'R-33'))
+  assert.equal(motionFindings('<section><video autoplay muted loop controls src="/v.mp4"></video></section>').length, 0)
+  assert.equal(motionFindings('<figure><video id="v" autoplay muted loop src="/v.mp4"></video><button type="button" data-media-toggle aria-controls="v">영상 정지</button></figure>').length, 0)
+  assert.ok(has(motionFindings('<marquee>공지</marquee>'), 'R-33'))
+})
+
+test('R-42: 히어로는 하나·첫 섹션, 화면 높이·스크롤 큐 금지, primary 둘은 경고', () => {
+  const restrained = { profile: 'public-institution', expression: 'restrained' }
+  const hero = (cls = '', inner = '<h1>항구도시 문화재단</h1>') => `<section class="section section--intro hero-bleed ${cls}"><div class="container">${inner}</div></section>`
+  const notice = '<section class="section section--notice" aria-label="공지"><div class="container"><h2>공지</h2></div></section>'
+  assert.ok(none(scanPageRules(page({ main: hero('', '<h1>항구도시 문화재단</h1><a class="btn btn--primary btn--large" href="/program">프로그램 신청하기</a>') + notice }), restrained), 'R-42'))
+  assert.ok(has(scanPageRules(page({ main: notice.replace('<h2>공지</h2>', '<h1>공지</h1>') + hero('', '<h2>도입</h2>') }), restrained), 'R-42'))
+  assert.ok(has(scanPageRules(page({ main: hero() + hero('', '<h2>또</h2>') }), restrained), 'R-42'))
+  assert.ok(has(scanPageRules(page({ main: hero('h-screen') }), restrained), 'R-42'))
+  assert.ok(has(scanPageRules(page({ main: hero('min-h-[55vh]') }), { profile: 'general-site', expression: 'expressive' }), 'R-42', 'warn'))
+  assert.ok(has(scanPageRules(page({ main: hero('', '<h1>바다</h1><span class="animate-bounce" aria-hidden="true">↓</span>') }), restrained), 'R-42'))
+  assert.ok(has(scanPageRules(page({ main: hero('', '<h1>바다</h1><a href="#next">스크롤</a>') }), restrained), 'R-42'))
+  const two = hero('', '<h1>바다</h1><a class="btn btn--primary" href="/a">시작</a><a class="btn btn--primary" href="/b">소개</a>')
+  assert.ok(has(scanPageRules(page({ main: two }), restrained), 'R-42', 'warn'))
+  assert.ok(has(scanPageRules(page({ main: hero() }), { profile: 'cms-admin', expression: 'utility' }), 'R-42'))
+})
+
 // ─── 검사기 통합 ─────────────────────────────────────
 
 test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문서 골격에는 닿지 않는다', () => {

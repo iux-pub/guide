@@ -20,6 +20,7 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | build-tokens.js |
 | R-31 | 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고) | warn | check-violations.js |
 | R-34 | 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자 | error | check-violations.js |
+| R-35 | 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하 | error | check-violations.js |
 | R-37 | Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다 | error | check-violations.js |
 | R-38 | KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고 | error | check-violations.js |
 
@@ -261,6 +262,30 @@ focus-visible:shadow-[0_0_0_0.4rem_var(--color-border-primary)]   // spread만 �
 ```
 
 **참고:** contracts/profiles.json, references/art-direction.md, scripts/lib/visual-signature.js
+
+---
+
+## R-35 — 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하
+
+**심각도:** `error` &nbsp; **검증:** check-violations.js
+
+> KRDS Shape는 반경 2~12px(Xlarge 12px)이고 Elevation은 검정 알파 3단계(Level-3 blur 24px)다. 22~24px 둥근 카드와 알약 버튼은 AI 슬롭 서명이다. CSS 선언(border-radius·border-*-radius), @apply·class의 rounded-[N]·rounded(-방향)-full·[border-radius:N]을 본다(scripts/lib/shape-motion.js). 1.2rem 넘는 반경은 오류. 완전 원형(rounded-full·50% 이상·100rem 이상)은 contracts/art-direction.json shape.pillBlocks(switch·avatar) 블록과 정사각 원형(같은 블록·class에 w-[x]=h-[x]·size-[x]·aspect-square·aspect-ratio:1)만 통과하고 그 밖은 오류다 — 배지 점(badge--dot)·아이콘 원은 정사각이라 통과, tag·chip·pagination·progress·버튼은 KRDS가 비원형 반경을 정해 오류다. 허용 블록 안의 2rem 이상(switch 100px)은 원형 의도로 본다. box-shadow·shadow-[…]의 blur가 2.4rem을 넘으면 경고다. 이름 스케일(rounded-lg 등)은 R-01 경고가 본다.
+
+**금지 예시**
+
+```css
+.feature { @apply rounded-[2.4rem]; }   // 24px 카드
+<a class="btn btn--primary rounded-full" href="/apply">신청하기</a>   // 알약 버튼
+```
+
+**올바른 형식**
+
+```css
+.card { @apply rounded-[1rem]; }   // KRDS 반경
+.badge--dot { @apply w-[0.8rem] h-[0.8rem] rounded-full; }   // 정사각 원형
+```
+
+**참고:** contracts/art-direction.json, references/krds-source.md, scripts/lib/shape-motion.js
 
 ---
 

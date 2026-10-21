@@ -52,13 +52,16 @@ order: 1
 | R-30 | 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-31 | 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고) | warn | [CSS 규칙](/conventions/css-rules/) |
 | R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-33 | 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-34 | 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자 | error | [CSS 규칙](/conventions/css-rules/) |
+| R-35 | 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-36 | 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27) | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-37 | Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-38 | KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-39 | main 안 h1은 하나, 제목 단계를 건너뛰지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-40 | 공공 화면은 모든 페이지 헤더에 통합검색을 두고, 공공 메인은 첫 화면에 과업 진입을 두며 마케팅 템플릿 섹션을 쓰지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-42 | 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 <!-- RULES_TABLE_END -->
 

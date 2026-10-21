@@ -19,6 +19,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | check-html-structure.js |
 | R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | check-violations.js, manual |
 | R-28 | 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지 | error | check-html-structure.js |
+| R-33 | 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다 | error | check-html-structure.js, check-violations.js |
 
 ---
 
@@ -209,5 +210,28 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 ```
 
 **참고:** references/accessibility.md
+
+---
+
+## R-33 — 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js · check-violations.js
+
+> KRDS 캐러셀(component_04_09)은 자동 전환에 정지 버튼을 요구하고 WCAG 2.2.2는 5초 넘게 움직이는 콘텐츠를 멈출 수 있어야 한다고 정한다. 마크업(scripts/lib/page-rules.js): data-carousel-autoplay가 0보다 크거나 data-autoplay가 false·0·off·no가 아닌 루트, Swiper·Splide·slick 인라인 autoplay 옵션에 정지 버튼([data-carousel-toggle]·[data-media-toggle] 또는 이름에 정지·일시정지·멈춤·pause·stop이 든 button)이 없으면 오류, 있어도 루트 안 첫 포커스 요소가 아니면 오류다. 간격 5000ms 미만은 경고(팀 기준 — KRDS는 '적절한 간격'만 정한다). video[autoplay]는 muted가 없으면 오류, controls도 정지 버튼도 없으면 오류다. <marquee>는 오류. CSS(scripts/lib/shape-motion.js): 선택자에 logo·partner·marquee·ticker·rolling·banner-zone·carousel·slider·swiper·slide가 든 규칙의 무한 애니메이션(animation·[animation:…infinite]·animate-[…])은 오류다. 스피너·스켈레톤·로딩 표시는 R-22 소관이라 뺀다. 초점·호버 진입 시 정지는 src/js/carousel.js 동작과 수동 QA로 본다.
+
+**금지 예시**
+
+```html
+<div class="carousel" data-autoplay="true"><ul class="carousel__list">…</ul></div>   // 정지 버튼 없음
+.partner-logos__track { animation: marquee 20s linear infinite; }   // 무한 롤링 마키
+```
+
+**올바른 형식**
+
+```html
+<div class="carousel" data-carousel-autoplay="6000"><button type="button" data-carousel-toggle aria-label="자동 재생 정지"></button>…</div>   // 정지 버튼이 첫 포커스
+```
+
+**참고:** src/snippets/carousel.md, scripts/lib/page-rules.js, scripts/lib/shape-motion.js
 
 ---

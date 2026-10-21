@@ -207,6 +207,92 @@ function deadLinkFindings(html) {
   return out
 }
 
+// R-33 — 자동 전환·자동 재생에는 정지 토글(첫 포커스), <marquee> 금지. page 계약과 무관하게 모든 마크업
+const PAUSE_NAME = /정지|일시정지|멈춤|pause|stop/i
+const isToggle = n => n.tag !== '#text' && ('data-carousel-toggle' in n.attrs || 'data-media-toggle' in n.attrs || (n.tag === 'button' && PAUSE_NAME.test(accessibleName(n) || norm(T.textOf(n)) || (T.find(n, x => x.tag === 'img')?.attrs.alt || ''))))
+const isFocusable = n => n.tag !== '#text' && !inHiddenRegion(n) && !('disabled' in n.attrs) && !T.ancestors(n).some(a => 'inert' in (a.attrs || {})) && (
+  (n.tag === 'a' && 'href' in n.attrs) || ['button', 'select', 'textarea'].includes(n.tag) || (n.tag === 'input' && !/^hidden$/i.test(n.attrs.type || '')) || (n.attrs.tabindex !== undefined && +n.attrs.tabindex >= 0)) &&
+  !(n.attrs.tabindex !== undefined && +n.attrs.tabindex < 0)
+function motionFindings(html) {
+  const out = []
+  const root = T.parseHtml(html)
+  const push = (severity, n, message) => out.push({ rule: 'R-33', severity, line: n.line, message, code: (n.src || '').replace(/\s+/g, ' ').slice(0, 120) })
+  T.walk(root, n => {
+    if (n.tag === '#text' || n.tag === '#root') return
+    if (n.tag === 'marquee') push('error', n, '<marquee> — 자동으로 흐르는 띠는 쓰지 않는다(WCAG 2.2.2).')
+    const autoplayMs = n.attrs['data-carousel-autoplay'] !== undefined ? parseInt(n.attrs['data-carousel-autoplay'], 10) : NaN
+    const isAuto = autoplayMs > 0 || (n.attrs['data-autoplay'] !== undefined && !/^(?:false|0|off|no)$/i.test(n.attrs['data-autoplay'].trim()))
+    if (isAuto) {
+      const focusables = els(n, isFocusable)
+      const toggle = focusables.find(isToggle) || T.find(n, x => x !== n && isToggle(x))
+      if (!toggle) push('error', n, '자동 전환 영역에 정지 버튼이 없다 — 루트 안 첫 요소로 [data-carousel-toggle] 정지·재생 버튼을 둔다(KRDS 캐러셀).')
+      else if (focusables[0] && focusables[0] !== toggle) push('error', n, '자동 전환 정지 버튼이 첫 번째 포커스 요소가 아니다 — 슬라이드 링크보다 앞에 둔다(KRDS 캐러셀).')
+      if (autoplayMs > 0 && autoplayMs < 5000) push('warn', n, `자동 전환 간격 ${autoplayMs}ms — 팀 기준 5초(5000ms) 이상으로 둔다(KRDS는 '적절한 간격'만 정한다).`)
+    }
+    if (n.tag === 'video' && 'autoplay' in n.attrs) {
+      if (!('muted' in n.attrs)) push('error', n, '소리 있는 자동 재생 영상 — 자동 재생은 muted여야 한다(KRDS 멀티미디어).')
+      if (!('controls' in n.attrs)) {
+        const id = n.attrs.id
+        const scope = T.ancestors(n).find(a => ['section', 'figure'].includes(a.tag)) || n.parent
+        const ok = (id && T.find(root, x => x.tag !== '#text' && x.attrs?.['aria-controls'] === id && isToggle(x))) || (scope && T.find(scope, isToggle))
+        if (!ok) push('error', n, '자동 재생 영상에 정지 수단이 없다 — controls를 두거나 [data-media-toggle] 정지 버튼을 같은 영역에 둔다.')
+      }
+    }
+    if (n.tag === 'script' && !n.attrs.src) {
+      const src = (n.children[0] || {}).text || ''
+      if (/new\s+(?:Swiper|Splide)\b|\.slick\(/.test(src) && /autoplay\s*:\s*(?:true|\{)/.test(src)) {
+        if (!T.find(root, isToggle)) push('error', n, '자동 재생 슬라이더(Swiper·Splide·slick)에 정지 버튼이 없다 — 슬라이더 안 첫 요소로 정지·재생 버튼을 둔다.')
+        const delay = src.match(/delay\s*:\s*(\d+)/) || src.match(/autoplaySpeed\s*:\s*(\d+)/)
+        if (delay && +delay[1] < 5000) push('warn', n, `자동 전환 간격 ${delay[1]}ms — 팀 기준 5초(5000ms) 이상으로 둔다.`)
+      }
+    }
+  })
+  return out
+}
+
+// R-42 — 메인 히어로는 하나·첫 섹션, utility는 쓰지 않음, 화면 높이·스크롤 유도 금지. ctx.expression: profiles.json 등급
+const HERO_CLASS = /(?:^|\s)(?:hero-bleed|section--intro)(?:\s|$)|(?:^|[\s_-])hero(?:[_-]|\s|$)/
+const TALL = /(?:^|\s)(?:[\w-]+:)*(?:min-)?h-(?:screen|dvh|svh|lvh)(?:\s|$)/
+const ARROW_ONLY = /^[\s↓⌄﹀▼⬇︾⇩↧]+$/
+const SCROLL_NAME = /^(?:scroll(?:\s+down)?|스크롤|아래로.*)$/i
+function r42(root, ctx, out) {
+  const main = T.find(root, n => n.tag === 'main')
+  if (!main) return
+  const sections = (main.children || []).filter(c => c.tag === 'section' && !hasClass(c, 'notice-bar'))
+  const heroes = els(main, n => hasClass(n, 'hero-bleed'))
+  if (heroes.length > 1) out.push({ rule: 'R-42', severity: 'error', line: heroes[1].line, message: `hero-bleed가 ${heroes.length}개다 — 히어로는 페이지에 하나, 첫 섹션에만 둔다. 사이 변주는 section-media를 쓴다.`, code: norm(heroes[1].src || '').slice(0, 120) })
+  if (heroes.length && heroes[0] !== sections[0]) out.push({ rule: 'R-42', severity: 'error', line: heroes[0].line, message: 'hero-bleed가 main의 첫 섹션이 아니다 — 히어로는 문서 최상단 도입 전용이다.', code: norm(heroes[0].src || '').slice(0, 120) })
+  const grade = ctx.expression
+  const first = sections[0]
+  if (grade === 'utility' && first && (hasClass(first, 'hero-bleed') || T.find(first, n => hasClass(n, 'carousel')))) {
+    out.push({ rule: 'R-42', severity: 'error', line: first.line, message: 'utility 등급(관리자·업무 화면)은 첫 섹션을 히어로·캐러셀로 쓰지 않는다 — 과업(검색·현황)으로 시작한다.', code: norm(first.src || '').slice(0, 120) })
+  }
+  const intros = [...new Set([first, ...sections.filter(s => HERO_CLASS.test(s.attrs.class || ''))].filter(Boolean))]
+  for (const intro of intros) {
+    const tall = [intro, ...els(intro, () => true)].find(n => {
+      const cls = n.attrs?.class || ''
+      if (TALL.test(cls)) return true
+      const vh = [...cls.matchAll(/(?:^|\s)(?:[\w-]+:)*(?:min-)?h-\[(\d+(?:\.\d+)?)(?:vh|dvh|svh|lvh)\]/g)].map(m => +m[1])
+      const style = (n.attrs?.style || '').match(/(?:min-)?height\s*:\s*(\d+(?:\.\d+)?)(?:vh|dvh|svh|lvh)/)
+      return vh.some(v => v > 50) || (style && +style[1] > 50)
+    })
+    if (tall) {
+      const severity = grade === 'expressive' ? 'warn' : grade ? 'error' : 'warn'
+      out.push({ rule: 'R-42', severity, line: tall.line, message: '도입부가 화면 높이의 절반을 넘는다(h-screen·50vh 초과) — 공공·업무 화면의 hero는 화면 1/2 이하다(art-direction 표현 등급). 과업 진입이 첫 화면에 보이게 한다.', code: norm(tall.src || '').slice(0, 120) })
+    }
+    const bounce = els(intro, n => /(?:^|\s)(?:[\w-]+:)*animate-bounce(?:\s|$)/.test(n.attrs.class || ''))
+    const cue = els(intro, n => ['a', 'button', 'span'].includes(n.tag) && n.attrs['aria-expanded'] === undefined && n.attrs['aria-controls'] === undefined && (() => {
+      const text = norm(T.textOf(n))
+      const name = norm(n.attrs['aria-label'] || text)
+      return (text && ARROW_ONLY.test(text)) || SCROLL_NAME.test(name) || (n.tag === 'a' && /^#/.test(n.attrs.href || '') && /(?:arrow|chevron)-down/.test((n.src || '') + T.textOf(n)))
+    })())
+    const c = bounce[0] || cue[0]
+    if (c) out.push({ rule: 'R-42', severity: 'error', line: c.line, message: '도입부의 스크롤 유도 큐(튀는 화살표·"스크롤") — AI 히어로 서명(AP-7)이다. 다음 섹션의 과업을 첫 화면에 보이게 한다.', code: norm(c.src || '').slice(0, 120) })
+    const primaries = els(intro, n => hasClass(n, 'btn--primary'))
+    if (primaries.length >= 2) out.push({ rule: 'R-42', severity: 'warn', line: primaries[1].line, message: `도입부 primary 버튼이 ${primaries.length}개다 — 전환 CTA는 하나(btn--primary), 나머지는 secondary·tertiary다.`, code: norm(T.textOf(primaries[1])).slice(0, 120) })
+  }
+}
+
 // ctx: { profile }
 function scanPageRules(html, ctx = {}) {
   const root = T.parseHtml(html)
@@ -216,7 +302,8 @@ function scanPageRules(html, ctx = {}) {
   r40Main(root, ctx, out)
   r41(root, ctx, out)
   r39(root, ctx, out)
+  r42(root, ctx, out)
   return out.sort((a, b) => (a.line || 0) - (b.line || 0))
 }
 
-module.exports = { scanPageRules, deadLinkFindings, isDeadHref }
+module.exports = { scanPageRules, deadLinkFindings, motionFindings, isDeadHref }

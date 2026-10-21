@@ -900,7 +900,7 @@
         "check-html-structure.js"
       ],
       "lang": "html",
-      "rationale": "\"중앙 제목 + 카드 그리드\" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 대체 패턴은 5-objects의 section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로)와 src/snippets/signature.md의 시그니처 요소가 공급한다.",
+      "rationale": "\"중앙 제목 + 카드 그리드\" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 사이에 끼울 변주는 5-objects의 section-media(이미지-텍스트 교차)와 src/snippets/signature.md의 시그니처 요소다. hero-bleed(풀블리드 인트로)는 첫 섹션 전용이라 변주로 쓰지 않는다(R-42).",
       "bad": [
         {
           "code": "<main id=\"main\">\n  <section class=\"section section--list\">…</section>\n  <section class=\"section section--list\">…</section>\n  <section class=\"section section--list\">…</section>\n</main>",
@@ -1184,6 +1184,39 @@
       ]
     },
     {
+      "id": "R-33",
+      "category": "a11y",
+      "summary": "자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js",
+        "check-violations.js"
+      ],
+      "lang": "html",
+      "rationale": "KRDS 캐러셀(component_04_09)은 자동 전환에 정지 버튼을 요구하고 WCAG 2.2.2는 5초 넘게 움직이는 콘텐츠를 멈출 수 있어야 한다고 정한다. 마크업(scripts/lib/page-rules.js): data-carousel-autoplay가 0보다 크거나 data-autoplay가 false·0·off·no가 아닌 루트, Swiper·Splide·slick 인라인 autoplay 옵션에 정지 버튼([data-carousel-toggle]·[data-media-toggle] 또는 이름에 정지·일시정지·멈춤·pause·stop이 든 button)이 없으면 오류, 있어도 루트 안 첫 포커스 요소가 아니면 오류다. 간격 5000ms 미만은 경고(팀 기준 — KRDS는 '적절한 간격'만 정한다). video[autoplay]는 muted가 없으면 오류, controls도 정지 버튼도 없으면 오류다. <marquee>는 오류. CSS(scripts/lib/shape-motion.js): 선택자에 logo·partner·marquee·ticker·rolling·banner-zone·carousel·slider·swiper·slide가 든 규칙의 무한 애니메이션(animation·[animation:…infinite]·animate-[…])은 오류다. 스피너·스켈레톤·로딩 표시는 R-22 소관이라 뺀다. 초점·호버 진입 시 정지는 src/js/carousel.js 동작과 수동 QA로 본다.",
+      "refs": [
+        "src/snippets/carousel.md",
+        "scripts/lib/page-rules.js",
+        "scripts/lib/shape-motion.js"
+      ],
+      "bad": [
+        {
+          "code": "<div class=\"carousel\" data-autoplay=\"true\"><ul class=\"carousel__list\">…</ul></div>",
+          "note": "정지 버튼 없음"
+        },
+        {
+          "code": ".partner-logos__track { animation: marquee 20s linear infinite; }",
+          "note": "무한 롤링 마키"
+        }
+      ],
+      "good": [
+        {
+          "code": "<div class=\"carousel\" data-carousel-autoplay=\"6000\"><button type=\"button\" data-carousel-toggle aria-label=\"자동 재생 정지\"></button>…</div>",
+          "note": "정지 버튼이 첫 포커스"
+        }
+      ]
+    },
+    {
       "id": "R-34",
       "category": "css",
       "summary": "장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자",
@@ -1235,6 +1268,42 @@
         {
           "code": ".section--intro { background: var(--color-surface-primary-subtler); }",
           "note": "단색 토큰 면"
+        }
+      ]
+    },
+    {
+      "id": "R-35",
+      "category": "css",
+      "summary": "반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "css",
+      "rationale": "KRDS Shape는 반경 2~12px(Xlarge 12px)이고 Elevation은 검정 알파 3단계(Level-3 blur 24px)다. 22~24px 둥근 카드와 알약 버튼은 AI 슬롭 서명이다. CSS 선언(border-radius·border-*-radius), @apply·class의 rounded-[N]·rounded(-방향)-full·[border-radius:N]을 본다(scripts/lib/shape-motion.js). 1.2rem 넘는 반경은 오류. 완전 원형(rounded-full·50% 이상·100rem 이상)은 contracts/art-direction.json shape.pillBlocks(switch·avatar) 블록과 정사각 원형(같은 블록·class에 w-[x]=h-[x]·size-[x]·aspect-square·aspect-ratio:1)만 통과하고 그 밖은 오류다 — 배지 점(badge--dot)·아이콘 원은 정사각이라 통과, tag·chip·pagination·progress·버튼은 KRDS가 비원형 반경을 정해 오류다. 허용 블록 안의 2rem 이상(switch 100px)은 원형 의도로 본다. box-shadow·shadow-[…]의 blur가 2.4rem을 넘으면 경고다. 이름 스케일(rounded-lg 등)은 R-01 경고가 본다.",
+      "refs": [
+        "contracts/art-direction.json",
+        "references/krds-source.md",
+        "scripts/lib/shape-motion.js"
+      ],
+      "bad": [
+        {
+          "code": ".feature { @apply rounded-[2.4rem]; }",
+          "note": "24px 카드"
+        },
+        {
+          "code": "<a class=\"btn btn--primary rounded-full\" href=\"/apply\">신청하기</a>",
+          "note": "알약 버튼"
+        }
+      ],
+      "good": [
+        {
+          "code": ".card { @apply rounded-[1rem]; }",
+          "note": "KRDS 반경"
+        },
+        {
+          "code": ".badge--dot { @apply w-[0.8rem] h-[0.8rem] rounded-full; }",
+          "note": "정사각 원형"
         }
       ]
     },
@@ -1456,6 +1525,38 @@
         {
           "code": "<nav class=\"breadcrumb\" aria-label=\"페이지 경로\">…</nav>\n<main id=\"main\"><section class=\"section section--content\"><div class=\"container\"><h1>공지사항</h1></div></section></main>",
           "note": "브레드크럼은 main의 형제, main은 h1로 시작"
+        }
+      ]
+    },
+    {
+      "id": "R-42",
+      "category": "html",
+      "summary": "메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "art-direction 표현 등급은 공공·업무 화면의 hero를 화면 1/2 이하로 두고, 화면 가득한 히어로 + 튀는 화살표는 AI 히어로 서명(AP-7)이다. 납품 페이지·boilerplate의 main을 본다(scripts/lib/page-rules.js). (1) hero-bleed가 2개 이상이거나 main의 첫 섹션(앞의 notice-bar는 건너뜀)이 아니면 오류 — 사이 변주는 section-media다. (2) infoux.json profile의 표현 등급이 utility(cms-admin)인데 첫 섹션이 hero-bleed·캐러셀이면 오류. (3) 도입부(첫 섹션·section--intro·hero-bleed·hero 클래스)와 그 자손에 (min-)h-screen·dvh·svh·lvh, 50vh를 넘는 h-[Nvh]·style height가 있으면 restrained·utility 오류, expressive 경고(프로필 없으면 경고). (4) 도입부의 animate-bounce, 화살표 글리프만 있거나 이름이 '스크롤·scroll·아래로'인 링크·버튼·span(펼침 토글 제외)은 오류. (5) 도입부 btn--primary 2개 이상은 경고(전환 CTA 1개). 렌더 높이 비율 판정은 하지 않는다.",
+      "refs": [
+        "references/art-direction.md",
+        "src/snippets/hero-bleed.md",
+        "scripts/lib/page-rules.js"
+      ],
+      "bad": [
+        {
+          "code": "<section class=\"section section--intro h-screen\">…<span class=\"animate-bounce\" aria-hidden=\"true\">↓</span></section>",
+          "note": "화면 높이 + 스크롤 큐"
+        },
+        {
+          "code": "<section class=\"section section--content hero-bleed\">…</section>",
+          "note": "중간 섹션 히어로"
+        }
+      ],
+      "good": [
+        {
+          "code": "<section class=\"section section--intro hero-bleed hero-bleed--scrim\" aria-labelledby=\"t\">…<a class=\"btn btn--primary btn--large\" href=\"/program\">프로그램 신청하기</a></section>",
+          "note": "첫 섹션 히어로 하나, CTA 하나"
         }
       ]
     },

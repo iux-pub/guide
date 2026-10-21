@@ -1,6 +1,6 @@
 {
   "name": "infomind-project-starter",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "description": "인포마인드 UX 프로젝트 스타터 킷 — KRDS + Tailwind v4 + BEM",
   "private": true,
   "scripts": {

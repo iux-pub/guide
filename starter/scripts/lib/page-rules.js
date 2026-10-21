@@ -352,7 +352,9 @@ function labelTextOf(root, input) {
   if (input.attrs['aria-label']) parts.push(input.attrs['aria-label'])
   return norm(parts.join(' '))
 }
-function privacyFormFindings(html) {
+// opts.rrnLegalBasis — infoux.json exceptions의 R-47 법령 근거(scripts/lib/contract-exceptions.js rrnLegalBasis).
+//   있으면 주민등록번호 입력을 경고로 낮춘다(개인정보 보호법 제24조의2 — 법령이 요구·허용하는 경우만)
+function privacyFormFindings(html, opts = {}) {
   const out = []
   const root = T.parseHtml(html)
   const push = (severity, n, message) => out.push({ rule: 'R-47', severity, line: n.line, message, code: (n.src || '').replace(/\s+/g, ' ').slice(0, 120) })
@@ -360,7 +362,10 @@ function privacyFormFindings(html) {
   for (const ctl of els(root, x => ['input', 'select', 'textarea'].includes(x.tag))) {
     const label = labelTextOf(root, ctl)
     const hay = [ctl.attrs.name, ctl.attrs.id, ctl.attrs.autocomplete, ctl.attrs.placeholder].filter(Boolean).join(' ')
-    if ((RRN.test(hay) || RRN.test(label)) && !RRN_NEGATED.test(label)) push('error', ctl, '주민등록번호 입력 — 법령 근거 없이 받지 않는다. 본인 확인은 휴대전화·공동인증 같은 다른 수단으로 한다.')
+    if ((RRN.test(hay) || RRN.test(label)) && !RRN_NEGATED.test(label)) {
+      if (opts.rrnLegalBasis) push('warn', ctl, `주민등록번호 입력 — 법령 예외(${opts.rrnLegalBasis})로 허용했다. 수집 고지에 근거 조항을 적고, 입력은 마스킹·암호화 전송한다.`)
+      else push('error', ctl, '주민등록번호 입력 — 법령 근거 없이 받지 않는다. 본인 확인은 휴대전화·공동인증 같은 다른 수단으로 한다. 법령이 요구하면 infoux.json exceptions에 { rule: "R-47", legalBasis, owner, expires }를 적는다.')
+    }
   }
   for (const form of els(root, x => x.tag === 'form')) {
     const inputs = els(form, x => x.tag === 'input' || x.tag === 'textarea')

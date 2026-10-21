@@ -1,6 +1,6 @@
 {
   "name": "infomind-ux-guide",
-  "version": "3.4.0",
+  "version": "4.0.0",
   "description": "인포마인드 UX 디자인/퍼블리싱 가이드 시스템",
   "private": true,
   "scripts": {
@@ -8,7 +8,8 @@
     "dev": "concurrently \"tailwindcss -i src/styles/style.css -o dist/css/style.css --watch\" \"tailwindcss -i src/styles/docs.css -o dist/css/docs.css --watch\" \"npx @11ty/eleventy --serve\"",
     "dev:docs": "npx @11ty/eleventy --serve --port=8083",
     "build": "npm run build:tokens && npm run icons:build && npm run build:rules && npm run build:profiles && npm run build:art-direction && npm run build:css && npm run build:docs-css && npm run build:prompts && npm run build:references && npm run build:mcp && npm run clean:site && npx @11ty/eleventy",
-    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js && node scripts/check-harness.js && node scripts/check-contrast.js && node scripts/check-presets.js && node scripts/check-icons.js",
+    "check": "node scripts/check-violations.js && node scripts/check-html-structure.js && node scripts/check-harness.js && node scripts/check-contrast.js && node scripts/check-presets.js && node scripts/check-icons.js && node scripts/check-contract.js",
+    "check:release": "npm run check && node scripts/check-contract.js --release",
     "lint": "npm run lint:css && npm run lint:js",
     "lint:fix": "npm run lint:css:fix && npm run lint:js:fix",
     "test": "npm run check && npm run lint && npm run test:unit && npm run build:tokens && npm run build:css && npm run build:docs-css && npm run build:rules && npm run build:profiles && npm run build:art-direction && npm run build:prompts && npm run build:references && npm run build:mcp && npm run clean:site && npx @11ty/eleventy && pa11y-ci --config .pa11yci.js",

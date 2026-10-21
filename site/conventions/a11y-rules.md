@@ -17,7 +17,7 @@ KWCAG/WCAG 2.1 AA 기반 접근성 필수 규칙이다.
 | R-14 | 건너뛰기 링크 필수 — .skip-to-content | error | check-violations.js |
 | R-16 | 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다 | error | check-html-structure.js |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | check-html-structure.js |
-| R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | check-violations.js, manual |
+| R-22 | 모션 최소화 선호 존중과 표현 등급별 모션 예산 — 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션 금지 | warning | check-violations.js, manual |
 | R-28 | 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지 | error | check-html-structure.js |
 | R-33 | 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다 | error | check-html-structure.js, check-violations.js |
 
@@ -165,16 +165,18 @@ color: var(--color-text-secondary); /* KRDS gray-700 — 흰 배경 대비 5.7:1
 
 ---
 
-## R-22 — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
+## R-22 — 모션 최소화 선호 존중과 표현 등급별 모션 예산 — 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션 금지
 
 **심각도:** `warning` &nbsp; **검증:** check-violations.js · manual
 
-> 전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). check-violations.js가 animation·@keyframes 사용 파일의 가드 누락을 경고로 자동 검출하며, 실제 모션 강도의 적절성은 수동 QA로 확인한다.
+> 전정기관 장애·멀미 민감 사용자를 위해 큰 이동·확대·회전·자동재생 애니메이션은 @media (prefers-reduced-motion: reduce)에서 축소·정지해야 한다. WCAG 2.3.3 Animation from Interactions (AAA) / 2.2.2 Pause, Stop, Hide (A). check-violations.js가 animation·@keyframes 사용 파일의 가드 누락을 경고로 자동 검출하며, 실제 모션 강도의 적절성은 수동 QA로 확인한다. 모션 예산(scripts/lib/shape-motion.js scanCssMotion·scanHtmlMotion): 표현 등급(infoux.json profile → profiles.json expression)이 restrained·utility일 때 로더(spinner·skeleton·progress·loading) 밖의 무한 반복과, utility 화면의 스크롤 진입 모션(data-aos·animate__·reveal·fade-up)은 오류다. 등급 출처가 없으면 경고로 낮춘다. 500ms 초과, 장식 animation의 등급 상한(utility 200·restrained 300·expressive 400ms) 초과, 튕기는 cubic-bezier, 로더 밖 animate-bounce·ping·pulse, restrained의 data-aos 예산 초과(fade 아님·once 없음·300ms 초과)는 경고다. @apply [transition:…] 표기도 읽는다. 컴포넌트 피드백 모션(모달·토스트·드롭다운·탭 등)은 interaction-timing 소관이라 면제하고, @keyframes 안의 scale 튕김은 수동 QA로 본다. 가이드 저장소의 공용 카탈로그(src/styles)는 utility 기준으로 검사한다.
 
 **금지 예시**
 
 ```css
 .carousel__track { animation: slide 5s infinite; }   // reduced-motion 가드 없는 자동 애니메이션
+<section data-aos="fade-up">   // utility 화면의 스크롤 진입 모션 — error
+.promo { @apply [animation:float_3s_ease-in-out_infinite]; }   // 로더 밖 무한 반복 — restrained·utility error
 ```
 
 **올바른 형식**

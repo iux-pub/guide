@@ -30,7 +30,7 @@ KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스�
 ```html
 <div class="form-field">
   <label for="memo" class="form-field__label">메모</label>
-  <textarea id="memo" class="textarea" rows="4" placeholder="내용을 입력하세요"></textarea>
+  <textarea id="memo" class="textarea" rows="4"></textarea>
 </div>
 ```
 

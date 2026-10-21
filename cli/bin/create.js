@@ -245,7 +245,12 @@ function writeProjectProfile(projectPath, profile) {
     // depth는 홈을 1로 센 메뉴 단계. 선언한 페이지에만 공공 메인 과업 진입(R-40)·서브 브레드크럼(R-41) 검사가 켜진다
     pageTypes: { 'index.html': 'main' },
     // 공식 배너·운영기관 식별자·정부 상징 — 정부·공공기관이 운영하는 공식 디지털 서비스로 확인되면 required로 바꾼다(R-46)
-    publicIdentity: 'unconfirmed'
+    publicIdentity: 'unconfirmed',
+    // 콘텐츠 출처(CT-03) — 실제 기관 용어·메뉴·연락처를 가져온 곳(과업 문서 경로·기존 사이트 URL·용어집).
+    // 비어 있으면 화면의 문구는 초안이다 — npm run check:release가 납품을 막는다
+    contentSources: [],
+    // 규칙 예외(CT-03) — { rule, reason, owner, expires: 'YYYY-MM-DD' }. 주민등록번호 수집(R-47)은 legalBasis(법령 조항)가 있어야 한다
+    exceptions: []
   }, null, 2) + '\n')
 
   // 에이전트 지시 파일에도 한 줄 박아 둔다. infoux.json을 안 읽는 도구도 있다.

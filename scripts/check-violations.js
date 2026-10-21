@@ -31,11 +31,21 @@ try {
 // 모양·움직임(R-35 반경·그림자, R-33 마키 애니메이션) — 원형 허용 블록은 contracts/art-direction.json shape.pillBlocks
 let SHAPE = null
 let SHAPE_OPTS = {}
+// 한글 조판(R-24) 단행 예외 선택자 — contracts/art-direction.json hangul.singleLineSelectors
+let HANGUL_OPTS = {}
+// 폰트 스택(R-26 확장 — font-family 허용값·font-serif·외부 폰트 호스트) — 없으면 건너뛴다
+let FONT = null
+try {
+  FONT = require('./lib/font-rules')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 try {
   SHAPE = require('./lib/shape-motion')
   try {
     const ad = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'contracts', 'art-direction.json'), 'utf8'))
     if (Array.isArray(ad.shape?.pillBlocks)) SHAPE_OPTS = { pillBlocks: ad.shape.pillBlocks }
+    if (ad.hangul?.singleLineSelectors) HANGUL_OPTS = { singleLine: ad.hangul.singleLineSelectors }
   } catch {
     // 계약이 없으면 기본 허용 블록(switch·avatar)
   }
@@ -209,11 +219,12 @@ let visualCtxCache = null
 function getVisualCtx() {
   if (visualCtxCache) return visualCtxCache
   let grade = 'restrained'
+  let gradeKnown = false
   try {
     const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
     const profiles = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
     const profile = (profiles.profiles || []).find(p => p.id === config.profile)
-    if (profile?.expression) grade = profile.expression
+    if (profile?.expression) { grade = profile.expression; gradeKnown = true }
   } catch {
     // infoux.json·profiles.json이 없으면 기본 등급
   }
@@ -223,7 +234,7 @@ function getVisualCtx() {
   } catch {
     // 토큰 소스를 못 읽으면 이름(violet·purple…)으로만 판정한다
   }
-  visualCtxCache = { grade, tokenColors }
+  visualCtxCache = { grade, gradeKnown, tokenColors }
   return visualCtxCache
 }
 
@@ -357,8 +368,18 @@ function checkCssFile(filePath) {
 
   // 글자 크기 하한(R-31·R-38) — 문서 사이트 크롬(docs.css)은 뺀다
   if (TYPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, TYPE.scanCssType(content))
+  // 한글 조판(R-24) 행간·자간·줄바꿈 — docs.css는 행간(a)만 면제하고 자간·줄바꿈은 본다
+  if (TYPE?.scanCssHangul) reportVisual(relPath, TYPE.scanCssHangul(content, { ...HANGUL_OPTS, exemptLeading: /(^|\/)src\/styles\/docs\.css$/.test(posixPath) }))
   // 반경·그림자(R-35)·마키(R-33) — 파일 이름이 블록 이름이다(switch.css → .switch)
   if (SHAPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, SHAPE.scanCssShape(content, { ...SHAPE_OPTS, file: posixPath }))
+  // 폰트 스택(R-26) — 아이콘 폰트 생성물(assets/icons/icons.css, 생성원 scripts/build-icons.js)은 자기 패밀리를 선언한다
+  if (FONT && !/\/assets\/icons\/icons\.css$/.test(posixPath)) reportVisual(relPath, FONT.scanCssFont(content))
+  // 모션 예산(R-22) — 가이드 저장소의 공용 카탈로그(src/styles)는 모든 유형이 쓰므로 기능형(utility) 기준
+  if (SHAPE?.scanCssMotion && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) {
+    const { grade, gradeKnown } = getVisualCtx()
+    const catalog = !gradeKnown && fs.existsSync(path.join(ROOT, 'starter')) && /^\/src\/styles\//.test(posixPath)
+    reportVisual(relPath, SHAPE.scanCssMotion(content, catalog ? { grade: 'utility', gradeKnown: true, file: posixPath } : { grade, gradeKnown, file: posixPath }))
+  }
   // 모바일 우선(R-48)
   if (LAYOUT && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) {
     reportVisual(relPath, LAYOUT.scanCssLayout(content))
@@ -485,7 +506,8 @@ function checkCssFile(filePath) {
 
     // 한글 본문 조판 하한 (R-24) — 단행 컴포넌트(badge·tag·btn) 파일은 예외
     const lhMatch = trimmed.match(LINE_HEIGHT_DECL)
-    if (lhMatch && parseFloat(lhMatch[1]) < HANGUL_LINE_HEIGHT_FLOOR && !R24_EXEMPT_CSS.test(posixPath)) {
+    // (선언 단위 판정 scanCssHangul이 없는 오래된 파생 프로젝트만 줄 단위로 본다)
+    if (!TYPE?.scanCssHangul && lhMatch && parseFloat(lhMatch[1]) < HANGUL_LINE_HEIGHT_FLOOR && !R24_EXEMPT_CSS.test(posixPath)) {
       warn(relPath, lineNum, `[R-24] line-height ${lhMatch[1]} — 한글 조판 하한 ${HANGUL_LINE_HEIGHT_FLOOR} 미만. 본문 1.6~1.7, 제목 1.5(KRDS 150%) 기준은 contracts/art-direction.json hangul 참조.`, trimmed)
     }
   })
@@ -581,11 +603,16 @@ function checkHtmlFile(filePath, opts = {}) {
     const density = getDensityBase()
     const shapeCss = t => [...(SHAPE ? SHAPE.scanCssShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanCssLayout(t) : []), ...(LAYOUT && density ? LAYOUT.sectionPaddingCss(t, density) : [])]
     const shapeHtml = t => [...(SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanHtmlLayout(t) : []), ...(LAYOUT && density ? LAYOUT.sectionPaddingHtml(t, density) : [])]
-    if (!isMarkdown) reportVisual(relPath, [...TYPE.scanHtmlType(content), ...shapeHtml(content)])
+    // 한글 조판(R-24) — 플레이그라운드 데모 크롬(.pg*)의 행간은 면제
+    const hangulOpts = { ...HANGUL_OPTS, exemptLeadingSel: isPlayground ? /\.pg(?:__|-|$|[^\w-])/ : null }
+    const hangulCss = t => [...(TYPE.scanCssHangul ? TYPE.scanCssHangul(t, hangulOpts) : []), ...(FONT ? FONT.scanCssFont(t) : [])]
+    const motionCtx = (({ grade, gradeKnown }) => ({ grade, gradeKnown }))(getVisualCtx())
+    const hangulHtml = t => [...(TYPE.scanHtmlHangul ? TYPE.scanHtmlHangul(t, hangulOpts) : []), ...(SHAPE?.scanHtmlMotion ? SHAPE.scanHtmlMotion(t, motionCtx) : []), ...(FONT ? FONT.scanHtmlFont(t) : [])]
+    if (!isMarkdown) reportVisual(relPath, [...TYPE.scanHtmlType(content), ...shapeHtml(content), ...hangulHtml(content)])
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {
         if (seg.counter) continue
-        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text)] : []
+        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text), ...hangulCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text), ...hangulHtml(seg.text)] : []
         reportVisual(relPath, found.map(f => ({ ...f, line: seg.startLine + (f.line || 1) - 1 })))
       }
     }
@@ -676,7 +703,7 @@ function checkHtmlFile(filePath, opts = {}) {
     }
 
     // 한글 조판 하한 (R-24) — leading-none은 한글 본문에서 글줄 겹침을 만든다(클래스 이름이라 마크업 줄만)
-    if (isMarkup && LEADING_NONE.test(trimmed)) {
+    if (!TYPE?.scanHtmlHangul && isMarkup && LEADING_NONE.test(trimmed)) {
       error(relPath, lineNum, '[R-24] leading-none 클래스 금지. 본문은 1.6~1.7을 지키고, 단행 UI의 행간은 컴포넌트 CSS(badge·tag·btn)가 소유한다.', trimmed.slice(0, 100))
     }
 

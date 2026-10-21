@@ -27,7 +27,7 @@ order: 3
 <!-- picture 태그로 WebP 우선 제공 -->
 <picture>
   <source srcset="/images/hero.webp" type="image/webp">
-  <img src="/images/hero.jpg" alt="서비스 메인 이미지" loading="lazy" width="1200" height="600">
+  <img src="/images/hero.jpg" alt="제주 성산일출봉 일출 풍경" loading="lazy" width="1200" height="600">
 </picture>
 ```
 
@@ -43,20 +43,20 @@ order: 3
 
 ```html
 <!-- DO: 첫 화면 이미지 - lazy loading 없음 -->
-<img src="/images/hero.webp" alt="메인 배너" width="1200" height="400">
+<img src="/images/hero.webp" alt="10월 시민 정책 공모전 접수 안내" width="1200" height="400">
 
 <!-- DO: 스크롤 아래 이미지 - lazy loading 적용 -->
-<img src="/images/feature.webp" alt="기능 소개" loading="lazy" width="600" height="400">
+<img src="/images/feature.webp" alt="민원 신청 화면에서 서류를 첨부하는 단계" loading="lazy" width="600" height="400">
 
 <!-- DON'T: width/height 누락 (레이아웃 시프트 발생) -->
-<img src="/images/feature.webp" alt="기능 소개" loading="lazy">
+<img src="/images/feature.webp" alt="민원 신청 화면에서 서류를 첨부하는 단계" loading="lazy">
 ```
 
 ### Decoding 속성
 
 ```html
 <!-- 비동기 디코딩 (메인 스레드 차단 방지) -->
-<img src="/images/photo.webp" alt="사진" loading="lazy" decoding="async" width="400" height="300">
+<img src="/images/photo.webp" alt="한라산 백록담 겨울 설경" loading="lazy" decoding="async" width="400" height="300">
 ```
 
 ## SVG 최적화
@@ -151,7 +151,7 @@ icon_search.svg         (언더스코어 금지)
     1200px
   "
   src="/images/img-banner-1200w.webp"
-  alt="배너 이미지"
+  alt="10월 시민 정책 공모전 접수 안내"
   loading="lazy"
   width="1200"
   height="400"

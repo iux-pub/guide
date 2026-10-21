@@ -736,3 +736,52 @@ test('저장소의 AI 컨텍스트 마크업은 CSS에 있는 클래스만 쓴�
   assert.equal(result.status, 0, result.stderr)
   assert.doesNotMatch(result.stderr, /\[R-29\]/)
 })
+
+test('R-25: li로 감싼 카드도 그리드로 센다(경고), -tile 블록 중첩은 오류', () => {
+  const grid = label => `
+    <section class="section section--list" aria-label="${label}">
+      <div class="container">
+        <ul class="list">
+          <li><div><article class="card"><div class="card__body">${label} 1</div></article></div></li>
+          <li><article class="card"><div class="card__body">${label} 2</div></article></li>
+          <li><article class="card"><div class="card__body">${label} 3</div></article></li>
+        </ul>
+      </div>
+    </section>`
+  const page = body => `<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">${body}</main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`
+  const warned = runCheck(page(`${grid('공지')}${grid('행사')}`))
+  assert.equal(warned.status, 0, warned.stderr)
+  assert.match(warned.stdout + warned.stderr, /카드 그리드 섹션이 2개 연속/)
+
+  const nested = runCheck('<div class="feature-tile"><div class="promo-card">안</div></div>')
+  assert.equal(nested.status, 2)
+  assert.match(nested.stderr, /\[R-25\].*중첩/)
+
+  // modifier·element 토큰(list--card, foo__x-card)은 카드형이 아니다
+  const ok = runCheck('<ul class="list list--card"><li class="list__item"><div class="news__x-card"><div class="news__x-card">안</div></div></li></ul>')
+  assert.doesNotMatch(ok.stdout + ok.stderr, /\[R-25\]/)
+})
+
+test('R-25: archetype 없는 section은 경고(납품 페이지 밖)', () => {
+  const result = runCheck(`<!DOCTYPE html>
+<html lang="ko">
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+  <header id="header"><div class="container">브랜드</div></header>
+  <main id="main">
+    <section class="section" aria-label="공지"><div class="container">공지</div></section>
+  </main>
+  <footer id="footer"><div class="container">푸터</div></footer>
+</body>
+</html>`)
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stdout + result.stderr, /archetype이 없습니다/)
+})

@@ -1,6 +1,6 @@
 {
   "name": "infomind-project-starter",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "description": "인포마인드 UX 프로젝트 스타터 킷 — KRDS + Tailwind v4 + BEM",
   "private": true,
   "scripts": {
@@ -10,7 +10,8 @@
     "build": "npm run build:tokens && npm run build:css",
     "lint:css": "stylelint \"src/styles/**/*.css\"",
     "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
-    "check": "node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js",
+    "check": "node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js && node ./scripts/check-contract.js",
+    "check:release": "npm run check && node ./scripts/check-contract.js --release",
     "icons:sheet": "node scripts/build-icon-sheet.js"
   },
   "browserslist": [

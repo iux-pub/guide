@@ -15,7 +15,7 @@ AI가 생성하는 프론트엔드 코드가 generic하지 않고, 맥락에 맞
 |----------|------------|
 | Inter / Roboto / Arial / 시스템 폰트 기본 사용 | 어디서나 볼 수 있는 generic한 인상 |
 | 보라색 그라디언트 + 흰 배경 | AI 생성물의 가장 흔한 클리셰 |
-| 예측 가능한 레이아웃/컴포넌트 패턴 | 맥락 없는 틀에 박힌 구성 |
+| 콘텐츠와 무관하게 복제한 섹션 구성(중앙 제목 + 카드 3열 반복) | 맥락 없는 틀에 박힌 구성 — 같은 위치에 같은 기능을 두는 KRDS 탐색 일관성과는 다르다 |
 | 매번 같은 폰트 수렴 (예: Space Grotesk) | 생성 간 다양성 부족 |
 | 맥락 무시한 쿠키커터 디자인 | 프로젝트 정체성이 없는 결과물 |
 | 장식 효과로 깊이감 흉내 — 그라디언트 덩어리·글래스·색 글로 | 정보 위계 대신 효과가 눈을 끌고, 뒤 배경에 따라 글자 대비가 달라진다(R-34) |
@@ -230,7 +230,7 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 - 디스플레이 + 본문 페어링: 개성 있는 디스플레이 폰트와 가독성 높은 본문 폰트를 조합한다
 - **인포마인드 제품 UI**: `PretendardGOV` + `JetBrains Mono`는 제품 UI의 표준이다. 랜딩/마케팅 페이지에서는 맥락에 맞는 디스플레이 폰트를 추가할 수 있다
 - **한국어 줄바꿈**: 모든 한국어 텍스트 블록에 `word-break: keep-all; overflow-wrap: break-word;` 적용하라. 단어 중간 줄바꿈은 가독성을 크게 해친다
-- **한국어 행간**: `line-height: 1`(leading-none) 사용 금지. 한국어는 라틴보다 글자 높이가 커서 최소 `line-height: 1.2` 이상이 필요하다
+- **한국어 행간**: `line-height: 1`(leading-none) 사용 금지. 한국어는 라틴보다 글자 높이가 커서 본문 1.6~1.7, 제목 1.5(KRDS 150%)를 지키고 1.5 미만으로 내리지 않는다(R-24)
 
 ### 2. 색상 의도성
 
@@ -241,15 +241,15 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 ### 3. 모션 집중
 
 - CSS 기반 애니메이션을 우선한다
-- **고임팩트 순간에 집중**: 잘 설계된 페이지 로드 시퀀스(스태거드 리빌)가 흩어진 마이크로인터랙션보다 효과적이다
-- 스크롤 트리거 애니메이션과 예상치 못한 호버 효과로 인터랙션에 놀라움을 더한다
+- **상태 변화에 집중**: 모션은 열림·닫힘·선택 같은 상태 변화를 알리는 데 쓴다. 0.1~0.5초, 장식 모션은 표현 등급 상한(기능형 200·절제형 300·표현형 400ms) 안에서만 쓴다(R-22)
+- 스크롤 진입 모션은 기능형 화면에서 쓰지 않고, 절제형은 fade·1회·300ms 이하로 둔다. 무한 반복은 로딩 표시에만 쓴다(R-22)
 
-### 4. 비대칭 레이아웃
+### 4. 레이아웃 변주
 
-- 좌우 대칭에 안주하지 않는다
-- 오버랩 & 대각선 흐름: 요소 간 겹침, 대각선 방향성으로 시각적 긴장감을 만든다
-- 그리드 브레이킹: 일부 요소를 의도적으로 그리드 밖에 배치한다
-- 여백 활용: 넉넉한 네거티브 스페이스 또는 통제된 밀도 -- 둘 다 유효하다
+- 기본은 KRDS 그리드 정렬이다 — 같은 위치에 같은 기능이 있어야 탐색이 빠르다
+- 변주는 섹션 리듬으로 만든다: 같은 archetype 3연속·카드 그리드 반복을 피하고 section-media(이미지-텍스트 교차)·시그니처 요소를 사이에 둔다(R-25)
+- 겹침·그리드 밖 배치 같은 실험은 표현형(expressive) 등급에서만, 시그니처 개수 상한 안에서 쓴다(contracts/profiles.json expression)
+- 여백은 밀도 프리셋(contracts/profiles.json density)을 따른다 — 공공·관리자 화면은 정보 밀도가 우선이다(R-49)
 
 ### 5. 면과 깊이
 
@@ -281,7 +281,7 @@ SmartFarm은 `tokens/brand.json`에서 primary를 녹색, secondary를 흙색 �
 | **BigData 플랫폼** | Data-Dense + Dark Mode(UX팀 결정) | Dark Navy(`#0d1117`) + Cyan/Green 데이터 강조 | 다중 패널 대시보드(패널은 단색 면으로 구분), 차트 그리드 3~4열 | Glassmorphism, Organic Biophilic, Claymorphism |
 | **SmartFarm** | Organic Biophilic + Minimalism | Green 계열(`#228738`) + Earth tone 보조 | 카드 기반 모니터링, 지도 중심 레이아웃 | Cyberpunk, HUD |
 | **면세 플랫폼** | Feature-Rich Showcase + 상품 사진 중심 | Luxury Gold(`#b8860b`) + 어두운 중성 배경(`--color-bg-inverse`) | 상품 그리드, 풀스크린 히어로(사진 + 스크림) | Glassmorphism, Brutalism |
-| **랜딩/마케팅** | Hero-Centric + Storytelling | 브랜드 단계 색의 단색 면 + 사진(스크림) | 풀스크린 섹션, 스크롤 스토리텔링 | Aurora UI, Glassmorphism, 장식 그라디언트(R-34) |
+| **랜딩/마케팅** | Hero-Centric + Storytelling | 브랜드 단계 색의 단색 면 + 사진(스크림) | 섹션 단위 서사(첫 섹션만 풀블리드 — R-42, 진입 모션은 R-22 예산 안) | Aurora UI, Glassmorphism, 장식 그라디언트(R-34) |
 | **WEB/SI** | Flat + Minimalism | 기관 CI 색상을 `brand.json` 브랜드 단계로 | 공공 웹 표준 레이아웃, 본문 건너뛰기 필수 | 감성/트렌드 스타일 — 표현 등급 상한 안에서만, 넘으면 Task Contract `exceptions`에 근거 기록 |
 
 ### 제품별 브랜드 색 바꾸기

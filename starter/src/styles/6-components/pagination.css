@@ -25,7 +25,7 @@
 
   /* 페이지 번호 — 정사각 */
   .pagination__item {
-    @apply inline-flex items-center justify-center h-[4.8rem] px-[0.8rem] rounded-[0.8rem] text-[var(--color-text)] text-[1.7rem] font-bold leading-none no-underline min-w-[4.8rem] [transition:background-color_0.15s_ease-in-out,_color_0.15s_ease-in-out];
+    @apply inline-flex items-center justify-center h-[4.8rem] px-[0.8rem] rounded-[0.8rem] text-[var(--color-text)] text-[1.7rem] font-bold leading-[1.5] no-underline min-w-[4.8rem] [transition:background-color_0.15s_ease-in-out,_color_0.15s_ease-in-out];
   }
 
   .pagination__item:hover {
@@ -45,7 +45,7 @@
 
   /* 이전/다음 버튼 — 동일 사이즈, 화살표 아이콘 */
   .pagination__nav {
-    @apply inline-flex items-center justify-center w-[4.8rem] h-[4.8rem] border border-[var(--color-border-control)] rounded-[0.8rem] bg-[var(--color-bg)] text-[var(--color-text)] text-[1.6rem] leading-none cursor-pointer [transition:background-color_0.15s_ease-in-out,_border-color_0.15s_ease-in-out];
+    @apply inline-flex items-center justify-center w-[4.8rem] h-[4.8rem] border border-[var(--color-border-control)] rounded-[0.8rem] bg-[var(--color-bg)] text-[var(--color-text)] text-[1.6rem] leading-[1.5] cursor-pointer [transition:background-color_0.15s_ease-in-out,_border-color_0.15s_ease-in-out];
   }
 
   .pagination__nav:hover:not(:disabled) {

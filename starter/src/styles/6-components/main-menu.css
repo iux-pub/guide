@@ -58,7 +58,7 @@
 
   .main-menu__link,
   .main-menu__toggle {
-    @apply inline-flex items-center gap-[0.4rem] h-[4.8rem] px-[1.2rem] text-[var(--color-text)] text-[1.7rem] font-bold leading-none no-underline bg-transparent border-0 cursor-pointer [transition:color_0.15s_ease-in-out];
+    @apply inline-flex items-center gap-[0.4rem] h-[4.8rem] px-[1.2rem] text-[var(--color-text)] text-[1.7rem] font-bold leading-[1.5] no-underline bg-transparent border-0 cursor-pointer [transition:color_0.15s_ease-in-out];
   }
 
   /* 구형 마크업 호환 — aria-haspopup 트리거의 화살표. 신규 마크업은 .main-menu__toggle 을 쓴다 */

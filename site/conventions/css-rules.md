@@ -23,6 +23,7 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-35 | 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하 | error | check-violations.js |
 | R-37 | Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다 | error | check-violations.js |
 | R-38 | KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고 | error | check-violations.js |
+| R-48 | 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고 | error | check-violations.js |
 
 ---
 
@@ -338,5 +339,29 @@ body { @apply text-[1.5rem]; }   // body 15px
 ```
 
 **참고:** references/krds-tokens.md, scripts/lib/type-floor.js
+
+---
+
+## R-48 — 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고
+
+**심각도:** `error` &nbsp; **검증:** check-violations.js
+
+> KRDS 반응형은 모바일(360px) 기준에서 시작한다. AI는 데스크톱 폭을 그대로 고정해 모바일에서 가로 스크롤을 만든다. 접두 없는(모바일 기본) w-[N]·min-w-[N]·[width:N]·[min-width:N], CSS width·min-width(min-width 768px 이상 @media 밖)가 36rem(360px)을 넘으면 오류다(scripts/lib/layout-rules.js). tablet:·laptop:·pc:·print: 접두는 넓은 화면 값이라 빼고 mobile:·max-*·상태 접두는 본다. 같은 요소의 max-w-full·max-w-[≤100%], 모바일에서 숨긴 요소(hidden + tablet:block 등), 가로 스크롤 래퍼(.table-wrap·overflow-x-auto·overflow-auto) 안, 데스크톱 전용 메뉴(.site-header__nav·.main-menu)는 뺀다. 접두 없는 grid-cols-3 이상(같은 요소에 tablet:·laptop:·pc: grid-cols가 없을 때)과 @media 밖 grid-template-columns: repeat(3 이상)은 경고다.
+
+**금지 예시**
+
+```css
+<div class="w-[120rem]">…</div>   // 모바일 1200px 고정
+<ul class="grid grid-cols-4">   // 모바일 4열(경고)
+```
+
+**올바른 형식**
+
+```css
+<div class="w-full max-w-[120rem]">…</div>   // 유연한 폭
+<ul class="grid grid-cols-1 tablet:grid-cols-2 pc:grid-cols-4">   // 모바일 1열부터
+```
+
+**참고:** references/tailwind-mapping.md, scripts/lib/layout-rules.js
 
 ---

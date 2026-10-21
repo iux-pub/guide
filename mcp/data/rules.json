@@ -1603,6 +1603,99 @@
           "note": "공식 재난 안내(합쇼체 명령)는 대상 아님"
         }
       ]
+    },
+    {
+      "id": "R-46",
+      "category": "html",
+      "summary": "publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "공식 배너('이 누리집은 대한민국 공식 전자정부 누리집입니다')·운영기관 식별자·정부 상징은 정부·관련 기관이 운영하는 공식 디지털 정부서비스만 쓴다(KRDS 공식 배너·운영기관 식별자). AI가 공공 '느낌'을 내려고 아무 사이트에나 붙이면 사칭이 된다. 권한은 infoux.json publicIdentity만 갖는다(없으면 unconfirmed — 페이지 안 표기로 스스로 선언할 수 없다). 납품 페이지·boilerplate에서 required가 아니면 .masthead·.identifier 블록, 정부 상징 이미지(alt '정부 상징·대한민국 정부 로고·대한민국 정부', src gov-symbol·gov-emblem·korea-gov-logo), 공식 배너 문구 전체는 오류, 문구 일부('공식 전자정부 누리집')와 운영기관 식별자 문구는 경고다. required면 공식 배너가 없거나 건너뛰기 링크 바로 다음(앞에는 배너의 조상만)이 아니면 오류, .identifier가 footer#footer 밖이면 오류다(scripts/lib/page-rules.js).",
+      "refs": [
+        "references/project-profiles.md",
+        "scripts/lib/page-rules.js"
+      ],
+      "bad": [
+        {
+          "code": "<div class=\"masthead\">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>",
+          "note": "publicIdentity 미확정"
+        }
+      ],
+      "good": [
+        {
+          "code": "{ \"publicIdentity\": \"required\" }  // infoux.json — 공식 서비스로 확인된 뒤",
+          "note": "확정 후에만 공식 배너"
+        }
+      ]
+    },
+    {
+      "id": "R-47",
+      "category": "html",
+      "summary": "개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다",
+      "severity": "error",
+      "enforcement": [
+        "check-html-structure.js"
+      ],
+      "lang": "html",
+      "rationale": "개인정보 보호법은 동의를 받을 때 수집·이용 목적, 수집 항목, 보유·이용 기간, 동의 거부 권리와 불이익을 알리게 하고, 주민등록번호는 법령 근거가 있을 때만 처리하게 한다. KRDS 개인 식별 정보 입력 패턴은 '수집이 필요한지 확인한다'를 요구한다. 모든 마크업의 native form에서(scripts/lib/page-rules.js): 개인정보 입력(type=tel·email, autocomplete name·tel·email·bday 계열, name·id 토큰 name·phone·mobile·tel·email·birth, 이름·성명·휴대·연락처·이메일·생년)과 개인정보 동의 체크박스·라디오(레이블·legend·aria-describedby 글에 개인정보·수집·제3자 제공·위탁 + 동의)가 함께 있으면, 동의 fieldset(없으면 form)과 그 안의 aria-describedby·aria-controls·#링크·모달이 가리키는 글에 목적·항목·보유(보관·보존·이용 기간)·거부(동의하지 않을)가 모두 있어야 한다 — 없으면 오류, 다른 문서로 가는 약관 링크가 있으면 경고. 개인정보 입력이 있는 폼에서 '동의'를 뜻하는 체크박스·라디오(마케팅 수신 포함, '동의하지 않음' 제외)가 미리 체크돼 있으면 오류. name·id·autocomplete·placeholder·레이블에 주민등록번호·rrn·ssn·jumin·resident-no가 있으면 오류(레이블이 '아님·받지 않습니다' 같은 부정 문맥이면 제외). 고지 값은 발주처 개인정보 처리방침·contentSources에서 가져오고 지어내지 않는다(R-23). 법령 근거가 있는 주민등록번호 처리의 면제 경로는 아직 없다.",
+      "refs": [
+        "references/workflows/design-form.md",
+        "scripts/lib/page-rules.js"
+      ],
+      "bad": [
+        {
+          "code": "<input type=\"checkbox\" id=\"ag\" checked><label for=\"ag\">개인정보 수집·이용에 동의합니다</label>",
+          "note": "미리 체크·고지 없음"
+        },
+        {
+          "code": "<label for=\"r\">주민등록번호</label><input id=\"r\" name=\"rrn\">",
+          "note": "주민등록번호 수집"
+        }
+      ],
+      "good": [
+        {
+          "code": "<fieldset><legend>개인정보 수집·이용 동의</legend><p>수집 목적·항목·보유 기간·동의 거부 권리(처리방침 원문)</p><input type=\"checkbox\" id=\"ag\"><label for=\"ag\">개인정보 수집·이용에 동의합니다</label></fieldset>",
+          "note": "4요소 고지 + 직접 선택"
+        }
+      ]
+    },
+    {
+      "id": "R-48",
+      "category": "css",
+      "summary": "모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고",
+      "severity": "error",
+      "enforcement": [
+        "check-violations.js"
+      ],
+      "lang": "css",
+      "rationale": "KRDS 반응형은 모바일(360px) 기준에서 시작한다. AI는 데스크톱 폭을 그대로 고정해 모바일에서 가로 스크롤을 만든다. 접두 없는(모바일 기본) w-[N]·min-w-[N]·[width:N]·[min-width:N], CSS width·min-width(min-width 768px 이상 @media 밖)가 36rem(360px)을 넘으면 오류다(scripts/lib/layout-rules.js). tablet:·laptop:·pc:·print: 접두는 넓은 화면 값이라 빼고 mobile:·max-*·상태 접두는 본다. 같은 요소의 max-w-full·max-w-[≤100%], 모바일에서 숨긴 요소(hidden + tablet:block 등), 가로 스크롤 래퍼(.table-wrap·overflow-x-auto·overflow-auto) 안, 데스크톱 전용 메뉴(.site-header__nav·.main-menu)는 뺀다. 접두 없는 grid-cols-3 이상(같은 요소에 tablet:·laptop:·pc: grid-cols가 없을 때)과 @media 밖 grid-template-columns: repeat(3 이상)은 경고다.",
+      "refs": [
+        "references/tailwind-mapping.md",
+        "scripts/lib/layout-rules.js"
+      ],
+      "bad": [
+        {
+          "code": "<div class=\"w-[120rem]\">…</div>",
+          "note": "모바일 1200px 고정"
+        },
+        {
+          "code": "<ul class=\"grid grid-cols-4\">",
+          "note": "모바일 4열(경고)"
+        }
+      ],
+      "good": [
+        {
+          "code": "<div class=\"w-full max-w-[120rem]\">…</div>",
+          "note": "유연한 폭"
+        },
+        {
+          "code": "<ul class=\"grid grid-cols-1 tablet:grid-cols-2 pc:grid-cols-4\">",
+          "note": "모바일 1열부터"
+        }
+      ]
     }
   ]
 }

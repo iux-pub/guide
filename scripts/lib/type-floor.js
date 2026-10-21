@@ -83,7 +83,7 @@ function cssBlocks(css) {
   const src = stripComments(css)
   const lineAt = T.makeLineAt(src)
   const blocks = []
-  const stack = [{ selectors: [''], decls: [], at: true }]
+  const stack = [{ selectors: [''], decls: [], at: true, media: '' }]
   let buf = ''
   let bufStart = 0
   const resolve = (header, parents) => {
@@ -99,7 +99,7 @@ function cssBlocks(css) {
     if (t) {
       const top = stack[stack.length - 1]
       const m = t.match(/^(@apply)\s+([\s\S]+)$/) || t.match(/^(--[\w-]+|-?[a-zA-Z][\w-]*)\s*:([\s\S]*)$/)
-      if (m) top.decls.push({ prop: m[1].toLowerCase(), value: m[2].trim(), line: lineAt(bufStart + (buf.length - buf.trimStart().length)) })
+      if (m) top.decls.push({ prop: m[1].toLowerCase(), value: m[2].trim(), line: lineAt(bufStart + (buf.length - buf.trimStart().length)), media: top.media })
     }
     buf = ''
   }
@@ -110,14 +110,16 @@ function cssBlocks(css) {
       const header = buf.trim()
       buf = ''
       const parent = stack[stack.length - 1]
-      if (header.startsWith('@')) stack.push({ selectors: parent.selectors, decls: [], at: true })
-      else stack.push({ selectors: resolve(header, parent.selectors), decls: [], at: false })
+      // @media 조건은 선언에 남긴다(모바일 우선 판정은 태블릿 이상 미디어 안을 뺀다)
+      const media = /^@media\b/i.test(header) ? [parent.media, header].filter(Boolean).join(' and ') : parent.media
+      if (header.startsWith('@')) stack.push({ selectors: parent.selectors, decls: [], at: true, media })
+      else stack.push({ selectors: resolve(header, parent.selectors), decls: [], at: false, media })
     } else if (c === '}') {
       pushDecl()
       const b = stack.pop()
       if (!b.at && b.decls.length) blocks.push(b)
       else if (b.at && b.decls.length && stack.length) stack[stack.length - 1].decls.push(...b.decls)
-      if (!stack.length) stack.push({ selectors: [''], decls: [], at: true })
+      if (!stack.length) stack.push({ selectors: [''], decls: [], at: true, media: '' })
     } else if (c === ';') {
       pushDecl()
     } else {

@@ -1,5 +1,5 @@
 {
-  "version": "015eae9",
+  "version": "d5b0640",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -109,7 +109,7 @@
     {
       "id": "design-form",
       "file": "design-form.md",
-      "chars": 732,
+      "chars": 925,
       "summary": "입력폼, 신청, 문의, 검색 조건, 로그인, 결제 정보 등 form UI를 설계하거나 수정할 때 사용. label, 도움말, 오류, 필수 상태와 제출 흐름을 구현 전에 확정한다."
     },
     {

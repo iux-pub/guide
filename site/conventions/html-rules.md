@@ -28,6 +28,8 @@ HTML 마크업 작성 규칙이다.
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | check-html-structure.js |
 | R-42 | 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
+| R-46 | publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다 | error | check-html-structure.js |
+| R-47 | 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다 | error | check-html-structure.js |
 
 ---
 
@@ -459,5 +461,50 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** references/art-direction.md, contracts/copy-lexicon.json, scripts/lib/copy-rules.js
+
+---
+
+## R-46 — publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> 공식 배너('이 누리집은 대한민국 공식 전자정부 누리집입니다')·운영기관 식별자·정부 상징은 정부·관련 기관이 운영하는 공식 디지털 정부서비스만 쓴다(KRDS 공식 배너·운영기관 식별자). AI가 공공 '느낌'을 내려고 아무 사이트에나 붙이면 사칭이 된다. 권한은 infoux.json publicIdentity만 갖는다(없으면 unconfirmed — 페이지 안 표기로 스스로 선언할 수 없다). 납품 페이지·boilerplate에서 required가 아니면 .masthead·.identifier 블록, 정부 상징 이미지(alt '정부 상징·대한민국 정부 로고·대한민국 정부', src gov-symbol·gov-emblem·korea-gov-logo), 공식 배너 문구 전체는 오류, 문구 일부('공식 전자정부 누리집')와 운영기관 식별자 문구는 경고다. required면 공식 배너가 없거나 건너뛰기 링크 바로 다음(앞에는 배너의 조상만)이 아니면 오류, .identifier가 footer#footer 밖이면 오류다(scripts/lib/page-rules.js).
+
+**금지 예시**
+
+```html
+<div class="masthead">이 누리집은 대한민국 공식 전자정부 누리집입니다.</div>   // publicIdentity 미확정
+```
+
+**올바른 형식**
+
+```html
+{ "publicIdentity": "required" }  // infoux.json — 공식 서비스로 확인된 뒤   // 확정 후에만 공식 배너
+```
+
+**참고:** references/project-profiles.md, scripts/lib/page-rules.js
+
+---
+
+## R-47 — 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> 개인정보 보호법은 동의를 받을 때 수집·이용 목적, 수집 항목, 보유·이용 기간, 동의 거부 권리와 불이익을 알리게 하고, 주민등록번호는 법령 근거가 있을 때만 처리하게 한다. KRDS 개인 식별 정보 입력 패턴은 '수집이 필요한지 확인한다'를 요구한다. 모든 마크업의 native form에서(scripts/lib/page-rules.js): 개인정보 입력(type=tel·email, autocomplete name·tel·email·bday 계열, name·id 토큰 name·phone·mobile·tel·email·birth, 이름·성명·휴대·연락처·이메일·생년)과 개인정보 동의 체크박스·라디오(레이블·legend·aria-describedby 글에 개인정보·수집·제3자 제공·위탁 + 동의)가 함께 있으면, 동의 fieldset(없으면 form)과 그 안의 aria-describedby·aria-controls·#링크·모달이 가리키는 글에 목적·항목·보유(보관·보존·이용 기간)·거부(동의하지 않을)가 모두 있어야 한다 — 없으면 오류, 다른 문서로 가는 약관 링크가 있으면 경고. 개인정보 입력이 있는 폼에서 '동의'를 뜻하는 체크박스·라디오(마케팅 수신 포함, '동의하지 않음' 제외)가 미리 체크돼 있으면 오류. name·id·autocomplete·placeholder·레이블에 주민등록번호·rrn·ssn·jumin·resident-no가 있으면 오류(레이블이 '아님·받지 않습니다' 같은 부정 문맥이면 제외). 고지 값은 발주처 개인정보 처리방침·contentSources에서 가져오고 지어내지 않는다(R-23). 법령 근거가 있는 주민등록번호 처리의 면제 경로는 아직 없다.
+
+**금지 예시**
+
+```html
+<input type="checkbox" id="ag" checked><label for="ag">개인정보 수집·이용에 동의합니다</label>   // 미리 체크·고지 없음
+<label for="r">주민등록번호</label><input id="r" name="rrn">   // 주민등록번호 수집
+```
+
+**올바른 형식**
+
+```html
+<fieldset><legend>개인정보 수집·이용 동의</legend><p>수집 목적·항목·보유 기간·동의 거부 권리(처리방침 원문)</p><input type="checkbox" id="ag"><label for="ag">개인정보 수집·이용에 동의합니다</label></fieldset>   // 4요소 고지 + 직접 선택
+```
+
+**참고:** references/workflows/design-form.md, scripts/lib/page-rules.js
 
 ---

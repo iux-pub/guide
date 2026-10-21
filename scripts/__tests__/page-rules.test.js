@@ -198,6 +198,38 @@ test('R-42: 히어로는 하나·첫 섹션, 화면 높이·스크롤 큐 금지
   assert.ok(has(scanPageRules(page({ main: hero() }), { profile: 'cms-admin', expression: 'utility' }), 'R-42'))
 })
 
+// ─── R-46·R-47 ───────────────────────────────────────
+
+test('R-46: publicIdentity가 required가 아니면 공식 배너·식별자·정부 상징 금지, required면 위치 확인', () => {
+  const banner = '<div class="masthead"><p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p></div>'
+  assert.ok(has(scanPageRules(page({ beforeMain: '' }).replace('<header', `${banner}<header`)), 'R-46'))
+  assert.ok(has(scanPageRules(page({ header: '<img src="/img/gov-symbol.svg" alt="대한민국 정부">' })), 'R-46'))
+  assert.ok(has(scanPageRules(page({ main: '<section><div class="container"><h1>안내</h1><p>이 누리집은 <strong>대한민국 공식 전자정부 누리집</strong>입니다.</p></div></section>' })), 'R-46'))
+  assert.ok(none(scanPageRules(page({ main: '<section><div class="container"><h1>공식 배너 안내</h1><p>공식 배너는 조건부로 만든다.</p></div></section>' })), 'R-46'))
+  // required — 건너뛰기 링크 바로 다음 배너, 식별자는 푸터 안
+  const req = { publicIdentity: 'required' }
+  assert.ok(none(scanPageRules(page().replace('<header', `${banner}<header`).replace(PRIVACY, `${PRIVACY}<div class="identifier">운영기관</div>`), req), 'R-46'))
+  assert.ok(has(scanPageRules(page(), req), 'R-46'))
+  assert.ok(has(scanPageRules(page().replace('<header id="header" class="site-header"><div class="container">', `<header id="header" class="site-header"><div class="container"><nav>메뉴</nav>${banner}`), req), 'R-46'))
+})
+
+test('R-47: 개인정보 동의는 4요소 고지, 미리 체크·주민등록번호 금지', () => {
+  const { privacyFormFindings } = require('../lib/page-rules')
+  const fields = '<label for="nm">이름</label><input id="nm" name="name" autocomplete="name"><label for="ph">휴대전화</label><input id="ph" type="tel" name="phone">'
+  const consent = (notice, checked = '') => `<fieldset><legend>개인정보 수집·이용 동의</legend>${notice}<input type="checkbox" id="ag" ${checked}><label for="ag">개인정보 수집·이용에 동의합니다</label></fieldset>`
+  const full = '<p>수집 목적: 상담 회신 / 수집 항목: 이름, 휴대전화 / 보유 기간: 처리방침에 따름 / 동의를 거부할 수 있으며, 거부하면 상담 신청이 제한됩니다.</p>'
+  assert.equal(privacyFormFindings(`<form>${fields}${consent(full)}</form>`).length, 0)
+  assert.ok(has(privacyFormFindings(`<form>${fields}${consent('<p>개인정보를 수집합니다.</p>')}</form>`), 'R-47'))
+  assert.ok(has(privacyFormFindings(`<form>${fields}${consent('<p>개인정보를 수집합니다. <a href="/privacy">처리방침 보기</a></p>')}</form>`), 'R-47', 'warn'))
+  assert.ok(has(privacyFormFindings(`<form>${fields}${consent(full, 'checked')}</form>`), 'R-47'))
+  assert.ok(has(privacyFormFindings(`<form>${fields}<input type="checkbox" id="mk" checked><label for="mk">마케팅 정보 수신 동의</label></form>`), 'R-47'))
+  assert.ok(has(privacyFormFindings('<form><label for="r">주민등록번호</label><input id="r" name="rrn"></form>'), 'R-47'))
+  assert.equal(privacyFormFindings('<form><label for="b">생년월일(주민등록번호 아님)</label><input id="b" name="birth"></form>').length, 0)
+  // 개인정보 입력이 없는 폼·hotel 같은 낱말은 대상이 아니다
+  assert.equal(privacyFormFindings('<form><input type="search" name="q"><input type="checkbox" id="k" checked><label for="k">아이디 저장</label></form>').length, 0)
+  assert.equal(privacyFormFindings('<form><input name="hotel"><input type="checkbox" id="a" checked><label for="a">약관에 동의</label></form>').length, 0)
+})
+
 // ─── 검사기 통합 ─────────────────────────────────────
 
 test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문서 골격에는 닿지 않는다', () => {

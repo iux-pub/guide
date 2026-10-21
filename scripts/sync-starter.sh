@@ -127,6 +127,8 @@ cp "$GUIDE_DIR/scripts/lib/page-rules.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/type-floor.js" "$STARTER_DIR/scripts/lib/"
 # 모양·움직임(R-35 반경·그림자·R-33 마키) — check-violations.js가 쓴다
 cp "$GUIDE_DIR/scripts/lib/shape-motion.js" "$STARTER_DIR/scripts/lib/"
+# 모바일 우선(R-48) — check-violations.js가 쓴다
+cp "$GUIDE_DIR/scripts/lib/layout-rules.js" "$STARTER_DIR/scripts/lib/"
 rm -rf "$STARTER_DIR/scripts/hooks"
 cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
 mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"

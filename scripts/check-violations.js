@@ -42,6 +42,13 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 모바일 우선(R-48 고정 폭·모바일 다열 그리드)
+let LAYOUT = null
+try {
+  LAYOUT = require('./lib/layout-rules')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 카피 규칙(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 없으면 옛 줄 단위 R-23 검사로 돌아간다
 let COPY = null
 try {
@@ -335,6 +342,8 @@ function checkCssFile(filePath) {
   if (TYPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, TYPE.scanCssType(content))
   // 반경·그림자(R-35)·마키(R-33) — 파일 이름이 블록 이름이다(switch.css → .switch)
   if (SHAPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, SHAPE.scanCssShape(content, { ...SHAPE_OPTS, file: posixPath }))
+  // 모바일 우선(R-48)
+  if (LAYOUT && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, LAYOUT.scanCssLayout(content))
 
   // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
   if (COPY) {
@@ -548,8 +557,8 @@ function checkHtmlFile(filePath, opts = {}) {
 
   // 글자 크기 하한(R-31·R-38) — HTML의 <style>·class·style 속성, 마크다운은 html·css 펜스(금지 예시 펜스 제외)
   if (TYPE) {
-    const shapeCss = t => (SHAPE ? SHAPE.scanCssShape(t, SHAPE_OPTS) : [])
-    const shapeHtml = t => (SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : [])
+    const shapeCss = t => [...(SHAPE ? SHAPE.scanCssShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanCssLayout(t) : [])]
+    const shapeHtml = t => [...(SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanHtmlLayout(t) : [])]
     if (!isMarkdown) reportVisual(relPath, [...TYPE.scanHtmlType(content), ...shapeHtml(content)])
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {

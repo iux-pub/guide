@@ -87,7 +87,8 @@
         "not-applicable",
         "unconfirmed"
       ],
-      "default": "unconfirmed"
+      "default": "unconfirmed",
+      "description": "required는 KRDS의 '정부 조직·관련 기관이 운영·관리하는 공식 디지털 정부서비스'로 확인된 경우다. 검사기는 infoux.json publicIdentity만 읽는다(R-46) — Task Contract 값은 낮추는 쪽으로만 쓴다."
     },
     "expression": {
       "enum": [

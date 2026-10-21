@@ -61,6 +61,15 @@ const PROFILE = (() => {
     return null
   }
 })()
+// 공식 아이덴티티(공식 배너·정부 상징 허용) — infoux.json publicIdentity만 권한이 있다. 없으면 unconfirmed(R-46)
+const PUBLIC_IDENTITY = (() => {
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
+    return typeof config.publicIdentity === 'string' ? config.publicIdentity : 'unconfirmed'
+  } catch {
+    return 'unconfirmed'
+  }
+})()
 // 표현 등급 — 프로필 기본값(contracts/profiles.json expression). 프로필이 없으면 null(히어로 높이는 경고로만)
 const EXPRESSION = (() => {
   if (!PROFILE) return null
@@ -800,7 +809,7 @@ function checkPageContract(html, filePath, baseLineNum = 1) {
   const relative = toPosix(rel(filePath))
   if (PAGE_RULES && (PAGE_FILES.has(path.resolve(filePath)) || isPagePath(ROOT, relative) || relative === 'src/snippets/boilerplate.md')) {
     // 페이지 유형(K-16)은 infoux.json pageTypes 선언에서만 — boilerplate 스니펫은 유형이 없다
-    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE, expression: EXPRESSION, pageType: pageTypeOf(ROOT, relative) })) {
+    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE, expression: EXPRESSION, publicIdentity: PUBLIC_IDENTITY, pageType: pageTypeOf(ROOT, relative) })) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + (f.line || 1) - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }
@@ -999,7 +1008,8 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   // R-30 실제 목적지 없는 링크 — 스니펫·플레이그라운드·문서 예시까지 모든 마크업
   if (PAGE_RULES) {
     // R-33 자동 전환 정지·자동 재생 영상·marquee도 모든 마크업
-    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html)]) {
+    // R-47 개인정보 수집 폼(고지·미리 체크·주민등록번호)도 모든 마크업
+    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html)]) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }

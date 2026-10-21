@@ -243,7 +243,9 @@ function writeProjectProfile(projectPath, profile) {
     pages: ['*.html', 'pages/**/*.html'],
     // 페이지 유형(K-16) — 글롭: 유형 또는 { type, depth }. 유형은 main·sub-content·board-list·board-detail·form·search-result·error,
     // depth는 홈을 1로 센 메뉴 단계. 선언한 페이지에만 공공 메인 과업 진입(R-40)·서브 브레드크럼(R-41) 검사가 켜진다
-    pageTypes: { 'index.html': 'main' }
+    pageTypes: { 'index.html': 'main' },
+    // 공식 배너·운영기관 식별자·정부 상징 — 정부·공공기관이 운영하는 공식 디지털 서비스로 확인되면 required로 바꾼다(R-46)
+    publicIdentity: 'unconfirmed'
   }, null, 2) + '\n')
 
   // 에이전트 지시 파일에도 한 줄 박아 둔다. infoux.json을 안 읽는 도구도 있다.

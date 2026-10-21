@@ -293,6 +293,106 @@ function r42(root, ctx, out) {
   }
 }
 
+// R-46 — 공식 배너·운영기관 식별자·정부 상징은 publicIdentity가 required로 확정된 경우에만(infoux.json)
+const BANNER_FULL = /이\s?누리집은\s?대한민국\s?공식\s?전자정부\s?누리집입니다/
+const BANNER_PART = /공식\s?전자정부\s?누리집|대한민국\s?공식\s?전자정부/
+const OPERATOR_TEXT = /이\s?누리집은\s?[^.]{1,40}에서\s?운영하는\s?누리집입니다/
+const GOV_ALT = /정부\s?상징|대한민국\s?정부\s?(?:상징|로고)|^대한민국\s?정부$/
+const GOV_SRC = /gov[-_]?(?:symbol|emblem)|korea[-_]?gov[-_]?(?:logo|symbol)/i
+function r46(root, ctx, out) {
+  const required = ctx.publicIdentity === 'required'
+  const textOfEl = n => norm(T.textOf(n))
+  if (!required) {
+    const push = (severity, n, message) => out.push({ rule: 'R-46', severity, line: n.line, message: `${message} publicIdentity가 required로 확정되지 않았다(infoux.json) — 정부·공공기관이 운영하는 공식 서비스로 확인된 뒤에만 만든다.`, code: (n.src || textOfEl(n)).replace(/\s+/g, ' ').slice(0, 120) })
+    const body = T.find(root, n => n.tag === 'body') || root
+    for (const n of els(body, x => !['script', 'style', 'title', 'pre', 'code', 'textarea'].includes(x.tag) && !T.ancestors(x).some(a => ['pre', 'code', 'textarea'].includes(a.tag)))) {
+      if (hasClass(n, 'masthead') || hasClass(n, 'identifier')) push('error', n, `공식 배너·운영기관 식별자 예약 블록(.${hasClass(n, 'masthead') ? 'masthead' : 'identifier'})이 있다.`)
+      if (n.tag === 'img' && (GOV_ALT.test(norm(n.attrs.alt || '')) || GOV_SRC.test(n.attrs.src || ''))) push('error', n, '정부 상징 이미지가 있다.')
+      // 글 판정은 글을 직접 가진 블록 단위로(인라인 강조를 걷어낸 글)
+      const own = (n.children || []).some(c => c.tag === '#text' && c.text.trim())
+      if (own && !T.INLINE.has(n.tag)) {
+        const text = textOfEl(n)
+        if (BANNER_FULL.test(text)) push('error', n, '공식 전자정부 누리집 배너 문구가 있다.')
+        else if (BANNER_PART.test(text)) push('warn', n, "'공식 전자정부 누리집' 문구가 있다.")
+        if (OPERATOR_TEXT.test(text)) push('warn', n, '운영기관 식별자 문구가 있다.')
+      }
+    }
+    return
+  }
+  // required — 공식 배너는 건너뛰기 링크 바로 다음(앞에는 배너의 조상만), 운영기관 식별자는 푸터 안
+  const masthead = T.find(root, n => hasClass(n, 'masthead'))
+  const skip = T.find(root, n => n.tag === 'a' && hasClass(n, 'skip-to-content'))
+  if (!masthead) out.push({ rule: 'R-46', severity: 'error', line: (skip || root).line || 1, message: 'publicIdentity가 required인데 공식 배너(.masthead)가 없다 — 건너뛰기 링크 바로 다음에 둔다(KRDS 공식 배너).', code: '<body>' })
+  else if (skip) {
+    const order = els(root, () => true)
+    const between = order.slice(order.indexOf(skip) + 1, order.indexOf(masthead)).filter(x => x.tag !== '#text' && !inside(x, skip) && !inside(masthead, x) && x !== skip)
+    if (between.length) out.push({ rule: 'R-46', severity: 'error', line: masthead.line, message: '공식 배너(.masthead)가 건너뛰기 링크 바로 다음이 아니다 — 배너 앞에 다른 요소를 두지 않는다(공지 띠는 배너 다음).', code: norm(masthead.src || '').slice(0, 120) })
+  }
+  for (const id of els(root, n => hasClass(n, 'identifier'))) {
+    if (!T.ancestors(id).some(a => a.tag === 'footer' && a.attrs.id === 'footer')) out.push({ rule: 'R-46', severity: 'error', line: id.line, message: '운영기관 식별자(.identifier)는 footer#footer 안 마지막에 둔다(KRDS 운영기관 식별자).', code: norm(id.src || '').slice(0, 120) })
+  }
+}
+
+// R-47 — 개인정보 수집 폼: 동의 옆 4요소 고지(목적·항목·보유 기간·거부권), 동의 미리 체크 금지, 주민등록번호 수집 금지.
+// 모든 마크업. 고지 값은 발주처 개인정보 처리방침·contentSources에서 가져온다(지어내지 않는다 — R-23)
+const PERSONAL_AC = /^(?:name|given-name|family-name|additional-name|nickname|tel(?:-[a-z-]+)?|email|bday(?:-[a-z]+)?)$/i
+const PERSONAL_TOKEN = /(?:^|[-_\s])(?:name|phone|mobile|tel|email|birth|bday)(?:$|[-_\s])|이름|성명|휴대|연락처|이메일|생년/i
+const CONSENT_TEXT = /(?:개인\s?정보|수집|제3자\s?제공|위탁).*동의|동의.*(?:개인\s?정보|수집)/
+const RRN = /주민\s?(?:등록)?\s?번호|(?:^|[^a-z])(?:rrn|ssn|jumin\w*|resident[-_]?(?:no|number))(?:[^a-z0-9]|$)/i
+const RRN_NEGATED = /아님|않습니다|받지|수집하지|대신/
+function labelTextOf(root, input) {
+  const parts = []
+  const wrap = T.ancestors(input).find(a => a.tag === 'label')
+  if (wrap) parts.push(T.textOf(wrap))
+  if (input.attrs.id) for (const l of els(root, x => x.tag === 'label' && x.attrs.for === input.attrs.id)) parts.push(T.textOf(l))
+  for (const ref of String(input.attrs['aria-describedby'] || input.attrs['aria-labelledby'] || '').split(/\s+/).filter(Boolean)) {
+    const el = T.find(root, x => x.attrs?.id === ref)
+    if (el) parts.push(T.textOf(el))
+  }
+  if (input.attrs['aria-label']) parts.push(input.attrs['aria-label'])
+  return norm(parts.join(' '))
+}
+function privacyFormFindings(html) {
+  const out = []
+  const root = T.parseHtml(html)
+  const push = (severity, n, message) => out.push({ rule: 'R-47', severity, line: n.line, message, code: (n.src || '').replace(/\s+/g, ' ').slice(0, 120) })
+  // 주민등록번호 입력(폼 안팎 모두)
+  for (const ctl of els(root, x => ['input', 'select', 'textarea'].includes(x.tag))) {
+    const label = labelTextOf(root, ctl)
+    const hay = [ctl.attrs.name, ctl.attrs.id, ctl.attrs.autocomplete, ctl.attrs.placeholder].filter(Boolean).join(' ')
+    if ((RRN.test(hay) || RRN.test(label)) && !RRN_NEGATED.test(label)) push('error', ctl, '주민등록번호 입력 — 법령 근거 없이 받지 않는다. 본인 확인은 휴대전화·공동인증 같은 다른 수단으로 한다.')
+  }
+  for (const form of els(root, x => x.tag === 'form')) {
+    const inputs = els(form, x => x.tag === 'input' || x.tag === 'textarea')
+    const personal = inputs.filter(i => {
+      const type = (i.attrs.type || 'text').toLowerCase()
+      if (['hidden', 'checkbox', 'radio', 'search', 'password', 'submit', 'button'].includes(type)) return false
+      return type === 'tel' || type === 'email' || PERSONAL_AC.test((i.attrs.autocomplete || '').trim()) || PERSONAL_TOKEN.test(`${i.attrs.name || ''} ${i.attrs.id || ''}`)
+    })
+    if (!personal.length) continue
+    const choices = inputs.filter(i => /^(?:checkbox|radio)$/i.test(i.attrs.type || ''))
+    const consents = choices.filter(c => CONSENT_TEXT.test(labelTextOf(root, c) + ' ' + norm(T.textOf(T.ancestors(c).find(a => a.tag === 'fieldset') || { tag: '#text', text: '' }))))
+    // 동의 미리 체크 — '동의하지 않음'은 뺀다(마케팅 수신 동의 포함)
+    for (const c of choices) {
+      const label = labelTextOf(root, c)
+      if ('checked' in c.attrs && /동의/.test(label) && !/동의하지\s?않/.test(label)) push('error', c, `동의 '${label.slice(0, 30)}'가 미리 체크돼 있다 — 이용자가 직접 고르게 둔다.`)
+    }
+    if (!consents.length) continue
+    const group = T.ancestors(consents[0]).find(a => a.tag === 'fieldset') || form
+    let text = norm(T.textOf(group))
+    for (const c of els(group, x => x.attrs && (x.attrs['aria-describedby'] || x.attrs['aria-controls'] || (x.tag === 'a' && /^#/.test(x.attrs.href || '')) || x.attrs['data-modal-open']))) {
+      const ids = [x => x.attrs['aria-describedby'], x => x.attrs['aria-controls'], x => (x.attrs.href || '').replace(/^#/, ''), x => x.attrs['data-modal-open']].map(f => f(c)).filter(Boolean).flatMap(v => v.split(/\s+/))
+      for (const id of ids) { const el = T.find(root, x => x.attrs?.id === id); if (el) text += ' ' + norm(T.textOf(el)) }
+    }
+    const missing = [['수집 목적', /목적/], ['수집 항목', /항목|수집하는\s?(?:개인\s?)?정보/], ['보유 기간', /보유|보관|보존|이용\s?기간/], ['거부 권리', /거부|동의하지\s?않/]].filter(([, re]) => !re.test(text)).map(([n]) => n)
+    if (missing.length) {
+      const external = els(group, x => x.tag === 'a' && x.attrs.href && !/^#/.test(x.attrs.href)).length > 0
+      push(external ? 'warn' : 'error', consents[0], `개인정보 동의 옆에 ${missing.join('·')} 고지가 없다 — 수집 목적·항목·보유 기간·거부 권리와 거부 시 불이익을 동의 그룹 안에 적는다. 값은 발주처 개인정보 처리방침에서 가져온다(지어내지 않는다).`)
+    }
+  }
+  return out
+}
+
 // ctx: { profile }
 function scanPageRules(html, ctx = {}) {
   const root = T.parseHtml(html)
@@ -303,7 +403,8 @@ function scanPageRules(html, ctx = {}) {
   r41(root, ctx, out)
   r39(root, ctx, out)
   r42(root, ctx, out)
+  r46(root, ctx, out)
   return out.sort((a, b) => (a.line || 0) - (b.line || 0))
 }
 
-module.exports = { scanPageRules, deadLinkFindings, motionFindings, isDeadHref }
+module.exports = { scanPageRules, deadLinkFindings, motionFindings, privacyFormFindings, isDeadHref }

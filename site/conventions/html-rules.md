@@ -17,8 +17,8 @@ HTML 마크업 작성 규칙이다.
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | check-violations.js |
 | R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | check-html-structure.js |
 | R-23 | 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처 | error | check-violations.js |
-| R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
-| R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, manual |
+| R-25 | 섹션 리듬 — 동일 archetype 3연속·카드형 중첩 금지, archetype 선언 필수, 카드 그리드 남발 경고(납품 페이지는 3연속·3개부터 오류) | error | check-html-structure.js |
+| R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, check-html-structure.js, manual |
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | check-html-structure.js |
 | R-30 | 링크는 실제 목적지와 그 목적지를 말하는 이름을 가진다 — 빈 값·#·javascript: 금지, 더보기만인 이름 경고 | error | check-html-structure.js |
 | R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | check-html-structure.js |
@@ -185,11 +185,11 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-25 — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
+## R-25 — 섹션 리듬 — 동일 archetype 3연속·카드형 중첩 금지, archetype 선언 필수, 카드 그리드 남발 경고(납품 페이지는 3연속·3개부터 오류)
 
 **심각도:** `error` &nbsp; **검증:** check-html-structure.js
 
-> "중앙 제목 + 카드 그리드" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 사이에 끼울 변주는 5-objects의 section-media(이미지-텍스트 교차)와 src/snippets/signature.md의 시그니처 요소다. hero-bleed(풀블리드 인트로)는 첫 섹션 전용이라 변주로 쓰지 않는다(R-42).
+> "중앙 제목 + 카드 그리드" 반복은 규정 준수형 무개성의 최빈 패턴이다. 형제 section 시퀀스에서 동일 archetype(section--X) 3연속과 카드 안 카드 중첩은 error, 카드 그리드 섹션(같은 부모 아래 직계 .card 3개 이상)의 페이지당 3개 이상 또는 연속 배치는 warn으로 검출한다. 사이에 끼울 변주는 5-objects의 section-media(이미지-텍스트 교차)와 src/snippets/signature.md의 시그니처 요소다. hero-bleed(풀블리드 인트로)는 첫 섹션 전용이라 변주로 쓰지 않는다(R-42). 카드형은 card 토큰과, BEM 블록 토큰(__·-- 없음)이 -card·-tile로 끝나는 요소다(section·main·ul·ol·nav·header·footer 제외). 그리드는 같은 부모 아래 카드형이 3개 이상일 때이며, 자식이 하나인 래퍼(li > div > article.card)를 2단까지 따라가 센다(탭 패널·hidden 래퍼 제외). 그리드 섹션 2연속은 경고, 납품 페이지(infoux.json pages·루트 *.html·pages/**)에서는 3연속과 페이지당 3개 이상이 오류다. main 직계 section은 등록된 archetype(contracts/html-page-contract.json sectionArchetypes)을 정확히 하나 가진다 — 없으면 납품 페이지 오류·그 밖 경고, 둘 이상이면 경고(modifier를 빼 연속 판정을 우회하는 길을 막는다). 플레이그라운드는 archetype 판정에서 면제한다.
 
 **금지 예시**
 
@@ -202,6 +202,7 @@ HTML 마크업 작성 규칙이다.
 <article class="card">
   <article class="card">…</article>
 </article>   // 카드 안 카드 중첩
+<section class="section" aria-label="공지">…</section>   // archetype 없음 — 납품 페이지 error
 ```
 
 **올바른 형식**
@@ -224,9 +225,9 @@ HTML 마크업 작성 규칙이다.
 
 ## R-27 — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 
-**심각도:** `error` &nbsp; **검증:** check-icons.js · manual
+**심각도:** `error` &nbsp; **검증:** check-icons.js · check-html-structure.js · manual
 
-> 아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 기본 표기는 `<span class="icon-font icon-font--{name}">`이고, 아이콘에는 항상 aria-hidden을 붙인다(스크린리더가 PUA 코드포인트를 오독한다). 뜻은 아이콘 밖에서 전한다 — 옆의 텍스트나 버튼의 aria-label이다. SVG 태그는 폰트를 못 쓰는 곳이나 개별 색이 필요할 때만 쓴다. 표정은 슬림·레귤러·볼드·필 네 가지이고 이름과 코드포인트는 그대로 둔 채 글리프만 바뀐다 — 폰트는 `icon-font--bold` 같은 클래스가, SVG는 스프라이트 파일(`sprite-bold.svg`)이 표정을 정한다. SVG 쪽에 `icon--bold` 같은 클래스를 붙이지 않는다(아무 일도 하지 않는다). 한 화면에서 표정을 섞지 않으며, 모든 아이콘에 필이 있는 것은 아니다 — 없는 표정을 부르면 빈 네모가 나온다.
+> 아이콘을 그때그때 붙여 넣으면 프로젝트마다 출처·굵기·그리드가 섞이고 라이선스 근거가 남지 않는다. 색상을 토큰으로 강제하는 R-01과 같은 이유다. 쓸 아이콘은 contracts/icon-codepoints.json에 등재된 것뿐이며, 없으면 지어내지 말고 UX팀에 요청한다 — AI 도구는 MCP list_icons·get_icon으로 실재하는 이름만 받는다. 기본 표기는 `<span class="icon-font icon-font--{name}">`이고, 아이콘에는 항상 aria-hidden을 붙인다(스크린리더가 PUA 코드포인트를 오독한다). 뜻은 아이콘 밖에서 전한다 — 옆의 텍스트나 버튼의 aria-label이다. SVG 태그는 폰트를 못 쓰는 곳이나 개별 색이 필요할 때만 쓴다. 표정은 슬림·레귤러·볼드·필 네 가지이고 이름과 코드포인트는 그대로 둔 채 글리프만 바뀐다 — 폰트는 `icon-font--bold` 같은 클래스가, SVG는 스프라이트 파일(`sprite-bold.svg`)이 표정을 정한다. SVG 쪽에 `icon--bold` 같은 클래스를 붙이지 않는다(아무 일도 하지 않는다). 한 화면에서 표정을 섞지 않으며, 모든 아이콘에 필이 있는 것은 아니다 — 없는 표정을 부르면 빈 네모가 나온다. 사용처 검사(scripts/lib/icon-usage.js): <use href>가 외부 URL이거나 대장 스프라이트(assets/icons/sprite[-slim|-bold|-fill].svg) 밖 파일이면 오류, 조각 이름이 그 스프라이트의 symbol에 없으면(대장에 없는 이름·그 표정이 없는 이름) 오류다. icon-font는 이름 클래스가 정확히 하나, 표정 클래스는 하나 이하여야 하고, 그 이름이 해당 표정을 가져야 한다. 아이콘(svg.icon·use가 있는 svg·.icon-font)은 자신이나 조상에 aria-hidden="true"가 있어야 한다(svg는 role="img"와 이름도 허용). use 없이 path 등으로 직접 그린 인라인 svg는 경고다(로고·차트·지도·엠블럼 클래스, 이름 있는 큰 그림은 면제, 문서·아이콘 시연 페이지는 보지 않는다). 같은 목록·내비게이션·툴바 안에서 slim·regular·bold 표정을 섞으면 경고다(fill은 선택 상태 표시용).
 
 **금지 예시**
 
@@ -237,6 +238,8 @@ HTML 마크업 작성 규칙이다.
 <span class="icon-font icon-font--magnifier" aria-hidden="true"></span>   // 대장에 없는 이름 — 아무것도 안 나온다
 <svg class="icon icon--bold" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>   // SVG에서 표정은 클래스가 아니라 스프라이트 파일이 정한다 — 이 클래스는 아무 일도 안 하고 기본 굵기가 나온다
 <span class="icon-font icon-font--fill icon-font--search" aria-hidden="true"></span>   // 돋보기는 채울 면이 없어 필이 없다 — 빈 네모가 나온다. 그 아이콘이 가진 표정만 쓴다
+<svg class="icon"><use href="assets/icons/sprite.svg#search"></use></svg>   // aria-hidden 없음 — error
+<svg viewBox="0 0 24 24"><path d="M3 3h18"/></svg>   // 직접 그린 svg — warn
 ```
 
 **올바른 형식**

@@ -69,14 +69,26 @@ const HANGUL_FONT_PATTERN = /(Pretendard|Noto\s*(Sans|Serif)\s*KR|Wanted\s*Sans|
  * 미정의 슬롯은 통과시킨다 — heading 슬롯이 없는 구 brand.json 파생 사이트가
  * 빌드에서 끊기면 안 된다.
  */
+// 스택의 1순위 패밀리(따옴표 제거). var(--font-sans)는 sans 스택으로 펼친 뒤 본다
+function firstFamily(stack, sansStack = '') {
+  const first = String(stack).split(',')[0].trim()
+  if (/^var\(\s*--font-sans\s*\)$/.test(first) && sansStack) return firstFamily(sansStack)
+  return first.replace(/^['"]|['"]$/g, '')
+}
+
 function assertHangulFontFallback(source) {
   const { readToken } = createResolver(source)
   const errors = []
+  const sansStack = source?.font?.family?.sans ? readToken('font.family.sans') : ''
   for (const slot of ['sans', 'heading']) {
     if (!source?.font?.family?.[slot]) continue
-    const value = readToken(`font.family.${slot}`)
+    // 카탈로그 페어링(standard-gov 등)은 heading을 var(--font-sans)로 둔다 — sans 스택으로 펼쳐 본다
+    const value = readToken(`font.family.${slot}`).replace(/var\(\s*--font-sans\s*\)/g, sansStack)
     if (!HANGUL_FONT_PATTERN.test(value)) {
       errors.push(`font.family.${slot}: 스택에 한글 가용 폰트가 없다 — ${value}`)
+    } else if (!HANGUL_FONT_PATTERN.test(firstFamily(value, sansStack))) {
+      // 1순위가 영문 display 폰트면 한글은 2순위로 떨어져 글자마다 서체가 섞인다
+      errors.push(`font.family.${slot}: 1순위 "${firstFamily(value, sansStack)}"가 카탈로그(art-direction typography)의 한글 폰트가 아니다 — 한글 폰트를 맨 앞에 둔다`)
     }
   }
   if (errors.length) {
@@ -124,6 +136,7 @@ module.exports = {
   BRAND_GROUPS,
   BRAND_MODES,
   HANGUL_FONT_PATTERN,
+  firstFamily,
   mergeTokens,
   assertBrandModeParity,
   assertHangulFontFallback,

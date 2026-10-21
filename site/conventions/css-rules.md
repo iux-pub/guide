@@ -17,7 +17,7 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | check-violations.js |
 | R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | check-violations.js |
 | R-24 | 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류) | error | check-violations.js |
-| R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | build-tokens.js |
+| R-26 | 폰트 스택 — 1순위는 카탈로그 한글 폰트, 서체는 토큰으로만(font-family 직접값·font-serif·외부 폰트 호스트 금지) | error | build-tokens.js, check-violations.js |
 | R-31 | 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고) | warn | check-violations.js |
 | R-34 | 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자 | error | check-violations.js |
 | R-35 | 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하 | error | check-violations.js |
@@ -195,16 +195,18 @@ body {
 
 ---
 
-## R-26 — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
+## R-26 — 폰트 스택 — 1순위는 카탈로그 한글 폰트, 서체는 토큰으로만(font-family 직접값·font-serif·외부 폰트 호스트 금지)
 
-**심각도:** `error` &nbsp; **검증:** build-tokens.js
+**심각도:** `error` &nbsp; **검증:** build-tokens.js · check-violations.js
 
-> 영문 전용 폰트 스택은 한글이 시스템 기본 폰트로 떨어져 fallback 미설계 조판이 된다. scripts/lib/token-source.js가 build:tokens·check:presets 경로에서 --font-sans·--font-heading 값에 한글 가용 폰트(Pretendard·Noto Sans/Serif KR·Wanted Sans 등) 포함을 강제하며, 미포함이면 빌드가 실패한다. 미정의 슬롯은 하위호환으로 통과한다.
+> 영문 전용 폰트 스택은 한글이 시스템 기본 폰트로 떨어져 fallback 미설계 조판이 된다. scripts/lib/token-source.js가 build:tokens·check:presets 경로에서 --font-sans·--font-heading 값에 한글 가용 폰트(Pretendard·Noto Sans/Serif KR·Wanted Sans 등) 포함을 강제하며, 미포함이면 빌드가 실패한다. 미정의 슬롯은 하위호환으로 통과한다. 확장(scripts/lib/font-rules.js): 스택의 1순위 패밀리가 카탈로그 한글 폰트여야 한다(var(--font-sans)는 sans 스택으로 펼쳐 본다). font-family 값은 var(--font-sans|heading|mono)·inherit·initial·unset·revert만 허용하고, font 축약형에 따옴표 패밀리·generic 이름을 쓰지 않는다. CSS에서 --font-sans·--font-heading을 다시 선언하면 1순위를 판정하고, 새 패밀리 변수(--font-display 등)는 오류다. Tailwind font-serif와 임의 font-[…]는 오류, 타입 표기 없는 font-[var(--font-*)]·font-(--font-*)는 Tailwind가 font-weight로 만들어 서체가 조용히 안 바뀌므로 font-[family-name:var(--font-*)]로 쓴다. 외부 폰트 호스트(구글·타입킷·눈누·jsdelivr pretendard·bunny 등)를 link·@import로 부르거나 @font-face src에 절대 URL을 쓰면 오류다 — 폰트는 assets/fonts에 자체 호스팅한다. 아이콘 폰트 생성물(assets/icons/icons.css)은 면제한다.
 
 **금지 예시**
 
 ```css
 --font-sans: 'Inter', sans-serif;   // 한글 가용 폰트 없음 — build:tokens 실패
+.hero__title { font-family: "Playfair Display", serif; }   // 토큰 밖 서체
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR">   // 외부 폰트 호스트
 ```
 
 **올바른 형식**

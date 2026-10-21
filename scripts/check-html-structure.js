@@ -59,6 +59,15 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 아이콘 사용처(R-27 — 대장 이름·스프라이트·aria-hidden·직접 그린 svg·표정 혼용) — 없으면 건너뛴다
+let ICONS = null
+let ICON_CATALOG = null
+try {
+  ICONS = require('./lib/icon-usage')
+  ICON_CATALOG = ICONS.loadIconCatalog(ROOT)
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 사이트 유형 — infoux.json profile. 없으면 유형별 판정(공공 통합검색·커머스 사업자 정보)을 하지 않는다
 const PROFILE = (() => {
   try {
@@ -635,16 +644,34 @@ function sectionArchetype(section) {
   return modifier ? modifier.slice('section--'.length) : null
 }
 
+// 카드형 — card 토큰, 또는 BEM 블록 토큰(__·-- 없음)이 -card·-tile로 끝나는 요소(구획 태그 제외)
+const CARD_SUFFIX_EXEMPT_TAGS = new Set(['section', 'main', 'ul', 'ol', 'nav', 'header', 'footer'])
+function isCardLike(node) {
+  const names = classList(node)
+  if (names.includes('card')) return true
+  return !CARD_SUFFIX_EXEMPT_TAGS.has(node.tag) && names.some(name => /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*-(?:card|tile)$/.test(name))
+}
+
+// 자식이 하나인 래퍼 사슬(li > div > article.card)을 2단까지 따라가 카드형에 닿는가 — 탭 패널·숨김 래퍼는 세지 않는다
+function wrapsCard(node, depth = 0) {
+  if (isCardLike(node)) return true
+  if (depth >= 2 || node.attrs?.role === 'tabpanel' || 'hidden' in (node.attrs || {})) return false
+  const kids = directElementChildren(node)
+  return kids.length === 1 && wrapsCard(kids[0], depth + 1)
+}
+
 function isCardGridSection(section) {
   return findNodes(section, node =>
-    directElementChildren(node).filter(child => hasClass(child, 'card')).length >= 3
+    directElementChildren(node).filter(child => wrapsCard(child)).length >= 3
   ).length > 0
 }
 
 function checkSectionRhythm(root, filePath, baseLineNum) {
+  // 납품 페이지는 그리드 섹션 3연속·페이지당 3개 이상을 오류로 본다(연속 2개는 경고)
+  const deliverable = PAGE_FILES.has(filePath)
   // ② 카드 중첩 — 위치 무관 전역 검사
-  for (const card of findNodes(root, node => hasClass(node, 'card'))) {
-    if (ancestor(card, node => hasClass(node, 'card'))) {
+  for (const card of findNodes(root, node => isCardLike(node))) {
+    if (ancestor(card, node => isCardLike(node))) {
       error(
         rel(filePath),
         nodeLine(baseLineNum, card),
@@ -688,26 +715,28 @@ function checkSectionRhythm(root, filePath, baseLineNum) {
     }
 
     // ③ 카드 그리드 섹션 — 연속 배치 판정 (형제 시퀀스 기준)
-    let prevWasGrid = false
+    let gridStreak = 0
     for (const section of sections) {
       const grid = isCardGridSection(section)
       if (grid) gridSections.push(section)
-      if (grid && prevWasGrid) {
-        warn(
+      gridStreak = grid ? gridStreak + 1 : 0
+      if (gridStreak >= 2) {
+        const report = gridStreak >= 3 && deliverable ? error : warn
+        report(
           rel(filePath),
           nodeLine(baseLineNum, section),
-          '[R-25] 카드 그리드 섹션이 연속 배치됐습니다. 사이에 section-media 같은 변주 패턴이나 목록·표 섹션을 끼우세요.',
+          `[R-25] 카드 그리드 섹션이 ${gridStreak}개 연속 배치됐습니다. 사이에 section-media 같은 변주 패턴이나 목록·표 섹션을 끼우세요.`,
           section.raw.slice(0, 120),
           'R-25'
         )
       }
-      prevWasGrid = grid
     }
   }
 
   // ③ 카드 그리드 섹션 페이지당 3개 이상
   if (gridSections.length > 2) {
-    warn(
+    const report = deliverable ? error : warn
+    report(
       rel(filePath),
       nodeLine(baseLineNum, gridSections[2]),
       `[R-25] 카드 그리드 섹션이 페이지당 ${gridSections.length}개 — 2개 이하를 권장합니다. 카드가 아니어도 되는 콘텐츠는 목록·표로 풉니다.`,
@@ -873,6 +902,24 @@ function checkPageContract(html, filePath, baseLineNum = 1) {
         )
       }
     }
+
+    // R-25 archetype 선언 — main 직계 section은 등록된 archetype을 정확히 하나 가진다.
+    // 빼면 동일 archetype 연속 판정을 우회한다. 납품 페이지는 오류, 그 밖은 경고, 플레이그라운드는 면제
+    if (!/^\/src\/playground\//.test(relPosix(filePath))) {
+      const declared = classList(section).filter(name => sectionModifierSet.has(name))
+      if (declared.length !== 1) {
+        const report = declared.length === 0 && PAGE_FILES.has(filePath) ? error : warn
+        report(
+          rel(filePath),
+          nodeLine(baseLineNum, section),
+          declared.length === 0
+            ? `[R-25] section에 archetype이 없습니다 — ${Array.from(sectionModifierSet).join(', ')} 중 하나를 붙여 섹션 리듬을 선언합니다.`
+            : `[R-25] section에 archetype이 ${declared.length}개(${declared.join(' ')}) — 하나만 둡니다.`,
+          section.raw.slice(0, 120),
+          'R-25'
+        )
+      }
+    }
   }
 }
 
@@ -1026,6 +1073,14 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   // 문서(site·references·prompts)는 ❌ 반례를 DO 예시와 같은 블록에 싣는다
   if (QUALITY && !/^\/(?:site|references|prompts)\//.test(relPosix(filePath))) {
     for (const f of [...QUALITY.altFindings(html), ...QUALITY.linkNameFindings(html), ...QUALITY.placeholderFindings(html)]) {
+      const report = f.severity === 'error' ? error : warn
+      report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
+  }
+  // 아이콘 사용처(R-27) — 이름·스프라이트·aria-hidden은 모든 마크업, 직접 그린 svg 경고는 문서·아이콘 시연 밖
+  if (ICONS) {
+    const docs = /^\/(?:site|references|prompts)\//.test(relPosix(filePath)) || /\/src\/playground\/icon\.html$/.test(relPosix(filePath))
+    for (const f of ICONS.iconFindings(html, ICON_CATALOG, { inlineSvg: !docs })) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }

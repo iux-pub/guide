@@ -33,6 +33,13 @@ let SHAPE = null
 let SHAPE_OPTS = {}
 // 한글 조판(R-24) 단행 예외 선택자 — contracts/art-direction.json hangul.singleLineSelectors
 let HANGUL_OPTS = {}
+// 폰트 스택(R-26 확장 — font-family 허용값·font-serif·외부 폰트 호스트) — 없으면 건너뛴다
+let FONT = null
+try {
+  FONT = require('./lib/font-rules')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 try {
   SHAPE = require('./lib/shape-motion')
   try {
@@ -365,6 +372,8 @@ function checkCssFile(filePath) {
   if (TYPE?.scanCssHangul) reportVisual(relPath, TYPE.scanCssHangul(content, { ...HANGUL_OPTS, exemptLeading: /(^|\/)src\/styles\/docs\.css$/.test(posixPath) }))
   // 반경·그림자(R-35)·마키(R-33) — 파일 이름이 블록 이름이다(switch.css → .switch)
   if (SHAPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, SHAPE.scanCssShape(content, { ...SHAPE_OPTS, file: posixPath }))
+  // 폰트 스택(R-26) — 아이콘 폰트 생성물(assets/icons/icons.css, 생성원 scripts/build-icons.js)은 자기 패밀리를 선언한다
+  if (FONT && !/\/assets\/icons\/icons\.css$/.test(posixPath)) reportVisual(relPath, FONT.scanCssFont(content))
   // 모션 예산(R-22) — 가이드 저장소의 공용 카탈로그(src/styles)는 모든 유형이 쓰므로 기능형(utility) 기준
   if (SHAPE?.scanCssMotion && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) {
     const { grade, gradeKnown } = getVisualCtx()
@@ -596,9 +605,9 @@ function checkHtmlFile(filePath, opts = {}) {
     const shapeHtml = t => [...(SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanHtmlLayout(t) : []), ...(LAYOUT && density ? LAYOUT.sectionPaddingHtml(t, density) : [])]
     // 한글 조판(R-24) — 플레이그라운드 데모 크롬(.pg*)의 행간은 면제
     const hangulOpts = { ...HANGUL_OPTS, exemptLeadingSel: isPlayground ? /\.pg(?:__|-|$|[^\w-])/ : null }
-    const hangulCss = t => (TYPE.scanCssHangul ? TYPE.scanCssHangul(t, hangulOpts) : [])
+    const hangulCss = t => [...(TYPE.scanCssHangul ? TYPE.scanCssHangul(t, hangulOpts) : []), ...(FONT ? FONT.scanCssFont(t) : [])]
     const motionCtx = (({ grade, gradeKnown }) => ({ grade, gradeKnown }))(getVisualCtx())
-    const hangulHtml = t => [...(TYPE.scanHtmlHangul ? TYPE.scanHtmlHangul(t, hangulOpts) : []), ...(SHAPE?.scanHtmlMotion ? SHAPE.scanHtmlMotion(t, motionCtx) : [])]
+    const hangulHtml = t => [...(TYPE.scanHtmlHangul ? TYPE.scanHtmlHangul(t, hangulOpts) : []), ...(SHAPE?.scanHtmlMotion ? SHAPE.scanHtmlMotion(t, motionCtx) : []), ...(FONT ? FONT.scanHtmlFont(t) : [])]
     if (!isMarkdown) reportVisual(relPath, [...TYPE.scanHtmlType(content), ...shapeHtml(content), ...hangulHtml(content)])
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {

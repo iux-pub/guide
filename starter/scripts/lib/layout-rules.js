@@ -80,4 +80,63 @@ function scanCssLayout(css) {
   return out
 }
 
-module.exports = { scanHtmlLayout, scanCssLayout }
+// R-49 — 섹션 세로 여백이 밀도 프리셋(profiles.json sectionPaddingMobile·Pc)의 1.5배를 넘으면 경고.
+//   공공·관리자 프로필에서만 본다(표현형 일반·커머스는 빼고, 프로필이 없으면 보지 않는다).
+//   기준: 접두 없음·mobile:·tablet:·@media 1024 미만 → 모바일 값, laptop:·pc:·@media 1024 이상 → PC 값.
+//   대상: section 요소, .section, .section--{archetype}(.section-media 같은 다른 블록은 아니다)
+const SECTION_SEL = /(?:^|[\s>+~])(?:section(?![\w-])|\.section(?:--[a-z-]+)?(?![\w-]))/
+const PAD_TOKEN = /^(py|pt|pb|p)-(?:\[([^\]]+)\]|(\d+(?:\.5)?))$/
+const remOf = raw => {
+  const v = String(raw).trim()
+  const m = v.match(/^(\d*\.?\d+)(rem|px)$/i)
+  return m ? (m[2].toLowerCase() === 'px' ? +m[1] / 10 : +m[1]) : null
+}
+const isPcVariant = tok => /(?:^|:)(?:laptop|pc):/.test(variantsOf(tok))
+const padMsg = (rem, base, where) => `섹션 세로 여백 ${Math.round(rem * 100) / 100}rem — ${where} 밀도 기준 ${base}rem의 1.5배를 넘는다. 과한 여백은 공공·업무 화면의 정보 밀도를 무너뜨린다(profiles.json density).`
+
+function sectionPaddingHtml(html, base) {
+  const out = []
+  T.walk(T.parseHtml(html), n => {
+    if (n.tag === '#root' || n.tag === '#text') return
+    const cls = n.attrs.class || ''
+    if (n.tag !== 'section' && !/(?:^|\s)section(?:--[a-z-]+)?(?:\s|$)/.test(cls)) return
+    for (const tok of cls.split(/\s+/)) {
+      const m = baseOf(tok).match(PAD_TOKEN)
+      if (!m) continue
+      const rem = m[2] ? remOf(m[2].replace(/_/g, ' ')) : +m[3] * 0.25
+      if (rem === null) continue
+      const pc = isPcVariant(tok)
+      const limit = (pc ? base.pc : base.mobile) * 1.5
+      if (rem > limit) out.push({ rule: 'R-49', severity: 'warn', line: n.line, message: padMsg(rem, pc ? base.pc : base.mobile, pc ? 'PC' : '모바일'), code: (n.src || '').replace(/\s+/g, ' ').slice(0, 120) })
+    }
+  })
+  return out
+}
+
+function sectionPaddingCss(css, base) {
+  const out = []
+  const mediaPc = media => (String(media).match(/min-width\s*:\s*(\d+)px/g) || []).some(m => +m.match(/\d+/)[0] >= 1024)
+  for (const b of cssBlocks(css)) {
+    if (!b.selectors.some(s => SECTION_SEL.test(s))) continue
+    for (const d of b.decls) {
+      const pcMedia = mediaPc(d.media)
+      const checks = []
+      if (/^padding-(?:top|bottom|block(?:-start|-end)?)$/.test(d.prop)) checks.push([remOf(d.value.split(/\s+/)[0]), pcMedia])
+      if (d.prop === 'padding') { const parts = d.value.split(/\s+/); checks.push([remOf(parts[0]), pcMedia]); if (parts[2]) checks.push([remOf(parts[2]), pcMedia]) }
+      if (d.prop === '@apply') {
+        for (const tok of d.value.split(/\s+/)) {
+          const m = baseOf(tok).match(PAD_TOKEN)
+          if (m) checks.push([m[2] ? remOf(m[2].replace(/_/g, ' ')) : +m[3] * 0.25, pcMedia || isPcVariant(tok)])
+        }
+      }
+      for (const [rem, pc] of checks) {
+        if (rem === null) continue
+        const b0 = pc ? base.pc : base.mobile
+        if (rem > b0 * 1.5) out.push({ rule: 'R-49', severity: 'warn', line: d.line, message: padMsg(rem, b0, pc ? 'PC' : '모바일'), code: `${b.selectors[0]} { ${d.prop === '@apply' ? '@apply ' : d.prop + ': '}${d.value} }`.replace(/\s+/g, ' ').slice(0, 120) })
+      }
+    }
+  }
+  return out
+}
+
+module.exports = { scanHtmlLayout, scanCssLayout, sectionPaddingHtml, sectionPaddingCss }

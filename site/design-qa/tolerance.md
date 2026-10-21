@@ -96,10 +96,10 @@ border-radius, shadow, transition 등 기타 스타일 속성에 대한 허용 �
 
 | 항목 | 허용 오차 | 조건 | 비고 |
 |------|:---------:|------|------|
-| border-radius | **0** | 토큰 값 필수 | 4/8/12/16/9999px 중 하나 |
+| border-radius | **0** | KRDS 반경 | 2/4/6/8/10/12px, 원형은 switch·avatar·정사각 원형만(R-35) |
 | border-width | **0** | 정확히 일치 | 보통 1px 사용 |
 | border-color | **정확히 일치** | 토큰 사용 | `--color-border` 또는 `--color-border-light` |
-| box-shadow | **시각적 일치** | 토큰 사용 | 토큰 정의된 shadow-sm/base/lg 사용 |
+| box-shadow | **시각적 일치** | KRDS Elevation | 검정 알파 3단계, blur 2.4rem 이하(R-35) |
 | transition 속도 | **+/- 0.05s** | 토큰 기반 | 0.1s/0.3s/0.5s 토큰 우선 |
 | z-index | **정확히 일치** | 토큰 값 필수 | 100/200/300/400/500/600 체계 준수 |
 

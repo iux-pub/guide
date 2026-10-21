@@ -28,6 +28,8 @@ HTML 마크업 작성 규칙이다.
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | check-html-structure.js |
 | R-42 | 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
+| R-44 | 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다 | warn | check-violations.js |
+| R-45 | 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다 | error | check-html-structure.js |
 | R-46 | publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다 | error | check-html-structure.js |
 | R-47 | 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다 | error | check-html-structure.js |
 
@@ -461,6 +463,55 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** references/art-direction.md, contracts/copy-lexicon.json, scripts/lib/copy-rules.js
+
+---
+
+## R-44 — 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다
+
+**심각도:** warn &nbsp; **검증:** check-violations.js
+
+> art-direction 카피 톤은 일반사이트 합쇼체 기본, 공공서비스 합쇼체 고정, 공공기관 성과 홍보 어조 금지, 커머스 근거 없는 최상급 금지다(infoUX 판단 — KRDS에는 문체 규정이 없어 경고로 둔다). 문구 덩어리 단위로 본다(scripts/lib/copy-rules.js, 사이트 문서 제외). (1) 혁신적·최고의·최상의·차별화된·압도적·독보적·완벽한·게임 체인저·새로운 경험/기준/차원·스마트한이 제목·도입부·캐러셀에 나오면 경고, 차세대·원스톱·최적의를 포함한 최상급이 페이지에 2회 이상이면 경고('최고의결기구'는 아니다). (2) 공공 프로필의 제목·도입부·캐러셀이 선도하는·도약·글로벌 리더/허브·세계 최고/일류·대한민국 대표·새로운 미래·비전 20XX·함께 만들어 가는이면 경고(청년도약계좌·글로벌허브도시·대한민국 대표 축제, h1이 비전·경영목표인 페이지는 제외). (3) 공공 프로필의 서술형 해요체(~어요·~예요·~네요·~죠, 문장 단위)는 경고 — '~세요'는 R-43, '~나요·~까요' 의문형과 버튼·링크의 한 단어 레이블은 제외. 그 밖의 프로필은 합쇼체와 해요체가 한 페이지에 각각 3문장 이상 섞이면 경고. 고유 문구는 copy-lexicon allow·infoux.json copyAllow로 뺀다.
+
+**금지 예시**
+
+```html
+<h2>혁신적인 원스톱 행정 서비스</h2>   // 제목의 최상급
+<p>신청서는 온라인으로 낼 수 있어요.</p>   // 공공 화면 해요체
+```
+
+**올바른 형식**
+
+```html
+<h2>민원 신청과 처리 현황 조회</h2>   // 사실 서술
+<p>신청서는 온라인으로 낼 수 있습니다.</p>   // 합쇼체
+```
+
+**참고:** references/art-direction.md, scripts/lib/copy-rules.js
+
+---
+
+## R-45 — 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다
+
+**심각도:** `error` &nbsp; **검증:** check-html-structure.js
+
+> KRDS 컴포넌트 레이블은 '더보기'·'전체메뉴'처럼 모두 국문이다. 'VIEW MORE +'·'Read more'는 해외 템플릿을 옮긴 흔적이다. 모든 마크업에서(scripts/lib/page-rules.js, 문서 lang이 한국어가 아니면 보지 않는다): (1) a·button의 보이는 글이나 aria-label이 view more·view all·read more·learn more·see more·more·details·skip to content·sign in·log in·sign up·contact us·menu·home이면 오류 — 링크·버튼 자신의 lang="en"으로는 면제되지 않고 lang이 한국어가 아닌 section·article·blockquote 안, 코드, 플레이그라운드 데모(pg__)만 면제한다. (3) 언어명 링크(English·ENG·EN·中文·日本語…)에 lang이 없거나 언어와 맞지 않으면 오류(WCAG 3.1.2, hreflang은 권장). (4) onchange가 location·href·submit()·window.open인 select는 오류(WCAG 3.2.2 — 패밀리 사이트·언어 선택은 별도 [이동] 버튼). 경고: (2) 주 메뉴(.main-menu, aria-label '주 메뉴·메인 메뉴') 항목이 모두 영문, (6) 제목 위 영문 대문자 eyebrow(class eyebrow·kicker·overline 또는 두 낱말 이상의 대문자, 배지·태그·약어 제외)와 영문 전용 h1~h3(FAQ 제외) — 이 둘은 사이트 문서(site/**)에서 보지 않는다. 용어 사전 대조와 날짜·금액 표기 혼용은 아직 기계화하지 않았다.
+
+**금지 예시**
+
+```html
+<a href="/news">VIEW MORE +</a>   // 영문 전용 레이블
+<a href="/en/" hreflang="en">English</a>   // lang 없음
+<select onchange="location.href=this.value">…</select>   // 선택만으로 이동
+```
+
+**올바른 형식**
+
+```html
+<a href="/news">새소식 더보기</a>   // 국문 레이블
+<a href="/en/" lang="en" hreflang="en">English</a>   // 언어 링크
+```
+
+**참고:** references/korean-web-patterns.md, scripts/lib/page-rules.js
 
 ---
 

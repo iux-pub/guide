@@ -393,6 +393,62 @@ function privacyFormFindings(html) {
   return out
 }
 
+// R-45 — 한국어 화면의 영문 전용 UI 레이블·언어 링크 lang·select 바로 이동(오류), 영문 주 메뉴·영문 eyebrow·영문 제목(경고).
+// 모든 마크업. 문서 lang이 한국어가 아니면 보지 않는다. lang=en 면제는 콘텐츠 영역(section·article·blockquote)에만 준다
+// — 링크·버튼 자신에 lang="en"을 붙여 VIEW MORE를 통과시키지 못하게
+const EN_LABEL = /^(?:view\s?more\s?\+?|view\s?all|read\s?more|learn\s?more|see\s?more|more\s?\+?|details?|skip to (?:main )?content|sign\s?in|log\s?in|sign\s?up|contact\s?us|menu|home)$/i
+const LANG_NAMES = [[/^(?:english|eng|en)$/i, 'en'], [/^(?:中文|简体中文|繁體中文|chinese|中國語|中国语)$/i, 'zh'], [/^(?:日本語|japanese|日本语)$/i, 'ja'], [/^(?:русский|russian)$/i, 'ru'], [/^(?:tiếng việt|vietnamese)$/i, 'vi'], [/^(?:español|spanish)$/i, 'es']]
+const ACRONYM = /^(?:PDF|HWP|HWPX|DOC|XLS|NEW|FAQ|Q&A|KRDS|TOP|HOT|BEST|EVENT|NOTICE)$/
+const DEMO_CLASS = /(?:^|\s)pg(?:__|\s|$)/
+// opts.docs: 사이트 문서(site/**) — 영문 제목·eyebrow 경고는 문서·반례에 쓰지 않는다
+function langFindings(html, opts = {}) {
+  const out = []
+  const root = T.parseHtml(html)
+  const htmlEl = T.find(root, n => n.tag === 'html')
+  if (htmlEl && htmlEl.attrs.lang && !/^ko\b/i.test(htmlEl.attrs.lang)) return out
+  const push = (severity, n, message, sample) => out.push({ rule: 'R-45', severity, line: n.line, message, code: norm(sample || n.src || '').slice(0, 120) })
+  const exempt = n => [n, ...T.ancestors(n)].some(a => ['code', 'kbd', 'pre', 'samp'].includes(a.tag) || DEMO_CLASS.test(a.attrs?.class || '')) ||
+    T.ancestors(n).some(a => ['section', 'article', 'blockquote'].includes(a.tag) && a.attrs.lang && !/^ko\b/i.test(a.attrs.lang))
+  const visible = n => norm(T.textOf(n, { visible: true }))
+  for (const n of els(root, x => x.tag === 'a' || x.tag === 'button')) {
+    if (exempt(n)) continue
+    const text = visible(n)
+    const name = norm(n.attrs['aria-label'] || '')
+    const hit = [text, name].find(s => s && EN_LABEL.test(s))
+    if (hit) { push('error', n, `영문 전용 UI 레이블 "${hit}" — 한국어 화면은 국문 레이블(더보기·전체 보기·로그인·메뉴·홈)을 쓴다.`, hit); continue }
+    // 언어 전환 링크 — lang 필수(대상 언어로 읽히게), 값이 언어와 맞아야 한다. hreflang은 권장
+    const lang = LANG_NAMES.find(([re]) => re.test(text))
+    if (n.tag === 'a' && lang) {
+      if (!n.attrs.lang) push('error', n, `언어 링크 "${text}"에 lang이 없다 — lang="${lang[1]}"(+ hreflang)을 단다(WCAG 3.1.2).`, text)
+      else if (!new RegExp(`^${lang[1]}\\b`, 'i').test(n.attrs.lang)) push('error', n, `언어 링크 "${text}"의 lang="${n.attrs.lang}"이 언어와 맞지 않다 — lang="${lang[1]}".`, text)
+    }
+  }
+  for (const s of els(root, x => x.tag === 'select')) {
+    if (/\blocation\b|\.href\s*=|\bsubmit\s*\(|window\.open/.test(s.attrs.onchange || '')) push('error', s, '고르기만 해도 이동·제출하는 select — 이동은 별도 [이동] 버튼으로 한다(WCAG 3.2.2).', s.src)
+  }
+  // 영문 전용 주 메뉴(경고)
+  for (const nav of els(root, x => hasClass(x, 'main-menu') || (x.tag === 'nav' && /^(?:주|메인)\s?메뉴$/.test(norm(x.attrs['aria-label'] || ''))))) {
+    if (exempt(nav)) continue
+    const items = els(nav, x => x.tag === 'a').map(visible).filter(Boolean)
+    if (items.length >= 2 && items.every(t => !/[가-힣]/.test(t) && /[A-Za-z]{3}/.test(t))) push('warn', nav, '주 메뉴가 영문뿐이다 — 한국어 화면의 메뉴는 국문으로 쓴다.', items.join(' · '))
+  }
+  // 영문 대문자 eyebrow·영문 전용 제목(경고)
+  for (const h of opts.docs ? [] : els(root, x => /^h[1-3]$/.test(x.tag))) {
+    if (exempt(h)) continue
+    const text = visible(h)
+    if (text && !/[가-힣]/.test(text) && /[A-Za-z]{2,}\s+[A-Za-z]{2,}/.test(text) && !/^(?:FAQ|Q&A)$/i.test(text)) push('warn', h, `영문 전용 제목 "${text}" — 한국어 화면의 제목은 국문으로 쓴다(영문 병기는 보조로).`, text)
+    const sibs = (h.parent.children || []).filter(c => c.tag !== '#text')
+    const prev = sibs[sibs.indexOf(h) - 1]
+    if (prev && !/^h[1-6]$/.test(prev.tag) && !hasClass(prev, 'badge') && !hasClass(prev, 'tag')) {
+      const pt = visible(prev)
+      const byClass = /(?:^|[\s_-])(?:eyebrow|kicker|overline)(?:$|[\s_-])/.test(prev.attrs.class || '')
+      const byText = /^[A-Z][A-Z&\s]{2,30}$/.test(pt) && /\s/.test(pt.trim()) && !ACRONYM.test(pt)
+      if (pt && !/[가-힣]/.test(pt) && (byClass || byText)) push('warn', prev, `제목 위 영문 eyebrow "${pt}" — AI 랜딩 서명이다. 빼거나 국문 분류명으로 쓴다.`, pt)
+    }
+  }
+  return out
+}
+
 // ctx: { profile }
 function scanPageRules(html, ctx = {}) {
   const root = T.parseHtml(html)
@@ -407,4 +463,4 @@ function scanPageRules(html, ctx = {}) {
   return out.sort((a, b) => (a.line || 0) - (b.line || 0))
 }
 
-module.exports = { scanPageRules, deadLinkFindings, motionFindings, privacyFormFindings, isDeadHref }
+module.exports = { scanPageRules, deadLinkFindings, motionFindings, privacyFormFindings, langFindings, isDeadHref }

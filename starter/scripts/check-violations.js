@@ -229,6 +229,23 @@ function getVisualCtx() {
 
 // 카피 문맥: 사이트 유형(공공서비스는 느낌표 error)과 프로젝트가 허용한 고유 문구(infoux.json copyAllow)
 let copyCtxCache = null
+// 섹션 여백 밀도 기준(R-49) — 공공·관리자 프로필만. infoux.json profile → profiles.json density 프리셋(모바일·PC rem)
+let densityCache
+function getDensityBase() {
+  if (densityCache !== undefined) return densityCache
+  densityCache = null
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
+    if (!['public-service', 'public-institution', 'cms-admin'].includes(config.profile)) return densityCache
+    const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+    const preset = (spec.densityPresets || spec.density || {})[(spec.profiles || []).find(x => x.id === config.profile)?.density]
+    if (preset) densityCache = { mobile: parseFloat(preset.sectionPaddingMobile), pc: parseFloat(preset.sectionPaddingPc) }
+  } catch {
+    // 프로필이 없으면 보지 않는다
+  }
+  return densityCache
+}
+
 function getCopyCtx() {
   if (copyCtxCache) return copyCtxCache
   let profile = null
@@ -343,7 +360,11 @@ function checkCssFile(filePath) {
   // 반경·그림자(R-35)·마키(R-33) — 파일 이름이 블록 이름이다(switch.css → .switch)
   if (SHAPE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, SHAPE.scanCssShape(content, { ...SHAPE_OPTS, file: posixPath }))
   // 모바일 우선(R-48)
-  if (LAYOUT && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, LAYOUT.scanCssLayout(content))
+  if (LAYOUT && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) {
+    reportVisual(relPath, LAYOUT.scanCssLayout(content))
+    // 섹션 세로 여백(R-49)
+    if (getDensityBase()) reportVisual(relPath, LAYOUT.sectionPaddingCss(content, getDensityBase()))
+  }
 
   // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
   if (COPY) {
@@ -557,8 +578,9 @@ function checkHtmlFile(filePath, opts = {}) {
 
   // 글자 크기 하한(R-31·R-38) — HTML의 <style>·class·style 속성, 마크다운은 html·css 펜스(금지 예시 펜스 제외)
   if (TYPE) {
-    const shapeCss = t => [...(SHAPE ? SHAPE.scanCssShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanCssLayout(t) : [])]
-    const shapeHtml = t => [...(SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanHtmlLayout(t) : [])]
+    const density = getDensityBase()
+    const shapeCss = t => [...(SHAPE ? SHAPE.scanCssShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanCssLayout(t) : []), ...(LAYOUT && density ? LAYOUT.sectionPaddingCss(t, density) : [])]
+    const shapeHtml = t => [...(SHAPE ? SHAPE.scanHtmlShape(t, SHAPE_OPTS) : []), ...(LAYOUT ? LAYOUT.scanHtmlLayout(t) : []), ...(LAYOUT && density ? LAYOUT.sectionPaddingHtml(t, density) : [])]
     if (!isMarkdown) reportVisual(relPath, [...TYPE.scanHtmlType(content), ...shapeHtml(content)])
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {

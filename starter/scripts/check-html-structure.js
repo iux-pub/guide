@@ -1009,7 +1009,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   if (PAGE_RULES) {
     // R-33 자동 전환 정지·자동 재생 영상·marquee도 모든 마크업
     // R-47 개인정보 수집 폼(고지·미리 체크·주민등록번호)도 모든 마크업
-    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html)]) {
+    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html), ...PAGE_RULES.langFindings(html, { docs: /^\/site\//.test(relPosix(filePath)) })]) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }

@@ -24,6 +24,7 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | R-37 | Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다 | error | check-violations.js |
 | R-38 | KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고 | error | check-violations.js |
 | R-48 | 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고 | error | check-violations.js |
+| R-49 | 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고) | warn | check-violations.js |
 
 ---
 
@@ -363,5 +364,27 @@ body { @apply text-[1.5rem]; }   // body 15px
 ```
 
 **참고:** references/tailwind-mapping.md, scripts/lib/layout-rules.js
+
+---
+
+## R-49 — 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고)
+
+**심각도:** warn &nbsp; **검증:** check-violations.js
+
+> 과한 섹션 여백으로 '고급스러움'을 만드는 것은 해외 랜딩 문법이고, 한국 공공·업무 화면은 정보 밀도가 우선이다. infoux.json profile이 public-service·public-institution·cms-admin일 때 profiles.json density 프리셋(여유 PC 8rem·모바일 4rem, 고밀도 PC 4rem·모바일 2.4rem)을 기준으로, section 요소·.section·.section--{archetype}의 세로 여백(py·pt·pb·p-[N], Tailwind 기본 py-N, padding·padding-top/bottom/block)이 기준의 1.5배를 넘으면 경고다(scripts/lib/layout-rules.js). 접두 없음·mobile:·tablet:·@media 1024 미만은 모바일 기준, laptop:·pc:·@media 1024 이상은 PC 기준이다. 일반사이트·커머스(표현형)와 프로필 없는 저장소는 보지 않는다. clamp()·var()·margin·부모 gap·내부 오브젝트 여백은 잡지 못하므로 견본 페이지 렌더 채점으로 보완한다.
+
+**금지 예시**
+
+```css
+<section class="section py-[6.4rem] laptop:py-[16rem]">   // 여유 기준 4rem·8rem의 1.6배·2배
+```
+
+**올바른 형식**
+
+```css
+<section class="section py-[4rem] laptop:py-[8rem]">   // 여유 밀도 기준
+```
+
+**참고:** contracts/profiles.json, scripts/lib/layout-rules.js
 
 ---

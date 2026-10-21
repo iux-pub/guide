@@ -569,6 +569,58 @@ function r43(root, chunks, ctx, out) {
   for (const m of best.values()) out.push(...m.values())
 }
 
+// ─── R-44 최상급·홍보 어조·해요체(경고) ────────────────
+
+// 단독으로도 걸리는 공허한 최상급(제목·도입부) — 차세대·원스톱·최적의는 누적(2회 이상)으로만 센다
+const SUPERLATIVE_STRONG = /혁신적|최고의(?!결|사결정)|최상의|차별화된|압도적|독보적|완벽한|게임\s?체인저|새로운\s(?:경험|기준|차원)|스마트한/g
+const SUPERLATIVE_WEAK = /차세대|원스톱|최적의/g
+const PROMO = /선도하는|(?<![가-힣])도약(?!계좌)|글로벌\s?(?:리더|허브(?!도시))|세계\s?(?:최고|일류)|대한민국\s?대표(?!\s?(?:문화관광)?축제)|새로운\s?미래|비전\s?20\d\d|함께\s?만들어\s?(?:가는|갑니다)/
+// 서술형 해요체 — '~세요'(재촉형, R-43)와 '~나요·~까요' 의문형은 뺀다
+const HAEYO = /(?:[아어여와워해돼봐줘려져라러]|이에|예|네|거든|는데|던데|군|게)요[.!]?$|죠[.!]?$/
+const HAPSHO = /(?:습니다|ㅂ니다|니다|십시오)[.!]?$/
+function r44(chunks, ctx, out) {
+  if (ctx.scope === 'doc') return
+  const C = ctx.copy
+  const allowN = [...(C.allow || []), ...(ctx.copyAllow || [])].map(s => norm(String(s))).filter(Boolean)
+  const clean = s => norm(allowN.reduce((t, w) => t.split(w).join(' '), norm(s)).replace(QUOTED, ' '))
+  const PUBLIC = new Set(['public-service', 'public-institution'])
+  const isPublic = PUBLIC.has(ctx.profile)
+  const push = (line, message, sample) => out.push({ rule: 'R-44', severity: 'warn', line, message, code: norm(sample).slice(0, 120) })
+  let total = 0
+  let firstWeak = null
+  const visionPage = chunks.some(ch => ch.el.tag === 'h1' && /비전|경영목표|경영공시/.test(norm(r43TextOf(ch))))
+  let haeyo = 0
+  let hapsho = 0
+  let firstHaeyo = null
+  for (const ch of chunks) {
+    const t = clean(r43TextOf(ch))
+    if (!t) continue
+    const place = placeOf(ch.el)
+    const prominent = place === 'heading' || place === 'intro' || chainOf(ch.el).some(a => T.classesOf(a).includes('carousel'))
+    const strong = t.match(SUPERLATIVE_STRONG) || []
+    const weak = t.match(SUPERLATIVE_WEAK) || []
+    total += strong.length + weak.length
+    if (weak.length && !firstWeak) firstWeak = { ch, t, word: weak[0] }
+    if (strong.length && prominent) push(lineOfMatch(ch, strong[0]), `근거 없는 최상급 "${strong[0]}" — 제목·도입부는 무엇을 하는 곳인지 사실로 쓴다(art-direction §8).`, t)
+    if (isPublic && prominent && !visionPage) {
+      const m = t.match(PROMO)
+      if (m) push(lineOfMatch(ch, m[0]), `공공 화면의 성과 홍보 어조 "${m[0]}" — 사실 서술로 쓴다(art-direction 공공기관 카피 톤).`, t)
+    }
+    // 종결 어미 — 문장 단위. 버튼·링크·레이블의 한 단어('좋아요')는 서술문이 아니다
+    const labelLike = place === 'button' || chainOf(ch.el).some(a => ['a', 'label', 'option'].includes(a.tag))
+    for (const s of sentencesOf(t)) {
+      if (labelLike && !/\s/.test(s)) continue
+      if (HAEYO.test(s)) { haeyo++; if (!firstHaeyo) firstHaeyo = { ch, s } }
+      else if (HAPSHO.test(s)) hapsho++
+    }
+  }
+  if (total >= 2 && firstWeak) push(lineOfMatch(firstWeak.ch, firstWeak.word), `최상급·수식어가 페이지에 ${total}번 나온다("${firstWeak.word}" 등) — 근거가 있는 사실로 바꾼다.`, firstWeak.t)
+  if (firstHaeyo) {
+    if (isPublic) push(lineOfMatch(firstHaeyo.ch, firstHaeyo.s), `공공 화면의 해요체 "${firstHaeyo.s.slice(-12)}" — 공공 화면은 합쇼체로 고정한다(art-direction 카피 톤).`, firstHaeyo.s)
+    else if (haeyo >= 3 && hapsho >= 3) push(lineOfMatch(firstHaeyo.ch, firstHaeyo.s), `합쇼체 ${hapsho}문장과 해요체 ${haeyo}문장이 섞였다 — 한 페이지는 한 종결로 맞춘다.`, firstHaeyo.s)
+  }
+}
+
 // ─── 스캐너 ─────────────────────────────────────────────
 
 // 틀 표시 요소 — 요소 트리로 찾는다(주석·script 문자열 안의 표시는 표시가 아니다). 이름은 대소문자를 가리지 않는다
@@ -592,6 +644,7 @@ function scanHtmlCopy(html, ctx) {
   const chunks = collectChunks(root)
   r23(root, chunks, ctx, out)
   r43(root, chunks, ctx, out)
+  r44(chunks, ctx, out)
   return out.sort((a, b) => (a.line || 0) - (b.line || 0))
 }
 

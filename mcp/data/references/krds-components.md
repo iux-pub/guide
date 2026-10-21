@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 1f38a2b
+> 빌드: 9f32769
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -944,6 +944,15 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
     </nav>
 
     <div class="site-header__actions">
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+      <a class="site-header__search-link" href="/search">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+        <span class="sr-only">통합검색</span>
+      </a>
       <button type="button" class="btn btn--text btn--small">로그인</button>
       <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
@@ -958,6 +967,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 - 1024px 미만(모바일·태블릿): 메인 메뉴 숨김 + 햄버거 토글 노출. 토글은 [전체메뉴](mobile-menu.md)를 연다 (KRDS: 메인 메뉴를 표시할 폭이 부족하면 햄버거)
 - 1024px 이상(KRDS large): 메인 메뉴 노출 + 햄버거 숨김. PC에는 전체메뉴 버튼을 두지 않는다(KRDS 공식 코드). 전체 구조가 필요하면 헤더 유틸리티에 「사이트맵」 페이지 링크를 둔다
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
+- 통합검색 — KRDS 검색 [필수]는 모든 화면에서 통합검색을 실행할 수 있어야 한다(공공 프로필은 R-40 오류). 1024px 이상은 헤더 안 입력창(`.site-header__search`), 미만은 검색 페이지 링크(`.site-header__search-link`, 아이콘 + sr-only 「통합검색」). 검색 결과는 별도 페이지(`pageType: search-result`)로 보낸다
 
 #### 접근성
 

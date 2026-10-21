@@ -582,6 +582,15 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
     </nav>
 
     <div class="site-header__actions">
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+      <a class="site-header__search-link" href="/search">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+        <span class="sr-only">통합검색</span>
+      </a>
       <button type="button" class="btn btn--text btn--small">로그인</button>
       <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>

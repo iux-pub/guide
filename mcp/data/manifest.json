@@ -1,5 +1,5 @@
 {
-  "version": "1f38a2b",
+  "version": "9f32769",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -47,7 +47,7 @@
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 69817,
+      "chars": 70587,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -231,7 +231,7 @@
     {
       "id": "header",
       "file": "header.md",
-      "chars": 2028,
+      "chars": 2798,
       "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
     },
     {

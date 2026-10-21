@@ -59,7 +59,15 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
-// 아이콘 사용처(R-27 — 대장 이름·스프라이트·aria-hidden·직접 그린 svg·표정 혼용) — 없으면 건너뛴다
+// R-47 주민등록번호 법령 예외 — infoux.json exceptions의 { rule: 'R-47', legalBasis } (만료 전)
+let RRN_LEGAL_BASIS = null
+try {
+  const CX = require('./lib/contract-exceptions')
+  RRN_LEGAL_BASIS = CX.rrnLegalBasis(CX.readConfig(ROOT))
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND' && !(e instanceof SyntaxError)) throw e
+}
+// 아이콘 사용처(R-27 —대장 이름·스프라이트·aria-hidden·직접 그린 svg·표정 혼용) — 없으면 건너뛴다
 let ICONS = null
 let ICON_CATALOG = null
 try {
@@ -1064,7 +1072,7 @@ function checkHtml(html, filePath, baseLineNum = 1) {
   if (PAGE_RULES) {
     // R-33 자동 전환 정지·자동 재생 영상·marquee도 모든 마크업
     // R-47 개인정보 수집 폼(고지·미리 체크·주민등록번호)도 모든 마크업
-    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html), ...PAGE_RULES.langFindings(html, { docs: /^\/site\//.test(relPosix(filePath)) })]) {
+    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html, { rrnLegalBasis: RRN_LEGAL_BASIS }),...PAGE_RULES.langFindings(html, { docs: /^\/site\//.test(relPosix(filePath)) })]) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }

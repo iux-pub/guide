@@ -60,5 +60,93 @@
     "당신앙",
     "당신신앙"
   ],
-  "allowNote": "고유명사·공식 슬로건·행사명처럼 바꿀 수 없는 문구. 여기에는 모든 프로젝트에 공통인 것(제주 무속 용어 당신(堂神) 복합어)만 두고, 프로젝트마다 다른 것은 infoux.json의 copyAllow 배열에 둔다(예: \"도민과 함께! 미래를 만나는 제주\"). 비교는 공백을 하나로 접은 뒤 하므로 줄바꿈·<br>로 나눈 슬로건도 한 줄로 적으면 된다."
+  "allowNote": "고유명사·공식 슬로건·행사명처럼 바꿀 수 없는 문구. 여기에는 모든 프로젝트에 공통인 것(제주 무속 용어 당신(堂神) 복합어)만 두고, 프로젝트마다 다른 것은 infoux.json의 copyAllow 배열에 둔다(예: \"도민과 함께! 미래를 만나는 제주\"). 비교는 공백을 하나로 접은 뒤 하므로 줄바꿈·<br>로 나눈 슬로건도 한 줄로 적으면 된다.",
+  "prescriptions": [
+    {
+      "id": "whitespace-40",
+      "pattern": "40\\s*%\\s*이상[은이]?\\s*비어",
+      "polarity": "prescriptive",
+      "note": "여백 비율 처방은 정본에 없다 — 밀도는 contracts/profiles.json density 프리셋이 정한다."
+    },
+    {
+      "id": "offwhite-hex",
+      "pattern": "오프\\s*화이트[^\\n]*#[0-9a-f]{3,6}\\b",
+      "polarity": "prescriptive",
+      "note": "배경색은 토큰(var(--color-bg*))만 쓴다(R-01)."
+    },
+    {
+      "id": "pure-white-ban",
+      "pattern": "순백[^\\n]{0,20}(?:금지|피)",
+      "polarity": "always",
+      "note": "KRDS 기본 배경은 흰색이다 — 순백을 금지하는 처방은 정본과 충돌한다."
+    },
+    {
+      "id": "gradient-mesh",
+      "pattern": "그라(?:디|데)이?언트\\s*메시|gradient\\s*mesh",
+      "polarity": "prescriptive",
+      "note": "장식 그라데이션은 R-34 금지다."
+    },
+    {
+      "id": "custom-cursor",
+      "pattern": "커스텀\\s*커서|custom\\s*cursor",
+      "polarity": "prescriptive",
+      "note": "커서 장식은 접근성·KRDS 기준 밖이다."
+    },
+    {
+      "id": "glassmorphism",
+      "pattern": "Glassmorphism\\s*[:(+]|\\+\\s*Glassmorphism|글래스모피즘\\s*(?:권장|적용)",
+      "polarity": "prescriptive",
+      "note": "글래스(backdrop)는 R-34 금지다."
+    },
+    {
+      "id": "aurora-ui",
+      "pattern": "Aurora\\s*UI",
+      "polarity": "prescriptive",
+      "note": "장식 그라데이션·블러는 R-34 금지다."
+    },
+    {
+      "id": "no-constraint",
+      "pattern": "\\(\\s*제약\\s*없음",
+      "polarity": "prescriptive",
+      "note": "표현 등급은 상한이다 — 제약 없는 등급은 없다(contracts/profiles.json expression)."
+    },
+    {
+      "id": "big-radius",
+      "pattern": "1[2-9]\\s*~\\s*\\d+\\s*px\\s*둥근|둥근\\s*모서리\\s*선호",
+      "polarity": "prescriptive",
+      "note": "KRDS 반경 상한은 1.2rem(12px)이다(R-35)."
+    },
+    {
+      "id": "thin-weight",
+      "pattern": "Thin\\s*\\(\\s*100\\s*~\\s*300\\s*\\)",
+      "polarity": "prescriptive",
+      "note": "한글 본문 weight는 400 이상이다(art-direction hangul.weights)."
+    },
+    {
+      "id": "scroll-story",
+      "pattern": "스크롤\\s*스토리텔링",
+      "polarity": "prescriptive",
+      "note": "스크롤 진입 모션은 R-22 예산 밖이다."
+    },
+    {
+      "id": "symmetry-dull",
+      "pattern": "좌우\\s*대칭[^\\n]{0,30}(?:안주|단조)",
+      "polarity": "always",
+      "note": "KRDS 그리드 정렬은 단조가 아니라 탐색 일관성이다."
+    },
+    {
+      "id": "easing-outdated",
+      "pattern": "(?:linear|ease)[^\\n]{0,30}구식",
+      "polarity": "always",
+      "note": "KRDS 모션은 ease 계열을 쓴다 — 구식이라는 처방은 정본과 충돌한다."
+    },
+    {
+      "id": "predictable-layout",
+      "pattern": "^\\s*\\|\\s*예측\\s*가능한\\s*레이아웃",
+      "polarity": "always",
+      "inCounterBlocks": true,
+      "note": "예측 가능한 레이아웃은 KRDS 탐색 일관성 원칙이다 — 안티패턴으로 적지 않는다."
+    }
+  ],
+  "prescriptionsNote": "HX-07 사전 — scripts/lib/doc-prescriptions.js가 references/*.md·site/design/*.md·prompts 수기 파일에 적용한다. prescriptive는 같은 줄에 금지·쓰지 않·피한다·안티패턴·❌가 있으면 면제, always는 면제하지 않는다."
 }

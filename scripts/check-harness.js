@@ -109,9 +109,12 @@ const starterDeps = { ...starterPackage.dependencies, ...starterPackage.devDepen
 for (const name of [...(starterStylelint.plugins || []), ...[].concat(starterStylelint.extends || [])]) {
   if (!starterDeps[name]) fail(`starter/.stylelintrc.json이 쓰는 ${name}이 starter/package.json에 없습니다.`)
 }
-const STARTER_CHECK = 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js'
+const STARTER_CHECK = 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js && node ./scripts/check-contract.js'
 if (starterPackage.scripts?.check !== STARTER_CHECK) {
-  fail('starter npm run check가 정적 검사기 4종(위반·HTML 구조·대비·아이콘)을 모두 실행하지 않습니다.')
+  fail('starter npm run check가 정적 검사기 5종(위반·HTML 구조·대비·아이콘·계약)을 모두 실행하지 않습니다.')
+}
+if (starterPackage.scripts?.['check:release'] !== 'npm run check && node ./scripts/check-contract.js --release') {
+  fail('starter에 납품 게이트 npm run check:release(CT-03)가 없습니다.')
 }
 
 // 스킬 계층은 2026-07-29 폐기했다. 작업 절차·레퍼런스는 infoUX MCP가 단일 경로로 제공한다.
@@ -199,6 +202,8 @@ requireSame('scripts/lib/shape-motion.js', 'starter/scripts/lib/shape-motion.js'
 requireSame('scripts/lib/content-quality.js', 'starter/scripts/lib/content-quality.js')
 requireSame('scripts/lib/font-rules.js', 'starter/scripts/lib/font-rules.js')
 requireSame('scripts/lib/icon-usage.js', 'starter/scripts/lib/icon-usage.js')
+requireSame('scripts/check-contract.js', 'starter/scripts/check-contract.js')
+requireSame('scripts/lib/contract-exceptions.js', 'starter/scripts/lib/contract-exceptions.js')
 requireSame('scripts/lib/layout-rules.js', 'starter/scripts/lib/layout-rules.js')
 requireSame('contracts/fake-content.json', 'starter/contracts/fake-content.json')
 requireSame('contracts/copy-lexicon.json', 'starter/contracts/copy-lexicon.json')
@@ -212,6 +217,23 @@ if (starterIndex && !/<meta\s+name=["']infoux:template["']/.test(starterIndex)) 
 const syncScript = read('scripts/sync-starter.sh')
 if (syncScript && !/^set -o pipefail/m.test(syncScript)) {
   fail('scripts/sync-starter.sh에 set -o pipefail이 없습니다 — 스타터 검사 실패가 tail 파이프에 묻힙니다.')
+}
+
+// HX-07 기준 문서 정합 — 정본과 모순되는 처방(슬롭 유도 문구)을 references·site/design·prompts에 두지 않는다
+//   사전: contracts/copy-lexicon.json prescriptions, 판정: scripts/lib/doc-prescriptions.js
+//   스타터 사본(starter/prompts)·MCP 번들(mcp/data)은 원본에서 생성되므로 원본만 본다
+const lexicon = JSON.parse(read('contracts/copy-lexicon.json') || '{}')
+if (Array.isArray(lexicon.prescriptions)) {
+  const { scanDocPrescriptions } = require('./lib/doc-prescriptions')
+  for (const dir of ['references', 'site/design', 'prompts']) {
+    const abs = path.join(ROOT, dir)
+    if (!fs.existsSync(abs)) continue
+    for (const name of fs.readdirSync(abs).filter(f => f.endsWith('.md'))) {
+      for (const f of scanDocPrescriptions(fs.readFileSync(path.join(abs, name), 'utf8'), lexicon.prescriptions)) {
+        fail(`${dir}/${name}:${f.line} [HX-07] ${f.message}\n    ${f.code}`)
+      }
+    }
+  }
 }
 
 if (errors > 0) {

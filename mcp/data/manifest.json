@@ -1,5 +1,5 @@
 {
-  "version": "e3941ee",
+  "version": "762a5f9",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -71,7 +71,7 @@
     {
       "id": "release-checklist",
       "file": "release-checklist.md",
-      "chars": 2373,
+      "chars": 2543,
       "summary": "자동검사가 통과했다고 배포해도 되는 것은 아니다. `npm run check`는 규칙 위반을 잡을 뿐, \"이 화면이 쓸 만한가\"는 판단하지 못한다."
     },
     {

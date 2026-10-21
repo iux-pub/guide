@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - R-25 확장 — `-card`·`-tile` 블록까지 카드형으로 보고 중첩을 막는다. li 래퍼 안의 카드도 그리드로 센다. main 직계 section의 archetype 선언이 없으면 납품 페이지 오류·그 밖 경고, 납품 페이지는 그리드 3연속·페이지당 3개부터 오류.
   - R-26 확장 — 토큰 스택 1순위는 카탈로그 한글 폰트, `font-family` 직접값·`font-serif`·임의 `font-[…]`·새 서체 변수 금지, 외부 폰트 호스트(link·@import·@font-face 절대 URL) 금지. 타입 표기 없는 `font-[var(--font-*)]`가 font-weight로 생성되는 함정을 잡는다(`scripts/lib/font-rules.js`).
   - R-27 확장 — `<use href>`를 대장 스프라이트의 실제 symbol과 대조(표정 보유 포함), icon-font 클래스 조합, 아이콘 aria-hidden 누락은 오류. 직접 그린 인라인 svg와 같은 목록 안 표정 혼용은 경고(`scripts/lib/icon-usage.js`).
+- **납품 게이트와 기준 문서 정합** (안티슬롭 후속 묶음 3)
+  - `npm run check:release`(CT-03, `scripts/check-contract.js --release`) — `infoux.json` `contentSources`가 비었거나 자리값이면, 납품 페이지에 `data-content-pending`·형식 예시 주석이 남았으면, 규칙 예외가 만료·형식 오류면 납품을 막는다. 평소 `npm run check`는 경고만 낸다. `create-infomind-ux`가 `contentSources`·`exceptions` 빈 칸을 만든다.
+  - R-47 법령 예외 — `exceptions`에 `{ rule: 'R-47', legalBasis, owner, expires }`가 있으면 주민등록번호 입력을 경고로 낮춘다. 근거 조항 없는 예외는 인정하지 않는다.
+  - HX-07 — 정본과 모순되는 처방(여백 40%·글래스모피즘 권장·스크롤 스토리텔링·linear/ease 구식 등)을 `contracts/copy-lexicon.json` `prescriptions` 사전으로 `references`·`site/design`·`prompts`에서 막는다(`check-harness.js`).
 - **아트 디렉션 계층 v1** — "규정 준수형 무개성"을 벗어나기 위한 표현 판단 기준을 계약·카탈로그·검사로 도입했다.
   - 표현 등급(expression) 축 — `contracts/profiles.json` 1.1.0에 `utility`(기능형) / `restrained`(절제형) / `expressive`(표현형) 3등급과 프로필별 기본 등급을 정의했다. 등급은 상한이지 목표가 아니며, Task Contract 스키마의 `expression` 필드로만 상향한다(`publicIdentity: required`면 상한 restrained — 스키마가 강제). `contentSources` 필드로 실제 기관 용어·콘텐츠 출처를 운반한다.
   - `contracts/art-direction.json` — 한글 조판 수치(keep-all·행간·자간·weight 상한), 타이포 페어링 카탈로그(원 배포처가 공식 woff2를 제공하는 폰트만 — 파일은 입수 대기), 팔레트 인덱스, 프로필별 리듬·카피 톤의 기계용 정본. 산문 해설·안티패턴 색인·납품 전 리뷰 체크리스트는 `references/art-direction.md`에 있다.
@@ -31,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - 고정 높이 컨트롤(calendar·file-upload·main-menu·pagination·step-indicator)의 `leading-none`을 `leading-[1.5]`로 바꿨다 — 렌더는 같고 R-24 하한을 지킨다. 문서 사이트 히어로 제목의 음수 자간을 0.1rem으로 바꿨다.
 - 플레이그라운드 코드 표시 서체(18개 파일의 Consolas 직접 지정)를 `var(--font-mono)`로 바꿨다 — mono 스택에 Consolas가 있어 Windows 렌더는 같다.
+- 미학 가이드(`site/design/aesthetics.md`)의 모션·레이아웃 원칙을 R-22 모션 예산·R-25 섹션 리듬·표현 등급 기준으로 다시 썼다. 한국어 행간 하한 서술을 1.2에서 R-24 정본 1.5로 바로잡았다.
+
+### Removed
+- `prompts/beauty-score.md`(스타터 사본 포함) — 생성기·인바운드 링크가 없는 고아 파일이고, 히어로 72~160px·행간 1.0·여백 40% 같은 처방이 모두 정본과 충돌했다.
 - BREAKING(파생 사이트 외관): 한글 조판 기본값을 base 계층에 도입했다. `3-generic/reset.css`의 body에 `word-break: keep-all`·`overflow-wrap: break-word`를 추가하고(`pre`·`code`는 `word-break: normal` 예외), 본문 line-height를 1.5 → 1.7로 올렸다. `4-elements/base.css`의 h1~h6 line-height는 1.5 → 1.3으로 내렸다. font-weight는 바뀌지 않는다.
 - 영향 범위: 이 저장소의 reset/base를 상속하는 모든 파생 사이트에서 ① 자체 `line-height`가 없는 본문 문단·목록의 행간이 커져 페이지 세로 길이가 늘고 ② 제목 행간이 줄어 여러 줄 제목이 조밀해지며 ③ keep-all로 한글 줄바꿈 위치가 단어 경계로 바뀐다. `leading-*`을 직접 지정한 컴포넌트(btn·badge·form·alert 등 6-components)는 영향이 없다. 파생 사이트는 업데이트 후 본문·제목이 긴 페이지의 시각 회귀를 확인해야 한다.
 

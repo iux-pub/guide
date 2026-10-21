@@ -520,7 +520,7 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { @apply [background:var(
 }
 
 .docs-layout__content .home-hero__title {
-  @apply m-0 p-0 border-0 text-[4rem] pc:text-[5.6rem] font-bold leading-[1.25] tracking-[-0.02em] text-[var(--color-text-bolder)];
+  @apply m-0 p-0 border-0 text-[4rem] pc:text-[5.6rem] font-bold leading-[1.25] tracking-[0.1rem] text-[var(--color-text-bolder)];
 }
 
 .docs-layout__content .home-hero__lead {

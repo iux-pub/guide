@@ -13,14 +13,14 @@ HTML 마크업 작성 규칙이다.
 |----|------|--------|------|
 | R-07 | inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용 | warning | check-violations.js |
 | R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warning | check-violations.js |
-| R-09 | img alt 속성 필수 | error | check-violations.js |
+| R-09 | img alt 속성 필수 — 일반 어휘·파일명·연번 alt는 경고 | error | check-violations.js, check-html-structure.js |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | check-violations.js |
 | R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | check-html-structure.js |
 | R-23 | 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처 | error | check-violations.js |
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | check-html-structure.js |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | check-icons.js, manual |
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | check-html-structure.js |
-| R-30 | 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지 | error | check-html-structure.js |
+| R-30 | 링크는 실제 목적지와 그 목적지를 말하는 이름을 가진다 — 빈 값·#·javascript: 금지, 더보기만인 이름 경고 | error | check-html-structure.js |
 | R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | check-html-structure.js |
 | R-36 | 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27) | error | check-violations.js |
 | R-39 | main 안 h1은 하나, 제목 단계를 건너뛰지 않는다 | error | check-html-structure.js |
@@ -32,6 +32,7 @@ HTML 마크업 작성 규칙이다.
 | R-45 | 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다 | error | check-html-structure.js |
 | R-46 | publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다 | error | check-html-structure.js |
 | R-47 | 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다 | error | check-html-structure.js |
+| R-50 | placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고 | warn | check-html-structure.js |
 
 ---
 
@@ -76,22 +77,23 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-09 — img alt 속성 필수
+## R-09 — img alt 속성 필수 — 일반 어휘·파일명·연번 alt는 경고
 
-**심각도:** `error` &nbsp; **검증:** check-violations.js
+**심각도:** `error` &nbsp; **검증:** check-violations.js · check-html-structure.js
 
-> 스크린 리더 사용자에게 이미지 정보를 전달한다. 장식용 이미지는 alt=""로 빈 값을 명시해 스크린 리더가 건너뛰게 한다. WCAG 1.1.1 비텍스트 콘텐츠 (A등급).
+> 스크린 리더 사용자에게 이미지 정보를 전달한다. 장식용 이미지는 alt=""로 빈 값을 명시해 스크린 리더가 건너뛰게 한다. WCAG 1.1.1 비텍스트 콘텐츠 (A등급). alt가 있어도 '메인 이미지'·'hero image'처럼 모든 어절이 일반 어휘이거나, 파일명(.jpg 등)·연번('이미지 1'·'banner01')·카메라 원본 이름(IMG_2034)이면 경고다(scripts/lib/content-quality.js). alt=""·aria-hidden·role=presentation·aria-labelledby는 면제, 문서(site·references·prompts)는 반례를 싣기 때문에 보지 않는다. 여러 줄에 걸친 <img>의 alt 누락은 트리 파서가 오류로 보완한다.
 
 **금지 예시**
 
 ```html
 <img src="photo.jpg">   // alt 없음
+<img src="hero.jpg" alt="메인 비주얼 이미지">   // 일반 어휘뿐 — warn
 ```
 
 **올바른 형식**
 
 ```html
-<img src="photo.jpg" alt="제품 상세 이미지">   // 의미 있는 alt
+<img src="photo.jpg" alt="흰색 러닝화 측면 사진">   // 이미지가 전하는 내용
 <img src="deco.svg" alt="">   // 장식용: 빈 alt 명시
 ```
 
@@ -273,11 +275,11 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-30 — 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지
+## R-30 — 링크는 실제 목적지와 그 목적지를 말하는 이름을 가진다 — 빈 값·#·javascript: 금지, 더보기만인 이름 경고
 
 **심각도:** `error` &nbsp; **검증:** check-html-structure.js
 
-> 국내 웹 96곳 중 javascript: 링크 55%, 빈 # 65%가 관찰된 관행이지만 WCAG 4.1.2(이름·역할·값)를 어기고 새 탭·북마크·공유가 안 된다. 이동은 실제 주소의 a, 동작(열기·닫기·토글·더보기)은 button으로 쓴다. href가 빈 값·'#'·'#none'·'#;'이거나 javascript:로 시작하면 오류다(scripts/lib/page-rules.js isDeadHref). '#top'·실제 앵커(#main)는 통과, 템플릿 식({{ url }})은 렌더할 때 정해지므로 보지 않는다. 스니펫·플레이그라운드·문서 예시까지 모든 마크업에 적용한다(반례 문서는 기존 제외 경로).
+> 국내 웹 96곳 중 javascript: 링크 55%, 빈 # 65%가 관찰된 관행이지만 WCAG 4.1.2(이름·역할·값)를 어기고 새 탭·북마크·공유가 안 된다. 이동은 실제 주소의 a, 동작(열기·닫기·토글·더보기)은 button으로 쓴다. href가 빈 값·'#'·'#none'·'#;'이거나 javascript:로 시작하면 오류다(scripts/lib/page-rules.js isDeadHref). '#top'·실제 앵커(#main)는 통과, 템플릿 식({{ url }})은 렌더할 때 정해지므로 보지 않는다. 스니펫·플레이그라운드·문서 예시까지 모든 마크업에 적용한다(반례 문서는 기존 제외 경로). 이름 경고(scripts/lib/content-quality.js): 접근 가능한 이름(aria-labelledby → aria-label → 글·sr-only·img alt)에서 장식 기호를 지운 결과가 '더보기'·'자세히'·'바로가기'·'VIEW MORE'·'Learn more' 같은 말뿐이면 경고, 문서 하나 안에서 같은 이름의 링크가 서로 다른 목적지(끝 슬래시·index.html·#조각은 같게 봄)로 가면 경고다. 숫자만인 이름(페이지 번호)과 button은 보지 않는다. 이 경고는 스니펫·플레이그라운드·납품 페이지에만 쓴다.
 
 **금지 예시**
 
@@ -557,5 +559,28 @@ HTML 마크업 작성 규칙이다.
 ```
 
 **참고:** references/workflows/design-form.md, scripts/lib/page-rules.js
+
+---
+
+## R-50 — placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고
+
+**심각도:** warn &nbsp; **검증:** check-html-structure.js
+
+> placeholder는 입력하면 사라지고 대비가 낮아 안내를 맡길 수 없다. '내용을 입력하세요'·'입력해 주십시오'처럼 아무 정보도 없는 안내와, 연결된 레이블(필수 표시 * 제외)을 되풀이할 뿐인 placeholder는 경고다(scripts/lib/content-quality.js placeholderFindings). '{레이블}을 입력하세요'는 microcopy 기준(site/design/microcopy.md)이 허용하므로 걸지 않는다. 형식 안내는 '예: 2026-11-03' 같은 예시로, 설명은 form-field__hint와 aria-describedby로 준다. 근거는 KRDS가 아니라 팀 마이크로카피 기준이다. 스니펫·플레이그라운드·납품 페이지에만 쓴다.
+
+**금지 예시**
+
+```html
+<textarea id="memo" placeholder="내용을 입력하세요"></textarea>   // 빈 안내
+<label for="email">이메일*</label><input id="email" placeholder="이메일">   // 레이블 반복
+```
+
+**올바른 형식**
+
+```html
+<label for="visit">방문일</label><input id="visit" placeholder="예: 2026-11-03">   // 예시만
+```
+
+**참고:** site/design/microcopy.md, scripts/lib/content-quality.js
 
 ---

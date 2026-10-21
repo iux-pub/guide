@@ -40,7 +40,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-03 `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - R-19 `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 - R-20 `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
-- R-24 `error` — 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고
+- R-24 `error` — 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류)
 - R-26 `error` — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
 - R-31 warn — 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)
 - R-34 `error` — 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자
@@ -60,14 +60,14 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 ### HTML/마크업 규칙
 - R-07 `warn` — inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용
 - R-08 `warn` — HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)
-- R-09 `error` — img alt 속성 필수
+- R-09 `error` — img alt 속성 필수 — 일반 어휘·파일명·연번 alt는 경고
 - R-10 `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
 - R-15 `error` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
 - R-23 `error` — 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
 - R-29 `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
-- R-30 `error` — 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지
+- R-30 `error` — 링크는 실제 목적지와 그 목적지를 말하는 이름을 가진다 — 빈 값·#·javascript: 금지, 더보기만인 이름 경고
 - R-32 `error` — 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만
 - R-36 `error` — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
 - R-39 `error` — main 안 h1은 하나, 제목 단계를 건너뛰지 않는다
@@ -79,6 +79,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-45 `error` — 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다
 - R-46 `error` — publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다
 - R-47 `error` — 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다
+- R-50 warn — placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -87,7 +88,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-14 `error` — 건너뛰기 링크 필수 — .skip-to-content
 - R-16 `error` — 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다
 - R-21 `error` — html lang 속성 필수 — 문서 기본 언어 명시
-- R-22 `warn` — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
+- R-22 `warn` — 모션 최소화 선호 존중과 표현 등급별 모션 예산 — 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션 금지
 - R-28 `error` — 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지
 - R-33 `error` — 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다
 <!-- RULES_END -->

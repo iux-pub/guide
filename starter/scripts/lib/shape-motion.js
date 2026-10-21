@@ -137,4 +137,122 @@ function scanHtmlShape(html, opts = {}) {
   return out
 }
 
-module.exports = { scanCssShape, scanClassShape, scanHtmlShape, DEFAULT_PILL_BLOCKS }
+// ─── R-22 모션 예산 — 표현 등급(utility·restrained·expressive)별 상한 ─────────────
+//   오류는 둘뿐: restrained·utility에서 로더 밖 무한 반복, utility의 스크롤 진입 모션.
+//   등급 출처(infoux.json profile)가 없으면 오류 판정도 경고로 낮춘다(ctx.gradeKnown).
+//   경고: 500ms 초과, 장식 animation의 등급 상한(200·300·400ms) 초과, cubic-bezier 튕김(overshoot), 로더 밖 animate-bounce·ping·pulse.
+//   로더(spinner·skeleton·progress·loading)와 컴포넌트 피드백 모션(모달·토스트·드롭다운·탭…)은 interaction-timing 소관이라 면제.
+//   @keyframes 안의 scale 튕김은 못 잡는다 — 수동 QA.
+const MOTION_CAP = { utility: 200, restrained: 300, expressive: 400 }
+const LOADER = /spinner|skeleton|progress|loading|loader|shimmer|placeholder|--pending|--loading|aria-busy/i
+const FEEDBACK_FILE = /(?:^|\/)(?:modal|toast|side-panel|tooltip|dialog|accordion|disclosure|mobile-menu|main-menu|select|tab|header|calendar)\.css$/
+const timesMs = v => String(v).split(/,(?![^(]*\))/).map(part => {
+  const m = part.match(/(?:^|[\s(])(\d*\.?\d+)(ms|s)\b/)
+  return m ? (m[2] === 's' ? +m[1] * 1000 : +m[1]) : null
+}).filter(x => x !== null)
+const overshoot = v => [...String(v).matchAll(/cubic-bezier\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/g)].some(m => +m[2] < 0 || +m[2] > 1 || +m[4] < 0 || +m[4] > 1)
+
+// 선언·@apply → 모션 조각 [{ kind: 'animation'|'transition'|'timing'|'util', value }]
+function motionParts(d) {
+  const out = []
+  if (/^animation(?:-duration|-iteration-count|-timing-function)?$/.test(d.prop)) out.push({ kind: d.prop === 'animation-timing-function' ? 'timing' : 'animation', value: d.value })
+  if (/^transition(?:-duration|-timing-function)?$/.test(d.prop)) out.push({ kind: d.prop === 'transition-timing-function' ? 'timing' : 'transition', value: d.value })
+  if (d.prop === '@apply') {
+    for (const raw of d.value.split(/\s+/)) {
+      const tok = raw.replace(/^(?:[\w-]+:|\[[^\]]*\]:)*/, '')
+      let m
+      if ((m = tok.match(/^\[(animation|transition)(?:-duration|-iteration-count)?:(.+)\]$/))) out.push({ kind: m[1], value: m[2].replace(/_/g, ' ') })
+      else if ((m = tok.match(/^animate-\[(.+)\]$/))) out.push({ kind: 'animation', value: m[1].replace(/_/g, ' ') })
+      else if ((m = tok.match(/^animate-(spin|ping|pulse|bounce)$/))) out.push({ kind: 'util', value: m[1] })
+      else if ((m = tok.match(/^duration-(\d+)$/))) out.push({ kind: 'transition', value: `${m[1]}ms` })
+      else if ((m = tok.match(/^duration-\[(.+)\]$/))) out.push({ kind: 'transition', value: m[1] })
+      else if ((m = tok.match(/^ease-\[(.+)\]$/))) out.push({ kind: 'timing', value: m[1].replace(/_/g, ' ') })
+    }
+  }
+  return out
+}
+
+// ctx: { grade, gradeKnown, file }
+function scanCssMotion(css, ctx = {}) {
+  const grade = ctx.grade || 'restrained'
+  const file = String(ctx.file || '')
+  const loaderFile = LOADER.test((file.match(/[^/]+$/) || [''])[0])
+  const feedback = FEEDBACK_FILE.test(file)
+  const out = []
+  for (const b of cssBlocks(css)) {
+    const sel = b.selectors.filter(Boolean).join(', ')
+    const loader = loaderFile || LOADER.test(sel)
+    for (const d of b.decls) {
+      const push = (severity, message) => out.push({ rule: 'R-22', severity, line: d.line, message, code: `${sel} { ${d.prop === '@apply' ? '@apply ' : d.prop + ': '}${d.value} }`.replace(/\s+/g, ' ').slice(0, 120) })
+      for (const p of motionParts(d)) {
+        if (loader) continue
+        if (p.kind === 'util') {
+          if (p.value === 'spin') push(grade === 'expressive' || !ctx.gradeKnown ? 'warn' : 'error', '로더 밖의 무한 회전(animate-spin) — 무한 반복 모션은 로딩 표시에만 쓴다.')
+          else push('warn', `animate-${p.value} — 장식 반복 모션은 로딩 표시(spinner·skeleton) 밖에서 쓰지 않는다.`)
+          continue
+        }
+        if (p.kind === 'animation' && /\binfinite\b/.test(p.value)) {
+          push(grade === 'expressive' || !ctx.gradeKnown ? 'warn' : 'error', `로더 밖의 무한 반복 애니메이션(${grade}) — 계속 움직이는 장식은 주의를 빼앗는다. 로딩 표시에만 쓴다.`)
+        }
+        if (p.kind === 'timing' || p.kind === 'animation' || p.kind === 'transition') {
+          if (!feedback && overshoot(p.value)) push('warn', '튕기는 easing(cubic-bezier 값이 0~1 밖) — 장식 모션에 overshoot를 쓰지 않는다.')
+        }
+        if (p.kind === 'animation' || p.kind === 'transition') {
+          const max = Math.max(0, ...timesMs(p.value))
+          if (max > 500) push('warn', `모션 ${max}ms — 500ms를 넘는 모션은 느리게 느껴진다(KRDS 모션 0.1~0.5초).`)
+          else if (p.kind === 'animation' && !feedback && max > MOTION_CAP[grade]) push('warn', `장식 애니메이션 ${max}ms — ${grade} 등급 상한 ${MOTION_CAP[grade]}ms를 넘는다.`)
+        }
+      }
+    }
+  }
+  const seen = new Set()
+  return out.filter(f => { const k = `${f.line}|${f.message}`; if (seen.has(k)) return false; seen.add(k); return true })
+}
+
+// HTML — 스크롤 진입 모션(data-aos·animate__·reveal·fade-up)을 요소 단위로 센다(빌드된 페이지 기준),
+//   class의 animate-*, <style> 블록
+const REVEAL_TOKEN = /^(?:reveal(?:--[\w-]+)?|fade-(?:up|in-up|down|left|right)|animate__(?!animated$)[\w-]+)$/
+function scanHtmlMotion(html, ctx = {}) {
+  const T = require('./html-tree')
+  const grade = ctx.grade || 'restrained'
+  const out = []
+  const reveals = []
+  T.walk(T.parseHtml(html), n => {
+    if (n.tag === '#root') return
+    if (n.tag === '#text') {
+      if (n.rawText && n.parent.tag === 'style') for (const f of scanCssMotion(n.text, ctx)) out.push({ ...f, line: n.lineStart + f.line - 1 })
+      return
+    }
+    const classes = T.classesOf(n)
+    const code = (n.src || '').replace(/\s+/g, ' ').slice(0, 120)
+    if ('data-aos' in n.attrs || classes.some(c => REVEAL_TOKEN.test(c))) reveals.push(n)
+    const loader = [n, ...T.ancestors(n)].some(a => /^(?:progressbar|status)$/.test(a.attrs?.role || '') || a.attrs?.['aria-busy'] === 'true' || T.classesOf(a).some(c => LOADER.test(c)))
+    if (loader) return
+    for (const c of classes) {
+      const m = c.replace(/^(?:[\w-]+:)*/, '').match(/^animate-(spin|ping|pulse|bounce)$/)
+      if (!m) continue
+      if (m[1] === 'spin') out.push({ rule: 'R-22', severity: grade === 'expressive' || !ctx.gradeKnown ? 'warn' : 'error', line: n.line, message: '로더 밖의 무한 회전(animate-spin) — 무한 반복 모션은 로딩 표시(role="status")에만 쓴다.', code })
+      else out.push({ rule: 'R-22', severity: 'warn', line: n.line, message: `animate-${m[1]} — 장식 반복 모션은 로딩 표시 밖에서 쓰지 않는다.`, code })
+    }
+  })
+  const push = (severity, n, message) => out.push({ rule: 'R-22', severity, line: n.line, message, code: (n.src || '').replace(/\s+/g, ' ').slice(0, 120) })
+  if (grade === 'utility') {
+    for (const n of reveals) push(ctx.gradeKnown ? 'error' : 'warn', n, '기능형(utility) 화면의 스크롤 진입 모션 — 과업 화면은 내용이 바로 보여야 한다. 진입 효과를 뺀다.')
+  } else if (grade === 'restrained') {
+    for (const n of reveals) {
+      if (!('data-aos' in n.attrs)) continue
+      const why = []
+      if (n.attrs['data-aos'] !== 'fade') why.push(`이동 효과(${n.attrs['data-aos'] || '기본'})`)
+      if (n.attrs['data-aos-once'] !== 'true') why.push('반복 재생(data-aos-once="true" 없음)')
+      if (+n.attrs['data-aos-duration'] > 300) why.push(`${n.attrs['data-aos-duration']}ms`)
+      if (why.length) push('warn', n, `절제형(restrained) 등급의 스크롤 진입 모션 예산 초과 — ${why.join('·')}. fade·1회·300ms 이하로 둔다.`)
+    }
+    const classOnly = reveals.filter(n => !('data-aos' in n.attrs))
+    if (classOnly.length >= 3) push('warn', classOnly[2], `절제형(restrained) 화면에 스크롤 진입 모션이 ${classOnly.length}곳 — 진입 효과는 2곳 이하로 둔다.`)
+  } else if (reveals.length >= 3) {
+    push('warn', reveals[2], `스크롤 진입 모션이 ${reveals.length}곳 — 표현형이라도 모든 섹션에 진입 효과를 걸지 않는다.`)
+  }
+  return out
+}
+
+module.exports = { scanCssShape, scanClassShape, scanHtmlShape, scanCssMotion, scanHtmlMotion, DEFAULT_PILL_BLOCKS }

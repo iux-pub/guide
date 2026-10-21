@@ -50,7 +50,7 @@
   }
 
   .calendar__title {
-    @apply text-[1.9rem] font-bold leading-none m-0 text-[var(--color-text)];
+    @apply text-[1.9rem] font-bold leading-[1.5] m-0 text-[var(--color-text)];
 
   }
 
@@ -68,7 +68,7 @@
 
   /* 일자 버튼 — 4×4 정사각 */
   .calendar__day {
-    @apply w-[4rem] h-[4rem] inline-flex items-center justify-center bg-transparent rounded-full text-[var(--color-text)] text-[1.7rem] leading-none cursor-pointer border border-transparent [transition:background-color_0.15s_ease-in-out,_color_0.15s_ease-in-out];
+    @apply w-[4rem] h-[4rem] inline-flex items-center justify-center bg-transparent rounded-full text-[var(--color-text)] text-[1.7rem] leading-[1.5] cursor-pointer border border-transparent [transition:background-color_0.15s_ease-in-out,_color_0.15s_ease-in-out];
   }
 
   .calendar__day:hover:not(:disabled):not([aria-selected="true"]) {

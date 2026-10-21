@@ -52,6 +52,13 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 이름의 질(R-09 alt·R-30 링크 이름·R-50 placeholder) — 없으면(오래된 파생 프로젝트) 건너뛴다
+let QUALITY = null
+try {
+  QUALITY = require('./lib/content-quality')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 사이트 유형 — infoux.json profile. 없으면 유형별 판정(공공 통합검색·커머스 사업자 정보)을 하지 않는다
 const PROFILE = (() => {
   try {
@@ -336,7 +343,8 @@ function extractHtmlBlocks(content) {
   let m
   while ((m = re.exec(content)) !== null) {
     const blockText = m[1]
-    const startLine = content.slice(0, m.index).split('\n').length
+    // 펜스(```html) 다음 줄이 블록 1행이다
+    const startLine = content.slice(0, m.index).split('\n').length + 1
     blocks.push({ text: blockText, startLine })
   }
   return blocks
@@ -1010,6 +1018,14 @@ function checkHtml(html, filePath, baseLineNum = 1) {
     // R-33 자동 전환 정지·자동 재생 영상·marquee도 모든 마크업
     // R-47 개인정보 수집 폼(고지·미리 체크·주민등록번호)도 모든 마크업
     for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html), ...PAGE_RULES.langFindings(html, { docs: /^\/site\//.test(relPosix(filePath)) })]) {
+      const report = f.severity === 'error' ? error : warn
+      report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
+  }
+  // 이름의 질(R-09 alt·R-30 링크 이름·R-50 placeholder) — 스니펫·플레이그라운드·납품 페이지만.
+  // 문서(site·references·prompts)는 ❌ 반례를 DO 예시와 같은 블록에 싣는다
+  if (QUALITY && !/^\/(?:site|references|prompts)\//.test(relPosix(filePath))) {
+    for (const f of [...QUALITY.altFindings(html), ...QUALITY.linkNameFindings(html), ...QUALITY.placeholderFindings(html)]) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }

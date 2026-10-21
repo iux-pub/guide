@@ -127,3 +127,10 @@
 
 > 상세: site/design/aesthetics.md
 
+
+---
+
+## 한국형 웹 패턴
+
+> 상세: site/design/korean-web-patterns.md
+

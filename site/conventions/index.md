@@ -28,7 +28,7 @@ order: 1
 | R-06 | 시각적 modifier 금지 — 의미적 이름 사용 | error | [BEM 네이밍](/conventions/bem/) |
 | R-07 | inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용 | warning | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warning | [HTML/마크업 규칙](/conventions/html-rules/) |
-| R-09 | img alt 속성 필수 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-09 | img alt 속성 필수 — 일반 어휘·파일명·연번 alt는 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-11 | 포커스 스타일 필수 — :focus { outline: none } 금지 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-12 | 색상 대비 — 일반 텍스트 4.5:1 이상, 큰 텍스트 3:1 이상 | error | [접근성 규칙](/conventions/a11y-rules/) |
@@ -41,15 +41,15 @@ order: 1
 | R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | [접근성 규칙](/conventions/a11y-rules/) |
-| R-22 | 모션 최소화 선호 존중 — prefers-reduced-motion 가드 | warning | [접근성 규칙](/conventions/a11y-rules/) |
+| R-22 | 모션 최소화 선호 존중과 표현 등급별 모션 예산 — 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션 금지 | warning | [접근성 규칙](/conventions/a11y-rules/) |
 | R-23 | 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
-| R-24 | 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고 | error | [CSS 규칙](/conventions/css-rules/) |
+| R-24 | 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류) | error | [CSS 규칙](/conventions/css-rules/) |
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-26 | 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-28 | 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지 | error | [접근성 규칙](/conventions/a11y-rules/) |
 | R-29 | 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
-| R-30 | 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-30 | 링크는 실제 목적지와 그 목적지를 말하는 이름을 가진다 — 빈 값·#·javascript: 금지, 더보기만인 이름 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-31 | 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고) | warn | [CSS 규칙](/conventions/css-rules/) |
 | R-32 | 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-33 | 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다 | error | [접근성 규칙](/conventions/a11y-rules/) |
@@ -69,6 +69,7 @@ order: 1
 | R-47 | 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-48 | 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-49 | 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고) | warn | [CSS 규칙](/conventions/css-rules/) |
+| R-50 | placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

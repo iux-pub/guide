@@ -1,5 +1,5 @@
 {
-  "version": "9f32769",
+  "version": "919d146",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -23,7 +23,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 16409,
+      "chars": 16410,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -47,7 +47,7 @@
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 70587,
+      "chars": 70563,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
@@ -225,7 +225,7 @@
     {
       "id": "form",
       "file": "form.md",
-      "chars": 1944,
+      "chars": 1920,
       "summary": "KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스템메시지** (요소 간 8px gap)"
     },
     {
@@ -309,7 +309,7 @@
     {
       "id": "signature",
       "file": "signature.md",
-      "chars": 4037,
+      "chars": 4060,
       "summary": "\"이 사이트만의 것\"으로 기억되는 반복 장치 3패턴이다. 등급별 상한(utility 0 · restrained 1 · expressive 3)은 `contracts/art-direction.json` expressionLevels가 정본이고, 선정·배치 원칙은 `references..."
     },
     {

@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 9f32769
+> 빌드: 919d146
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -216,7 +216,7 @@ KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스�
 ```html
 <div class="form-field">
   <label for="memo" class="form-field__label">메모</label>
-  <textarea id="memo" class="textarea" rows="4" placeholder="내용을 입력하세요"></textarea>
+  <textarea id="memo" class="textarea" rows="4"></textarea>
 </div>
 ```
 

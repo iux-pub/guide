@@ -249,7 +249,7 @@ body { font-family: var(--font-sans); }
 #### ✅ 허용
 
 ```html
-<img src="logo.png" alt="로고" class="visual-panel__logo" />
+<img src="logo.png" alt="기관명" class="visual-panel__logo" />
 <ol class="step-indicator" aria-label="진행 단계">...</ol>
 <p class="wrap">텍스트</p>
 ```

@@ -22,6 +22,11 @@
       "appliesFromRem": 3.2
     },
     "headingMaxLines": 2,
+    "singleLineSelectors": {
+      "blocks": ["btn", "badge", "tag"],
+      "suffixes": ["__icon", "__close", "__remove"],
+      "note": "R-24 행간 하한(lintFloor) 예외 — 한 줄로 고정된 UI 블록과 글리프 전용 요소만. 같은 규칙 블록에 whitespace-nowrap(white-space: nowrap)이 있으면 그 선택자도 예외다. 블록 단위 예외 확대는 KRDS 결정 D4④에서 기각됐다."
+    },
     "weights": {
       "bodyBase": 400,
       "bodyEmphasisMax": 700,

@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **이름의 질·조판·모션 예산 검사** (안티슬롭 후속 묶음 1)
+  - R-09 품질 경고 — 일반 어휘('메인 이미지'·'hero image')·파일명·연번·카메라 원본 이름 alt. 여러 줄 `<img>`의 alt 누락은 트리 파서가 오류로 보완한다(`scripts/lib/content-quality.js`).
+  - R-30 이름 경고 — '더보기'·'자세히'·'VIEW MORE'만인 링크, 같은 이름이 서로 다른 목적지로 가는 링크.
+  - R-50(신규, 경고) — '내용을 입력하세요' 같은 빈 placeholder와 레이블 반복. 스니펫·플레이그라운드의 해당 5곳을 예시 형식으로 고쳤다.
+  - R-24 확장 — 음수 자간·전역 자간·pre/code 밖 `word-break: break-all·normal·break-word` 오류, 마크업의 1.5 미만 행간 오류, CSS 행간 경고를 선언·`@apply` 단위로 본다. 단행 예외는 `contracts/art-direction.json` `hangul.singleLineSelectors`와 `whitespace-nowrap`.
+  - R-22 모션 예산 — 표현 등급별로 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션(오류), 500ms 초과·등급 상한 초과·튕기는 easing·restrained의 data-aos 예산 초과(경고). `@apply [transition:…]` 표기를 읽는다.
+  - 문서 사이트에 한국형 웹 패턴(K-01) 페이지를 노출했다.
 - **아트 디렉션 계층 v1** — "규정 준수형 무개성"을 벗어나기 위한 표현 판단 기준을 계약·카탈로그·검사로 도입했다.
   - 표현 등급(expression) 축 — `contracts/profiles.json` 1.1.0에 `utility`(기능형) / `restrained`(절제형) / `expressive`(표현형) 3등급과 프로필별 기본 등급을 정의했다. 등급은 상한이지 목표가 아니며, Task Contract 스키마의 `expression` 필드로만 상향한다(`publicIdentity: required`면 상한 restrained — 스키마가 강제). `contentSources` 필드로 실제 기관 용어·콘텐츠 출처를 운반한다.
   - `contracts/art-direction.json` — 한글 조판 수치(keep-all·행간·자간·weight 상한), 타이포 페어링 카탈로그(원 배포처가 공식 woff2를 제공하는 폰트만 — 파일은 입수 대기), 팔레트 인덱스, 프로필별 리듬·카피 톤의 기계용 정본. 산문 해설·안티패턴 색인·납품 전 리뷰 체크리스트는 `references/art-direction.md`에 있다.
@@ -18,8 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `contracts/agent-workflow.json` version 2 — task-contract step에 표현 등급 선언을 추가하고, 패턴 조합 전에 아트 디렉션 확정 step을 넣었다. `design-page`·`init-project` 워크플로에 등급 확정·contentSources 확보·프리셋 적용·`--font-heading` 절차를 연결했다.
 
 ### Changed
+- 고정 높이 컨트롤(calendar·file-upload·main-menu·pagination·step-indicator)의 `leading-none`을 `leading-[1.5]`로 바꿨다 — 렌더는 같고 R-24 하한을 지킨다. 문서 사이트 히어로 제목의 음수 자간을 0.1rem으로 바꿨다.
 - BREAKING(파생 사이트 외관): 한글 조판 기본값을 base 계층에 도입했다. `3-generic/reset.css`의 body에 `word-break: keep-all`·`overflow-wrap: break-word`를 추가하고(`pre`·`code`는 `word-break: normal` 예외), 본문 line-height를 1.5 → 1.7로 올렸다. `4-elements/base.css`의 h1~h6 line-height는 1.5 → 1.3으로 내렸다. font-weight는 바뀌지 않는다.
 - 영향 범위: 이 저장소의 reset/base를 상속하는 모든 파생 사이트에서 ① 자체 `line-height`가 없는 본문 문단·목록의 행간이 커져 페이지 세로 길이가 늘고 ② 제목 행간이 줄어 여러 줄 제목이 조밀해지며 ③ keep-all로 한글 줄바꿈 위치가 단어 경계로 바뀐다. `leading-*`을 직접 지정한 컴포넌트(btn·badge·form·alert 등 6-components)는 영향이 없다. 파생 사이트는 업데이트 후 본문·제목이 긴 페이지의 시각 회귀를 확인해야 한다.
+
+### Fixed
+- 마크다운 html 블록의 위반 줄 번호가 한 줄 앞으로 보고되던 문제(펜스 줄을 1행으로 셌다).
 
 ## [3.4.0] - 2026-07-29
 

@@ -5,7 +5,7 @@
  *
  * 구조 (JS 변형 — 권장):
  *   <button class="tooltip-trigger" aria-describedby="tip-1">도움말</button>
- *   <div id="tip-1" class="tooltip" role="tooltip" hidden>설명 텍스트</div>
+ *   <div id="tip-1" class="tooltip" role="tooltip" hidden>영문, 숫자, 특수문자를 섞어 9자 이상으로 정합니다.</div>
  *
  * CSS-only 변형 (간단한 hover-only — 키보드/터치 사용 권장 X):
  *   <span class="tooltip-wrap">

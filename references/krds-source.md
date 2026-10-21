@@ -461,8 +461,9 @@
 | nav-depth-small-bold | 1.5rem (700) | 1.5rem (700) |
 | nav-depth-small | 1.5rem (400) | 1.5rem (400) |
 
-> letter-spacing은 Display는 1px, 그 외 기본 0px.
+> letter-spacing은 Display 전 단계와 heading xlarge·large가 1px(0.1rem), 그 외 0px다(KRDS 공식 타이포그래피 표 style_03 기준 — 2026-10-20 원문 대조로 정정). 음수 자간 값은 없다.
 > line-height는 모두 150% 일관 적용.
+> mobile→pc 글자 크기 전환은 KRDS 공식 CSS에서 768px(@media max-width 767px)이다.
 
 ---
 
@@ -512,6 +513,8 @@
 | gap-10 | number-16 | 48px |
 | gap-11 | number-18 | 64px |
 | gap-12 | number-20 | 80px |
+
+> 이 표의 `gap-N`·`padding-N`은 KRDS 토큰 이름이다. 같은 이름의 Tailwind 유틸(`gap-3` = 0.75rem)과 값이 다르고, 이 저장소는 루트가 62.5%라 Tailwind 기본 스케일을 쓰지 않는다(R-37). px 값을 rem 임의값으로 옮겨 쓴다 — KRDS `gap-3`(8px) → `gap-[0.8rem]`.
 
 ### 3.3 Semantic padding
 | 토큰 | 참조 primitive | px |
@@ -899,7 +902,7 @@
 ### 10.3 입력 필드 (Text input) — 핵심 명세
 
 - 구성: 레이블 → 보조설명 → 입력박스 → 시스템메시지
-- 요소 간 gap: **gap-3 (8px)**
+- 요소 간 gap: **gap-3 (8px)** — 이 저장소 표기 `gap-[0.8rem]`
 - 입력박스 내부 padding: **padding-6 (16px)**
 - 출처: KRDS 입력폼 가이드 페이지
 

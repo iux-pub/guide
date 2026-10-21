@@ -9,27 +9,27 @@ order: 2
 ## 주요 시맨틱 색상
 
 <div class="color-grid">
-  <div class="color-swatch" style="background:var(--color-primary);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-primary); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-primary</span>
     <span class="color-swatch__desc">주요 액션</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-primary-hover);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-primary-hover); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-primary-hover</span>
     <span class="color-swatch__desc">주요 액션 hover</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-primary-pressed);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-primary-pressed); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-primary-pressed</span>
     <span class="color-swatch__desc">주요 액션 active</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-text);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-text); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-text</span>
     <span class="color-swatch__desc">본문 텍스트</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-bg);color:#000;border:1px solid var(--color-border-light)">
+  <div class="color-swatch" style="--swatch-bg: var(--color-bg); --swatch-fg: var(--color-text); --swatch-border: var(--color-border-light)">
     <span class="color-swatch__name">--color-bg</span>
     <span class="color-swatch__desc">기본 배경</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-surface);color:#000;border:1px solid var(--color-border-light)">
+  <div class="color-swatch" style="--swatch-bg: var(--color-surface); --swatch-fg: var(--color-text); --swatch-border: var(--color-border-light)">
     <span class="color-swatch__name">--color-surface</span>
     <span class="color-swatch__desc">카드/패널 표면</span>
   </div>
@@ -38,16 +38,16 @@ order: 2
 ## 상태 색상
 
 <div class="color-grid">
-  <div class="color-swatch" style="background:var(--color-info);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-info); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-info</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-success);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-success); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-success</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-warning);color:#000">
+  <div class="color-swatch" style="--swatch-bg: var(--color-warning); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-warning</span>
   </div>
-  <div class="color-swatch" style="background:var(--color-danger);color:#fff">
+  <div class="color-swatch" style="--swatch-bg: var(--color-danger); --swatch-fg: var(--color-text-inverse)">
     <span class="color-swatch__name">--color-danger</span>
   </div>
 </div>

@@ -22,5 +22,8 @@
   .badge--info    { @apply [background:var(--color-info)]; }
   .badge--success { @apply [background:var(--color-success)]; }
   .badge--warning { @apply [background:var(--color-warning)] [color:var(--color-text)]; }
+
+  /* 상태 없음(중립). --gray는 시각 단어라(R-18) 폐기 예정 별칭으로만 남긴다 — contracts/class-naming.json deprecated */
+  .badge--neutral,
   .badge--gray    { @apply [background:var(--color-gray-60)]; }
 }

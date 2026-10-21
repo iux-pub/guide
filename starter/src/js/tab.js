@@ -1,4 +1,7 @@
-// 탭 컴포넌트 — 키보드 좌우 전환 (자동 활성화)
+// 탭 컴포넌트 — KRDS 탭(component_04_10) 동작
+// - 모든 탭이 Tab·Shift+Tab 순서에 들어간다(KRDS: 「모든 탭에 접근할 수 있어야 함」) — tabindex로 빼지 않는다
+// - 탭은 클릭·Enter·Space로 고른다(수동 활성화). 버튼이라 Enter·Space는 click으로 들어온다
+// - ←→·Home·End는 보조 수단으로 초점만 옮긴다(고르지 않는다)
 ;(function () {
   'use strict'
 
@@ -7,18 +10,10 @@
     var tabs = tablist.querySelectorAll('[role="tab"]')
     var tabContainer = tablist.closest('.tab')
 
-    // 모든 탭 비활성화
     tabs.forEach(function (t) {
-      t.setAttribute('aria-selected', 'false')
-      t.setAttribute('tabindex', '-1')
+      t.setAttribute('aria-selected', t === tab ? 'true' : 'false')
     })
 
-    // 선택된 탭 활성화
-    tab.setAttribute('aria-selected', 'true')
-    tab.setAttribute('tabindex', '0')
-    tab.focus()
-
-    // 패널 전환
     var panelId = tab.getAttribute('aria-controls')
     var panels = tabContainer.querySelectorAll('[role="tabpanel"]')
     panels.forEach(function (panel) {
@@ -26,13 +21,13 @@
     })
   }
 
-  // 이벤트 위임 — 클릭
+  // 이벤트 위임 — 클릭(Enter·Space 포함)
   document.addEventListener('click', function (e) {
     var tab = e.target.closest('[role="tab"]')
     if (tab) activateTab(tab)
   })
 
-  // 이벤트 위임 — 키보드
+  // 이벤트 위임 — 방향키는 초점만 옮긴다
   document.addEventListener('keydown', function (e) {
     var tab = e.target.closest('[role="tab"]')
     if (!tab) return
@@ -41,20 +36,20 @@
     var tabs = Array.from(tablist.querySelectorAll('[role="tab"]'))
     var index = tabs.indexOf(tab)
 
-    var newTab = null
+    var target = null
     if (e.key === 'ArrowRight') {
-      newTab = tabs[(index + 1) % tabs.length]
+      target = tabs[(index + 1) % tabs.length]
     } else if (e.key === 'ArrowLeft') {
-      newTab = tabs[(index - 1 + tabs.length) % tabs.length]
+      target = tabs[(index - 1 + tabs.length) % tabs.length]
     } else if (e.key === 'Home') {
-      newTab = tabs[0]
+      target = tabs[0]
     } else if (e.key === 'End') {
-      newTab = tabs[tabs.length - 1]
+      target = tabs[tabs.length - 1]
     }
 
-    if (newTab) {
+    if (target) {
       e.preventDefault()
-      activateTab(newTab)
+      target.focus()
     }
   })
 })()

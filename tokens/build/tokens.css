@@ -4,18 +4,19 @@
  * 직접 수정 금지. 브랜드 변경은 tokens/brand.json에서 한다.
  *
  * 공개 토큰은 색상, 기본 폰트, 브레이크포인트만 발행한다.
- * 간격·크기·타이포 스케일·반경·모션·그림자·z-index는 CSS/Tailwind 직접값으로 작성한다.
+ * 간격·크기·타이포 스케일·반경은 rem 임의값(p-[1.6rem]), 모션·z-index는 CSS 값·Tailwind 임의값으로 작성한다. 그림자는 KRDS 검정 알파만.
  */
 
 :root {
   /* Font families */
-  --font-sans: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
-  --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  --font-sans: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace;
 
   /* Breakpoints */
   --breakpoint-mobile: 360px;
   --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 1024px;
   --breakpoint-pc: 1280px;
 
   /* Semantic colors */
@@ -365,14 +366,15 @@
   /* Tailwind 기본 색상 팔레트 비활성화 — INFOUX 색상만 노출 */
   --color-*: initial;
 
-  --font-sans: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
-  --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  --font-sans: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --font-heading: 'Pretendard GOV', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'D2Coding', SFMono-Regular, Consolas, monospace;
 
-  /* Tailwind responsive variants: mobile:, tablet:, pc: */
+  /* Tailwind responsive variants: mobile:, tablet:, laptop:, pc: (KRDS 표준형 small/medium/large/xlarge) */
   --breakpoint-*: initial;
   --breakpoint-mobile: 360px;
   --breakpoint-tablet: 768px;
+  --breakpoint-laptop: 1024px;
   --breakpoint-pc: 1280px;
 
   --color-primary: var(--color-primary);

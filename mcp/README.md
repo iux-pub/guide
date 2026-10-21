@@ -14,7 +14,7 @@ INFOMIND UX팀의 퍼블리싱 기준(infoUX)을 MCP로 제공한다. 팀원이 
 | `list_icons` | 아이콘 찾기. `query` 없이 부르면 세트 목록, 주면 구글 Material Symbols 전량을 한국어·영어로 찾아 「세트에 있음」과 「카탈로그에만 있음」으로 나눠 준다 |
 | `get_icon` | 아이콘 마크업·표정·접근성 요건. 구글 이름(`shopping_cart`)으로 물어도 세트의 이름을 알려 준다. 카탈로그에만 있는 아이콘이면 마크업 대신 채택 방법을 준다 |
 | `get_tokens` | 색상·폰트·브레이크포인트 토큰. `query`로 필터, `raw`로 tokens.css 원본 |
-| `get_rules` | 코딩 규칙 R-01~R-27 (위반·준수 예시 포함) |
+| `get_rules` | 코딩 규칙 전체 — rules.json (위반·준수 예시 포함) |
 | `get_reference` | 접근성·금지패턴·Tailwind 매핑·HTML 시맨틱·사이트 유형 프로필 |
 | `get_profile` | 사이트 유형 프리셋 — section 흐름·우선 컴포넌트·밀도·표현 등급 |
 | `get_workflow` | 작업 절차 — 페이지·폼·위젯 설계, 컴포넌트 생성, 토큰 변경, UI 리뷰, 프로젝트 초기화 |

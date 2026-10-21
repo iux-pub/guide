@@ -10,7 +10,7 @@
 
 1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등).
 2. **ARIA는 보완** — 네이티브 시맨틱으로 표현 불가한 경우에만 `role`/`aria-*` 사용 (WAI-ARIA 1st rule).
-3. **상태는 ARIA 속성** — 시각 상태(open/selected/disabled)는 ARIA로 표현. `.is-*` 같은 비-BEM 상태 클래스 금지(R-17).
+3. **상태는 ARIA·hidden 속성 먼저** — 열림·선택·현재·비활성·숨김은 `aria-*`·`hidden`·`disabled`로 표현하고 CSS가 그 속성으로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier. `.is-*`·`.has-*` 같은 비-BEM 상태 클래스 금지(R-17, § 6.2).
 4. **키보드 동등성** — 마우스로 가능한 모든 조작이 키보드로도 가능해야 한다 (KWCAG 2.1.1).
 5. **포커스 가시성** — 모든 인터랙티브 요소는 `:focus-visible` 4px primary outline (reset 전역 처리, 컴포넌트 단위 override 금지).
 6. **단계 차이 50 규칙** — KRDS 색상에서 두 단계 차이 50 이상 = 명도 대비 4.5:1 자동 충족.
@@ -30,14 +30,16 @@
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 
@@ -98,7 +100,8 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 필수 속성 | `type` (button 한정) / `href` (a 한정) |
 | 필수 ARIA | 토글 시 `aria-pressed="true|false"` / 메뉴 트리거 시 `aria-haspopup` + `aria-expanded` / 텍스트 없는 아이콘 버튼은 `aria-label` |
 | 키보드 | `Tab` 포커스 → `Enter`/`Space` 실행 (네이티브) |
-| 금지 | `div/span 클릭 핸들러 패턴` (R-10) · `<button>` 안 `<a>` 중첩 · disabled 상태 표현으로 `.btn--disabled` 클래스만 (속성 `disabled` 또는 `aria-disabled` 같이 사용) |
+| 비활성 | `<button disabled>` (네이티브 속성) · 링크형은 `aria-disabled="true"` — CSS가 `:disabled`·`[aria-disabled="true"]`로 표시한다 |
+| 금지 | `div/span 클릭 핸들러 패턴` (R-10) · `<button>` 안 `<a>` 중첩 · `.btn--disabled` 같은 비활성 클래스(CSS에 없다 — R-17·R-29) |
 
 ### `check-radio` — 체크박스/라디오
 
@@ -126,7 +129,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<div class="form-field">` (한 필드 단위) |
-| 자식 시맨틱 | `<label for="id">` (필수) → `<input id="id">` → `<p class="form-field__help" id="hint-id">` (도움말) → `<p class="form-field__message" id="err-id">` (에러) |
+| 자식 시맨틱 | KRDS 순서 — `<label for="id" class="form-field__label">` (필수) → `<p class="form-field__hint" id="hint-id">` (보조설명) → `<input id="id" class="input" aria-describedby="hint-id">` → `<p class="form-field__message" id="msg-id">` (시스템 메시지) |
 | 필수 ARIA | 에러 시 `aria-invalid="true"` + `aria-describedby="err-id"` / 필수 표시 `<span aria-label="필수">*</span>` |
 | 그룹 | 관련 필드는 `<fieldset>` + `<legend>` |
 | 키보드 | 네이티브 |
@@ -146,7 +149,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<label class="switch">` (인풋 감쌈) |
-| 자식 시맨틱 | `<input type="checkbox" role="switch">` (필수, 시맨틱 명시 위해 `role="switch"` 추가) → `<span class="switch__track" aria-hidden="true">` → `<span class="switch__thumb" aria-hidden="true">` → `<span class="switch__label">` |
+| 자식 시맨틱 | `<input type="checkbox" role="switch">` (필수, 시맨틱 명시 위해 `role="switch"` 추가) → `<span class="switch__track" aria-hidden="true">` (손잡이는 `::after`로 그린다) → `<span class="switch__label">` |
 | 필수 ARIA | `role="switch"` (네이티브 checkbox 위에 의도 명시) / 상태는 native `checked` |
 | 키보드 | 네이티브 (`Space` 토글) |
 
@@ -168,7 +171,8 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<article class="card">` (독립 콘텐츠) / `<section class="card">` (관련 그룹, 제목 필수) / `<a class="card">` (카드 전체가 링크) |
-| 자식 시맨틱 | `<header class="card__header">` → `<h3 class="card__title">` (heading) → `<div class="card__body">` → `<footer class="card__footer">` / 미디어 영역은 `<figure class="card__media">` |
+| 자식 시맨틱 | `<header class="card__header">` → `<h3 class="card__title">` (heading) → `<div class="card__body">` → `<footer class="card__footer">` / 이미지는 `card__body` 안에 `<img alt="…">`로 둔다 — 감싸는 부품 클래스(`card__media`·`card__image`)는 CSS에 없다(R-29) |
+| 변형 | 크기 `--xsmall`·`--small`·`--medium`·`--large` · `--inverse`(어두운 바탕) · `--elevated`(그림자) · `--link`(전체 링크 호버). 이 밖의 변형(`--featured` 등)은 지어내지 않는다(R-29) |
 | 필수 ARIA | — (시맨틱 태그만으로 충분) |
 | 인터랙션 | 카드 전체 링크면 `<a class="card">`. 카드 내부에 또 `<a>` 두면 이중 링크 금지 |
 
@@ -207,7 +211,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | Root 태그 | `<div class="tab">` |
 | 자식 시맨틱 | `<div class="tab__list" role="tablist" aria-label="...">` → `<button class="tab__item" role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">` → `<div id="panel-1" role="tabpanel" aria-labelledby="tab-1">` |
 | 필수 ARIA | tablist에 `role="tablist"` + `aria-label` · 각 탭에 `role="tab"` + `aria-selected` + `aria-controls` + 고유 `id` · 패널에 `role="tabpanel"` + `aria-labelledby` |
-| 키보드 | `←→` 탭 이동 · `Home`/`End` 처음/끝 · `Enter`/`Space` 활성화 · 비활성 탭은 `tabindex="-1"`, 활성 탭만 `tabindex="0"` |
+| 키보드 (KRDS) | `Tab`/`Shift+Tab`으로 모든 탭에 닿는다(탭에 `tabindex="-1"`을 주지 않는다) · `Enter`/`Space`/클릭으로 선택(수동 활성화) · `←→`·`Home`/`End`는 초점만 옮기는 보조 수단 · 탭 6개 이하, 비활성 탭 금지 |
 
 ---
 
@@ -217,8 +221,8 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<nav class="breadcrumb" aria-label="페이지 경로">` |
-| 자식 시맨틱 | `<ol class="breadcrumb__list">` → `<li class="breadcrumb__item">` → `<a class="breadcrumb__link">` (마지막 항목은 `<span>` + `aria-current="page"`) |
+| Root 태그 | `<nav class="breadcrumb" aria-label="브레드크럼">` (KRDS — 구획 제목을 「브레드크럼」으로 준다) |
+| 자식 시맨틱 | `<ol class="breadcrumb__list">` → `<li class="breadcrumb__item">` → `<a>` (클래스 없음). 마지막 항목은 링크 없이 `<li class="breadcrumb__item" aria-current="page">` |
 | 필수 ARIA | `<nav aria-label>` · 현재 페이지에 `aria-current="page"` |
 | 키보드 | 네이티브 (Tab) |
 
@@ -227,7 +231,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<header class="site-header">` |
-| 자식 시맨틱 | `<a class="site-header__brand" href="/">` (로고/홈) → `<nav>` (주 메뉴, main-menu 참조) → 검색/유틸리티 영역 |
+| 자식 시맨틱 | `<a class="site-header__brand" href="/">` (로고/홈) → `<nav>` (메인 메뉴, main-menu 참조) → 검색/유틸리티 영역 |
 | 필수 ARIA | 페이지에 nav가 여러 개면 각 nav에 `aria-label` 필수 |
 | 키보드 | Tab 흐름 자연스럽게 (브랜드 → 메뉴 → 유틸) |
 
@@ -236,16 +240,18 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<footer id="footer" class="site-footer">` (페이지에 하나, `main` 바깥) |
-| 자식 시맨틱 | `.container` → `div.site-footer__top`(`a.site-footer__brand` · `nav.site-footer__nav aria-label="푸터 메뉴"` → `div.site-footer__group` → `h2.site-footer__heading` + `ul.site-footer__list aria-labelledby`) → `div.site-footer__bottom`(`nav.site-footer__legal aria-label="약관 및 정책"` · `address.site-footer__address` · `small.site-footer__copy` · `details.site-footer__family`) |
+| 자식 시맨틱 | `.container` → `div.site-footer__top`(선택 — `nav.site-footer__nav aria-label="푸터 메뉴"` → `div.site-footer__group` → `h2.site-footer__heading` + `ul.site-footer__list aria-labelledby`) → `div.site-footer__bottom`(KRDS 순서: `div.site-footer__info`[`a.site-footer__brand` → `address.site-footer__address` → `ul.site-footer__utility aria-label`(+ `details.site-footer__family`)] → `nav aria-label="약관 및 정책"`(→ `ul.site-footer__legal-list`) → `dl.site-footer__biz`(전자상거래) → `small.site-footer__copy`) |
+| KRDS 순서 | 서비스 로고 → 연락처 → 유틸리티 링크 → 정책 링크 → 저작권. 좁은 화면에서도 같다. 운영기관 식별자는 공식 디지털 정부서비스일 때만 마지막 구획 |
 | 필수 ARIA | 푸터 안 `nav`가 여럿이면 각각 `aria-label` · 그룹 목록은 제목 id로 `aria-labelledby` |
-| 키보드 | 네이티브 (Tab) · 패밀리 사이트 `details`는 `Enter`/`Space`로 열고 닫는다 |
-| 금지 | 패밀리 사이트를 `<select>` 선택만으로 이동시키지 않는다(WCAG 3.2.2) · 법정 고지 문구를 지어내지 않는다(R-23) |
+| 필수 항목 | 「개인정보 처리방침」 링크(명칭 고정·강조) — 모든 사이트. 이용약관·사업자 정보 — 전자상거래가 있으면 |
+| 키보드 | 네이티브 (Tab) · 관련 기관 `details`는 `Enter`/`Space`로 열고 닫는다 |
+| 금지 | 관련 기관을 `<select>` 선택만으로 이동시키지 않는다(WCAG 3.2.2) · 법정 고지 문구를 지어내지 않는다(R-23) · 서비스 내비게이션을 메인 메뉴와 다른 구조·레이블로 만들지 않는다(KRDS) · 구 명칭 「개인정보취급방침」 |
 
-### `main-menu` — 주 메뉴
+### `main-menu` — 메인 메뉴
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<nav class="main-menu" aria-label="주 메뉴">` (메가형은 `.main-menu--mega` 추가) |
+| Root 태그 | `<nav class="main-menu" aria-label="메인 메뉴">` (메가형은 `.main-menu--mega` 추가) |
 | 자식 시맨틱 | `<ul class="main-menu__list">` → `<li class="main-menu__item">` → `<a class="main-menu__link">` / 하위 패널 트리거는 `<button class="main-menu__toggle" aria-expanded aria-controls="panel-id">`. 패널은 드롭다운 `ul.main-menu__submenu` 또는 메가 `div.main-menu__panel` → `.container.main-menu__groups` → `div.main-menu__group` → `p.main-menu__group-title` + `ul.main-menu__group-list aria-labelledby` |
 | 필수 ARIA | `<nav aria-label>` · 하위 패널 트리거에 `aria-expanded` + `aria-controls`(대상 id 실존) · 현재 페이지에 `aria-current="page"` |
 | 쓰지 않는 것 | `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 여닫는 disclosure 패턴이라 메뉴 위젯 역할을 선언하지 않는다(APG Disclosure Navigation). 선언하면 스크린리더가 방향키 운용을 기대한다 |
@@ -256,8 +262,8 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>` (`header` 바깥) |
-| 자식 시맨틱 | `div.mobile-menu__header`(`p.mobile-menu__title#mobile-menu-title` · `button.mobile-menu__close aria-label`) → `nav.mobile-menu__nav aria-label="주 메뉴"` → `ul.mobile-menu__list` → `li.mobile-menu__item` → `a.mobile-menu__link` / `details.mobile-menu__group` → `summary.mobile-menu__summary` + `ul.mobile-menu__sublist` |
-| 트리거 | `<button class="site-header__toggle" aria-label="전체 메뉴" aria-expanded aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">` — 라벨은 고정, 열림은 `aria-expanded`가 전한다 |
+| 자식 시맨틱 | `div.mobile-menu__header`(`p.mobile-menu__title#mobile-menu-title` · `button.mobile-menu__close aria-label`) → `nav.mobile-menu__nav aria-label="메인 메뉴"` → `ul.mobile-menu__list` → `li.mobile-menu__item` → `a.mobile-menu__link` / `details.mobile-menu__group` → `summary.mobile-menu__summary` + `ul.mobile-menu__sublist` |
+| 트리거 | `<button class="site-header__toggle" aria-label="전체메뉴" aria-expanded aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">` — 라벨은 고정, 열림은 `aria-expanded`가 전한다 |
 | 필수 ARIA | 패널 `role="dialog"` + `aria-modal="true"` + `aria-labelledby` · 트리거 `aria-expanded` + `aria-controls`(= `data-mobile-menu-open` 값) · 닫기 버튼 `aria-label` |
 | 키보드 | 열림 시 닫기 버튼으로 초점 이동 · `Tab`/`Shift+Tab` 패널 안 순환(포커스 트랩) · `Esc` 닫기 + 트리거로 초점 복귀 · `summary`는 `Enter`/`Space` |
 
@@ -266,7 +272,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<nav class="pagination" aria-label="페이지 내비게이션">` |
-| 자식 시맨틱 | `<button class="pagination__nav" aria-label="이전 페이지">` → `<ol class="pagination__list">` → `<li>` → `<a class="pagination__link">` (현재 페이지는 `aria-current="page"`) → `<button class="pagination__nav" aria-label="다음 페이지">` |
+| 자식 시맨틱 | `<button class="pagination__nav" aria-label="이전 페이지">` → `<ol class="pagination__list">` → `<li>` → `<a class="pagination__item">` (현재 페이지는 `aria-current="page"` — CSS가 이 속성으로 표시한다) → `<button class="pagination__nav" aria-label="다음 페이지">` |
 | 필수 ARIA | `<nav aria-label>` · 현재 페이지에 `aria-current="page"` · 텍스트 없는 화살표 버튼에 `aria-label` |
 | 키보드 | 네이티브 (Tab) |
 
@@ -285,14 +291,18 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 ### `notice-bar` — 공지 띠
 
+KRDS 「긴급 공지(Critical alerts)」에 해당한다.
+
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="…">` (건너뛰기 링크 다음, `header#header` 앞) |
-| 자식 시맨틱 | `.container.notice-bar__inner` → `span.notice-bar__label`(분류 텍스트) → `p.notice-bar__message` → `a.notice-bar__link` → `button.notice-bar__close aria-label="공지 닫기"` |
-| 필수 ARIA | `section`의 `aria-label` · 닫기 버튼 `aria-label` · 장식 아이콘 `aria-hidden="true"` |
-| 쓰지 않는 것 | `role="alert"` · `aria-live` — 로드 때 이미 있는 정적 안내라 낭독을 강제하지 않는다. 동적으로 삽입하는 긴급 안내는 `alert`를 쓴다 |
-| 금지 | 자동 전환·롤링·마키(WCAG 2.2.2) · 동시에 둘 이상 노출 · 색만으로 톤 전달(라벨 텍스트 병기) |
-| 키보드 | 링크·닫기 버튼 Tab 가능, Enter/Space로 닫기. 닫은 뒤 초점은 헤더의 첫 링크·버튼으로 옮긴다 |
+| Root 태그 | `<section class="notice-bar" aria-label="사이트 공지">` — 긴급도 「하」는 클래스 없음(기본), 「중」은 `.notice-bar--warning`, 「상」은 `.notice-bar--danger` |
+| 위치 (KRDS) | `header#header`(메인 메뉴) 다음, 본문 콘텐츠의 **첫 요소** — `main#main`의 첫 `section`으로 히어로 앞에 둔다. 폭은 화면 전체(`.container`가 내용 폭을 맞춘다) |
+| 긴급도 (KRDS) | 「상」 국가 재난·비상사태, 갑작스러운 서비스 장애 / 「중」 서비스 중단 사전 예고 / 「하」 큰 영향은 없지만 대부분의 사용자가 알아야 할 상황 |
+| 자식 시맨틱 | `.container.notice-bar__inner` → `svg.icon aria-hidden="true"`(스프라이트 아이콘) → `span.notice-bar__label`(긴급도 텍스트) → `p.notice-bar__message`(짧은 문장. 링크는 하나만 — `a.notice-bar__link`) |
+| 필수 ARIA | `section`의 `aria-label` · 장식 아이콘 `aria-hidden="true"` |
+| 쓰지 않는 것 | 숨기기·닫기·접기 버튼(KRDS) · `role="alert"` · `aria-live` — 로드 때 이미 있는 정적 안내라 낭독을 강제하지 않는다. 동적으로 삽입하는 긴급 안내는 `alert`를 쓴다 |
+| 금지 | 동시에 둘 이상 노출(KRDS) · 링크 둘 이상 · 두 줄을 넘는 문장(넓은 화면 한 줄, 좁은 화면 최대 두 줄) · 홍보·일반 공지·폼 입력 피드백 용도 · 상황이 끝난 뒤에도 남겨 두기 · 자동 전환·롤링·마키(WCAG 2.2.2) · 색만으로 긴급도 전달(라벨 텍스트 병기) |
+| 키보드 | 링크만 Tab으로 닿는다. 건너뛰기 링크(`#main`)로 이동하면 공지부터 읽힌다 |
 
 ### `badge` — 뱃지
 
@@ -325,7 +335,8 @@ Section modifier는 목적 기반 archetype만 사용한다.
 |------|-----|
 | Root 태그 | `<ol class="step-indicator" aria-label="진행 단계">` |
 | 자식 시맨틱 | `<li class="step-indicator__item">` → `<span class="step-indicator__num" aria-hidden="true">` (번호 시각) → `<span class="step-indicator__label">` |
-| 필수 ARIA | `<ol aria-label>` · 현재 단계에 `aria-current="step"` · 번호 시각에 `aria-hidden="true"` (label로 충분) · 완료/현재/대기 상태는 BEM modifier(`--done`/`--current`/`--todo`) |
+| 필수 ARIA | `<ol aria-label>` · 현재 단계에 `aria-current="step"` · 번호 시각에 `aria-hidden="true"` (label로 충분) |
+| 상태 | 현재 단계는 `aria-current="step"`을 먼저 단다(+ 기존 `.step-indicator__item--current`를 같은 요소에) · 완료 단계는 `.step-indicator__item--done` (ARIA에 대응하는 상태가 없다 — R-17) · 예정 단계는 클래스 없음 |
 | 키보드 | 인터랙티브이면 각 항목 `<a>` 또는 `<button>` |
 
 ### `tag` — 태그
@@ -341,7 +352,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 | 항목 | 값 |
 |------|-----|
 | Root 태그 | `<div class="toast-stack">` (컨테이너) → `<div class="toast" role="status">` (개별 토스트) |
-| 자식 시맨틱 | `<span class="toast__icon" aria-hidden="true">` → `<div class="toast__body">` → `<button class="toast__close" aria-label="닫기">` |
+| 자식 시맨틱 | `<span class="toast__icon" aria-hidden="true">` → `<p class="toast__message">` → `<button class="toast__close" aria-label="닫기">` |
 | 필수 ARIA | `role="status"` (polite, 비긴급) 또는 `role="alert"` (긴급) · 장식 아이콘 `aria-hidden` · 닫기 버튼 `aria-label` |
 | 자동 사라짐 | 모션 감소 사용자엔 자동 닫기 비활성화 또는 시간 연장 권장 |
 
@@ -364,18 +375,19 @@ Section modifier는 목적 기반 archetype만 사용한다.
 |------|-----|
 | Root 태그 | `<div class="calendar" role="application" aria-label="날짜 선택">` |
 | 자식 시맨틱 | `<div class="calendar__head">` (월 표시 + 네비게이션) → `<button class="calendar__nav" aria-label="이전 달">` / `<button class="calendar__nav" aria-label="다음 달">` → `<table class="calendar__grid" role="grid">` → `<th scope="col">` (요일) → `<button class="calendar__day" aria-label="...">` |
-| 필수 ARIA | `role="application"` (커스텀 위젯) · 네비 버튼 `aria-label` · 각 날짜 `aria-label`(예: "2026년 5월 12일") · 선택 날짜 `aria-selected="true"` · 오늘 `aria-current="date"` · 비활성 날짜 `aria-disabled="true"` |
+| 필수 ARIA | `role="application"` (커스텀 위젯) · 네비 버튼 `aria-label` · 각 날짜 `aria-label`(예: "2026년 5월 12일") · 선택 날짜 `aria-selected="true"` · 오늘 `aria-current="date"`(+ 기존 `.calendar__day--today`) · 비활성 날짜 `aria-disabled="true"` |
 | 키보드 | `←→` 일 · `↑↓` 주 · `PageUp/PageDown` 월 · `Home`/`End` 주 시작/끝 · `Enter`/`Space` 선택 |
 
 ### `carousel` — 캐러셀
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">` |
-| 자식 시맨틱 | `<div class="carousel__viewport">` → `<ol class="carousel__track">` → `<li class="carousel__slide" aria-roledescription="slide" aria-label="3 of 5">` → 컨트롤 `<button aria-label="이전 슬라이드">` / `<button aria-label="일시정지">` / `<button aria-label="다음 슬라이드">` |
-| 필수 ARIA | `aria-roledescription="carousel"` · 각 슬라이드에 `aria-roledescription="slide"` + `aria-label="N of M"` · 컨트롤 `aria-label` · 자동재생 시 일시정지 버튼 필수(WCAG 2.2.2) |
-| 자동 재생 금지 (KRDS) | 사용자가 명시 활성화 안 했으면 OFF. 활성화 시 일시정지 버튼 필수 |
-| 키보드 | `←→` 슬라이드 이동 · `Esc` 또는 일시정지 버튼으로 정지 |
+| Root 태그 | `<div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel>` |
+| 자식 시맨틱 | `div.carousel__controls`(슬라이드보다 앞) → `button.carousel__toggle`(자동 회전일 때, **첫 상호작용 요소**) · `button.carousel__nav`(이전) · `p.carousel__counter aria-hidden` · `div.carousel__dots role="group"` → `button.carousel__dot aria-current` · `button.carousel__nav`(다음) → `div.carousel__viewport` → `div.carousel__track aria-live` → `div.carousel__slide role="group" aria-roledescription="slide" aria-label="N / 총수"` |
+| 필수 ARIA | `aria-roledescription="carousel"` + `aria-label` · 슬라이드 `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"` · 아이콘 버튼은 `sr-only` 이름 · 현재 점 `aria-current="true"` · 현재 밖 슬라이드 `inert` + `aria-hidden="true"` |
+| 자동 회전 (KRDS) | 지정할 때만 켠다. 정지/재생 버튼이 첫 상호작용 요소. 키보드 초점이 들어오면 정지하고 사용자가 재생하기 전에는 재개하지 않는다. 마우스를 올리면 멈춘다. `prefers-reduced-motion`이면 시작하지 않는다 |
+| 사용 조건 (KRDS) | 슬라이드 5개 이내(초과하면 목록). 1023px 미만 분수형·1024px 이상 점 버튼 식별자. 텍스트 이미지 슬라이드 금지 |
+| 키보드 | `Tab` 컨트롤·현재 슬라이드 순회 · `Enter`/`Space` 버튼 실행 · 점 그룹에서 `←→` 이전/다음 |
 
 ### `error-page` — 오류 페이지
 
@@ -392,9 +404,9 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | `<ul class="list">` (순서 무관) / `<ol class="list">` (순서 의미) / `<dl class="list">` (정의 목록) |
-| 자식 시맨틱 | `<li>` (ul/ol) / `<dt>` + `<dd>` (dl) |
-| 변형 | `.list--text` (텍스트 목록) / `.list--bullet` (불릿) / `.list--ordered` (번호) / `.list--description` (정의) |
+| Root 태그 | `<ul class="list--text">` (글머리표 목록) / `<ol class="list--text list--ordered">` (번호 목록) / `<dl class="list--structured">` (정의 목록) |
+| 자식 시맨틱 | `<li>` (ul/ol) / `<div class="list__row">` → `<dt>` + `<dd>` (dl) |
+| 변형 | `.list--text` (텍스트 목록) · `.list--ordered` (번호, `--text`와 함께) · `.list--structured` (라벨-값 정의 목록). 이 밖의 변형(`--bullet`·`--description` 등)은 CSS에 없다(R-29) |
 | 필수 ARIA | — (시맨틱 태그만으로 충분) |
 
 ### `table` — 테이블
@@ -422,26 +434,32 @@ ARIA로 연결되는 ID는 충돌 방지를 위해 다음 패턴:
 
 ### 6.2 상태 표현 (R-17)
 
+상태는 ARIA·hidden 속성을 먼저 쓰고, CSS가 그 속성으로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier를 쓴다.
+
 | 상태 | 표현 |
 |------|------|
-| 활성/선택 | BEM modifier (`.tab__item--selected`) + ARIA (`aria-selected="true"`) |
-| 비활성 | 네이티브 `disabled` 속성 + (필요 시) `aria-disabled="true"` |
-| 펼침 | ARIA `aria-expanded` (시각은 modifier 또는 ARIA 셀렉터로) |
+| 선택 | `aria-selected="true"` — CSS `[aria-selected="true"]` |
+| 현재 | `aria-current="page"` / `"step"` / `"date"` / `"true"` — CSS `[aria-current="…"]` |
+| 비활성 | 네이티브 `disabled` 속성 (링크형은 `aria-disabled="true"`) — CSS `:disabled`·`[aria-disabled="true"]` |
+| 펼침 | `aria-expanded="true"` — CSS `[aria-expanded="true"]` (modifier를 따로 두지 않는다) |
 | 숨김 | `hidden` 속성 (display:none 동등) 또는 `aria-hidden="true"` (스크린리더만) |
+| 오류 입력 | `aria-invalid="true"` (+ 기존 `--error` 변형) |
 | 로딩 | `role="status"` + `aria-busy="true"` |
+| ARIA 대응 없음 | BEM modifier — 예: 단계 표시의 완료 `.step-indicator__item--done` |
+
+기존 CSS가 `--current`·`--selected`·`--today` 같은 변형으로 모양을 그리는 컴포넌트는 대응 속성을 먼저 달고, 그 변형은 같은 요소에 함께 둔다(`--current`·`--selected`·`--disabled`를 대응 속성 없이 쓰면 R-17 경고). 새 컴포넌트는 속성 선택자로 그린다.
 
 **금지**: `.is-active`, `.has-error`, `.is-open` 같은 비-BEM 상태 클래스 (R-17 위반).
 
 ### 6.3 modifier 의미성 (R-06, R-18)
 
-**금지 단어 (시각적 표현)**: `--big`, `--small`, `--large`, `--xl`, `--xxl`, `--red`, `--blue`, `--green`, `--yellow`, `--rounded`, `--shadow`, `--bold`, `--italic`
+modifier 이름의 정본은 `contracts/class-naming.json`이고, 결정 순서·어휘 표는 `references/class-naming.md`에 있다. 요약:
 
-**허용 단어 (의미적)**:
-- 변형(variant): `--primary`, `--secondary`, `--tertiary`, `--text`, `--ghost` (KRDS 정의 한정)
-- 사이즈(KRDS 스케일): `--xsmall`, `--small`, `--medium`, `--large`, `--xlarge`
-- 상태: `--selected`, `--disabled`, `--expanded`, `--loading`, `--error`, `--success`, `--current`, `--done`, `--todo`
-- 톤: `--info`, `--success`, `--warning`, `--danger`, `--inverse`
-- 레이아웃: `--horizontal`, `--vertical`, `--block`, `--inline`
+- **허용 어휘** — 크기 `--xsmall`·`--small`·`--medium`·`--large`·`--xlarge` · 위계 `--primary`·`--secondary`·`--tertiary`·`--text` · 상태색 `--info`·`--success`·`--warning`·`--danger`·`--critical`·`--error`·`--neutral` · 밀도 `--compact`·`--comfortable` · 바탕 `--inverse`·`--scrim` · 배치·형식 `--block`·`--reverse`·`--mega`·`--ordered`·`--structured`·`--bottom` · 상태(ARIA로 표현할 수 없을 때만) · 역할 `--prev`·`--next`·`--required`·`--important`·`--elevated`·`--link` 등
+- **금지어** — 모양을 말하는 단어: `--big`·`--tiny`·`--red`·`--blue`·`--gray`·`--dark`·`--rounded`·`--shadow`·`--bold`·`--wide` 등 (전체 목록은 `forbiddenWords`)
+- **KRDS 밖 크기 약어** — `--sm`·`--lg`·`--xl`·`--xxl`은 쓰지 않는다. KRDS 크기 어휘로 쓴다
+- **옛 버튼 변형** — `btn--ghost`·`btn--outline`·`btn--link`는 쓰지 않는다(R-06)
+- **카탈로그 블록의 변형** — 어휘 안이라도 CSS에 정의된 것만 쓴다(R-29). 블록 고유 변형이 필요하면 CSS에 먼저 정의하고 `blockModifiers`에 등록한다
 
 ### 6.4 키보드 트랩 — modal/side-panel/mobile-menu만
 
@@ -493,15 +511,16 @@ ARIA로 연결되는 ID는 충돌 방지를 위해 다음 패턴:
 
 ---
 
-## 7. 검증 자동화 (R-15 / R-16 / R-17 / R-18)
+## 7. 검증 자동화 (R-15 / R-16 / R-17 / R-18 / R-29)
 
 `contracts/html-page-contract.json`과 `scripts/check-html-structure.js`가 page shell 및 컴포넌트 구조를 자동 검증:
 
 1. **R-14/R-15** — page shell의 skip link, `header#header`, `main#main`, `footer#footer`, `main > section > .container`, section 접근 이름
 2. **R-15** — 컴포넌트 BEM Block(`.card`/`.modal` 등) 사용 시 root 태그가 매핑과 일치하는지
 3. **R-16** — 인터랙티브 컴포넌트(`modal`/`tab`/`accordion`/`tooltip`/`disclosure`/`carousel`/`calendar`/`mobile-menu`/`notice-bar`)와 disclosure 내비게이션(`main-menu__toggle` · `data-mobile-menu-open` 햄버거)은 필수 ARIA 속성 누락 시 error. 토글에 `aria-haspopup`/`role="menu"`를 붙이면 warn
-4. **R-17** — `.is-*`/`.has-*` 비-BEM 상태 클래스 사용 시 warn → 1개월 후 error 승급
-5. **R-18** — § 6.3 금지 단어 modifier 사용 시 error
+4. **R-17** — `.is-*`/`.has-*` 비-BEM 상태 클래스 사용 시 error. ARIA·네이티브 대응이 있는 상태 modifier(`--current`·`--selected`·`--disabled`)를 그 속성 없이 쓰면 warn
+5. **R-18** — `contracts/class-naming.json` `forbiddenWords`의 금지어 modifier error · 폐기 예정 modifier(`deprecated`) warn. 어휘 밖 modifier를 CSS에 정의하면 `check-violations.js`가 warn
+6. **R-29** — 카탈로그 블록인데 CSS에 없는 modifier error · element warn (지어낸 `card--featured`·`card__media` 등)
 
 ---
 

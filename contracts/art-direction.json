@@ -13,13 +13,13 @@
       "lintFloor": 1.5
     },
     "headingLineHeight": {
-      "min": 1.2,
-      "max": 1.45
+      "min": 1.5,
+      "max": 1.5
     },
     "headingLetterSpacing": {
-      "min": "-0.03em",
-      "max": "0",
-      "appliesFromRem": 2.4
+      "min": "0",
+      "max": "0.1rem",
+      "appliesFromRem": 3.2
     },
     "headingMaxLines": 2,
     "weights": {
@@ -28,7 +28,16 @@
       "headingMax": 700,
       "maxPerScreen": 4
     },
-    "note": "lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2."
+    "note": "lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0)은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2."
+  },
+  "shape": {
+    "radiusMaxRem": 1.2,
+    "shadowBlurMaxRem": 2.4,
+    "pillBlocks": [
+      "switch",
+      "avatar"
+    ],
+    "note": "KRDS Shape: 반경 2~12px(Xlarge 12px). 완전 원형(pill)은 pillBlocks 블록과 정사각 원형(가로=세로·size-[x]·aspect-square)만 — 배지 점(badge--dot)·아이콘 원은 정사각이라 통과한다. tag·chip·pagination·progress는 KRDS가 비원형 반경을 정해 목록에 넣지 않는다. 그림자는 KRDS Elevation 검정 알파 3단계, blur는 Level-3의 2.4rem 이하. 검사는 R-35(scripts/lib/shape-motion.js)."
   },
   "typography": [
     {
@@ -45,8 +54,8 @@
           600,
           700
         ],
-        "letterSpacing": "-0.02em",
-        "lineHeight": 1.35
+        "letterSpacing": "0",
+        "lineHeight": 1.5
       },
       "body": {
         "stack": "var(--font-sans)",
@@ -118,8 +127,8 @@
           600,
           700
         ],
-        "letterSpacing": "-0.02em",
-        "lineHeight": 1.3
+        "letterSpacing": "0",
+        "lineHeight": 1.5
       },
       "body": {
         "stack": "var(--font-sans)",
@@ -177,8 +186,8 @@
         "weights": [
           600
         ],
-        "letterSpacing": "-0.01em",
-        "lineHeight": 1.4
+        "letterSpacing": "0",
+        "lineHeight": 1.5
       },
       "body": {
         "stack": "var(--font-sans)",
@@ -241,7 +250,7 @@
           600
         ],
         "letterSpacing": "0",
-        "lineHeight": 1.3
+        "lineHeight": 1.5
       },
       "body": {
         "stack": "var(--font-sans)",
@@ -300,8 +309,8 @@
         "weights": [
           600
         ],
-        "letterSpacing": "-0.01em",
-        "lineHeight": 1.3
+        "letterSpacing": "0",
+        "lineHeight": 1.5
       },
       "body": {
         "stack": "var(--font-sans)",
@@ -409,7 +418,7 @@
         "market-terracotta"
       ],
       "rhythm": "풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용",
-      "copyTone": "합쇼체 기본. 명사형 버튼 레이블. 직역체·2인칭 '당신' 금지"
+      "copyTone": "합쇼체 기본. 버튼 레이블은 동사형(KRDS) — 완료·닫기·취소·추가·삭제 같은 일반 작업만 명사형. 직역체·2인칭 '당신' 금지"
     },
     "public-service": {
       "typography": [
@@ -442,7 +451,7 @@
         "trust-blue"
       ],
       "rhythm": "hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터",
-      "copyTone": "명사형·개조식. 문장 최소화"
+      "copyTone": "개조식. 문장 최소화. 버튼 레이블은 동사형(KRDS) — 일반 작업(완료·닫기·취소·추가·삭제)과 길이 제약이 있을 때만 명사형"
     },
     "commerce-reservation": {
       "typography": [

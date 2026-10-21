@@ -9,7 +9,7 @@
 ### ❌ 금지
 
 ```css
-/* hex/rgb/hsl 직접 작성 */
+/* 금지 — hex/rgb/hsl 직접 작성 */
 .btn { background: #256ef4; }
 .card { color: rgb(30, 33, 36); }
 .alert { border-color: hsl(220, 50%, 50%); }
@@ -64,9 +64,11 @@
 
 ---
 
-## 2. 간격/크기 — 과잉 토큰화 금지
+## 2. 간격/크기 — 과잉 토큰화·Tailwind 기본 스케일 금지 (R-37)
 
-간격, 크기, 반경, 그림자, 모션, z-index는 공개 토큰으로 만들지 않는다. 화면 밀도와 컴포넌트 맥락에 맞춰 Tailwind v4 `@apply` 또는 명확한 CSS 직접값을 사용한다.
+간격, 크기, 반경, 그림자, 모션, z-index는 공개 토큰으로 만들지 않는다. 화면 밀도와 컴포넌트 맥락에 맞춰 Tailwind v4 `@apply`의 rem 임의값 또는 명확한 CSS 직접값을 사용한다.
+
+루트 글자 크기가 62.5%(1rem = 10px)라서 Tailwind 기본 스케일은 의도보다 37.5% 작게 렌더된다(`p-4` = 10px, `min-h-12` = 30px, `max-w-md` = 280px). 숫자 간격·크기 유틸과 컨테이너 폭 유틸 대신 `p-[1.6rem]`처럼 rem 임의값을 쓴다. KRDS 간격 `gap-3`(8px)도 이 저장소에서는 `gap-[0.8rem]`이다.
 
 ### ❌ 금지
 
@@ -82,22 +84,27 @@
 }
 ```
 
+```html
+<!-- 금지 — Tailwind 기본 스케일: 62.5% 루트에서 37.5% 작게 렌더된다 (R-37) -->
+<div class="p-4 mt-10 min-h-12 gap-2 max-w-md">...</div>
+```
+
 ### ✅ 허용
 
 ```css
 .card {
-  @apply rounded-lg;
+  @apply rounded-[0.8rem];
   padding: 2.4rem;
   margin-top: 4rem;
 }
 
 .btn {
-  @apply inline-flex min-h-12 items-center gap-2 px-[2.4rem];
+  @apply inline-flex min-h-[4.8rem] items-center gap-[0.4rem] px-[2.4rem];
 }
 ```
 
 ```html
-<div class="p-[2.4rem] mt-10 min-h-12">...</div>
+<div class="p-[2.4rem] mt-[4rem] min-h-[4.8rem]">...</div>
 ```
 
 ---
@@ -110,17 +117,22 @@
 .body { font-family: "Pretendard"; }
 ```
 
+```css
+/* 금지 — Tailwind 기본 글자 크기·숫자 행간: text-3xl은 18.75px, leading-6은 15px 고정 (R-37) */
+.page-title { @apply text-3xl leading-6; }
+```
+
 ### ✅ 허용
 
 ```css
 body { font-family: var(--font-sans); }
 
 .page-title {
-  @apply text-3xl font-bold leading-tight;
+  @apply text-[3.2rem] font-bold leading-[1.5];
 }
 ```
 
-폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 Tailwind/CSS 값으로 작성한다.
+폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 정하되, 크기와 행간은 rem 임의값과 비율(`text-[1.7rem] leading-[1.6]`) 또는 CSS 직접값으로 작성한다. Tailwind 기본 글자 크기(`text-xs`~`text-9xl`)와 숫자 행간(`leading-6` 등)은 쓰지 않는다(R-37). 이름 행간(`leading-relaxed` 등)은 허용하지만 한글 본문은 1.5 이상을 지킨다(R-24).
 
 ---
 
@@ -336,8 +348,8 @@ KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스�
 ```html
 <article class="card">...</article>
 <dialog class="modal">...</dialog>
-<nav class="breadcrumb" aria-label="페이지 경로"><ol>...</ol></nav>
-<nav class="main-menu" aria-label="주 메뉴"><ul>...</ul></nav>
+<nav class="breadcrumb" aria-label="브레드크럼"><ol>...</ol></nav>
+<nav class="main-menu" aria-label="메인 메뉴"><ul>...</ul></nav>
 <nav class="pagination" aria-label="페이지 내비게이션"><ol>...</ol></nav>
 ```
 
@@ -372,24 +384,24 @@ modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없
 
 ```html
 <div role="dialog" aria-modal="true" aria-labelledby="modal-title" class="modal">
-  <h2 id="modal-title">제목</h2>
+  <h2 id="modal-title">작성 내용 임시 저장</h2>
 </div>
 
 <button class="disclosure" aria-expanded="false" aria-controls="more">자세히</button>
 <div id="more" class="disclosure__panel" hidden>...</div>
 
-<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" class="tab__item">탭1</button>
+<button role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" class="tab__item">공지사항</button>
 <div id="panel-1" role="tabpanel" aria-labelledby="tab-1" class="tab__panel">...</div>
 
 <button class="tooltip-trigger" aria-describedby="tip-1">?</button>
-<div id="tip-1" role="tooltip" class="tooltip">설명</div>
+<div id="tip-1" role="tooltip" class="tooltip">생년월일 6자리를 입력합니다.</div>
 ```
 
 ---
 
 ### 10.3 비-BEM 상태 클래스 (R-17)
 
-상태는 BEM modifier(시각) + ARIA 속성(의미)으로만 표현한다. `.is-*`, `.has-*` 같은 비-BEM 상태 클래스는 어느 컴포넌트의 상태인지 모호하다.
+상태는 ARIA·hidden 속성을 먼저 쓰고, CSS가 그 속성 선택자로 모양을 바꾼다. ARIA로 표현할 수 없는 상태(`step-indicator__item--done` 등)만 BEM modifier로 쓴다. `.is-*`, `.has-*` 같은 비-BEM 상태 클래스는 어느 컴포넌트의 상태인지 모호하다. 결정 순서는 `references/class-naming.md`.
 
 #### ❌ 금지
 
@@ -403,44 +415,176 @@ modal / tab / accordion / tooltip / disclosure / carousel / calendar는 ARIA 없
 #### ✅ 허용
 
 ```html
-<button class="btn" disabled aria-disabled="true">
-<div class="modal modal--open" aria-modal="true">
+<button type="button" class="btn btn--primary" disabled>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
 <input class="input input--error" aria-invalid="true">
-<li role="tab" class="tab__item tab__item--selected" aria-selected="true">
+<button type="button" role="tab" class="tab__item" aria-selected="true">
+<li class="step-indicator__item step-indicator__item--done">  <!-- ARIA에 '완료' 상태가 없어 modifier -->
 ```
 
 ---
 
 ### 10.4 시각적 단어 modifier (R-18)
 
-modifier 이름은 의미를 담아야 한다. 색·크기를 직접 명시한 이름은 디자인 변경 시 클래스명도 같이 바꿔야 하는 부채를 만든다.
+modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 이름은 디자인 변경 시 클래스명도 같이 바꿔야 하는 부채를 만든다. 금지어·허용 어휘의 정본은 `contracts/class-naming.json`이고, 표는 `references/class-naming.md`에 있다.
 
-#### ❌ 금지 — 시각적 단어 사전
+#### ❌ 금지 — 시각적 단어 (예)
 
-`--big` · `--small` · `--large` · `--xl` · `--xxl` · `--red` · `--blue` · `--green` · `--yellow` · `--rounded` · `--shadow` · `--bold` · `--italic`
+`--big` · `--huge` · `--tiny` · `--red` · `--blue` · `--gray` · `--dark` · `--rounded` · `--shadow` · `--bold` · `--wide` — 전체 목록은 `references/class-naming.md` 「금지어」. 어휘 밖 크기 줄임말(`--sm` · `--lg` · `--xl` · `--xxl`)도 쓰지 않는다.
 
 ```html
 <button class="btn btn--blue">
 <div class="card card--big">
 <span class="tag tag--rounded">
-<button class="btn btn--red">
+<span class="badge badge--gray">  <!-- 폐기 예정 별칭 — 검사는 경고, 새 마크업은 badge--neutral -->
 ```
 
-#### ✅ 허용 — KRDS 정의 어휘만
+#### ✅ 허용 — 어휘 표에서 고르고, 카탈로그 블록은 CSS에 정의된 변형만
 
-| 카테고리 | 허용 단어 |
-|---------|---------|
-| Variant | `--primary`, `--secondary`, `--tertiary`, `--text`, `--ghost` |
-| 사이즈 (KRDS 스케일) | `--xsmall`, `--small`, `--medium`, `--large`, `--xlarge` |
-| 상태 | `--selected`, `--disabled`, `--expanded`, `--loading`, `--error`, `--success`, `--current`, `--done`, `--todo` |
-| 톤 | `--info`, `--success`, `--warning`, `--danger`, `--inverse` |
-| 레이아웃 | `--horizontal`, `--vertical`, `--block`, `--inline` |
+크기 `--xsmall`~`--xlarge`(KRDS), 위계 `--primary` · `--secondary` · `--tertiary` · `--text`, 상태색 `--info` · `--success` · `--warning` · `--danger` · `--neutral` 등 — 축별 전체 어휘는 `references/class-naming.md` 「허용 modifier 어휘」.
 
 ```html
 <button class="btn btn--primary">
 <div class="card card--large">
 <span class="tag tag--info">
-<button class="btn btn--danger">
+<span class="badge badge--neutral">
+```
+
+---
+
+## 11. 장식 효과 — AI 슬롭 서명 금지 (R-34)
+
+보라→파랑 그라데이션, 글래스 카드, 흐린 블롭, 색 번진 그림자는 AI가 만든 화면을 알아보게 하는 첫 서명이다(AP-3·AP-4). KRDS에는 글래스·글로우가 없고, 고대비 모드에서 깨진다. 그라데이션은 표현 등급(`infoux.json` profile → `contracts/profiles.json` expression)으로 판정한다 — utility·restrained는 오류, expressive는 경고. 보라·남색 계열은 등급과 상관없이 오류다.
+
+### ❌ 금지
+
+```css
+.cta { background: linear-gradient(90deg, var(--color-primary-50), var(--color-secondary-60)); } /* 장식 그라데이션 */
+.card { backdrop-filter: blur(1.2rem); }                    /* 글래스 */
+.blob { filter: blur(4rem); }                               /* 흐린 장식 블롭 */
+.card:hover { box-shadow: 0 0 4rem var(--color-primary-40); } /* 컬러 글로우 */
+```
+
+```html
+<h1 class="bg-clip-text text-transparent bg-linear-to-r from-violet-600 to-blue-600">제목</h1>
+<article class="card backdrop-blur-xl">…</article>
+```
+
+### ✅ 허용
+
+```css
+/* 사진 위 글자 대비 스크림 — 투명에서 검정 알파 한 색으로 */
+.hero-bleed__media::after { background: linear-gradient(to bottom, transparent, var(--color-alpha-black-50)); }
+/* KRDS 그림자 — 검정 알파 */
+.card:hover { @apply shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f]; }
+/* 강조는 단색 토큰 면·타이포·간격으로 */
+.section--intro { background: var(--color-surface-primary-subtler); }
+```
+
+---
+
+## 12. 이모지 — 아이콘·장식 대용 금지 (R-36)
+
+이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고, 플랫폼마다 모양이 다르다. 국내 사이트 99곳 중 1곳만 쓴다. 제목·버튼·링크·목록·배지·CSS content의 이모지는 오류, 본문 문장 안은 경고다. ©·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니다.
+
+### ❌ 금지
+
+```html
+<h3 class="feature__title">🚀 빠른 처리</h3>
+<li>✅ 24시간 민원 접수</li>
+<span class="badge">✨ NEW</span>
+```
+
+### ✅ 허용
+
+```html
+<h3 class="feature__title">빠른 처리</h3>
+<li><svg class="icon" aria-hidden="true"><use href="assets/icons/sprite.svg#check"></use></svg>24시간 민원 접수</li>
+<p>※ 신청 기간을 확인하십시오.</p>
+```
+
+---
+
+## 13. 가짜·자리 콘텐츠 (R-23)
+
+시안의 자리 문구가 납품 페이지에 남으면 검수 신뢰가 깨진다. 범위마다 심각도가 다르다.
+
+| 항목 | 납품 페이지 | 템플릿(루트 index.html 틀 표시) | 스니펫 사본 | 플레이그라운드 |
+|------|------|------|------|------|
+| 채움 문구('카드 본문 내용', '…설명이 들어갑니다') | 오류 | 오류 | 오류 | 경고 |
+| placeholder 이미지 핫링크 | 오류 | 오류 | 오류 | 오류 |
+| '자주 묻는 질문 1·2' 같은 연번 레이블 | 오류 | 경고 | 경고 | 경고 |
+| 자리값 제목('새 프로젝트', '모달 제목') | 오류 | 경고 | 경고 | — |
+| 비실재 표기(○○, 064-000-0000, 홍길동, example 도메인) | 오류 | 경고 | 통과(K-04 형식 예시) | — |
+| 실재처럼 보이는 가짜 번호(02-1234-5678) | 오류 | 경고 | 경고 | 경고 |
+
+납품 페이지는 루트 `*.html`·`pages/**`·`infoux.json` `pages`다. 스니펫이 형식 예시로 쓰는 비실재 표기는 그대로 납품 페이지에 옮기면 그때 잡힌다. 글은 블록·제목·버튼 하나 아래 인라인 글을 이은 덩어리로 보므로 `<strong>`·`<br>`로 쪼갠 자리 문구도 잡힌다.
+
+### ❌ 금지
+
+```html
+<title>새 프로젝트</title>
+<summary class="accordion__summary">자주 묻는 질문 1</summary>
+<button class="tab__item" role="tab">탭 1</button>
+<p>카드 본문 내용</p>
+<p>대표전화 064-000-0000 · ○○시청</p>
+<img src="https://picsum.photos/400/300" alt="행사 사진">
+```
+
+### ✅ 허용
+
+```html
+<title>공지사항 | 제주특별자치도</title>
+<summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
+<button class="tab__item" role="tab">보도자료</button>
+<p>담당 김○○ 주무관</p>
+<p class="form__hint">예: 010-1234-5678</p>
+```
+
+수치 밴드(단위 붙은 값 3칸 이상, 그중 %·+·만·억·배가 하나 이상)와 마스킹 이름·별점 후기는 출처가 없으면 경고다 — `출처: …`, `2026. 9. 30. 기준`, `<cite>`를 붙이거나 뺀다. 순위·정원·건수만 이어진 운영 정보는 밴드가 아니다. 성씨 마스킹(김○○ 주무관·남궁○○님), 표 머리·레이블·폼 업로드 칸, `예:` 뒤의 형식 예시, 고유명사(홍길동전)는 대상이 아니다. 스타터 `index.html`처럼 고쳐 쓸 틀은 `<meta name="infoux:template">`를 단다 — 루트 `index.html`에서만 인정하고, 프로젝트를 시작하면 지운다(주석 처리는 지운 것이 아니다).
+
+---
+
+## 14. 카피 톤 — 번역투·재촉형 버튼·공공 화면 느낌표 (R-43)
+
+영어 마케팅 직역('당신만의 여정을 시작하세요', '새로운 차원을 경험하세요', '지금 바로 무료로 시작')은 AI 카피의 서명이다. 제목·버튼·도입부·aria-label에서 오류, 본문에서 경고다. 버튼 이름(aria-label과 보이는 글 각각)이 '-(으)세요·-십시오'로 끝나면(신청하세요·받으세요·해 주세요·하십시오) 오류 — KRDS 동사형('신청하기')을 쓴다. 탭·목록 펼침 트리거·아코디언 제목 버튼은 행동 버튼이 아니라 보지 않는다. 느낌표(！·~!·?! 포함)는 공공서비스의 제목·버튼·도입부에서 오류다. `<em>`으로 쪼갠 문구도 한 덩어리로 보고, `<html lang="en">`이어도 한글 문구는 검사한다. 바꿀 수 없는 공식 슬로건은 `infoux.json`의 `copyAllow`에 둔다.
+
+### ❌ 금지
+
+```html
+<h2>당신만의 여정을 시작하세요</h2>
+<a class="btn btn--primary" href="/apply">지금 바로 신청하세요!</a>
+<h1>신청이 완료되었습니다!</h1>
+```
+
+### ✅ 허용
+
+```html
+<h2>신청 방법</h2>
+<a class="btn btn--primary" href="/apply">신청하기</a>
+<h1>신청이 완료되었습니다</h1>
+<p>지금 바로 높은 곳으로 대피하십시오.</p>
+```
+
+---
+
+## 15. 한국형 페이지 골격 (R-32 · R-40 · R-41)
+
+납품 페이지의 KRDS 필수 골격이다. 푸터에는 '개인정보 처리방침' 링크를 실제 주소로 두고 옛 명칭을 쓰지 않는다(R-32). 공공 화면은 모든 페이지 헤더에 통합검색을 둔다(R-40). 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖에 두고, main 안 첫 제목은 h1이다(R-41).
+
+### ❌ 금지
+
+```html
+<footer id="footer"><div class="container"><a href="#">개인정보취급방침</a></div></footer>
+<main id="main"><section class="section section--intro"><div class="container"><nav class="breadcrumb" aria-label="브레드크럼">…</nav><h2>알림마당</h2></div></section></main>
+```
+
+### ✅ 허용
+
+```html
+<nav class="breadcrumb" aria-label="브레드크럼">…</nav>
+<main id="main"><section class="section section--content"><div class="container"><h1>공지사항</h1></div></section></main>
+<footer id="footer"><div class="container"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></div></footer>
 ```
 
 ---

@@ -34,7 +34,7 @@
         </ul>
       </nav>
 
-      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-000-0000(평일 09:00~18:00)로 알려 주세요.</p>
     </div>
   </div>
 </section>
@@ -101,7 +101,7 @@ HTML만으로 끝나지 않는다. 아래는 구현팀과 함께 확인한다.
 ## 출처
 
 - 색상은 `--color-primary` · `--color-primary-pressed` · `--color-text` · `--color-text-subtle` · `--color-border-light`
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/error-page.css`
 - 문안 기준: `site/design/microcopy.md` (에러 메시지 3-Part 공식)
 - 수위 기준: `references/art-direction.md` §1 (페이지 단위 강등)

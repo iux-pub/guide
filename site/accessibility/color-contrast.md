@@ -106,16 +106,12 @@ order: 3
 
 WebAIM Contrast Checker에서 조절한 색상과 배경색을 입력하여 4.5:1 이상인지 확인한다.
 
-**3단계: 토큰 변수로 적용**
+**3단계: 토큰을 고치는 곳에서 고친다**
 
-확인된 색상은 `tokens/foundation.json`에서 조정하고 `npm run build:tokens`로 반영한다.
+CSS 파일에서 `:root { --color-warning: … }`처럼 토큰을 다시 정의하지 않는다 — raw 색이 되고(R-01) 대비 검사(`npm run check:contrast`)를 우회한다.
 
-```css
-:root {
-  /* warning 색상 대비 보강 예시 */
-  --color-warning: #a86e00;
-}
-```
+- 상태색(warning·danger 등)과 바탕·글자·테두리 색은 `tokens/foundation.json`(불변 계층) 소유다. 프로젝트에서 바꾸지 않고, 대비가 부족하면 UX팀에 보고해 기준 저장소에서 고친다.
+- 브랜드색(primary·secondary·point)은 `tokens/brand.json`에서 라이트·고대비 두 모드를 함께 고친 뒤 `npm run build:tokens && npm run check:contrast`로 확인한다.
 
 ### 빠른 참조: 최소 대비를 충족하는 밝기 한계
 

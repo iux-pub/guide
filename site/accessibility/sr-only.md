@@ -77,10 +77,12 @@ document.getElementById('status-message').textContent = '장바구니에 상품�
 ```html
 <p class="sr-only">* 표시는 필수 입력 항목입니다</p>
 
-<label for="name" class="form__label form__label--required">
-  이름
-</label>
-<input type="text" id="name" class="form__input" required>
+<div class="form-field">
+  <label for="name" class="form-field__label">
+    이름<span class="form-field__required" aria-label="필수">*</span>
+  </label>
+  <input type="text" id="name" class="input" required>
+</div>
 ```
 
 ### 6. 링크/버튼의 추가 맥락

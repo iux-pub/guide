@@ -58,7 +58,7 @@
     }
 
     .pg__desc {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       color: var(--color-text-subtle);
       margin-bottom: 16px;
       line-height: 1.6;
@@ -71,7 +71,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">HTML 페이지 보일러플레이트</h1>
 
     <div class="pg__section">
@@ -89,13 +89,14 @@
           </div>
         </header>
 
-        <main id="main">
+        <!-- 놀이터 본문이 이미 main이라 main을 겹치지 않도록 미리보기에서는 div로 둔다. 실제 페이지는 아래 코드처럼 main이다. -->
+        <div id="main">
           <section class="section">
             <div class="container">
               <p class="pg__placeholder">[main: 페이지 콘텐츠 영역]</p>
             </div>
           </section>
-        </main>
+        </div>
 
         <footer id="footer" class="site-footer">
           <div class="container">
@@ -104,13 +105,13 @@
         </footer>
       </div>
 
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 구조 마크업 코드" tabindex="0">
 <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="ko"&gt;
 &lt;head&gt;
   &lt;meta charset="UTF-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-  &lt;title&gt;페이지 제목&lt;/title&gt;
+  &lt;title&gt;공지사항 | 사이트명&lt;/title&gt;
   &lt;link rel="stylesheet" href="../../dist/css/style.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -155,6 +156,6 @@
         </ul>
       </div>
     </div>
-  </div>
+  </main>
 </body>
 </html>

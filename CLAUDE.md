@@ -35,20 +35,27 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 
 <!-- RULES_START -->
 ### CSS 규칙
-- R-01 `error` — 색상은 var(--token) 강제 — 간격/크기/타이포 스케일은 권장
+- R-01 `error` — 색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37)
 - R-02 `warn` — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
 - R-03 `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - R-19 `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 - R-20 `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
 - R-24 `error` — 한글 조판 하한 — keep-all 존재 필수·leading-none 금지·line-height 1.5 미만 경고
 - R-26 `error` — 폰트 스택 한글 fallback 필수 — --font-sans·--font-heading에 한글 가용 폰트 포함
+- R-31 warn — 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)
+- R-34 `error` — 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자
+- R-35 `error` — 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하
+- R-37 `error` — Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다
+- R-38 `error` — KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고
+- R-48 `error` — 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고
+- R-49 warn — 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고)
 
 ### BEM 네이밍
 - R-04 `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
 - R-05 `error` — element 2단계 중첩 금지 — 평탄화
 - R-06 `error` — 시각적 modifier 금지 — 의미적 이름 사용
-- R-17 `error` — 상태는 BEM modifier로만 표현 — .is-* / .has-* 비-BEM 상태 클래스 금지
-- R-18 `error` — modifier 이름은 의미적이어야 함 — 시각적 단어 금지
+- R-17 `error` — 상태는 ARIA·hidden 속성을 먼저 — ARIA로 표현할 수 없을 때만 BEM modifier, .is-* / .has-* 금지
+- R-18 `error` — modifier 이름은 허용 어휘(contracts/class-naming.json)에서 — 시각적 단어 금지
 
 ### HTML/마크업 규칙
 - R-07 `warn` — inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용
@@ -56,9 +63,22 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-09 `error` — img alt 속성 필수
 - R-10 `error` — 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지
 - R-15 `error` — HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다
-- R-23 `error` — 가짜 콘텐츠 금지 — lorem ipsum·자리 채움 문구·placeholder 핫링크
+- R-23 `error` — 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처
 - R-25 `error` — 섹션 리듬 — 동일 archetype 3연속·카드 중첩 금지, 카드 그리드 남발 경고
 - R-27 `error` — 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지
+- R-29 `error` — 마크업의 BEM 클래스는 CSS에 실재해야 한다 — 없는 modifier 금지, 없는 element 경고
+- R-30 `error` — 링크는 실제 목적지가 있어야 한다 — 빈 값·#·#none·#;·javascript: 금지
+- R-32 `error` — 푸터에 KRDS 명칭 '개인정보 처리방침' 링크를 실제 주소로 둔다 — 옛 명칭 금지, 강조는 그 링크에만
+- R-36 `error` — 이모지를 아이콘·불릿·배지·제목 장식으로 쓰지 않는다 — 아이콘은 카탈로그(R-27)
+- R-39 `error` — main 안 h1은 하나, 제목 단계를 건너뛰지 않는다
+- R-40 `error` — 공공 화면은 모든 페이지 헤더에 통합검색을 두고, 공공 메인은 첫 화면에 과업 진입을 두며 마케팅 템플릿 섹션을 쓰지 않는다
+- R-41 `error` — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다
+- R-42 `error` — 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다
+- R-43 `error` — 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지
+- R-44 warn — 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다
+- R-45 `error` — 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다
+- R-46 `error` — publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다
+- R-47 `error` — 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다
 
 ### 접근성 규칙
 - R-11 `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -68,9 +88,11 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 - R-16 `error` — 인터랙티브 컴포넌트는 필수 ARIA 속성을 누락할 수 없다
 - R-21 `error` — html lang 속성 필수 — 문서 기본 언어 명시
 - R-22 `warn` — 모션 최소화 선호 존중 — prefers-reduced-motion 가드
+- R-28 `error` — 확대 차단 금지 — viewport에 user-scalable=no·0 또는 maximum-scale 2 미만 금지
+- R-33 `error` — 자동 전환·자동 재생에는 정지 버튼(첫 포커스)이 있어야 하고, 무한 롤링 마키는 쓰지 않는다
 <!-- RULES_END -->
 
-> 위 표는 `rules.json`에서 자동 생성된다. 실제 적용 대상은 `src/styles/**/*.css`(R-01~R-06, R-11~R-13) + `src/snippets/**/*.md`/`site/**/*.md`(R-07~R-10, R-14).
+> 위 표는 `rules.json`에서 자동 생성된다. 규칙별 적용 대상과 검사기는 `rules.json`의 `lang`·`enforcement` 필드가 정한다(MCP `get_rules`).
 
 ---
 
@@ -83,7 +105,7 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 3. ✅ 사용할 토큰 확인: `tokens/foundation.json`(불변) + `tokens/brand.json`(프로젝트 교체)
 4. ✅ 모든 색상 = `var(--color-*)` 시맨틱 토큰
 5. ✅ 기본 폰트 = `var(--font-sans)` / 코드 폰트 = `var(--font-mono)`
-6. ✅ 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용
+6. ✅ 간격/크기/타이포 스케일은 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`, `text-[1.7rem]`) 사용 — 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `text-sm`)은 37.5% 작게 렌더된다(R-37)
 7. ✅ 표준 CSS nesting과 Tailwind v4 `@apply`를 사용해 구조를 간결하게 유지
 8. ✅ 새 컴포넌트는 `src/styles/6-components/{name}.css` 추가 + `6-components/index.css`에 `@import` 등록
 9. ✅ 작성 후: `npm run lint:css` 통과 + `npm run check` 위반 0건
@@ -116,14 +138,16 @@ KRDS(범정부 UI/UX 디자인 시스템) 베이스 + INFOMIND UX팀 표준을 �
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 
@@ -170,7 +194,7 @@ MCP `get_workflow("create-component")` 절차를 따른다 — 아래 파일이 
 
 ## 디자인 토큰 위치
 
-색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(`var(--*)`)와 Tailwind `@theme` 기준을 사용하라. 간격·크기·타이포 스케일은 프로젝트 맥락에 맞는 CSS/Tailwind 직접값으로 작성한다(R-01).
+색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(`var(--*)`)와 Tailwind `@theme` 기준을 사용하라. 간격·크기·타이포 스케일은 프로젝트 맥락에 맞는 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`, `gap-[0.8rem]`, `text-[1.7rem] leading-[1.6]`)으로 작성한다(R-01). 루트 글자 크기가 62.5%(1rem = 10px)라서 Tailwind 기본 스케일(`p-4`, `gap-2`, `text-sm`, `leading-6`, `max-w-md`)은 37.5% 작게 렌더되므로 쓰지 않는다(R-37).
 
 | 단계 | 파일 | 갱신 정책 |
 |------|------|----------|
@@ -203,7 +227,7 @@ src/styles/
 
 ## 반응형 가이드
 
-모바일 퍼스트로 작성하고 Tailwind v4 variant `mobile:` / `tablet:` / `pc:`만 사용한다. 단순 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply pc:*`를 우선한다.
+모바일 퍼스트로 작성하고 Tailwind v4 variant `mobile:` / `tablet:` / `laptop:` / `pc:`만 사용한다. 단순 속성 변경은 CSS 파일 내부에서도 `@apply tablet:*`, `@apply laptop:*`, `@apply pc:*`를 우선한다.
 
 ```css
 .block {
@@ -223,7 +247,8 @@ src/styles/
 }
 ```
 
-- 브레이크포인트 — 모바일 360 기준, 태블릿 768 이상, PC 1280 이상 (INFOUX 표준)
+- 브레이크포인트 — 모바일 360 기준, 태블릿 768 이상, 노트북 1024 이상, PC 1280 이상 (KRDS 표준형 small·medium·large·xlarge)
+- 글자 크기의 mobile→pc 전환은 768(`tablet:`), 메인 메뉴↔전체메뉴·서브 LNB 2단·레이아웃 간격 전환은 1024(`laptop:`)다
 - `@media (min-width: var(--breakpoint-*))`는 표준으로 쓰지 않는다
 - 표준 CSS nesting과 Tailwind v4 `@apply` 사용 가능
 
@@ -259,16 +284,25 @@ src/styles/
 
 `mcp/` — infoUX MCP 서버(`@infomind-ux/infoux-mcp`). 팀원 전달의 단일 경로다 — 등록 한 줄로 Claude Code·Codex·Cursor 어디서든 같은 기준이 간다. 도구 목록은 `mcp/README.md`를 참조한다. 데이터는 `npm run build:mcp`로 생성하며 직접 수정하지 않는다.
 
-`references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
+`references/` — 기준 본체. `CONTRACT.md`(작업 컨트랙트) + krds-tokens · krds-components · tailwind-mapping · accessibility · forbidden-patterns · html-semantics · project-profiles · korean-web-patterns(한국형 메인 레시피·서브·헤더·푸터) + `workflows/`(작업 절차 7종). 생성물은 `npm run build:references`, MCP 번들 반영은 `npm run build:mcp`.
 
 ---
 
 ## 절대 금지 (요약 — 상세는 `references/forbidden-patterns.md`)
 
 - Raw hex/rgb/hsl 색상
-- 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
+- 간격/크기/타이포 스케일은 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`) 사용. 색상 raw 값은 금지
 - Tailwind 기본 팔레트 raw 컬러 유틸
-- Tailwind 기본 스케일은 프로젝트 기준과 충돌하지 않는지 확인
+- Tailwind 기본 스케일(`text-sm`, `leading-6`, `p-4`, `gap-2`, `max-w-md` 등) — 62.5% 루트에서 37.5% 작게 렌더된다(R-37)
+- 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·큰 블러·컬러 글로우 그림자(R-34). 사진 위 스크림과 KRDS 검정 알파 그림자만 쓴다
+- 이모지를 아이콘·불릿·배지·제목 장식으로 쓰기(R-36) — 아이콘은 카탈로그에서
+- 가짜·자리 콘텐츠(R-23) — 채움 문구, placeholder 핫링크, '자주 묻는 질문 1·2' 같은 연번 레이블, '페이지 제목' 같은 자리값 제목, 064-000-0000·○○ 같은 비실재 표기를 납품 페이지에 남기기
+- 실제 목적지 없는 링크(`href="#"`·`javascript:`)(R-30) — 이동은 a, 동작은 button
+- 1.3rem 미만 글자, body 1.6rem·설명 요소 1.5rem 미만(R-38), 루트 글자 크기 변경(R-31)
+- 정지 버튼 없는 자동 전환·무한 롤링 마키(R-33), 1.2rem 넘는 반경·알약 버튼(R-35), 화면 높이 히어로·스크롤 유도 화살표·중간 히어로(R-42)
+- 확정되지 않은 공식 배너·정부 상징(R-46), 고지 없는 개인정보 동의·미리 체크·주민등록번호(R-47), 모바일 360px 넘는 고정 폭(R-48)
+- 영문 전용 UI 레이블(VIEW MORE)·lang 없는 언어 링크·선택만으로 이동하는 select(R-45), 근거 없는 최상급·공공 화면 해요체(R-44 경고), 과한 섹션 여백(R-49 경고)
+- 번역투·2인칭 마케팅 카피('당신', '~을 경험하세요', '지금 바로'), '~하세요'로 끝나는 버튼, 공공 화면의 느낌표(R-43) — 합쇼체 사실 서술, 버튼은 KRDS 동사형('신청하기')
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
 - `!important` (사유 주석 없을 시)
 - 인라인 `style="..."` (CSS 변수 주입 외)

@@ -1,23 +1,29 @@
 {
-  "version": "bf7ceb2",
+  "version": "9f32769",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
       "id": "accessibility",
       "file": "accessibility.md",
-      "chars": 6196,
+      "chars": 6267,
       "summary": "KRDS는 **WCAG 2.1 Level AA 이상 + KWCAG 2.1/2.2** 준수를 강제한다. 본 스킬도 이를 그대로 따른다."
     },
     {
       "id": "art-direction",
       "file": "art-direction.md",
-      "chars": 12387,
+      "chars": 14342,
       "summary": "brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디까지 열지 판단하는 기준. 수치 정본은 `contracts/art-direction.json`, 팔레트 hex 정본은 `tokens/presets/`이며, 이 문서의 표는 build-art-direct..."
+    },
+    {
+      "id": "class-naming",
+      "file": "class-naming.md",
+      "chars": 6639,
+      "summary": "infoUX의 CSS 클래스 이름은 이 순서대로 정한다. 어휘·대응 표의 정본은 `contracts/class-naming.json`이며, 아래 표는 `npm run build:references`가 그 파일에서 다시 만든다(마커 사이를 직접 고치지 않는다)."
     },
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 10600,
+      "chars": 16409,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -29,31 +35,37 @@
     {
       "id": "html-semantics",
       "file": "html-semantics.md",
-      "chars": 23716,
+      "chars": 27037,
       "summary": "1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등)."
+    },
+    {
+      "id": "korean-web-patterns",
+      "file": "korean-web-patterns.md",
+      "chars": 54018,
+      "summary": "국내 웹사이트 96곳을 관찰해 추린 기준이다. 한국형 메인 레시피, 블록 구현 경로, 서브·헤더·푸터 관행을 다룬다. KRDS와 다르거나 애매하면 KRDS를 따른다."
     },
     {
       "id": "krds-components",
       "file": "krds-components.md",
-      "chars": 59009,
+      "chars": 70587,
       "summary": "아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § \"카탈로그에 없는 컴포넌트 요구 시\" 절차 따름."
     },
     {
       "id": "krds-source",
       "file": "krds-source.md",
-      "chars": 34433,
+      "chars": 34826,
       "summary": "- **시스템명**: KRDS (Korea Government Design System) — 한국명 \"범정부 UI/UX 디자인 시스템\""
     },
     {
       "id": "krds-tokens",
       "file": "krds-tokens.md",
-      "chars": 6945,
-      "summary": "색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니며 CSS/Tailwind 직접값으로 작성한다."
+      "chars": 7315,
+      "summary": "색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니다 — 간격·크기·타이포는 rem 임의값(`p-[1.6rem]`, Tailwind 기본 스케일은..."
     },
     {
       "id": "project-profiles",
       "file": "project-profiles.md",
-      "chars": 8144,
+      "chars": 8780,
       "summary": "KRDS 체크리스트는 모든 프로젝트에 같은 방식으로 적용하지 않는다. 코드 생성 전 사이트 유형을 먼저 판정하고, 공통 품질 규칙과 조건부 정부/공공 규칙을 분리한다."
     },
     {
@@ -65,19 +77,19 @@
     {
       "id": "snippet-template",
       "file": "snippet-template.md",
-      "chars": 3913,
+      "chars": 4181,
       "summary": "```markdown"
     },
     {
       "id": "tailwind-mapping",
       "file": "tailwind-mapping.md",
-      "chars": 1713,
+      "chars": 2973,
       "summary": "INFOUX는 Tailwind v4 `@theme`에 색상과 폰트만 공개한다."
     },
     {
       "id": "trade-off-rules",
       "file": "trade-off-rules.md",
-      "chars": 2127,
+      "chars": 2140,
       "summary": "좋은 원칙끼리 부딪히는 순간이 실제 작업의 대부분이다. \"접근성도 중요하고 브랜드도 중요하다\"는 말은 결정을 미룰 뿐이다. 아래는 **무엇이 무엇을 이기는지**를 미리 정한 것이다."
     }
   ],
@@ -91,25 +103,25 @@
     {
       "id": "create-component",
       "file": "create-component.md",
-      "chars": 1590,
+      "chars": 2560,
       "summary": "BEM 컴포넌트 일괄 생성. 컴포넌트명 입력 시 CSS + 스니펫 + playground HTML + site 문서 페이지를 생성한다. \"컴포넌트 추가\", \"새 컴포넌트\", \"create component\" 요청 시 사용."
     },
     {
       "id": "design-form",
       "file": "design-form.md",
-      "chars": 643,
+      "chars": 925,
       "summary": "입력폼, 신청, 문의, 검색 조건, 로그인, 결제 정보 등 form UI를 설계하거나 수정할 때 사용. label, 도움말, 오류, 필수 상태와 제출 흐름을 구현 전에 확정한다."
     },
     {
       "id": "design-page",
       "file": "design-page.md",
-      "chars": 931,
+      "chars": 1118,
       "summary": "INFOUX 기준으로 새 페이지, 화면, 랜딩, 상세, 목록, 관리자 화면을 설계하거나 구현할 때 사용. 코드 작성 전에 사이트 유형, 사용자 핵심 과업, page shell, section 패턴과 재사용 컴포넌트를 확정한다."
     },
     {
       "id": "design-widget",
       "file": "design-widget.md",
-      "chars": 693,
+      "chars": 955,
       "summary": "modal, tab, accordion, disclosure, tooltip, carousel, calendar, combobox 같은 인터랙티브 위젯을 설계하거나 구현할 때 사용. 상태 모델, ARIA 관계, 키보드와 포커스 이동을 코드 전에 확정한다."
     },
     {
@@ -129,7 +141,7 @@
     {
       "id": "accordion",
       "file": "accordion.md",
-      "chars": 1260,
+      "chars": 1521,
       "summary": "native `<details>`/`<summary>` 활용 — JS 없이 동작."
     },
     {
@@ -141,44 +153,44 @@
     {
       "id": "badge",
       "file": "badge.md",
-      "chars": 553,
+      "chars": 587,
       "summary": "작은 알림 표시기 (카운트 / 상태 / 새 항목)."
     },
     {
       "id": "boilerplate",
       "file": "boilerplate.md",
-      "chars": 3524,
+      "chars": 4107,
       "summary": "기본 마크업은 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약 모두에 적용 가능한 공통 골격이다. 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 사이트 유형 판정에서 적용 대상이 확인된 경우에만 추가한다."
     },
     {
       "id": "breadcrumb",
       "file": "breadcrumb.md",
-      "chars": 634,
+      "chars": 992,
       "summary": "페이지 경로 표시. 사용자의 현재 위치를 보여주고 상위 페이지로 빠르게 이동할 수 있게 한다."
     },
     {
       "id": "btn",
       "file": "btn.md",
-      "chars": 2098,
+      "chars": 2104,
       "summary": "```html"
     },
     {
       "id": "calendar",
       "file": "calendar.md",
-      "chars": 2016,
+      "chars": 2057,
       "summary": "날짜 선택 그리드. 단독 사용 또는 date input의 팝업으로 사용."
     },
     {
       "id": "card",
       "file": "card.md",
-      "chars": 1199,
+      "chars": 1251,
       "summary": "```html"
     },
     {
       "id": "carousel",
       "file": "carousel.md",
-      "chars": 1483,
-      "summary": "스크롤 스냅 기반 슬라이드 컨테이너."
+      "chars": 6389,
+      "summary": "KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작은 `src/js/carousel.js`가 맡는다."
     },
     {
       "id": "check-radio",
@@ -195,7 +207,7 @@
     {
       "id": "error-page",
       "file": "error-page.md",
-      "chars": 4668,
+      "chars": 4674,
       "summary": "요청한 페이지를 보여줄 수 없을 때(404 · 403 · 500 · 점검) 한 화면으로 보여주는 패턴. 사용자는 이 화면을 구경하러 온 것이 아니라 **빠져나가러** 왔다. 장식보다 탈출 경로가 먼저다."
     },
     {
@@ -207,25 +219,25 @@
     {
       "id": "footer",
       "file": "footer.md",
-      "chars": 6338,
-      "summary": "페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 구성 요소를 덜어 쓰는 패턴이라, 모든 요소를 채우는 것이 목표가 아니다."
+      "chars": 8149,
+      "summary": "KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 항목을 덜어 쓰되, **정보 순서는 바꾸지 않는다**."
     },
     {
       "id": "form",
       "file": "form.md",
-      "chars": 1869,
+      "chars": 1944,
       "summary": "KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스템메시지** (요소 간 8px gap)"
     },
     {
       "id": "header",
       "file": "header.md",
-      "chars": 1914,
-      "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
+      "chars": 2798,
+      "summary": "사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다."
     },
     {
       "id": "hero-bleed",
       "file": "hero-bleed.md",
-      "chars": 1506,
+      "chars": 1512,
       "summary": "화면 가로 전체를 쓰는 도입 섹션이다. section 자체에 클래스를 얹어 쓰고, 내부 `.container`가 본문 폭을 잡는다. 배경 이미지 위에 텍스트를 얹을 때는 `--scrim`을 함께 쓴다."
     },
     {
@@ -243,31 +255,31 @@
     {
       "id": "main-menu",
       "file": "main-menu.md",
-      "chars": 4419,
+      "chars": 4423,
       "summary": "드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다."
     },
     {
       "id": "mobile-menu",
       "file": "mobile-menu.md",
-      "chars": 4161,
-      "summary": "헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [주 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다."
+      "chars": 4178,
+      "summary": "헤더 햄버거로 여는 전체 화면 메뉴(KRDS 메인 메뉴의 모바일 형태). 1024px 미만(모바일·태블릿)에서 [메인 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다."
     },
     {
       "id": "modal",
       "file": "modal.md",
-      "chars": 1546,
+      "chars": 1596,
       "summary": "```html"
     },
     {
       "id": "notice-bar",
       "file": "notice-bar.md",
-      "chars": 3230,
-      "summary": "페이지 최상단에서 사이트 방문자 모두에게 한 번 알리는 공지. 점검·휴무·운영 변경처럼 **기간이 있는 안내**에 쓴다."
+      "chars": 4557,
+      "summary": "KRDS 긴급 공지(Critical alerts) — 지금 대부분의 사용자가 알아야 하는 **한시적 사실 하나**를 본문 맨 위에 띠로 알린다. 블록 이름은 `notice-bar`다."
     },
     {
       "id": "pagination",
       "file": "pagination.md",
-      "chars": 1110,
+      "chars": 1098,
       "summary": "목록을 여러 페이지로 나눠 탐색."
     },
     {
@@ -279,7 +291,7 @@
     {
       "id": "section-media",
       "file": "section-media.md",
-      "chars": 1974,
+      "chars": 1980,
       "summary": "동일 archetype 연속(R-25)을 끊는 변주 패턴이다. 태블릿 이상에서 이미지와 본문이 2컬럼으로 나란히 서고, `--reverse`로 좌우를 교차해 zigzag 리듬을 만든다."
     },
     {
@@ -291,13 +303,13 @@
     {
       "id": "side-panel",
       "file": "side-panel.md",
-      "chars": 1476,
+      "chars": 1807,
       "summary": "우측에서 슬라이드 인하는 보조 패널. 모달과 달리 본문 스크롤을 차단하지 않는다."
     },
     {
       "id": "signature",
       "file": "signature.md",
-      "chars": 3970,
+      "chars": 4037,
       "summary": "\"이 사이트만의 것\"으로 기억되는 반복 장치 3패턴이다. 등급별 상한(utility 0 · restrained 1 · expressive 3)은 `contracts/art-direction.json` expressionLevels가 정본이고, 선정·배치 원칙은 `references..."
     },
     {
@@ -309,7 +321,7 @@
     {
       "id": "step-indicator",
       "file": "step-indicator.md",
-      "chars": 1000,
+      "chars": 1012,
       "summary": "다단계 폼/프로세스의 현재 단계 표시."
     },
     {
@@ -321,13 +333,13 @@
     {
       "id": "tab",
       "file": "tab.md",
-      "chars": 1535,
-      "summary": "```html"
+      "chars": 2561,
+      "summary": "KRDS 탭(component_04_10) — 같은 영역 안에서 상호배타적인 콘텐츠 섹션을 버튼으로 전환한다. 동작은 `src/js/tab.js`."
     },
     {
       "id": "table",
       "file": "table.md",
-      "chars": 1141,
+      "chars": 1484,
       "summary": "데이터 표. 모바일에서는 가로 스크롤 컨테이너로 감싸서 사용."
     },
     {
@@ -345,7 +357,7 @@
     {
       "id": "tooltip",
       "file": "tooltip.md",
-      "chars": 788,
+      "chars": 818,
       "summary": "짧은 보조 설명 팝업. **JS 트리거 변형 권장** (키보드/터치 호환)."
     }
   ]

@@ -14,9 +14,9 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/form.md`이며, 
   <label for="name" class="form-field__label">
     이름<span class="form-field__required" aria-label="필수">*</span>
   </label>
-  <p class="form-field__hint">사업자등록증에 기재된 대표자명</p>
-  <input type="text" id="name" class="input" placeholder="홍길동" required>
-  <p class="form-field__message">최대 20자까지 입력 가능합니다</p>
+  <p id="name-hint" class="form-field__hint">사업자등록증에 기재된 대표자명</p>
+  <input type="text" id="name" class="input" placeholder="홍길동" required aria-describedby="name-hint name-message">
+  <p id="name-message" class="form-field__message">최대 20자까지 입력 가능합니다</p>
 </div>
 ```
 

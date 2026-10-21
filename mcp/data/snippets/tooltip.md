@@ -9,7 +9,7 @@
   도움말
 </button>
 <div id="tip-1" class="tooltip" role="tooltip" hidden>
-  도움말 설명 텍스트
+  영문, 숫자, 특수문자를 섞어 9자 이상으로 정합니다.
 </div>
 ```
 
@@ -20,7 +20,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 ```html
 <span class="tooltip-wrap">
   <button type="button" aria-label="도움말">?</button>
-  <span class="tooltip" role="tooltip">설명 텍스트</span>
+  <span class="tooltip" role="tooltip">생년월일 6자리를 입력합니다.</span>
 </span>
 ```
 

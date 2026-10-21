@@ -16,7 +16,7 @@
 
 ## Variant
 
-- `.badge` (기본 — danger 빨강) / `.badge--primary` / `.badge--info` / `.badge--success` / `.badge--warning` / `.badge--gray`
+- `.badge` (기본 — danger 빨강) / `.badge--primary` / `.badge--info` / `.badge--success` / `.badge--warning` / `.badge--neutral` (상태 없음 — 옛 이름 `--gray`는 폐기 예정)
 - `.badge--dot` — 숫자 없는 단순 점 (8×8)
 
 ## 접근성

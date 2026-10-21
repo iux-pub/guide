@@ -1,11 +1,11 @@
-# 주 메뉴 (Main Menu) — KRDS
+# 메인 메뉴 (Main Menu) — KRDS
 
 드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다.
 
 ## 기본 마크업
 
 ```html
-<nav class="main-menu" aria-label="주 메뉴">
+<nav class="main-menu" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <a class="main-menu__link" href="/about">소개</a>
@@ -32,7 +32,7 @@
 
 ## 시맨틱 구조
 
-- **Root 태그**: `<nav class="main-menu" aria-label="주 메뉴">`
+- **Root 태그**: `<nav class="main-menu" aria-label="메인 메뉴">`
 - **자식**: `ul.main-menu__list` → `li.main-menu__item` → `a.main-menu__link`(이동) 또는 `button.main-menu__toggle`(하위 패널 열기)
 - **필수 ARIA**: `nav`에 `aria-label` · 토글 버튼에 `aria-expanded` + `aria-controls` · 현재 페이지에 `aria-current="page"`
 - **쓰지 않는 것**: `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 펼치는 것일 뿐 애플리케이션 메뉴가 아니다
@@ -51,7 +51,7 @@
 패널이 헤더 전체 폭으로 열린다. 그룹 제목은 링크가 아니라 텍스트이고, 목록은 `aria-labelledby`로 그룹 이름을 받는다.
 
 ```html
-<nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+<nav class="main-menu main-menu--mega" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">

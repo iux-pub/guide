@@ -18,6 +18,9 @@ const ROOT = path.resolve(__dirname, '..')
 const SNIPPETS_DIR = path.join(ROOT, 'src/snippets')
 const PLAYGROUND_DIR = path.join(ROOT, 'src/playground')
 const SITE_DIR = path.join(ROOT, 'site')
+// AI가 직접 읽는 컨텍스트 — MCP 번들(references)과 손으로 쓴 프롬프트(prompts)도 같은 기준으로 본다
+const REFERENCES_DIR = path.join(ROOT, 'references')
+const PROMPTS_DIR = path.join(ROOT, 'prompts')
 const PAGE_CONTRACT_PATH = path.join(ROOT, 'contracts', 'html-page-contract.json')
 
 const TARGET_FILES = process.argv.slice(2)
@@ -25,6 +28,58 @@ const HAS_EXPLICIT_TARGETS = TARGET_FILES.length > 0
 const PAGE_CONTRACT = fs.existsSync(PAGE_CONTRACT_PATH)
   ? JSON.parse(fs.readFileSync(PAGE_CONTRACT_PATH, 'utf-8'))
   : null
+
+// 납품 페이지(루트 *.html·pages/**·infoux.json pages) — 인자 없이 돌 때도 page 계약으로 검사한다(HX-06)
+const PAGE_SCOPE = (() => {
+  if (HAS_EXPLICIT_TARGETS) return { files: [], problems: [], notices: [] }
+  try {
+    return require('./lib/page-scope').collectPageFiles(ROOT)
+  } catch (e) {
+    if (e.code !== 'MODULE_NOT_FOUND') throw e
+    return { files: [], problems: ['scripts/lib/page-scope.js가 없어 납품 페이지를 검사하지 못했다 — npm run sync:starter(또는 스타터 갱신)로 받는다'], notices: [] }
+  }
+})()
+const PAGE_FILES = new Set(PAGE_SCOPE.files)
+
+// 한국형 페이지 골격(R-32 푸터 개인정보 처리방침·R-40 공공 통합검색·R-41 서브 골격) — 없으면(오래된 파생 프로젝트) 건너뛴다
+let PAGE_RULES = null
+let isPagePath = () => false
+let pageTypeOf = () => null
+try {
+  PAGE_RULES = require('./lib/page-rules')
+  isPagePath = require('./lib/page-scope').isPagePath
+  pageTypeOf = require('./lib/page-scope').pageTypeOf
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
+// 사이트 유형 — infoux.json profile. 없으면 유형별 판정(공공 통합검색·커머스 사업자 정보)을 하지 않는다
+const PROFILE = (() => {
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
+    return typeof config.profile === 'string' ? config.profile : null
+  } catch {
+    return null
+  }
+})()
+// 공식 아이덴티티(공식 배너·정부 상징 허용) — infoux.json publicIdentity만 권한이 있다. 없으면 unconfirmed(R-46)
+const PUBLIC_IDENTITY = (() => {
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'infoux.json'), 'utf8').replace(/^\uFEFF/, ''))
+    return typeof config.publicIdentity === 'string' ? config.publicIdentity : 'unconfirmed'
+  } catch {
+    return 'unconfirmed'
+  }
+})()
+// 표현 등급 — 프로필 기본값(contracts/profiles.json expression). 프로필이 없으면 null(히어로 높이는 경고로만)
+const EXPRESSION = (() => {
+  if (!PROFILE) return null
+  try {
+    const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'contracts', 'profiles.json'), 'utf8'))
+    return (spec.profiles || []).find(p => p.id === PROFILE)?.expression || null
+  } catch {
+    return null
+  }
+})()
 
 // ─── 출력 헬퍼 ─────────────────────────────────────────
 
@@ -50,6 +105,10 @@ function warn(file, line, msg, code, rule) {
 }
 
 const rel = (p) => path.relative(ROOT, p)
+// 경로 판정 정규식은 '/' 구분자를 가정한다. Windows의 '\' 경로도 같은 판정을 받게 한다.
+const toPosix = (p) => p.split(path.sep).join('/')
+// 경로 판정은 프로젝트 루트 기준 상대 경로로 한다 — 상위 폴더 이름(…/references/프로젝트)이 판정을 바꾸지 않게
+const relPosix = (p) => '/' + toPosix(path.relative(ROOT, p))
 
 // ─── R-15: 컴포넌트 root 태그 매핑 참고 (html-semantics.md 기준) ──────────────────────
 //
@@ -80,16 +139,16 @@ const COMPONENT_ROOT_MAPPING = {
   'tab': { allowedTags: ['div'], note: '내부 tablist는 role="tablist"' },
 
   // 그룹 C — 내비게이션
-  'breadcrumb': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 경로"' },
+  'breadcrumb': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="브레드크럼"(KRDS)' },
   'site-header': { allowedTags: ['header'], note: '사이트 헤더' },
   'site-footer': { allowedTags: ['footer'], note: '페이지 shell의 footer#footer 랜드마크' },
-  'main-menu': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="주 메뉴"' },
+  'main-menu': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="메인 메뉴"' },
   'mobile-menu': { allowedTags: ['div', 'dialog'], note: 'div 사용 시 role="dialog" aria-modal="true" aria-labelledby 필수' },
   'pagination': { allowedTags: ['nav'], requireAriaLabel: true, note: 'nav에 aria-label="페이지 내비게이션"' },
 
   // 그룹 D — 피드백
   'alert': { allowedTags: ['div'], requireRoleAlertOrStatus: true, note: 'role="alert" 또는 role="status"' },
-  'notice-bar': { allowedTags: ['section'], requireAriaLabel: true, note: 'section에 aria-label="사이트 공지" — 라이브 영역(role/aria-live)은 쓰지 않는다' },
+  'notice-bar': { allowedTags: ['section'], requireAriaLabel: true, note: 'section에 aria-label="사이트 공지" — KRDS 긴급 공지: main#main의 첫 section(header 다음, 히어로 앞), 닫기 버튼 없음, 링크 1개, 라이브 영역(role/aria-live)은 쓰지 않는다' },
   'badge': { allowedTags: ['span'], note: 'dot(텍스트 없음)은 aria-label 필수' },
   'progress': { allowedTags: ['div'], note: '내부 progress 또는 div[role=progressbar]' },
   'spinner': { allowedTags: ['span'], requireRoleStatus: true, note: 'role="status" + aria-label' },
@@ -136,7 +195,7 @@ const REQUIRED_ARIA = {
   },
   'breadcrumb': {
     requireAll: [/aria-label=/],
-    desc: 'aria-label (페이지 경로 설명)'
+    desc: 'aria-label="브레드크럼" (KRDS)'
   },
   'main-menu': {
     requireAll: [/aria-label=/],
@@ -178,7 +237,13 @@ const NON_BEM_STATE_CLASS = /\bclass\s*=\s*["'][^"']*?\b(is|has)-[a-z][\w-]*/g
 // ─── R-18: 시각적 단어 modifier 블랙리스트 ───────────────────────
 // modifier 부분(--xxx)에서 시각적 단어 사용 검출
 
-const FORBIDDEN_MODIFIER_WORDS = [
+// 클래스 명명 계약 — 금지어·폐기 대응·면제 접두어의 정본. 없으면(오래된 파생 프로젝트) 아래 기본값을 쓴다.
+const CLASS_NAMING_PATH = path.join(ROOT, 'contracts', 'class-naming.json')
+const CLASS_NAMING = fs.existsSync(CLASS_NAMING_PATH)
+  ? JSON.parse(fs.readFileSync(CLASS_NAMING_PATH, 'utf-8'))
+  : null
+
+const FORBIDDEN_MODIFIER_WORDS = CLASS_NAMING?.forbiddenWords || [
   // 크기 — 시각적 표현
   'big', 'huge', 'tiny', 'mini',
   // 색상 — 시각적 표현
@@ -190,13 +255,58 @@ const FORBIDDEN_MODIFIER_WORDS = [
   // 기타
   'wide', 'narrow', 'thick', 'thin'
 ]
+const FORBIDDEN_WORD_SET = new Set(FORBIDDEN_MODIFIER_WORDS)
+const DEPRECATED_CLASSES = new Map((CLASS_NAMING?.deprecated || []).map(d => [d.class, d.replacement]))
+const EXEMPT_BLOCK_PREFIXES = CLASS_NAMING?.exemptBlockPrefixes || ['docs-', 'pg']
+
+// 파일 이름 ≠ 블록 이름인 컴포넌트와 흔한 오기 — AI가 header__*, form__*, table-wrapper처럼 지어내는 블록.
+// CSS에 그 이름의 블록이 없을 때만 실제 블록 이름을 알려 준다(프로젝트가 같은 이름을 정의했으면 건드리지 않는다).
+const BLOCK_ALIASES = (() => {
+  const map = new Map()
+  for (const fb of CLASS_NAMING?.fileBlocks || []) {
+    if (!fb.blocks.includes(fb.component)) map.set(fb.component, fb.blocks)
+  }
+  for (const a of CLASS_NAMING?.blockAliases || []) map.set(a.alias, [a.block])
+  return map
+})()
+
+// modifier를 '-'로 나눈 조각 중 금지어가 있으면 그 단어를 돌려준다(--gray-dark, --dark-mode 모두 잡는다)
+function forbiddenSegment(modifier) {
+  return modifier.split('-').find(seg => FORBIDDEN_WORD_SET.has(seg)) || null
+}
+
+// ─── R-29: 마크업의 BEM 클래스는 CSS에 실재해야 한다 ─────────────────
+// src/styles와 아이콘 CSS에 정의된 클래스를 모은다. 이 색인의 블록에 속한 클래스만 검사한다
+// (프로젝트 고유 블록·외부 라이브러리 클래스는 대상이 아니다).
+function collectCssClasses() {
+  const classes = new Set()
+  const files = []
+  const walk = (dir) => {
+    if (!fs.existsSync(dir)) return
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name)
+      if (fs.statSync(full).isDirectory()) walk(full)
+      else if (name.endsWith('.css')) files.push(full)
+    }
+  }
+  walk(path.join(ROOT, 'src', 'styles'))
+  const iconsCss = path.join(ROOT, 'assets', 'icons', 'icons.css')
+  if (fs.existsSync(iconsCss)) files.push(iconsCss)
+  for (const file of files) {
+    const css = fs.readFileSync(file, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '')
+    for (const m of css.matchAll(/\.([a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?(?:--[a-z0-9]+(?:-[a-z0-9]+)*)?)/g)) {
+      classes.add(m[1])
+    }
+  }
+  const blocks = new Set([...classes].map(c => c.split(/__|--/)[0]))
+  return { classes, blocks }
+}
+const CSS_INDEX = collectCssClasses()
 // 주의: --xl, --xxl은 KRDS 정의가 아님 (KRDS는 xsmall/small/medium/large/xlarge 표준)
 // 단, --xl/--xxl 이미 사용 중이면 별도 정리 필요. 일단 미검출(false negative 허용).
 
-const FORBIDDEN_MODIFIER_RE = new RegExp(
-  `\\b([a-z][\\w-]*?)--(${FORBIDDEN_MODIFIER_WORDS.join('|')})\\b`,
-  'g'
-)
+// 블록(·element)과 modifier 전체를 잡는다. 판정은 forbiddenSegment()가 조각 단위로 한다.
+const MODIFIER_TOKEN_RE = /\b([a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?)--([a-z0-9]+(?:-[a-z0-9]+)*)\b/g
 
 // 블록별 예외 — 그 블록에서는 정의된 축 이름이라 시각적 작명이 아니다.
 //
@@ -560,7 +670,7 @@ function checkSectionRhythm(root, filePath, baseLineNum) {
         error(
           rel(filePath),
           nodeLine(baseLineNum, section),
-          `[R-25] 동일 archetype "section--${archetype}" 3연속 — 연속 상한은 2입니다. section-media(이미지-텍스트 교차)·hero-bleed(풀블리드 인트로) 같은 변주 패턴을 사이에 끼우세요.`,
+          `[R-25] 동일 archetype "section--${archetype}" 3연속 — 연속 상한은 2입니다. section-media(이미지-텍스트 교차)·시그니처 요소 같은 변주 패턴을 사이에 끼우세요(hero-bleed는 첫 섹션 전용 — R-42).`,
           section.raw.slice(0, 120),
           'R-25'
         )
@@ -613,16 +723,18 @@ function shouldCheckPageContract(html, filePath) {
   // 건너뛰기 링크)을 요구할 대상이 아니며, check-violations.js도 같은 이유로 R-14를
   // 면제한다. 명시적으로 파일을 넘겨받는 경로(pre-commit 훅)에서도 같게 판단해야
   // 두 검사기가 어긋나지 않는다.
-  if (/\/src\/playground\//.test(filePath)) return false
+  if (/\/src\/playground\//.test(relPosix(filePath))) return false
 
   // Nunjucks 레이아웃·파셜(site/_includes)은 페이지가 아니라 조각이다. 완성된 shell 은 렌더 결과(_site)가 갖는다.
   // 전체 검사(walk) 모드에서는 원래 page shell 을 요구하지 않았는데, 파일을 지정하면(pre-commit 훅)
   // <main>·skip-to-content 가 든 레이아웃이 완전한 페이지로 판정돼 레이아웃을 고칠 때마다 커밋이 막혔다.
-  if (/\/site\/_includes\//.test(filePath)) return false
+  if (/\/site\/_includes\//.test(relPosix(filePath))) return false
 
   if (HAS_EXPLICIT_TARGETS) return true
 
-  const relative = rel(filePath)
+  // 인자 없는 검사: 납품 페이지와 페이지 골격 스니펫만 page 계약을 받는다
+  if (PAGE_FILES.has(path.resolve(filePath))) return true
+  const relative = toPosix(rel(filePath))
   return relative === 'src/snippets/boilerplate.md'
 }
 
@@ -691,6 +803,16 @@ function checkPageContract(html, filePath, baseLineNum = 1) {
 
   if (footers.length === 0) {
     error(rel(filePath), baseLineNum, '[R-15] page shell에 footer#footer가 없습니다.', '', 'R-15')
+  }
+
+  // 한국형 골격은 실제 페이지(납품 페이지·boilerplate 스니펫)만 — 사이트 문서의 '...' 생략 골격은 대상이 아니다
+  const relative = toPosix(rel(filePath))
+  if (PAGE_RULES && (PAGE_FILES.has(path.resolve(filePath)) || isPagePath(ROOT, relative) || relative === 'src/snippets/boilerplate.md')) {
+    // 페이지 유형(K-16)은 infoux.json pageTypes 선언에서만 — boilerplate 스니펫은 유형이 없다
+    for (const f of PAGE_RULES.scanPageRules(html, { profile: PROFILE, expression: EXPRESSION, publicIdentity: PUBLIC_IDENTITY, pageType: pageTypeOf(ROOT, relative) })) {
+      const report = f.severity === 'error' ? error : warn
+      report(rel(filePath), baseLineNum + (f.line || 1) - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
   }
 
   if (!main) return
@@ -780,12 +902,121 @@ function checkHtmlLang(html, filePath, baseLineNum) {
   )
 }
 
+// ─── R-28: viewport 확대 차단 ─────────────────────────────────
+// WCAG 1.4.4 — 200% 확대가 가능해야 한다. user-scalable=no·0 또는 maximum-scale 2 미만은 오류,
+// 2 이상 5 미만은 경고(지정하지 않는 것이 가장 낫다).
+const VIEWPORT_META_RE = /<meta\b[^>]*\bname\s*=\s*["']viewport["'][^>]*>/gi
+const ZOOM_WARN_CEILING = 5
+const ZOOM_MIN_SCALE = 2
+
+function parseViewportContent(tag) {
+  const m = /\bcontent\s*=\s*(["'])([\s\S]*?)\1/i.exec(tag)
+  if (!m) return {}
+  const props = {}
+  for (const part of m[2].split(/[,;]/)) {
+    const [key, value] = part.split('=').map(s => (s || '').trim().toLowerCase())
+    if (key) props[key] = value
+  }
+  return props
+}
+
+function checkViewportZoom(html, filePath, baseLineNum) {
+  VIEWPORT_META_RE.lastIndex = 0
+  let m
+  while ((m = VIEWPORT_META_RE.exec(html)) !== null) {
+    const props = parseViewportContent(m[0])
+    const lineNum = baseLineNum + html.slice(0, m.index).split('\n').length - 1
+    const code = m[0].slice(0, 160)
+    const scalable = props['user-scalable']
+    const maxScale = props['maximum-scale'] !== undefined ? parseFloat(props['maximum-scale']) : NaN
+    if (scalable === 'no' || scalable === '0') {
+      error(rel(filePath), lineNum, '[R-28] viewport가 확대를 막습니다(user-scalable). 저시력 사용자가 200% 확대할 수 있게 user-scalable을 지우세요.', code, 'R-28')
+    } else if (!Number.isNaN(maxScale) && maxScale < ZOOM_MIN_SCALE) {
+      error(rel(filePath), lineNum, `[R-28] viewport maximum-scale=${props['maximum-scale']} — 200% 확대가 불가능합니다. maximum-scale을 지우세요.`, code, 'R-28')
+    } else if (!Number.isNaN(maxScale) && maxScale < ZOOM_WARN_CEILING) {
+      warn(rel(filePath), lineNum, `[R-28] viewport maximum-scale=${props['maximum-scale']} — 확대 상한을 두지 않는 것이 가장 낫습니다.`, code, 'R-28')
+    }
+  }
+}
+
+// R-29 + R-18(폐기): 카탈로그 블록의 클래스가 CSS에 없거나 폐기 예정이면 알린다.
+// modifier는 모양을 바꾸려고 있는 것이라 CSS가 없으면 무의미하거나 지어낸 것이다 → error.
+// element는 스타일 없는 구조 표시일 수 있어 warn — 스타일이 필요 없으면 클래스를 달지 않는다.
+// R-17 보조: ARIA·네이티브 대응이 있는 상태 modifier는 그 속성과 함께 써야 한다(색만으로 상태를 보이지 않게).
+// 키는 modifier 마지막 조각, 값은 같은 요소에 있어야 하는 속성 중 하나.
+const STATE_MODIFIER_ATTRS = {
+  current: ['aria-current'],
+  selected: ['aria-selected', 'aria-current', 'aria-pressed', 'checked'],
+  disabled: ['disabled', 'aria-disabled']
+}
+
+function checkClassExistence(html, filePath, baseLineNum) {
+  const local = new Set()
+  for (const s of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) {
+    for (const m of s[1].matchAll(/\.([a-z][\w-]*)/g)) local.add(m[1])
+  }
+  const archetypes = new Set((PAGE_CONTRACT?.sectionArchetypes || []).map(a => `section--${a}`))
+  const reported = new Set()
+  // 이스케이프된 코드 예시(&lt;div class="…"&gt;)의 클래스도 검사하도록 class 속성 단위로 훑는다.
+  // ARIA 짝 검사만 실제 태그(<…>) 안에 있을 때 그 태그의 속성을 본다.
+  for (const m of html.matchAll(/\bclass\s*=\s*(["'])([^"']*)\1/g)) {
+    const lineNum = baseLineNum + html.slice(0, m.index).split('\n').length - 1
+    const open = html.lastIndexOf('<', m.index)
+    const close = html.indexOf('>', m.index)
+    const tagText = open !== -1 && close !== -1 && !html.slice(open, m.index).includes('>') ? html.slice(open, close + 1) : null
+    for (const cls of m[2].split(/\s+/).filter(Boolean)) {
+      // 템플릿 식(Nunjucks {{ }}, JS ${ }) 조각은 실제 클래스 이름이 아니다
+      if (!/^[a-z][a-z0-9_-]*$/.test(cls)) continue
+      const block = cls.split(/__|--/)[0]
+      if (EXEMPT_BLOCK_PREFIXES.some(p => block.startsWith(p))) continue
+      if (archetypes.has(cls) || local.has(cls)) continue
+      const key = `${lineNum}:${cls}`
+      if (reported.has(key)) continue
+      reported.add(key)
+      // 파일 이름·오기로 지은 블록 — CSS에 그 블록이 없으면 실제 블록 이름을 알려 준다
+      const aliasTarget = BLOCK_ALIASES.get(block)
+      const aliasApplies = aliasTarget && !CSS_INDEX.blocks.has(block) && (/__|--/.test(cls) || block.includes('-'))
+      if (aliasApplies) {
+        error(rel(filePath), lineNum, `[R-29] CSS에 없는 블록 "${cls}". 이 컴포넌트의 블록은 ${aliasTarget.map(b => `.${b}`).join(' · ')}다(references/class-naming.md 파일↔블록 대응).`, cls, 'R-29')
+        continue
+      }
+      if (!/__|--/.test(cls)) continue
+      if (DEPRECATED_CLASSES.has(cls)) {
+        warn(rel(filePath), lineNum, `[R-18] 폐기 예정 modifier "${cls}" — ${DEPRECATED_CLASSES.get(cls)}로 바꾼다.`, cls, 'R-18')
+        continue
+      }
+      const stateWord = cls.includes('--') ? cls.split('--').pop().split('-').pop() : null
+      const needed = stateWord && STATE_MODIFIER_ATTRS[stateWord]
+      if (needed && tagText && !needed.some(attr => new RegExp(`\\s${attr}(\\s|=|>|/)`).test(tagText))) {
+        warn(rel(filePath), lineNum, `[R-17] 상태 modifier "${cls}"에 대응 속성(${needed.join(' / ')})이 없다. 상태는 속성으로 먼저 알린다 — 클래스만으로는 색으로만 보인다.`, cls, 'R-17')
+      }
+      if (!CSS_INDEX.blocks.has(block) || CSS_INDEX.classes.has(cls)) continue
+      if (cls.includes('--')) {
+        error(rel(filePath), lineNum, `[R-29] CSS에 없는 modifier "${cls}". 카탈로그 CSS에 정의된 변형만 쓴다 — 없는 변형을 지어내지 않는다. 필요하면 contracts/class-naming.json 어휘로 CSS부터 정의한다.`, cls, 'R-29')
+      } else {
+        warn(rel(filePath), lineNum, `[R-29] CSS에 없는 element "${cls}". 스타일이 필요 없는 구조 요소에는 클래스를 달지 않고, 필요하면 컴포넌트 CSS에 정의한다.`, cls, 'R-29')
+      }
+    }
+  }
+}
+
 function checkHtml(html, filePath, baseLineNum = 1) {
   const lines = html.split('\n')
   const root = parseHtmlTree(html)
 
   checkPageContract(html, filePath, baseLineNum)
+  // R-30 실제 목적지 없는 링크 — 스니펫·플레이그라운드·문서 예시까지 모든 마크업
+  if (PAGE_RULES) {
+    // R-33 자동 전환 정지·자동 재생 영상·marquee도 모든 마크업
+    // R-47 개인정보 수집 폼(고지·미리 체크·주민등록번호)도 모든 마크업
+    for (const f of [...PAGE_RULES.deadLinkFindings(html), ...PAGE_RULES.motionFindings(html), ...PAGE_RULES.privacyFormFindings(html), ...PAGE_RULES.langFindings(html, { docs: /^\/site\//.test(relPosix(filePath)) })]) {
+      const report = f.severity === 'error' ? error : warn
+      report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
+  }
   checkHtmlLang(html, filePath, baseLineNum)
+  checkViewportZoom(html, filePath, baseLineNum)
+  checkClassExistence(html, filePath, baseLineNum)
   checkFormLabels(root, filePath, baseLineNum)
   checkTabPattern(root, filePath, baseLineNum)
   checkAccordionPattern(root, filePath, baseLineNum)
@@ -802,26 +1033,31 @@ function checkHtml(html, filePath, baseLineNum = 1) {
       error(
         rel(filePath),
         lineNum,
-        `[R-17] 비-BEM 상태 클래스 "${stateName}-*" 발견. BEM modifier + ARIA 속성으로 표현하세요.`,
+        `[R-17] 비-BEM 상태 클래스 "${stateName}-*" 발견. 상태는 ARIA·hidden 속성(aria-expanded, aria-current, aria-selected, hidden, disabled)으로 표현하고, ARIA로 표현할 수 없을 때만 BEM modifier(예: --done)를 쓰세요.`,
         line.trim().slice(0, 120),
         'R-17'
       )
     }
   })
 
-  // R-18: 시각적 단어 modifier
+  // R-18: 시각적 단어 modifier — modifier를 조각으로 나눠 금지어가 하나라도 있으면 오류
   lines.forEach((line, idx) => {
-    FORBIDDEN_MODIFIER_RE.lastIndex = 0
+    MODIFIER_TOKEN_RE.lastIndex = 0
     let m
-    while ((m = FORBIDDEN_MODIFIER_RE.exec(line)) !== null) {
+    while ((m = MODIFIER_TOKEN_RE.exec(line)) !== null) {
       const lineNum = baseLineNum + idx
       const block = m[1]
-      const word = m[2]
-      if (ALLOWED_MODIFIER_BY_BLOCK.get(block)?.has(word)) continue
+      const modifier = m[2]
+      const word = forbiddenSegment(modifier)
+      if (!word) continue
+      if (EXEMPT_BLOCK_PREFIXES.some(p => block.startsWith(p))) continue
+      if (ALLOWED_MODIFIER_BY_BLOCK.get(block)?.has(modifier)) continue
+      // 폐기 예정 별칭(클래스 전체가 같을 때만)은 checkClassExistence가 대체 이름과 함께 경고한다
+      if (DEPRECATED_CLASSES.has(`${block}--${modifier}`)) continue
       error(
         rel(filePath),
         lineNum,
-        `[R-18] 시각적 단어 modifier "${block}--${word}" 발견. KRDS 의미적 어휘 사용 (예: --primary, --large, --info).`,
+        `[R-18] 시각적 단어 modifier "${block}--${modifier}" 발견("${word}"). 허용 어휘(contracts/class-naming.json)에서 의미로 짓는다 (예: --primary, --large, --info, --neutral).`,
         line.trim().slice(0, 120),
         'R-18'
       )
@@ -904,11 +1140,14 @@ function checkHtml(html, filePath, baseLineNum = 1) {
 const SKIP_PATTERNS = [
   /\/site\/conventions\//, // 규칙 문서 — ❌ 금지 예시 포함
   /\/site\/accessibility\//, // 접근성 가이드 — "Don't" 예시 포함
+  /\/site\/testing\//, // 테스트 가이드 — 확대 차단 viewport 등 "DON'T" 예시 포함
+  /\/references\/forbidden-patterns\.md$/, // 금지 패턴 사전 — ❌ 예시가 본문
+  /\/references\/accessibility\.md$/, // 접근성 기준 — "Don't" 예시·조각 마크업 포함
   /\/src\/playground\/index\.html$/ // 색상/토큰 스케일 데모 — pg__swatch-color--gray-* 의도적 사용
 ]
 
 function isSkipped(filePath) {
-  return SKIP_PATTERNS.some(re => re.test(filePath))
+  return SKIP_PATTERNS.some(re => re.test(relPosix(filePath)))
 }
 
 function walk(dir, exts, accumulator) {
@@ -935,6 +1174,11 @@ function getTargetFiles() {
   walk(SNIPPETS_DIR, ['.md'], files)
   walk(PLAYGROUND_DIR, ['.html'], files)
   walk(SITE_DIR, ['.md', '.njk', '.html'], files)
+  walk(REFERENCES_DIR, ['.md'], files)
+  walk(PROMPTS_DIR, ['.md'], files)
+  for (const page of PAGE_SCOPE.files) {
+    if (!files.includes(page) && !isSkipped(page)) files.push(page)
+  }
   return files
 }
 
@@ -942,7 +1186,11 @@ function getTargetFiles() {
 
 function main() {
   const files = getTargetFiles()
-  console.log(`${DIM}HTML 구조 검사 시작 — ${files.length}개 파일${RESET}`)
+  const checkedPages = files.filter(f => PAGE_FILES.has(f)).length
+  const pageNote = checkedPages > 0 ? ` (납품 페이지 ${checkedPages}개 포함)` : ''
+  console.log(`${DIM}HTML 구조 검사 시작 — ${files.length}개 파일${pageNote}${RESET}`)
+  for (const problem of PAGE_SCOPE.problems) error('infoux.json', null, problem, null, 'HX-06')
+  for (const notice of PAGE_SCOPE.notices) warn('infoux.json', null, notice, null, 'HX-06')
 
   for (const filePath of files) {
     const content = fs.readFileSync(filePath, 'utf-8')

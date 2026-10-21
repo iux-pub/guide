@@ -10,9 +10,9 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/table.md`이며,
 ## 기본 마크업
 
 ```html
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-labelledby="apply-status-caption">
   <table class="table">
-    <caption class="table__caption">2026년 1분기 신청 현황</caption>
+    <caption class="table__caption" id="apply-status-caption">2026년 1분기 신청 현황</caption>
     <thead>
       <tr>
         <th scope="col">번호</th>
@@ -39,7 +39,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/table.md`이며,
 - `<caption>`으로 표 제목 명시
 - 정렬 헤더는 `aria-sort="ascending|descending|none"`
 - 선택 행은 `aria-selected="true"`
-- 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기
+- 모바일 가로 스크롤은 `.table-wrap` 래퍼로 감싸고, 래퍼에 `tabindex="0"` + `role="region"` + `aria-labelledby`(caption `id`)를 둔다 — 키보드로 가로 스크롤할 수 있고 영역 이름은 표 제목이 된다
 
 ## 파일
 

@@ -5,10 +5,23 @@
   "description": "UI 구현 전에 작업 의도, 재사용 패턴, 접근성 요구를 확정하는 계약.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["profile", "primaryTask", "pagePattern", "reuse", "interactive", "exceptions"],
+  "required": [
+    "profile",
+    "primaryTask",
+    "pagePattern",
+    "reuse",
+    "interactive",
+    "exceptions"
+  ],
   "properties": {
     "profile": {
-      "enum": ["general-site", "public-service", "public-institution", "cms-admin", "commerce-reservation"]
+      "enum": [
+        "general-site",
+        "public-service",
+        "public-institution",
+        "cms-admin",
+        "commerce-reservation"
+      ]
     },
     "primaryTask": {
       "type": "string",
@@ -18,33 +31,79 @@
       "type": "string",
       "minLength": 1
     },
+    "pageType": {
+      "enum": [
+        "main",
+        "sub-content",
+        "board-list",
+        "board-detail",
+        "form",
+        "search-result",
+        "error"
+      ],
+      "description": "이 계약이 다루는 페이지의 유형(K-16). 검사기는 같은 값을 infoux.json pageTypes 선언에서 읽는다(R-40 공공 메인 과업 진입·마케팅 섹션, R-41 서브 브레드크럼·서브 히어로). form·search-result·error는 utility~restrained로 작성한다."
+    },
+    "recipe": {
+      "enum": [
+        "KR-MAIN-PORTAL",
+        "KR-MAIN-TASK",
+        "KR-MAIN-CULTURE",
+        "KR-MAIN-CORP",
+        "KR-MAIN-COMMERCE",
+        "KR-MAIN-CAMPUS"
+      ],
+      "description": "pageType이 main일 때만 쓰는 한국형 메인 레시피(references/korean-web-patterns.md). 서브 레시피는 정의되지 않았다."
+    },
     "reuse": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "uniqueItems": true
     },
     "interactive": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "uniqueItems": true
     },
     "tokens": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "uniqueItems": true,
-      "default": ["semantic-color"]
+      "default": [
+        "semantic-color"
+      ]
     },
     "publicIdentity": {
-      "enum": ["required", "not-applicable", "unconfirmed"],
-      "default": "unconfirmed"
+      "enum": [
+        "required",
+        "not-applicable",
+        "unconfirmed"
+      ],
+      "default": "unconfirmed",
+      "description": "required는 KRDS의 '정부 조직·관련 기관이 운영·관리하는 공식 디지털 정부서비스'로 확인된 경우다. 검사기는 infoux.json publicIdentity만 읽는다(R-46) — Task Contract 값은 낮추는 쪽으로만 쓴다."
     },
     "expression": {
-      "enum": ["utility", "restrained", "expressive"],
+      "enum": [
+        "utility",
+        "restrained",
+        "expressive"
+      ],
       "description": "표현 등급 override. 생략 시 profile 기본값(contracts/profiles.json). 상향 근거는 primaryTask 또는 exceptions에 명시. task contract는 페이지·과업 단위로 작성되므로 이 값이 페이지 스코프 등급을 운반한다 — 결제·인증·폼 페이지는 utility로 강등해 작성한다."
     },
     "contentSources": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "uniqueItems": true,
       "description": "실제 기관 용어·메뉴명·콘텐츠의 출처(과업 문서 경로, 용어집, 기존 사이트 URL). 비어 있으면 카피는 임시 초안 신분을 벗어날 수 없다."
     },
@@ -53,20 +112,52 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["rule", "reason"],
+        "required": [
+          "rule",
+          "reason"
+        ],
         "properties": {
-          "rule": { "type": "string", "minLength": 1 },
-          "reason": { "type": "string", "minLength": 1 },
-          "owner": { "type": "string" },
-          "expires": { "type": "string", "format": "date" }
+          "rule": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "string",
+            "format": "date"
+          }
         }
       }
     }
   },
   "allOf": [
     {
-      "if": { "properties": { "publicIdentity": { "const": "required" } }, "required": ["publicIdentity"] },
-      "then": { "properties": { "expression": { "enum": ["utility", "restrained"] } } }
+      "if": {
+        "properties": {
+          "publicIdentity": {
+            "const": "required"
+          }
+        },
+        "required": [
+          "publicIdentity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "expression": {
+            "enum": [
+              "utility",
+              "restrained"
+            ]
+          }
+        }
+      }
     }
   ]
 }

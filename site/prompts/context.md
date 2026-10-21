@@ -43,7 +43,7 @@ ChatGPT, Gemini, Claude 웹
 
 ## 디자인 토큰
 
-색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(`var(--token)`)와 Tailwind `@theme` 기준을 사용하라. 간격·크기·타이포 스케일은 CSS/Tailwind 직접값을 사용한다.
+색상, 기본 폰트, 브레이크포인트는 CSS Custom Properties(`var(--token)`)와 Tailwind `@theme` 기준을 사용하라. 간격·크기·타이포 스케일은 CSS 값·Tailwind rem 임의값을 사용한다.
 
 - **색상** (`--color-*`) — 의미 기반 토큰
 - **폰트** (`--font-sans`, `--font-heading`, `--font-mono`) — 전역 기본 폰트. 제목 차등 서체는 `--font-heading`(brand에 heading 슬롯이 없으면 sans 값으로 폴백)
@@ -72,14 +72,16 @@ ChatGPT, Gemini, Claude 웹
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 

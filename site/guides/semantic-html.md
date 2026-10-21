@@ -40,8 +40,8 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 <!-- DON'T: 스타일 목적으로 heading 선택 -->
 <h4>서비스 소개</h4>    <!-- h1이어야 하지만 작게 보이려고 h4 사용 -->
 
-<!-- DO: CSS로 크기 조정 -->
-<h1 class="page__title--sm">서비스 소개</h1>
+<!-- DO: 의미대로 h1을 쓰고, 작게 보여야 하면 크기는 CSS에서 조정한다 (태그 레벨을 바꾸지 않는다) -->
+<h1>서비스 소개</h1>
 ```
 
 ## 시맨틱 섹셔닝 태그
@@ -55,10 +55,10 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 | `<div>` | 의미 없는 그룹 | 스타일링/레이아웃 목적의 래퍼 |
 
 ```html
-<!-- DO: 의미에 맞는 태그 선택 -->
-<main id="main">
-  <section>
-    <h2>공지사항</h2>
+<!-- DO: 의미에 맞는 태그 선택 — main 안의 section 하나(page shell: main > section > .container) -->
+<section class="section section--list" aria-labelledby="notice-title">
+  <div class="container">
+    <h2 id="notice-title">공지사항</h2>
     <article>
       <h3>시스템 점검 안내</h3>
       <p>2026년 3월 30일 02:00-06:00 시스템 점검이 있습니다.</p>
@@ -67,8 +67,8 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
       <h3>신규 기능 출시</h3>
       <p>대시보드 v2가 출시되었습니다.</p>
     </article>
-  </section>
-</main>
+  </div>
+</section>
 ```
 
 ```html
@@ -89,7 +89,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 
 ```html
 <!-- DO: 주요 네비게이션 -->
-<nav aria-label="주 메뉴">
+<nav aria-label="메인 메뉴">
   <ul>
     <li><a href="/">홈</a></li>
     <li><a href="/about/">소개</a></li>
@@ -97,7 +97,7 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
   </ul>
 </nav>
 
-<!-- DO: 보조 네비게이션 (aria-label로 구분) -->
+<!-- DO: 보조 네비게이션 (aria-label로 구분 — 브레드크럼은 KRDS대로 "브레드크럼") -->
 <nav aria-label="브레드크럼">
   <ol>
     <li><a href="/">홈</a></li>
@@ -108,12 +108,20 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 ```
 
 ```html
-<!-- DON'T: 모든 링크 목록에 nav 사용 -->
+<!-- DON'T: 이름 없는 nav가 여럿 — 랜드마크 목록에 「내비게이션」만 반복돼 서로 구분할 수 없다 -->
 <nav>
-  <a href="/terms/">이용약관</a>
-  <a href="/privacy/">개인정보처리방침</a>
+  <ul>
+    <li><a href="/">홈</a></li>
+    <li><a href="/about/">소개</a></li>
+  </ul>
 </nav>
-<!-- 푸터 링크는 nav 없이 ul/li로 충분하다 -->
+<nav>
+  <ul>
+    <li><a href="/terms/">이용약관</a></li>
+    <li><a href="/privacy/">개인정보 처리방침</a></li>
+  </ul>
+</nav>
+<!-- 페이지에 nav가 둘 이상이면 각각 aria-label로 이름을 준다 (예: 푸터 정책 링크는 aria-label="약관 및 정책") -->
 ```
 
 ### aside
@@ -121,19 +129,21 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 본문과 관련이 있지만 분리 가능한 부가 콘텐츠에 사용한다.
 
 ```html
-<!-- DO: 사이드바, 관련 링크, 부가 정보 -->
-<main id="main">
-  <article>
-    <h1>CSS Grid 가이드</h1>
-    <p>CSS Grid는 2차원 레이아웃 시스템이다...</p>
-  </article>
-  <aside aria-label="관련 가이드">
-    <h2>관련 가이드</h2>
-    <ul>
-      <li><a href="/guides/css-performance/">CSS 성능</a></li>
-    </ul>
-  </aside>
-</main>
+<!-- DO: 사이드바, 관련 링크, 부가 정보 — main 안의 section 하나 -->
+<section class="section section--content" aria-labelledby="guide-title">
+  <div class="container">
+    <article>
+      <h1 id="guide-title">CSS Grid 가이드</h1>
+      <p>CSS Grid는 2차원 레이아웃 시스템이다...</p>
+    </article>
+    <aside aria-label="관련 가이드">
+      <h2>관련 가이드</h2>
+      <ul>
+        <li><a href="/guides/css-performance/">CSS 성능</a></li>
+      </ul>
+    </aside>
+  </div>
+</section>
 ```
 
 ### header / footer
@@ -143,8 +153,8 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 <body>
   <a href="#main" class="skip-to-content">본문 바로가기</a>
   <header id="header" class="site-header">
-    <h1 class="site-header__logo">사이트명</h1>
-    <nav aria-label="주 메뉴">...</nav>
+    <a class="site-header__brand" href="/">사이트명</a><!-- 로고는 링크 — h1은 페이지 제목에 쓴다 -->
+    <nav aria-label="메인 메뉴">...</nav>
   </header>
 
   <main id="main">
@@ -172,13 +182,13 @@ HTML 태그를 의미에 맞게 사용하면 접근성, SEO, 유지보수성이 
 | `<form>` | `form` (aria-label 있을 때) | 불필요 |
 
 ```html
-<!-- DON'T: 중복 role 지정 -->
+<!-- DON'T(금지 예시): 중복 role 지정 -->
 <nav role="navigation">...</nav>
-<main>...</main>
+<aside role="complementary">...</aside>
 
 <!-- DO: 시맨틱 태그만으로 충분 -->
-<nav aria-label="주 메뉴">...</nav>
-<main id="main">...</main>
+<nav aria-label="메인 메뉴">...</nav>
+<aside aria-label="관련 가이드">...</aside>
 ```
 
 ## 체크리스트

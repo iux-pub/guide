@@ -14,7 +14,9 @@
 
 - 모든 컨트롤은 보이는 `label` 또는 동등한 접근 가능한 이름을 가진다.
 - 도움말과 오류는 고유 id로 `aria-describedby`에 연결한다.
-- 오류 상태는 BEM modifier와 `aria-invalid="true"`를 함께 사용한다.
+- 오류 상태는 `aria-invalid="true"`를 먼저 쓰고, 기존 `--error` 변형(`.input--error`·`.select--error`·`.textarea--error`)을 함께 둔다(R-17). `.has-error`는 쓰지 않는다.
 - placeholder는 label을 대체하지 않는다.
 - 제출은 native `form`과 `button type="submit"`을 사용한다.
 - 모바일 인터랙티브 영역은 44x44px 이상이다.
+- 개인정보를 받는 폼은 동의 그룹(`fieldset`) 안에 수집 목적·항목·보유 기간·거부 권리와 거부 시 불이익을 적는다. 값은 발주처 개인정보 처리방침·`contentSources`에서 가져오고 지어내지 않는다(R-47·R-23).
+- 동의 체크박스·라디오를 미리 체크하지 않는다. 주민등록번호는 법령 근거 없이 받지 않는다(R-47).

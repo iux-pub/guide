@@ -1,12 +1,12 @@
 /**
- * Main Menu — KRDS Main menu (드롭다운형·메가형 주 메뉴)
+ * Main Menu — KRDS Main menu (드롭다운형·메가형 메인 메뉴)
  *
  * 하위 메뉴 트리거는 disclosure 패턴이다 — <button aria-expanded aria-controls>.
  * role="menu" · aria-haspopup 은 쓰지 않는다. 링크 목록을 열고 닫을 뿐이라
  * 메뉴 위젯 역할을 선언하면 스크린리더가 화살표 키 운용을 기대한다.
  *
  * 구조 (#header 안에서 사용):
- *   <nav class="main-menu" aria-label="주 메뉴">
+ *   <nav class="main-menu" aria-label="메인 메뉴">
  *     <ul class="main-menu__list">
  *       <li class="main-menu__item">
  *         <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="submenu-about">
@@ -23,7 +23,7 @@
  * 메가 메뉴 (.main-menu--mega) — 패널이 헤더 전체 폭으로 열린다.
  * 패널은 가장 가까운 위치 지정 조상(헤더 .site-header, sticky)을 기준으로 놓이므로
  * 헤더 밖에서 쓰려면 기준 조상을 직접 지정해야 한다.
- *   <nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+ *   <nav class="main-menu main-menu--mega" aria-label="메인 메뉴">
  *     <ul class="main-menu__list">
  *       <li class="main-menu__item">
  *         <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">...</button>
@@ -63,7 +63,7 @@
 
   /* 구형 마크업 호환 — aria-haspopup 트리거의 화살표. 신규 마크업은 .main-menu__toggle 을 쓴다 */
   .main-menu__link[aria-haspopup="true"]::after {
-    @apply content-[''] w-[1.2rem] h-[1.2rem] [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='12'_height='12'_viewBox='0_0_12_12'_fill='none'><path_d='M3_4.5L6_7.5L9_4.5'_stroke='%231E2124'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:transform_0.15s_ease-in-out];
+    @apply content-[''] w-[1.2rem] h-[1.2rem] [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'><path%20d='M3%204.5L6%207.5L9%204.5'%20stroke='%231E2124'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:rotate_0.15s_ease-in-out];
   }
 
   .main-menu__link[aria-expanded="true"]::after {
@@ -78,7 +78,7 @@
 
   /* 토글 화살표 — 아이콘 카탈로그의 chevron-down 스프라이트를 쓰고 펼침 상태에서 뒤집는다 */
   .main-menu__icon {
-    @apply [transition:transform_0.15s_ease-in-out];
+    @apply [transition:rotate_0.15s_ease-in-out];
   }
 
   .main-menu__toggle[aria-expanded="true"] .main-menu__icon {
@@ -87,7 +87,8 @@
 
   /* 서브메뉴 (드롭다운) */
   .main-menu__submenu {
-    @apply absolute left-0 m-0 py-[0.8rem] px-0 list-none bg-[var(--color-surface)] border border-[var(--color-border-light)] rounded-[0.6rem] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] z-[1000] top-[100%] min-w-[20rem];
+    /* KRDS 메인 메뉴: 드롭다운 영역은 뷰포트 높이의 70%를 넘지 않고, 넘으면 패널 안에서 스크롤한다 */
+    @apply absolute left-0 m-0 py-[0.8rem] px-0 list-none bg-[var(--color-surface)] border border-[var(--color-border-light)] rounded-[0.6rem] shadow-[0_0_0.2rem_0_#00000014,_0_0.8rem_1.6rem_0_#0000001f] z-[1000] top-[100%] min-w-[20rem] max-h-[70vh] overflow-y-auto;
 
 
 
@@ -115,13 +116,18 @@
   }
 
   .main-menu__panel {
-    @apply absolute inset-x-0 top-full bg-[var(--color-surface)] border-y border-[var(--color-border-light)] shadow-[0_0.8rem_1.6rem_0_#0000001f] z-[1000];
+    @apply absolute inset-x-0 top-full bg-[var(--color-surface)] border-y border-[var(--color-border-light)] shadow-[0_0.8rem_1.6rem_0_#0000001f] z-[1000] max-h-[70vh] overflow-y-auto;
   }
 
   .main-menu__panel[hidden] { @apply [display:none]; }
 
   .main-menu__groups {
     @apply grid grid-cols-2 gap-x-[3.2rem] gap-y-[2.4rem] py-[3.2rem] tablet:grid-cols-3 pc:grid-cols-4;
+  }
+
+  /* 메가 패널의 열 — 그리드 칸이 긴 단어에 밀려 넘치지 않게 한다 */
+  .main-menu__group {
+    @apply min-w-0;
   }
 
   .main-menu__group-title {

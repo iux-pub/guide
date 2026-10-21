@@ -91,7 +91,7 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 - ✅ 색상은 토큰만 사용 (raw hex/rgb/hsl 금지)
 - ✅ 간격/크기/타이포는 KRDS를 참고하되 프로젝트 밀도에 맞게 조정
 - ✅ 기존 컴포넌트 패턴 우선 사용, 필요한 컴포넌트는 UX팀 판단으로 확장
-- ✅ R-01~R-20 규칙 자동 준수
+- ✅ rules.json 규칙 전체 자동 준수 (MCP `get_rules`)
 - ✅ 위반 발견 시 작업 중단 + 사용자에게 보고
 
 정부 아이덴티티 요소는 모든 프로젝트의 기본값이 아니다. 민간 사이트, 사내 시스템, 일반 CMS에서는 공식 배너·정부 상징·운영기관 식별자를 생성하지 않고 KRDS 접근성/구조/사용성 원칙만 적용한다.
@@ -103,7 +103,7 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 | **Claude Code** | `CLAUDE.md` + infoUX MCP | 필요한 기준을 도구로 직접 조회 |
 | **Cursor** | `AGENTS.md` + 경로별 `AGENTS.md` + `.cursorrules` | 자동 |
 | **Aider** | `AGENTS.md` | 자동 |
-| **OpenAI Codex CLI** | `AGENTS.md` + `.agents/skills/` | 자동 |
+| **OpenAI Codex CLI** | `AGENTS.md` + infoUX MCP | 자동 |
 | **Continue.dev** | `AGENTS.md` | 자동 |
 | **GitHub Copilot Chat** | `.github/instructions/*.instructions.md` | 파일 경로별 자동 적용 |
 | **Hermes Agent** | 사용자가 시스템 프롬프트로 `AGENTS.md` 또는 `prompts/` 주입 | 수동 |
@@ -123,9 +123,9 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 
 ---
 
-## 📦 발행 채널 (4개)
+## 📦 발행 채널
 
-이 저장소는 단일 소스(SoT). 빌드 산출물이 4채널로 배포된다.
+이 저장소는 단일 소스(SoT). 빌드 산출물이 아래 채널로 배포된다.
 
 | 채널 | 명령 | 도착지 |
 |------|------|-------|
@@ -173,8 +173,8 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 | 명령 | 용도 |
 |------|------|
 | `npm run dev` | 개발 서버 (Tailwind 워치 + Eleventy 서브) |
-| `npm run build` | 전체 빌드 (에이전트 스킬 → 토큰 → 규칙 → CSS → 프롬프트 → 사이트) |
-| `npm run check` | 컨트랙트 위반(R-01~R-20) 자동 검출 |
+| `npm run build` | 전체 빌드 (토큰 → 아이콘 → 규칙·프로필·아트디렉션 → CSS → 프롬프트·레퍼런스 → MCP 번들 → 사이트) |
+| `npm run check` | 컨트랙트 위반(rules.json 전체) 자동 검출 |
 | `npm run lint` | Stylelint + ESLint |
 | `npm run test` | 전체 CI 시뮬레이션 (check + lint + build + a11y) |
 
@@ -183,7 +183,7 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 ### 하네스 강제 계층
 
 1. Task Contract가 구현 전에 사이트 유형, 사용자 과업, 재사용 패턴과 위젯을 확정한다.
-2. 작업별 스킬과 경로별 `AGENTS.md`/Copilot instructions가 필요한 규칙만 제공한다.
+2. MCP `get_workflow`(작업별 절차)와 경로별 `AGENTS.md`/Copilot instructions가 필요한 규칙만 제공한다.
 3. 기존 컴포넌트 카탈로그와 승인 패턴을 조합해 첫 생성의 준수율을 높인다.
 4. `rules.json`과 `contracts/`가 기계 판독 가능한 계약을 제공한다.
 5. 정적 검사와 CI는 예방 흐름이 실패했을 때 배포를 막는 마지막 안전망으로 동작한다.
@@ -204,11 +204,9 @@ src/styles/               CSS 소스 (ITCSS 5레이어 + Tailwind v4)
 src/snippets/             마크업 스니펫 (LLM 참조)
 src/playground/           컴포넌트 미리보기 HTML
 
-skill/                    info-design 스킬 (Claude 컨트랙트)
-  SKILL.md                컨트랙트 본체
-  references/             html-semantics · krds-tokens · krds-components ·
-                          accessibility · forbidden-patterns · snippet-template
-.agents/skills/            작업별 스킬 단일 원본
+references/               기준 본체 — CONTRACT · krds-* · html-semantics · accessibility ·
+                          forbidden-patterns · art-direction · trade-off-rules · workflows/
+                          (스킬 계층은 2026-07-29 폐기 — MCP 번들로 발행)
 mcp/                       infoUX MCP 서버 — 팀원 배포 단일 경로
 contracts/                 Task Contract + HTML Page Contract
 .github/instructions/      Copilot 파일 경로별 지시
@@ -217,8 +215,7 @@ site/                     문서 사이트 (Eleventy 소스)
 prompts/                  LLM 컨텍스트 묶음 (대화 첨부용)
 starter/                  스타터 키트 (sync:starter로 배포)
 scripts/                  빌드/검사 스크립트
-references/               KRDS 원본 자료
-rules.json                R-01~R-20 단일 소스
+rules.json                코딩 규칙 단일 소스
 CLAUDE.md                 LLM이 항상 따르는 룰
 ```
 
@@ -241,7 +238,7 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 
 ## 📜 코딩 규칙 (요약)
 
-`rules.json`이 단일 소스. `npm run check`가 자동 검출. 전체 19개 규칙은 [`/conventions/`](http://localhost:8080/conventions/) 또는 `CLAUDE.md` 참조.
+`rules.json`이 단일 소스. `npm run check`가 자동 검출. 전체 규칙은 [`/conventions/`](http://localhost:8080/conventions/) 또는 `CLAUDE.md` 참조.
 
 | 규칙 | 영역 | 내용 |
 |------|------|------|

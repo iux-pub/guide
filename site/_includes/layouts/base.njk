@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block pagetitle %}{{ title }} | {{ site.title }}{% endblock %}</title>
+  <link rel="preload" href="{{ '/assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2' | url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2' | url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ '/assets/fonts/fonts.css' | url }}">
   <link rel="stylesheet" href="{{ '/dist/css/style.css' | url }}">
   <link rel="stylesheet" href="{{ '/dist/css/docs.css' | url }}">
   <link href="{{ '/pagefind/pagefind-ui.css' | url }}" rel="stylesheet">

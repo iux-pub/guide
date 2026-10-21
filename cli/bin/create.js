@@ -236,7 +236,16 @@ function writeProjectProfile(projectPath, profile) {
   fs.writeFileSync(configPath, JSON.stringify({
     profile,
     note: 'infoUX 사이트 유형. AI 도구는 이 값을 사이트 유형 판정 결과로 사용하고 다시 판정하지 않는다. 프리셋 상세는 contracts/profiles.json 또는 MCP get_profile(profile)에서 읽는다.',
-    preset: 'contracts/profiles.json'
+    preset: 'contracts/profiles.json',
+    // 납품 페이지 범위 — npm run check가 기본 범위(*.html, pages/**/*.html)와 여기 더한 글롭에 맞는 .html을
+    // page 계약(건너뛰기 링크·header·main·footer·section 이름)으로 검사한다. 기본 범위는 항상 들어간다.
+    // 페이지를 다른 폴더에 두면 글롭을 더한다('public/**/*.html'). '*'·'**'·'?'만 쓰고, 루트 밖('..')은 가리킬 수 없다.
+    pages: ['*.html', 'pages/**/*.html'],
+    // 페이지 유형(K-16) — 글롭: 유형 또는 { type, depth }. 유형은 main·sub-content·board-list·board-detail·form·search-result·error,
+    // depth는 홈을 1로 센 메뉴 단계. 선언한 페이지에만 공공 메인 과업 진입(R-40)·서브 브레드크럼(R-41) 검사가 켜진다
+    pageTypes: { 'index.html': 'main' },
+    // 공식 배너·운영기관 식별자·정부 상징 — 정부·공공기관이 운영하는 공식 디지털 서비스로 확인되면 required로 바꾼다(R-46)
+    publicIdentity: 'unconfirmed'
   }, null, 2) + '\n')
 
   // 에이전트 지시 파일에도 한 줄 박아 둔다. infoux.json을 안 읽는 도구도 있다.
@@ -252,6 +261,22 @@ function writeProjectProfile(projectPath, profile) {
 }
 
 /** 납품본에서 사내 운영 자산을 걷어낸다. 검증에 필요한 것은 남긴다. */
+// 스타터 틀 표시를 지우고 자리값 제목을 프로젝트 이름으로 바꾼다 — 이제부터 index.html은 납품 페이지로 검사된다(R-23).
+// 표시(<meta name="infoux:template">)가 남아 있으면 자리값 제목·기관명이 경고로만 잡힌다
+function finalizeStarterPage(projectPath, projectName) {
+  const file = path.join(projectPath, 'index.html')
+  if (!fs.existsSync(file)) return false
+  const html = fs.readFileSync(file, 'utf-8')
+  const next = html
+    .replace(/^[ \t]*<!--[^\n]*스타터 틀 표시[^\n]*-->\r?\n/m, '')
+    .replace(/^[ \t]*<meta\s+name=["']infoux:template["'][^>]*>\r?\n/m, '')
+    .replace('<title>새 프로젝트</title>', `<title>${projectName}</title>`)
+    .replace(/(<h1\b[^>]*>)새 프로젝트(<\/h1>)/, `$1${projectName}$2`)
+  if (next === html) return false
+  fs.writeFileSync(file, next)
+  return true
+}
+
 function stripInternal(projectPath) {
   const removed = []
   for (const name of INTERNAL_ONLY) {
@@ -322,6 +347,9 @@ async function main() {
     delete pkg.description
     fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
   }
+
+  // 3-0. 스타터 틀 표시 제거 — 프로젝트 이름(소문자·숫자·하이픈만, validateName)으로 제목을 채운다
+  if (finalizeStarterPage(projectPath, projectName)) log('   ', 'index.html 틀 표시 제거, 제목을 프로젝트 이름으로', DIM)
 
   // 3-1. 사이트 유형 기록
   if (args.flags.profile) {
@@ -398,8 +426,13 @@ async function main() {
   console.log('')
 }
 
-main().catch((e) => {
-  console.error(`${RED}예상 못한 오류: ${e.message}${RESET}`)
-  if (process.env.DEBUG) console.error(e.stack)
-  process.exit(1)
-})
+// 단위 테스트가 require로 불러 쓸 수 있게 직접 실행할 때만 main을 돈다
+if (require.main === module) {
+  main().catch((e) => {
+    console.error(`${RED}예상 못한 오류: ${e.message}${RESET}`)
+    if (process.env.DEBUG) console.error(e.stack)
+    process.exit(1)
+  })
+}
+
+module.exports = { finalizeStarterPage }

@@ -4,8 +4,8 @@
  * 구조: native <details>/<summary> 활용
  *   <div class="accordion">
  *     <details class="accordion__item">
- *       <summary class="accordion__summary">질문 1</summary>
- *       <div class="accordion__panel">답변 1</div>
+ *       <summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
+ *       <div class="accordion__panel">민원 종류마다 다릅니다.</div>
  *     </details>
  *     <details class="accordion__item">...</details>
  *   </div>
@@ -30,7 +30,7 @@
 
   /* 화살표 indicator */
   .accordion__summary::after {
-    @apply content-[''] shrink-0 w-[1.6rem] h-[1.6rem] [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='16'_height='16'_viewBox='0_0_16_16'_fill='none'><path_d='M4_6L8_10L12_6'_stroke='%2333363D'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:transform_0.4s_ease-in-out];
+    @apply content-[''] shrink-0 w-[1.6rem] h-[1.6rem] [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'><path%20d='M4%206L8%2010L12%206'%20stroke='%2333363D'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:rotate_0.4s_ease-in-out];
   }
 
   .accordion__item[open] > .accordion__summary {

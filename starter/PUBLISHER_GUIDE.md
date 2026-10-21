@@ -23,6 +23,8 @@ git init
 git remote add origin 새_프로젝트_GIT_URL
 ```
 
+그다음 `index.html`의 `<meta name="infoux:template" content="starter">` 줄(과 바로 위 안내 주석)을 지우고 `<title>`·`<h1>`의 '새 프로젝트'를 실제 페이지 제목으로 바꾼다. 표시가 남아 있으면 검사기가 자리값 제목·연락처를 경고로만 본다(R-23). 표시는 지워야 한다 — 주석 처리는 지운 것이 아니다.
+
 ### 1-2. 패키지 설치
 
 ```bash
@@ -99,7 +101,7 @@ npm run build
 <main id="main">
   <section class="section section--content" aria-labelledby="page-title">
     <div class="container">
-      <h1 id="page-title">페이지 제목</h1>
+      <h1 id="page-title">공지사항</h1>
       <!-- 페이지 콘텐츠 -->
     </div>
   </section>
@@ -188,11 +190,12 @@ npm run build
 `src/styles/5-objects/`, `src/styles/6-components/`의 클래스는 BEM을 따른다.
 
 ```css
+/* card.css에 실제로 있는 클래스 */
 .card {}
 .card__header {}
 .card__title {}
-.card--featured {}
-.card__action--primary {}
+.card__footer {}
+.card--elevated {}
 ```
 
 금지 예시:
@@ -200,15 +203,17 @@ npm run build
 ```css
 .card__header__title {} /* element 2단계 중첩 금지 */
 .card--blue {}          /* 시각 단어 modifier 금지 */
+.card--featured {}      /* card.css에 없는 변형을 지어내기 금지 (R-29) */
 .is-active {}           /* 비-BEM 상태 클래스 금지 */
 ```
 
-상태는 의미 있는 modifier와 ARIA 속성을 함께 쓴다.
+상태는 ARIA·hidden 속성을 먼저 쓰고, CSS가 그 속성으로 모양을 바꾼다. ARIA로 표현할 수 없는 상태만 modifier로 쓴다(R-17). modifier 이름은 허용 어휘에서 고르고, 카탈로그 블록에 CSS가 없는 변형을 지어내지 않는다(R-18·R-29 — MCP `get_reference("class-naming")`).
 
 ```html
-<button class="tab__button tab__button--selected" aria-selected="true">
+<button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
   탭 제목
 </button>
+<li class="step-indicator__item step-indicator__item--done">신청서 작성</li>
 ```
 
 ### 4-4. SCSS는 쓰지 않는다

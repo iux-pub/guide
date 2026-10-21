@@ -7,11 +7,11 @@
   <div class="modal__overlay"></div>
   <div class="modal__content modal__content--medium">
     <header class="modal__header">
-      <h2 id="modal-title" class="modal__title">제목</h2>
+      <h2 id="modal-title" class="modal__title">작성 내용 임시 저장</h2>
       <button type="button" class="modal__close" aria-label="닫기">×</button>
     </header>
     <div class="modal__body">
-      <p>모달 본문 내용</p>
+      <p>작성 중인 내용을 임시 저장합니다. 임시 저장한 글은 30일 동안 보관합니다.</p>
     </div>
     <footer class="modal__footer">
       <button type="button" class="btn btn--tertiary">취소</button>
@@ -49,6 +49,6 @@
 
 ## 출처
 
-- Shape 값은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- Shape 값은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - Shadow: `--shadow-3` (KRDS modal-wrap-shadow 추상화)
 - CSS: `src/styles/6-components/modal.css`

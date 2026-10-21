@@ -102,6 +102,13 @@ for (const instruction of [
 }
 
 const starterPackage = JSON.parse(read('starter/package.json') || '{}')
+// .stylelintrc.json은 루트에서 복사되지만 package.json은 스타터 전용이다 — 플러그인·확장을 설치 목록에 두지 않으면
+// 파생 프로젝트의 모든 CSS 편집이 'Could not find …'로 실패한다(편집 훅이 CSS마다 stylelint를 돌린다)
+const starterStylelint = JSON.parse(read('starter/.stylelintrc.json') || '{}')
+const starterDeps = { ...starterPackage.dependencies, ...starterPackage.devDependencies }
+for (const name of [...(starterStylelint.plugins || []), ...[].concat(starterStylelint.extends || [])]) {
+  if (!starterDeps[name]) fail(`starter/.stylelintrc.json이 쓰는 ${name}이 starter/package.json에 없습니다.`)
+}
 const STARTER_CHECK = 'node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js'
 if (starterPackage.scripts?.check !== STARTER_CHECK) {
   fail('starter npm run check가 정적 검사기 4종(위반·HTML 구조·대비·아이콘)을 모두 실행하지 않습니다.')
@@ -165,16 +172,43 @@ for (const step of workflow.steps || []) {
   if (!step.id || !step.instruction) fail('Agent Workflow step에 id 또는 instruction이 없습니다.')
 }
 
+// 편집 훅(HX-06) — 루트·스타터 × Claude·Codex 네 파일이 모두 정해진 명령 하나만 부른다.
+// 훅 로직은 scripts/hooks/post-edit.js에 두고, 판정은 lib/hook-contract.js가 한다(단위 테스트 대상).
+const { validateHookConfig } = require('./lib/hook-contract')
+for (const hookPath of ['.claude/settings.json', '.codex/hooks.json', 'starter/.claude/settings.json', 'starter/.codex/hooks.json']) {
+  const raw = read(hookPath)
+  if (!raw) continue
+  for (const problem of validateHookConfig(raw)) fail(`${hookPath} ${problem}`)
+}
 const codexHooks = JSON.parse(read('.codex/hooks.json') || '{}')
 const claudeHooks = JSON.parse(read('.claude/settings.json') || '{}')
 if (JSON.stringify(codexHooks.hooks) !== JSON.stringify(claudeHooks.hooks)) {
   fail('Codex와 Claude의 훅 절차가 동일하지 않습니다.')
 }
+requireSame('.claude/settings.json', 'starter/.claude/settings.json')
+requireSame('.codex/hooks.json', 'starter/.codex/hooks.json')
+requireSame('scripts/hooks/post-edit.js', 'starter/scripts/hooks/post-edit.js')
+requireSame('scripts/lib/page-scope.js', 'starter/scripts/lib/page-scope.js')
+requireSame('scripts/lib/visual-signature.js', 'starter/scripts/lib/visual-signature.js')
+// 카피 검사(R-23·R-43) — 라이브러리와 판정 자료가 스타터와 같아야 파생 프로젝트가 같은 기준으로 검사한다
+requireSame('scripts/lib/html-tree.js', 'starter/scripts/lib/html-tree.js')
+requireSame('scripts/lib/copy-rules.js', 'starter/scripts/lib/copy-rules.js')
+requireSame('scripts/lib/page-rules.js', 'starter/scripts/lib/page-rules.js')
+requireSame('scripts/lib/type-floor.js', 'starter/scripts/lib/type-floor.js')
+requireSame('scripts/lib/shape-motion.js', 'starter/scripts/lib/shape-motion.js')
+requireSame('scripts/lib/layout-rules.js', 'starter/scripts/lib/layout-rules.js')
+requireSame('contracts/fake-content.json', 'starter/contracts/fake-content.json')
+requireSame('contracts/copy-lexicon.json', 'starter/contracts/copy-lexicon.json')
+// 스타터 index.html은 틀 표시를 달고 나간다 — 없으면 자리값 제목이 납품 오류로 잡히고, create는 지울 표시가 없다
+const starterIndex = read('starter/index.html')
+if (starterIndex && !/<meta\s+name=["']infoux:template["']/.test(starterIndex)) {
+  fail('starter/index.html에 <meta name="infoux:template"> 틀 표시가 없습니다(R-23 템플릿 범위).')
+}
 
-for (const hookPath of ['.codex/hooks.json', '.claude/settings.json']) {
-  const hooks = read(hookPath)
-  if (hooks.includes('sync:starter')) fail(`${hookPath}에서 starter 동기화를 자동 실행하면 안 됩니다.`)
-  if (hooks.includes('|| true')) fail(`${hookPath} 검사 훅이 실패를 숨기고 있습니다.`)
+// 스타터 푸시 단계가 검사 실패를 파이프로 삼키지 않게 한다(npm run check | tail 은 pipefail 없이는 늘 성공)
+const syncScript = read('scripts/sync-starter.sh')
+if (syncScript && !/^set -o pipefail/m.test(syncScript)) {
+  fail('scripts/sync-starter.sh에 set -o pipefail이 없습니다 — 스타터 검사 실패가 tail 파이프에 묻힙니다.')
 }
 
 if (errors > 0) {

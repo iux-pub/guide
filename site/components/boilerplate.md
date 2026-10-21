@@ -16,7 +16,7 @@ tags: component
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>페이지 제목</title>
+  <title>공지사항 | 사이트명</title>
   <link rel="stylesheet" href="../../dist/css/style.css">
 </head>
 <body>
@@ -31,7 +31,7 @@ tags: component
   <main id="main">
     <section class="section section--content" aria-labelledby="section-title">
       <div class="container">
-        <h1 id="section-title">페이지 제목</h1>
+        <h1 id="section-title">공지사항</h1>
         <!-- 페이지 콘텐츠 -->
       </div>
     </section>
@@ -39,7 +39,11 @@ tags: component
 
   <footer id="footer" class="site-footer">
     <div class="container">
-      <!-- 푸터 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
     </div>
   </footer>
 </body>

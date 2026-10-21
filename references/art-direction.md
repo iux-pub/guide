@@ -15,10 +15,10 @@ brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디�
 
 | 유형 | 기본 등급 | 타이포 후보 | 팔레트 후보 | 섹션 리듬 | 카피 톤 |
 |------|-----------|-------------|-------------|-----------|---------|
-| 일반사이트 (`general-site`) | 표현형 (`expressive`) | standard-gov, product-modern, formal-serif, retro-display | coast-teal, market-terracotta | 풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용 | 합쇼체 기본. 명사형 버튼 레이블. 직역체·2인칭 '당신' 금지 |
+| 일반사이트 (`general-site`) | 표현형 (`expressive`) | standard-gov, product-modern, formal-serif, retro-display | coast-teal, market-terracotta | 풀블리드 인트로(hero-bleed)→이미지-텍스트 교차(section-media)→리스트 변주 허용 | 합쇼체 기본. 버튼 레이블은 동사형(KRDS) — 완료·닫기·취소·추가·삭제 같은 일반 작업만 명사형. 직역체·2인칭 '당신' 금지 |
 | 공공서비스 (`public-service`) | 절제형 (`restrained`) | standard-gov | trust-blue, coast-teal | 과업 진입(search) 우선. 장식 hero는 화면 1/2 이하 | 합쇼체 고정. 느낌표 금지. KRDS 용어 우선 |
 | 공공기관 (`public-institution`) | 절제형 (`restrained`) | standard-gov, formal-serif | trust-blue | 기관 정체성+공지 결합형 인트로. 슬라이더는 정지 컨트롤 필수 | 합쇼체 고정. 성과 홍보 어조 금지 — 사실 서술 |
-| CMS·관리자 (`cms-admin`) | 기능형 (`utility`) | standard-gov, technical-global | trust-blue | hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터 | 명사형·개조식. 문장 최소화 |
+| CMS·관리자 (`cms-admin`) | 기능형 (`utility`) | standard-gov, technical-global | trust-blue | hero 없음(profiles 소유 참조). 첫 화면은 검색/필터+데이터 | 개조식. 문장 최소화. 버튼 레이블은 동사형(KRDS) — 일반 작업(완료·닫기·취소·추가·삭제)과 길이 제약이 있을 때만 명사형 |
 | 커머스·예약 (`commerce-reservation`) | 표현형 (`expressive`) | standard-gov, product-modern | market-terracotta, trust-blue | 상품·프로모션 중심, 전환 CTA 1개 원칙. 결제 플로우는 utility 강등 | 합쇼체 기본. 근거 없는 최상급 금지. 가격·기간 사실 정보 우선 |
 <!-- art-direction:expression:end -->
 
@@ -41,12 +41,12 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 |------|-----|
 | word-break / overflow-wrap | `keep-all` / `break-word` |
 | 본문 line-height | 1.6~1.7 (기본 1.7, 고밀도 기본 1.6, lint 하한 1.5) |
-| 제목 line-height | 1.2~1.45 |
-| 제목 letter-spacing | -0.03em~0 (2.4rem 이상부터) |
+| 제목 line-height | 1.5~1.5 |
+| 제목 letter-spacing | 0~0.1rem (3.2rem 이상부터) |
 | 제목 최대 줄수 | 2 |
 | weight | 본문 기본 400 · 인라인 강조 상한 700 · 제목 상한 700 · 화면당 4종 이하 |
 
-> lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2.
+> lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0)은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2.
 <!-- art-direction:hangul:end -->
 
 - 본문 줄길이는 28~42자(공백 포함)를 권장한다. 게시판 목록·약관·표처럼 문서형 콘텐츠는 예외다 — 줄길이를 맞추려고 컨테이너를 쪼개지 않는다.
@@ -60,11 +60,11 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 <!-- art-direction:typography:begin — contracts/art-direction.json에서 자동 생성. 직접 수정 금지. npm run build:art-direction -->
 | id | 라벨 | 무드 | 제목 | 본문 | 등급 | 라이선스 | 파일 |
 |----|------|------|------|------|------|----------|------|
-| `standard-gov` | 표준 관청체 | 중립·신뢰·표준 | `var(--font-sans)` 600/700 · ls -0.02em · lh 1.35 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 4건 입수 완료 |
-| `product-modern` | 프로덕트 산세리프 | 친근·현대적·제품 | `'Wanted Sans', var(--font-sans)` 600/700 · ls -0.02em · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 2건 입수 완료 |
-| `formal-serif` | 격식 명조 | 격식·기록·전통 | `'Noto Serif KR', var(--font-sans)` 600 · ls -0.01em · lh 1.4 | 400/500 · lh 1.7 | restrained, expressive | OFL-1.1 | 1건 입수 완료 |
-| `retro-display` | 레트로 디스플레이 | 레트로·문화·독립 | `'Hahmlet', var(--font-sans)` 500/600 · ls 0 · lh 1.3 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 1건 입수 완료 |
-| `technical-global` | 테크니컬 고딕 | 테크·국제·데이터 | `'IBM Plex Sans KR', var(--font-sans)` 600 · ls -0.01em · lh 1.3 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 1건 입수 완료 |
+| `standard-gov` | 표준 관청체 | 중립·신뢰·표준 | `var(--font-sans)` 600/700 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 4건 입수 완료 |
+| `product-modern` | 프로덕트 산세리프 | 친근·현대적·제품 | `'Wanted Sans', var(--font-sans)` 600/700 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 2건 입수 완료 |
+| `formal-serif` | 격식 명조 | 격식·기록·전통 | `'Noto Serif KR', var(--font-sans)` 600 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | restrained, expressive | OFL-1.1 | 1건 입수 완료 |
+| `retro-display` | 레트로 디스플레이 | 레트로·문화·독립 | `'Hahmlet', var(--font-sans)` 500/600 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | expressive | OFL-1.1 | 1건 입수 완료 |
+| `technical-global` | 테크니컬 고딕 | 테크·국제·데이터 | `'IBM Plex Sans KR', var(--font-sans)` 600 · ls 0 · lh 1.5 | 400/500 · lh 1.7 | utility, restrained, expressive | OFL-1.1 | 1건 입수 완료 |
 
 - **standard-gov** [warn] 단독으로는 무개성 — 크기 대비(본문 1.7rem ↔ h1 4rem)와 여백으로 위계를 만든다.
 - **standard-gov** [info] 민간 프로젝트는 일반 Pretendard도 무방. 전 프로필 안전 기본값.
@@ -118,7 +118,7 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 
 동일 archetype 연속 상한은 2다 — 3연속이면 리듬이 죽는다(R-25 검출 근거). "중앙 제목 + 카드 그리드" 3연속이 규정 준수형 무개성의 최빈 패턴이다.
 
-- 교차 원칙 — 이미지-텍스트 교차(section-media)·풀블리드 인트로(hero-bleed) 같은 변주 패턴을 사이에 끼운다. zigzag는 1왕복이면 충분하다 — 전 섹션 교차는 그 자체로 단조롭다.
+- 교차 원칙 — 이미지-텍스트 교차(section-media)·시그니처 요소 같은 변주 패턴을 사이에 끼운다. 풀블리드 인트로(hero-bleed)는 첫 섹션 전용이다(R-42). zigzag는 1왕복이면 충분하다 — 전 섹션 교차는 그 자체로 단조롭다.
 - 첫 콘텐츠 섹션은 1순위 과업이 차지한다. 장식이 과업 진입을 밀어내지 않는다.
 - 배경 리듬 — 흰 배경 연속 구간에 옅은 배경 섹션을 끼워 단원을 만든다. 매 섹션 배경 교차는 금지 수준의 과잉이다.
 - 프로필별 hero 원칙·기본 section 흐름·밀도는 profiles 소유다 — §1 프로필 기본값 표의 리듬 열과 get_profile(id)를 참조하고, 여기서 반복하지 않는다.
@@ -143,9 +143,9 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 
 프로필별 종결어미·금지선은 §1 프로필 기본값 표의 카피 톤 열이 정본이다. 공통 원칙:
 
-- 버튼 레이블은 명사형("신청", "다운로드")을 기본으로 한다.
+- 버튼 레이블은 실행될 기능을 예측할 수 있는 **동사형**을 기본으로 한다("신청하기", "파일 내려받기", "변경사항 저장"). 명사형은 KRDS가 정한 예외 — "완료", "닫기", "취소", "추가", "삭제" 같은 일반 작업이거나 동사로 쓰면 버튼 길이·해석에 문제가 생기는 경우 — 에만 쓴다(KRDS 버튼 component_05_02).
 - 근거 없는 최상급·성과 홍보 어조·느낌표 남발을 금지한다. 사실 서술이 기본이다.
-- 번역투 금지 — "지금 시작하세요", 2인칭 "당신", "~을 경험하세요" 류.
+- 번역투 금지 — "지금 시작하세요", 2인칭 "당신", "~을 경험하세요" 류. 기계 검출은 R-43이 맡는다 — 어휘는 `contracts/copy-lexicon.json`, '~하세요'로 끝나는 버튼과 공공 화면 느낌표도 함께 본다. 바꿀 수 없는 공식 슬로건은 `infoux.json`의 `copyAllow`에 둔다.
 - 문장 공식·에러 메시지 3-part 구조는 microcopy 소유다(site/design/microcopy.md).
 - 실제 기관 용어·메뉴명은 task contract의 `contentSources`에서 가져온다. 출처가 비어 있으면 카피는 임시 초안 신분을 벗어날 수 없다.
 
@@ -161,9 +161,25 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 - [ ] 실제 기관 용어 정합 — `contentSources`와 대조했다. 임시 카피·가짜 콘텐츠가 남아 있지 않다(R-23).
 - [ ] 이미지 라이선스 — 전 이미지의 출처·라이선스가 교체 목록 또는 크레딧으로 정리돼 있다.
 
+**KRDS 대조** — 관찰 빈도와 무관하게 지킨다. 어긋나면 KRDS를 따른다.
+
+- [ ] 건너뛰기 링크가 문서의 첫 요소다. 목적지에 사이드 메뉴·브레드크럼·페이지 도구가 들어 있지 않다(서브 페이지는 h1이 첫 요소인 `#contents`).
+- [ ] 메인 메뉴는 클릭·Enter·Space로만 열린다(마우스오버로 열지 않는다). 1024px 이상에는 전체메뉴 버튼이 없다.
+- [ ] 캐러셀 — 슬라이드 5장 이내. 자동 회전이면 정지/재생 버튼이 첫 상호작용 요소이고, 키보드 초점이 들어오면 멈추며 재생을 누르기 전에는 다시 돌지 않는다. 가려진 슬라이드는 초점에서 빠진다.
+- [ ] 배너·팝업존·슬라이드 문구는 HTML 텍스트다. 글자가 든 이미지 슬라이드가 없다(로고처럼 글자 표현이 필수인 이미지만 예외, alt에 글자 전부).
+- [ ] 진입 시 자동으로 뜨는 모달이 없거나, KRDS 예외(서비스 메인 화면의 긴급 정보·인증 세션 만료) 1개뿐이다.
+- [ ] 긴급 공지(`notice-bar`)가 있으면 본문 첫 요소(`main#main`의 첫 section, 히어로 앞)에 하나만, 한 줄·링크 1개 이하로 두고 닫기 버튼을 달지 않는다. 긴급도(상·중·하)는 라벨 텍스트로도 전한다.
+- [ ] 3단계 이상 계층의 서브 페이지에 브레드크럼(경로 표시 전용)과 h1이 있다. 형제 페이지 이동에 탭 컴포넌트를 쓰지 않는다.
+- [ ] 푸터가 KRDS 순서(로고 → 연락처 → 유틸리티 링크 → 정책 링크 → 저작권)이고, 「개인정보 처리방침」이 명칭 그대로 강조돼 있다. 전자상거래면 이용약관·사업자 정보가 있다.
+- [ ] 탭은 6개 이하이고 비활성 탭이 없다. `Tab`으로 모든 탭에 닿고 `Enter`·클릭으로 고른다(탭에 `tabindex="-1"` 없음).
+- [ ] 버튼 레이블은 동사형이다(완료·닫기·취소·추가·삭제 같은 일반 작업만 명사형).
+- [ ] 글자 — 본문 1.7rem(Pretendard GOV)·행간 1.5 이상·본문 자간 0. 제목은 768px에서 KRDS pc 크기로 바뀐다. viewport 확대를 막지 않는다(R-28). 루트 글자 크기를 vw로 줄이지 않는다.
+- [ ] 360·768·1024·1280px에서 확인했다(1024에서 메인 메뉴·전체메뉴 전환).
+- [ ] 클래스 — 카탈로그 블록의 클래스는 CSS에 실재한다(R-29). 변형 이름은 `references/class-naming.md` 어휘에서 골랐다.
+
 ## 10. 안티패턴 색인
 
-기계 검출 4종은 rules.json이 정본이다 — R-23 가짜 콘텐츠, R-24 한글 조판 하한, R-25 섹션 리듬, R-26 폰트 한글 fallback. 아래 10건은 산문 판정 목록이며 이 문서가 유일한 등재처다.
+기계 검출 규칙은 rules.json이 정본이다 — R-23 가짜·자리 콘텐츠(5번의 출처 없는 수치·가짜 후기는 경고), R-24 한글 조판 하한, R-25 섹션 리듬, R-26 폰트 한글 fallback, R-34 장식 효과(3번의 보라 그라데이션·4번의 글래스모피즘 포함), R-36 이모지 아이콘·장식, R-43 카피 톤(6번). 아래 10건은 산문 판정 목록이며 이 문서가 유일한 등재처다.
 
 1. AI 에디토리얼 룩 — 크림 오프화이트+세리프+테라코타 조합 서명. brand 저작 시점에 판정한다. [owner: art-direction]
 2. AI 다크테크 룩 — 니어블랙+애시드그린+소문자 mono. [owner: art-direction]
@@ -195,11 +211,12 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 
 프리셋 seed 후보 4종 — culture-violet·care-green·deep-navy·slate-neutral. 자동 생성기(generate-preset.js)·게이트 3종(Y 대역·point 밴드·ΔE)과 함께 v2에서 재평가한다.
 
-v2 검출기 후보 — 모션 수치·이모지·상태 셀렉터·카피 금지 문자열. §9 체크리스트로 대신 운용하고, 오탐 데이터가 쌓이면 기계화를 재평가한다.
+v2 검출기 후보 — 모션 수치·상태 셀렉터(이모지는 R-36, 카피 금지 문자열은 R-43으로 기계화했다). §9 체크리스트로 대신 운용하고, 오탐 데이터가 쌓이면 기계화를 재평가한다.
 
 ## 관련
 
 - 표현 등급 운용·판정 예시: `project-profiles.md`
+- 한국형 메인 레시피·서브·헤더·푸터 관행, 한국형 AI 슬롭 대응: `korean-web-patterns.md`
 - 프로필 구조·밀도·section 흐름: `contracts/profiles.json`
 - 기계 정본: `contracts/art-direction.json` / 팔레트 hex 정본: `tokens/presets/`
 - 모션 수치: site/design/interaction-timing.md / 카피 문장 공식: site/design/microcopy.md

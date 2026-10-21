@@ -453,8 +453,9 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { @apply [background:var(
   @apply grid gap-[1.6rem] mb-[3.2rem] [grid-template-columns:repeat(auto-fill,_minmax(220px,_1fr))];
 }
 
+/* 견본 색은 마크업이 커스텀 속성으로 넘긴다(style="--swatch-bg: var(--color-primary)") — 인라인 선언 대신(R-07) */
 .color-swatch {
-  @apply flex flex-col justify-end min-h-[12rem] p-[0.8rem_1.6rem] rounded-[0.6rem] text-[1.5rem] leading-[1.5];
+  @apply flex flex-col justify-end min-h-[12rem] p-[0.8rem_1.6rem] rounded-[0.6rem] text-[1.5rem] leading-[1.5] [background:var(--swatch-bg)] [color:var(--swatch-fg)] [border:1px_solid_var(--swatch-border,transparent)];
 }
 
 .color-swatch__name {

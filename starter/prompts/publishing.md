@@ -17,6 +17,12 @@
 
 금지: `.btn-primary`(→ `.btn--primary`), `.card-header`(→ `.card__header`), element 2단계 중첩(`.card__header__title` → `.card__title`).
 
+이름 짓기 순서는 `references/class-naming.md`, 어휘의 정본은 `contracts/class-naming.json`이다.
+
+- **modifier 어휘** — 크기 `--xsmall`~`--xlarge`, 위계 `--primary`/`--secondary`/`--tertiary`/`--text`, 상태색 `--info`/`--success`/`--warning`/`--danger`/`--neutral` 등 허용 어휘에서만 고른다. `--blue`·`--big`·`--rounded` 같은 시각 단어는 쓰지 않는다 (R-18).
+- **CSS에 있는 클래스만** — 카탈로그 블록의 변형·부품은 CSS에 정의된 것만 쓴다. `card--featured`·`card__media`처럼 그럴듯한 이름을 지어내지 않는다 (R-29).
+- **상태는 ARIA·hidden 속성 먼저** — `aria-expanded`·`aria-current`·`aria-selected`·`hidden`·`disabled`로 표현하고 CSS가 속성 선택자로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier(예: `.step-indicator__item--done`)를 쓴다. `.is-*`·`.has-*` 금지 (R-17).
+
 **SCSS 사용 금지.** 표준 CSS nesting과 Tailwind v4 `@apply`/`@theme`/`@utility`는 허용한다 (R-03).
 
 ## CSS 구조: ITCSS 5레이어
@@ -40,7 +46,7 @@ src/styles/
 - **INFOUX 공개 토큰**:
   - 색상: `var(--color-primary)`, `var(--color-text)`, `var(--color-bg)`, `var(--color-border)`
   - 폰트: `var(--font-sans)`, `var(--font-mono)`
-  - 간격/크기/타이포 스케일/반경은 직접값 사용
+  - 간격/크기/타이포 스케일/반경은 rem 직접값 사용 — Tailwind는 `p-[2.4rem]` 같은 임의값으로 쓰고 기본 스케일(`p-4`, `text-sm`)은 쓰지 않는다(R-37)
 
 - **시맨틱 색상 토큰**:
   - 색상: `var(--color-text)`, `--color-text-secondary`, `--color-text-disabled`, `--color-bg`, `--color-bg-secondary`, `--color-border`, `--color-primary` (KRDS 토큰을 가리킴)
@@ -92,14 +98,16 @@ Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 

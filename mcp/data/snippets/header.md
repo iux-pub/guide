@@ -1,6 +1,6 @@
 # 사이트 헤더 (Site Header)
 
-사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
+사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
 
 ## 기본 마크업
 
@@ -8,11 +8,11 @@
 <header id="header" class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <img src="/logo.svg" alt="기관명">
-      <span class="site-header__brand-name">기관명</span>
+      <img src="/logo.svg" alt=""><!-- 바로 뒤 텍스트가 이름을 전하므로 로고는 장식 -->
+      <span>기관명</span>
     </a>
 
-    <nav class="site-header__nav" aria-label="주 메뉴">
+    <nav class="site-header__nav" aria-label="메인 메뉴">
       <ul class="site-header__menu">
         <li><a href="/about">소개</a></li>
         <li><a href="/services" aria-current="page">서비스</a></li>
@@ -21,8 +21,17 @@
     </nav>
 
     <div class="site-header__actions">
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+      <a class="site-header__search-link" href="/search">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+        <span class="sr-only">통합검색</span>
+      </a>
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -32,16 +41,17 @@
 
 ## 동작
 
-- 모바일/태블릿 (< 1280px): 주 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
-- PC (≥ 1280px): 주 메뉴 노출 + 햄버거 숨김
+- 1024px 미만(모바일·태블릿): 메인 메뉴 숨김 + 햄버거 토글 노출. 토글은 [전체메뉴](mobile-menu.md)를 연다 (KRDS: 메인 메뉴를 표시할 폭이 부족하면 햄버거)
+- 1024px 이상(KRDS large): 메인 메뉴 노출 + 햄버거 숨김. PC에는 전체메뉴 버튼을 두지 않는다(KRDS 공식 코드). 전체 구조가 필요하면 헤더 유틸리티에 「사이트맵」 페이지 링크를 둔다
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
+- 통합검색 — KRDS 검색 [필수]는 모든 화면에서 통합검색을 실행할 수 있어야 한다(공공 프로필은 R-40 오류). 1024px 이상은 헤더 안 입력창(`.site-header__search`), 미만은 검색 페이지 링크(`.site-header__search-link`, 아이콘 + sr-only 「통합검색」). 검색 결과는 별도 페이지(`pageType: search-result`)로 보낸다
 
 ## 접근성
 
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
-- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 메인 메뉴는 `<nav aria-label="메인 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
 - 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 

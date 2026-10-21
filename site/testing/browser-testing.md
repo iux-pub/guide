@@ -38,7 +38,7 @@ order: 2
 | Safari | `position: sticky` + overflow | 부모에 `overflow: hidden` 시 sticky 무시 | 부모 overflow 제거 또는 구조 변경 |
 | Firefox | `:focus-visible` 스타일 차이 | 포커스 링 모양이 다름 | 커스텀 포커스 스타일 적용으로 통일 |
 | Firefox | `scrollbar-width` 지원 | 스크롤바 너비가 다름 | `scrollbar-width: thin` 명시 |
-| Samsung Internet | CSS `backdrop-filter` 미지원 | 블러 배경 효과 없음 | `@supports` 분기로 대체 배경색 제공 |
+| Samsung Internet | CSS `backdrop-filter` 미지원 | 블러 배경 효과 없음 | infoUX는 글래스(`backdrop-filter`)를 쓰지 않는다(R-34). 고정 헤더·오버레이는 단색 토큰 배경(`--color-surface`, `--color-alpha-black-50`)으로 만든다 |
 | Samsung Internet | 일부 CSS 논리 속성 미지원 | `inline-size` 등 무시 | 물리 속성(`width`)과 병행 사용 |
 | 전체 | 폴백 없는 최신 선택자 | `:has()` 등 지원 경계에 있는 선택자가 통째로 무시됨 | sibling selector, 의미적 상태 class, ARIA 속성 selector 사용 |
 
@@ -46,7 +46,7 @@ order: 2
 
 ### 레이아웃
 
-- [ ] 3개 뷰포트(360/768/1280)에서 레이아웃 깨짐 없음
+- [ ] 4개 뷰포트(360/768/1024/1280)에서 레이아웃 깨짐 없음
 - [ ] 반응형 전환 지점(breakpoint)에서 콘텐츠 겹침 없음
 - [ ] 가로 스크롤 발생하지 않음 (모바일)
 - [ ] `max-width` 제한이 와이드 뷰포트에서 정상 동작
@@ -61,8 +61,9 @@ order: 2
 
 - [ ] CSS Custom Properties(토큰) 값이 모든 브라우저에서 동일 렌더링
 - [ ] `box-shadow`, `border-radius` 일관된 표현
-- [ ] 그라데이션 정상 렌더링
-- [ ] 폴백 없는 `:has()`, `backdrop-filter`, 최신 논리 속성 사용 없음
+- [ ] 사진 위 스크림 그라데이션 정상 렌더링 (장식 그라데이션은 쓰지 않는다 — R-34)
+- [ ] 폴백 없는 `:has()`, 최신 논리 속성 사용 없음
+- [ ] `backdrop-filter`(글래스) 사용 없음 (R-34)
 
 ### 인터랙션
 
@@ -87,7 +88,7 @@ order: 2
 1. Chrome DevTools 열기 (Cmd+Option+I / F12)
 2. Device Toolbar 토글 (Cmd+Shift+M)
 3. 상단에서 뷰포트 크기 직접 입력 또는 기기 프리셋 선택
-4. 360 / 768 / 1280 순서로 확인
+4. 360 / 768 / 1024 / 1280 순서로 확인
 ```
 
 ### 실제 기기 테스트

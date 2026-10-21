@@ -50,7 +50,7 @@ http://localhost:8080 에서 문서 사이트 확인.
    ↓
 2. 브랜치 생성: feat/<scope>-<설명>  또는  fix/<scope>-<설명>
    ↓
-3. 원본 소스 수정 (tokens/, rules.json, src/, skill/ 등)
+3. 원본 소스 수정 (tokens/, rules.json, src/, references/, contracts/ 등)
    ↓
 4. 자동 생성물 재빌드 ── 가장 자주 빠뜨리는 단계
      npm run build:tokens   # 토큰 바꿨으면
@@ -60,7 +60,7 @@ http://localhost:8080 에서 문서 사이트 확인.
      # 또는 한 번에:  npm run build
    ↓
 5. 검사 통과 확인
-     npm run check     # R-01~R-20 자동 검출
+     npm run check     # rules.json 규칙 전체 자동 검출
      npm run lint      # stylelint + eslint
      npm run test      # 전체 CI 시뮬레이션
    ↓
@@ -91,7 +91,7 @@ http://localhost:8080 에서 문서 사이트 확인.
 | `tokens` | 디자인 토큰 (foundation, build-tokens.js) |
 | `components` | CSS 컴포넌트 (`src/styles/6-components/`) |
 | `snippets` | 마크업 스니펫 (`src/snippets/`) |
-| `skill` | info-design 스킬 (`skill/`) |
+| `references` | 기준 본체 (`references/`, MCP 번들 원본) |
 | `prompts` | LLM 컨텍스트 (`prompts/`, `scripts/build-prompts.js`) |
 | `rules` | 코딩 규칙 (`rules.json`) |
 | `conventions` | 규칙 문서 (`site/conventions/`) |
@@ -130,7 +130,7 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 | husky pre-commit 실패 — `R-XX` | stylelint 또는 check-violations 위반 | 출력 메시지의 규칙 ID 확인, `references/forbidden-patterns.md` 참조 |
 | HTML 구조 경고 — R-15 | 기존 인포마인드 HTML 기본 골격과 다르거나 시맨틱 보강 필요 | `header/main/footer`, `main > section > .container` 구조와 ARIA 보강 확인 |
 | HTML 구조 위반 — R-18 | `--blue`, `--big` 같은 시각 단어 modifier 사용 | KRDS 의미 어휘로 (`--primary`, `--large` 등) |
-| 스킬이 적용되지 않음 | 도구가 루트/경로별 계약을 인식하지 못함 | `AGENTS.md`, `.agents/skills`, `.github/instructions` 인식 여부 확인 |
+| 스킬이 적용되지 않음 | 도구가 루트/경로별 계약을 인식하지 못함 | `AGENTS.md`, infoUX MCP 등록, `.github/instructions` 인식 여부 확인 |
 | starter 변경이 다운스트림에 안 감 | `npm run sync:starter` 안 돌림 | 표준 변경 후 `sync:starter` 실행 |
 
 ---

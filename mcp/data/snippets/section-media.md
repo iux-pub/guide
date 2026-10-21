@@ -56,6 +56,6 @@
 
 ## 출처
 
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/5-objects/section-media.css`
 - 리듬 원칙: `references/art-direction.md` §5

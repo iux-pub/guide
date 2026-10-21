@@ -188,7 +188,7 @@ button:focus { outline: 0; }
 |---------|-----|
 | Modal | `Esc` 닫기, `Tab` 트랩 (포커스 가두기) |
 | Dropdown | `Esc` 닫기, `↑↓` 이동, `Enter` 선택 |
-| Tab | `←→` 탭 이동, `Home/End` 처음/끝 |
+| Tab (KRDS) | `Tab`·`Shift+Tab`으로 모든 탭에 닿는다. `Enter`·`Space`·클릭으로 선택(수동). `←→`·`Home/End`는 초점만 옮기는 보조 수단 |
 | Accordion | `Tab` 항목 간 이동, `Space/Enter` 펼침 |
 | Calendar | `←→` 일, `↑↓` 주, `Page Up/Down` 월, `Home/End` 주 시작/끝 |
 | Carousel | `←→` 슬라이드 이동 |

@@ -6,7 +6,7 @@
 
 CSS: BEM(Block__Element--Modifier) + Tailwind v4 + ITCSS 5레이어(3-generic/4-elements/5-objects/6-components/7-utilities). **SCSS 사용 금지.** 표준 CSS nesting과 Tailwind v4 `@apply`/`@theme`/`@utility`는 허용.
 
-토큰: 색상은 `var(--color-*)`를 강제한다. 기본 폰트는 `var(--font-sans)`/`var(--font-mono)`를 사용한다. 간격/크기/타이포 스케일은 CMS·관리자 화면처럼 정보 밀도가 중요한 프로젝트 맥락에 맞게 CSS/Tailwind 직접값을 사용한다. 토큰 출처는 `tokens/foundation.json` → `tokens/build/tokens.css`.
+토큰: 색상은 `var(--color-*)`를 강제한다. 기본 폰트는 `var(--font-sans)`/`var(--font-mono)`를 사용한다. 간격/크기/타이포 스케일은 CMS·관리자 화면처럼 정보 밀도가 중요한 프로젝트 맥락에 맞게 CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`)을 사용한다. 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `text-sm`)은 37.5% 작게 렌더돼 쓰지 않는다(R-37). 토큰 출처는 `tokens/foundation.json` → `tokens/build/tokens.css`.
 
 반응형: 모바일 퍼스트. 브레이크포인트는 360 / 768 / 1280만 사용한다. 단순 속성 변경은 CSS에서도 `@apply tablet:*` / `@apply pc:*`를 우선하고, 복잡한 중첩 선택자나 여러 하위 요소 동시 제어만 관련 선택자 내부 중첩 `@media`로 작성한다. 파일 하단에 `@media`를 몰아두지 않는다.
 
@@ -23,17 +23,21 @@ HTML 기본 골격은 큰 영역을 심플하게 잡고, `main` 안은 `section 
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
 </main>
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 
 버튼 KRDS variant(4종): `--primary` `--secondary` `--tertiary` `--text`. KRDS size(5종): `--xsmall`(32) `--small`(40) medium(48, 기본) `--large`(56) `--xlarge`(64). 모바일은 medium 이상 권장.
+
+클래스 이름: modifier는 허용 어휘(크기 `--xsmall`~`--xlarge`, 위계 `--primary`/`--secondary`/`--tertiary`/`--text`, 상태색 `--info`/`--success`/`--warning`/`--danger`/`--neutral` 등)에서만 고르고 `--blue`·`--big`·`--rounded` 같은 시각 단어는 쓰지 않는다. 카탈로그 블록의 클래스는 CSS에 정의된 것만 쓴다 — `card--featured`·`card__media`처럼 그럴듯한 변형·부품을 지어내지 않는다. 상태는 ARIA·hidden 속성을 먼저 쓴다(`aria-expanded`·`aria-current`·`aria-selected`·`hidden`·`disabled` — CSS가 속성 선택자로 모양을 바꾼다). ARIA로 표현할 수 없을 때만 BEM modifier(예: 단계 표시의 완료 `--done`)를 쓰고, `.is-*`·`.has-*`는 쓰지 않는다.
 
 접근성 (KWCAG/WCAG 2.1 AA): 대비 4.5:1 (큰 텍스트 3:1), 터치 ≥44×44px (모바일 medium=48px 권장), `:focus-visible` (reset.css 전역 4px primary 외곽선 — 컴포넌트에서 제거 금지), skip-to-content 필수, `<img alt>` 필수, `<label for>+id` 필수, `div/span 클릭 핸들러 패턴` 금지.
 

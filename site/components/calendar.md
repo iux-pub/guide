@@ -36,7 +36,7 @@ KRDS 정의 컴포넌트. 권위 있는 소스는 `src/snippets/calendar.md`이�
           <button type="button" class="calendar__day" aria-label="2026년 4월 1일">1</button>
         </td>
         <td role="gridcell">
-          <button type="button" class="calendar__day calendar__day--today" aria-label="2026년 4월 2일 (오늘)">2</button>
+          <button type="button" class="calendar__day" aria-current="date" aria-label="2026년 4월 2일 (오늘)">2</button>
         </td>
         <td role="gridcell">
           <button type="button" class="calendar__day calendar__day--selected" aria-selected="true" aria-label="2026년 4월 3일 (선택됨)">3</button>

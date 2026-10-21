@@ -5,23 +5,28 @@
     "version": "1.0.0",
     "owner": "INFOMIND UX Team",
     "source": "single source consolidated on 2026-05-13",
-    "policy": "Public CSS variables expose colors, font families, and the three project breakpoints only. Layout, spacing, size, radius, motion, shadow, and z-index use direct CSS/Tailwind values."
+    "policy": "Public CSS variables expose colors, font families, and the four project breakpoints (KRDS standard layout: small/medium/large/xlarge) only. Layout, spacing, size, radius, motion, shadow, and z-index use direct CSS/Tailwind values."
   },
   "breakpoint": {
     "mobile": {
       "value": "360px",
       "type": "dimension",
-      "description": "모바일 기준 뷰포트"
+      "description": "모바일 기준 뷰포트 (KRDS small)"
     },
     "tablet": {
       "value": "768px",
       "type": "dimension",
-      "description": "태블릿 이상"
+      "description": "태블릿 이상 (KRDS medium) — 글자 크기 mobile→pc 전환점"
+    },
+    "laptop": {
+      "value": "1024px",
+      "type": "dimension",
+      "description": "노트북 이상 (KRDS large) — 메인 메뉴↔전체메뉴 전환, 서브 LNB 2단, 레이아웃 간격(gap-layout) 전환점"
     },
     "pc": {
       "value": "1280px",
       "type": "dimension",
-      "description": "PC 이상"
+      "description": "PC 이상 (KRDS xlarge)"
     }
   },
   "primitive": {

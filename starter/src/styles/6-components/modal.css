@@ -6,7 +6,7 @@
  *     <div class="modal__overlay"></div>
  *     <div class="modal__content modal__content--medium">
  *       <header class="modal__header">
- *         <h2 id="modal-title" class="modal__title">제목</h2>
+ *         <h2 id="modal-title" class="modal__title">작성 내용 임시 저장</h2>
  *         <button class="modal__close" aria-label="닫기">×</button>
  *       </header>
  *       <div class="modal__body">...</div>
@@ -24,23 +24,20 @@
 @layer components {
   .modal {
     @apply fixed inset-0 z-[1050] flex items-center justify-center p-[1.6rem];
-
-
   }
 
   .modal[hidden] { @apply [display:none]; }
 
-  /* 백드롭 (dim) */
+  /* 백드롭 (dim)
+     .modal(fixed + z-index)이 쌓임 맥락을 만든다. 그 안에서 덮개는 맨 아래(z-0),
+     콘텐츠는 그 위(z-[1])에 둔다 — 덮개가 위로 오면 입력·버튼 클릭이 덮개 클릭으로 처리돼 모달이 닫힌다 */
   .modal__overlay {
-    @apply absolute inset-0 bg-[var(--color-bg-dim)] z-[1040];
+    @apply absolute inset-0 bg-[var(--color-bg-dim)] z-0;
   }
 
-  /* 콘텐츠 박스 */
+  /* 콘텐츠 박스 — 덮개(z-0) 위 */
   .modal__content {
     @apply relative bg-[var(--color-surface)] rounded-[1.2rem] shadow-[0_0_0.2rem_0_#00000014,_0_1.6rem_2.4rem_0_#0000001f] flex flex-col w-full max-w-[56rem] z-[1] max-h-[calc(100vh_-_4.8rem)];
-
-
-
   }
 
   .modal__content--small  { @apply [max-width:40rem]; }

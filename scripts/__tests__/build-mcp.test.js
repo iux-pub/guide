@@ -9,8 +9,16 @@ const ROOT = path.resolve(__dirname, '..', '..')
 const DATA_DIR = path.join(ROOT, 'mcp', 'data')
 
 test('MCP 번들이 서버가 읽는 파일을 모두 갖췄다', () => {
-  for (const required of ['manifest.json', 'rules.json', 'contract.md', 'tokens.css', 'art-direction.json']) {
+  for (const required of ['manifest.json', 'rules.json', 'contract.md', 'tokens.css', 'art-direction.json', 'fake-content.json', 'copy-lexicon.json']) {
     assert.ok(fs.existsSync(path.join(DATA_DIR, required)), `mcp/data/${required} 누락 — npm run build:mcp`)
+  }
+})
+
+test('카피 규칙 판정 자료(R-23·R-43)가 원본 계약과 같다', () => {
+  for (const name of ['fake-content.json', 'copy-lexicon.json']) {
+    const bundled = fs.readFileSync(path.join(DATA_DIR, name), 'utf8')
+    const source = fs.readFileSync(path.join(ROOT, 'contracts', name), 'utf8')
+    assert.equal(bundled, source, `MCP가 낡은 ${name}을 답한다 — npm run build:mcp`)
   }
 })
 
@@ -104,6 +112,18 @@ async function withServer(fn) {
 
 const hasSdk = fs.existsSync(path.join(ROOT, 'mcp', 'node_modules', '@modelcontextprotocol', 'sdk'))
 const serverOpts = { skip: !hasSdk || !fs.existsSync(LIBRARY) }
+
+test('get_rules 단건 조회는 위반·준수 예시를 코드로 주고, R-23·R-43은 판정 자료까지 준다', { skip: !hasSdk }, async () => {
+  await withServer(async (call) => {
+    const r43 = await call('get_rules', { id: 'R-43' })
+    assert.doesNotMatch(r43, /\[object Object\]/)
+    assert.match(r43, /판정 어휘 — contracts\/copy-lexicon\.json/)
+    assert.match(r43, /지금\\s\?시작/)
+    const r23 = await call('get_rules', { id: 'R-23' })
+    assert.match(r23, /판정 자료 — contracts\/fake-content\.json/)
+    assert.match(r23, /picsum\.photos/)
+  })
+})
 
 test('list_icons는 세트에 있는 것과 카탈로그에만 있는 것을 나눠 준다', serverOpts, async () => {
   await withServer(async (call) => {

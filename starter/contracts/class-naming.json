@@ -1,0 +1,237 @@
+{
+  "name": "INFOUX Class Naming",
+  "version": "1.0.0",
+  "policy": "BEM 클래스 이름의 기계용 정본. references/class-naming.md의 어휘·대응 표는 build-references.js가 이 파일에서 생성한다. 검사: check-violations.js가 CSS에 정의하는 modifier의 어휘를(R-18), check-html-structure.js가 마크업 클래스가 CSS에 실재하는지(R-29)와 금지·폐기 modifier를(R-18) 본다.",
+  "formula": "block__element--modifier — 소문자·하이픈. element는 한 단계만(block__a__b 금지, R-05/R-08). BEM은 5-objects·6-components 레이어에만(R-04).",
+  "vocabulary": [
+    {
+      "axis": "size",
+      "label": "크기",
+      "source": "KRDS 크기 어휘(xsmall~xlarge). --sm·--lg·--xl·--xxl은 KRDS 어휘가 아니다",
+      "words": [
+        "xsmall",
+        "small",
+        "medium",
+        "large",
+        "xlarge"
+      ]
+    },
+    {
+      "axis": "hierarchy",
+      "label": "위계",
+      "source": "KRDS 버튼 유형(기본·보조·3차·텍스트)",
+      "words": [
+        "primary",
+        "secondary",
+        "tertiary",
+        "text"
+      ]
+    },
+    {
+      "axis": "status",
+      "label": "상태색",
+      "source": "KRDS 시스템 색상(정보·성공·경고·위험) + 입력 오류. neutral은 상태 없음",
+      "words": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "critical",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "axis": "density",
+      "label": "밀도",
+      "source": "표·목록·푸터의 간격 단계",
+      "words": [
+        "compact",
+        "comfortable"
+      ]
+    },
+    {
+      "axis": "tone",
+      "label": "바탕",
+      "source": "어두운 바탕 반전, 이미지 위 글자 대비용 덮개",
+      "words": [
+        "inverse",
+        "scrim"
+      ]
+    },
+    {
+      "axis": "layout",
+      "label": "배치·형식",
+      "source": "컴포넌트 고유 형식",
+      "words": [
+        "block",
+        "reverse",
+        "mega",
+        "ordered",
+        "structured",
+        "bottom"
+      ]
+    },
+    {
+      "axis": "state",
+      "label": "상태",
+      "source": "ARIA·hidden 속성으로 표현할 수 없을 때만 쓴다(R-17). current·selected·disabled는 대응 속성(aria-current·aria-selected·disabled)이 같은 요소에 없으면 경고한다. open·show·active는 기존 CSS 별칭으로 남은 이름이다 — 새 블록은 aria-expanded·hidden을 쓴다",
+      "words": [
+        "current",
+        "done",
+        "selected",
+        "active",
+        "open",
+        "show",
+        "disabled",
+        "today",
+        "other-month"
+      ]
+    },
+    {
+      "axis": "role",
+      "label": "역할·강조",
+      "source": "구성 요소의 역할",
+      "words": [
+        "prev",
+        "next",
+        "required",
+        "important",
+        "elevated",
+        "link",
+        "clickable",
+        "dot",
+        "inherit"
+      ]
+    }
+  ],
+  "blockModifiers": {
+    "table": {
+      "words": [
+        "striped",
+        "hover"
+      ],
+      "note": "표 행 구분(줄무늬)·행 강조. 기존 API라 유지한다. 새 블록에는 쓰지 않는다"
+    }
+  },
+  "forbiddenWords": [
+    "big",
+    "huge",
+    "tiny",
+    "mini",
+    "red",
+    "blue",
+    "green",
+    "yellow",
+    "orange",
+    "purple",
+    "pink",
+    "black",
+    "white",
+    "gray",
+    "grey",
+    "dark",
+    "light",
+    "rounded",
+    "circle",
+    "square",
+    "shadow",
+    "glow",
+    "flat",
+    "bold",
+    "italic",
+    "underline",
+    "wide",
+    "narrow",
+    "thick",
+    "thin"
+  ],
+  "deprecated": [
+    {
+      "class": "badge--gray",
+      "replacement": "badge--neutral",
+      "note": "시각 단어(R-18). CSS에는 이행 기간 동안 별칭으로 남긴다. 마크업에 쓰면 경고한다"
+    },
+    {
+      "class": "pagination__item--current",
+      "replacement": "pagination__item + aria-current=\"page\"",
+      "note": "ARIA로 표현할 수 있는 상태(R-17). CSS는 [aria-current=\"page\"]로 그린다. 이미 납품한 마크업 때문에 CSS 별칭은 남긴다"
+    }
+  ],
+  "fileBlocks": [
+    {
+      "file": "src/styles/6-components/header.css",
+      "component": "header",
+      "blocks": [
+        "site-header"
+      ],
+      "why": "`<header>` 요소·KRDS 헤더와 구분해 사이트 공통 헤더를 site-header로 쓴다"
+    },
+    {
+      "file": "src/styles/6-components/footer.css",
+      "component": "footer",
+      "blocks": [
+        "site-footer"
+      ],
+      "why": "`<footer>` 요소와 구분해 사이트 공통 푸터를 site-footer로 쓴다"
+    },
+    {
+      "file": "src/styles/6-components/check-radio.css",
+      "component": "check-radio",
+      "blocks": [
+        "check",
+        "radio"
+      ],
+      "why": "KRDS 체크박스·라디오 버튼을 한 파일에 두고 블록은 둘로 나눈다"
+    },
+    {
+      "file": "src/styles/6-components/form.css",
+      "component": "form",
+      "blocks": [
+        "form-field",
+        "input",
+        "textarea"
+      ],
+      "why": "KRDS 텍스트 입력 계열(레이블·입력·여러 줄 입력)을 한 파일에 둔다"
+    },
+    {
+      "file": "src/styles/6-components/table.css",
+      "component": "table",
+      "blocks": [
+        "table",
+        "table-wrap"
+      ],
+      "why": "좁은 화면에서 가로로 스크롤되는 감싸개는 별도 블록이다(표 자체와 역할이 다르다)"
+    },
+    {
+      "file": "src/styles/6-components/toast.css",
+      "component": "toast",
+      "blocks": [
+        "toast",
+        "toast-stack"
+      ],
+      "why": "여러 토스트를 쌓는 화면 고정 영역은 별도 블록이다"
+    },
+    {
+      "file": "src/styles/6-components/tooltip.css",
+      "component": "tooltip",
+      "blocks": [
+        "tooltip",
+        "tooltip-wrap"
+      ],
+      "why": "트리거와 툴팁을 묶어 위치를 잡는 감싸개는 별도 블록이다"
+    }
+  ],
+  "blockAliases": [
+    {
+      "alias": "table-wrapper",
+      "block": "table-wrap",
+      "why": "흔한 오기. 감싸개 블록 이름은 table-wrap이다"
+    }
+  ],
+  "exemptBlockPrefixes": [
+    "docs-",
+    "pg"
+  ],
+  "jsHooks": "JS가 동작을 붙이는 시작점은 data-* 속성(data-modal-open, data-carousel 등)이나 ARIA 역할(role=\"tablist\")로 잡는다. 컴포넌트 안에서 범위를 찾는 데(closest('.modal'))는 블록 클래스를 써도 되지만, 클래스 이름을 바꾸면 JS도 함께 바꾼다. 상태 표시용 클래스를 JS가 붙이거나 떼지 않는다 — 상태는 ARIA·hidden 속성으로 바꾼다(R-17)."
+}

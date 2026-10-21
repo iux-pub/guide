@@ -73,6 +73,12 @@
     "src/playground/**/*.html": [
       "node scripts/check-violations.js",
       "node scripts/check-html-structure.js"
+    ],
+    "src/js/**/*.js": [
+      "node scripts/check-violations.js"
+    ],
+    "{references,prompts}/**/*.md": [
+      "node scripts/check-html-structure.js"
     ]
   },
   "keywords": [],

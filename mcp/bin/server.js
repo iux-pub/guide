@@ -33,6 +33,23 @@ const manifest = JSON.parse(readData('manifest.json'))
 const rules = JSON.parse(readData('rules.json'))
 const profileSpec = JSON.parse(readData('profiles.json'))
 const artDirection = JSON.parse(readData('art-direction.json'))
+// 카피 규칙 판정 자료(R-23 자리값·R-43 어휘) — 오래된 번들에는 없을 수 있다
+function readOptionalJson(name) {
+  try {
+    return JSON.parse(readData(name))
+  } catch {
+    return null
+  }
+}
+const copyLexicon = readOptionalJson('copy-lexicon.json')
+const fakeContent = readOptionalJson('fake-content.json')
+
+// 규칙 범위는 번들된 rules.json에서 읽는다. 문구에 숫자를 박아 두면 규칙이 늘 때마다
+// 에이전트가 새 규칙을 모른 채 일한다(2026-10에 R-28이 생겼는데 R-27로 안내되던 것처럼).
+const RULE_IDS = (rules.rules || []).map((r) => r.id)
+const RULE_RANGE = RULE_IDS.length
+  ? `${RULE_IDS[0]}~${RULE_IDS[RULE_IDS.length - 1]}(${RULE_IDS.length}개)`
+  : 'rules.json 전체'
 
 // ─────────────────────────────────────────────────────
 // 서버 지시문 — 에이전트가 도구를 언제 써야 하는지 알려준다
@@ -58,11 +75,14 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    「세트에 있음」은 바로 쓰고, 「카탈로그에만 있음」은 사용자가 세트에 넣어야(채택) 쓸 수 있다.
    카탈로그에도 없으면 UX팀에 요청한다 (R-27). 세트에 없는 아이콘을 SVG로 직접 넣지 않는다.
    장식용은 aria-hidden, 의미를 담으면 role="img"+aria-label을 붙인다.
-5. 규칙 R-01~R-27을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
-6. 간격·크기·타이포 스케일·반경·모션은 토큰이 아니라 CSS/Tailwind 직접값으로 쓴다.
+5. 규칙 ${RULE_RANGE}을 지킨다. get_rules로 확인한다. BEM, 접근성, 금지 패턴이 여기 있다.
+6. 간격·크기·타이포 스케일·반경은 토큰이 아니라 rem 임의값(p-[1.6rem])으로 쓴다 — 루트가 62.5%라 Tailwind 기본 스케일(p-4·text-sm)은 37.5% 작게 렌더된다(R-37). 모션·z-index는 CSS 값이나 Tailwind 임의값(duration-[200ms], z-[1050])으로 쓴다.
 7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
    100% 통과가 조건이다.
+8. 페이지는 프로젝트 루트(*.html)나 pages/ 아래에 둔다. 다른 폴더에 두면 infoux.json "pages"에
+   글롭을 더한다 — npm run check가 그 범위의 페이지만 page 계약으로 검사한다. 검사를 끄거나
+   실패를 숨기는 훅·스크립트(|| true, 2>/dev/null)를 만들지 않는다.
 
 기술 스택은 Tailwind v4 + 표준 CSS nesting + BEM + ITCSS 5계층이다. SCSS는 쓰지 않는다.`
 
@@ -139,7 +159,7 @@ const TOOLS = [
   {
     name: 'get_rules',
     description:
-      'infoUX 코딩 규칙 R-01~R-27을 반환한다. CSS·BEM·HTML·접근성 규칙과 위반 예시가 들어 있다.',
+      `infoUX 코딩 규칙 ${RULE_RANGE}을 반환한다. CSS·BEM·HTML·접근성 규칙과 위반 예시가 들어 있다.`,
     inputSchema: {
       type: 'object',
       properties: {
@@ -572,11 +592,46 @@ function getRules({ id, category, severity } = {}) {
     lines.push(`- 심각도: ${rule.severity} / 분류: ${rule.category}`)
     if (rule.enforcement?.length) lines.push(`- 검사: ${rule.enforcement.join(', ')}`)
     if (rule.rationale) lines.push(`- 이유: ${rule.rationale}`)
-    if (rule.bad) lines.push('', '위반:', '```', String(rule.bad), '```')
-    if (rule.good) lines.push('', '준수:', '```', String(rule.good), '```')
+    if (rule.bad) lines.push('', '위반:', '```', examplesText(rule.bad), '```')
+    if (rule.good) lines.push('', '준수:', '```', examplesText(rule.good), '```')
+    // 단건 조회면 판정 자료까지 — 에이전트가 어떤 문구·자리값이 걸리는지 미리 안다
+    if (id && rule.id === 'R-23' && fakeContent) lines.push('', ...fakeContentLines())
+    if (id && rule.id === 'R-43' && copyLexicon) lines.push('', ...copyLexiconLines())
     lines.push('')
   }
+  if (!id && found.some(r => r.id === 'R-23' || r.id === 'R-43')) {
+    lines.push('> R-23 자리값 목록·R-43 번역투 어휘는 get_rules(id)로 단건 조회하면 함께 나온다(contracts/fake-content.json·copy-lexicon.json).')
+  }
   return text(lines.join('\n'))
+}
+
+// rules.json의 bad·good은 { code, note } 배열이다(예전에는 문자열이었다)
+function examplesText(list) {
+  return (Array.isArray(list) ? list : [list])
+    .map(item => (typeof item === 'string' ? item : `${item.code}${item.note ? `\n  ↳ ${item.note}` : ''}`))
+    .join('\n')
+}
+
+function fakeContentLines() {
+  return [
+    '### 판정 자료 — contracts/fake-content.json',
+    `- 핫링크 호스트: ${fakeContent.hotlinkHosts.join(', ')}`,
+    `- 연번 명사('명사 + 번호' 형제 2개 이상): ${fakeContent.serialNouns.join(', ')}`,
+    `- 자리값 title·h1: ${fakeContent.placeholderTitles.join(', ')}`,
+    `- 자리값 h2~h6: ${fakeContent.placeholderHeadings.join(', ')} (+ '모달 제목'처럼 화면 부품 이름 + 제목)`,
+    `- 기관명 자리값: ${fakeContent.brandPlaceholders.join(', ')}`,
+    `- 틀 표시: <meta name="${fakeContent.templateMarker}"> — ${fakeContent.templateMarkerNote || ''}`
+  ]
+}
+
+function copyLexiconLines() {
+  return [
+    '### 판정 어휘 — contracts/copy-lexicon.json',
+    ...copyLexicon.translationese.map(t => `- \`${t.pattern}\` — ${t.why}`),
+    `- 재촉형 버튼 어미: \`${copyLexicon.buttonImperativeEndings}\`${copyLexicon.buttonImperativeNote ? ` — ${copyLexicon.buttonImperativeNote}` : ''}`,
+    `- 느낌표: \`${copyLexicon.exclamation}\`${copyLexicon.exclamationNote ? ` — ${copyLexicon.exclamationNote}` : ''}`,
+    `- 공통 허용 문구: ${(copyLexicon.allow || []).join(', ') || '없음'} — 프로젝트 고유 문구는 infoux.json copyAllow`
+  ]
 }
 
 function getProfile(name) {
@@ -771,6 +826,9 @@ function getArtDirection({ profile, expression } = {}) {
 
   if (map) {
     lines.push('', '## 리듬·카피 톤', '', `- 섹션 리듬: ${map.rhythm}`, `- 카피 톤: ${map.copyTone}`)
+  }
+  if (copyLexicon) {
+    lines.push('- 카피 톤 기계 검출(R-43): 번역투·2인칭 어휘, \'-(으)세요·-십시오\'로 끝나는 버튼, 느낌표(공공서비스 제목·버튼·도입부는 오류). 어휘 전체는 get_rules("R-43").')
   }
 
   lines.push('', '## 한글 조판 공통값', '', ...hangulLines())

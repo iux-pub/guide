@@ -7,16 +7,18 @@
  *   <header id="header" class="site-header">
  *     <div class="container site-header__inner">
  *       <a class="site-header__brand" href="/">
- *         <img src="/logo.svg" alt="기관명">
- *         <span class="site-header__brand-name">기관명</span>
+ *         <img src="/logo.svg" alt="">
+ *         <span>기관명</span>
  *       </a>
- *       <nav class="site-header__nav" aria-label="주 메뉴">
+ *       <nav class="site-header__nav" aria-label="메인 메뉴">
  *         <ul class="site-header__menu">
  *           <li><a href="/about">소개</a></li>
  *           <li><a href="/services">서비스</a></li>
  *         </ul>
  *       </nav>
  *       <div class="site-header__actions">
+ *         <form class="site-header__search" role="search" action="/search">…</form>
+ *         <a class="site-header__search-link" href="/search">…통합검색</a>
  *         <button class="btn btn--text btn--small">로그인</button>
  *       </div>
  *     </div>
@@ -47,9 +49,9 @@
     @apply h-[3.2rem] w-auto;
   }
 
-  /* 주 메뉴 (PC) */
+  /* 메인 메뉴 (1024px 이상 — KRDS large, 미만은 전체메뉴) */
   .site-header__nav {
-    @apply hidden flex-1 pc:block;
+    @apply hidden flex-1 laptop:block;
   }
 
   .site-header__menu {
@@ -72,8 +74,22 @@
 
   }
 
+  /* 통합검색 — KRDS 검색 [필수] '모든 화면에서 통합 검색을 실행할 수 있게'(R-40).
+     1024px 이상은 헤더 안 입력창, 미만은 검색 페이지로 가는 아이콘 링크 */
+  .site-header__search {
+    @apply hidden items-center gap-[0.8rem] laptop:flex;
+  }
+
+  .site-header__search-input {
+    @apply w-[24rem] h-[4.4rem] px-[1.2rem] border border-[var(--color-border-control)] rounded-[0.6rem] bg-[var(--color-bg)] text-[var(--color-text)] text-[1.6rem];
+  }
+
+  .site-header__search-link {
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] text-[var(--color-text)] laptop:hidden;
+  }
+
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
-    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] cursor-pointer pc:hidden;
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] cursor-pointer laptop:hidden;
   }
 }

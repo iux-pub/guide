@@ -2,7 +2,7 @@
  * Breadcrumb — KRDS Breadcrumb
  *
  * 구조:
- *   <nav class="breadcrumb" aria-label="페이지 경로">
+ *   <nav class="breadcrumb" aria-label="브레드크럼">   ← 구획 제목은 KRDS 그대로 "브레드크럼"
  *     <ol class="breadcrumb__list">
  *       <li class="breadcrumb__item"><a href="/">홈</a></li>
  *       <li class="breadcrumb__item"><a href="/section">섹션</a></li>
@@ -27,7 +27,7 @@
 
   /* 구분자 */
   .breadcrumb__item:not(:first-child)::before {
-    @apply content-[''] w-[1.2rem] h-[1.2rem] shrink-0 [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='12'_height='12'_viewBox='0_0_12_12'_fill='none'><path_d='M4.5_2L8.5_6L4.5_10'_stroke='%236D7882'_stroke-width='1.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain];
+    @apply content-[''] w-[1.2rem] h-[1.2rem] shrink-0 [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'><path%20d='M4.5%202L8.5%206L4.5%2010'%20stroke='%236D7882'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain];
 
   }
 

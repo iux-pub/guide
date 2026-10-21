@@ -59,5 +59,5 @@
 
 - KRDS 버튼 명세: https://www.krds.go.kr/html/site/component/component_summary.html
 - 색상: `--color-button-*`, `--color-text-*`
-- 크기/간격/반경: CSS/Tailwind 직접값
+- 크기/간격/반경: CSS 값·Tailwind rem 임의값
 - CSS: `src/styles/6-components/btn.css`

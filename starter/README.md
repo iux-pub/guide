@@ -23,6 +23,8 @@ git remote add origin https://github.com/YOUR_ORG/YOUR_REPO.git
 npm install
 ```
 
+`index.html`의 `<meta name="infoux:template" content="starter">` 줄(과 바로 위 안내 주석)을 지우고 `<title>`·`<h1>`을 실제 페이지 제목으로 바꾼다. 이 표시가 남아 있으면 `npm run check`가 자리값 제목·연락처를 경고로만 본다(R-23). `npx create-infomind-ux`로 만들면 이 단계는 자동이다.
+
 ### 2. 빌드
 
 ```bash
@@ -121,9 +123,9 @@ AI로 화면을 생성하기 전에 프로젝트 유형을 먼저 판정합니�
 <!-- 카드 -->
 <article class="card card--medium">
   <header class="card__header">
-    <h3 class="card__title">제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
-  <div class="card__body">내용</div>
+  <div class="card__body"><p>매주 월요일과 법정 공휴일에는 휴관합니다.</p></div>
 </article>
 ```
 

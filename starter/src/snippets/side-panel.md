@@ -11,7 +11,7 @@
     <button type="button" class="side-panel__close" aria-label="닫기">×</button>
   </header>
   <div class="side-panel__body">
-    <p>패널 본문 내용</p>
+    <p>접수 번호, 처리 상태, 담당 부서를 확인할 수 있습니다.</p>
   </div>
   <footer class="side-panel__footer">
     <button type="button" class="btn btn--tertiary">닫기</button>
@@ -30,9 +30,12 @@
 
 ## 동작 (JS)
 
-- 열기: `panel.setAttribute('aria-hidden', 'false')` (또는 `.side-panel--open` 추가)
-- 닫기: `panel.setAttribute('aria-hidden', 'true')`
-- transform 트랜지션으로 슬라이드 인/아웃
+상태는 `aria-hidden` 속성 하나로 바꾼다(R-17). 상태 클래스를 붙이거나 떼지 않는다.
+
+- 열기: `panel.setAttribute('aria-hidden', 'false')` → 패널 안 첫 초점 요소(닫기 버튼 등)로 초점을 옮긴다
+- 닫기: `panel.setAttribute('aria-hidden', 'true')` → 패널을 연 버튼으로 초점을 돌려준다
+- CSS가 transform 트랜지션으로 슬라이드 인/아웃하고, 닫힌 패널은 `visibility: hidden`으로 Tab 순서·스크린리더에서 함께 뺀다(화면 밖 버튼에 초점이 닿지 않는다). 움직임 줄이기 설정에서는 슬라이드 없이 바로 바뀐다
+- `.side-panel--open`은 이미 납품한 마크업을 위한 CSS 별칭이다. 새 마크업·JS에는 쓰지 않는다
 
 ## Modal vs Side Panel
 
@@ -49,7 +52,7 @@
 - 닫기 버튼 `aria-label="닫기"` 필수
 - ESC 키 닫기 권장
 - 포커스 트랩은 선택 (모달과 달리 본문 인터랙션 허용)
-- `aria-hidden` 토글로 스크린리더 노출 제어
+- 열림·닫힘은 `aria-hidden="false"`/`"true"` 토글 하나로 표현한다 — 닫힌 패널은 CSS가 초점 순서에서도 뺀다
 
 ## 출처
 

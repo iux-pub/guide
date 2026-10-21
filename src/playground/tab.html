@@ -59,7 +59,7 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">탭 (Tab)</h1>
 
     <!-- 기본 탭 (3개) -->
@@ -68,56 +68,56 @@
       <div class="pg__preview">
         <div class="tab">
           <div class="tab__list" role="tablist" aria-label="기본 탭 예시">
-            <button type="button" class="tab__button" role="tab" id="tab-basic-1" aria-selected="true" aria-controls="tabpanel-basic-1" tabindex="0">탭 1</button>
-            <button type="button" class="tab__button" role="tab" id="tab-basic-2" aria-selected="false" aria-controls="tabpanel-basic-2" tabindex="-1">탭 2</button>
-            <button type="button" class="tab__button" role="tab" id="tab-basic-3" aria-selected="false" aria-controls="tabpanel-basic-3" tabindex="-1">탭 3</button>
+            <button type="button" class="tab__item" role="tab" id="tab-basic-1" aria-selected="true" aria-controls="tabpanel-basic-1">공지사항</button>
+            <button type="button" class="tab__item" role="tab" id="tab-basic-2" aria-selected="false" aria-controls="tabpanel-basic-2">보도자료</button>
+            <button type="button" class="tab__item" role="tab" id="tab-basic-3" aria-selected="false" aria-controls="tabpanel-basic-3">채용 정보</button>
           </div>
           <div class="tab__panel" role="tabpanel" id="tabpanel-basic-1" aria-labelledby="tab-basic-1">
-            <p>첫 번째 탭 패널 내용입니다. ArrowLeft/ArrowRight 키로 탭을 전환할 수 있습니다.</p>
+            <p>공지사항 패널입니다. Tab 키로 모든 탭을 지나고, Enter·Space·클릭으로 탭을 고릅니다. 화살표 키는 초점만 옮깁니다.</p>
           </div>
           <div class="tab__panel" role="tabpanel" id="tabpanel-basic-2" aria-labelledby="tab-basic-2" hidden>
-            <p>두 번째 탭 패널 내용입니다. Home/End 키로 첫 번째/마지막 탭으로 이동합니다.</p>
+            <p>보도자료 패널입니다. Home/End 키로 첫 번째/마지막 탭으로 이동합니다.</p>
           </div>
           <div class="tab__panel" role="tabpanel" id="tabpanel-basic-3" aria-labelledby="tab-basic-3" hidden>
-            <p>세 번째 탭 패널 내용입니다.</p>
+            <p>채용 정보 패널입니다.</p>
           </div>
         </div>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 탭 마크업 코드" tabindex="0">
 <pre><code>&lt;div class="tab"&gt;
   &lt;div class="tab__list" role="tablist" aria-label="탭 예시"&gt;
-    &lt;button type="button" class="tab__button" role="tab" id="tab-basic-1" aria-selected="true" aria-controls="tabpanel-basic-1" tabindex="0"&gt;탭 1&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" id="tab-basic-2" aria-selected="false" aria-controls="tabpanel-basic-2" tabindex="-1"&gt;탭 2&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" id="tab-basic-3" aria-selected="false" aria-controls="tabpanel-basic-3" tabindex="-1"&gt;탭 3&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" id="tab-basic-1" aria-selected="true" aria-controls="tabpanel-basic-1"&gt;공지사항&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" id="tab-basic-2" aria-selected="false" aria-controls="tabpanel-basic-2"&gt;보도자료&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" id="tab-basic-3" aria-selected="false" aria-controls="tabpanel-basic-3"&gt;채용 정보&lt;/button&gt;
   &lt;/div&gt;
   &lt;div class="tab__panel" role="tabpanel" id="tabpanel-basic-1" aria-labelledby="tab-basic-1"&gt;
-    &lt;p&gt;첫 번째 탭 패널 내용&lt;/p&gt;
+    &lt;p&gt;공지사항 목록&lt;/p&gt;
   &lt;/div&gt;
   &lt;div class="tab__panel" role="tabpanel" id="tabpanel-basic-2" aria-labelledby="tab-basic-2" hidden&gt;
-    &lt;p&gt;두 번째 탭 패널 내용&lt;/p&gt;
+    &lt;p&gt;보도자료 목록&lt;/p&gt;
   &lt;/div&gt;
   &lt;div class="tab__panel" role="tabpanel" id="tabpanel-basic-3" aria-labelledby="tab-basic-3" hidden&gt;
-    &lt;p&gt;세 번째 탭 패널 내용&lt;/p&gt;
+    &lt;p&gt;채용 정보 목록&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
 
-    <!-- 많은 탭 (5개+, 모바일 스크롤) -->
+    <!-- 탭 6개 (KRDS 상한) -->
     <div class="pg__section">
-      <h2 class="pg__subtitle">많은 탭 (모바일 가로 스크롤)</h2>
+      <h2 class="pg__subtitle">탭 6개 (KRDS 상한)</h2>
       <div class="pg__preview">
         <div class="tab">
           <div class="tab__list" role="tablist" aria-label="많은 탭 예시">
-            <button type="button" class="tab__button" role="tab" id="tab-many-1" aria-selected="true" aria-controls="tabpanel-many-1" tabindex="0">개요</button>
-            <button type="button" class="tab__button" role="tab" id="tab-many-2" aria-selected="false" aria-controls="tabpanel-many-2" tabindex="-1">상세 정보</button>
-            <button type="button" class="tab__button" role="tab" id="tab-many-3" aria-selected="false" aria-controls="tabpanel-many-3" tabindex="-1">첨부 파일</button>
-            <button type="button" class="tab__button" role="tab" id="tab-many-4" aria-selected="false" aria-controls="tabpanel-many-4" tabindex="-1">댓글</button>
-            <button type="button" class="tab__button" role="tab" id="tab-many-5" aria-selected="false" aria-controls="tabpanel-many-5" tabindex="-1">이력</button>
-            <button type="button" class="tab__button" role="tab" id="tab-many-6" aria-selected="false" aria-controls="tabpanel-many-6" tabindex="-1">설정</button>
+            <button type="button" class="tab__item" role="tab" id="tab-many-1" aria-selected="true" aria-controls="tabpanel-many-1">개요</button>
+            <button type="button" class="tab__item" role="tab" id="tab-many-2" aria-selected="false" aria-controls="tabpanel-many-2">상세 정보</button>
+            <button type="button" class="tab__item" role="tab" id="tab-many-3" aria-selected="false" aria-controls="tabpanel-many-3">첨부 파일</button>
+            <button type="button" class="tab__item" role="tab" id="tab-many-4" aria-selected="false" aria-controls="tabpanel-many-4">댓글</button>
+            <button type="button" class="tab__item" role="tab" id="tab-many-5" aria-selected="false" aria-controls="tabpanel-many-5">이력</button>
+            <button type="button" class="tab__item" role="tab" id="tab-many-6" aria-selected="false" aria-controls="tabpanel-many-6">설정</button>
           </div>
           <div class="tab__panel" role="tabpanel" id="tabpanel-many-1" aria-labelledby="tab-many-1">
-            <p>개요 패널입니다. 모바일에서 탭이 많으면 가로 스크롤로 탐색할 수 있습니다.</p>
+            <p>개요 패널입니다. 탭은 6개까지 둔다(KRDS). 좁은 화면에서 넘치면 목록이 가로로 스크롤되지만, 스크롤만으로 탭을 숨기지 말고 개수를 먼저 줄인다.</p>
           </div>
           <div class="tab__panel" role="tabpanel" id="tabpanel-many-2" aria-labelledby="tab-many-2" hidden>
             <p>상세 정보 패널입니다.</p>
@@ -136,23 +136,23 @@
           </div>
         </div>
       </div>
-      <div class="pg__code">
-<pre><code>&lt;!-- 모바일에서 탭이 많으면 .tab__list가 가로 스크롤 --&gt;
+      <div class="pg__code" role="region" aria-label="탭 6개 마크업 코드" tabindex="0">
+<pre><code>&lt;!-- 탭은 6개 이하(KRDS). 좁은 화면에서 넘치면 .tab__list가 가로 스크롤된다 --&gt;
 &lt;div class="tab"&gt;
   &lt;div class="tab__list" role="tablist" aria-label="많은 탭"&gt;
-    &lt;button type="button" class="tab__button" role="tab" ...&gt;개요&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" ...&gt;상세 정보&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" ...&gt;첨부 파일&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" ...&gt;댓글&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" ...&gt;이력&lt;/button&gt;
-    &lt;button type="button" class="tab__button" role="tab" ...&gt;설정&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" ...&gt;개요&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" ...&gt;상세 정보&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" ...&gt;첨부 파일&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" ...&gt;댓글&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" ...&gt;이력&lt;/button&gt;
+    &lt;button type="button" class="tab__item" role="tab" ...&gt;설정&lt;/button&gt;
   &lt;/div&gt;
   &lt;!-- tabpanel 요소들... --&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
 
-  </div>
+  </main>
 
   <script src="../js/tab.js"></script>
 </body>

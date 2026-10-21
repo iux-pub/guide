@@ -56,7 +56,7 @@ src/styles/
 - **INFOUX 공개 토큰**:
   - 색상: `var(--color-primary)`, `var(--color-text)`, `var(--color-bg)`, `var(--color-border)`
   - 폰트: `var(--font-sans)`, `var(--font-mono)`
-  - 간격/크기/타이포 스케일/반경은 직접값 사용
+  - 간격/크기/타이포 스케일/반경은 rem 직접값 사용 — Tailwind는 `p-[2.4rem]` 같은 임의값으로 쓰고 기본 스케일(`p-4`, `text-sm`)은 쓰지 않는다(R-37)
 
 - **시맨틱 색상 토큰**:
   - 색상: `var(--color-text)`, `--color-text-secondary`, `--color-text-disabled`, `--color-bg`, `--color-bg-secondary`, `--color-border`, `--color-primary` (KRDS 토큰을 가리킴)
@@ -108,14 +108,16 @@ Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md
 <main id="main">
   <section class="section section--content" aria-labelledby="section-title">
     <div class="container">
-      <h1 id="section-title">페이지 제목</h1>
+      <h1 id="section-title">공지사항</h1>
       ...
     </div>
   </section>
 </main>
 
 <footer id="footer" class="site-footer">
-  <div class="container">...</div>
+  <div class="container">
+    <nav aria-label="약관 및 정책"><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></nav>
+  </div>
 </footer>
 ```
 

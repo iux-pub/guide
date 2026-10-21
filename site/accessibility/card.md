@@ -12,7 +12,7 @@ order: 7
 | 속성 | 대상 요소 | 값 | 설명 |
 |------|----------|-----|------|
 | `alt` | 카드 내 `<img>` | 이미지 설명 텍스트 | 장식용 이미지는 `alt=""` (빈 값). 정보 전달 이미지는 내용을 설명 |
-| `aria-label` | 링크 카드(전체 클릭) | 카드 제목 텍스트 | 카드 전체를 `<a>`로 감싸는 경우 링크 목적을 명시 |
+| `aria-labelledby` | 링크 카드(`<a class="card">`) | 카드 제목의 `id` | 카드 전체가 링크면 안의 텍스트 전체가 링크 이름이 된다. 길어지면 제목을 가리켜 이름을 제목으로 줄인다 (보이는 텍스트를 포함하므로 레이블과 네임이 일치한다) |
 
 ## 카드 이미지 alt 작성 원칙
 
@@ -25,21 +25,39 @@ order: 7
 
 ## 링크 카드의 클릭 영역 처리
 
-**권장 패턴:** 제목에만 링크를 걸고 CSS `::after` pseudo-element로 클릭 영역을 카드 전체로 확장한다.
+카드가 한 곳으로만 이동하는지, 안에 동작이 여럿인지에 따라 둘 중 하나를 고른다. 두 패턴 모두 `card.css`에 정의된 클래스만 쓴다.
+
+**1. 카드 전체가 한 곳으로 가는 링크** — 카드 루트를 `<a class="card card--link">`로 둔다. `card.css`의 `a.card`·`.card--link`가 블록 표시와 호버를 맡는다. 카드 안에 다른 링크·버튼을 두지 않는다 (링크 안 인터랙티브 요소 중첩 금지).
+
+```html
+<a class="card card--link" href="/notice/a11y-checklist" aria-labelledby="card-a11y-title">
+  <header class="card__header">
+    <h3 class="card__title" id="card-a11y-title">웹 접근성 체크리스트 개정</h3>
+  </header>
+  <div class="card__body">
+    <p>KWCAG 2.2 기준으로 고친 점검 항목을 확인하세요.</p>
+  </div>
+</a>
+```
+
+**2. 카드 안에 동작이 여럿** — `<article class="card">`로 두고 제목에만 링크를 건다. 나머지 동작은 `card__footer`의 버튼·링크로 분리한다. 이미지는 감싸는 부품 클래스 없이 `card__body` 안에 둔다.
 
 ```html
 <article class="card">
-  <div class="card__image">
-    <img src="thumbnail.jpg" alt="">
-  </div>
+  <header class="card__header">
+    <h3 class="card__title"><a href="/notice/a11y-checklist">웹 접근성 체크리스트 개정</a></h3>
+  </header>
   <div class="card__body">
-    <h3 class="card__title">
-      <a href="/post/123" class="card__link">웹 접근성 가이드 업데이트</a>
-    </h3>
-    <p class="card__desc">KWCAG 2.2 기준으로 업데이트된 체크리스트를 확인하세요.</p>
+    <img src="/images/notice/a11y-checklist.png" alt="개정 체크리스트 33개 항목을 인식·운용·이해·견고성 4분류로 나눈 표">
+    <p>KWCAG 2.2 기준으로 고친 점검 항목을 확인하세요.</p>
   </div>
+  <footer class="card__footer">
+    <a class="btn btn--text btn--small" href="/files/a11y-checklist.pdf">체크리스트 내려받기 (PDF)</a>
+  </footer>
 </article>
 ```
+
+> 제목 링크를 `::after`로 카드 전체 클릭 영역까지 넓히는 방식은 `card.css`가 제공하지 않는다. 카드 전체가 링크여야 하면 1번 패턴을 쓴다. `card__image`·`card__link`·`card__desc` 같은 부품 클래스는 CSS에 없으므로 만들지 않는다 (R-29).
 
 ## KWCAG 2.2 관련 검사항목
 

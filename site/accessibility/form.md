@@ -40,26 +40,31 @@ order: 6
 ### Do (올바른 예)
 
 ```html
-<!-- 에러 상태: aria-invalid + aria-describedby + role="alert" -->
-<div class="form__group">
-  <label for="email" class="form__label form__label--required">이메일</label>
-  <input type="email" id="email" class="form__input form__input--error"
-         aria-invalid="true" aria-describedby="email-error" required>
-  <p id="email-error" class="form__error" role="alert">
+<!-- 에러 상태: aria-invalid + aria-describedby(보조설명 + 에러) + role="alert" -->
+<div class="form-field">
+  <label for="email" class="form-field__label">
+    이메일<span class="form-field__required" aria-label="필수">*</span>
+  </label>
+  <p id="email-hint" class="form-field__hint">예: hong@example.com</p>
+  <input type="email" id="email" class="input input--error"
+         aria-invalid="true" aria-describedby="email-hint email-error" required>
+  <p id="email-error" class="form-field__message form-field__message--error" role="alert">
     올바른 이메일 형식을 입력해 주세요
   </p>
 </div>
 
 <!-- 라디오 그룹: fieldset + legend -->
-<fieldset class="form__fieldset">
-  <legend class="form__legend">결제 방법</legend>
-  <label class="form__radio">
+<fieldset>
+  <legend class="form-field__label">결제 방법</legend>
+  <label class="radio">
     <input type="radio" name="payment" value="card">
-    <span class="form__radio-label">카드 결제</span>
+    <span class="radio__box" aria-hidden="true"></span>
+    <span class="radio__label">카드 결제</span>
   </label>
-  <label class="form__radio">
+  <label class="radio">
     <input type="radio" name="payment" value="bank">
-    <span class="form__radio-label">계좌이체</span>
+    <span class="radio__box" aria-hidden="true"></span>
+    <span class="radio__label">계좌이체</span>
   </label>
 </fieldset>
 ```
@@ -67,12 +72,16 @@ order: 6
 ### Don't (잘못된 예)
 
 ```html
-<!-- label 없이 placeholder만 사용 -->
-<input type="text" class="form__input" placeholder="이름을 입력하세요">
+<!-- 금지 예시: label 없이 placeholder만 사용 -->
+<input type="text" class="input" placeholder="이름을 입력하세요">
 
-<!-- 에러 상태를 색상만으로 표시 -->
-<input type="email" class="form__input" style="border-color: red;">
-<p class="form__error">잘못된 이메일</p>
+<!-- 금지 예시: 에러 상태를 빨간 테두리(input--error)로만 표시
+     aria-invalid가 없고 메시지가 aria-describedby로 연결되지 않아 스크린리더는 오류를 모른다 -->
+<div class="form-field">
+  <label for="email-bad" class="form-field__label">이메일</label>
+  <input type="email" id="email-bad" class="input input--error">
+  <p class="form-field__message form-field__message--error">잘못된 이메일</p>
+</div>
 ```
 
 ## KWCAG 2.2 관련 검사항목

@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: bf7ceb2
+> 빌드: 9f32769
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -81,7 +81,7 @@
 
 - KRDS 버튼 명세: https://www.krds.go.kr/html/site/component/component_summary.html
 - 색상: `--color-button-*`, `--color-text-*`
-- 크기/간격/반경: CSS/Tailwind 직접값
+- 크기/간격/반경: CSS 값·Tailwind rem 임의값
 - CSS: `src/styles/6-components/btn.css`
 
 
@@ -195,9 +195,9 @@ KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스�
   <label for="name" class="form-field__label">
     이름<span class="form-field__required" aria-label="필수">*</span>
   </label>
-  <p class="form-field__hint">사업자등록증에 기재된 대표자명</p>
-  <input type="text" id="name" class="input" placeholder="홍길동" required>
-  <p class="form-field__message">최대 20자까지 입력 가능합니다</p>
+  <p id="name-hint" class="form-field__hint">사업자등록증에 기재된 대표자명</p>
+  <input type="text" id="name" class="input" placeholder="홍길동" required aria-describedby="name-hint name-message">
+  <p id="name-message" class="form-field__message">최대 20자까지 입력 가능합니다</p>
 </div>
 ```
 
@@ -341,25 +341,27 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 ```html
 <div class="accordion">
   <details class="accordion__item">
-    <summary class="accordion__summary">자주 묻는 질문 1</summary>
+    <summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
     <div class="accordion__panel">
-      <p>답변 1 내용</p>
+      <p>민원 종류마다 다릅니다. 신청 화면의 처리 기간 항목에서 확인할 수 있습니다.</p>
     </div>
   </details>
   <details class="accordion__item">
-    <summary class="accordion__summary">자주 묻는 질문 2</summary>
+    <summary class="accordion__summary">신청한 뒤에 내용을 고칠 수 있나요?</summary>
     <div class="accordion__panel">
-      <p>답변 2 내용</p>
+      <p>처리 상태가 접수 대기일 때만 고칠 수 있습니다. 나의 민원에서 해당 신청을 열어 고칩니다.</p>
     </div>
   </details>
   <details class="accordion__item" open>
-    <summary class="accordion__summary">기본 열린 항목</summary>
+    <summary class="accordion__summary">첨부 파일은 몇 개까지 올릴 수 있나요?</summary>
     <div class="accordion__panel">
-      <p><code>open</code> 속성으로 초기 열림 상태</p>
+      <p>파일은 5개까지, 하나에 10MB까지 올릴 수 있습니다.</p>
     </div>
   </details>
 </div>
 ```
+
+세 번째 항목처럼 `open` 속성을 주면 처음부터 펼친 상태로 보인다. 질문은 실제 문의에서 가져온다 — "자주 묻는 질문 1"·"답변 1 내용" 같은 자리 문구는 납품 페이지에서 R-23 오류다.
 
 #### 단일 열림 (한 번에 하나만)
 
@@ -367,8 +369,8 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
 ```html
 <div class="accordion">
-  <details class="accordion__item" name="faq"><summary class="accordion__summary">Q1</summary>...</details>
-  <details class="accordion__item" name="faq"><summary class="accordion__summary">Q2</summary>...</details>
+  <details class="accordion__item" name="faq"><summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>...</details>
+  <details class="accordion__item" name="faq"><summary class="accordion__summary">신청한 뒤에 내용을 고칠 수 있나요?</summary>...</details>
 </div>
 ```
 
@@ -392,10 +394,10 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 ```html
 <article class="card">
   <header class="card__header">
-    <h3 class="card__title">카드 제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
   <div class="card__body">
-    <p>카드 본문 내용</p>
+    <p>매주 월요일과 법정 공휴일에는 휴관합니다. 휴관일에도 무인 반납함은 이용할 수 있습니다.</p>
   </div>
   <footer class="card__footer">
     <button type="button" class="btn btn--text btn--small">자세히</button>
@@ -433,7 +435,7 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
 #### 출처
 
-- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 카드 padding/반경은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/card.css`
 
 
@@ -496,11 +498,11 @@ trigger.addEventListener('click', () => {
   <div class="modal__overlay"></div>
   <div class="modal__content modal__content--medium">
     <header class="modal__header">
-      <h2 id="modal-title" class="modal__title">제목</h2>
+      <h2 id="modal-title" class="modal__title">작성 내용 임시 저장</h2>
       <button type="button" class="modal__close" aria-label="닫기">×</button>
     </header>
     <div class="modal__body">
-      <p>모달 본문 내용</p>
+      <p>작성 중인 내용을 임시 저장합니다. 임시 저장한 글은 30일 동안 보관합니다.</p>
     </div>
     <footer class="modal__footer">
       <button type="button" class="btn btn--tertiary">취소</button>
@@ -538,7 +540,7 @@ trigger.addEventListener('click', () => {
 
 #### 출처
 
-- Shape 값은 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- Shape 값은 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - Shadow: `--shadow-3` (KRDS modal-wrap-shadow 추상화)
 - CSS: `src/styles/6-components/modal.css`
 
@@ -558,7 +560,7 @@ trigger.addEventListener('click', () => {
     <button type="button" class="side-panel__close" aria-label="닫기">×</button>
   </header>
   <div class="side-panel__body">
-    <p>패널 본문 내용</p>
+    <p>접수 번호, 처리 상태, 담당 부서를 확인할 수 있습니다.</p>
   </div>
   <footer class="side-panel__footer">
     <button type="button" class="btn btn--tertiary">닫기</button>
@@ -577,9 +579,12 @@ trigger.addEventListener('click', () => {
 
 #### 동작 (JS)
 
-- 열기: `panel.setAttribute('aria-hidden', 'false')` (또는 `.side-panel--open` 추가)
-- 닫기: `panel.setAttribute('aria-hidden', 'true')`
-- transform 트랜지션으로 슬라이드 인/아웃
+상태는 `aria-hidden` 속성 하나로 바꾼다(R-17). 상태 클래스를 붙이거나 떼지 않는다.
+
+- 열기: `panel.setAttribute('aria-hidden', 'false')` → 패널 안 첫 초점 요소(닫기 버튼 등)로 초점을 옮긴다
+- 닫기: `panel.setAttribute('aria-hidden', 'true')` → 패널을 연 버튼으로 초점을 돌려준다
+- CSS가 transform 트랜지션으로 슬라이드 인/아웃하고, 닫힌 패널은 `visibility: hidden`으로 Tab 순서·스크린리더에서 함께 뺀다(화면 밖 버튼에 초점이 닿지 않는다). 움직임 줄이기 설정에서는 슬라이드 없이 바로 바뀐다
+- `.side-panel--open`은 이미 납품한 마크업을 위한 CSS 별칭이다. 새 마크업·JS에는 쓰지 않는다
 
 #### Modal vs Side Panel
 
@@ -596,7 +601,7 @@ trigger.addEventListener('click', () => {
 - 닫기 버튼 `aria-label="닫기"` 필수
 - ESC 키 닫기 권장
 - 포커스 트랩은 선택 (모달과 달리 본문 인터랙션 허용)
-- `aria-hidden` 토글로 스크린리더 노출 제어
+- 열림·닫힘은 `aria-hidden="false"`/`"true"` 토글 하나로 표현한다 — 닫힌 패널은 CSS가 초점 순서에서도 뺀다
 
 #### 출처
 
@@ -608,32 +613,47 @@ trigger.addEventListener('click', () => {
 
 ##### 탭 (Tab) — KRDS {#tab}
 
-#### 기본 마크업 (WAI-ARIA tabs pattern)
+KRDS 탭(component_04_10) — 같은 영역 안에서 상호배타적인 콘텐츠 섹션을 버튼으로 전환한다. 동작은 `src/js/tab.js`.
+
+#### 사용 조건
+
+- 대부분의 사용자에게 첫 번째 섹션이 가장 중요하고, 한 번에 두 섹션을 볼 필요가 없을 때 쓴다.
+- 서로 비교해야 하는 정보, 순서가 중요한 절차(→ step-indicator)에는 쓰지 않는다.
+- 탭은 **6개 이하**로 둔다(KRDS). 더 필요하면 탭을 늘리지 말고 콘텐츠를 나누거나 묶는다.
+- 좁은 화면에서 탭이 넘치면 `.tab__list`가 가로로 스크롤된다. 스크롤에 가려지는 탭이 생기지 않도록 탭 이름을 짧게 쓰고 개수를 먼저 줄인다.
+- 좌우 이동 버튼·숨은 탭 팝업 같은 **넘침 컨트롤은 카탈로그에 없다.** 필요하면 프로젝트 확장으로 UX팀이 결정한다 — 이 스니펫에 없는 클래스(`tab__prev` 등)를 지어내지 않는다(R-29).
+- **비활성(disabled) 탭을 쓰지 않는다.** 보일 콘텐츠가 없으면 탭을 빼거나, 패널에서 없는 이유를 설명한다.
+- 다른 **페이지**로 가는 링크 묶음에는 탭을 쓰지 않는다 — `nav` 링크 목록 + `aria-current="page"`로 만든다.
+- 탭을 중첩하지 않는다.
+
+#### 기본 마크업
 
 ```html
 <div class="tab">
-  <div class="tab__list" role="tablist" aria-label="섹션">
-    <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
-      개요
+  <div class="tab__list" role="tablist" aria-label="이용 안내">
+    <button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
+      관람 시간
     </button>
-    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" tabindex="-1">
-      상세
+    <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">
+      관람료
     </button>
-    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" tabindex="-1">
-      후기
+    <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3">
+      오시는 길
     </button>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
-    개요 내용
+    <p>화요일~일요일 09:00~18:00, 매주 월요일 휴관</p>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
-    상세 내용
+    <p>성인 2,000원, 청소년·어린이 1,000원</p>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
-    후기 내용
+    <p>제주시 ○○로 00 — 시내버스 000번 ○○ 정류장 하차</p>
   </div>
 </div>
 ```
+
+- 예시 문구·요금·주소는 형식 예시다. 실제 값은 `contentSources`에서 가져온다(R-23).
 
 #### 사이즈
 
@@ -641,23 +661,27 @@ trigger.addEventListener('click', () => {
 - 기본 (48px) — 표준
 - `.tab__list--large` (56px height) — 강조
 
-#### 동작 (JS — 별도 구현)
+#### 동작 (src/js/tab.js)
 
-- 탭 클릭 → 모든 `aria-selected="false"` + 클릭한 탭만 `aria-selected="true"`
-- 모든 패널 `hidden` + 활성 탭의 `aria-controls` 패널만 `hidden` 제거
-- 키보드 — 좌/우 화살표로 탭 이동, Home/End로 처음/마지막
-- 비활성 탭은 `tabindex="-1"`로 Tab 키에서 제외 (활성 탭만 `tabindex` 없음)
+| 키·조작 | 동작 | 근거 |
+|---------|------|------|
+| `Tab` / `Shift+Tab` | **모든 탭**을 차례로 지난다. 탭에 `tabindex="-1"`을 주지 않는다 | KRDS |
+| 클릭 · `Enter` · `Space` | 초점이 있는 탭을 고르고 패널을 바꾼다(수동 활성화) | KRDS |
+| `←` `→` `Home` `End` | 보조 수단 — 초점만 옮긴다. 고르지 않는다 | infoUX 보완 |
 
 #### 접근성 (KRDS + WAI-ARIA)
 
 - `role="tablist"` + 각 탭에 `role="tab"`, 패널에 `role="tabpanel"`
 - 탭 ↔ 패널 연결: `aria-controls` (탭 → 패널 id), `aria-labelledby` (패널 → 탭 id)
-- 활성 표시는 `aria-selected="true"` (시각 인디케이터는 CSS가 자동 처리)
-- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적 명시 권장
+- 선택은 `aria-selected="true"` — CSS는 색에 더해 탭 바닥의 밑줄 인디케이터(`::after`)로 보인다(색만으로 구분하지 않는다)
+- 초점이 간 탭은 탭 안쪽 초점 링으로 분명히 보인다 — 밑줄·초점 링 모두 탭 상자 안에 그려 목록의 가로 스크롤에 잘리지 않는다
+- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적을 밝힌다
 
 #### 출처
 
 - CSS: `src/styles/6-components/tab.css`
+- JS: `src/js/tab.js`
+- 기준: KRDS 탭 https://www.krds.go.kr/html/site/component/component_04_10.html
 
 
 ---
@@ -671,7 +695,7 @@ trigger.addEventListener('click', () => {
 #### 기본 마크업
 
 ```html
-<nav class="breadcrumb" aria-label="페이지 경로">
+<nav class="breadcrumb" aria-label="브레드크럼">
   <ol class="breadcrumb__list">
     <li class="breadcrumb__item"><a href="/">홈</a></li>
     <li class="breadcrumb__item"><a href="/services">서비스</a></li>
@@ -680,9 +704,15 @@ trigger.addEventListener('click', () => {
 </nav>
 ```
 
+#### 배치
+
+본문 바로가기 목적지 밖에 둔다(KRDS component_03_01, R-41). `<main id="main">`의 형제로 header와 main 사이에 두고, 타이틀 밴드(`section--intro`) 안에 넣지 않는다. 깊이 2 이하 사이트는 생략할 수 있다.
+
+순서: `header#header` → `nav.breadcrumb` → `main#main`(첫 제목 h1) → `footer#footer`.
+
 #### 접근성
 
-- `<nav aria-label="페이지 경로">` 필수 (스크린리더용 식별자)
+- `<nav aria-label="브레드크럼">` 필수 — KRDS가 정한 구획 제목이다(스크린리더 랜드마크 이름). 다른 이름으로 바꾸지 않는다
 - `<ol>` 사용 — 순서가 의미를 가짐
 - 현재 페이지: `aria-current="page"` + `<a>` 없이 텍스트만 (링크 아님)
 - 구분자(`›`)는 CSS `::before`로 그려서 스크린리더에 노출 안 됨 (불필요한 읽기 방지)
@@ -690,38 +720,43 @@ trigger.addEventListener('click', () => {
 #### 출처
 
 - CSS: `src/styles/6-components/breadcrumb.css`
+- 기준: KRDS 브레드크럼 https://www.krds.go.kr/html/site/component/component_03_03.html
 
 
 ---
 
-##### 푸터 (Site Footer) — infoUX {#footer}
+##### 푸터 (Site Footer) — KRDS {#footer}
 
-페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 구성 요소를 덜어 쓰는 패턴이라, 모든 요소를 채우는 것이 목표가 아니다.
+KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 항목을 덜어 쓰되, **정보 순서는 바꾸지 않는다**.
+
+#### KRDS 정보 순서
+
+**서비스 로고 → 연락처 → 유틸리티 링크 → 정책 링크 → 저작권 정보** (명확한 이유 없이 바꾸지 않는다. 좁은 화면에서도 같은 순서로 쌓는다.)
+
+- 서비스 로고·연락처·유틸리티 링크는 한 그룹(`__info`)으로 묶어 보이게 한다.
+- 서비스 내비게이션(푸터 메뉴)은 선택이다. 두면 **메인 메뉴의 최상위 링크를 모두 같은 구조·레이블로** 넣는다.
+- 운영기관 식별자는 공식 디지털 정부서비스(`publicIdentity: required`)일 때만, 푸터 안 마지막 구획에 둔다.
 
 #### 기본 마크업
 
 ```html
 <footer id="footer" class="site-footer">
   <div class="container">
+    <!-- 서비스 내비게이션(선택): 메인 메뉴 최상위 링크를 모두 같은 레이블로 -->
     <div class="site-footer__top">
-      <a class="site-footer__brand" href="/">
-        <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
-      </a>
       <nav class="site-footer__nav" aria-label="푸터 메뉴">
         <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-about">재단 소개</h2>
+          <h2 class="site-footer__heading" id="footer-group-about">기관 소개</h2>
           <ul class="site-footer__list" aria-labelledby="footer-group-about">
             <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
-            <li><a class="site-footer__link" href="/about/history">연혁</a></li>
             <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
           </ul>
         </div>
         <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-program">프로그램</h2>
-          <ul class="site-footer__list" aria-labelledby="footer-group-program">
-            <li><a class="site-footer__link" href="/program/exhibition">전시</a></li>
-            <li><a class="site-footer__link" href="/program/performance">공연</a></li>
-            <li><a class="site-footer__link" href="/program/education">교육</a></li>
+          <h2 class="site-footer__heading" id="footer-group-service">주요 사업</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-service">
+            <li><a class="site-footer__link" href="/service/support">지원 사업</a></li>
+            <li><a class="site-footer__link" href="/service/education">교육</a></li>
           </ul>
         </div>
         <div class="site-footer__group">
@@ -731,53 +766,62 @@ trigger.addEventListener('click', () => {
             <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
           </ul>
         </div>
-        <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-help">이용 안내</h2>
-          <ul class="site-footer__list" aria-labelledby="footer-group-help">
-            <li><a class="site-footer__link" href="/help/faq">자주 묻는 질문</a></li>
-            <li><a class="site-footer__link" href="/help/sitemap">사이트맵</a></li>
-          </ul>
-        </div>
       </nav>
     </div>
 
     <div class="site-footer__bottom">
+      <!-- ① 서비스 로고 ② 연락처 ③ 유틸리티 링크 — 한 그룹 -->
       <div class="site-footer__info">
-        <nav class="site-footer__legal" aria-label="약관 및 정책">
-          <ul class="site-footer__legal-list">
-            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
-            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
-            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
-          </ul>
-        </nav>
+        <a class="site-footer__brand" href="/">
+          <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
+        </a>
+        <!-- contentSources: 주소·대표전화·운영시간 — 아래는 형식 예시다 -->
         <address class="site-footer__address">
-          제주특별자치도 제주시 한라로 100<br>
-          대표전화 064-123-4567 · 이메일 contact@example.org
+          (우)00000 제주특별자치도 제주시 ○○로 00<br>
+          대표전화 064-000-0000 · 평일 09:00~18:00
         </address>
-        <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+        <ul class="site-footer__utility" aria-label="바로가기">
+          <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+          <li><a class="site-footer__link" href="/sitemap">사이트맵</a></li>
+          <li>
+            <details class="site-footer__family">
+              <summary class="site-footer__family-summary">
+                관련 기관
+                <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+              </summary>
+              <ul class="site-footer__family-list">
+                <li><a class="site-footer__family-link" href="https://www.example.go.kr/">○○시청</a></li>
+                <li><a class="site-footer__family-link" href="https://www.example.or.kr/">○○문화재단</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
       </div>
 
-      <details class="site-footer__family">
-        <summary class="site-footer__family-summary">
-          패밀리 사이트
-          <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
-        </summary>
-        <ul class="site-footer__family-list">
-          <li><a class="site-footer__family-link" href="https://example.org/museum">미술관</a></li>
-          <li><a class="site-footer__family-link" href="https://example.org/library">도서관</a></li>
+      <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+          <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
+          <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
         </ul>
-      </details>
+      </nav>
+
+      <!-- ⑤ 저작권 정보 -->
+      <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
     </div>
   </div>
 </footer>
 ```
 
+- 예시의 주소·전화·기관명은 형식 예시다(`○○`, `000-0000`). 실제 값은 Task Contract `contentSources`에서만 가져오고, 예시 값을 납품물에 복사하지 않는다(R-23).
+
 #### 시맨틱 구조
 
-- **Root 태그**: `<footer id="footer" class="site-footer">` — 페이지에 하나, `main` 바깥 (R-15 page shell)
-- **자식**: `.container` → `__top`(브랜드 + 푸터 메뉴) → `__bottom`(정책 링크·연락처·저작권·패밀리 사이트)
+- **Root 태그**: `<footer id="footer" class="site-footer">` — 페이지에 하나, `main` 바깥 (R-15 page shell). 푸터의 모든 요소는 `<footer>` 안에 둔다(KRDS).
+- **자식**: `.container` → `__top`(서비스 내비게이션, 선택) → `__bottom`(`__info`[로고·연락처·유틸리티] → `__legal` → `__biz`(선택) → `__copy`)
 - **내비게이션**: 푸터 안 `nav`가 둘 이상이면 각각 `aria-label`로 구분한다 (`푸터 메뉴`, `약관 및 정책`)
-- **연락처**: `<address>`는 이 사이트의 연락처에만 쓴다. 임의의 주소 문장에 쓰지 않는다
+- **연락처**: `<address>`는 이 사이트의 연락처에만 쓴다
 - **저작권**: `<small>` — 부가 고지임을 나타낸다
 
 > 상세: `references/html-semantics.md#site-footer`
@@ -786,46 +830,76 @@ trigger.addEventListener('click', () => {
 
 | Variant | 클래스 | 용도 |
 |---------|--------|------|
-| 기본 | `.site-footer` | 푸터 메뉴 + 하단 고지. 일반사이트·공공기관 |
-| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면 |
+| 기본 | `.site-footer` | 서비스 내비게이션 + 하단 정보. 일반사이트·공공기관 |
+| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면. 그래도 로고·연락처·정책 링크·저작권 순서는 지킨다 |
 | 반전 | `.site-footer--inverse` | 어두운 바탕. 일반사이트·커머스 표현형 한정 |
 
 ```html
-<!-- 소형: 상단 메뉴 없이 정책 링크와 저작권만 -->
+<!-- 소형: 서비스 내비게이션 없이 KRDS 정보 순서만 -->
 <footer id="footer" class="site-footer site-footer--compact">
   <div class="container">
     <div class="site-footer__bottom">
       <div class="site-footer__info">
-        <nav class="site-footer__legal" aria-label="약관 및 정책">
-          <ul class="site-footer__legal-list">
-            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
-            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
-          </ul>
-        </nav>
-        <small class="site-footer__copy">© 2026 기관명</small>
+        <a class="site-footer__brand" href="/"><img class="site-footer__logo" src="/images/logo.svg" alt="서비스명"></a>
+        <address class="site-footer__address">민원 문의 064-000-0000 · 평일 09:00~18:00</address>
       </div>
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+      <small class="site-footer__copy">© 2026 기관명</small>
     </div>
   </div>
 </footer>
 ```
 
-#### 사이트 유형별 구성
+##### 전자상거래 — 이용약관·사업자 정보
 
-| 유형 | 변형 | 구성 | 비고 |
-|------|------|------|------|
-| 일반사이트 | 기본 / 반전 | 푸터 메뉴 + 정책 링크 + 연락처 + 저작권 (+ 패밀리 사이트) | 표현형이라 브랜드 톤을 푸터에서 가장 크게 연다 |
-| 공공서비스 | 소형 | 정책 링크 + 저작권 | 과업 화면을 방해하지 않는다. 기관 식별자는 발주처 지침이 확인된 경우에만 |
-| 공공기관 | 기본 | 푸터 메뉴 + 정책 링크 + 연락처 + 저작권 + 패밀리 사이트 | 공공 푸터 필수 링크는 과업지시서·기관 정책 확인 후 추가 |
-| CMS·관리자 | 소형 | 저작권·버전 표기 정도 | utility 등급. 장식 없음 |
-| 커머스·예약 | 기본 / 반전 | 약관·환불·개인정보 링크 + 사업자 정보 | 법정 표기 항목은 발주처·법무 확인 후 채운다 |
+전자상거래가 있으면 이용약관과 사업자 정보를 반드시 표시한다(KRDS). 정책 링크 뒤, 저작권 앞에 둔다.
+
+```html
+<nav aria-label="약관 및 정책">
+  <ul class="site-footer__legal-list">
+    <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+    <li><a class="site-footer__link" href="/terms">이용약관</a></li>
+    <li><a class="site-footer__link" href="/refund">교환·환불 안내</a></li>
+  </ul>
+</nav>
+<!-- contentSources: 사업자 정보 — 아래는 비실재 형식 예시다 -->
+<dl class="site-footer__biz">
+  <div><dt>상호</dt><dd>○○면세점</dd></div>
+  <div><dt>대표자</dt><dd>○○○</dd></div>
+  <div><dt>사업자등록번호</dt><dd>000-00-00000</dd></div>
+  <div><dt>통신판매업 신고번호</dt><dd>제0000-○○○○-0000호</dd></div>
+</dl>
+```
+
+#### 표기 항목 카탈로그 (사이트 유형별)
+
+| 항목 | 공공 포털 | 공공 업무 (compact) | 일반·기업 | 커머스·예약 | CMS·관리자 |
+|------|-----------|---------------------|-----------|-------------|------------|
+| 서비스 로고 | 필수 | 필수 | 필수 | 필수 | 권장 |
+| 연락처(주소·대표/민원 전화·운영시간) | 필수 | 필수(민원 연락처) | 필수 | 필수 | 선택 |
+| 유틸리티 링크(오시는 길·사이트맵·관련 기관·SNS) | 권장 | 선택 | 권장 | 권장 | 없음 |
+| **개인정보 처리방침**(명칭 고정·강조) | **필수** | **필수** | **필수** | **필수** | **필수** |
+| 이용약관 | 서비스 이용 약관이 있으면 | 같음 | 같음 | **필수(전자상거래)** | 같음 |
+| 사업자 정보(상호·대표자·사업자등록번호·통신판매업 신고) | — | — | 법정 요구 시 | **필수(전자상거래)** | — |
+| 웹 접근성 정책·저작권 정책·공공누리·이메일무단수집거부·영상정보처리기기 운영방침 | 요구 확인 시 | 요구 확인 시 | 요구 확인 시 | 요구 확인 시 | — |
+| 인증마크(웹 접근성 품질인증 등) | 보유 시 | 보유 시 | 보유 시 | 보유 시 | — |
+| 저작권 정보 | 필수 | 필수 | 필수 | 필수 | 필수 |
+| 운영기관 식별자 | 공식 디지털 정부서비스일 때만(마지막 구획) | 같음 | 쓰지 않음 | 쓰지 않음 | 쓰지 않음 |
+
+- 「요구 확인 시」 항목의 문구·값은 발주처 정책·과업지시서로 확인한 것만 쓴다. 지어내지 않는다(R-23).
+- 인증마크 `alt`에는 이미지에 표기된 인증명·유효기간만 쓴다. 유효기간이 지난 인증마크는 내린다.
 
 #### 사용 조건
 
-- 푸터 메뉴는 사이트맵을 복제하는 곳이 아니다 — 자주 찾는 경로만 3~5개 그룹으로 추린다
-- 한 그룹의 링크는 5개 안팎으로 둔다. 길어지면 그룹을 나눈다
-- 정책 링크 중 가장 중요한 하나(개인정보처리방침 등)에만 `--important`를 준다
-- 패밀리 사이트는 **링크 클릭으로만** 이동한다. `<select>` 선택만으로 페이지가 바뀌지 않게 한다 (WCAG 3.2.2)
-- 사업자 정보·법정 고지 문구는 지어내지 않는다 — 발주처가 확인해 준 값만 쓴다 (R-23)
+- 서비스 내비게이션을 두면 메인 메뉴의 모든 최상위 링크를 같은 레이블로 넣는다(KRDS). 하위 링크를 넣으면 메인 메뉴와 같은 구조를 따른다.
+- 개인정보 처리방침은 **「개인정보 처리방침」** 명칭을 쓰고(구 명칭 「개인정보취급방침」 금지), 글자 굵기·색으로 다른 고지와 구분한다(`--important`는 이 링크에만).
+- 관련 기관(패밀리 사이트)은 **링크 클릭으로만** 이동한다. `<select>` 선택만으로 페이지가 바뀌지 않게 한다 (WCAG 3.2.2)
+- 존재하지 않는 페이지로 가는 링크, `#`·`javascript:` 링크를 두지 않는다.
+- 본문이 뷰포트보다 짧으면 푸터가 뷰포트 하단에 오게 한다(page shell의 `body` 레이아웃).
 
 #### 접근성
 
@@ -833,15 +907,14 @@ trigger.addEventListener('click', () => {
 - 푸터 `nav`가 여럿이면 `aria-label`이 서로 달라야 한다
 - 그룹 제목은 `h2` + 목록 `aria-labelledby`로 연결해 스크린리더가 그룹 이름을 읽게 한다
 - 링크 터치 영역 44×44px 이상 (R-13) — `__link`는 `min-h-[4.4rem]`를 포함한다
-- 패밀리 사이트 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
+- 관련 기관 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
 - 반전 변형: 일반 텍스트 4.5:1 이상을 유지한다 (`--color-gray-20` on `--color-bg-inverse`)
 - 외부 사이트 링크는 새 창을 열지 않는다. 새 창이 필요하면 링크 텍스트나 `aria-label`에 "새 창"을 밝힌다
-- 초점 외곽선: 칸을 꽉 채우는 링크(`__family-link`)는 `outline-offset`을 음수로 두어 안쪽에 그린다
 
 #### 출처
 
+- 기준: KRDS 푸터 https://www.krds.go.kr/html/site/component/component_02_04.html
 - 색상은 `--color-bg-subtler` · `--color-text` · `--color-text-subtle` · 반전은 `--color-bg-inverse` · `--color-text-inverse` · `--color-gray-20`
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
 - CSS: `src/styles/6-components/footer.css`
 - 아이콘: `chevron-down` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
 
@@ -850,7 +923,7 @@ trigger.addEventListener('click', () => {
 
 ##### 사이트 헤더 (Site Header) {#header}
 
-사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 주 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
+사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
 
 #### 기본 마크업
 
@@ -858,11 +931,11 @@ trigger.addEventListener('click', () => {
 <header id="header" class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <img src="/logo.svg" alt="기관명">
-      <span class="site-header__brand-name">기관명</span>
+      <img src="/logo.svg" alt=""><!-- 바로 뒤 텍스트가 이름을 전하므로 로고는 장식 -->
+      <span>기관명</span>
     </a>
 
-    <nav class="site-header__nav" aria-label="주 메뉴">
+    <nav class="site-header__nav" aria-label="메인 메뉴">
       <ul class="site-header__menu">
         <li><a href="/about">소개</a></li>
         <li><a href="/services" aria-current="page">서비스</a></li>
@@ -871,8 +944,17 @@ trigger.addEventListener('click', () => {
     </nav>
 
     <div class="site-header__actions">
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+      <a class="site-header__search-link" href="/search">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+        <span class="sr-only">통합검색</span>
+      </a>
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -882,16 +964,17 @@ trigger.addEventListener('click', () => {
 
 #### 동작
 
-- 모바일/태블릿 (< 1280px): 주 메뉴 숨김 + 햄버거 토글 노출. 토글은 [모바일 메뉴](mobile-menu.md)를 연다
-- PC (≥ 1280px): 주 메뉴 노출 + 햄버거 숨김
+- 1024px 미만(모바일·태블릿): 메인 메뉴 숨김 + 햄버거 토글 노출. 토글은 [전체메뉴](mobile-menu.md)를 연다 (KRDS: 메인 메뉴를 표시할 폭이 부족하면 햄버거)
+- 1024px 이상(KRDS large): 메인 메뉴 노출 + 햄버거 숨김. PC에는 전체메뉴 버튼을 두지 않는다(KRDS 공식 코드). 전체 구조가 필요하면 헤더 유틸리티에 「사이트맵」 페이지 링크를 둔다
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
+- 통합검색 — KRDS 검색 [필수]는 모든 화면에서 통합검색을 실행할 수 있어야 한다(공공 프로필은 R-40 오류). 1024px 이상은 헤더 안 입력창(`.site-header__search`), 미만은 검색 페이지 링크(`.site-header__search-link`, 아이콘 + sr-only 「통합검색」). 검색 결과는 별도 페이지(`pageType: search-result`)로 보낸다
 
 #### 접근성
 
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
-- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 메인 메뉴는 `<nav aria-label="메인 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
 - 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
@@ -911,14 +994,14 @@ trigger.addEventListener('click', () => {
 
 ---
 
-##### 주 메뉴 (Main Menu) — KRDS {#main-menu}
+##### 메인 메뉴 (Main Menu) — KRDS {#main-menu}
 
 드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다.
 
 #### 기본 마크업
 
 ```html
-<nav class="main-menu" aria-label="주 메뉴">
+<nav class="main-menu" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <a class="main-menu__link" href="/about">소개</a>
@@ -945,7 +1028,7 @@ trigger.addEventListener('click', () => {
 
 #### 시맨틱 구조
 
-- **Root 태그**: `<nav class="main-menu" aria-label="주 메뉴">`
+- **Root 태그**: `<nav class="main-menu" aria-label="메인 메뉴">`
 - **자식**: `ul.main-menu__list` → `li.main-menu__item` → `a.main-menu__link`(이동) 또는 `button.main-menu__toggle`(하위 패널 열기)
 - **필수 ARIA**: `nav`에 `aria-label` · 토글 버튼에 `aria-expanded` + `aria-controls` · 현재 페이지에 `aria-current="page"`
 - **쓰지 않는 것**: `role="menu"` · `role="menuitem"` · `aria-haspopup` — 링크 목록을 펼치는 것일 뿐 애플리케이션 메뉴가 아니다
@@ -964,7 +1047,7 @@ trigger.addEventListener('click', () => {
 패널이 헤더 전체 폭으로 열린다. 그룹 제목은 링크가 아니라 텍스트이고, 목록은 `aria-labelledby`로 그룹 이름을 받는다.
 
 ```html
-<nav class="main-menu main-menu--mega" aria-label="주 메뉴">
+<nav class="main-menu main-menu--mega" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <button type="button" class="main-menu__toggle" aria-expanded="false" aria-controls="mega-service">
@@ -1033,7 +1116,7 @@ trigger.addEventListener('click', () => {
 
 ##### 모바일 메뉴 (Mobile Menu) — infoUX {#mobile-menu}
 
-헤더 햄버거로 여는 전체 화면 메뉴. 1280px 미만(모바일·태블릿)에서 [주 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
+헤더 햄버거로 여는 전체 화면 메뉴(KRDS 메인 메뉴의 모바일 형태). 1024px 미만(모바일·태블릿)에서 [메인 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
 
 #### 기본 마크업
 
@@ -1046,7 +1129,7 @@ trigger.addEventListener('click', () => {
       <img src="/logo.svg" alt="기관명">
     </a>
     <div class="site-header__actions">
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -1055,13 +1138,13 @@ trigger.addEventListener('click', () => {
 
 <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
   <div class="mobile-menu__header">
-    <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
-    <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+    <p id="mobile-menu-title" class="mobile-menu__title">전체메뉴</p>
+    <button type="button" class="mobile-menu__close" aria-label="전체메뉴 닫기" data-mobile-menu-close>
       <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
     </button>
   </div>
 
-  <nav class="mobile-menu__nav" aria-label="주 메뉴">
+  <nav class="mobile-menu__nav" aria-label="메인 메뉴">
     <ul class="mobile-menu__list">
       <li class="mobile-menu__item">
         <a class="mobile-menu__link" href="/about">소개</a>
@@ -1104,20 +1187,20 @@ trigger.addEventListener('click', () => {
 - 닫기: 닫기 버튼(`data-mobile-menu-close`) 또는 `Esc` → `hidden` 복원 + `aria-expanded="false"` + **햄버거로 초점 복귀**
 - 포커스 트랩: `Tab`/`Shift+Tab`이 패널 안에서만 순환한다. 닫힌 `details` 안의 링크는 순환에서 빠진다
 - 같은 페이지 앵커(`href="#…"`)를 누르면 메뉴를 닫는다
-- 화면이 1280px 이상으로 넓어지면 열려 있던 패널을 정리한다 (주 메뉴가 대신한다)
+- 화면이 1024px 이상으로 넓어지면 열려 있던 패널을 정리한다 (메인 메뉴가 대신한다)
 
 #### 사용 조건
 
 - 하위 단계는 한 단계까지 — `details` 안에 `details`를 또 넣지 않는다. 더 깊으면 메뉴 구조를 다시 짠다
 - 패널 안에 검색·로그인 같은 유틸리티를 둘 수 있다. 이 경우에도 닫기 버튼이 항상 첫 번째 포커스 대상이다
-- 패널 타이틀은 "전체 메뉴"처럼 기능 이름을 쓴다. 기관 홍보 문구를 넣지 않는다
+- 패널 타이틀은 "전체메뉴"처럼 기능 이름을 쓴다. 기관 홍보 문구를 넣지 않는다
 - 장식 애니메이션은 쓰지 않는다. 열림은 즉시 나타나는 것이 기본이다 (필요하면 fade 150~200ms, `prefers-reduced-motion` 가드 필수 · R-22)
 
 #### 접근성
 
 - 패널 열림 중 뒤쪽 콘텐츠는 `aria-modal="true"`로 스크린리더 탐색에서 빠진다
-- 햄버거 `aria-label`은 **고정**한다 (`전체 메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
-- 닫기 버튼 `aria-label="전체 메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
+- 햄버거 `aria-label`은 **고정**한다 (`전체메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
+- 닫기 버튼 `aria-label="전체메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
 - 아이콘은 모두 장식 — `aria-hidden="true"`. 햄버거·닫기 모양의 텍스트 기호로 아이콘을 대신하지 않는다 (R-27)
 - 터치 영역: 햄버거·닫기 44×44px, 항목 56px / 하위 항목 48px (R-13)
 - 초점 외곽선: 스크롤 영역(`overflow-y: auto`) 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 `outline-offset`을 음수로 두어 안쪽에 그린다
@@ -1145,7 +1228,7 @@ trigger.addEventListener('click', () => {
   <button type="button" class="pagination__nav" aria-label="이전 페이지">‹</button>
   <ol class="pagination__list">
     <li><a class="pagination__item" href="?p=1">1</a></li>
-    <li><a class="pagination__item pagination__item--current" href="?p=2" aria-current="page">2</a></li>
+    <li><a class="pagination__item" href="?p=2" aria-current="page">2</a></li>
     <li><a class="pagination__item" href="?p=3">3</a></li>
     <li><a class="pagination__item" href="?p=4">4</a></li>
     <li><a class="pagination__item" href="?p=5">5</a></li>
@@ -1162,7 +1245,7 @@ trigger.addEventListener('click', () => {
 #### 비활성 (첫/마지막 페이지)
 
 ```html
-<button class="pagination__nav" aria-label="이전 페이지" aria-disabled="true" disabled>‹</button>
+<button type="button" class="pagination__nav" aria-label="이전 페이지" aria-disabled="true" disabled>‹</button>
 ```
 
 #### 접근성
@@ -1240,7 +1323,7 @@ trigger.addEventListener('click', () => {
 
 #### Variant
 
-- `.badge` (기본 — danger 빨강) / `.badge--primary` / `.badge--info` / `.badge--success` / `.badge--warning` / `.badge--gray`
+- `.badge` (기본 — danger 빨강) / `.badge--primary` / `.badge--info` / `.badge--success` / `.badge--warning` / `.badge--neutral` (상태 없음 — 옛 이름 `--gray`는 폐기 예정)
 - `.badge--dot` — 숫자 없는 단순 점 (8×8)
 
 #### 접근성
@@ -1255,91 +1338,123 @@ trigger.addEventListener('click', () => {
 
 ---
 
-##### 공지 띠 (Notice Bar) — infoUX {#notice-bar}
+##### 긴급 공지 (Notice Bar) — KRDS {#notice-bar}
 
-페이지 최상단에서 사이트 방문자 모두에게 한 번 알리는 공지. 점검·휴무·운영 변경처럼 **기간이 있는 안내**에 쓴다.
+KRDS 긴급 공지(Critical alerts) — 지금 대부분의 사용자가 알아야 하는 **한시적 사실 하나**를 본문 맨 위에 띠로 알린다. 블록 이름은 `notice-bar`다.
 
 #### 기본 마크업
 
-페이지 shell에서 **건너뛰기 링크(`.skip-to-content`) 다음, `header#header` 앞**에 둔다.
-
 ```html
-<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+<section class="notice-bar notice-bar--danger" aria-label="사이트 공지">
   <div class="container notice-bar__inner">
-    <span class="notice-bar__label">점검</span>
+    <svg class="notice-bar__icon icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#error"></use></svg>
+    <span class="notice-bar__label">긴급</span>
     <p class="notice-bar__message">
-      <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다</a>
+      <a class="notice-bar__link" href="/notice/typhoon-closure">태풍으로 10월 12일 전 시설을 임시 휴관합니다</a>
     </p>
-    <button type="button" class="notice-bar__close" aria-label="공지 닫기">
-      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
-    </button>
   </div>
 </section>
 ```
 
+- 예시 문구·날짜는 형식 예시다. 실제 값은 `contentSources`에서 가져온다(R-23).
+- 링크는 **하나까지**다. 자세한 안내 페이지가 없으면 `<a>` 없이 문장만 쓴다.
+
+#### 배치 — 본문의 첫 요소
+
+KRDS는 긴급 공지를 메인 메뉴와 히어로 사이, **본문 콘텐츠의 첫 요소**로 화면 폭 전체에 둔다. infoUX page shell에서는 `main#main`의 첫 `section`이다. 건너뛰기 링크로 본문에 들어온 사용자도 가장 먼저 읽는다.
+
+```html
+<a href="#main" class="skip-to-content">본문 바로가기</a>
+
+<header id="header" class="site-header">
+  <div class="container">
+    <!-- 로고, 메인 메뉴 -->
+  </div>
+</header>
+
+<main id="main">
+  <!-- 긴급 공지: main의 첫 section (메인 메뉴 다음, 히어로 앞) -->
+  <section class="notice-bar notice-bar--warning" aria-label="사이트 공지">
+    <div class="container notice-bar__inner">
+      <svg class="notice-bar__icon icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#warning"></use></svg>
+      <span class="notice-bar__label">예고</span>
+      <p class="notice-bar__message">
+        <a class="notice-bar__link" href="/notice/maintenance">10월 12일 0~6시 점검으로 온라인 신청 중단</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="hero-bleed" aria-labelledby="intro-title">
+    <div class="container hero-bleed__content">
+      <h1 class="hero-bleed__title" id="intro-title">항구도시 문화재단</h1>
+    </div>
+  </section>
+</main>
+
+<footer id="footer" class="site-footer">
+  <div class="container">
+    <!-- 로고, 연락처, 저작권 -->
+  </div>
+</footer>
+```
+
+- `header#header` 앞이나 건너뛰기 링크 앞에 두지 않는다 — 본문 밖에 놓이면 건너뛰기 링크가 공지를 건너뛴다.
+- root가 `section` + `.container` 직계 자식 + `aria-label`이라 main의 section 규칙(R-15)을 그대로 만족한다.
+
+#### Variant — 긴급도 (KRDS 상·중·하)
+
+| 긴급도 | 상황 | 클래스 | 라벨 | 아이콘 |
+|--------|------|--------|------|--------|
+| 상 | 국가 재난·비상 상황, 갑작스러운 서비스 장애 | `.notice-bar--danger` | 긴급 | `error` |
+| 중 | 서비스 중단 사전 예고 | `.notice-bar--warning` | 예고 | `warning` |
+| 하 | 대부분의 사용자가 알아야 하지만 큰 영향은 없는 상황 | (클래스 없음 — 기본) | 안내 | `info` |
+
+긴급도는 색만으로 전하지 않는다 — 라벨 텍스트가 같은 뜻을 전한다(WCAG 1.4.1). 아이콘은 장식이라 `aria-hidden="true"`다.
+
 #### 시맨틱 구조
 
 - **Root 태그**: `<section class="notice-bar" aria-label="사이트 공지">` — 이름 있는 영역(region)이 되어 스크린리더 랜드마크 탐색에 잡힌다
-- **자식**: `.container` → `__label`(분류 텍스트) · `__message`(문장 + 링크) · `__close`(닫기 버튼)
-- **필수 ARIA**: `aria-label` (영역 이름) · 닫기 버튼 `aria-label="공지 닫기"`
-- **라이브 영역을 쓰지 않는다**: `role="alert"` · `aria-live`는 붙이지 않는다. 페이지 로드 때 이미 있는 정적 안내이고, 낭독을 강제하면 매 페이지마다 방해가 된다
+- **자식**: `.container.notice-bar__inner` → `svg.notice-bar__icon`(장식) · `span.notice-bar__label`(긴급도) · `p.notice-bar__message`(짧은 문장, 링크 0~1개)
+- **필수 ARIA**: `aria-label` (영역 이름)
+- **라이브 영역을 쓰지 않는다**: `role="alert"` · `aria-live`는 붙이지 않는다. 페이지를 열 때 이미 있는 정적 안내이고, 낭독을 강제하면 매 페이지마다 방해가 된다
 
 > 상세: `references/html-semantics.md#notice-bar`
 
-#### Variant
+#### 사용 조건 (KRDS)
 
-| Variant | 클래스 | 용도 | 라벨 예 |
-|---------|--------|------|---------|
-| 정보 | `.notice-bar--info` | 일반 안내 (기본) | 공지 |
-| 주의 | `.notice-bar--warning` | 점검·휴무·일정 변경 | 점검 |
-| 긴급 | `.notice-bar--danger` | 서비스 중단·장애·재난 | 긴급 |
-
-톤은 색만으로 전하지 않는다 — 라벨 텍스트가 같은 뜻을 전한다 (WCAG 1.4.1).
-
-#### 동작 (JS)
-
-`src/js/notice-bar.js`
-
-- 닫기 버튼 → 띠에 `hidden` 부여. `data-notice-id`가 있으면 `localStorage`에 닫은 기록을 남긴다
-- 다음 방문에는 같은 `data-notice-id`의 띠를 로드 때 숨긴다. **공지 내용이 바뀌면 `data-notice-id`도 바꾼다** — 그래야 새 공지가 다시 보인다
-- 닫은 뒤 초점은 헤더의 첫 링크·버튼으로 옮긴다 (사라진 버튼에 초점이 남지 않게)
-- 저장소를 못 쓰는 환경(시크릿 모드·차단)에서도 닫기 자체는 동작한다. 다음 방문에 다시 보일 뿐이다
-
-#### 사용 조건
-
-- **한 번에 하나만** 둔다. 여러 공지가 있으면 가장 중요한 하나를 띄우고 나머지는 공지사항 목록으로 안내한다
-- **자동으로 넘어가거나 굴러가는 형태(롤링·마키)로 만들지 않는다.** 5초 넘게 움직이는 콘텐츠는 멈출 수 있어야 하고(WCAG 2.2.2), 읽기 어려운 사용자를 만든다
-- 장문의 본문을 띠에 넣지 않는다. 한 줄 요약 + 상세 페이지 링크로 둔다
-- 만료일이 지난 공지는 내린다. 기간 없는 상시 안내(약관 변경 등)에 쓰지 않는다
+- **닫기·숨기기·접기 버튼을 두지 않는다.** 상황이 유효한 동안 모두가 봐야 하는 공지다. 상황이 끝나면 운영자가 내린다 — 그래서 JS가 없다
+- **한 번에 하나만** 둔다. 긴급 공지 여러 개를 동시에 띄우지 않는다. 더 알릴 것은 공지사항 목록으로 안내한다
+- 문장은 **한 줄**로 쓴다. 좁은 화면에서도 두 줄을 넘지 않게 짧게 쓰고, 자세한 내용은 링크한 안내 페이지에 둔다
+- 상황이 유효한 동안만 둔다. 끝나면 바로 내린다 — 기간 없는 상시 안내(약관 변경 등)에 쓰지 않는다
+- 홍보·이벤트·일반 공지에 쓰지 않는다(→ 공지사항 목록·배너). 폼 입력 결과·오류 안내에 쓰지 않는다(→ `alert`·입력 필드 메시지)
+- 자동으로 넘어가거나 굴러가는 형태(롤링·마키)로 만들지 않는다. 5초 넘게 움직이는 콘텐츠는 멈출 수 있어야 한다(WCAG 2.2.2)
 - 쿠키·개인정보 동의 배너와 다르다 — 동의 요청은 이 컴포넌트로 만들지 않는다
 - 사이트 유형: 공공서비스·공공기관·일반사이트·커머스에서 쓴다. CMS·관리자는 시스템 공지를 `alert`로 화면 안에 둔다
 
 ##### 다른 알림 컴포넌트와의 구분
 
-| | 공지 띠 | Alert | Toast |
+| | 긴급 공지 | Alert | Toast |
 |---|---------|-------|-------|
-| 위치 | 페이지 최상단 | 해당 콘텐츠 영역 안 | 화면 모서리 |
-| 성격 | 사이트 전체 안내 (정적) | 이 화면의 상태 메시지 | 방금 한 동작의 결과 |
-| 사라짐 | 사용자가 닫음 | 상태가 바뀔 때 | 몇 초 뒤 자동 |
+| 위치 | 본문 첫 요소(main 첫 section) | 해당 콘텐츠 영역 안 | 화면 모서리 |
+| 성격 | 지금 대부분이 알아야 할 한시적 사실 (정적) | 이 화면의 상태 메시지 | 방금 한 동작의 결과 |
+| 사라짐 | 운영자가 내릴 때까지 (닫기 없음) | 상태가 바뀔 때 | 몇 초 뒤 자동 |
 | 라이브 영역 | 쓰지 않음 | `role="alert"`/`status` | `role="status"`/`alert` |
 
 #### 접근성
 
-- 영역 이름 `aria-label="사이트 공지"` — 페이지에 비슷한 영역이 더 있으면 서로 다른 이름으로 구분한다
+- 영역 이름 `aria-label="사이트 공지"` — 한 번에 하나만 두므로 이름이 겹치지 않는다
 - 링크는 밑줄로 구분한다. 색 차이만으로 링크임을 전하지 않는다
-- 닫기 버튼은 아이콘만 있으므로 `aria-label` 필수. 아이콘은 `aria-hidden="true"`
-- 터치 영역: 닫기 버튼 44×44px, 링크 `min-h-[4.4rem]` (R-13)
+- 터치 영역: 링크 `min-h-[4.4rem]` (R-13)
 - 대비: 본문 텍스트 `--color-text`, 라벨은 `--color-text-inverse` on `--color-information-60`/`--color-warning-60`/`--color-danger-60` (4.5:1 이상)
-- 닫은 뒤 초점이 문서 처음으로 날아가지 않도록 헤더로 옮긴다 (WCAG 2.4.3)
-- 동적으로 삽입하는 긴급 안내(장애 발생 직후 등)는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
+- 페이지를 보는 중에 새로 생긴 긴급 안내(장애 발생 직후 등)를 동적으로 알릴 때는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
 
 #### 출처
 
-- 색상은 `--color-info-surface` · `--color-information-20` · `--color-information-60` (톤별 warning/danger 동일 구조)
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
-- CSS: `src/styles/6-components/notice-bar.css`
-- JS: `src/js/notice-bar.js`
-- 아이콘: `close` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
+- 기준: KRDS 긴급 공지 https://www.krds.go.kr/html/site/component/component_04_02.html
+- 색상은 `--color-info-surface` · `--color-information-20` · `--color-information-60` (긴급도별 warning/danger 동일 구조)
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
+- CSS: `src/styles/6-components/notice-bar.css` (JS 없음)
+- 아이콘: `info` · `warning` · `error` 스프라이트 — `/assets/icons/sprite.svg` (아이콘 카탈로그, R-27)
 
 
 ---
@@ -1418,7 +1533,7 @@ native `<progress>` + 시각 커스텀.
     <span class="step-indicator__num" aria-hidden="true">1</span>
     <span class="step-indicator__label">정보 입력</span>
   </li>
-  <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+  <li class="step-indicator__item" aria-current="step">
     <span class="step-indicator__num" aria-hidden="true">2</span>
     <span class="step-indicator__label">확인</span>
   </li>
@@ -1432,7 +1547,7 @@ native `<progress>` + 시각 커스텀.
 #### 상태 클래스
 
 - `.step-indicator__item--done` — 완료 (primary 채움)
-- `.step-indicator__item--current` — 현재 (primary 테두리)
+- 현재: `aria-current="step"` (primary 테두리) — `.step-indicator__item--current`는 이미 납품한 마크업을 위한 별칭
 - (없음) — 예정 (회색)
 
 #### 접근성
@@ -1557,7 +1672,7 @@ native `<progress>` + 시각 커스텀.
   도움말
 </button>
 <div id="tip-1" class="tooltip" role="tooltip" hidden>
-  도움말 설명 텍스트
+  영문, 숫자, 특수문자를 섞어 9자 이상으로 정합니다.
 </div>
 ```
 
@@ -1568,7 +1683,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 ```html
 <span class="tooltip-wrap">
   <button type="button" aria-label="도움말">?</button>
-  <span class="tooltip" role="tooltip">설명 텍스트</span>
+  <span class="tooltip" role="tooltip">생년월일 6자리를 입력합니다.</span>
 </span>
 ```
 
@@ -1625,7 +1740,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
           <button type="button" class="calendar__day" aria-label="2026년 4월 1일">1</button>
         </td>
         <td role="gridcell">
-          <button type="button" class="calendar__day calendar__day--today" aria-label="2026년 4월 2일 (오늘)">2</button>
+          <button type="button" class="calendar__day" aria-current="date" aria-label="2026년 4월 2일 (오늘)">2</button>
         </td>
         <td role="gridcell">
           <button type="button" class="calendar__day calendar__day--selected" aria-selected="true" aria-label="2026년 4월 3일 (선택됨)">3</button>
@@ -1638,7 +1753,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 
 #### 상태 클래스
 
-- `.calendar__day--today` — 오늘 (primary 테두리)
+- 오늘: `aria-current="date"` (primary 테두리) — `.calendar__day--today`는 이미 납품한 마크업을 위한 별칭
 - `.calendar__day--selected` 또는 `aria-selected="true"` — 선택됨 (primary 채움)
 - `.calendar__day--other-month` — 다른 달 날짜 (희미)
 - `:disabled` — 선택 불가
@@ -1660,47 +1775,144 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 
 ##### 캐러셀 (Carousel) — KRDS {#carousel}
 
-스크롤 스냅 기반 슬라이드 컨테이너.
+KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작은 `src/js/carousel.js`가 맡는다.
+메인 비주얼, 본문 안 팝업존처럼 여러 항목을 한 자리에서 번갈아 보여 줄 때 쓴다.
 
-#### 기본 마크업
+#### 사용 조건
+
+- 슬라이드는 **5개 이내**다. 6건 이상이면 캐러셀 대신 목록([list](list.md))과 전체 목록 페이지 링크를 쓴다.
+- 중요한 정보를 캐러셀에만 두지 않는다. 같은 정보에 닿는 다른 경로(공지 목록 등)를 함께 둔다.
+- 슬라이드 문구는 **HTML 텍스트**다(제목·기간·대상 1~2줄). 글자가 들어간 이미지를 슬라이드로 쓰지 않는다. 발주처가 이미지 배너만 주면 문구를 HTML로 다시 쓰고, 글자 없는 배경 이미지를 요청한다(R-23·WCAG 1.4.5).
+- 자동 회전은 지정할 때만 켠다(`data-carousel-autoplay="밀리초"`). 기본은 끈다.
+- 슬라이드가 1개면 컨트롤을 숨긴다(JS가 처리).
+
+#### 자동 회전 마크업
+
+정지/재생 버튼이 **첫 상호작용 요소**다. 컨트롤 막대는 슬라이드 위에 둬서 문서 순서·초점 순서·보이는 순서를 같게 한다.
 
 ```html
-<div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">
-  <div class="carousel__viewport">
-    <ol class="carousel__track">
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="1 / 3">
-        <img src="/img1.jpg" alt="설명">
-      </li>
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="2 / 3">
-        <img src="/img2.jpg" alt="설명">
-      </li>
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="3 / 3">
-        <img src="/img3.jpg" alt="설명">
-      </li>
-    </ol>
+<div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel data-carousel-autoplay="6000">
+  <div class="carousel__controls">
+    <button type="button" class="carousel__toggle" data-carousel-toggle>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#pause"></use></svg>
+      <span class="sr-only">자동 넘김 정지</span>
+    </button>
+    <button type="button" class="carousel__nav" data-carousel-prev>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-left"></use></svg>
+      <span class="sr-only">이전 슬라이드</span>
+    </button>
+    <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>3</span></p>
+    <div class="carousel__dots" role="group" aria-label="슬라이드 선택">
+      <button type="button" class="carousel__dot" data-carousel-goto="0" aria-current="true"><span class="sr-only">1번 슬라이드</span></button>
+      <button type="button" class="carousel__dot" data-carousel-goto="1"><span class="sr-only">2번 슬라이드</span></button>
+      <button type="button" class="carousel__dot" data-carousel-goto="2"><span class="sr-only">3번 슬라이드</span></button>
+    </div>
+    <button type="button" class="carousel__nav" data-carousel-next>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+      <span class="sr-only">다음 슬라이드</span>
+    </button>
   </div>
 
-  <button type="button" class="carousel__nav carousel__nav--prev" aria-label="이전 슬라이드">‹</button>
-  <button type="button" class="carousel__nav carousel__nav--next" aria-label="다음 슬라이드">›</button>
-
-  <div class="carousel__indicators" role="tablist">
-    <button type="button" class="carousel__dot" role="tab" aria-selected="true" aria-label="1번 슬라이드"></button>
-    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="2번 슬라이드"></button>
-    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="3번 슬라이드"></button>
+  <div class="carousel__viewport">
+    <div class="carousel__track" aria-live="off">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+        <a class="carousel__link" href="/notice/view/1024">
+          <img class="carousel__image" src="/images/main/notice-01.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">2026년 하반기 청년 창업 지원 사업 공모</span>
+            <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
+          </span>
+        </a>
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+        <a class="carousel__link" href="/notice/view/1031">
+          <img class="carousel__image" src="/images/main/notice-02.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">겨울철 도로 결빙 구간 안내</span>
+            <span class="carousel__meta">2026.12.01부터 적용</span>
+          </span>
+        </a>
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+        <a class="carousel__link" href="/notice/view/1040">
+          <img class="carousel__image" src="/images/main/notice-03.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">민원 처리 시스템 점검으로 일시 중단</span>
+            <span class="carousel__meta">2026.11.15 02:00 ~ 06:00</span>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 ```
 
-#### 접근성 (WCAG 2.2 + KRDS)
+- 이미지는 문구를 HTML로 옮겼으므로 장식이다(`alt=""`). 이미지 자체에 문구 밖 정보가 있으면 alt로 쓴다.
+- 예시의 문구·주소·날짜는 형식 예시다. 실제 값은 Task Contract의 `contentSources`에서 가져온다(R-23).
 
-- 자동 재생은 **기본 OFF** 권장 — 사용자 통제권 (WCAG 2.2.2)
-- 자동 재생 시: 일시정지 버튼 필수 + `prefers-reduced-motion: reduce` 시 자동 비활성
-- 인디케이터는 키보드 작동 가능
-- 슬라이드별 `aria-label="N / 총수"`로 위치 안내
+#### 수동 넘김 마크업
+
+자동 회전이 없으면 정지/재생 버튼을 두지 않는다. 나머지 구조는 같다.
+
+```html
+<div class="carousel" role="region" aria-roledescription="carousel" aria-label="추천 여행지" data-carousel>
+  <div class="carousel__controls">
+    <button type="button" class="carousel__nav" data-carousel-prev>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-left"></use></svg>
+      <span class="sr-only">이전 슬라이드</span>
+    </button>
+    <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>2</span></p>
+    <button type="button" class="carousel__nav" data-carousel-next>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+      <span class="sr-only">다음 슬라이드</span>
+    </button>
+  </div>
+  <div class="carousel__viewport">
+    <div class="carousel__track" aria-live="polite">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 2">…</div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 2">…</div>
+    </div>
+  </div>
+</div>
+<script src="/js/carousel.js" defer></script>
+```
+
+#### 동작 (src/js/carousel.js)
+
+| 상황 | 동작 | 근거 |
+|------|------|------|
+| 키보드 초점이 캐러셀에 들어옴 | 자동 회전 정지. 사용자가 재생 버튼을 누르기 전에는 다시 시작하지 않는다 | KRDS · WCAG 2.2.2 |
+| 마우스를 올림 | 멈춘다. 내리면 이어 간다(사용자가 정지하지 않았을 때만) | KRDS |
+| 탭이 숨겨짐 | 멈춘다 | — |
+| `prefers-reduced-motion: reduce` | 자동 회전을 시작하지 않는다 | R-22 |
+| 현재 슬라이드 밖 | `inert` + `aria-hidden="true"` — 초점·보조기기에서 뺀다 | KRDS |
+| 자동 회전 중 / 정지 | 트랙 `aria-live`를 `off` / `polite`로 바꾼다 | APG |
+| 식별자(점) 그룹에서 ←→ | 이전/다음 슬라이드를 고른다 | KRDS |
+| 스와이프·드래그 | 스크롤 스냅으로 넘기고 현재 위치를 다시 맞춘다 | KRDS |
+
+#### 접근성 · KRDS 요건
+
+- 루트: `role="region"` + `aria-roledescription="carousel"` + `aria-label`(무엇의 캐러셀인지).
+- 슬라이드: `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"`.
+- 트랙·슬라이드는 `div`다(APG carousel). 슬라이드에 `group` 역할을 주므로 `ul`/`li`로 두면 목록 항목이 사라져 목록 구조가 깨진다.
+- 위치 식별자: 1023px 미만은 분수형(`.carousel__counter`), 1024px 이상은 도형형 버튼(`.carousel__dots`, 현재는 `aria-current="true"`). 현재 점은 색과 길이로 구분한다.
+- 모든 컨트롤은 44×44px 이상이다(R-13). 아이콘만 있는 버튼은 `sr-only` 텍스트로 이름을 준다.
+- 컨트롤과 식별자가 슬라이드 내용을 가리지 않는다.
+
+#### 금지
+
+- 6개 이상 슬라이드, 「전체 보기」 모달로 많은 슬라이드를 몰아 보여 주기
+- 정지 버튼이 없거나, 이전·다음보다 뒤에 있는 자동 회전
+- 글자가 든 배너 이미지 슬라이드
+- 트랙을 `ul`, 슬라이드를 `li[role="group"]`으로 쓰기 — 목록 안에 목록 항목이 없게 된다
+- 초점이 빠진 뒤 저절로 다시 도는 자동 회전
 
 #### 출처
 
 - CSS: `src/styles/6-components/carousel.css`
+- JS: `src/js/carousel.js`
+- 미리보기: `src/playground/carousel.html`
+- 기준: KRDS 캐러셀 https://www.krds.go.kr/html/site/component/component_04_09.html
 
 
 ---
@@ -1741,7 +1953,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
         </ul>
       </nav>
 
-      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-000-0000(평일 09:00~18:00)로 알려 주세요.</p>
     </div>
   </div>
 </section>
@@ -1808,7 +2020,7 @@ HTML만으로 끝나지 않는다. 아래는 구현팀과 함께 확인한다.
 #### 출처
 
 - 색상은 `--color-primary` · `--color-primary-pressed` · `--color-text` · `--color-text-subtle` · `--color-border-light`
-- 간격·타이포는 프로젝트 밀도에 맞는 CSS/Tailwind 직접값 사용
+- 간격·타이포는 프로젝트 밀도에 맞는 CSS 값·Tailwind rem 임의값 사용
 - CSS: `src/styles/6-components/error-page.css`
 - 문안 기준: `site/design/microcopy.md` (에러 메시지 3-Part 공식)
 - 수위 기준: `references/art-direction.md` §1 (페이지 단위 강등)
@@ -1999,9 +2211,9 @@ KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
 #### 기본 마크업
 
 ```html
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-labelledby="apply-status-caption">
   <table class="table">
-    <caption class="table__caption">2026년 1분기 신청 현황</caption>
+    <caption class="table__caption" id="apply-status-caption">2026년 1분기 신청 현황</caption>
     <thead>
       <tr>
         <th scope="col">번호</th>
@@ -2050,7 +2262,8 @@ KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
 - `<caption>`으로 표 제목 명시
 - 정렬 헤더는 `aria-sort="ascending|descending|none"`
 - 선택 행은 `aria-selected="true"`
-- 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기
+- 모바일 가로 스크롤은 `.table-wrap` 래퍼로 감싼다. 래퍼에는 `tabindex="0"` + `role="region"` + `aria-labelledby`(caption의 `id`)를 함께 둔다 — 마우스·터치 없이도 키보드 화살표로 가로 스크롤할 수 있고, 스크린리더는 표 제목으로 영역을 안내한다(KWCAG 6.1.1)
+- caption `id`는 페이지 안에서 겹치지 않게 짓는다. 한 페이지에 표가 여럿이면 표 제목(=영역 이름)도 서로 다르게 쓴다. 초점 링은 전역 `:focus-visible` 스타일이 그린다
 
 #### 출처
 

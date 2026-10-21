@@ -16,6 +16,10 @@
 #   - contracts/             → starter/contracts/
 #   - assets/icons/          → starter/assets/icons/ (스프라이트·폰트·CSS·낱개 SVG)
 #   - scripts/check-icons.js → starter/scripts/ (+ build-icon-sheet.js, lib/svg-*.js)
+#   - scripts/hooks/         → starter/scripts/hooks/ (편집 직후 검사 훅 — HX-06)
+#   - scripts/lib/page-scope.js → starter/scripts/lib/ (납품 페이지 범위 — HX-06)
+#   - scripts/lib/{visual-signature,html-tree,copy-rules}.js → starter/scripts/lib/ (시각 서명·카피 검사)
+#   - .claude/settings.json, .codex/hooks.json → starter/ (루트와 같은 훅 — check-harness가 정합을 본다)
 #   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
 #   - .stylelintrc.json       → starter/
@@ -25,6 +29,8 @@
 # starter/README.md는 starter 전용으로 별도 관리.
 
 set -e
+# 파이프의 앞 명령이 실패해도 잡는다 — 'npm run check | tail'이 검사 실패를 삼키면 깨진 스타터가 푸시된다
+set -o pipefail
 
 PUSH_REMOTE=false
 if [ "${1:-}" = "--push" ]; then
@@ -86,6 +92,12 @@ for f in "$GUIDE_DIR/assets/icons/"infoux-icons*.woff2; do
   [ -f "$f" ] && cp "$f" "$STARTER_DIR/assets/icons/"
 done
 
+# 4.6. 서체 — fonts.css(@font-face)·woff2·LICENSE를 폴더째 옮긴다. fonts.css가 상대 경로로 가리킨다.
+echo "[4.6/8] assets/fonts 동기화..."
+rm -rf "$STARTER_DIR/assets/fonts"
+mkdir -p "$STARTER_DIR/assets"
+cp -r "$GUIDE_DIR/assets/fonts" "$STARTER_DIR/assets/fonts"
+
 # 5. scripts + contracts
 echo "[5/8] scripts 동기화..."
 mkdir -p "$STARTER_DIR/scripts/lib"
@@ -102,6 +114,26 @@ cp "$GUIDE_DIR/scripts/check-icons.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/build-icon-sheet.js" "$STARTER_DIR/scripts/"
 cp "$GUIDE_DIR/scripts/lib/svg-path.js" "$STARTER_DIR/scripts/lib/"
 cp "$GUIDE_DIR/scripts/lib/svg-geometry.js" "$STARTER_DIR/scripts/lib/"
+# 납품 페이지 범위와 편집 훅 — 스타터의 index.html·pages/도 검사가 닿고, 실패를 숨기지 않는다(HX-06)
+cp "$GUIDE_DIR/scripts/lib/page-scope.js" "$STARTER_DIR/scripts/lib/"
+# 시각 서명 검사(R-01 색·R-34 장식 효과·R-36 이모지·R-37 기본 스케일)
+cp "$GUIDE_DIR/scripts/lib/visual-signature.js" "$STARTER_DIR/scripts/lib/"
+# 카피 검사(R-23 가짜·자리 콘텐츠·R-43 카피 톤) — 판정 자료는 contracts/fake-content.json·copy-lexicon.json(아래 contracts 복사)
+cp "$GUIDE_DIR/scripts/lib/html-tree.js" "$STARTER_DIR/scripts/lib/"
+cp "$GUIDE_DIR/scripts/lib/copy-rules.js" "$STARTER_DIR/scripts/lib/"
+# 한국형 페이지 골격(R-32 푸터·R-40 공공 통합검색·R-41 서브 골격) — check-html-structure.js가 쓴다
+cp "$GUIDE_DIR/scripts/lib/page-rules.js" "$STARTER_DIR/scripts/lib/"
+# 글자 크기 하한(R-31 루트 글자 크기·R-38 최소 글자) — check-violations.js가 쓴다
+cp "$GUIDE_DIR/scripts/lib/type-floor.js" "$STARTER_DIR/scripts/lib/"
+# 모양·움직임(R-35 반경·그림자·R-33 마키) — check-violations.js가 쓴다
+cp "$GUIDE_DIR/scripts/lib/shape-motion.js" "$STARTER_DIR/scripts/lib/"
+# 모바일 우선(R-48) — check-violations.js가 쓴다
+cp "$GUIDE_DIR/scripts/lib/layout-rules.js" "$STARTER_DIR/scripts/lib/"
+rm -rf "$STARTER_DIR/scripts/hooks"
+cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
+mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"
+cp "$GUIDE_DIR/.claude/settings.json" "$STARTER_DIR/.claude/settings.json"
+cp "$GUIDE_DIR/.codex/hooks.json" "$STARTER_DIR/.codex/hooks.json"
 mkdir -p "$STARTER_DIR/contracts"
 cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
 

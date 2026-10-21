@@ -10,7 +10,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>페이지 제목</title>
+  <title>공지사항 | 사이트명</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
   <link rel="stylesheet" href="../../dist/css/style.css">
 </head>
 <body>
@@ -25,7 +28,7 @@
   <main id="main">
     <section class="section section--content" aria-labelledby="section-title">
       <div class="container">
-        <h1 id="section-title">페이지 제목</h1>
+        <h1 id="section-title">공지사항</h1>
         <!-- 페이지 콘텐츠 -->
       </div>
     </section>
@@ -33,7 +36,12 @@
 
   <footer id="footer" class="site-footer">
     <div class="container">
-      <!-- 로고, 연락처, 저작권, 주요 링크 -->
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
     </div>
   </footer>
 </body>
@@ -81,7 +89,7 @@
 
 | 유형 | 추가 검토 요소 |
 |------|----------------|
-| 일반사이트 | 브랜드 로고, 주요 링크, 연락처, 개인정보처리방침 등 자체 운영 정보 |
+| 일반사이트 | 브랜드 로고, 주요 링크, 연락처, 개인정보 처리방침 등 자체 운영 정보 |
 | 공공서비스 | 민원/신청/조회/정책/참여 흐름, 서비스 안내, 로그인/인증, 공공 푸터 필수 링크 검토 |
 | 공공기관 | 기관 CI/BI, 기관 소개, 공지, 정보공개, 운영기관 정보. 공식 배너와 정부 상징은 요구 확인 후 |
 | CMS·관리자 | 서비스명, 사용자 메뉴, 로그아웃, 업무 내비게이션. 정부 아이덴티티 요소 제외 |

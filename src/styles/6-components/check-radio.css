@@ -26,7 +26,7 @@
 
   /* 체크 표시 — SVG 배경 */
   .check__box::after {
-    @apply content-[''] absolute inset-0 opacity-0 [background:url("data:image/svg+xml;utf8,<svg_xmlns='http://www.w3.org/2000/svg'_width='24'_height='24'_viewBox='0_0_24_24'_fill='none'><path_d='M5_12.5L10_17L19_7.5'_stroke='white'_stroke-width='2.5'_stroke-linecap='round'_stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:opacity_0.15s_ease-in-out];
+    @apply content-[''] absolute inset-0 opacity-0 [background:url("data:image/svg+xml;utf8,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'><path%20d='M5%2012.5L10%2017L19%207.5'%20stroke='white'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'/></svg>")_no-repeat_center_/_contain] [transition:opacity_0.15s_ease-in-out];
   }
 
   .check input:checked ~ .check__box {

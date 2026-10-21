@@ -58,12 +58,14 @@
     @apply bg-[var(--color-primary)];
   }
 
-  /* 현재 단계 */
-  .step-indicator__item--current {
+  /* 현재 단계 — aria-current="step"으로 그린다(R-17). --current는 이미 납품한 마크업을 위한 별칭 */
+  .step-indicator__item--current,
+  .step-indicator__item[aria-current="step"] {
     @apply text-[var(--color-primary)];
   }
 
-  .step-indicator__item--current .step-indicator__num {
+  .step-indicator__item--current .step-indicator__num,
+  .step-indicator__item[aria-current="step"] .step-indicator__num {
     @apply border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-surface-primary-subtler)];
   }
 }

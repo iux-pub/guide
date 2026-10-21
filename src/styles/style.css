@@ -24,6 +24,7 @@
 
 /* ─── 5-objects — 레이아웃 패턴 ─── */
 @import "./5-objects/container.css";
+@import "./5-objects/section.css";
 @import "./5-objects/section-media.css";
 @import "./5-objects/hero-bleed.css";
 

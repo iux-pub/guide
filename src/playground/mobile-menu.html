@@ -75,18 +75,18 @@
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">모바일 메뉴 (Mobile Menu)</h1>
 
     <div class="pg__section">
       <h2 class="pg__subtitle">전체 화면 메뉴</h2>
-      <p class="pg__note">1280px 미만에서 햄버거가 보입니다(브라우저 창을 좁혀서 확인). 열면 초점이 닫기 버튼으로 가고, Tab은 패널 안에서만 순환하며, Esc로 닫으면 햄버거로 돌아옵니다.</p>
+      <p class="pg__note">1024px 미만에서 햄버거가 보입니다(브라우저 창을 좁혀서 확인). 열면 초점이 닫기 버튼으로 가고, Tab은 패널 안에서만 순환하며, Esc로 닫으면 햄버거로 돌아옵니다.</p>
       <div class="pg__preview pg__preview--flush">
         <header id="header" class="site-header">
           <div class="container site-header__inner">
-            <a class="site-header__brand" href="#">기관명</a>
+            <a class="site-header__brand" href="/">기관명</a>
             <div class="site-header__actions">
-              <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+              <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
                 <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#menu"></use></svg>
               </button>
             </div>
@@ -95,16 +95,16 @@
 
         <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
           <div class="mobile-menu__header">
-            <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
-            <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+            <p id="mobile-menu-title" class="mobile-menu__title">전체메뉴</p>
+            <button type="button" class="mobile-menu__close" aria-label="전체메뉴 닫기" data-mobile-menu-close>
               <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#close"></use></svg>
             </button>
           </div>
 
-          <nav class="mobile-menu__nav" aria-label="주 메뉴">
+          <nav class="mobile-menu__nav" aria-label="메인 메뉴">
             <ul class="mobile-menu__list">
               <li class="mobile-menu__item">
-                <a class="mobile-menu__link" href="#">소개</a>
+                <a class="mobile-menu__link" href="/about">소개</a>
               </li>
               <li class="mobile-menu__item">
                 <details class="mobile-menu__group">
@@ -113,9 +113,9 @@
                     <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
                   </summary>
                   <ul class="mobile-menu__sublist">
-                    <li><a class="mobile-menu__sublink" href="#">신청</a></li>
-                    <li><a class="mobile-menu__sublink" href="#" aria-current="page">조회</a></li>
-                    <li><a class="mobile-menu__sublink" href="#">이용 안내</a></li>
+                    <li><a class="mobile-menu__sublink" href="/apply">신청</a></li>
+                    <li><a class="mobile-menu__sublink" href="/lookup" aria-current="page">조회</a></li>
+                    <li><a class="mobile-menu__sublink" href="/guide">이용 안내</a></li>
                   </ul>
                 </details>
               </li>
@@ -126,24 +126,24 @@
                     <svg class="mobile-menu__icon icon icon--xsmall" aria-hidden="true"><use href="../../assets/icons/sprite.svg#chevron-down"></use></svg>
                   </summary>
                   <ul class="mobile-menu__sublist">
-                    <li><a class="mobile-menu__sublink" href="#">공지사항</a></li>
-                    <li><a class="mobile-menu__sublink" href="#">보도자료</a></li>
+                    <li><a class="mobile-menu__sublink" href="/notice">공지사항</a></li>
+                    <li><a class="mobile-menu__sublink" href="/press">보도자료</a></li>
                   </ul>
                 </details>
               </li>
               <li class="mobile-menu__item">
-                <a class="mobile-menu__link" href="#">문의</a>
+                <a class="mobile-menu__link" href="/contact">문의</a>
               </li>
             </ul>
           </nav>
         </div>
       </div>
-      <div class="pg__code" role="region" aria-label="마크업 코드" tabindex="0">
+      <div class="pg__code" role="region" aria-label="전체 화면 메뉴 마크업 코드" tabindex="0">
 <pre><code>&lt;header id="header" class="site-header"&gt;
   &lt;div class="container site-header__inner"&gt;
     &lt;a class="site-header__brand" href="/"&gt;기관명&lt;/a&gt;
     &lt;div class="site-header__actions"&gt;
-      &lt;button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu"&gt;
+      &lt;button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu"&gt;
         &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#menu"&gt;&lt;/use&gt;&lt;/svg&gt;
       &lt;/button&gt;
     &lt;/div&gt;
@@ -152,13 +152,13 @@
 
 &lt;div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden&gt;
   &lt;div class="mobile-menu__header"&gt;
-    &lt;p id="mobile-menu-title" class="mobile-menu__title"&gt;전체 메뉴&lt;/p&gt;
-    &lt;button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close&gt;
+    &lt;p id="mobile-menu-title" class="mobile-menu__title"&gt;전체메뉴&lt;/p&gt;
+    &lt;button type="button" class="mobile-menu__close" aria-label="전체메뉴 닫기" data-mobile-menu-close&gt;
       &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="/assets/icons/sprite.svg#close"&gt;&lt;/use&gt;&lt;/svg&gt;
     &lt;/button&gt;
   &lt;/div&gt;
 
-  &lt;nav class="mobile-menu__nav" aria-label="주 메뉴"&gt;
+  &lt;nav class="mobile-menu__nav" aria-label="메인 메뉴"&gt;
     &lt;ul class="mobile-menu__list"&gt;
       &lt;li class="mobile-menu__item"&gt;
         &lt;a class="mobile-menu__link" href="/about"&gt;소개&lt;/a&gt;
@@ -197,7 +197,7 @@
       </div>
     </div>
 
-  </div>
+  </main>
   <script src="../js/mobile-menu.js"></script>
 </body>
 </html>

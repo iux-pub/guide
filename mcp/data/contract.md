@@ -26,11 +26,32 @@
 | 규칙 | 항목 | 금지 사유 |
 |------|------|----------|
 | **R-01** | 색상 raw hex/rgb/hsl 직접 작성 (`#fff`, `rgb(0,0,0)`) | KRDS 토큰만 허용 |
-| **R-01** | Tailwind 기본 팔레트 raw 컬러 유틸리티 | 색상 토큰 또는 프로젝트 색상 유틸만 |
+| **R-01** | Tailwind 기본 팔레트·흑백 유틸(`bg-gray-50`, `text-white`), 임의값·style 속성·var 폴백 안의 raw 색 | 색은 어디에 쓰든 `var(--color-*)` — 그림자의 KRDS 검정 알파 3값만 한시 허용 |
+| **R-34** | 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·4px 이상 블러·컬러 글로우 그림자 | AI 슬롭 서명(AP-3·AP-4), KRDS에 없는 효과. 스크림과 검정 알파 그림자만 |
+| **R-36** | 이모지를 아이콘·불릿·배지·제목 장식으로 사용 | 토큰·고대비를 따르지 못한다 — 아이콘은 카탈로그(R-27) |
+| **R-37** | Tailwind 기본 타입·행간·간격·컨테이너 스케일(`text-sm`, `leading-6`, `p-4`, `max-w-md`) | 62.5% 루트에서 37.5% 작게 렌더된다 — rem 임의값(`p-[1.6rem]`) |
+| **R-23** | 가짜·자리 콘텐츠 — 채움 문구, placeholder 핫링크, '자주 묻는 질문 1·2' 연번 레이블, '새 프로젝트'·'페이지 제목' 같은 자리값 제목, 064-000-0000·○○·example 도메인 같은 비실재 표기를 납품 페이지에 남김 | 검수 신뢰가 깨진다 — 실제 문안은 `contentSources`에서 |
+| **R-30** | 실제 목적지 없는 링크(빈 값·`#`·`#none`·`javascript:`) | 이동은 실제 주소의 a, 동작은 button |
+| **R-31** | 루트 글자 크기를 62.5% 밖으로 바꿈(축소·vw) | 사용자 글자 크기 설정·rem 단계 붕괴(경고) |
+| **R-33** | 정지 버튼 없는 자동 전환·자동 재생, 무한 롤링 마키 | KRDS 캐러셀·WCAG 2.2.2 |
+| **R-35** | 1.2rem 넘는 반경, 지정 블록 밖 알약(pill) 반경 | KRDS Shape(최대 12px) |
+| **R-42** | 히어로 여러 개·중간 히어로, 화면 높이 히어로, 스크롤 유도 화살표 | 공공·업무 hero는 화면 1/2 이하(AP-7) |
+| **R-38** | 1.3rem 미만 글자, body 1.6rem·설명 요소 1.5rem 미만 | KRDS 최소 13px·본문 16px |
+| **R-39** | main 안 h1 여러 개, 제목 단계 건너뛰기 | 제목 구조(WCAG 1.3.1) |
+| **R-32** | 푸터에 '개인정보 처리방침' 링크가 없거나 주소가 비었음, 옛 명칭(개인정보취급방침) | KRDS 필수 명칭·공개 의무 |
+| **R-40** | 공공 화면 헤더에 통합검색 진입이 없음 | KRDS 검색 [필수] — 모든 화면에서 통합검색 |
+| **R-41** | 브레드크럼·사이드 메뉴를 본문 바로가기 목적지 안에 둠, main 첫 제목이 h1이 아님 | KRDS component_03_01 · 페이지 제목 h1 |
+| **R-44** | 근거 없는 최상급, 공공 화면 홍보 어조·해요체, 경어 혼용(경고) | 합쇼체 사실 서술 |
+| **R-45** | 영문 전용 UI 레이블(VIEW MORE), lang 없는 언어 링크, 선택만으로 이동하는 select | KRDS 국문 레이블·WCAG 3.1.2·3.2.2 |
+| **R-49** | 공공·관리자 섹션 여백이 밀도 기준의 1.5배 초과(경고) | 정보 밀도(profiles.json density) |
+| **R-46** | publicIdentity 미확정 상태에서 공식 배너·운영기관 식별자·정부 상징 생성 | 공식 정부서비스 사칭 방지 |
+| **R-47** | 개인정보 동의에 목적·항목·보유 기간·거부권 고지 없음, 동의 미리 체크, 주민등록번호 수집 | 개인정보 보호법 |
+| **R-48** | 모바일에서 360px 넘는 고정 폭, 모바일 기본 열 없는 다열 그리드 | 모바일 우선(KRDS 반응형) |
+| **R-43** | 번역투·2인칭 마케팅 카피('당신', '~을 경험하세요', '지금 바로'), '~하세요'로 끝나는 버튼, 공공 화면의 느낌표 | 합쇼체 사실 서술 — 버튼은 KRDS 동사형('신청하기') |
 | **R-02** | `!important` (정당한 사유 주석 없을 시) | 토큰 시스템 우회 위험 |
 | **R-03** | SCSS 사용 (`*.scss`, `@use`, `@forward`, `$var`) | Tailwind v4 + CSS Custom Properties만 허용 |
 | **R-04** | BEM 미준수 클래스명 — `.block__element--modifier` 형식 외 | 일관성 |
-| **R-05** | BEM element 2단계 중첩 (`.card__body__title`) | 평탄화 — `.card__title` 또는 `.card__body-title` |
+| **R-05** | BEM element 2단계 중첩 (`.card__body__title`) | 평탄화 — `.card__title` |
 | **R-06** | 옛 variant 이름 사용 (`btn--ghost`, `btn--outline`, `btn--link`) | KRDS 4 variant만: `--primary` / `--secondary` / `--tertiary` / `--text` |
 | **R-07** | 인라인 `style="..."` (CSS 변수 주입 외) | 토큰 추적 불가 |
 | **R-08** | HTML 클래스 BEM 2단계 element 중첩 | R-05 HTML 적용 |
@@ -42,8 +63,9 @@
 | **R-14** | 페이지에 `.skip-to-content` 건너뛰기 링크 누락 | WCAG 2.4.1 — `<body>` 진입 직후 필수 |
 | **R-15** | 기존 인포마인드 HTML 기본 골격을 무시한 임의 구조 | 유지보수 패턴 단절 |
 | **R-16** | 인터랙티브 컴포넌트(modal/tab/accordion/tooltip/disclosure/carousel/calendar) 필수 ARIA 누락 | 스크린리더 접근 불가 |
-| **R-17** | 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open` 등) | BEM modifier + ARIA로만 표현 |
-| **R-18** | 시각적 단어 modifier (`--blue`, `--red`, `--big`, `--rounded`, `--shadow` 등) | 의미 기반 modifier만 |
+| **R-17** | 비-BEM 상태 클래스 (`.is-active`, `.has-error`, `.is-open` 등) | 상태는 ARIA·hidden 속성을 먼저 쓴다. ARIA로 표현할 수 없을 때만 BEM modifier |
+| **R-18** | 허용 어휘 밖·시각적 단어 modifier (`--blue`, `--red`, `--big`, `--rounded`, `--shadow` 등) | `contracts/class-naming.json` 허용 어휘에서만 고른다 (`references/class-naming.md`) |
+| **R-29** | CSS에 없는 BEM 클래스 (`.card--featured`, `.card__media` 등 지어낸 변형·부품) | 카탈로그 블록의 클래스는 CSS에 정의된 것만 쓴다 |
 | — | 폼 요소 `<label>` 누락 (placeholder만 사용) | WCAG 3.3.2 |
 
 **모호한 케이스는 사용자에게 질문한다.** 자체 판단으로 우회하지 않는다.
@@ -56,17 +78,17 @@
 |------|------|
 | 사이트 유형 판정 | 코드 생성 전 `references/project-profiles.md` 기준으로 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 먼저 판정 |
 | 색상 | `var(--color-*)` 시맨틱 토큰만 사용 |
-| 간격/크기 | CSS/Tailwind 직접값. CMS·관리자 화면은 정보 밀도에 맞게 조정 |
+| 간격/크기 | CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`). 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `gap-2`, `max-w-md`)은 37.5% 작게 렌더돼 쓰지 않는다(R-37). CMS·관리자 화면은 정보 밀도에 맞게 조정 |
 | 폰트 | `var(--font-sans)`, `var(--font-mono)` — 직접 폰트 패밀리 작성 금지 |
-| 폰트 사이즈 | 프로젝트 타입 계층 우선. 토큰화하지 않음 |
+| 폰트 사이즈 | 프로젝트 타입 계층 우선. 토큰화하지 않음. `text-[1.7rem]`처럼 rem 임의값으로 쓰고 `text-sm` 등 기본 크기는 쓰지 않는다(R-37) |
 | CSS 작성 | 표준 CSS nesting 허용. Tailwind v4 `@apply`, `@theme`, `@utility` 사용 가능 |
 | 반응형 작성 | 단순 속성 변경은 `@apply tablet:*` / `@apply pc:*` 우선. 복잡한 중첩 선택자만 관련 선택자 내부 `@media` 사용 |
 | line-height | 한국어 가독성을 위해 1.4~1.6 권장. `line-height: 1` 금지 |
-| 반경/그림자 | CSS/Tailwind 직접값 |
-| z-index | CSS/Tailwind 직접값. 레이어 의미가 보이도록 주석 또는 클래스명으로 관리 |
-| 모션 | CSS/Tailwind 직접값. 접근성 `prefers-reduced-motion` 고려 |
+| 반경/그림자 | CSS 직접값 또는 rem 임의값(`rounded-[0.8rem]`). 그림자는 KRDS 3단계 검정 알파(`#0000000d`·`#00000014`·`#0000001f`) 조합만 — 색 있는 글로우 금지(R-34) |
+| z-index | CSS 값 또는 Tailwind 임의값(`z-[1050]`). 레이어 의미가 보이도록 주석 또는 클래스명으로 관리 |
+| 모션 | CSS 값 또는 Tailwind 임의값(`duration-[200ms]`). 접근성 `prefers-reduced-motion` 고려 |
 | 터치 영역 | 44px 이상 — 모바일 인터랙티브 요소 강제 |
-| 브레이크포인트 | 360 / 768 / 1280 (3단계, INFOUX 표준) |
+| 브레이크포인트 | 360 / 768 / 1024 / 1280 (4단계, KRDS 표준형 small·medium·large·xlarge) — 글자 크기 전환 768, 메인 메뉴↔전체메뉴·서브 LNB 2단 1024 |
 | 컨테이너 max-width | 1200px (KRDS contents-size) |
 | BEM | `.block__element--modifier` (소문자, 하이픈) — 5-objects · 6-components 레이어에만 |
 | ITCSS | 5-layer 순서: 3-generic → 4-elements → 5-objects → 6-components → 7-utilities (`tokens/`는 외부 소스) |
@@ -79,8 +101,8 @@
 | Section 구조 | 각 `section`은 `.container`를 직접 포함하고 heading 또는 `aria-labelledby`/`aria-label`로 접근 가능한 이름 제공 |
 | 컴포넌트 root 태그 | `references/html-semantics.md`는 참고 기준. 기존 패턴 위에 시맨틱/ARIA 보강 |
 | 인터랙티브 위젯 ARIA | WAI-ARIA 1.2 APG 패턴 + KRDS 보강 — modal `aria-modal`+`aria-labelledby`, tab `role`+`aria-selected`+`aria-controls`, accordion `aria-expanded`+`aria-controls` 등 |
-| 상태 표현 | BEM modifier (시각) + ARIA 속성 (의미) 동시 사용 — `.tab__item--selected` + `aria-selected="true"` |
-| modifier 어휘 | KRDS 정의만: variant(`--primary/--secondary/--tertiary/--text`), 사이즈(`--xsmall..--xlarge`), 상태(`--selected/--disabled/--expanded/--loading/--error/--success/--current/--done/--todo`), 톤(`--info/--success/--warning/--danger/--inverse`), 레이아웃(`--horizontal/--vertical/--block/--inline`), section archetype(`--intro/--content/--list/--form/--data/--search/--process/--notice`) |
+| 상태 표현 | ARIA·hidden 속성 먼저 — CSS가 `[aria-selected="true"]`·`[aria-current="page"]`·`[hidden]`으로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier(`.step-indicator__item--done`) (R-17) |
+| modifier 어휘 | `contracts/class-naming.json` 허용 어휘에서만 고른다 — 크기 `--xsmall..--xlarge`, 위계 `--primary/--secondary/--tertiary/--text`, 상태색 `--info/--success/--warning/--danger/--neutral` 등. 카탈로그 블록의 변형은 CSS에 정의된 것만 쓴다(R-18·R-29). section 목적 modifier(`--intro/--content/--list/--form/--data/--search/--process/--notice`)는 `html-page-contract.json`. 결정 순서는 `references/class-naming.md` |
 
 ---
 

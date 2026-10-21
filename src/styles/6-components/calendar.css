@@ -75,8 +75,9 @@
     @apply bg-[var(--color-bg-subtler)];
   }
 
-  /* 오늘 */
-  .calendar__day--today {
+  /* 오늘 — aria-current="date"로 그린다(R-17). --today는 이미 납품한 마크업을 위한 별칭 */
+  .calendar__day--today,
+  .calendar__day[aria-current="date"] {
     @apply border-[var(--color-primary)] text-[var(--color-primary)] font-bold;
   }
 

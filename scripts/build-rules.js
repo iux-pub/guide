@@ -162,7 +162,7 @@ function buildConventionPage(cat) {
     lines.push(`## ${r.id} — ${r.summary}`)
     lines.push('')
 
-    const severityMap = { error: '🔴 error', warning: '🟡 warning', info: '🔵 info' }
+    const severityMap = { error: '`error`', warning: '`warning`', info: '`info`' }
     const enforcementStr = (r.enforcement || []).join(' · ')
     lines.push(`**심각도:** ${severityMap[r.severity] || r.severity} &nbsp; **검증:** ${enforcementStr}`)
     lines.push('')
@@ -173,14 +173,14 @@ function buildConventionPage(cat) {
     }
 
     if (r.bad && r.bad.length > 0) {
-      lines.push('**❌ 금지**')
+      lines.push('**금지 예시**')
       lines.push('')
       lines.push(codeBlock(r.bad, ruleLang))
       lines.push('')
     }
 
     if (r.good && r.good.length > 0) {
-      lines.push('**✅ 올바른 형식**')
+      lines.push('**올바른 형식**')
       lines.push('')
       lines.push(codeBlock(r.good, ruleLang))
       lines.push('')

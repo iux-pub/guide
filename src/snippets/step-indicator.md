@@ -10,7 +10,7 @@
     <span class="step-indicator__num" aria-hidden="true">1</span>
     <span class="step-indicator__label">정보 입력</span>
   </li>
-  <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+  <li class="step-indicator__item" aria-current="step">
     <span class="step-indicator__num" aria-hidden="true">2</span>
     <span class="step-indicator__label">확인</span>
   </li>
@@ -24,7 +24,7 @@
 ## 상태 클래스
 
 - `.step-indicator__item--done` — 완료 (primary 채움)
-- `.step-indicator__item--current` — 현재 (primary 테두리)
+- 현재: `aria-current="step"` (primary 테두리) — `.step-indicator__item--current`는 이미 납품한 마크업을 위한 별칭
 - (없음) — 예정 (회색)
 
 ## 접근성

@@ -40,21 +40,21 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ```html
 <div class="accordion">
   <details class="accordion__item">
-    <summary class="accordion__summary">자주 묻는 질문 1</summary>
+    <summary class="accordion__summary">민원 처리 기간은 얼마나 걸리나요?</summary>
     <div class="accordion__panel">
-      <p>답변 1 내용</p>
+      <p>민원 종류마다 다릅니다. 신청 화면의 처리 기간 항목에서 확인할 수 있습니다.</p>
     </div>
   </details>
   <details class="accordion__item">
-    <summary class="accordion__summary">자주 묻는 질문 2</summary>
+    <summary class="accordion__summary">신청한 뒤에 내용을 고칠 수 있나요?</summary>
     <div class="accordion__panel">
-      <p>답변 2 내용</p>
+      <p>처리 상태가 접수 대기일 때만 고칠 수 있습니다. 나의 민원에서 해당 신청을 열어 고칩니다.</p>
     </div>
   </details>
   <details class="accordion__item" open>
-    <summary class="accordion__summary">기본 열린 항목</summary>
+    <summary class="accordion__summary">첨부 파일은 몇 개까지 올릴 수 있나요?</summary>
     <div class="accordion__panel">
-      <p><code>open</code> 속성으로 초기 열림 상태</p>
+      <p>파일은 5개까지, 하나에 10MB까지 올릴 수 있습니다.</p>
     </div>
   </details>
 </div>
@@ -128,7 +128,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 기본 마크업
 
 ```html
-<nav class="breadcrumb" aria-label="페이지 경로">
+<nav class="breadcrumb" aria-label="브레드크럼">
   <ol class="breadcrumb__list">
     <li class="breadcrumb__item"><a href="/">홈</a></li>
     <li class="breadcrumb__item"><a href="/services">서비스</a></li>
@@ -139,7 +139,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ### 접근성
 
-- `<nav aria-label="페이지 경로">` 필수 (스크린리더용 식별자)
+- `<nav aria-label="브레드크럼">` 필수 — KRDS가 정한 구획 제목이다(스크린리더 랜드마크 이름). 다른 이름으로 바꾸지 않는다
 - `<ol>` 사용 — 순서가 의미를 가짐
 - 현재 페이지: `aria-current="page"` + `<a>` 없이 텍스트만 (링크 아님)
 - 구분자(`›`)는 CSS `::before`로 그려서 스크린리더에 노출 안 됨 (불필요한 읽기 방지)
@@ -206,7 +206,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
           <button type="button" class="calendar__day" aria-label="2026년 4월 1일">1</button>
         </td>
         <td role="gridcell">
-          <button type="button" class="calendar__day calendar__day--today" aria-label="2026년 4월 2일 (오늘)">2</button>
+          <button type="button" class="calendar__day" aria-current="date" aria-label="2026년 4월 2일 (오늘)">2</button>
         </td>
         <td role="gridcell">
           <button type="button" class="calendar__day calendar__day--selected" aria-selected="true" aria-label="2026년 4월 3일 (선택됨)">3</button>
@@ -234,10 +234,10 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ```html
 <article class="card">
   <header class="card__header">
-    <h3 class="card__title">카드 제목</h3>
+    <h3 class="card__title">도서관 휴관일 안내</h3>
   </header>
   <div class="card__body">
-    <p>카드 본문 내용</p>
+    <p>매주 월요일과 법정 공휴일에는 휴관합니다. 휴관일에도 무인 반납함은 이용할 수 있습니다.</p>
   </div>
   <footer class="card__footer">
     <button type="button" class="btn btn--text btn--small">자세히</button>
@@ -258,38 +258,70 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 기본 마크업
 
 ```html
-<div class="carousel" aria-roledescription="carousel" aria-label="추천 항목">
-  <div class="carousel__viewport">
-    <ol class="carousel__track">
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="1 / 3">
-        <img src="/img1.jpg" alt="설명">
-      </li>
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="2 / 3">
-        <img src="/img2.jpg" alt="설명">
-      </li>
-      <li class="carousel__slide" aria-roledescription="slide" aria-label="3 / 3">
-        <img src="/img3.jpg" alt="설명">
-      </li>
-    </ol>
+<div class="carousel" role="region" aria-roledescription="carousel" aria-label="알림" data-carousel data-carousel-autoplay="6000">
+  <div class="carousel__controls">
+    <button type="button" class="carousel__toggle" data-carousel-toggle>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#pause"></use></svg>
+      <span class="sr-only">자동 넘김 정지</span>
+    </button>
+    <button type="button" class="carousel__nav" data-carousel-prev>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-left"></use></svg>
+      <span class="sr-only">이전 슬라이드</span>
+    </button>
+    <p class="carousel__counter" aria-hidden="true"><span data-carousel-current>1</span> / <span data-carousel-total>3</span></p>
+    <div class="carousel__dots" role="group" aria-label="슬라이드 선택">
+      <button type="button" class="carousel__dot" data-carousel-goto="0" aria-current="true"><span class="sr-only">1번 슬라이드</span></button>
+      <button type="button" class="carousel__dot" data-carousel-goto="1"><span class="sr-only">2번 슬라이드</span></button>
+      <button type="button" class="carousel__dot" data-carousel-goto="2"><span class="sr-only">3번 슬라이드</span></button>
+    </div>
+    <button type="button" class="carousel__nav" data-carousel-next>
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+      <span class="sr-only">다음 슬라이드</span>
+    </button>
   </div>
 
-  <button type="button" class="carousel__nav carousel__nav--prev" aria-label="이전 슬라이드">‹</button>
-  <button type="button" class="carousel__nav carousel__nav--next" aria-label="다음 슬라이드">›</button>
-
-  <div class="carousel__indicators" role="tablist">
-    <button type="button" class="carousel__dot" role="tab" aria-selected="true" aria-label="1번 슬라이드"></button>
-    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="2번 슬라이드"></button>
-    <button type="button" class="carousel__dot" role="tab" aria-selected="false" aria-label="3번 슬라이드"></button>
+  <div class="carousel__viewport">
+    <div class="carousel__track" aria-live="off">
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="1 / 3">
+        <a class="carousel__link" href="/notice/view/1024">
+          <img class="carousel__image" src="/images/main/notice-01.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">2026년 하반기 청년 창업 지원 사업 공모</span>
+            <span class="carousel__meta">접수 2026.11.03 ~ 11.21</span>
+          </span>
+        </a>
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="2 / 3">
+        <a class="carousel__link" href="/notice/view/1031">
+          <img class="carousel__image" src="/images/main/notice-02.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">겨울철 도로 결빙 구간 안내</span>
+            <span class="carousel__meta">2026.12.01부터 적용</span>
+          </span>
+        </a>
+      </div>
+      <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="3 / 3">
+        <a class="carousel__link" href="/notice/view/1040">
+          <img class="carousel__image" src="/images/main/notice-03.jpg" alt="">
+          <span class="carousel__body">
+            <span class="carousel__title">민원 처리 시스템 점검으로 일시 중단</span>
+            <span class="carousel__meta">2026.11.15 02:00 ~ 06:00</span>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 ```
 
 ### 접근성
 
-- 자동 재생은 **기본 OFF** 권장 — 사용자 통제권 (WCAG 2.2.2)
-- 자동 재생 시: 일시정지 버튼 필수 + `prefers-reduced-motion: reduce` 시 자동 비활성
-- 인디케이터는 키보드 작동 가능
-- 슬라이드별 `aria-label="N / 총수"`로 위치 안내
+- 루트: `role="region"` + `aria-roledescription="carousel"` + `aria-label`(무엇의 캐러셀인지).
+- 슬라이드: `role="group"` + `aria-roledescription="slide"` + `aria-label="N / 총수"`.
+- 트랙·슬라이드는 `div`다(APG carousel). 슬라이드에 `group` 역할을 주므로 `ul`/`li`로 두면 목록 항목이 사라져 목록 구조가 깨진다.
+- 위치 식별자: 1023px 미만은 분수형(`.carousel__counter`), 1024px 이상은 도형형 버튼(`.carousel__dots`, 현재는 `aria-current="true"`). 현재 점은 색과 길이로 구분한다.
+- 모든 컨트롤은 44×44px 이상이다(R-13). 아이콘만 있는 버튼은 `sr-only` 텍스트로 이름을 준다.
+- 컨트롤과 식별자가 슬라이드 내용을 가리지 않는다.
 
 ---
 
@@ -366,7 +398,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
         </ul>
       </nav>
 
-      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-123-4567(평일 09:00~18:00)로 알려 주세요.</p>
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-000-0000(평일 09:00~18:00)로 알려 주세요.</p>
     </div>
   </div>
 </section>
@@ -405,32 +437,28 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 14. 푸터 (Site Footer) — infoUX
+## 14. 푸터 (Site Footer) — KRDS
 
 ### 기본 마크업
 
 ```html
 <footer id="footer" class="site-footer">
   <div class="container">
+    <!-- 서비스 내비게이션(선택): 메인 메뉴 최상위 링크를 모두 같은 레이블로 -->
     <div class="site-footer__top">
-      <a class="site-footer__brand" href="/">
-        <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
-      </a>
       <nav class="site-footer__nav" aria-label="푸터 메뉴">
         <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-about">재단 소개</h2>
+          <h2 class="site-footer__heading" id="footer-group-about">기관 소개</h2>
           <ul class="site-footer__list" aria-labelledby="footer-group-about">
             <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
-            <li><a class="site-footer__link" href="/about/history">연혁</a></li>
             <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
           </ul>
         </div>
         <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-program">프로그램</h2>
-          <ul class="site-footer__list" aria-labelledby="footer-group-program">
-            <li><a class="site-footer__link" href="/program/exhibition">전시</a></li>
-            <li><a class="site-footer__link" href="/program/performance">공연</a></li>
-            <li><a class="site-footer__link" href="/program/education">교육</a></li>
+          <h2 class="site-footer__heading" id="footer-group-service">주요 사업</h2>
+          <ul class="site-footer__list" aria-labelledby="footer-group-service">
+            <li><a class="site-footer__link" href="/service/support">지원 사업</a></li>
+            <li><a class="site-footer__link" href="/service/education">교육</a></li>
           </ul>
         </div>
         <div class="site-footer__group">
@@ -440,42 +468,49 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
             <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
           </ul>
         </div>
-        <div class="site-footer__group">
-          <h2 class="site-footer__heading" id="footer-group-help">이용 안내</h2>
-          <ul class="site-footer__list" aria-labelledby="footer-group-help">
-            <li><a class="site-footer__link" href="/help/faq">자주 묻는 질문</a></li>
-            <li><a class="site-footer__link" href="/help/sitemap">사이트맵</a></li>
-          </ul>
-        </div>
       </nav>
     </div>
 
     <div class="site-footer__bottom">
+      <!-- ① 서비스 로고 ② 연락처 ③ 유틸리티 링크 — 한 그룹 -->
       <div class="site-footer__info">
-        <nav class="site-footer__legal" aria-label="약관 및 정책">
-          <ul class="site-footer__legal-list">
-            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보처리방침</a></li>
-            <li><a class="site-footer__link" href="/terms">이용약관</a></li>
-            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
-          </ul>
-        </nav>
+        <a class="site-footer__brand" href="/">
+          <img class="site-footer__logo" src="/images/logo.svg" alt="기관명">
+        </a>
+        <!-- contentSources: 주소·대표전화·운영시간 — 아래는 형식 예시다 -->
         <address class="site-footer__address">
-          제주특별자치도 제주시 한라로 100<br>
-          대표전화 064-123-4567 · 이메일 contact@example.org
+          (우)00000 제주특별자치도 제주시 ○○로 00<br>
+          대표전화 064-000-0000 · 평일 09:00~18:00
         </address>
-        <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
+        <ul class="site-footer__utility" aria-label="바로가기">
+          <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+          <li><a class="site-footer__link" href="/sitemap">사이트맵</a></li>
+          <li>
+            <details class="site-footer__family">
+              <summary class="site-footer__family-summary">
+                관련 기관
+                <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
+              </summary>
+              <ul class="site-footer__family-list">
+                <li><a class="site-footer__family-link" href="https://www.example.go.kr/">○○시청</a></li>
+                <li><a class="site-footer__family-link" href="https://www.example.or.kr/">○○문화재단</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
       </div>
 
-      <details class="site-footer__family">
-        <summary class="site-footer__family-summary">
-          패밀리 사이트
-          <svg class="site-footer__family-icon icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"></use></svg>
-        </summary>
-        <ul class="site-footer__family-list">
-          <li><a class="site-footer__family-link" href="https://example.org/museum">미술관</a></li>
-          <li><a class="site-footer__family-link" href="https://example.org/library">도서관</a></li>
+      <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+          <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
+          <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
         </ul>
-      </details>
+      </nav>
+
+      <!-- ⑤ 저작권 정보 -->
+      <small class="site-footer__copy">© 2026 기관명. All rights reserved.</small>
     </div>
   </div>
 </footer>
@@ -485,8 +520,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 | Variant | 클래스 | 용도 |
 |---------|--------|------|
-| 기본 | `.site-footer` | 푸터 메뉴 + 하단 고지. 일반사이트·공공기관 |
-| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면 |
+| 기본 | `.site-footer` | 서비스 내비게이션 + 하단 정보. 일반사이트·공공기관 |
+| 소형 | `.site-footer--compact` | `__top` 없이 `__bottom`만. 공공서비스·관리자 화면. 그래도 로고·연락처·정책 링크·저작권 순서는 지킨다 |
 | 반전 | `.site-footer--inverse` | 어두운 바탕. 일반사이트·커머스 표현형 한정 |
 
 ### 접근성
@@ -495,10 +530,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 푸터 `nav`가 여럿이면 `aria-label`이 서로 달라야 한다
 - 그룹 제목은 `h2` + 목록 `aria-labelledby`로 연결해 스크린리더가 그룹 이름을 읽게 한다
 - 링크 터치 영역 44×44px 이상 (R-13) — `__link`는 `min-h-[4.4rem]`를 포함한다
-- 패밀리 사이트 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
+- 관련 기관 `details`는 키보드 `Enter`/`Space`로 열고 닫는다. JS가 필요 없다
 - 반전 변형: 일반 텍스트 4.5:1 이상을 유지한다 (`--color-gray-20` on `--color-bg-inverse`)
 - 외부 사이트 링크는 새 창을 열지 않는다. 새 창이 필요하면 링크 텍스트나 `aria-label`에 "새 창"을 밝힌다
-- 초점 외곽선: 칸을 꽉 채우는 링크(`__family-link`)는 `outline-offset`을 음수로 두어 안쪽에 그린다
 
 ---
 
@@ -511,9 +545,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   <label for="name" class="form-field__label">
     이름<span class="form-field__required" aria-label="필수">*</span>
   </label>
-  <p class="form-field__hint">사업자등록증에 기재된 대표자명</p>
-  <input type="text" id="name" class="input" placeholder="홍길동" required>
-  <p class="form-field__message">최대 20자까지 입력 가능합니다</p>
+  <p id="name-hint" class="form-field__hint">사업자등록증에 기재된 대표자명</p>
+  <input type="text" id="name" class="input" placeholder="홍길동" required aria-describedby="name-hint name-message">
+  <p id="name-message" class="form-field__message">최대 20자까지 입력 가능합니다</p>
 </div>
 ```
 
@@ -535,11 +569,11 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 <header id="header" class="site-header">
   <div class="container site-header__inner">
     <a class="site-header__brand" href="/">
-      <img src="/logo.svg" alt="기관명">
-      <span class="site-header__brand-name">기관명</span>
+      <img src="/logo.svg" alt=""><!-- 바로 뒤 텍스트가 이름을 전하므로 로고는 장식 -->
+      <span>기관명</span>
     </a>
 
-    <nav class="site-header__nav" aria-label="주 메뉴">
+    <nav class="site-header__nav" aria-label="메인 메뉴">
       <ul class="site-header__menu">
         <li><a href="/about">소개</a></li>
         <li><a href="/services" aria-current="page">서비스</a></li>
@@ -548,8 +582,17 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
     </nav>
 
     <div class="site-header__actions">
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+      <a class="site-header__search-link" href="/search">
+        <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>
+        <span class="sr-only">통합검색</span>
+      </a>
       <button type="button" class="btn btn--text btn--small">로그인</button>
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -560,9 +603,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 접근성
 
 - `<header id="header">` 시맨틱 태그 사용 (페이지당 하나)
-- 주 메뉴는 `<nav aria-label="주 메뉴">` (페이지에 nav가 여러 개면 label 필수)
+- 메인 메뉴는 `<nav aria-label="메인 메뉴">` (페이지에 nav가 여러 개면 label 필수)
 - 현재 페이지 메뉴: `aria-current="page"`
-- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체 메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
+- 모바일 토글: `aria-label`은 상태와 무관하게 고정(`전체메뉴`)하고, 열림 여부는 `aria-expanded`가 전한다. `aria-controls`로 [모바일 메뉴](mobile-menu.md) 패널 id를 연결한다
 - 토글 아이콘은 아이콘 카탈로그(`menu` 스프라이트)를 쓴다 — 햄버거 모양의 텍스트 기호를 아이콘 대신 쓰지 않는다 (R-27)
 - 로고 `<img>` `alt` 텍스트 필수 (KRDS R-09)
 
@@ -653,12 +696,12 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 20. 주 메뉴 (Main Menu) — KRDS
+## 20. 메인 메뉴 (Main Menu) — KRDS
 
 ### 기본 마크업
 
 ```html
-<nav class="main-menu" aria-label="주 메뉴">
+<nav class="main-menu" aria-label="메인 메뉴">
   <ul class="main-menu__list">
     <li class="main-menu__item">
       <a class="main-menu__link" href="/about">소개</a>
@@ -714,7 +757,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
       <img src="/logo.svg" alt="기관명">
     </a>
     <div class="site-header__actions">
-      <button type="button" class="site-header__toggle" aria-label="전체 메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+      <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
         <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#menu"></use></svg>
       </button>
     </div>
@@ -723,13 +766,13 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" hidden>
   <div class="mobile-menu__header">
-    <p id="mobile-menu-title" class="mobile-menu__title">전체 메뉴</p>
-    <button type="button" class="mobile-menu__close" aria-label="전체 메뉴 닫기" data-mobile-menu-close>
+    <p id="mobile-menu-title" class="mobile-menu__title">전체메뉴</p>
+    <button type="button" class="mobile-menu__close" aria-label="전체메뉴 닫기" data-mobile-menu-close>
       <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
     </button>
   </div>
 
-  <nav class="mobile-menu__nav" aria-label="주 메뉴">
+  <nav class="mobile-menu__nav" aria-label="메인 메뉴">
     <ul class="mobile-menu__list">
       <li class="mobile-menu__item">
         <a class="mobile-menu__link" href="/about">소개</a>
@@ -758,8 +801,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 접근성
 
 - 패널 열림 중 뒤쪽 콘텐츠는 `aria-modal="true"`로 스크린리더 탐색에서 빠진다
-- 햄버거 `aria-label`은 **고정**한다 (`전체 메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
-- 닫기 버튼 `aria-label="전체 메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
+- 햄버거 `aria-label`은 **고정**한다 (`전체메뉴`). 열림 여부는 `aria-expanded`가 전하므로 라벨을 "열기/닫기"로 바꾸지 않는다
+- 닫기 버튼 `aria-label="전체메뉴 닫기"` 필수 — 아이콘만 있는 버튼이므로
 - 아이콘은 모두 장식 — `aria-hidden="true"`. 햄버거·닫기 모양의 텍스트 기호로 아이콘을 대신하지 않는다 (R-27)
 - 터치 영역: 햄버거·닫기 44×44px, 항목 56px / 하위 항목 48px (R-13)
 - 초점 외곽선: 스크롤 영역(`overflow-y: auto`) 안에서 칸을 꽉 채우는 항목은 바깥 외곽선이 잘리므로 `outline-offset`을 음수로 두어 안쪽에 그린다
@@ -777,11 +820,11 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   <div class="modal__overlay"></div>
   <div class="modal__content modal__content--medium">
     <header class="modal__header">
-      <h2 id="modal-title" class="modal__title">제목</h2>
+      <h2 id="modal-title" class="modal__title">작성 내용 임시 저장</h2>
       <button type="button" class="modal__close" aria-label="닫기">×</button>
     </header>
     <div class="modal__body">
-      <p>모달 본문 내용</p>
+      <p>작성 중인 내용을 임시 저장합니다. 임시 저장한 글은 30일 동안 보관합니다.</p>
     </div>
     <footer class="modal__footer">
       <button type="button" class="btn btn--tertiary">취소</button>
@@ -803,41 +846,37 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ---
 
-## 23. 공지 띠 (Notice Bar) — infoUX
+## 23. 긴급 공지 (Notice Bar) — KRDS
 
 ### 기본 마크업
 
 ```html
-<section class="notice-bar notice-bar--info" aria-label="사이트 공지" data-notice-id="2026-10-maintenance">
+<section class="notice-bar notice-bar--danger" aria-label="사이트 공지">
   <div class="container notice-bar__inner">
-    <span class="notice-bar__label">점검</span>
+    <svg class="notice-bar__icon icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#error"></use></svg>
+    <span class="notice-bar__label">긴급</span>
     <p class="notice-bar__message">
-      <a class="notice-bar__link" href="/notice/maintenance">10월 12일 새벽 0시부터 6시까지 시스템 점검이 있습니다</a>
+      <a class="notice-bar__link" href="/notice/typhoon-closure">태풍으로 10월 12일 전 시설을 임시 휴관합니다</a>
     </p>
-    <button type="button" class="notice-bar__close" aria-label="공지 닫기">
-      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"></use></svg>
-    </button>
   </div>
 </section>
 ```
 
 ### Variant / Size
 
-| Variant | 클래스 | 용도 | 라벨 예 |
-|---------|--------|------|---------|
-| 정보 | `.notice-bar--info` | 일반 안내 (기본) | 공지 |
-| 주의 | `.notice-bar--warning` | 점검·휴무·일정 변경 | 점검 |
-| 긴급 | `.notice-bar--danger` | 서비스 중단·장애·재난 | 긴급 |
+| 긴급도 | 상황 | 클래스 | 라벨 | 아이콘 |
+|--------|------|--------|------|--------|
+| 상 | 국가 재난·비상 상황, 갑작스러운 서비스 장애 | `.notice-bar--danger` | 긴급 | `error` |
+| 중 | 서비스 중단 사전 예고 | `.notice-bar--warning` | 예고 | `warning` |
+| 하 | 대부분의 사용자가 알아야 하지만 큰 영향은 없는 상황 | (클래스 없음 — 기본) | 안내 | `info` |
 
 ### 접근성
 
-- 영역 이름 `aria-label="사이트 공지"` — 페이지에 비슷한 영역이 더 있으면 서로 다른 이름으로 구분한다
+- 영역 이름 `aria-label="사이트 공지"` — 한 번에 하나만 두므로 이름이 겹치지 않는다
 - 링크는 밑줄로 구분한다. 색 차이만으로 링크임을 전하지 않는다
-- 닫기 버튼은 아이콘만 있으므로 `aria-label` 필수. 아이콘은 `aria-hidden="true"`
-- 터치 영역: 닫기 버튼 44×44px, 링크 `min-h-[4.4rem]` (R-13)
+- 터치 영역: 링크 `min-h-[4.4rem]` (R-13)
 - 대비: 본문 텍스트 `--color-text`, 라벨은 `--color-text-inverse` on `--color-information-60`/`--color-warning-60`/`--color-danger-60` (4.5:1 이상)
-- 닫은 뒤 초점이 문서 처음으로 날아가지 않도록 헤더로 옮긴다 (WCAG 2.4.3)
-- 동적으로 삽입하는 긴급 안내(장애 발생 직후 등)는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
+- 페이지를 보는 중에 새로 생긴 긴급 안내(장애 발생 직후 등)를 동적으로 알릴 때는 이 컴포넌트가 아니라 [alert](alert.md)의 `role="alert"`를 쓴다
 
 ---
 
@@ -850,7 +889,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   <button type="button" class="pagination__nav" aria-label="이전 페이지">‹</button>
   <ol class="pagination__list">
     <li><a class="pagination__item" href="?p=1">1</a></li>
-    <li><a class="pagination__item pagination__item--current" href="?p=2" aria-current="page">2</a></li>
+    <li><a class="pagination__item" href="?p=2" aria-current="page">2</a></li>
     <li><a class="pagination__item" href="?p=3">3</a></li>
     <li><a class="pagination__item" href="?p=4">4</a></li>
     <li><a class="pagination__item" href="?p=5">5</a></li>
@@ -957,7 +996,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
     <button type="button" class="side-panel__close" aria-label="닫기">×</button>
   </header>
   <div class="side-panel__body">
-    <p>패널 본문 내용</p>
+    <p>접수 번호, 처리 상태, 담당 부서를 확인할 수 있습니다.</p>
   </div>
   <footer class="side-panel__footer">
     <button type="button" class="btn btn--tertiary">닫기</button>
@@ -972,7 +1011,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - 닫기 버튼 `aria-label="닫기"` 필수
 - ESC 키 닫기 권장
 - 포커스 트랩은 선택 (모달과 달리 본문 인터랙션 허용)
-- `aria-hidden` 토글로 스크린리더 노출 제어
+- 열림·닫힘은 `aria-hidden="false"`/`"true"` 토글 하나로 표현한다 — 닫힌 패널은 CSS가 초점 순서에서도 뺀다
 
 ---
 
@@ -1022,7 +1061,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
     <span class="step-indicator__num" aria-hidden="true">1</span>
     <span class="step-indicator__label">정보 입력</span>
   </li>
-  <li class="step-indicator__item step-indicator__item--current" aria-current="step">
+  <li class="step-indicator__item" aria-current="step">
     <span class="step-indicator__num" aria-hidden="true">2</span>
     <span class="step-indicator__label">확인</span>
   </li>
@@ -1067,25 +1106,25 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 ```html
 <div class="tab">
-  <div class="tab__list" role="tablist" aria-label="섹션">
-    <button class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
-      개요
+  <div class="tab__list" role="tablist" aria-label="이용 안내">
+    <button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">
+      관람 시간
     </button>
-    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" tabindex="-1">
-      상세
+    <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">
+      관람료
     </button>
-    <button class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" tabindex="-1">
-      후기
+    <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3">
+      오시는 길
     </button>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
-    개요 내용
+    <p>화요일~일요일 09:00~18:00, 매주 월요일 휴관</p>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
-    상세 내용
+    <p>성인 2,000원, 청소년·어린이 1,000원</p>
   </div>
   <div class="tab__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
-    후기 내용
+    <p>제주시 ○○로 00 — 시내버스 000번 ○○ 정류장 하차</p>
   </div>
 </div>
 ```
@@ -1094,8 +1133,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 
 - `role="tablist"` + 각 탭에 `role="tab"`, 패널에 `role="tabpanel"`
 - 탭 ↔ 패널 연결: `aria-controls` (탭 → 패널 id), `aria-labelledby` (패널 → 탭 id)
-- 활성 표시는 `aria-selected="true"` (시각 인디케이터는 CSS가 자동 처리)
-- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적 명시 권장
+- 선택은 `aria-selected="true"` — CSS는 색에 더해 탭 바닥의 밑줄 인디케이터(`::after`)로 보인다(색만으로 구분하지 않는다)
+- 초점이 간 탭은 탭 안쪽 초점 링으로 분명히 보인다 — 밑줄·초점 링 모두 탭 상자 안에 그려 목록의 가로 스크롤에 잘리지 않는다
+- `aria-label` 또는 `aria-labelledby`로 탭 그룹의 목적을 밝힌다
 
 ---
 
@@ -1104,9 +1144,9 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 ### 기본 마크업
 
 ```html
-<div class="table-wrap">
+<div class="table-wrap" tabindex="0" role="region" aria-labelledby="apply-status-caption">
   <table class="table">
-    <caption class="table__caption">2026년 1분기 신청 현황</caption>
+    <caption class="table__caption" id="apply-status-caption">2026년 1분기 신청 현황</caption>
     <thead>
       <tr>
         <th scope="col">번호</th>
@@ -1133,7 +1173,8 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
 - `<caption>`으로 표 제목 명시
 - 정렬 헤더는 `aria-sort="ascending|descending|none"`
 - 선택 행은 `aria-selected="true"`
-- 모바일 가로 스크롤은 `<div class="table-wrap">` 래퍼로 감싸기
+- 모바일 가로 스크롤은 `.table-wrap` 래퍼로 감싼다. 래퍼에는 `tabindex="0"` + `role="region"` + `aria-labelledby`(caption의 `id`)를 함께 둔다 — 마우스·터치 없이도 키보드 화살표로 가로 스크롤할 수 있고, 스크린리더는 표 제목으로 영역을 안내한다(KWCAG 6.1.1)
+- caption `id`는 페이지 안에서 겹치지 않게 짓는다. 한 페이지에 표가 여럿이면 표 제목(=영역 이름)도 서로 다르게 쓴다. 초점 링은 전역 `:focus-visible` 스타일이 그린다
 
 ---
 
@@ -1196,7 +1237,7 @@ Cursor, Copilot, Windsurf, Claude Code, ChatGPT, v0
   도움말
 </button>
 <div id="tip-1" class="tooltip" role="tooltip" hidden>
-  도움말 설명 텍스트
+  영문, 숫자, 특수문자를 섞어 9자 이상으로 정합니다.
 </div>
 ```
 

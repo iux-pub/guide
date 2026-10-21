@@ -67,10 +67,17 @@
       font-family: 'Consolas', 'Monaco', monospace;
       white-space: pre;
     }
+
+    /* 데모 전용: 필드(.form-field) 사이 세로 간격 — 컴포넌트에 필드 묶음 간격 클래스가 없어 미리보기에서만 지정 */
+    .pg__form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">조합 패턴: 모달 + 폼</h1>
 
     <!-- 모달 안에 폼 -->
@@ -80,76 +87,88 @@
       <div class="pg__preview">
         <button type="button" class="btn btn--primary" data-modal-open="modal-signup">회원가입</button>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="회원가입 모달 폼 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 트리거 버튼 --&gt;
 &lt;button type="button" class="btn btn--primary" data-modal-open="modal-signup"&gt;회원가입&lt;/button&gt;
 
 &lt;!-- 회원가입 모달 --&gt;
 &lt;div class="modal" id="modal-signup" role="dialog" aria-modal="true"
-     aria-labelledby="modal-signup-title" aria-hidden="true"&gt;
+     aria-labelledby="modal-signup-title" hidden&gt;
   &lt;div class="modal__overlay"&gt;&lt;/div&gt;
-  &lt;div class="modal__container"&gt;
-    &lt;div class="modal__header"&gt;
+  &lt;div class="modal__content modal__content--medium"&gt;
+    &lt;header class="modal__header"&gt;
       &lt;h2 class="modal__title" id="modal-signup-title"&gt;회원가입&lt;/h2&gt;
       &lt;button type="button" class="modal__close" aria-label="닫기" data-modal-close&gt;&amp;times;&lt;/button&gt;
-    &lt;/div&gt;
+    &lt;/header&gt;
     &lt;div class="modal__body"&gt;
-      &lt;form&gt;
-        &lt;div class="form__group"&gt;
-          &lt;label class="form__label form__label--required" for="signup-name"&gt;이름&lt;/label&gt;
-          &lt;input type="text" id="signup-name" class="form__input" placeholder="이름을 입력하세요" required aria-required="true"&gt;
+      &lt;form id="signup-form"&gt;
+        &lt;div class="form-field"&gt;
+          &lt;label class="form-field__label" for="signup-name"&gt;
+            이름&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
+          &lt;/label&gt;
+          &lt;input type="text" id="signup-name" class="input" placeholder="이름을 입력하세요" required aria-required="true"&gt;
         &lt;/div&gt;
-        &lt;div class="form__group"&gt;
-          &lt;label class="form__label form__label--required" for="signup-email"&gt;이메일&lt;/label&gt;
-          &lt;input type="email" id="signup-email" class="form__input" placeholder="이메일을 입력하세요" required aria-required="true"&gt;
+        &lt;div class="form-field"&gt;
+          &lt;label class="form-field__label" for="signup-email"&gt;
+            이메일&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
+          &lt;/label&gt;
+          &lt;input type="email" id="signup-email" class="input" placeholder="이메일을 입력하세요" required aria-required="true"&gt;
         &lt;/div&gt;
-        &lt;div class="form__group"&gt;
-          &lt;label class="form__label form__label--required" for="signup-password"&gt;비밀번호&lt;/label&gt;
-          &lt;input type="password" id="signup-password" class="form__input" placeholder="비밀번호를 입력하세요" required aria-required="true"&gt;
-          &lt;span class="form__help"&gt;8자 이상, 영문+숫자 조합&lt;/span&gt;
+        &lt;div class="form-field"&gt;
+          &lt;label class="form-field__label" for="signup-password"&gt;
+            비밀번호&lt;span class="form-field__required" aria-label="필수"&gt;*&lt;/span&gt;
+          &lt;/label&gt;
+          &lt;p id="signup-password-hint" class="form-field__hint"&gt;8자 이상, 영문+숫자 조합&lt;/p&gt;
+          &lt;input type="password" id="signup-password" class="input" placeholder="비밀번호를 입력하세요" required aria-required="true" aria-describedby="signup-password-hint"&gt;
         &lt;/div&gt;
       &lt;/form&gt;
     &lt;/div&gt;
-    &lt;div class="modal__footer"&gt;
+    &lt;footer class="modal__footer"&gt;
       &lt;button type="button" class="btn btn--secondary" data-modal-close&gt;취소&lt;/button&gt;
-      &lt;button type="submit" class="btn btn--primary"&gt;가입하기&lt;/button&gt;
-    &lt;/div&gt;
+      &lt;button type="submit" class="btn btn--primary" form="signup-form"&gt;가입하기&lt;/button&gt;
+    &lt;/footer&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
 
-  </div>
+  </main>
 
   <!-- 회원가입 모달 (실제 동작) -->
-  <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-labelledby="modal-signup-title" aria-hidden="true">
+  <div class="modal" id="modal-signup" role="dialog" aria-modal="true" aria-labelledby="modal-signup-title" hidden>
     <div class="modal__overlay"></div>
-    <div class="modal__container">
-      <div class="modal__header">
+    <div class="modal__content modal__content--medium">
+      <header class="modal__header">
         <h2 class="modal__title" id="modal-signup-title">회원가입</h2>
         <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
-      </div>
+      </header>
       <div class="modal__body">
-        <form>
-          <div class="form__group">
-            <label class="form__label form__label--required" for="signup-name">이름</label>
-            <input type="text" id="signup-name" class="form__input" placeholder="이름을 입력하세요" required aria-required="true">
+        <form id="signup-form" class="pg__form">
+          <div class="form-field">
+            <label class="form-field__label" for="signup-name">
+              이름<span class="form-field__required" aria-label="필수">*</span>
+            </label>
+            <input type="text" id="signup-name" class="input" placeholder="이름을 입력하세요" required aria-required="true">
           </div>
-          <div class="form__group">
-            <label class="form__label form__label--required" for="signup-email">이메일</label>
-            <input type="email" id="signup-email" class="form__input" placeholder="이메일을 입력하세요" required aria-required="true">
+          <div class="form-field">
+            <label class="form-field__label" for="signup-email">
+              이메일<span class="form-field__required" aria-label="필수">*</span>
+            </label>
+            <input type="email" id="signup-email" class="input" placeholder="이메일을 입력하세요" required aria-required="true">
           </div>
-          <div class="form__group">
-            <label class="form__label form__label--required" for="signup-password">비밀번호</label>
-            <input type="password" id="signup-password" class="form__input" placeholder="비밀번호를 입력하세요" required aria-required="true">
-            <span class="form__help">8자 이상, 영문+숫자 조합</span>
+          <div class="form-field">
+            <label class="form-field__label" for="signup-password">
+              비밀번호<span class="form-field__required" aria-label="필수">*</span>
+            </label>
+            <p id="signup-password-hint" class="form-field__hint">8자 이상, 영문+숫자 조합</p>
+            <input type="password" id="signup-password" class="input" placeholder="비밀번호를 입력하세요" required aria-required="true" aria-describedby="signup-password-hint">
           </div>
         </form>
       </div>
-      <div class="modal__footer">
+      <footer class="modal__footer">
         <button type="button" class="btn btn--secondary" data-modal-close>취소</button>
-        <button type="submit" class="btn btn--primary">가입하기</button>
-      </div>
+        <button type="submit" class="btn btn--primary" form="signup-form">가입하기</button>
+      </footer>
     </div>
   </div>
 

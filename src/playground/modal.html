@@ -60,16 +60,10 @@
       font-family: 'Consolas', 'Monaco', monospace;
       white-space: pre;
     }
-
-    /* 데모 전용: 위험 액션 버튼 (KRDS는 별도 danger variant 미정의 — 데모 페이지 한정) */
-    .pg__btn-danger {
-      background-color: var(--color-danger);
-      border-color: var(--color-danger);
-    }
   </style>
 </head>
 <body>
-  <div class="pg">
+  <main class="pg">
     <h1 class="pg__title">모달 (Modal)</h1>
 
     <!-- 기본 모달 -->
@@ -78,25 +72,25 @@
       <div class="pg__preview">
         <button type="button" class="btn btn--primary" data-modal-open="modal-default">모달 열기</button>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="기본 모달 마크업 코드" tabindex="0">
 <pre><code>&lt;!-- 트리거 버튼 --&gt;
 &lt;button type="button" class="btn btn--primary" data-modal-open="modal-default"&gt;모달 열기&lt;/button&gt;
 
 &lt;!-- 모달 --&gt;
-&lt;div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" aria-hidden="true"&gt;
+&lt;div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" hidden&gt;
   &lt;div class="modal__overlay"&gt;&lt;/div&gt;
-  &lt;div class="modal__container"&gt;
-    &lt;div class="modal__header"&gt;
-      &lt;h2 class="modal__title" id="modal-default-title"&gt;모달 제목&lt;/h2&gt;
+  &lt;div class="modal__content modal__content--medium"&gt;
+    &lt;header class="modal__header"&gt;
+      &lt;h2 class="modal__title" id="modal-default-title"&gt;작성 내용 임시 저장&lt;/h2&gt;
       &lt;button type="button" class="modal__close" aria-label="닫기" data-modal-close&gt;&amp;times;&lt;/button&gt;
-    &lt;/div&gt;
+    &lt;/header&gt;
     &lt;div class="modal__body"&gt;
-      &lt;p&gt;모달 본문 내용입니다.&lt;/p&gt;
+      &lt;p&gt;작성 중인 내용을 임시 저장합니다.&lt;/p&gt;
     &lt;/div&gt;
-    &lt;div class="modal__footer"&gt;
+    &lt;footer class="modal__footer"&gt;
       &lt;button type="button" class="btn btn--secondary" data-modal-close&gt;작성 취소&lt;/button&gt;
       &lt;button type="button" class="btn btn--primary"&gt;저장하기&lt;/button&gt;
-    &lt;/div&gt;
+    &lt;/footer&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
       </div>
@@ -108,64 +102,64 @@
       <div class="pg__preview">
         <button type="button" class="btn btn--secondary" data-modal-open="modal-delete">삭제 모달 열기</button>
       </div>
-      <div class="pg__code">
+      <div class="pg__code" role="region" aria-label="삭제 확인 모달 마크업 코드" tabindex="0">
 <pre><code>&lt;button type="button" class="btn btn--secondary" data-modal-open="modal-delete"&gt;삭제 모달 열기&lt;/button&gt;
 
-&lt;div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" aria-hidden="true"&gt;
+&lt;div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" hidden&gt;
   &lt;div class="modal__overlay"&gt;&lt;/div&gt;
-  &lt;div class="modal__container"&gt;
-    &lt;div class="modal__header"&gt;
+  &lt;div class="modal__content modal__content--medium"&gt;
+    &lt;header class="modal__header"&gt;
       &lt;h2 class="modal__title" id="modal-delete-title"&gt;항목 삭제&lt;/h2&gt;
       &lt;button type="button" class="modal__close" aria-label="닫기" data-modal-close&gt;&amp;times;&lt;/button&gt;
-    &lt;/div&gt;
+    &lt;/header&gt;
     &lt;div class="modal__body"&gt;
       &lt;p&gt;정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.&lt;/p&gt;
     &lt;/div&gt;
-    &lt;div class="modal__footer"&gt;
+    &lt;footer class="modal__footer"&gt;
       &lt;button type="button" class="btn btn--secondary" data-modal-close&gt;작성 취소&lt;/button&gt;
-      &lt;button type="button" class="btn btn--primary pg__btn-danger"&gt;항목 삭제&lt;/button&gt;
-    &lt;/div&gt;
+      &lt;button type="button" class="btn btn--primary"&gt;항목 삭제&lt;/button&gt;
+    &lt;/footer&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
       </div>
     </div>
 
-  </div>
+  </main>
 
   <!-- 기본 모달 (실제 동작) -->
-  <div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" aria-hidden="true">
+  <div class="modal" id="modal-default" role="dialog" aria-modal="true" aria-labelledby="modal-default-title" hidden>
     <div class="modal__overlay"></div>
-    <div class="modal__container">
-      <div class="modal__header">
-        <h2 class="modal__title" id="modal-default-title">모달 제목</h2>
+    <div class="modal__content modal__content--medium">
+      <header class="modal__header">
+        <h2 class="modal__title" id="modal-default-title">작성 내용 임시 저장</h2>
         <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
-      </div>
+      </header>
       <div class="modal__body">
-        <p>모달 본문 내용입니다. ESC 키를 누르거나 오버레이를 클릭하면 닫힙니다.</p>
+        <p>작성 중인 내용을 임시 저장합니다. ESC 키를 누르거나 오버레이를 클릭하면 닫힙니다.</p>
         <p>Tab 키로 포커스가 모달 내부에서만 순환합니다 (포커스 트랩).</p>
       </div>
-      <div class="modal__footer">
+      <footer class="modal__footer">
         <button type="button" class="btn btn--secondary" data-modal-close>작성 취소</button>
         <button type="button" class="btn btn--primary">저장하기</button>
-      </div>
+      </footer>
     </div>
   </div>
 
   <!-- 삭제 확인 모달 (실제 동작) -->
-  <div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" aria-hidden="true">
+  <div class="modal" id="modal-delete" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" hidden>
     <div class="modal__overlay"></div>
-    <div class="modal__container">
-      <div class="modal__header">
+    <div class="modal__content modal__content--medium">
+      <header class="modal__header">
         <h2 class="modal__title" id="modal-delete-title">항목 삭제</h2>
         <button type="button" class="modal__close" aria-label="닫기" data-modal-close>&times;</button>
-      </div>
+      </header>
       <div class="modal__body">
         <p>정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
       </div>
-      <div class="modal__footer">
+      <footer class="modal__footer">
         <button type="button" class="btn btn--secondary" data-modal-close>작성 취소</button>
-        <button type="button" class="btn btn--primary pg__btn-danger">항목 삭제</button>
-      </div>
+        <button type="button" class="btn btn--primary">항목 삭제</button>
+      </footer>
     </div>
   </div>
 

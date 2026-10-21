@@ -64,8 +64,11 @@ npm run build:tokens   # tokens/foundation.json → tokens/build/tokens.css
 npm run build:css      # Tailwind v4 컴파일 → dist/css/style.css
 npm run watch:css      # 워치 모드
 npm run lint:css       # stylelint 검사
-npm run check          # info-design 컨트랙트 위반 검출
+npm run check          # info-design 컨트랙트 위반 검출 — 루트 *.html·pages/**(또는 infoux.json pages)는 page 계약까지
 ```
+
+- 페이지는 루트(`index.html` 등)나 `pages/` 아래에 둔다. 다른 폴더를 쓰면 `infoux.json`의 `pages`에 글롭을 더한다 — 그래야 검사가 닿는다.
+- 파일을 고치면 훅(`scripts/hooks/post-edit.js`)이 바로 검사한다. 훅을 끄거나 실패를 숨기지(`|| true`, `2>/dev/null`) 않는다.
 
 ## 하네스 부재 시 자체 검증
 
@@ -85,7 +88,7 @@ npm run check          # info-design 컨트랙트 위반 검출
 1. ✅ Task Contract의 사이트 유형·핵심 과업·재사용 패턴 확정
 2. ✅ 사용 색상 = `--color-*` 시맨틱 토큰
 3. ✅ 기본 폰트 = `--font-sans` / `--font-mono`
-4. ✅ 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용
+4. ✅ 간격/크기/타이포 스케일은 CSS 값·Tailwind rem 임의값 사용
 5. ✅ CSS는 표준 nesting과 Tailwind v4 `@apply` 사용 가능
 6. ✅ 단순 반응형은 `@apply tablet:*` / `@apply pc:*` 우선
 7. ✅ 직접 `@media`는 관련 선택자 내부에 중첩
@@ -101,9 +104,18 @@ npm run check          # info-design 컨트랙트 위반 검출
 ## 절대 금지 (요약 — 상세는 MCP `get_reference("forbidden-patterns")`)
 
 - Raw hex/rgb/hsl 색상
-- 간격/크기/타이포 스케일은 CSS/Tailwind 직접값 사용. 색상 raw 값은 금지
+- 간격/크기/타이포 스케일은 CSS 값·Tailwind rem 임의값 사용. 색상 raw 값은 금지
 - Tailwind 기본 팔레트 raw 컬러 유틸
-- Tailwind 기본 스케일은 프로젝트 기준과 충돌하지 않는지 확인
+- Tailwind 기본 스케일(`text-sm`, `leading-6`, `p-4`, `gap-2`, `max-w-md` 등) — 62.5% 루트에서 37.5% 작게 렌더된다. rem 임의값(`p-[1.6rem]`)을 쓴다(R-37)
+- 장식 효과 — 장식 그라데이션·그라데이션 글자·글래스(`backdrop-*`)·큰 블러·컬러 글로우 그림자(R-34). 사진 위 스크림과 KRDS 검정 알파 그림자만 쓴다
+- 이모지를 아이콘·불릿·배지·제목 장식으로 쓰기(R-36) — 아이콘은 카탈로그에서
+- 가짜·자리 콘텐츠(R-23) — 채움 문구, placeholder 핫링크, '자주 묻는 질문 1·2' 같은 연번 레이블, '페이지 제목' 같은 자리값 제목, 064-000-0000·○○ 같은 비실재 표기를 납품 페이지에 남기기
+- 실제 목적지 없는 링크(`href="#"`·`javascript:`)(R-30) — 이동은 a, 동작은 button
+- 1.3rem 미만 글자, body 1.6rem·설명 요소 1.5rem 미만(R-38), 루트 글자 크기 변경(R-31)
+- 정지 버튼 없는 자동 전환·무한 롤링 마키(R-33), 1.2rem 넘는 반경·알약 버튼(R-35), 화면 높이 히어로·스크롤 유도 화살표·중간 히어로(R-42)
+- 확정되지 않은 공식 배너·정부 상징(R-46), 고지 없는 개인정보 동의·미리 체크·주민등록번호(R-47), 모바일 360px 넘는 고정 폭(R-48)
+- 영문 전용 UI 레이블(VIEW MORE)·lang 없는 언어 링크·선택만으로 이동하는 select(R-45), 근거 없는 최상급·공공 화면 해요체(R-44 경고), 과한 섹션 여백(R-49 경고)
+- 번역투·2인칭 마케팅 카피('당신', '~을 경험하세요', '지금 바로'), '~하세요'로 끝나는 버튼, 공공 화면의 느낌표(R-43) — 합쇼체 사실 서술, 버튼은 KRDS 동사형('신청하기')
 - 옛 버튼 variant (`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`)
 - `!important` (사유 주석 없을 시)
 - 인라인 `style="..."` (CSS 변수 주입 외)

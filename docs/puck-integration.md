@@ -13,7 +13,7 @@ inSTACK 콘텐츠는 CMS의 Puck 에디터에서 만들어 DB에 JSON으로 저�
 | 프레임워크 | CMS·포털 모두 Next.js 16.3.8, React 19.2.3, Tailwind v4 |
 | Puck | CMS만 `@measured/puck` ^0.20.2 (현행 패키지 이름은 `@puckeditor/core`). 포털에는 puck 의존성이 없다 |
 | 저장 | `CMS_CONTENT.CTT_DESC`에 Puck 데이터 JSON 문자열 |
-| 포털 렌더 | CMS `GET /api/puck/render/{siteCd}/{cttId}` → `htmlRenderer.ts`(약 1630줄)가 블록마다 HTML 문자열을 만든다 → 포털이 `.sub-page__body--puck` 안에 넣는다 |
+| 포털 렌더 | 포털 `fetchRenderedContentHtml` → 백엔드 `GET /api/asset/site/{siteCd}/content/{cttId}/html`(`AssetSiteController`, CMS로 중계) → CMS `GET /api/puck/render/{siteCd}/{cttId}` → `htmlRenderer.ts`(약 1630줄)가 블록마다 HTML 문자열을 만든다 → 포털이 `sanitizeContentBody`를 거쳐 `.sub-page__body--puck` 안에 넣는다 |
 | 에디터 렌더 | 각 블록의 React `render`. 캔버스 iframe에 사이트별 포털 CSS(`edtr.css`)를 넣는다 |
 | 블록 | 기본 7종(`config.tsx`, 인라인 style) · KRDS 8종(`config.krds.tsx`, `krds-react`) · 회사소개 19종(`infomindPuckComponents`) · 사이트 커스텀(`entities/custom/puck`) |
 | 계층 | 없다. `content` 배열 한 줄로 쌓는다(slot·DropZone 미사용). 탭·아코디언 항목은 `array` 필드의 textarea |
@@ -27,7 +27,12 @@ inSTACK 콘텐츠는 CMS의 Puck 에디터에서 만들어 DB에 JSON으로 저�
 블록마다 에디터용 React `render`와 포털용 `htmlRenderer` 문자열 함수가 따로 있다. 둘은 손으로 맞춰야 하고, 이미 어긋나 있다.
 
 - `htmlRenderer.ts`에는 `Krds*` 분기가 하나도 없다. `renderItem`은 모르는 타입에 빈 문자열을 돌려주고, 커스텀 렌더러(`renderCustomPuckItem`)의 기본값은 `null`이다. 그래서 KRDS 배지·디스클로저·아코디언·탭·긴급 공지·단계 표시·목록·표는 에디터 미리보기에는 보이고 포털에서는 빈 자리가 된다.
-- 운영 포털에서 실제로 빠지는지는 아직 확인하지 않았다(사이트 fork가 커스텀 렌더러로 덮었을 수 있다).
+- 확인 범위(2026-10-22):
+  - 코드 경로: 포털 → 백엔드 중계 → CMS `htmlRenderer`까지 다른 렌더 경로가 없다. `htmlRenderer.ts`는 2026-06-25 이후 6번 바뀌었고 `Krds*`가 들어간 적이 없다. `config.krds.tsx`의 KRDS 블록은 그 전부터 있었다. 렌더러 테스트에도 `Krds*` 사례가 없다.
+  - 같은 유형의 결함이 이미 났다: `c9553d8`(2026-09-28) 「[TTA 2차 결함26] Puck Embed 블록이 포털 화면에 표시되지 않던 문제 — 서버 렌더러 Embed 지원」. 서버 렌더러에 분기가 없는 블록은 포털에서 사라진다.
+  - 포크: inSTACK 기반 CMS 저장소 중 커스텀 렌더러를 덮어쓴 곳은 `INFO_ENCYNET_CMS_WORK` 하나이고, 거기에도 `Krds*` 분기가 없다(`AI_AIEC_CMS`·`EGOV_5_0_CMS_WORK`는 기본값).
+  - 운영(`www.infomind.co.kr`, 사이트 `IN`): 공개 페이지 23개 중 Puck 본문 페이지 17개가 모두 인포마인드 회사소개 블록만 출력하고 `krds-` 마크업은 0건이다. 저장된 JSON에 KRDS 블록이 들어 있는지는 확인하지 못했다 — 사용자 콘텐츠 API(`/api/user/site/IN/…`)가 내부 토큰 없이 403을 돌려준다. 즉 **코드상 확정, 운영에서 지금 사라지고 있는지는 CMS 데이터 확인 필요**다.
+- 부수 발견: 운영 메뉴의 `/product/agenticai/ai-chatbot` 링크가 404다.
 - Puck 폴더의 `CLAUDE.md`는 포털에도 `config.krds.tsx`를 둔다고 쓰고, 같은 문서의 CSS 절과 포털 `package.json`은 포털에 Puck이 없다고 말한다. 문서가 실제와 어긋난다.
 
 ### 2.2 기본 블록이 하네스 규칙을 어긴다
@@ -215,7 +220,7 @@ DB 콘텐츠는 저장소 밖이다. 포털 보강 스크립트의 스크롤 트
 
 ## 8. 열린 질문
 
-1. KRDS 블록이 운영 포털에서 실제로 빠지는가. 쓰는 콘텐츠가 있는가
+1. 저장된 콘텐츠(`CMS_CONTENT.CTT_DESC`) 중 `Krds*` 블록을 쓰는 것이 있는가 — 있으면 지금 포털에서 빠지고 있다. CMS 관리자나 DB 조회로 확인한다
 2. 블록 마크업을 `krds-react`에서 infoUX BEM으로 바꿔도 되는가(포털 CSS가 infoUX 기반이라는 전제 확인)
 3. `@measured/puck` → `@puckeditor/core` 이전 시점
 4. 발행 상태 전환이 CMS 서버 액션 말고 다른 경로(백엔드 API·일괄 처리)로도 일어나는가

@@ -110,3 +110,116 @@ test('사내 운영 문서는 납품본에서 제외한다', () => {
     assert.ok(internal.includes(name), `${name}이 납품본 제외 목록에 없다`)
   }
 })
+
+// ─── 압축 해제·의존성 설치 (2026-10-23 Windows에서 드러난 결함) ─────────
+
+const os = require('node:os')
+const zlib = require('node:zlib')
+const { extractTarGz, runNpmInstall } = require('../../cli/bin/create')
+
+/** ustar 헤더 한 블록을 만든다(체크섬 포함). */
+function tarHeader(name, { size = 0, type = '0', mode = 0o644 } = {}) {
+  const h = Buffer.alloc(512)
+  h.write(name, 0, 100, 'utf8')
+  h.write(mode.toString(8).padStart(7, '0') + '\0', 100)
+  h.write('0000000\0', 108)
+  h.write('0000000\0', 116)
+  h.write(size.toString(8).padStart(11, '0') + '\0', 124)
+  h.write('00000000000\0', 136)
+  h.write(type, 156)
+  h.write('ustar\0', 257)
+  h.write('00', 263)
+  h.fill(0x20, 148, 156)
+  let sum = 0
+  for (const byte of h) sum += byte
+  h.write(sum.toString(8).padStart(6, '0') + '\0 ', 148)
+  return h
+}
+
+function tarEntry(name, content = '', opts = {}) {
+  const body = Buffer.from(content, 'utf8')
+  const pad = Buffer.alloc((512 - (body.length % 512)) % 512)
+  return Buffer.concat([tarHeader(name, { ...opts, size: body.length }), body, pad])
+}
+
+/** pax 레코드("길이 키=값\n") — 길이는 자기 자신을 포함한다. */
+function paxBody(fields) {
+  return Object.entries(fields).map(([k, v]) => {
+    const rest = ` ${k}=${v}\n`
+    let len = Buffer.byteLength(rest) + 1
+    while (String(len).length + Buffer.byteLength(rest) !== len) len++
+    return `${len}${rest}`
+  }).join('')
+}
+
+function writeTarGz(entries) {
+  const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'iux-tar-')), 'starter.tar.gz')
+  fs.writeFileSync(file, zlib.gzipSync(Buffer.concat([...entries, Buffer.alloc(1024)])))
+  return file
+}
+
+test('압축 해제: 시스템 tar를 부르지 않는다 — Windows의 Git GNU tar가 C: 경로를 원격 호스트로 읽는다', () => {
+  assert.doesNotMatch(CLI, /execSync\(\s*`tar\b/, 'tar 명령을 셸로 부르면 PATH 순서에 따라 Windows에서 실패한다')
+})
+
+test('압축 해제: GitHub tarball 모양(전역 pax·최상위 폴더·긴 경로)을 풀고 최상위 폴더를 벗긴다', () => {
+  const longDir = 'starter-main/src/' + 'deep-folder-name/'.repeat(6)
+  const tarball = writeTarGz([
+    tarEntry('pax_global_header', paxBody({ comment: '02662da' }), { type: 'g' }),
+    tarEntry('starter-main/', '', { type: '5', mode: 0o755 }),
+    tarEntry('starter-main/package.json', '{"name":"starter"}\n'),
+    tarEntry('starter-main/src/snippets/', '', { type: '5', mode: 0o755 }),
+    tarEntry('starter-main/src/snippets/header.md', '# 헤더\n'),
+    tarEntry('PaxHeader/long', paxBody({ path: `${longDir}page.html` }), { type: 'x' }),
+    tarEntry('starter-main/src/truncated-name', '<!doctype html>\n'),
+    tarEntry('starter-main/link', '', { type: '2' })
+  ])
+  // 실제 결함 재현처럼 드라이브 문자가 든 절대 경로(Windows)로 푼다
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-out-'))
+  const result = extractTarGz(tarball, out)
+
+  assert.equal(result.files, 3)
+  assert.deepEqual(result.skipped, ['link'])
+  assert.equal(fs.readFileSync(path.join(out, 'package.json'), 'utf8'), '{"name":"starter"}\n')
+  assert.equal(fs.readFileSync(path.join(out, 'src', 'snippets', 'header.md'), 'utf8'), '# 헤더\n')
+  assert.ok(fs.existsSync(path.join(out, ...longDir.split('/').slice(1), 'page.html')), 'pax 긴 경로를 따르지 않았다')
+  assert.ok(!fs.existsSync(path.join(out, 'starter-main')), '최상위 폴더를 벗기지 않았다')
+  assert.ok(!fs.existsSync(path.join(out, 'src', 'truncated-name')), 'pax path 대신 잘린 이름을 썼다')
+})
+
+test('압축 해제: 프로젝트 폴더 밖을 가리키는 항목은 멈춘다', () => {
+  const parent = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-escape-'))
+  const out = path.join(parent, 'project')
+  fs.mkdirSync(out)
+  const tarball = writeTarGz([tarEntry('starter-main/../../evil.txt', 'x')])
+  assert.throws(() => extractTarGz(tarball, out), /폴더 밖/)
+  assert.ok(!fs.existsSync(path.join(parent, 'evil.txt')))
+})
+
+test('의존성 설치: Windows는 셸을 거쳐 npm.cmd를 찾는다', () => {
+  const calls = []
+  const spawn = (...a) => { calls.push(a); return { status: 0 } }
+  assert.deepEqual(runNpmInstall('C:\\work\\app', { platform: 'win32', spawn }), { ok: true })
+  assert.equal(calls[0][0], 'npm install')
+  assert.equal(calls[0][1].shell, true)
+  assert.equal(calls[0][1].cwd, 'C:\\work\\app')
+
+  calls.length = 0
+  assert.deepEqual(runNpmInstall('/work/app', { platform: 'linux', spawn }), { ok: true })
+  assert.deepEqual(calls[0].slice(0, 2), ['npm', ['install']])
+})
+
+test('의존성 설치: 실행 실패·비정상 종료는 이유와 함께 실패로 돌려준다', () => {
+  const enoent = Object.assign(new Error('spawnSync npm ENOENT'), { code: 'ENOENT' })
+  const failed = runNpmInstall('.', { platform: 'win32', spawn: () => ({ status: null, error: enoent }) })
+  assert.equal(failed.ok, false)
+  assert.match(failed.reason, /ENOENT/)
+  assert.match(runNpmInstall('.', { platform: 'linux', spawn: () => ({ status: 1 }) }).reason, /종료 코드 1/)
+  assert.match(runNpmInstall('.', { platform: 'linux', spawn: () => ({ status: null, signal: 'SIGINT' }) }).reason, /SIGINT/)
+})
+
+test('의존성 설치 실패는 「완료」로 덮지 않고 종료 코드 1로 알린다', () => {
+  const block = CLI.slice(CLI.indexOf('// 5. npm install'), CLI.indexOf('다음 단계:'))
+  assert.match(block, /runNpmInstall\(/)
+  assert.match(block, /if \(installFailed\)[\s\S]*process\.exitCode = 1[\s\S]*else[\s\S]*✓ 완료!/)
+})

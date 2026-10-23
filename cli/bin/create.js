@@ -16,7 +16,7 @@
  *   5. npm install (--skip-install 옵션 시 생략)
  *   6. 다음 단계 안내 출력
  *
- * Zero dependency: Node 표준 라이브러리만 사용 (https/fs/child_process/path)
+ * Zero dependency: Node 표준 라이브러리만 사용 (https/fs/zlib/child_process/path)
  */
 
 'use strict'
@@ -24,7 +24,8 @@
 const fs = require('fs')
 const path = require('path')
 const https = require('https')
-const { execSync, spawnSync } = require('child_process')
+const zlib = require('zlib')
+const { spawnSync } = require('child_process')
 const os = require('os')
 
 // ─── 상수 ──────────────────────────────────────────────
@@ -176,13 +177,113 @@ function download(url, dest) {
   })
 }
 
-// tar 압축 해제 — 시스템 tar 사용
+/** tar 헤더의 NUL 종료 문자열 필드를 읽는다. */
+function tarField(header, start, length) {
+  const raw = header.subarray(start, start + length)
+  const end = raw.indexOf(0)
+  return raw.subarray(0, end === -1 ? length : end).toString('utf8')
+}
+
+/** pax 확장 헤더 본문("길이 키=값\n" 반복)을 객체로 읽는다. */
+function parsePax(body) {
+  const out = {}
+  let pos = 0
+  while (pos < body.length) {
+    const space = body.indexOf(0x20, pos)
+    if (space === -1) break
+    const length = parseInt(body.subarray(pos, space).toString('utf8'), 10)
+    if (!length) break
+    const record = body.subarray(space + 1, pos + length - 1).toString('utf8')
+    const eq = record.indexOf('=')
+    if (eq !== -1) out[record.slice(0, eq)] = record.slice(eq + 1)
+    pos += length
+  }
+  return out
+}
+
+/**
+ * tar.gz 압축 해제 — 시스템 tar를 부르지 않고 Node 표준 라이브러리로 푼다.
+ * Windows에서 PATH 앞에 Git의 GNU tar(usr/bin)가 있으면 'C:\…'의 'C:'를 원격 호스트로 읽어
+ * 「Cannot connect to C: resolve failed」로 실패했다(2026-10-23 제주관광공사 메인 시안).
+ * 일반 파일·디렉터리만 만든다. 심볼릭 링크 등 나머지 항목은 건너뛰고 이름을 돌려준다.
+ * 출력 폴더 밖을 가리키는 항목('..'·절대 경로)은 오류로 멈춘다.
+ */
+function extractTarGz(tarPath, outDir, { strip = 1 } = {}) {
+  const data = zlib.gunzipSync(fs.readFileSync(tarPath))
+  const root = path.resolve(outDir)
+  const skipped = []
+  let files = 0
+  let offset = 0
+  let pax = {}
+  let longName = null
+
+  while (offset + 512 <= data.length) {
+    const header = data.subarray(offset, offset + 512)
+    if (header.every(byte => byte === 0)) break // 끝 표시(빈 블록)
+
+    const size = parseInt(tarField(header, 124, 12).trim() || '0', 8)
+    if (Number.isNaN(size)) throw new Error(`tar 헤더를 읽지 못했습니다(오프셋 ${offset})`)
+    const type = tarField(header, 156, 1) || '0'
+    const body = data.subarray(offset + 512, offset + 512 + size)
+    offset += 512 + Math.ceil(size / 512) * 512
+
+    // 다음 항목에 걸리는 메타 헤더 — pax 'x'(긴 경로)·GNU 'L'(긴 이름). 'g'(전역, GitHub는 커밋 해시)는 쓰지 않는다
+    if (type === 'x') { pax = parsePax(body); continue }
+    if (type === 'g') continue
+    if (type === 'L') { longName = body.toString('utf8').replace(/\0+$/, ''); continue }
+
+    const prefix = tarField(header, 345, 155)
+    const shortName = tarField(header, 0, 100)
+    const name = pax.path || longName || (prefix ? `${prefix}/${shortName}` : shortName)
+    pax = {}
+    longName = null
+
+    const parts = name.split('/').filter(part => part && part !== '.')
+    if (parts.length <= strip) continue
+    const relParts = parts.slice(strip)
+    const dest = path.join(root, ...relParts)
+    if (relParts.includes('..') || path.isAbsolute(name) || !dest.startsWith(root + path.sep)) {
+      throw new Error(`압축 파일 항목이 프로젝트 폴더 밖을 가리킵니다: ${name}`)
+    }
+
+    if (type === '5') {
+      fs.mkdirSync(dest, { recursive: true })
+    } else if (type === '0' || type === '7') {
+      fs.mkdirSync(path.dirname(dest), { recursive: true })
+      const mode = parseInt(tarField(header, 100, 8).trim() || '644', 8) & 0o777
+      fs.writeFileSync(dest, body, { mode: mode || 0o644 })
+      files++
+    } else {
+      skipped.push(relParts.join('/'))
+    }
+  }
+
+  return { files, skipped }
+}
+
 function extractTar(tarPath, outDir) {
   try {
-    execSync(`tar -xzf "${tarPath}" -C "${outDir}" --strip-components=1`, { stdio: 'pipe' })
+    const { files, skipped } = extractTarGz(tarPath, outDir)
+    if (files === 0) die('tar 압축 해제 실패: 풀린 파일이 없습니다. 내려받은 파일이 깨졌을 수 있습니다.')
+    if (skipped.length) log('   ', `${YELLOW}일반 파일이 아닌 항목 ${skipped.length}개는 건너뜀: ${skipped.join(', ')}${RESET}`, DIM)
   } catch (e) {
     die(`tar 압축 해제 실패: ${e.message}`)
   }
+}
+
+/**
+ * npm install 실행. Windows의 npm은 npm.cmd라서 셸 없이 spawn하면 ENOENT로 실행조차 안 된다 —
+ * 예전 코드는 이것을 놓쳐 node_modules 없이 「완료」로 끝났다(2026-10-23). 결과를 돌려주고 호출부가 알린다.
+ */
+function runNpmInstall(cwd, { platform = process.platform, spawn = spawnSync } = {}) {
+  const result = platform === 'win32'
+    ? spawn('npm install', { cwd, stdio: 'inherit', shell: true })
+    : spawn('npm', ['install'], { cwd, stdio: 'inherit' })
+  if (result.error) return { ok: false, reason: `npm을 실행하지 못했습니다 (${result.error.code || result.error.message})` }
+  if (result.status !== 0) {
+    return { ok: false, reason: result.signal ? `npm install이 신호 ${result.signal}로 중단됐습니다` : `npm install 종료 코드 ${result.status}` }
+  }
+  return { ok: true }
 }
 
 
@@ -391,26 +492,30 @@ async function main() {
   }
 
   // 5. npm install
+  let install = null
   if (!args.flags.skipInstall) {
     log('5/5', '의존성 설치 중... (1~2분)')
-    const result = spawnSync('npm', ['install'], { cwd: projectPath, stdio: 'inherit' })
-    if (result.status !== 0) {
-      console.log('')
-      console.log(`${YELLOW}⚠ 의존성 설치 실패. 디렉토리는 생성됨. 수동으로:${RESET}`)
-      console.log(`  cd ${projectName} && npm install`)
-    }
+    install = runNpmInstall(projectPath)
   } else {
     log('5/5', '의존성 설치 건너뜀 (--skip-install)', DIM)
   }
+  const installFailed = install && !install.ok
 
-  // 완료 안내
+  // 완료 안내 — 설치가 실패하면 「완료」라 하지 않고 종료 코드 1로 알린다(npx·스크립트가 실패를 알아챈다)
   console.log('')
-  console.log(`${GREEN}${BOLD}✓ 완료!${RESET} ${projectName} 프로젝트 생성됨`)
+  if (installFailed) {
+    console.error(`${RED}${BOLD}✗ 의존성 설치 실패${RESET} — ${install.reason}`)
+    console.error(`  ${projectName} 폴더는 만들어졌지만 node_modules가 없습니다. npm run check·dev가 돌지 않습니다.`)
+    console.error(`  수동으로 설치하세요: ${CYAN}cd ${projectName} && npm install${RESET}`)
+    process.exitCode = 1
+  } else {
+    console.log(`${GREEN}${BOLD}✓ 완료!${RESET} ${projectName} 프로젝트 생성됨`)
+  }
   console.log('')
   console.log(`${BOLD}다음 단계:${RESET}`)
   console.log('')
   console.log(`  ${CYAN}cd ${projectName}${RESET}`)
-  if (args.flags.skipInstall) {
+  if (args.flags.skipInstall || installFailed) {
     console.log(`  ${CYAN}npm install${RESET}`)
   }
   console.log(`  ${CYAN}npm run dev${RESET}          # 개발 서버 (http://localhost:8080)`)
@@ -440,4 +545,4 @@ if (require.main === module) {
   })
 }
 
-module.exports = { finalizeStarterPage }
+module.exports = { finalizeStarterPage, extractTarGz, runNpmInstall }

@@ -38,11 +38,9 @@
     @apply flex items-center gap-[2.4rem] h-[6.4rem] pc:h-[8rem];
   }
 
-  /* 브랜드 영역 */
+  /* 브랜드 영역 — 로고(3.2rem)만 든 링크도 터치 하한 44px을 지킨다(R-13, .site-footer__brand와 같다) */
   .site-header__brand {
-    @apply inline-flex items-center gap-[1.6rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
-
-
+    @apply inline-flex items-center gap-[1.6rem] min-h-[4.4rem] min-w-[4.4rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
   }
 
   .site-header__brand img {

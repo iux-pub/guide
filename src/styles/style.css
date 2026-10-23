@@ -10,8 +10,14 @@
 
 @import "tailwindcss";
 
-/* ─── ITCSS 레이어 우선순위 ─── */
+/* ─── ITCSS 레이어 우선순위 (낮음 → 높음) ───
+ *   base(3-generic·4-elements) < components.objects(5-objects) < components(6-components) < utilities(7-utilities·Tailwind 유틸)
+ *   모든 규칙을 레이어 안에 둔다. 레이어 밖 규칙은 선택자 우선순위와 무관하게 모든 레이어를 이긴다 —
+ *   5-objects가 레이어 밖이던 때 6-components의 프로젝트 변형이 무시됐다(2026-10-23 제주관광공사 시안).
+ *   프로젝트 변형은 @layer components 안에 둔다. objects를 고치는 변형도 마찬가지다.
+ */
 @layer base, components, utilities;
+@layer components.objects;
 
 /* ─── 1-settings — 색상 + 기본 폰트 + 브레이크포인트 토큰 ─── */
 @import "../../tokens/build/tokens.css";
@@ -36,4 +42,4 @@
 
 /* ─── 프로젝트별 스타일 확장 슬롯 ─── */
 
-/* 프로젝트별 확장은 이 파일 뒤에 별도 CSS를 추가 import한다. */
+/* 프로젝트별 확장은 이 파일 뒤에 별도 CSS를 추가 import한다. 그 안의 규칙은 @layer components { … }로 감싼다(맨 위 레이어 순서 참고). */

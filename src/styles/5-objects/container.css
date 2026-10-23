@@ -4,8 +4,13 @@
  *   - 스크린 마진: 768px 미만 16px / 768px 이상 24px (KRDS 최소 스크린 마진 small 16·medium 24·large 24)
  *   - 이전 값(max-width 120rem + pc 40px 여백)은 실제 콘텐츠가 1120px로 줄었다
  *   - 브레이크포인트: mobile 360 / tablet 768 / laptop 1024 / pc 1280 (KRDS small/medium/large/xlarge)
+ *   - 레이어: 다른 objects와 달리 utilities에 둔다. Tailwind v4 내장 `container` 유틸리티(폭마다 max-width를
+ *     브레이크포인트 값으로 바꾼다)가 같은 클래스 이름을 쓰므로, 그보다 낮은 레이어에 두면 1248px 대신
+ *     360·1280px로 렌더된다. 같은 utilities 레이어 안에서는 이 파일이 뒤에 와서 이긴다.
  */
 
-.container {
-  @apply w-full max-w-[124.8rem] mx-auto px-[1.6rem] tablet:px-[2.4rem];
+@layer utilities {
+  .container {
+    @apply w-full max-w-[124.8rem] mx-auto px-[1.6rem] tablet:px-[2.4rem];
+  }
 }

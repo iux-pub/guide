@@ -1,5 +1,5 @@
 {
-  "version": "c9b64a0",
+  "version": "ed759b2",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -23,7 +23,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 16410,
+      "chars": 16485,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {
@@ -159,7 +159,7 @@
     {
       "id": "boilerplate",
       "file": "boilerplate.md",
-      "chars": 4107,
+      "chars": 4829,
       "summary": "기본 마크업은 일반사이트, 공공서비스, 공공기관, CMS·관리자, 커머스·예약 모두에 적용 가능한 공통 골격이다. 공식 배너, 정부 상징, 운영기관 식별자, 공공 푸터 필수 링크는 사이트 유형 판정에서 적용 대상이 확인된 경우에만 추가한다."
     },
     {

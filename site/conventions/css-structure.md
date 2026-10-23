@@ -42,8 +42,9 @@ src/styles/
 
 @import "tailwindcss";
 
-/* ITCSS 레이어 우선순위 */
+/* ITCSS 레이어 우선순위 (낮음 → 높음) */
 @layer base, components, utilities;
+@layer components.objects;
 
 /* 토큰 — KRDS 정본 + INFOUX 파운데이션 (자동 생성) */
 @import "../../tokens/build/tokens.css";
@@ -52,8 +53,33 @@ src/styles/
 @import "./3-generic/reset.css";
 @import "./4-elements/base.css";
 @import "./5-objects/container.css";
+@import "./5-objects/section.css";
 @import "./6-components/index.css";
 @import "./7-utilities/sr-only.css";
+```
+
+## 캐스케이드 레이어
+
+모든 규칙은 CSS `@layer` 안에 둔다. 우선순위는 낮은 것부터 다음과 같다.
+
+| 폴더 | `@layer` |
+|------|----------|
+| 3-generic · 4-elements | `base` |
+| 5-objects | `components.objects` (`container.css`만 `utilities`) |
+| 6-components | `components` |
+| 7-utilities · Tailwind 유틸 | `utilities` |
+
+- **레이어 밖 규칙을 쓰지 않는다.** 레이어 밖 규칙은 선택자 우선순위와 무관하게 모든 레이어를 이긴다. 5-objects가 레이어 밖이던 때, 6-components에 둔 `.hero-bleed--large .hero-bleed__title { @apply laptop:text-[6rem]; }`가 무시되어 제목이 44px로 나왔다.
+- **프로젝트 변형은 `@layer components` 안에 둔다.** objects를 고치는 변형도 같다. `components.objects`는 `components`의 하위 레이어라서 선택자 우선순위와 상관없이 6-components 쪽 규칙이 이긴다.
+- **`container.css`만 `utilities`에 둔다.** Tailwind v4 내장 `container` 유틸리티가 같은 클래스 이름으로 폭마다 max-width를 바꾼다. 그보다 낮은 레이어에 두면 1248px이 아니라 브레이크포인트 값(360·1280px)으로 렌더된다.
+
+```css
+/* 프로젝트 변형 — 프로젝트 CSS(6-components 또는 style.css 뒤에 불러오는 확장 파일) */
+@layer components {
+  .hero-bleed--large .hero-bleed__title {
+    @apply laptop:text-[6rem];
+  }
+}
 ```
 
 `@import` 사용은 R-03(SCSS 사용 금지)과 무관하다. R-03은 SCSS 빌드 파이프라인 자체를 금지하는 것이며, 표준 CSS의 `@import`는 정상이다.

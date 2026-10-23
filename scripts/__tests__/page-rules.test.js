@@ -252,3 +252,28 @@ test('검사기: 납품 페이지에 R-32·R-40·R-41이 닿고, 사이트 문�
   assert.match(out, /\[R-41\][^\n]*3단계/)
   assert.doesNotMatch(out, /shell\.md[^\n]*\n[^\n]*\[R-32\]/)
 })
+
+test('boilerplate 스니펫: 공공 프로필 프로젝트의 npm run check에서 R-40이 나지 않는다', () => {
+  // 2026-10-23 public-institution으로 만든 프로젝트에서 boilerplate.md:22 R-40 오류가 났다 — 헤더에 통합검색이 없었다
+  const md = fs.readFileSync(path.join(ROOT, 'src', 'snippets', 'boilerplate.md'), 'utf8')
+  const html = md.match(/```html\n([\s\S]*?)```/)[1]
+  for (const profile of ['public-service', 'public-institution']) {
+    const r = scanPageRules(html, { profile })
+    assert.ok(none(r, 'R-40'), `${profile}\n${brief(r)}`)
+    assert.ok(!r.some(f => f.severity === 'error'), `${profile}\n${brief(r)}`)
+  }
+
+  // 검사기 통합 — 파생 프로젝트처럼 infoux.json profile을 두고 스니펫 사본을 검사한다
+  for (const profile of ['public-service', 'public-institution']) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'iux-boilerplate-'))
+    fs.cpSync(path.join(ROOT, 'scripts', 'lib'), path.join(dir, 'scripts', 'lib'), { recursive: true })
+    fs.copyFileSync(path.join(ROOT, 'scripts', 'check-html-structure.js'), path.join(dir, 'scripts', 'check-html-structure.js'))
+    fs.mkdirSync(path.join(dir, 'contracts'))
+    for (const name of ['html-page-contract.json', 'class-naming.json']) fs.copyFileSync(path.join(ROOT, 'contracts', name), path.join(dir, 'contracts', name))
+    fs.mkdirSync(path.join(dir, 'src', 'snippets'), { recursive: true })
+    fs.copyFileSync(path.join(ROOT, 'src', 'snippets', 'boilerplate.md'), path.join(dir, 'src', 'snippets', 'boilerplate.md'))
+    fs.writeFileSync(path.join(dir, 'infoux.json'), JSON.stringify({ profile }))
+    const res = spawnSync(process.execPath, [path.join(dir, 'scripts', 'check-html-structure.js')], { cwd: dir, encoding: 'utf8', env: { ...process.env, FORCE_COLOR: '0' } })
+    assert.doesNotMatch(res.stdout + res.stderr, /\[R-40\]/, `${profile}\n${res.stdout}${res.stderr}`)
+  }
+})

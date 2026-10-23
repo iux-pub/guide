@@ -20,8 +20,20 @@
   <a href="#main" class="skip-to-content">본문 바로가기</a>
 
   <header id="header" class="site-header">
-    <div class="container">
-      <!-- 브랜드, GNB, 유틸리티 -->
+    <div class="container site-header__inner">
+      <!-- 브랜드·메인 메뉴는 header.md를 따른다 -->
+      <div class="site-header__actions">
+        <!-- 통합검색 — 공공서비스·공공기관은 모든 페이지 헤더에 둔다(KRDS 검색 [필수], R-40) -->
+        <form class="site-header__search" role="search" action="/search">
+          <label for="site-search" class="sr-only">통합검색</label>
+          <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+          <button type="submit" class="btn btn--secondary">검색</button>
+        </form>
+        <a class="site-header__search-link" href="/search">
+          <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#search"></use></svg>
+          <span class="sr-only">통합검색</span>
+        </a>
+      </div>
     </div>
   </header>
 

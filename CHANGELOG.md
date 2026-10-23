@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- 2026-10-23 제주관광공사 메인 시안을 `create-infomind-ux`(public-institution)로 만들다 드러난 결함 3건.
+  - `boilerplate.md` 페이지 골격 헤더에 통합검색(`form role="search"` + 모바일 검색 링크, `header.md`와 같은 마크업)을 넣었다. 공공서비스·공공기관 프로필 프로젝트의 `npm run check`가 스니펫 사본에서 R-40 오류(`boilerplate.md:22`)를 내던 문제다. 스타터 사본·MCP 번들·references를 다시 만들었다.
+  - `.site-header__brand`에 `min-h-[4.4rem] min-w-[4.4rem]`을 두었다. 로고만 든 링크가 32px로 터치 하한(R-13)에 못 미쳤다. `.site-footer__brand`와 같다.
+  - `create-infomind-ux`: 시스템 `tar` 대신 Node 표준 라이브러리(zlib)로 압축을 푼다. Windows에서 PATH 앞에 Git의 GNU tar가 있으면 `C:\…` 경로를 원격 호스트로 읽어 「Cannot connect to C: resolve failed」로 실패했다. 프로젝트 폴더 밖을 가리키는 항목은 멈춘다.
+  - `create-infomind-ux`: Windows에서 `npm install`을 셸을 거쳐 실행한다. 셸 없이 `npm`(실제는 `npm.cmd`)을 부르면 ENOENT로 설치가 돌지 않았는데, 경고 한 줄 뒤에 「완료」와 종료 코드 0이 나와 묻혔다. 이제 설치가 실패하면 이유를 오류로 알리고 종료 코드 1로 끝낸다.
+  - 5-objects CSS를 캐스케이드 레이어에 넣었다. 레이어 순서는 `base` < `components.objects`(5-objects) < `components`(6-components) < `utilities`다. 전에는 5-objects가 레이어 밖이라, 6-components에 둔 프로젝트 변형이 선택자 우선순위와 무관하게 졌다(`laptop:text-[6rem]` 제목이 44px로 나옴). `container.css`만 `utilities`에 둔다. Tailwind v4 내장 `container` 유틸리티와 이름이 같아서, 더 낮은 레이어면 max-width를 빼앗긴다. 플레이그라운드 21개·스니펫 예시·스타터 index의 계산 스타일을 375·1440px에서 비교해 바뀐 요소가 0개임을 확인했다. 프로젝트 변형은 `@layer components`에 둔다고 CLAUDE.md·CONTRACT.md·스타터 문서·CSS 구조 페이지에 적었다.
+
 ## [4.0.0] - 2026-10-21
 
 3.4.0 이후 석 달 치 변경(아트 디렉션·아이콘 계층·KRDS 정합·안티슬롭 검사 R-23~R-50)을 한 번에 묶은 릴리스다. 함께 올린 패키지: MCP `@infomind-ux/infoux-mcp` 0.5.0, `create-infomind-ux` 0.3.0, 스타터 4.0.0(이 버전부터 가이드 릴리스 번호를 따른다).

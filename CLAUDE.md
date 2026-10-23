@@ -224,6 +224,19 @@ src/styles/
 
 > 1-settings(토큰)는 `tokens/`로 분리, 2-tools(SCSS 믹스인)는 Tailwind v4 utilities로 대체됐다. BEM은 **5-objects, 6-components 레이어에만** 적용한다.
 
+**캐스케이드 레이어** — 모든 규칙을 CSS `@layer` 안에 둔다. 우선순위는 낮은 것부터 다음과 같다.
+
+| 폴더 | `@layer` | 비고 |
+|------|----------|------|
+| 3-generic · 4-elements | `base` | |
+| 5-objects | `components.objects` | `components`의 하위 레이어라 6-components에 항상 진다. 예외로 `container.css`는 `utilities`에 둔다. Tailwind v4 내장 `container` 유틸리티와 이름이 같기 때문이다 |
+| 6-components | `components` | |
+| 7-utilities · Tailwind 유틸 | `utilities` | |
+
+- 레이어 밖 규칙은 선택자 우선순위와 무관하게 모든 레이어를 이긴다. 그래서 레이어 없는 규칙을 새로 쓰지 않는다(`scripts/__tests__/css-layers.test.js`).
+- 프로젝트 변형은 `@layer components` 안에 둔다. objects(`.hero-bleed__title` 등)를 바꾸는 변형도 같다. 이렇게 두면 선택자 우선순위와 상관없이 objects 기본값을 이긴다.
+- 사례: 5-objects가 레이어 밖이던 때 6-components의 `laptop:text-[6rem]` 변형이 무시되어 6rem 제목이 44px로 나왔다(2026-10-23 제주관광공사 시안).
+
 ---
 
 ## 반응형 가이드

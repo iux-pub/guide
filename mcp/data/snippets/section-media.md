@@ -12,7 +12,6 @@
         <img class="section-media__img" src="/images/course-haean.jpg" alt="해안 산책로를 걷는 방문객">
       </div>
       <div class="section-media__body">
-        <p class="section-media__eyebrow">추천 코스</p>
         <h2 class="section-media__title" id="walk-title">해안 산책로 3.2km</h2>
         <p class="section-media__desc">방파제에서 등대까지 이어지는 완만한 코스입니다. 휠체어·유아차 통행이 가능하며, 중간 쉼터 2곳에 그늘막이 있습니다.</p>
         <div class="section-media__actions">

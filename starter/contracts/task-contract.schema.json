@@ -98,6 +98,16 @@
       ],
       "description": "표현 등급 override. 생략 시 profile 기본값(contracts/profiles.json). 상향 근거는 primaryTask 또는 exceptions에 명시. task contract는 페이지·과업 단위로 작성되므로 이 값이 페이지 스코프 등급을 운반한다 — 결제·인증·폼 페이지는 utility로 강등해 작성한다."
     },
+    "designDials": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variance": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "motion": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "density": { "type": "integer", "minimum": 1, "maximum": 10 }
+      },
+      "description": "디자인 다이얼(references/design-intelligence.md §2). 표현 등급 안에서 배치 변화도·장식 모션·밀도의 위치를 1~10으로 적는다. 등급별 상한은 같은 문서 표가 정한다. motion 7 이상은 쓰지 않는다."
+    },
     "contentSources": {
       "type": "array",
       "items": {

@@ -70,6 +70,7 @@ order: 1
 | R-48 | 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-49 | 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고) | warn | [CSS 규칙](/conventions/css-rules/) |
 | R-50 | placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-51 | 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선은 경고 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

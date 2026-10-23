@@ -59,6 +59,13 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 템플릿 장식 서명(R-51 색 있는 굵은 옆선, 경고) — 마크업 쪽(eyebrow·장식 번호·등장 효과)은 check-html-structure.js
+let TEMPLATE = null
+try {
+  TEMPLATE = require('./lib/template-signature')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 카피 규칙(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 없으면 옛 줄 단위 R-23 검사로 돌아간다
 let COPY = null
 try {
@@ -386,6 +393,8 @@ function checkCssFile(filePath) {
     // 섹션 세로 여백(R-49)
     if (getDensityBase()) reportVisual(relPath, LAYOUT.sectionPaddingCss(content, getDensityBase()))
   }
+  // 템플릿 장식 서명(R-51) — 색 있는 굵은 옆선. 문서 사이트 크롬(docs.css)은 뺀다
+  if (TEMPLATE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, TEMPLATE.scanCssTemplate(content))
 
   // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
   if (COPY) {
@@ -612,7 +621,9 @@ function checkHtmlFile(filePath, opts = {}) {
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {
         if (seg.counter) continue
-        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text), ...hangulCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text), ...hangulHtml(seg.text)] : []
+        // 템플릿 장식 서명(R-51) css 펜스는 스니펫만 — 마크업 펜스는 check-html-structure.js가 본다
+        const templateCss = t => (TEMPLATE && isSnippet ? TEMPLATE.scanCssTemplate(t) : [])
+        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text), ...hangulCss(seg.text), ...templateCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text), ...hangulHtml(seg.text)] : []
         reportVisual(relPath, found.map(f => ({ ...f, line: seg.startLine + (f.line || 1) - 1 })))
       }
     }

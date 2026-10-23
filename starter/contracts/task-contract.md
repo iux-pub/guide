@@ -14,6 +14,10 @@ tokens:
   - semantic-color
 publicIdentity: not-applicable
 expression: expressive
+designDials:
+  variance: 5
+  motion: 3
+  density: 5
 contentSources:
   - 과업 문서 경로·용어집·기존 사이트 URL
 exceptions: []
@@ -30,4 +34,5 @@ exceptions: []
 7. 등급 묶음에서 축 하나만 열 때는 통째 상향 대신 `exceptions`에 `rule: "expression.hero"` 형식의 축 단위 예외를 근거와 함께 기록한다.
 8. `contentSources`는 실제 기관 용어·메뉴명·콘텐츠의 출처다(과업 문서 경로, 용어집, 기존 사이트 URL). 비어 있으면 카피는 임시 초안 신분을 벗어날 수 없다.
 9. `pageType`은 페이지 유형이다(main, sub-content, board-list, board-detail, form, search-result, error). 같은 값을 `infoux.json`의 `pageTypes`에 파일 글롭으로 선언해야 검사기가 안다 — `{ "index.html": "main", "pages/notice/*.html": { "type": "board-list", "depth": 3 } }`. `depth`는 홈을 1로 센 메뉴 단계다(홈>알림마당>공지사항 = 3). 선언이 있으면 R-40(공공 메인의 과업 진입·마케팅 섹션)과 R-41(3단계 이상 브레드크럼·서브 첫 섹션 히어로 금지)이 그 페이지에 켜진다. `recipe`는 main일 때만 쓴다(references/korean-web-patterns.md).
-10. 필수 판단이 비어 있으면 코드 생성을 시작하지 않는다.
+10. `designDials`는 디자인 다이얼이다(variance·motion·density, 1~10). 판단 순서와 등급별 상한은 `references/design-intelligence.md`가 정한다. 생략하면 등급 기본 위치(4~6)로 본다.
+11. 필수 판단이 비어 있으면 코드 생성을 시작하지 않는다.

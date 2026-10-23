@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `references/design-intelligence.md` — 디자인 판단 순서 8단계, 디자인 다이얼(변화도·모션·밀도)과 등급별 상한, KRDS 호환 스타일 허용표, 규칙 검사가 못 잡는 전문가 품질 점검, 충돌 우선순위. ui-ux-pro-max 스킬(MIT)을 infoUX 맥락으로 옮겨 썼고 KRDS가 우선한다.
+- Task Contract `designDials` 선택 필드(스키마·문서·스타터 사본).
+- design-page 절차에 판단 순서·다이얼 단계, 아트 디렉션 납품 전 체크리스트에 전문가 품질 점검 항목.
+- design-intelligence에 Impeccable(Apache 2.0)·Anthropic frontend-design 스킬을 반영: 디자인 계획 산출물(`docs/design-plan.md`: 소재·색·서체·레이아웃·원칙), 템플릿 자가 점검, 「과감함은 한 곳에」, 색 전략 4종, 템플릿 서명 금지표, 렌더 품질 점검(나란한 단 윗선·넓은 화면 빈 절반·브라우저 표면), 장신구 하나 빼기.
+
 ## [4.0.0] - 2026-10-21
 
 3.4.0 이후 석 달 치 변경(아트 디렉션·아이콘 계층·KRDS 정합·안티슬롭 검사 R-23~R-50)을 한 번에 묶은 릴리스다. 함께 올린 패키지: MCP `@infomind-ux/infoux-mcp` 0.5.0, `create-infomind-ux` 0.3.0, 스타터 4.0.0(이 버전부터 가이드 릴리스 번호를 따른다).

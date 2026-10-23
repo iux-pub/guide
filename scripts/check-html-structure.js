@@ -59,6 +59,13 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 템플릿 장식 서명(R-51 eyebrow·장식 번호·전 섹션 등장 효과·굵은 옆선) — 없으면(오래된 파생 프로젝트) 건너뛴다
+let TEMPLATE = null
+try {
+  TEMPLATE = require('./lib/template-signature')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // R-47 주민등록번호 법령 예외 — infoux.json exceptions의 { rule: 'R-47', legalBasis } (만료 전)
 let RRN_LEGAL_BASIS = null
 try {
@@ -1083,6 +1090,12 @@ function checkHtml(html, filePath, baseLineNum = 1) {
     for (const f of [...QUALITY.altFindings(html), ...QUALITY.linkNameFindings(html), ...QUALITY.placeholderFindings(html)]) {
       const report = f.severity === 'error' ? error : warn
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
+  }
+  // 템플릿 장식 서명(R-51, 경고) — 같은 범위(스니펫·플레이그라운드·납품 페이지). 문서는 반례를 싣는다
+  if (TEMPLATE && !/^\/(?:site|references|prompts)\//.test(relPosix(filePath))) {
+    for (const f of TEMPLATE.scanHtmlTemplate(html)) {
+      warn(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }
   }
   // 아이콘 사용처(R-27) — 이름·스프라이트·aria-hidden은 모든 마크업, 직접 그린 svg 경고는 문서·아이콘 시연 밖

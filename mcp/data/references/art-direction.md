@@ -154,7 +154,8 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 납품 전 1회, 페이지 전량을 대상으로 실행한다. `release-checklist.md`의 게이트와 연결된다.
 
 - [ ] 안티패턴 색인(§10) 10건 각각에 대해 해당 없음을 확인했다.
-- [ ] `design-intelligence.md` §4 전문가 품질 점검(표면 언어 두 가지 이하, 주 행동 하나, 빈 칸 없는 격자, 사진 톤 하나, 호버·초점 상태)을 375·768·1024·1440 렌더 화면으로 확인했다.
+- [ ] `docs/design-plan.md`(소재·색·서체·레이아웃·원칙)가 있고, 템플릿 자가 점검으로 고친 칸이 기록돼 있다(`design-intelligence.md` §1·§2-3).
+- [ ] `design-intelligence.md` §4 템플릿 서명이 없고, §5 렌더 품질 점검(표면 언어 두 가지 이하, 빈 칸 없는 격자, 나란한 단의 윗선·높이, 넓은 화면 빈 절반, 브라우저 표면)을 375·768·1024·1440 렌더로 확인했다.
 - [ ] 섹션 교차 리듬 — "중앙 제목+그리드" 3연속이 없다. 좌정렬·교차·풀블리드 변주가 있다.
 - [ ] 카드화 필요성 — 카드가 아니어도 되는 콘텐츠를 카드로 감싸지 않았다. 카드 안 카드 중첩이 없다.
 - [ ] 결제·인증·폼 페이지의 task contract가 utility로 강등돼 있다.
@@ -192,6 +193,8 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 8. 무한 롤링 로고 마키·scroll-jacking·500ms 초과 장식 모션·**장식/스크롤 진입 모션의** overshoot easing. 모달·토스트·인풋 전환 같은 컴포넌트 피드백 모션의 Spring 프리셋은 이 금지의 대상이 아니다 — interaction-timing 소유(등급 무관, `contracts/profiles.json` 모션 note). [owner: interaction-timing / R-22]
 9. 요구에 없는 다크모드 토글 — infoUX는 high-contrast 2모드 체계다. [owner: tokens]
 10. weight 700 남발·영문 display 폰트의 한글 fallback 미설계. [owner: art-direction hangul / R-26]
+
+템플릿 서명(제목 위 분류 표지, 장식 번호, 전 섹션 등장 효과, 굵은 색 옆선, 같은 크기 카드 구조 등)은 design-intelligence.md §4가 정본이다. 기계 검출은 R-51(경고)이다.
 
 ## 부록. 검증 대기 후보 풀
 

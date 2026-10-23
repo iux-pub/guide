@@ -9,7 +9,8 @@
 1. `references/project-profiles.md`에서 사이트 유형과 기본 section 흐름을 판정한다. 메인이면 `references/korean-web-patterns.md`(`get_reference("korean-web-patterns")`) §2에서 한국형 메인 레시피를, 서브면 §4 서브 골격을 고른다. 페이지 유형은 Task Contract `pageType`과 `infoux.json` `pageTypes`에 함께 적는다.
 2. `get_art_direction(profile)`로 표현 등급, 섹션 리듬 변주, 카피 톤을 확정하고, 실제 기관 용어·콘텐츠의 출처(`contentSources`)를 확보한다. 등급 상향은 Task Contract의 `expression` 필드에 근거와 함께 기록한다.
 3. 사용자의 핵심 과업을 한 문장으로 쓴다.
-3-1. `references/design-intelligence.md`(`get_reference("design-intelligence")`)의 판단 순서대로 스타일 하나와 디자인 다이얼(`designDials`)을 정해 Task Contract에 적는다. 납품 전에는 같은 문서 §4 전문가 품질 점검을 렌더 화면으로 확인한다.
+3-1. `references/design-intelligence.md`(`get_reference("design-intelligence")`) 절차대로 디자인 계획(`docs/design-plan.md`: 소재·색·서체·레이아웃·원칙)을 쓰고, 템플릿 자가 점검(§2-3)으로 기본값 칸을 고친다. 다이얼(`designDials`)은 Task Contract에 적는다. 계획 없이 메인·랜딩 코드를 쓰지 않는다.
+3-2. 구현 뒤 375·768·1024·1440 렌더를 섹션마다 훑어 같은 문서 §4 템플릿 서명과 §5 렌더 품질 점검을 확인하고, 장신구 하나를 뺀다(§2-7).
 4. `references/krds-components.md`에서 재사용할 컴포넌트를 고른다.
 5. `contracts/html-page-contract.json`으로 page shell과 section 구조를 확정한다.
 6. 인터랙티브 위젯이 있으면 `design-widget` 절차를 함께 적용한다.

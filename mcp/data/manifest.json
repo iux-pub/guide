@@ -1,5 +1,5 @@
 {
-  "version": "a96f243",
+  "version": "b98a720",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -23,7 +23,7 @@
     {
       "id": "design-intelligence",
       "file": "design-intelligence.md",
-      "chars": 6286,
+      "chars": 7072,
       "summary": "규칙 검사를 통과한 화면이 여전히 「구린」 이유는 두 가지다. 하나는 판단 순서를 건너뛴 것이고, 다른 하나는 모델이 습관처럼 붙이는 템플릿 장식이다. 이 문서는 어떤 LLM이 작업해도 같은 수준이 나오도록 구현 전 계획, 자가 점검, 렌더 비평의 순서를 정한다."
     },
     {

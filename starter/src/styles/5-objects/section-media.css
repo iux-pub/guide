@@ -6,44 +6,46 @@
  *   - 사용 조건·마크업: src/snippets/section-media.md
  */
 
-.section-media {
-  @apply grid items-center gap-[2.4rem] tablet:grid-cols-2 tablet:gap-[4rem] pc:gap-[6.4rem];
-}
+@layer components.objects {
+  .section-media {
+    @apply grid items-center gap-[2.4rem] tablet:grid-cols-2 tablet:gap-[4rem] pc:gap-[6.4rem];
+  }
 
-.section-media__media {
-  @apply overflow-hidden rounded-[1rem];
-}
+  .section-media__media {
+    @apply overflow-hidden rounded-[1rem];
+  }
 
-.section-media__img {
-  @apply w-full h-auto object-cover [aspect-ratio:4/3];
-}
+  .section-media__img {
+    @apply w-full h-auto object-cover [aspect-ratio:4/3];
+  }
 
-.section-media__body {
-  @apply flex flex-col gap-[1.6rem];
-}
+  .section-media__body {
+    @apply flex flex-col gap-[1.6rem];
+  }
 
-.section-media__eyebrow {
-  @apply text-[1.5rem] font-bold text-[var(--color-primary)];
-}
+  .section-media__eyebrow {
+    @apply text-[1.5rem] font-bold text-[var(--color-primary)];
+  }
 
-/* KRDS heading large(mobile 2.4 / pc 3.2rem) · 행간 150% · 자간 0.1rem — h2 자리 */
-.section-media__title {
-  @apply text-[2.4rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-text)] m-0 tablet:text-[3.2rem];
-}
+  /* KRDS heading large(mobile 2.4 / pc 3.2rem) · 행간 150% · 자간 0.1rem — h2 자리 */
+  .section-media__title {
+    @apply text-[2.4rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-text)] m-0 tablet:text-[3.2rem];
+  }
 
-.section-media__desc {
-  @apply text-[1.7rem] leading-[1.7] text-[var(--color-text-subtle)] m-0;
-}
+  .section-media__desc {
+    @apply text-[1.7rem] leading-[1.7] text-[var(--color-text-subtle)] m-0;
+  }
 
-.section-media__actions {
-  @apply flex flex-wrap gap-[0.8rem] mt-[0.8rem];
-}
+  .section-media__actions {
+    @apply flex flex-wrap gap-[0.8rem] mt-[0.8rem];
+  }
 
-/* 교차(zigzag) — 미디어를 오른쪽에. DOM 순서는 유지해 읽기 순서를 보존한다 */
-.section-media--reverse .section-media__media {
-  @apply tablet:order-2;
-}
+  /* 교차(zigzag) — 미디어를 오른쪽에. DOM 순서는 유지해 읽기 순서를 보존한다 */
+  .section-media--reverse .section-media__media {
+    @apply tablet:order-2;
+  }
 
-.section-media--reverse .section-media__body {
-  @apply tablet:order-1;
+  .section-media--reverse .section-media__body {
+    @apply tablet:order-1;
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "02662da",
+  "version": "ed759b2",
   "generated": "scripts/build-mcp.js",
   "references": [
     {
@@ -23,7 +23,7 @@
     {
       "id": "forbidden-patterns",
       "file": "forbidden-patterns.md",
-      "chars": 16410,
+      "chars": 16485,
       "summary": "이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다."
     },
     {

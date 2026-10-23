@@ -7,36 +7,38 @@
  *   - 사용 조건·마크업: src/snippets/hero-bleed.md
  */
 
-.hero-bleed {
-  @apply relative overflow-hidden bg-[var(--color-bg-inverse)];
-}
+@layer components.objects {
+  .hero-bleed {
+    @apply relative overflow-hidden bg-[var(--color-bg-inverse)];
+  }
 
-.hero-bleed__media {
-  @apply absolute inset-0;
-}
+  .hero-bleed__media {
+    @apply absolute inset-0;
+  }
 
-.hero-bleed__img {
-  @apply w-full h-full object-cover;
-}
+  .hero-bleed__img {
+    @apply w-full h-full object-cover;
+  }
 
-/* 스크림 — 이미지 위 단색 40~60% (기본 alpha-black-50 토큰) */
-.hero-bleed--scrim .hero-bleed__media::after {
-  @apply content-[''] absolute inset-0 bg-[var(--color-alpha-black-50)];
-}
+  /* 스크림 — 이미지 위 단색 40~60% (기본 alpha-black-50 토큰) */
+  .hero-bleed--scrim .hero-bleed__media::after {
+    @apply content-[''] absolute inset-0 bg-[var(--color-alpha-black-50)];
+  }
 
-.hero-bleed__content {
-  @apply relative flex flex-col justify-center gap-[1.6rem] min-h-[36rem] py-[6.4rem] tablet:min-h-[44rem] pc:min-h-[52rem];
-}
+  .hero-bleed__content {
+    @apply relative flex flex-col justify-center gap-[1.6rem] min-h-[36rem] py-[6.4rem] tablet:min-h-[44rem] pc:min-h-[52rem];
+  }
 
-/* KRDS display medium(mobile 3.2 / pc 4.4rem) · 행간 150% · 자간 0.1rem */
-.hero-bleed__title {
-  @apply text-[3.2rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-text-inverse)] m-0 tablet:text-[4.4rem];
-}
+  /* KRDS display medium(mobile 3.2 / pc 4.4rem) · 행간 150% · 자간 0.1rem */
+  .hero-bleed__title {
+    @apply text-[3.2rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-text-inverse)] m-0 tablet:text-[4.4rem];
+  }
 
-.hero-bleed__desc {
-  @apply text-[1.9rem] leading-[1.7] text-[var(--color-text-inverse)] m-0 max-w-[64rem];
-}
+  .hero-bleed__desc {
+    @apply text-[1.9rem] leading-[1.7] text-[var(--color-text-inverse)] m-0 max-w-[64rem];
+  }
 
-.hero-bleed__actions {
-  @apply flex flex-wrap gap-[0.8rem] mt-[1.6rem];
+  .hero-bleed__actions {
+    @apply flex flex-wrap gap-[0.8rem] mt-[1.6rem];
+  }
 }

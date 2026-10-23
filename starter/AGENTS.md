@@ -27,6 +27,8 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - 단순 반응형 속성 변경은 `@apply tablet:*` / `@apply pc:*`를 우선한다.
 - 복잡한 중첩 선택자나 여러 하위 요소 동시 제어만 관련 선택자 내부 `@media`로 작성한다. 파일 하단에 `@media`를 몰아두지 않는다.
 - 5-objects, 6-components 레이어의 클래스명은 BEM을 따른다.
+- 모든 CSS 규칙은 `@layer` 안에 둔다. 우선순위는 `base`(3·4) < `components.objects`(5-objects) < `components`(6-components) < `utilities`(7·Tailwind 유틸) 순이다. 레이어 밖 규칙은 선택자 우선순위와 무관하게 모두 이기므로 쓰지 않는다.
+- 프로젝트 변형(새 modifier, 기존 블록 덮어쓰기)은 `@layer components` 안에 둔다. objects(`.hero-bleed__title`·`.section` 등)를 고치는 변형도 같다. 이렇게 두면 objects 기본값을 항상 이긴다.
 - 기본 페이지 구조는 `header > .container`, `main > section > .container`, `footer > .container` 흐름을 유지한다.
 - 컴포넌트화는 페이지 전체가 아니라 `main` 내부 section 단위로 우선 분리한다.
 

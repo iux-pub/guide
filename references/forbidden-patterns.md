@@ -321,7 +321,7 @@ body { font-family: var(--font-sans); }
 - `@import "..."` (CSS native)
 - `@theme { ... }` (Tailwind v4 토큰 정의)
 - `@apply` (Tailwind v4 component layer)
-- `@layer base, components, utilities` (Tailwind v4 cascade layer)
+- `@layer base, components, utilities` (Tailwind v4 cascade layer) — 모든 규칙을 레이어 안에 둔다. 5-objects는 `components.objects`, 프로젝트 변형은 `components`
 
 ---
 

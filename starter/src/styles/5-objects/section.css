@@ -9,10 +9,12 @@
  *   더 벌리지 않는다 — 공공·관리자 화면은 밀도 기준의 1.5배를 넘으면 R-49 경고다.
  */
 
-.section {
-  @apply py-[2rem] laptop:py-[4rem];
-}
+@layer components.objects {
+  .section {
+    @apply py-[2rem] laptop:py-[4rem];
+  }
 
-[data-density="compact"] .section {
-  @apply py-[1.2rem] laptop:py-[2rem];
+  [data-density="compact"] .section {
+    @apply py-[1.2rem] laptop:py-[2rem];
+  }
 }

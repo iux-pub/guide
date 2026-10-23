@@ -92,6 +92,7 @@
 | 컨테이너 max-width | 1200px (KRDS contents-size) |
 | BEM | `.block__element--modifier` (소문자, 하이픈) — 5-objects · 6-components 레이어에만 |
 | ITCSS | 5-layer 순서: 3-generic → 4-elements → 5-objects → 6-components → 7-utilities (`tokens/`는 외부 소스) |
+| 캐스케이드 레이어 | 모든 규칙을 `@layer` 안에 둔다 — `base`(3·4) < `components.objects`(5, `container`만 `utilities`) < `components`(6) < `utilities`(7·Tailwind). 레이어 밖 규칙은 선택자 우선순위와 무관하게 모두 이기므로 쓰지 않는다. 프로젝트 변형은 objects를 고치는 것까지 `@layer components`에 둔다 |
 | @import (CSS) | Tailwind v4 `@import` 사용. SCSS `@use/@forward` 또는 `@import` 사용 금지 (SCSS 자체가 폐기됨) |
 | 다크/고대비 | `[data-color-mode="high-contrast"]` 어트리뷰트로 자동 대응 — 컴포넌트 코드에 색 수동 분기 작성 금지 |
 | HTML 기본 구조 | 큰 영역은 `header/main/footer`, `main` 안은 `section > .container` 구조 |

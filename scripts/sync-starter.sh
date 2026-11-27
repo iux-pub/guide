@@ -1,10 +1,13 @@
 #!/bin/bash
 # guide → starter 동기화 (INFOUX + Tailwind v4 시스템)
 # 사용법:
-#   npm run sync:starter       # 로컬 starter/만 갱신
-#   npm run sync:starter:push  # 로컬 갱신 후 iux-pub/starter 푸시 (작업 사본에서 설치·빌드·검사 통과 시에만)
+#   npm run sync:starter       # 로컬 starter/만 갱신 — node scripts/sync-starter.js (Windows에서도 돈다)
+#   npm run sync:starter:push  # 로컬 갱신 후 iux-pub/starter 푸시 (작업 사본에서 설치·빌드·검사 통과 시에만) — 이 스크립트(bash)
 #   DRY_RUN=1 npm run sync:starter:push   # 빌드·검사까지 하고 커밋·푸시 직전에 변경 요약만 본다
 #   STARTER_SYNC_DIR=<경로>               # 푸시용 작업 사본 위치(기본 /tmp/starter-sync)
+#
+# 로컬 갱신은 scripts/sync-starter.js가 한다 — 복사 목록의 정본은 그 파일 하나다(이 스크립트는 목록을 갖지 않는다).
+# 아래는 읽는 사람을 위한 요약이다. 항목을 더하거나 빼려면 sync-starter.js를 고친다.
 #
 # 동기화 대상:
 #   - src/styles/             → starter/src/styles/
@@ -19,6 +22,9 @@
 #   - scripts/hooks/         → starter/scripts/hooks/ (편집 직후 검사 훅 — HX-06)
 #   - scripts/lib/page-scope.js → starter/scripts/lib/ (납품 페이지 범위 — HX-06)
 #   - scripts/lib/{visual-signature,html-tree,copy-rules}.js → starter/scripts/lib/ (시각 서명·카피 검사)
+#   - scripts/lib/template-signature.js → starter/scripts/lib/ (R-51 템플릿 장식 서명 — 빠지면 스타터의 R-51 검사가 조용히 꺼진다)
+#   - scripts/lib/design-plan.js → starter/scripts/lib/ (CT-04 디자인 계획 판독 — check-contract.js가 쓴다)
+#   - scripts/lib/*.js 나머지 → 스타터로 가는 스크립트가 require로 부르는 파일 전부(sync-starter.js가 따라가며 모은다)
 #   - .claude/settings.json, .codex/hooks.json → starter/ (루트와 같은 훅 — check-harness가 정합을 본다)
 #   - prompts/               → starter/prompts/
 #   - postcss.config.mjs      → starter/
@@ -40,136 +46,15 @@ fi
 GUIDE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STARTER_DIR="$GUIDE_DIR/starter"
 
-echo "=== guide → starter 동기화 (INFOUX + Tailwind v4) ==="
-
-# 1. styles
-echo "[1/8] src/styles/ 동기화..."
-rm -rf "$STARTER_DIR/src/styles"
-cp -r "$GUIDE_DIR/src/styles" "$STARTER_DIR/src/styles"
-
-# 2. snippets
-echo "[2/8] src/snippets/ 동기화..."
-rm -rf "$STARTER_DIR/src/snippets"
-cp -r "$GUIDE_DIR/src/snippets" "$STARTER_DIR/src/snippets"
-
-# 3. js
-echo "[3/8] src/js/ 동기화..."
-if [ -d "$GUIDE_DIR/src/js" ]; then
-  mkdir -p "$STARTER_DIR/src/js"
-  cp "$GUIDE_DIR/src/js/"*.js "$STARTER_DIR/src/js/" 2>/dev/null || true
-fi
-
-# 4. tokens (build/ 제외 — starter에서 자체 빌드)
-#    brand.json은 프로젝트가 갈아끼우는 파일이지만, 스타터에는 INFOMIND 기본값을
-#    실어 보낸다. 프로젝트는 이 파일만 고치고 foundation.json은 건드리지 않는다.
-echo "[4/8] tokens/ 동기화..."
-mkdir -p "$STARTER_DIR/tokens"
-cp "$GUIDE_DIR/tokens/foundation.json" "$STARTER_DIR/tokens/"
-cp "$GUIDE_DIR/tokens/brand.json" "$STARTER_DIR/tokens/"
-cp "$GUIDE_DIR/tokens/contrast-baseline.json" "$STARTER_DIR/tokens/"
-cp "$GUIDE_DIR/tokens/README.md" "$STARTER_DIR/tokens/"
-cp "$GUIDE_DIR/tokens/AGENTS.md" "$STARTER_DIR/tokens/"
-# 팔레트 프리셋 — brand.json 자리에 그대로 복사해 쓰는 완전 동형 파일
-rm -rf "$STARTER_DIR/tokens/presets"
-mkdir -p "$STARTER_DIR/tokens/presets"
-cp "$GUIDE_DIR/tokens/presets/"*.json "$STARTER_DIR/tokens/presets/"
-
-# 4.5. 아이콘 자산 — 프로젝트 소스 안에 통째로 들어간다(self-contained).
-# 외부에서 불러오는 것이 하나도 없어야 폐쇄망에서도 그대로 뜬다.
-echo "[4.5/8] assets/icons 동기화..."
-rm -rf "$STARTER_DIR/assets/icons"
-mkdir -p "$STARTER_DIR/assets/icons"
-cp -r "$GUIDE_DIR/assets/icons/svg" "$STARTER_DIR/assets/icons/svg"
-cp "$GUIDE_DIR/assets/icons/icons.css" "$STARTER_DIR/assets/icons/"
-cp "$GUIDE_DIR/assets/icons/LICENSE-NOTICE.txt" "$STARTER_DIR/assets/icons/"
-# 스프라이트는 표정마다 하나씩이다(sprite.svg·sprite-slim.svg…). 기본만 옮기면
-# 표정 클래스는 오는데 그림이 안 와서 프로젝트에서 빈 네모가 나온다.
-for f in "$GUIDE_DIR/assets/icons/"sprite*.svg; do
-  [ -f "$f" ] && cp "$f" "$STARTER_DIR/assets/icons/"
-done
-# 폰트는 있을 때만 — 빌드 환경에 폰트 도구가 없으면 생성되지 않는다
-for f in "$GUIDE_DIR/assets/icons/"infoux-icons*.woff2; do
-  [ -f "$f" ] && cp "$f" "$STARTER_DIR/assets/icons/"
-done
-
-# 4.6. 서체 — fonts.css(@font-face)·woff2·LICENSE를 폴더째 옮긴다. fonts.css가 상대 경로로 가리킨다.
-echo "[4.6/8] assets/fonts 동기화..."
-rm -rf "$STARTER_DIR/assets/fonts"
-mkdir -p "$STARTER_DIR/assets"
-cp -r "$GUIDE_DIR/assets/fonts" "$STARTER_DIR/assets/fonts"
-
-# 5. scripts + contracts
-echo "[5/8] scripts 동기화..."
-mkdir -p "$STARTER_DIR/scripts/lib"
-cp "$GUIDE_DIR/scripts/build-tokens.js" "$STARTER_DIR/scripts/"
-cp "$GUIDE_DIR/scripts/check-violations.js" "$STARTER_DIR/scripts/"
-cp "$GUIDE_DIR/scripts/check-html-structure.js" "$STARTER_DIR/scripts/"
-cp "$GUIDE_DIR/scripts/check-contrast.js" "$STARTER_DIR/scripts/"
-# 납품 게이트(CT-03 contentSources·자리 표기·예외 만료)와 R-47 법령 예외 판독
-cp "$GUIDE_DIR/scripts/check-contract.js" "$STARTER_DIR/scripts/"
-cp "$GUIDE_DIR/scripts/lib/contract-exceptions.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/token-source.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/contrast.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/build-tokens-css.js" "$STARTER_DIR/scripts/lib/"
-# 아이콘 — 검사와 검수 시트는 프로젝트에서도 돌려야 한다.
-# 반입·빌드(import-icons/build-icons)는 원본 저장소의 일이므로 넘기지 않는다.
-cp "$GUIDE_DIR/scripts/check-icons.js" "$STARTER_DIR/scripts/"
-cp "$GUIDE_DIR/scripts/build-icon-sheet.js" "$STARTER_DIR/scripts/"
-cp "$GUIDE_DIR/scripts/lib/svg-path.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/svg-geometry.js" "$STARTER_DIR/scripts/lib/"
-# 납품 페이지 범위와 편집 훅 — 스타터의 index.html·pages/도 검사가 닿고, 실패를 숨기지 않는다(HX-06)
-cp "$GUIDE_DIR/scripts/lib/page-scope.js" "$STARTER_DIR/scripts/lib/"
-# 시각 서명 검사(R-01 색·R-34 장식 효과·R-36 이모지·R-37 기본 스케일)
-cp "$GUIDE_DIR/scripts/lib/visual-signature.js" "$STARTER_DIR/scripts/lib/"
-# 카피 검사(R-23 가짜·자리 콘텐츠·R-43 카피 톤) — 판정 자료는 contracts/fake-content.json·copy-lexicon.json(아래 contracts 복사)
-cp "$GUIDE_DIR/scripts/lib/html-tree.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/copy-rules.js" "$STARTER_DIR/scripts/lib/"
-# 한국형 페이지 골격(R-32 푸터·R-40 공공 통합검색·R-41 서브 골격) — check-html-structure.js가 쓴다
-cp "$GUIDE_DIR/scripts/lib/page-rules.js" "$STARTER_DIR/scripts/lib/"
-# 글자 크기 하한(R-31 루트 글자 크기·R-38 최소 글자) — check-violations.js가 쓴다
-cp "$GUIDE_DIR/scripts/lib/type-floor.js" "$STARTER_DIR/scripts/lib/"
-# 모양·움직임(R-35 반경·그림자·R-33 마키) — check-violations.js가 쓴다
-cp "$GUIDE_DIR/scripts/lib/shape-motion.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/content-quality.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/font-rules.js" "$STARTER_DIR/scripts/lib/"
-cp "$GUIDE_DIR/scripts/lib/icon-usage.js" "$STARTER_DIR/scripts/lib/"
-# 모바일 우선(R-48) — check-violations.js가 쓴다
-cp "$GUIDE_DIR/scripts/lib/layout-rules.js" "$STARTER_DIR/scripts/lib/"
-rm -rf "$STARTER_DIR/scripts/hooks"
-cp -r "$GUIDE_DIR/scripts/hooks" "$STARTER_DIR/scripts/hooks"
-mkdir -p "$STARTER_DIR/.claude" "$STARTER_DIR/.codex"
-cp "$GUIDE_DIR/.claude/settings.json" "$STARTER_DIR/.claude/settings.json"
-cp "$GUIDE_DIR/.codex/hooks.json" "$STARTER_DIR/.codex/hooks.json"
-mkdir -p "$STARTER_DIR/contracts"
-cp "$GUIDE_DIR/contracts/"* "$STARTER_DIR/contracts/"
-
-# 5.5. prompts
-echo "[6/8] prompts 동기화..."
-rm -rf "$STARTER_DIR/prompts"
-cp -r "$GUIDE_DIR/prompts" "$STARTER_DIR/prompts"
-
-# 6. config files
-echo "[7/8] config 동기화..."
-cp "$GUIDE_DIR/postcss.config.mjs" "$STARTER_DIR/"
-cp "$GUIDE_DIR/.stylelintrc.json" "$STARTER_DIR/"
-cp "$GUIDE_DIR/.npmrc" "$STARTER_DIR/"
-
-# 6.5. 도구별 경로 지시
-#      스킬은 폐기했다 — 작업 절차·레퍼런스는 infoUX MCP가 제공한다.
-echo "[8/8] 경로별 지시 동봉..."
-mkdir -p "$STARTER_DIR/.github"
-rm -rf "$STARTER_DIR/.github/instructions"
-cp -r "$GUIDE_DIR/.github/instructions" "$STARTER_DIR/.github/"
-
-echo ""
-echo "✓ 로컬 starter/ 동기화 완료"
-echo ""
-
-# 기본 명령은 로컬 생성물만 갱신한다. 원격 push는 명시적 --push에서만 실행한다.
+# 1~6. 로컬 starter/ 갱신 — 복사 목록은 scripts/sync-starter.js에 있다(npm run sync:starter와 같은 코드).
+#       여기에 cp 줄을 다시 적지 않는다 — 두 벌이 되면 한쪽에만 파일이 늘어난다.
+#       기본 명령은 로컬 생성물만 갱신한다. 원격 push는 명시적 --push에서만 실행한다.
 if [ "$PUSH_REMOTE" != true ]; then
-  echo "원격 배포는 실행하지 않았습니다. 배포 시 npm run sync:starter:push 사용."
+  node "$GUIDE_DIR/scripts/sync-starter.js"
   exit 0
 fi
+node "$GUIDE_DIR/scripts/sync-starter.js" --before-push
+echo ""
 
 # 7. iux-pub/starter 원격 저장소로 push (개발팀 clone 대상)
 #    작업 사본 위치는 STARTER_SYNC_DIR 로 바꿀 수 있다(기본 /tmp/starter-sync).

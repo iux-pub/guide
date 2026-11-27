@@ -33,7 +33,7 @@
       "headingMax": 700,
       "maxPerScreen": 4
     },
-    "note": "lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0)은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2."
+    "note": "lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0. 예외: 2.4rem 이상 제목 블록만 -0.03em 이내(em 단위, 2026-11-23 오너 승인 — 국내 수상 공공사이트 다섯 곳 모두 제목 자간 -0.01~-0.06em, R-24 검출기가 같은 블록의 글자 크기를 본다))은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2."
   },
   "shape": {
     "radiusMaxRem": 1.2,
@@ -360,7 +360,7 @@
         },
         {
           "severity": "info",
-          "text": "foundation의 --font-mono(Plex Mono 계열)와 가족 정합 — 데이터 화면에서 강점. admin에서는 standard-gov 단일 서체도 유효한 대안."
+          "text": "데이터 화면에서 강점. foundation의 --font-mono는 JetBrains Mono라 고정폭 표기는 같은 가족이 아니다. admin에서는 standard-gov 단일 서체도 유효한 대안."
         }
       ]
     }

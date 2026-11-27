@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- 장면 그림의 도해 층 · 일러스트 층(`design-intelligence.md` §5-10) — 직접 그린 첫 화면 장면을 「읽게 하는」 도해 층(강조색 하나, 선 두 단계, 4px 격자, 글자는 HTML)과 「보게 하는」 일러스트 층(바탕 · 중경 · 전경 세 무리, 대기 원근 · 물속 감쇠, 빛 방향 하나, 실측 형상)으로 나누고, 과학 일러스트 관례(절단면 해칭 · 치수선 끝 표시 · 축척 과장 표기), 글자 제거 시험, 렌더 후 원본 직접 수정, 한 장면 안 사진 · 그림의 결 맞추기를 적었다. 근거는 2026-11-25 공개 디자인 스킬 조사와 해양과학기술원 시안 s13 · s14 평가.
+- R-34 그림 자산 검사 — img · picture로 넣은 독립 .svg 안 그라데이션은 빛 · 깊이 · 재질을 그릴 때만 쓰고, 보라 · 남색 계열은 그림 안에서도 오류다. `check-violations.js`가 인자로 받은 .svg와 납품 페이지가 넣은 SVG를 읽는다(로고 · 아이콘 · 스프라이트 제외, `svgAssetFindings` · `svgAssetRefs` · `isMarkAsset`, 단위 테스트).
+- 렌더 비평 보강(`design-intelligence.md` §8, 평가자 지시문) — 계획 대조(과제 3: 계획의 시각 결정을 화면 서술로 바꿔 결함 · 짝 비교를 맡지 않은 평가자가 원본 크기로 눈으로 보이는지 답한다), 짝 비교 다섯 차원 답(장면 · 위계 · 면과 색 · 조판 · 마감 — 판정은 전체 답으로만), 회차마다 다듬기 · 전환 선택 기록(D01 · D02 · D03 · D17이 「예」면 전환이 기본), 이유가 반대로 갈린 짝 비교는 평가자를 늘리지 않고 갈린 차원과 함께 사람에게 묻고 견본 색인 `calibration`에 「짝 판정」으로 남긴다. 계획 서식에 「짝 비교 1·2 차원」「계획 대조」「다음 회차」 줄.
+- 결함 문항 D17(디자인이 아니라 와이어프레임인가)과 §5-9 「와이어프레임과 디자인」, 렌더 관문 줄(1920×1080 첫 화면 다음 섹션 걸쳐 보임, 본문 선 밖 글자 0곳), `references/user-behavior.md`(사용자 행동 근거).
+- 반슬롭 지침 반영 — §7-3 과교정 표(금지가 낳는 다음 기본값), §8-6 제거 테스트와 「고치는 회차에는 새 장치를 더하지 않는다」, R-44 대비 구문 표어 경고, 기본 CSS `scroll-padding-top` · `::selection` · 고정폭 숫자.
+- 공기업·기관 메인 기준 — `design-intelligence.md` §3-4 레퍼런스 고르기(같은 분야 안에서 갤러리 평점·완성도가 높은 곳, 기준 갤러리 디비컷), §3-5 공기업·기관 메인(업무 자리 먼저 — 첫 화면 검색·자주 찾는 서비스, 두 번째 자리 알림마당, 정보공개·대표전화 — 그 위에 실적 수치 장면·사업영역 사진 판·넓은 브랜드 색 면·자기 부품 언어), §5-5 재료 원칙(실적 수치·기관 사진은 지어내지 않고 사람에게 요청, 생성 이미지는 분위기 사진에만), §8-1 그래픽 가속·화면 단위 스크롤 캡처. 2026-11-13 제주관광공사 공기업 메인 시안의 운영자 판정 원문과 분리 평가자 짝 비교 결과를 근거로 적었다.
+- 블록 카탈로그에 공기업 메인 블록 4종(`service-gate` 업무 판 첫 화면 — 입체 아이콘 이미지·스프라이트 아이콘 둘 다 받는다, `notice-board` 알림마당 + 접수 중 색 면 상자, `field-accordion` 사업영역 사진 아코디언 — :has() 없이 키보드 초점으로도 펼친다, `open-panel` 짙은 정보공개 판 + 대표전화)과 견본 조합 `public-enterprise`를 더했다. 출처는 「견본 — 운영자 판정 대기」다.
+- `scripts/capture.js`(`npm run capture`, 스타터 동기화) — `shots`(그래픽 가속 전체 페이지 구간 캡처 + 가로 넘침 측정), `scroll`(스크롤 연출 사이트를 화면 단위로), `alpha`(흰 바탕 그림 → 투명 PNG). 단위 테스트 `scripts/__tests__/capture.test.js`.
+- 기준 견본 색인에 E-04~E-07(제주관광공사 메인 E·H·I·J안 판정 이력)을 더하고 `verdict` 「대기」, 선택 칸 `case`·`reference`·`notes`·캡처 `source`를 받게 했다. 평가자 지시문에 「짝 비교 상대는 같은 분야 고평점 선정작」과 운영자 판정 사례 세 건을 더했다.
+- 블록 카탈로그에 장면형 쇼케이스 블록 5종(`scene`·`news-deck`·`field-shore`·`link-lines`·`logo-row`)과 견본 조합(`src/blocks/sets.json` — `scene-showcase`·`split-cover`, MCP `compose_page({ set })`)을 더했다. 블록 예외 장치 — `block.json`의 `exceptions`(규칙 + 선택자 + 값 + 사유)를 `npm run build:blocks`가 `contracts/block-exceptions.json`으로 모으고, `check-violations.js`·`check-html-structure.js`는 등록된 조합만 통과시키며 적용 건수를 출력에 보인다(`scripts/lib/block-exceptions.js`). 표제 크기 상한·제목 행간 150%를 넘는 다섯 곳은 「KRDS 기준 밖 — 운영자 승인 대기」로 표시했다.
+- 블록 카탈로그 — 메인·랜딩의 섹션 단위 실물 6종(`cover`·`task-index`·`bulletin`·`field-list`·`link-rows`·`partner-row`)을 `src/blocks/<id>/`(메타데이터·마크업 틀)와 `src/styles/6-components/`(스타일)에 두고, MCP `list_blocks`·`get_block`·`compose_page`로 찾기 → 가져오기 → 조립 → 순서 점검을 제공한다. 미리보기는 `npm run build:blocks`가 `src/playground/block-*.html`·`blocks.html`로 만든다.
+- `references/design-intelligence.md` — 디자인 판단 순서 8단계, 디자인 다이얼(변화도·모션·밀도)과 등급별 상한, KRDS 호환 스타일 허용표, 규칙 검사가 못 잡는 전문가 품질 점검, 충돌 우선순위. ui-ux-pro-max 스킬(MIT)을 infoUX 맥락으로 옮겨 썼고 KRDS가 우선한다.
+- Task Contract `designDials` 선택 필드(스키마·문서·스타터 사본).
+- design-page 절차에 판단 순서·다이얼 단계, 아트 디렉션 납품 전 체크리스트에 전문가 품질 점검 항목.
+- design-intelligence에 Impeccable(Apache 2.0)·Anthropic frontend-design 스킬을 반영: 디자인 계획 산출물(`docs/design-plan.md`: 소재·색·서체·레이아웃·원칙), 템플릿 자가 점검, 「과감함은 한 곳에」, 색 전략 4종, 템플릿 서명 금지표, 렌더 품질 점검(나란한 단 윗선·넓은 화면 빈 절반·브라우저 표면), 장신구 하나 빼기.
+- 디자인 디렉션 절차(메인·랜딩) — `references/design-intelligence.md`를 「금지 목록」에서 「만드는 순서」로 다시 썼다. 2026-10-23 제주관광공사 시안이 규칙 검사를 모두 통과하고도 「심심하고 전형적」 판정을 받은 것이 계기다. 레시피는 무엇을 실을지만 정하고 형식은 매번 설계한다.
+  - 컨셉 한 문장과 시그니처 장면(§2), 두 축 이상에서 다른 세 방향의 첫 화면을 만들어 고르는 방향 라운드(§3).
+  - 구성 기본기(§5): KRDS 타이포 단계로 본 역할별 크기와 「한 단계 건너뛰기」, 색 전략과 면 지도, 열 비율·빈 칸 없는 벤토 배치표, 여백 세 종류, 사진, 실데이터 그림.
+  - 블록별 형식(§6): 메인 비주얼 6형, 자주 찾는 서비스 4형, 공지·소식 4형, 사업 소개 4형.
+  - 전형 조립 서명(§7-1)과 열 항목 20점 렌더 비평 채점표(§8) — 16점 이상, 0점 항목 없음.
+  - 3D·캔버스·스크롤 연동 장면을 쓸 때의 조건 아홉 가지(§9-3).
+- `contracts/design-plan.md` 계획 서식과 납품 게이트 CT-04 — 메인 페이지가 있는 프로젝트는 `docs/design-plan.md`의 일곱 칸과 통과한 비평 기록이 없으면 `npm run check:release`가 실패한다(`scripts/lib/design-plan.js`).
+- `contracts/agent-workflow.json` version 3 — 폐기된 스킬 경로를 `get_workflow`로 바꾸고 `design-direction`·`render-critique` 단계를 넣었다.
+- MCP: 서버 지시문에 메인·랜딩 절차 안내, `get_reference("design-plan")`·`get_reference("task-contract")`.
+
+### Changed
+
+- 렌더 비평(`design-intelligence.md` §8)을 열 항목 20점 자기 채점에서 근거 있는 평가로 바꿨다. 만든 에이전트가 후한 점수를 주고 통과해도 화면은 그대로였다. 이제 계산되는 항목은 기계 검사 관문으로 돌리고, 만든 맥락을 모르는 별도 평가자가 결함 문항 D01~D16(예·아니오, 전형·심심함 문항에 무게)과 순서를 바꾼 두 번의 짝 비교를 맡으며, 고친 안은 직전 최고안을 이길 때만 채택하고, 마지막 판정은 사람이 한다.
+  - 평가자 지시문 `contracts/render-critique-evaluator.md`(MCP `get_reference("render-critique-evaluator")`), 기준 견본 자리 `assets/exemplars/`와 색인 `index.json`(MCP `get_reference("exemplars")`, 스타터 동기화). 운영자 판정 세 건을 첫 견본으로 적었고 캡처는 대기다.
+  - `contracts/design-plan.md` 「비평 기록」 서식과 CT-04 검사(`scripts/lib/design-plan.js`) — 평가자 분리, 기계 검사, 결함 문항, 두 번의 짝 비교, 채택, 사람 판정을 본다. 납품 검사는 사람 판정 「승인」이 없으면 실패한다. BREAKING(검사): 옛 「합계: NN/20」 기록은 받지 않고 새 서식을 안내한다.
+  - `contracts/agent-workflow.json` — `render-critique` 단계를 새 절차로 바꾸고 `human-verdict` 단계와 중단 조건 두 개를 더했다.
+- 렌더 확인 폭을 360·768·1024·1280·1440으로 통일했다.
+- `src/snippets/hero-bleed.md` 기본 마크업의 버튼을 하나로 줄이고, 이 패턴이 여섯 형식 가운데 하나임을 밝혔다.
+- `site/design/aesthetics.md` — 영문 웹 기준 안티패턴(Inter·Space Grotesk)과 「독특한 폰트를 고르라」를 걷어 내고 한국어 화면의 징후와 카탈로그 서체 기준으로 바꿨다. 메인과 서브·업무 화면의 수위 표를 넣었다.
+- `korean-web-patterns.md` — 레시피와 형식의 역할 구분, KR-M30 전형 조립, 영문 eyebrow 불허(KR-T09·KR-M23).
+
 ## [4.0.0] - 2026-10-21
 
 3.4.0 이후 석 달 치 변경(아트 디렉션·아이콘 계층·KRDS 정합·안티슬롭 검사 R-23~R-50)을 한 번에 묶은 릴리스다. 함께 올린 패키지: MCP `@infomind-ux/infoux-mcp` 0.5.0, `create-infomind-ux` 0.3.0, 스타터 4.0.0(이 버전부터 가이드 릴리스 번호를 따른다).

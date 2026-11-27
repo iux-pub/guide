@@ -1,0 +1,71 @@
+/**
+ * Notice Board — 알림마당 탭 게시판 + 접수 중 색 면 상자 (블록 카탈로그 notice-board · design-intelligence §6-3 N2)
+ *   왼쪽 8열에 섹션 제목과 KRDS 탭 게시판, 오른쪽 4열에 접수 중인 공모·모집을 짙은 브랜드 색의 넓은 면으로 둔다.
+ *   공기업·기관 메인의 두 번째 자리(첫 화면 바로 아래)다(design-intelligence §3-5).
+ *   정본: src/blocks/notice-board/. MCP get_block("notice-board")
+ *   <section class="section section--notice notice-board" aria-labelledby="notice-board-title">
+ *     <div class="container notice-board__grid">
+ *       <div class="notice-board__board"><h2 class="notice-board__title">…</h2><div class="tab">…</div></div>
+ *       <aside class="notice-board__due">… <ul class="notice-board__due-list"><li><a class="notice-board__due-item">…</a></li></ul></aside>
+ *     </div>
+ *   </section>
+ *   두 단은 아랫선을 맞춘다 — 색 면 상자가 게시판 높이까지 늘어난다.
+ * 레이어 밖에 둔다 — 탭·목록의 간격을 이 블록 안에서 조정한다.
+ */
+
+/* 섹션 세로 여백은 .section(5-objects)이 맡는다 — 블록에서 덮어쓰지 않는다(design-intelligence §5-4) */
+.notice-board {
+  @apply relative;
+}
+
+.notice-board__grid {
+  @apply grid gap-[4rem] laptop:gap-[4.8rem] laptop:items-stretch laptop:[grid-template-columns:minmax(0,8fr)_minmax(0,4fr)];
+}
+
+.notice-board__board {
+  @apply min-w-0;
+}
+
+/* KRDS heading-xlarge(mobile 2.8 / pc 4rem) */
+.notice-board__title {
+  @apply m-0 mb-[2.4rem] [font-family:var(--font-heading)] text-[2.8rem] font-bold leading-[1.5] tracking-normal text-[var(--color-text-bolder)] [word-break:keep-all] tablet:text-[4rem];
+}
+
+/* 접수 중 — 넓은 브랜드 색 면. 강조색은 남은 날수 표지에만 */
+.notice-board__due {
+  @apply p-[2.4rem] rounded-[1.2rem] bg-[var(--color-primary-70)] laptop:mt-[8.4rem] laptop:p-[3.2rem];
+}
+
+.notice-board__due-title {
+  @apply m-0 text-[1.9rem] font-bold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all];
+}
+
+.notice-board__asof {
+  @apply m-0 mt-[0.4rem] text-[1.5rem] leading-[1.5] text-[var(--color-primary-20)];
+}
+
+.notice-board__due-list {
+  @apply grid gap-[1.2rem] list-none m-0 mt-[2rem] p-0;
+}
+
+.notice-board__due-item {
+  @apply grid gap-y-[0.4rem] p-[2rem] rounded-[0.8rem] bg-[var(--color-primary-80)] no-underline [outline-offset:0.2rem] [transition:box-shadow_0.2s_ease] hover:shadow-[inset_0_0_0_0.2rem_var(--color-point-30)];
+}
+
+.notice-board__dday {
+  @apply justify-self-start px-[0.8rem] rounded-[0.4rem] bg-[var(--color-point-30)] text-[1.5rem] font-bold leading-[1.6] text-[var(--color-gray-95)] [font-variant-numeric:tabular-nums];
+}
+
+.notice-board__due-name {
+  @apply mt-[0.4rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all];
+}
+
+.notice-board__due-date {
+  @apply text-[1.5rem] leading-[1.5] text-[var(--color-primary-20)] [font-variant-numeric:tabular-nums];
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice-board__due-item {
+    @apply [transition:none];
+  }
+}

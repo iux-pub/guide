@@ -76,7 +76,7 @@
     },
     {
       "id": "pure-white-ban",
-      "pattern": "순백[^\\n]{0,20}(?:금지|피)",
+      "pattern": "순백[^\\n]{0,20}(?:금지|피(?:한다|하라|해야|할\\s))",
       "polarity": "always",
       "note": "KRDS 기본 배경은 흰색이다 — 순백을 금지하는 처방은 정본과 충돌한다."
     },
@@ -146,6 +146,30 @@
       "polarity": "always",
       "inCounterBlocks": true,
       "note": "예측 가능한 레이아웃은 KRDS 탐색 일관성 원칙이다 — 안티패턴으로 적지 않는다."
+    },
+    {
+      "id": "negative-tracking",
+      "pattern": "(?:자간|letter-spacing|tracking)[^\\n]{0,20}-\\s*0\\.0\\d\\s*em[^\\n]{0,15}(?:권장|으로\\s?좁|를\\s?준다|을\\s?준다|쓴다)",
+      "polarity": "prescriptive",
+      "note": "KRDS 자간은 0과 0.1rem뿐이다 — 한글은 네모틀 글자라 좁히면 받침과 획이 겹친다(R-24 음수 자간 금지, 예외: 2.4rem 이상 제목 블록만 -0.03em 이내(em 단위, 2026-11-23 오너 승인 — 국내 수상 공공사이트 다섯 곳 모두 제목 자간 -0.01~-0.06em, R-24 검출기가 같은 블록의 글자 크기를 본다)). 반슬롭 지침의 음수 자간 권장(-0.02~-0.04em)은 라틴 디스플레이 서체 기준이다."
+    },
+    {
+      "id": "extreme-weight",
+      "pattern": "(?:100|200)\\s*(?:/\\s*200\\s*)?(?:대|vs\\.?|↔)\\s*(?:800|900)",
+      "polarity": "prescriptive",
+      "note": "한글 굵기는 400·700이 기본이다(art-direction hangul.weights, KRDS 4종 이내) — 극단 굵기 대비 처방은 저시력 사용자에게 가는 한글을 남긴다."
+    },
+    {
+      "id": "staggered-reveal",
+      "pattern": "계단식\\s*등장|staggered\\s*reveal|animation-delay로\\s*(?:차례|순서)",
+      "polarity": "prescriptive",
+      "note": "페이지 로드 계단식 등장은 모든 섹션 등장 효과(R-51)와 같은 서명이다 — 의도한 순간은 페이지에 하나(design-intelligence §5-7)."
+    },
+    {
+      "id": "grain-noise",
+      "pattern": "그레인\\s*(?:오버레이|질감|텍스처)|노이즈\\s*(?:텍스처|질감)|grain\\s*overlay|noise\\s*texture",
+      "polarity": "prescriptive",
+      "note": "그레인·노이즈 배경은 장식 효과다(R-34) — 배경 위 글자 대비를 실측할 수 없고 선명한 화면 모드와 부딪힌다. Anthropic frontend-design 스킬도 2026-09 개정에서 이 처방을 거뒀다."
     }
   ],
   "prescriptionsNote": "HX-07 사전 — scripts/lib/doc-prescriptions.js가 references/*.md·site/design/*.md·prompts 수기 파일에 적용한다. prescriptive는 같은 줄에 금지·쓰지 않·피한다·안티패턴·❌가 있으면 면제, always는 면제하지 않는다."

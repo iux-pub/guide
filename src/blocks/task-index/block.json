@@ -1,0 +1,97 @@
+{
+  "id": "task-index",
+  "name": "글자 바로가기 판",
+  "slot": "quick-links",
+  "forms": ["Q1"],
+  "reference": "design-intelligence §6-2 Q1 글자 목록",
+  "tags": ["바로가기", "자주 찾는 서비스", "글자 목록", "과업 진입", "걸침"],
+  "summary": "첫 화면 아래쪽에 걸쳐 올라오는 흰 판이다. 왼쪽 색 면에 제목, 오른쪽에 큰 글자 바로가기를 3열로 놓는다.",
+  "useWhen": [
+    "자주 찾는 과업이 3·6·9개이고 이름이 길어 아이콘 없이 글자로 읽히는 편이 낫다.",
+    "첫 화면 블록 바로 아래에서 과업 진입을 첫 스크롤 안에 보여 줘야 한다(공공 메인 R-40).",
+    "원 배경 아이콘을 같은 크기로 늘어놓는 바로가기(전형 조립 B)를 피하고 싶다."
+  ],
+  "avoidWhen": [
+    "앞 블록이 첫 화면 블록이 아니다 — 이 판은 앞 블록 위로 걸쳐 올라가므로 본문 중간에 두면 앞 내용을 덮는다.",
+    "한두 항목에 이용이 몰린다 — 대표 + 나머지(Q2)를 쓴다.",
+    "통합검색이 1순위 과업이다 — 검색 결합(Q4)을 쓴다.",
+    "항목이 10개를 넘는다 — 바로가기가 아니라 메뉴다. 항목을 줄인다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "판 제목",
+      "spec": "한글 4~10자. 「자주 찾는 서비스」처럼 무엇의 목록인지 적는다.",
+      "example": "자주 찾는 서비스"
+    },
+    {
+      "key": "tasks",
+      "kind": "list",
+      "label": "바로가기 항목",
+      "min": 3,
+      "max": 9,
+      "spec": "넓은 화면에서 3열이다 — 3·6·9개일 때 빈 칸이 없다. 그 밖의 수면 마지막 줄이 비므로 항목을 더하거나 덜어 맞춘다. 이용 통계가 있으면 많이 찾는 순서로 놓는다.",
+      "fields": [
+        {
+          "key": "label",
+          "kind": "text",
+          "label": "과업 이름",
+          "spec": "한글 4~12자. 기관이 실제로 쓰는 메뉴 이름을 그대로 쓴다."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "목적지 주소",
+          "spec": "실제 목적지 주소(R-30)."
+        }
+      ],
+      "examples": [
+        { "label": "공연·전시 예매", "href": "/ticket" },
+        { "label": "대관 신청", "href": "/rental" },
+        { "label": "교육 프로그램 신청", "href": "/education" },
+        { "label": "입찰·계약 정보", "href": "/tender" },
+        { "label": "채용 공고", "href": "/recruit" },
+        { "label": "정보공개 청구", "href": "/open/request" }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "제목 면 색",
+      "options": ["primary-60(기본)", "브랜드의 다른 짙은 단계"],
+      "how": "제목 칸 배경은 .task-index__title의 토큰 하나다. 앞 블록의 면 색과 다른 단계를 고른다 — 같으면 판과 배경의 경계가 사라진다."
+    },
+    {
+      "axis": "걸침 높이",
+      "options": ["8rem(기본)"],
+      "how": "앞 블록이 정한 --cover-overlap을 읽는다. 앞 블록이 cover가 아니면 그 블록이 아래 여백에 걸침 몫을 남겨야 한다."
+    }
+  ],
+  "neighbors": {
+    "before": ["cover"],
+    "after": ["bulletin"],
+    "avoid": [],
+    "requiresBeforeSlot": "first-screen"
+  },
+  "surface": {
+    "tone": "overlap",
+    "note": "섹션은 투명하고 판만 --color-surface다. 제목 칸은 --color-primary-60. 앞 블록 위에 걸치므로 면 흐름에서 한 칸으로 세지 않는다."
+  },
+  "section": { "archetype": "list" },
+  "styles": ["src/styles/6-components/task-index.css"],
+  "requires": {
+    "components": ["icon"],
+    "icons": ["chevron-right"],
+    "scripts": []
+  },
+  "accessibility": [
+    "제목은 h2이고 section의 aria-labelledby가 가리킨다.",
+    "목록은 ul이다. 목록 표시를 지웠으므로 role=\"list\"를 남긴다.",
+    "링크 칸 높이는 모바일 7.2rem으로 터치 영역 44px을 넘는다(R-13).",
+    "chevron은 장식이라 aria-hidden이다. 링크 이름은 글자가 전한다.",
+    "초점 링은 칸 안쪽으로 들여 그린다(outline-offset). outline을 지우지 않는다(R-11).",
+    "호버의 화살표 이동은 prefers-reduced-motion에서 꺼진다."
+  ],
+  "origin": "제주관광공사 메인 D안(2026-11)의 task-index 블록을 옮겼다. 판 가장자리는 그림자 대신 테두리로 바꿨다."
+}

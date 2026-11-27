@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>가로 줄 링크 묶음 (link-rows) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: link-rows — 가로 줄 링크 묶음 -->
+    <section class="section section--list inverse-surface" aria-labelledby="link-rows-title">
+      <div class="container link-rows">
+        <h2 class="link-rows__title" id="link-rows-title">열린경영</h2>
+        <dl class="link-rows__list">
+          <div class="link-rows__row">
+            <dt class="link-rows__group">열린 경영</dt>
+            <dd class="link-rows__links">
+              <a class="link-rows__link" href="/open/disclosure">경영 공시</a>
+              <a class="link-rows__link" href="/open/ethics">윤리·인권 경영</a>
+              <a class="link-rows__link" href="/open/realname">사업 실명제</a>
+            </dd>
+          </div>
+          <div class="link-rows__row">
+            <dt class="link-rows__group">정보공개</dt>
+            <dd class="link-rows__links">
+              <a class="link-rows__link" href="/open/list">사전 정보 공표</a>
+              <a class="link-rows__link" href="/open/request">정보공개 청구</a>
+              <a class="link-rows__link" href="/open/data">공공데이터 제공</a>
+            </dd>
+          </div>
+          <div class="link-rows__row">
+            <dt class="link-rows__group">시민 참여</dt>
+            <dd class="link-rows__links">
+              <a class="link-rows__link" href="/voice">재단에 바란다</a>
+              <a class="link-rows__link" href="/survey">설문 조사</a>
+              <a class="link-rows__link" href="/proposal">시민 제안</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

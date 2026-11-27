@@ -3,6 +3,8 @@ title: AI 에이전트 규칙 준수 전략
 order: 5
 ---
 
+> 2026-07-29 스킬 계층 폐기 이전에 쓴 기록이다. 본문의 `skill/`·`.agents/skills`·`.claude/skills`는 지금 없는 경로이고, 현재 전달 경로는 infoUX MCP(`get_workflow`·`get_reference`)와 `references/` 문서다.
+
 infoUX의 AI 하네스는 위반을 사후 검출하는 도구가 아니라, 에이전트가 처음부터 팀의 방식으로 판단하고 구현하도록 유도하는 작업 시스템이어야 한다.
 
 ## 목표

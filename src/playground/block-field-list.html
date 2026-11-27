@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사진과 글자 줄 목록 (field-list) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: field-list — 사진과 글자 줄 목록 -->
+    <section class="section section--content field-list" aria-labelledby="field-list-title">
+      <div class="container">
+        <h2 class="field-list__title" id="field-list-title">사업영역</h2>
+        <div class="field-list__grid">
+          <figure class="field-list__media">
+            <img class="field-list__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 1500'%3E%3Crect width='1200' height='1500' fill='%23c5d4e3'/%3E%3Cpath d='M0 1040 Q300 960 600 1020 T1200 1000 V1500 H0 Z' fill='%2354789e'/%3E%3Crect x='540' y='520' width='120' height='500' fill='%23f4f5f6'/%3E%3Cpath d='M520 520 L600 420 L680 520 Z' fill='%233b5e81'/%3E%3C/svg%3E" alt="" width="1200" height="1500" loading="lazy">
+          </figure>
+          <div class="field-list__body">
+            <ul class="field-list__list" role="list">
+              <li class="field-list__item">
+                <h3 class="field-list__name">공연·전시 기획</h3>
+                <ul class="field-list__work" role="list">
+                  <li>시립 극장 기획 공연과 초청 공연 운영</li>
+                  <li>항구 미술관 상설·기획 전시</li>
+                </ul>
+              </li>
+              <li class="field-list__item">
+                <h3 class="field-list__name">문화예술 교육</h3>
+                <ul class="field-list__work" role="list">
+                  <li>어린이·청소년 예술 교실</li>
+                  <li>시민 예술 아카데미 운영</li>
+                </ul>
+              </li>
+              <li class="field-list__item">
+                <h3 class="field-list__name">예술인 지원</h3>
+                <ul class="field-list__work" role="list">
+                  <li>창작 지원금 공모와 심사</li>
+                  <li>청년 예술가 작업실 임대</li>
+                </ul>
+              </li>
+              <li class="field-list__item">
+                <h3 class="field-list__name">축제·지역 행사</h3>
+                <ul class="field-list__work" role="list">
+                  <li>등대 축제와 거리 공연 축제 개최</li>
+                  <li>마을 단위 문화 행사 지원</li>
+                </ul>
+              </li>
+              <li class="field-list__item">
+                <h3 class="field-list__name">시설 운영</h3>
+                <ul class="field-list__work" role="list">
+                  <li>극장·전시실·연습실 대관</li>
+                  <li>문화 시설 안전 관리</li>
+                </ul>
+              </li>
+            </ul>
+            <p class="field-list__more"><a class="btn btn--secondary btn--large" href="/business">사업 자세히 보기</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

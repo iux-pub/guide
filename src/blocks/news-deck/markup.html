@@ -1,0 +1,45 @@
+<section class="section section--notice inverse-surface news-deck" aria-labelledby="news-deck-title">
+  <div class="container news-deck__grid">
+    <div class="news-deck__board">
+      <h2 class="display-title" id="news-deck-title">{{title}}</h2>
+      <div class="tab">
+        <div class="tab__list" role="tablist" aria-label="{{board_label}}">
+          <!-- @each boards as board -->
+          <button type="button" class="tab__item" role="tab" aria-selected="{{board.@first:true|false}}" aria-controls="news-deck-panel-{{board.@n}}" id="news-deck-tab-{{board.@n}}">{{board.name}}</button>
+          <!-- @end -->
+        </div>
+        <!-- @each boards as board -->
+        <div class="tab__panel" role="tabpanel" id="news-deck-panel-{{board.@n}}" aria-labelledby="news-deck-tab-{{board.@n}}"{{board.@first:| hidden}}>
+          <ul class="post-list" role="list">
+            <!-- @each board.posts as post -->
+            <li class="post-list__item">
+              <a class="post-list__link" href="{{post.href}}">{{post.title}}</a>
+              <time class="post-list__date" datetime="{{post.datetime}}">{{post.date_label}}</time>
+            </li>
+            <!-- @end -->
+          </ul>
+          <a class="more-link" href="{{board.more_href}}">{{board.name}} 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg></a>
+        </div>
+        <!-- @end -->
+      </div>
+    </div>
+    <aside class="due-track" aria-labelledby="due-track-title" data-reveal>
+      <h3 class="due-track__title" id="due-track-title">{{due_title}}</h3>
+      <p class="due-track__asof">오늘 <time datetime="{{asof_datetime}}">{{asof_label}}</time> 기준</p>
+      <ol class="due-track__list" role="list">
+        <!-- @each dues as due -->
+        <li class="due-track__item">
+          <a class="due-track__link" href="{{due.href}}">
+            <span class="due-track__days"><strong class="due-track__count">{{due.days}}</strong>일 남음</span>
+            <span class="due-track__body">
+              <span class="due-track__name">{{due.title}}</span>
+              <span class="due-track__meta"><time datetime="{{due.datetime}}">{{due.date_label}}</time> 마감</span>
+            </span>
+            <span class="due-track__bar" style="--left: {{due.percent}}%" aria-hidden="true"><span class="due-track__fill"></span></span>
+          </a>
+        </li>
+        <!-- @end -->
+      </ol>
+    </aside>
+  </div>
+</section>

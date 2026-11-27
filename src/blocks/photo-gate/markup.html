@@ -1,0 +1,26 @@
+<section class="section section--intro photo-gate" aria-labelledby="photo-gate-title" data-autoplay="7000">
+  <div class="container photo-gate__control">
+    <button type="button" class="photo-gate__pause" data-carousel-toggle aria-controls="photo-gate-scenes">
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#pause"></use></svg>
+      <span class="sr-only">첫 화면 장면 전환 정지</span>
+    </button>
+    <p class="photo-gate__count" aria-hidden="true" data-scene-count>1 / {{scenes.@count}}</p>
+    <span class="photo-gate__progress" aria-hidden="true"><span class="photo-gate__bar" data-scene-bar></span></span>
+  </div>
+  <div class="photo-gate__scene" id="photo-gate-scenes">
+    <!-- @each scenes as scene -->
+    <img class="photo-gate__photo" style="--focus: {{scene.focus}}" src="{{scene.src}}" alt="{{scene.alt}}" width="2560" height="1440"{{scene.@first: data-active| decoding="async"}}>
+    <!-- @end -->
+  </div>
+  <div class="container photo-gate__body">
+    <h1 class="photo-gate__title" id="photo-gate-title">{{title_line_1}}<br> {{title_line_2}}</h1>
+    <p class="photo-gate__lead">{{lead}}</p>
+  </div>
+  <nav class="container photo-gate__quick" aria-label="{{quick_label}}">
+    <ul class="photo-gate__links" role="list">
+      <!-- @each services as service -->
+      <li><a class="photo-gate__link" href="{{service.href}}"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#{{service.icon}}"></use></svg>{{service.label}}</a></li>
+      <!-- @end -->
+    </ul>
+  </nav>
+</section>

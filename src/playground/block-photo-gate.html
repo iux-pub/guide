@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>움직이는 사진 표지 첫 화면 — 사진 장면 전환 + 사명 표제 + 바닥 바로가기 줄 (photo-gate) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header photo-header">
+    <div class="container site-header__inner">
+      <a class="site-header__brand" href="/">
+        <span>항구도시 문화재단</span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="메인 메뉴">
+        <ul class="site-header__menu">
+          <li><a href="/about">소개</a></li>
+          <li><a href="/services" aria-current="page">서비스</a></li>
+          <li><a href="/notice">공지</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" role="search" action="/search">
+          <label for="site-search" class="sr-only">통합검색</label>
+          <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+          <button type="submit" class="btn btn--secondary">검색</button>
+        </form>
+        <a class="site-header__search-link" href="/search">
+          <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#search"></use></svg>
+          <span class="sr-only">통합검색</span>
+        </a>
+        <button type="button" class="btn btn--text btn--small">로그인</button>
+        <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+          <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#menu"></use></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: photo-gate — 움직이는 사진 표지 첫 화면 — 사진 장면 전환 + 사명 표제 + 바닥 바로가기 줄 -->
+    <section class="section section--intro photo-gate" aria-labelledby="photo-gate-title" data-autoplay="7000">
+      <div class="container photo-gate__control">
+        <button type="button" class="photo-gate__pause" data-carousel-toggle aria-controls="photo-gate-scenes">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#pause"></use></svg>
+          <span class="sr-only">첫 화면 장면 전환 정지</span>
+        </button>
+        <p class="photo-gate__count" aria-hidden="true" data-scene-count>1 / 3</p>
+        <span class="photo-gate__progress" aria-hidden="true"><span class="photo-gate__bar" data-scene-bar></span></span>
+      </div>
+      <div class="photo-gate__scene" id="photo-gate-scenes">
+        <img class="photo-gate__photo" style="--focus: 50% 45%" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%2386b3d1'/%3E%3Cpath d='M0 520 Q400 470 800 520 T1600 500 V900 H0 Z' fill='%23356e96'/%3E%3Cpath d='M900 520 L1120 300 L1260 410 L1400 330 L1600 520 Z' fill='%23476b4a'/%3E%3C/svg%3E" alt="맑은 낮, 방파제 너머로 등대와 부두 크레인이 보이는 항구" width="2560" height="1440" data-active>
+        <img class="photo-gate__photo" style="--focus: 60% 50%" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23a9c6db'/%3E%3Cpath d='M0 600 L1600 560 V900 H0 Z' fill='%23596b4f'/%3E%3Crect x='980' y='300' width='220' height='300' fill='%23d8d2c4'/%3E%3C/svg%3E" alt="항구 언덕 위 붉은 벽돌 공연장과 앞마당 잔디밭" width="2560" height="1440" decoding="async">
+        <img class="photo-gate__photo" style="--focus: 40% 50%" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%2397b8cf'/%3E%3Cpath d='M0 640 Q500 600 1000 650 T1600 620 V900 H0 Z' fill='%23305a78'/%3E%3C/svg%3E" alt="해 질 무렵 전 바다 위로 이어진 해안 산책로" width="2560" height="1440" decoding="async">
+      </div>
+      <div class="container photo-gate__body">
+        <h1 class="photo-gate__title" id="photo-gate-title">예술로 일상을 잇는<br> 항구도시의 문화 공공기관</h1>
+        <p class="photo-gate__lead">항구문화재단은 항구광역시가 출연한 문화예술 공공기관입니다.</p>
+      </div>
+      <nav class="container photo-gate__quick" aria-label="자주 찾는 서비스">
+        <ul class="photo-gate__links" role="list">
+          <li><a class="photo-gate__link" href="/tender"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#document"></use></svg>입찰·계약정보</a></li>
+          <li><a class="photo-gate__link" href="/recruit"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#users"></use></svg>채용공고</a></li>
+          <li><a class="photo-gate__link" href="/notice"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#bell"></use></svg>공지사항</a></li>
+          <li><a class="photo-gate__link" href="/press"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#file"></use></svg>보도자료</a></li>
+          <li><a class="photo-gate__link" href="/open/disclosure"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#folder"></use></svg>사전정보공표</a></li>
+          <li><a class="photo-gate__link" href="/open/management"><svg class="icon icon--medium" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chart-bar"></use></svg>경영공시</a></li>
+        </ul>
+      </nav>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 서비스 내비게이션(선택): 메인 메뉴 최상위 링크를 모두 같은 레이블로 -->
+      <div class="site-footer__top">
+        <nav class="site-footer__nav" aria-label="푸터 메뉴">
+          <div class="site-footer__group">
+            <h2 class="site-footer__heading" id="footer-group-about">기관 소개</h2>
+            <ul class="site-footer__list" aria-labelledby="footer-group-about">
+              <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
+              <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__group">
+            <h2 class="site-footer__heading" id="footer-group-service">주요 사업</h2>
+            <ul class="site-footer__list" aria-labelledby="footer-group-service">
+              <li><a class="site-footer__link" href="/service/support">지원 사업</a></li>
+              <li><a class="site-footer__link" href="/service/education">교육</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__group">
+            <h2 class="site-footer__heading" id="footer-group-news">알림마당</h2>
+            <ul class="site-footer__list" aria-labelledby="footer-group-news">
+              <li><a class="site-footer__link" href="/news/notice">공지사항</a></li>
+              <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="site-footer__bottom">
+        <!-- ① 서비스 로고 ② 연락처 ③ 유틸리티 링크 — 한 그룹 -->
+        <div class="site-footer__info">
+          <a class="site-footer__brand" href="/">항구도시 문화재단</a>
+          <!-- contentSources: 주소·대표전화·운영시간 — 아래는 형식 예시다 -->
+          <address class="site-footer__address">
+            항구광역시 중구 등대로 12 항구도시 문화재단<br>
+            평일 09:00~18:00
+          </address>
+          <ul class="site-footer__utility" aria-label="바로가기">
+            <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+            <li><a class="site-footer__link" href="/sitemap">사이트맵</a></li>
+            </ul>
+        </div>
+
+        <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
+        <nav aria-label="약관 및 정책">
+          <ul class="site-footer__legal-list">
+            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+            <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
+            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
+          </ul>
+        </nav>
+
+        <!-- ⑤ 저작권 정보 -->
+        <small class="site-footer__copy">© 2026 항구도시 문화재단</small>
+      </div>
+    </div>
+  </footer>
+  <script src="../js/photo-gate.js"></script>
+  <script src="../js/photo-header.js"></script>
+</body>
+</html>

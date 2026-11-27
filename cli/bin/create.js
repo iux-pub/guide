@@ -6,7 +6,7 @@
  * 사용법:
  *   npx create-infomind-ux <project-name>
  *   npx create-infomind-ux <project-name> --skip-install
- *   npx create-infomind-ux <project-name> --template starter --no-git
+ *   npx create-infomind-ux <project-name> --profile public-service --no-git
  *
  * 동작:
  *   1. iux-pub/starter 저장소를 GitHub tarball로 다운로드
@@ -78,8 +78,16 @@ const DELIVERABLE_REQUIRED = ['contracts', 'scripts', 'tokens']
 
 // ─── CLI 인자 파싱 ─────────────────────────────────────
 
+// 잘못된 인자는 Error를 던진다(main이 받아 종료한다) — 단위 테스트가 프로세스를 끝내지 않고 부를 수 있게
 function parseArgs(argv) {
   const args = { _: [], flags: {} }
+  // 값을 받는 옵션 — 다음 인자가 없거나 또 다른 옵션이면 값이 빠진 것이다.
+  // 예전에는 undefined가 들어가 --profile을 준 것이 조용히 무시됐다(사이트 유형이 기록되지 않는다)
+  const valueOf = (i, flag, hint) => {
+    const value = argv[i + 1]
+    if (value === undefined || value.startsWith('-')) throw new Error(`${flag} 옵션에는 값이 필요합니다. ${hint}`)
+    return value
+  }
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i]
     if (a === '--help' || a === '-h') {
@@ -90,19 +98,19 @@ function parseArgs(argv) {
       args.flags.skipInstall = true
     } else if (a === '--no-git') {
       args.flags.noGit = true
-    } else if (a === '--template') {
-      args.flags.template = argv[++i] || 'starter'
     } else if (a === '--profile') {
-      args.flags.profile = argv[++i]
+      args.flags.profile = valueOf(i++, '--profile', `가능한 값: ${Object.keys(PROFILES).join(', ')}`)
     } else if (a === '--brand') {
-      args.flags.brand = argv[++i]
+      args.flags.brand = valueOf(i++, '--brand', '예: --brand ./brand.json')
+    } else if (a === '--template' || a.startsWith('--template=')) {
+      // 받기만 하고 무시되던 옵션이다 — 스타터는 하나뿐이라 없앴다. 조용히 넘기지 않는다
+      throw new Error(`--template 옵션은 없어졌습니다. 스타터는 ${REPO} 하나입니다.`)
     } else if (a === '--deliver') {
       args.flags.deliver = true
     } else if (!a.startsWith('-')) {
       args._.push(a)
     } else {
-      console.error(`${RED}알 수 없는 옵션: ${a}${RESET}`)
-      process.exit(1)
+      throw new Error(`알 수 없는 옵션: ${a} (--help로 옵션 목록을 본다)`)
     }
   }
   return args
@@ -121,7 +129,6 @@ ${BOLD}옵션:${RESET}
   --deliver          납품본 생성 — 사내 운영 문서 제외
   --skip-install     의존성 설치 건너뛰기
   --no-git           git init 건너뛰기
-  --template <name>  스타터 템플릿 (기본: starter)
   --help, -h         이 도움말
   --version, -v      버전
 
@@ -156,35 +163,92 @@ function validateName(name) {
   }
 }
 
-// HTTPS GET → 파일로 저장 (리다이렉트 따라감)
-function download(url, dest) {
+const MAX_REDIRECTS = 5
+const DOWNLOAD_TIMEOUT_MS = 30000
+
+// HTTPS GET → 파일로 저장. 리다이렉트는 MAX_REDIRECTS번까지만 따라가고(https 주소만),
+// 실패하면 쓰던 스트림을 닫고 반쯤 받은 파일을 지운 뒤 거절한다.
+// opts.get은 단위 테스트가 네트워크 없이 응답을 흉내 낼 때 쓴다.
+function download(url, dest, { get = https.get, maxRedirects = MAX_REDIRECTS } = {}) {
   return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(dest)
-    const req = (u) => https.get(u, (res) => {
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return req(res.headers.location)
+    let file = null
+    let settled = false
+    const fail = (err) => {
+      if (settled) return
+      settled = true
+      const remove = () => fs.rm(dest, { force: true }, () => reject(err))
+      if (file && !file.closed) {
+        file.once('close', remove)
+        file.destroy()
+      } else {
+        remove()
       }
-      if (res.statusCode !== 200) {
-        return reject(new Error(`HTTP ${res.statusCode} from ${u}`))
+    }
+    const request = (u, redirectsLeft) => {
+      const req = get(u, (res) => {
+        const { statusCode, headers } = res
+        if (statusCode >= 300 && statusCode < 400 && headers.location) {
+          res.resume() // 본문을 버려 소켓을 돌려준다
+          if (redirectsLeft <= 0) return fail(new Error(`리다이렉트가 ${maxRedirects}번을 넘었습니다: ${u}`))
+          let next
+          try {
+            next = new URL(headers.location, u).toString()
+          } catch {
+            return fail(new Error(`잘못된 리다이렉트 주소: ${headers.location}`))
+          }
+          if (!next.startsWith('https:')) return fail(new Error(`https가 아닌 주소로 리다이렉트: ${next}`))
+          return request(next, redirectsLeft - 1)
+        }
+        if (statusCode !== 200) {
+          res.resume()
+          return fail(new Error(`HTTP ${statusCode} from ${u}`))
+        }
+        file = fs.createWriteStream(dest)
+        file.on('error', fail)
+        res.on('error', fail)
+        res.on('aborted', () => fail(new Error('다운로드 중 연결이 끊겼습니다')))
+        file.on('finish', () => file.close((err) => {
+          if (err) return fail(err)
+          if (settled) return
+          settled = true
+          resolve()
+        }))
+        res.pipe(file)
+      })
+      req.on('error', fail)
+      if (typeof req.setTimeout === 'function') {
+        req.setTimeout(DOWNLOAD_TIMEOUT_MS, () => req.destroy(new Error(`${DOWNLOAD_TIMEOUT_MS / 1000}초 동안 응답이 없습니다`)))
       }
-      res.pipe(file)
-      file.on('finish', () => file.close(() => resolve()))
-    }).on('error', (e) => {
-      fs.unlink(dest, () => reject(e))
-    })
-    req(url)
+    }
+    request(url, maxRedirects)
   })
+}
+
+// npm은 Windows에서 npm.cmd다 — 셸 없이 spawn하면 ENOENT로 항상 실패한다.
+// win32에서는 셸로 부른다(인자는 고정 문자열이라 한 줄 명령으로 넘긴다 — 셸 + 인자 배열은 Node가 경고한다).
+function runNpm(args, options = {}, platform = process.platform) {
+  return platform === 'win32'
+    ? spawnSync(`npm ${args.join(' ')}`, { ...options, shell: true })
+    : spawnSync('npm', args, options)
+}
+
+// 완료 안내에 쓸 명령 — 생성된 프로젝트의 package.json에 실제로 있는 스크립트만 안내한다.
+// (예전에는 스타터에 없는 dev 스크립트를 안내했다. 스타터 스크립트가 바뀌어도 없는 명령을 말하지 않는다)
+const NEXT_STEP_SCRIPTS = [
+  ['build', '토큰 + CSS 빌드 (dist/css/style.css)'],
+  ['watch:css', 'CSS 변경 감시'],
+  ['check', '컨트랙트·HTML 구조·대비 검사']
+]
+function nextSteps(scripts = {}) {
+  return NEXT_STEP_SCRIPTS
+    .filter(([name]) => typeof scripts[name] === 'string')
+    .map(([name, note]) => ({ command: `npm run ${name}`, note }))
 }
 
 // tar 압축 해제 — 시스템 tar 사용
 function extractTar(tarPath, outDir) {
-  try {
-    execSync(`tar -xzf "${tarPath}" -C "${outDir}" --strip-components=1`, { stdio: 'pipe' })
-  } catch (e) {
-    die(`tar 압축 해제 실패: ${e.message}`)
-  }
+  execSync(`tar -xzf "${tarPath}" -C "${outDir}" --strip-components=1`, { stdio: 'pipe' })
 }
-
 
 // ─── 옵션 처리 ─────────────────────────────────────────
 
@@ -301,7 +365,12 @@ function stripInternal(projectPath) {
 // ─── 메인 ──────────────────────────────────────────────
 
 async function main() {
-  const args = parseArgs(process.argv)
+  let args
+  try {
+    args = parseArgs(process.argv)
+  } catch (e) {
+    die(e.message)
+  }
 
   if (args.flags.help) { showHelp(); return }
   if (args.flags.version) {
@@ -339,14 +408,22 @@ async function main() {
   // 2. 압축 해제
   log('2/5', '압축 해제 중...')
   fs.mkdirSync(projectPath, { recursive: true })
-  extractTar(tmpTarball, projectPath)
-  fs.unlinkSync(tmpTarball)
+  try {
+    extractTar(tmpTarball, projectPath)
+  } catch (e) {
+    die(`tar 압축 해제 실패: ${e.message}`)
+  } finally {
+    // 성공하든 실패하든 임시 tarball은 남기지 않는다
+    fs.rmSync(tmpTarball, { force: true })
+  }
 
   // 3. package.json name 변경
   log('3/5', 'package.json 갱신 중...')
   const pkgPath = path.join(projectPath, 'package.json')
+  let projectScripts = {}
   if (fs.existsSync(pkgPath)) {
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
+    projectScripts = pkg.scripts || {}
     pkg.name = projectName
     pkg.version = '0.1.0'
     delete pkg.description
@@ -384,7 +461,7 @@ async function main() {
     spawnSync('git', ['init', '--quiet'], { cwd: projectPath, stdio: 'pipe' })
     spawnSync('git', ['add', '.'], { cwd: projectPath, stdio: 'pipe' })
     spawnSync('git', ['commit', '--quiet', '-m', `chore: ${projectName} 초기화 (create-infomind-ux)`], {
-      cwd: projectPath, stdio: 'pipe',
+      cwd: projectPath, stdio: 'pipe'
     })
   } else {
     log('4/5', 'git 초기화 건너뜀 (--no-git)', DIM)
@@ -393,7 +470,7 @@ async function main() {
   // 5. npm install
   if (!args.flags.skipInstall) {
     log('5/5', '의존성 설치 중... (1~2분)')
-    const result = spawnSync('npm', ['install'], { cwd: projectPath, stdio: 'inherit' })
+    const result = runNpm(['install'], { cwd: projectPath, stdio: 'inherit' })
     if (result.status !== 0) {
       console.log('')
       console.log(`${YELLOW}⚠ 의존성 설치 실패. 디렉토리는 생성됨. 수동으로:${RESET}`)
@@ -413,7 +490,9 @@ async function main() {
   if (args.flags.skipInstall) {
     console.log(`  ${CYAN}npm install${RESET}`)
   }
-  console.log(`  ${CYAN}npm run dev${RESET}          # 개발 서버 (http://localhost:8080)`)
+  for (const step of nextSteps(projectScripts)) {
+    console.log(`  ${CYAN}${step.command.padEnd(20)}${RESET} # ${step.note}`)
+  }
   console.log('')
   console.log(`${DIM}브랜드 변경:${RESET}   tokens/brand.json 편집 → npm run build → npm run check`)
   console.log(`${DIM}AI 기준 연결:${RESET}  claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp`)
@@ -440,4 +519,4 @@ if (require.main === module) {
   })
 }
 
-module.exports = { finalizeStarterPage }
+module.exports = { finalizeStarterPage, parseArgs, download, runNpm, nextSteps, PROFILES, MAX_REDIRECTS }

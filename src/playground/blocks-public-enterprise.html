@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공기업·기관 메인 — 업무 먼저, 완성도 장치를 얹은 조합 (public-enterprise) - 블록 견본 조합</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: service-gate — 업무 판 첫 화면 — 사진 + 통합검색 + 자주 찾는 서비스 -->
+    <section class="section section--intro service-gate" aria-labelledby="service-gate-title">
+      <img class="service-gate__photo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1664 936'%3E%3Crect width='1664' height='936' fill='%23cfe0ee'/%3E%3Cpath d='M0 560 Q420 520 830 560 T1664 540 V936 H0 Z' fill='%234f86b0'/%3E%3Cpath d='M980 560 L1180 380 L1300 470 L1420 400 L1664 560 Z' fill='%233d5f45'/%3E%3C/svg%3E" alt="맑은 아침, 방파제 너머로 부두 크레인과 등대가 보이는 항구" width="1664" height="936">
+      <div class="container service-gate__body">
+        <h1 class="service-gate__title" id="service-gate-title">항구문화재단</h1>
+        <p class="service-gate__lead">항구광역시 출연 문화예술 공공기관 · 공연·전시 기획, 예술 교육, 예술인 지원</p>
+      </div>
+      <div class="container service-gate__panel">
+        <form class="service-gate__search" role="search" action="/search">
+          <label class="service-gate__search-label" for="service-gate-q">무엇을 찾으십니까?</label>
+          <div class="service-gate__search-row">
+            <input class="service-gate__search-input" id="service-gate-q" type="search" name="q" placeholder="예: 채용, 대관 신청">
+            <button class="service-gate__search-btn" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#search"></use></svg><span class="sr-only">검색</span></button>
+          </div>
+          <p class="service-gate__keywords">
+            <span class="service-gate__keywords-label">자주 찾는 검색어</span>
+            <a class="service-gate__keyword" href="/search?q=채용">채용</a>
+            <a class="service-gate__keyword" href="/search?q=대관">대관</a>
+            <a class="service-gate__keyword" href="/search?q=입찰">입찰</a>
+          </p>
+        </form>
+        <nav class="service-gate__services" aria-label="자주 찾는 서비스">
+          <ul class="service-gate__list" role="list">
+            <li><a class="service-gate__service" href="/tender"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%231f4e79'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%236b9cc4'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>입찰·계약 정보</span></a></li>
+            <li><a class="service-gate__service" href="/recruit"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%231f4e79'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%23f2b36b'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>채용 공고</span></a></li>
+            <li><a class="service-gate__service" href="/open/disclosure"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%23d9822b'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%236b9cc4'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>사전정보공표</span></a></li>
+            <li><a class="service-gate__service" href="/open/management"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%23d9822b'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%23f2b36b'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>경영 공시</span></a></li>
+            <li><a class="service-gate__service" href="/voice"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%232e6da4'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%236b9cc4'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>재단에 바란다</span></a></li>
+            <li><a class="service-gate__service" href="/open/data"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%232e6da4'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%23f2b36b'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>공공데이터 제공</span></a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- 블록: notice-board — 알림마당 — 탭 게시판 + 접수 중 색 면 상자 -->
+    <section class="section section--notice notice-board" aria-labelledby="notice-board-title">
+      <div class="container notice-board__grid">
+        <div class="notice-board__board">
+          <h2 class="notice-board__title" id="notice-board-title">알림마당</h2>
+          <div class="tab">
+            <div class="tab__list" role="tablist" aria-label="알림마당 게시판">
+              <button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="notice-board-panel-1" id="notice-board-tab-1">공지사항</button>
+              <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="notice-board-panel-2" id="notice-board-tab-2">입찰·계약</button>
+              <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="notice-board-panel-3" id="notice-board-tab-3">채용</button>
+              <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="notice-board-panel-4" id="notice-board-tab-4">보도자료</button>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-1" aria-labelledby="notice-board-tab-1">
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1575">청년 예술가 창작 지원 공모 안내</a>
+                  <time class="post-list__date" datetime="2026-11-02">2026.11.02</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1559">시민 합창단 신규 단원 모집</a>
+                  <time class="post-list__date" datetime="2026-10-28">2026.10.28</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1551">겨울 방학 어린이 미술 교실 수강 신청 일정</a>
+                  <time class="post-list__date" datetime="2026-10-21">2026.10.21</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1544">소극장 무대 조명 교체 공사에 따른 대관 일시 중단 안내</a>
+                  <time class="post-list__date" datetime="2026-10-14">2026.10.14</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1538">누리집 개인정보 처리방침 개정 안내</a>
+                  <time class="post-list__date" datetime="2026-10-06">2026.10.06</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/notice">공지사항 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-2" aria-labelledby="notice-board-tab-2" hidden>
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/tender/991">전시실 항온항습 설비 유지관리 용역</a>
+                  <time class="post-list__date" datetime="2026-10-21">2026.10.21</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/tender/990">거리 공연 축제 무대 설치 및 운영 용역</a>
+                  <time class="post-list__date" datetime="2026-10-16">2026.10.16</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/tender/989">예매 시스템 통합 유지관리 용역</a>
+                  <time class="post-list__date" datetime="2026-10-14">2026.10.14</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/tender">입찰·계약 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-3" aria-labelledby="notice-board-tab-3" hidden>
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/recruit/702">2026년 제3차 정규직 채용 필기시험 일시와 장소 공고</a>
+                  <time class="post-list__date" datetime="2026-10-08">2026.10.08</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/recruit/700">공연 기획 분야 기간제 근로자 채용 공고</a>
+                  <time class="post-list__date" datetime="2026-09-10">2026.09.10</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/recruit/699">청년 인턴(체험형) 최종 합격자 임용 등록 안내</a>
+                  <time class="post-list__date" datetime="2026-09-03">2026.09.03</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/recruit">채용 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-4" aria-labelledby="notice-board-tab-4" hidden>
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/press/2873">항구 미술관 겨울 기획전 개막</a>
+                  <time class="post-list__date" datetime="2026-10-21">2026.10.21</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/press/2872">등대 축제 관람객 집계 결과 발표</a>
+                  <time class="post-list__date" datetime="2026-10-20">2026.10.20</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/press/2871">시민 예술 아카데미 수료식 개최</a>
+                  <time class="post-list__date" datetime="2026-10-19">2026.10.19</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/press">보도자료 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+          </div>
+        </div>
+        <aside class="notice-board__due" aria-labelledby="notice-board-due-title">
+          <h3 class="notice-board__due-title" id="notice-board-due-title">접수 중인 공모·모집</h3>
+          <p class="notice-board__asof"><time datetime="2026-11-13">11월 13일</time> 기준</p>
+          <ul class="notice-board__due-list" role="list">
+            <li><a class="notice-board__due-item" href="/notice/1575">
+              <span class="notice-board__dday">D-8</span>
+              <span class="notice-board__due-name">청년 예술가 창작 지원 공모</span>
+              <span class="notice-board__due-date"><time datetime="2026-11-21">11.21</time> 마감</span>
+            </a></li>
+            <li><a class="notice-board__due-item" href="/notice/1559">
+              <span class="notice-board__dday">D-17</span>
+              <span class="notice-board__due-name">시민 합창단 신규 단원 모집</span>
+              <span class="notice-board__due-date"><time datetime="2026-11-30">11.30</time> 마감</span>
+            </a></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 블록: field-accordion — 사업영역 사진 아코디언 -->
+    <section class="section section--content field-accordion" aria-labelledby="field-accordion-title">
+      <div class="container">
+        <div class="field-accordion__head">
+          <h2 class="field-accordion__title" id="field-accordion-title">사업영역</h2>
+          <p class="field-accordion__lead">공연·전시·예술 교육·예술인 지원·시설 운영</p>
+          <a class="field-accordion__more" href="/business">사업영역 자세히 보기<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#arrow-right"></use></svg></a>
+        </div>
+        <ul class="field-accordion__list" role="list">
+          <li class="field-accordion__item">
+            <img class="field-accordion__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%233d5f80'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%2323394f'/%3E%3C/svg%3E" alt="객석에서 바라본 시립 극장 무대의 리허설" width="1120" height="1400" loading="lazy">
+            <div class="field-accordion__text">
+              <h3 class="field-accordion__name"><a class="field-accordion__link" href="/business/stage">공연·전시 기획</a></h3>
+              <p class="field-accordion__desc">시립 극장 기획 공연과 항구 미술관 전시 운영</p>
+            </div>
+          </li>
+          <li class="field-accordion__item">
+            <img class="field-accordion__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%23c98a3d'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%237a5222'/%3E%3C/svg%3E" alt="미술 교실에서 그림을 그리는 어린이들" width="1120" height="1400" loading="lazy">
+            <div class="field-accordion__text">
+              <h3 class="field-accordion__name"><a class="field-accordion__link" href="/business/education">문화예술 교육</a></h3>
+              <p class="field-accordion__desc">어린이·청소년 예술 교실과 시민 예술 아카데미</p>
+            </div>
+          </li>
+          <li class="field-accordion__item">
+            <img class="field-accordion__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%236f8f5a'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%233f5733'/%3E%3C/svg%3E" alt="작업실 창가에서 조각을 다듬는 작가" width="1120" height="1400" loading="lazy">
+            <div class="field-accordion__text">
+              <h3 class="field-accordion__name"><a class="field-accordion__link" href="/business/artist">예술인 지원</a></h3>
+              <p class="field-accordion__desc">창작 지원금 공모와 청년 예술가 작업실 임대</p>
+            </div>
+          </li>
+          <li class="field-accordion__item">
+            <img class="field-accordion__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%238a5a7a'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%234f3346'/%3E%3C/svg%3E" alt="부두 광장의 저녁 거리 공연" width="1120" height="1400" loading="lazy">
+            <div class="field-accordion__text">
+              <h3 class="field-accordion__name"><a class="field-accordion__link" href="/business/festival">축제·지역 행사</a></h3>
+              <p class="field-accordion__desc">등대 축제와 거리 공연 축제 개최</p>
+            </div>
+          </li>
+          <li class="field-accordion__item">
+            <img class="field-accordion__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%235a7a8f'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%232f4352'/%3E%3C/svg%3E" alt="조명을 켠 빈 소극장 객석" width="1120" height="1400" loading="lazy">
+            <div class="field-accordion__text">
+              <h3 class="field-accordion__name"><a class="field-accordion__link" href="/business/facility">문화시설 운영</a></h3>
+              <p class="field-accordion__desc">소극장·전시실 대관과 시설 관리</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 블록: open-panel — 정보공개 판 — 짙은 단색 면 + 대표전화 -->
+    <section class="section section--list open-panel" aria-labelledby="open-panel-title">
+      <div class="container">
+        <div class="open-panel__panel">
+          <h2 class="open-panel__title" id="open-panel-title">열린경영</h2>
+          <div class="open-panel__groups">
+            <div class="open-panel__group">
+              <h3 class="open-panel__group-name">열린경영</h3>
+              <ul class="open-panel__links" role="list">
+                <li><a class="open-panel__link" href="/open/ethics">윤리경영<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/management">경영공시<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/budget">예산·결산<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+              </ul>
+            </div>
+            <div class="open-panel__group">
+              <h3 class="open-panel__group-name">정보공개</h3>
+              <ul class="open-panel__links" role="list">
+                <li><a class="open-panel__link" href="/open/disclosure">사전정보공표<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/request">정보공개 청구<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/data">공공데이터 제공<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+              </ul>
+            </div>
+            <div class="open-panel__group">
+              <h3 class="open-panel__group-name">고객참여</h3>
+              <ul class="open-panel__links" role="list">
+                <li><a class="open-panel__link" href="/voice">재단에 바란다<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/voice/survey">설문조사<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/voice/report">부패·공익 신고<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+              </ul>
+            </div>
+          </div>
+          <p class="open-panel__call">대표전화 <a class="open-panel__tel" href="tel:051-000-0000">051-000-0000</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 블록: partner-row — 관련 기관 로고 줄 -->
+    <section class="section section--list" aria-labelledby="partner-row-title">
+      <div class="container">
+        <h2 class="sr-only" id="partner-row-title">관련 기관</h2>
+        <ul class="partner-row" role="list">
+          <li><a class="partner-row__link" href="https://www.example.go.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 28'%3E%3Crect width='28' height='28' fill='%230b50d0'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E항구시청%3C/text%3E%3C/svg%3E" alt="항구시청" width="112" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://museum.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 28'%3E%3Ccircle cx='14' cy='14' r='14' fill='%23ab2b36'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E항구 미술관%3C/text%3E%3C/svg%3E" alt="항구 미술관" width="128" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://theater.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 28'%3E%3Cpath d='M0 28 L14 0 L28 28 Z' fill='%23052561'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E시립 극장%3C/text%3E%3C/svg%3E" alt="시립 극장" width="112" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://edu.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 176 28'%3E%3Crect width='28' height='28' fill='%23228738'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E문화예술 교육센터%3C/text%3E%3C/svg%3E" alt="문화예술 교육센터" width="176" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://tour.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 28'%3E%3Ccircle cx='14' cy='14' r='14' fill='%2354789e'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E항구 관광 안내%3C/text%3E%3C/svg%3E" alt="항구 관광 안내" width="144" height="28"><span class="sr-only"> 새 창</span></a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+  <script src="../js/tab.js"></script>
+</body>
+</html>

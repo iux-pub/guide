@@ -1,0 +1,17 @@
+<section class="section section--list link-lines" aria-labelledby="link-lines-title">
+  <div class="container link-lines__grid">
+    <h2 class="display-title link-lines__title" id="link-lines-title">{{title}}</h2>
+    <dl class="link-lines__list">
+      <!-- @each groups as group -->
+      <div class="link-lines__row">
+        <dt class="link-lines__group">{{group.name}}</dt>
+        <dd class="link-lines__links">
+          <!-- @each group.links as link -->
+          <a class="link-lines__link" href="{{link.href}}">{{link.label}}</a>
+          <!-- @end -->
+        </dd>
+      </div>
+      <!-- @end -->
+    </dl>
+  </div>
+</section>

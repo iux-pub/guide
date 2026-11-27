@@ -55,6 +55,18 @@
 
   }
 
+  /* ─── 브라우저 기본 표면 — 생성 화면이 가장 자주 빠뜨리는 마감(design-intelligence §5-8) ───
+   * 글자 선택 색은 대표색 계열 옅은 단계(어두운 화면 모드에서도 의미 토큰이 따라간다).
+   * 날짜·표의 숫자는 고정폭 숫자 — 줄마다 자릿수가 맞아 목록 오른쪽 날짜 열이 흔들리지 않는다 */
+  ::selection {
+    @apply bg-[var(--color-border-primary-light)] text-[var(--color-text-bolder)];
+  }
+
+  time,
+  table {
+    @apply [font-variant-numeric:tabular-nums];
+  }
+
   /* ─── 코드 ─── */
   code,
   kbd,

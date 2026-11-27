@@ -1,18 +1,21 @@
 /**
  * Section — main 안 콘텐츠 구획(section.section)의 세로 여백
- *   밀도 프리셋(contracts/profiles.json density)을 실물로 둔다. 섹션마다 위아래 여백의 합이
- *   섹션 사이 간격이 된다.
- *   - 여유(comfortable, 기본): 섹션 사이 모바일 4rem · 1024px 이상 8rem
- *   - 고밀도(compact): <body data-density="compact"> — 섹션 사이 모바일 2.4rem · 1024px 이상 4rem
+ *   밀도 프리셋(contracts/profiles.json density)의 sectionPadding 값을 섹션 위아래 여백에 그대로 쓴다.
+ *   섹션 사이 간격은 앞 섹션 아래 여백 + 뒤 섹션 위 여백이라 프리셋 값의 두 배가 된다.
+ *   - 여유(comfortable, 기본): 위아래 각 모바일 4rem · 1024px 이상 8rem → 섹션 사이 8rem · 16rem
+ *   - 고밀도(compact): <body data-density="compact"> — 위아래 각 모바일 2.4rem · 1024px 이상 4rem
  *     (관리자·업무 화면. 밀도는 페이지 단위 판단이라 section modifier가 아니라 body 속성으로 둔다)
  *   - 1024px 기준은 KRDS gap-layout(mobile·PC 전환)과 같다
- *   더 벌리지 않는다 — 공공·관리자 화면은 밀도 기준의 1.5배를 넘으면 R-49 경고다.
+ *   블록·프로젝트 CSS에서 섹션 여백을 덮어쓰지 않는다(design-intelligence §5-4).
+ *   더 벌리지 않는다 — 공공·관리자 화면은 프리셋의 1.5배를 넘으면 R-49 경고다.
+ *   2026-11-19 이전에는 위아래 각 2rem·4rem이었다. 프리셋 값을 「섹션 사이 간격」으로 잘못 읽어 절반이 됐고,
+ *   오너가 12회차에 「섹션간 여백 아직도 좁아보인다」고 지적했다.
  */
 
 .section {
-  @apply py-[2rem] laptop:py-[4rem];
+  @apply py-[4rem] laptop:py-[8rem];
 }
 
 [data-density="compact"] .section {
-  @apply py-[1.2rem] laptop:py-[2rem];
+  @apply py-[2.4rem] laptop:py-[4rem];
 }

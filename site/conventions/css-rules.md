@@ -12,11 +12,11 @@ CSS 파일 작성 시 적용되는 값·문법 규칙이다. Tailwind v4 + INFOU
 | ID | 규칙 | 심각도 | 검증 |
 |----|------|--------|------|
 | R-01 | 색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37) | error | check-violations.js |
-| R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | check-violations.js |
+| R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warn | check-violations.js |
 | R-03 | SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용 | error | check-violations.js |
 | R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | check-violations.js |
 | R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | check-violations.js |
-| R-24 | 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류) | error | check-violations.js |
+| R-24 | 한글 조판 하한 — keep-all 존재 필수·음수 자간(2.4rem 이상 제목 -0.03em 이내 예외)·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류) | error | check-violations.js |
 | R-26 | 폰트 스택 — 1순위는 카탈로그 한글 폰트, 서체는 토큰으로만(font-family 직접값·font-serif·외부 폰트 호스트 금지) | error | build-tokens.js, check-violations.js |
 | R-31 | 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고) | warn | check-violations.js |
 | R-34 | 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자 | error | check-violations.js |
@@ -60,7 +60,7 @@ gap: 1.6rem;   // 간격은 rem 값
 
 ## R-02 — !important 사용 금지 — 부득이한 경우 주석으로 사유 필수
 
-**심각도:** `warning` &nbsp; **검증:** check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-violations.js
 
 > 캐스케이드 우선순위를 강제 무력화하여 이후 오버라이드를 불가능하게 만든다. 외부 라이브러리 인라인 스타일을 덮어야 하는 등 불가피한 경우에만 허용하며 반드시 사유를 주석으로 명시한다.
 
@@ -164,11 +164,11 @@ $primary: #256ef4;   // SCSS 변수
 
 ---
 
-## R-24 — 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류)
+## R-24 — 한글 조판 하한 — keep-all 존재 필수·음수 자간(2.4rem 이상 제목 -0.03em 이내 예외)·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류)
 
 **심각도:** `error` &nbsp; **검증:** check-violations.js
 
-> 한글은 단어 중간 줄바꿈(keep-all 부재·break-all)과 좁은 행간·음수 자간에서 가독성이 급락한다. CSS 선언·@apply·임의값·HTML class·style을 선언 단위로 본다(scripts/lib/type-floor.js scanCssHangul·scanHtmlHangul). 오류: reset 계층의 word-break: keep-all 부재, 음수 자간(tracking-tight·tracking-[-…]·letter-spacing 음수), * 선택자의 자간(값 무관)과 html·body의 0 아닌 자간, pre·code·kbd·samp 밖의 word-break: break-all·normal·break-word(break-all·break-normal 유틸 포함), HTML class·style의 1.5 미만 행간. 경고: CSS의 1.5 미만 행간, 스타일시트 없이 자체 <style>에 keep-all도 없는 문서, 한 텍스트의 &nbsp; 3개 이상. 행간 예외는 contracts/art-direction.json hangul.singleLineSelectors(btn·badge·tag 블록, __icon·__close·__remove)와 같은 규칙 블록의 whitespace-nowrap이다 — 고정 높이 inline-flex 컨트롤은 leading-[1.5]로 써도 렌더가 같다. 임계값 1.5의 정본은 hangul.bodyLineHeight.lintFloor다. 문서 사이트 크롬(docs.css)과 플레이그라운드 데모 크롬(.pg*)은 행간만 면제한다.
+> 한글은 단어 중간 줄바꿈(keep-all 부재·break-all)과 좁은 행간·음수 자간에서 가독성이 급락한다. CSS 선언·@apply·임의값·HTML class·style을 선언 단위로 본다(scripts/lib/type-floor.js scanCssHangul·scanHtmlHangul). 오류: reset 계층의 word-break: keep-all 부재, 음수 자간(tracking-tight·tracking-[-…]·letter-spacing 음수 — 단 같은 선언 블록이 2.4rem 이상 글자 크기를 선언하고 자간이 em 단위 -0.03em 이내면 제목 예외로 허용, 2026-11-23 오너 승인: 국내 수상 공공사이트 다섯 곳 모두 제목 자간 -0.01~-0.06em), * 선택자의 자간(값 무관)과 html·body의 0 아닌 자간, pre·code·kbd·samp 밖의 word-break: break-all·normal·break-word(break-all·break-normal 유틸 포함), HTML class·style의 1.5 미만 행간. 경고: CSS의 1.5 미만 행간, 스타일시트 없이 자체 <style>에 keep-all도 없는 문서, 한 텍스트의 &nbsp; 3개 이상. 행간 예외는 contracts/art-direction.json hangul.singleLineSelectors(btn·badge·tag 블록, __icon·__close·__remove)와 같은 규칙 블록의 whitespace-nowrap이다 — 고정 높이 inline-flex 컨트롤은 leading-[1.5]로 써도 렌더가 같다. 임계값 1.5의 정본은 hangul.bodyLineHeight.lintFloor다. 문서 사이트 크롬(docs.css)과 플레이그라운드 데모 크롬(.pg*)은 행간만 면제한다.
 
 **금지 예시**
 
@@ -189,6 +189,7 @@ body {
 }   // 한글 조판 기본값 (3-generic/reset.css 소유)
 .badge { line-height: 1; }
 .tab__item { @apply whitespace-nowrap leading-none; }   // 단행 선택자·nowrap 예외
+.hero__title { @apply text-[2.8rem] laptop:text-[4.8rem] tracking-[-0.02em]; }   // 2.4rem 이상 제목 블록의 -0.03em 이내 자간 — 허용(제목 예외)
 ```
 
 **참고:** contracts/art-direction.json, references/art-direction.md, src/styles/3-generic/reset.css
@@ -221,7 +222,7 @@ body {
 
 ## R-31 — 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)
 
-**심각도:** warn &nbsp; **검증:** check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-violations.js
 
 > infoUX의 rem 단계(1rem = 10px)는 KRDS 방식의 62.5% 루트를 전제한다. html·:root의 font-size를 다른 값으로 줄이거나 vw로 두면 사용자의 브라우저 글자 크기 설정(WCAG 1.4.4)과 rem 단계가 함께 무너진다(국내 13곳 관찰). html·:root의 font-size가 62.5%가 아니면 경고다. 글자 크기 조절 기능은 html[data-font-scale]로 두며 예외다(scripts/lib/type-floor.js).
 
@@ -247,7 +248,7 @@ html[data-font-scale="large"] { font-size: 75%; }   // 글자 크기 조절
 
 **심각도:** `error` &nbsp; **검증:** check-violations.js
 
-> AI가 만든 화면을 알아보게 하는 첫 서명이 보라→파랑 그라데이션, 글래스 카드, 흐린 블롭, 색 번진 그림자다(AP-3·AP-4). KRDS에는 글래스·글로우가 없고, 공공·기관 화면의 신뢰 톤과 고대비 모드를 깨뜨린다. 그라데이션은 표현 등급(infoux.json profile → contracts/profiles.json expression, 없으면 restrained)으로 판정한다 — utility·restrained는 error, expressive는 warn. 보라·남색 계열(hue 225~300°, 채도 0.25 이상, 토큰은 실제 색으로 풀어 본다)은 등급과 상관없이 error다. 사진 위 글자 대비 스크림(투명 → 검정 알파·바탕 한 색의 선형 페이드)과 가로 스크롤 힌트는 허용하고, 무채색 그라데이션(스켈레톤 반짝임)은 warn이다. background-clip:text, backdrop-filter·backdrop-*, 4px(0.4rem) 이상 블러, blur가 있는데 색이 검정 계열이 아닌 그림자(box-shadow·text-shadow·drop-shadow·shadow-[…]·그림자 모양 커스텀 속성)는 error다. spread만 있는 포커스 링(0 0 0 0.4rem var(--color-border-primary))은 그림자가 아니라 통과한다. 문서 사이트 크롬(src/styles/docs.css)은 제외한다.
+> AI가 만든 화면을 알아보게 하는 첫 서명이 보라→파랑 그라데이션, 글래스 카드, 흐린 블롭, 색 번진 그림자다(AP-3·AP-4). KRDS에는 글래스·글로우가 없고, 공공·기관 화면의 신뢰 톤과 고대비 모드를 깨뜨린다. 그라데이션은 표현 등급(infoux.json profile → contracts/profiles.json expression, 없으면 restrained)으로 판정한다 — utility·restrained는 error, expressive는 warn. 보라·남색 계열(hue 225~300°, 채도 0.25 이상, 토큰은 실제 색으로 풀어 본다)은 등급과 상관없이 error다. 사진 위 글자 대비 스크림(투명 → 검정 알파·바탕 한 색의 선형 페이드)과 가로 스크롤 힌트는 허용하고, 무채색 그라데이션(스켈레톤 반짝임)은 warn이다. background-clip:text, backdrop-filter·backdrop-*, 4px(0.4rem) 이상 블러, blur가 있는데 색이 검정 계열이 아닌 그림자(box-shadow·text-shadow·drop-shadow·shadow-[…]·그림자 모양 커스텀 속성)는 error다. spread만 있는 포커스 링(0 0 0 0.4rem var(--color-border-primary))은 그림자가 아니라 통과한다. 문서 사이트 크롬(src/styles/docs.css)은 제외한다. 그림 자산(img·picture로 넣는 독립 .svg) 안의 그라데이션은 CSS 장식과 따로 본다 — 장면의 빛·깊이·재질(하늘의 명도 변화, 물속 색 감쇠, 곡면 음영, 퇴적층)을 그릴 때만 쓰고 무엇을 그렸는지 디자인 계획에 적는다. 판·단추·글자·섹션 바탕은 그림이 아니다. 그림 안에서도 보라·남색 계열은 error다(납품 페이지가 넣은 SVG와 인자로 받은 .svg를 읽는다, 로고·아이콘·스프라이트는 뺀다). 판정 기준은 design-intelligence §5-10이다.
 
 **금지 예시**
 
@@ -374,7 +375,7 @@ body { @apply text-[1.5rem]; }   // body 15px
 
 ## R-49 — 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고)
 
-**심각도:** warn &nbsp; **검증:** check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-violations.js
 
 > 과한 섹션 여백으로 '고급스러움'을 만드는 것은 해외 랜딩 문법이고, 한국 공공·업무 화면은 정보 밀도가 우선이다. infoux.json profile이 public-service·public-institution·cms-admin일 때 profiles.json density 프리셋(여유 PC 8rem·모바일 4rem, 고밀도 PC 4rem·모바일 2.4rem)을 기준으로, section 요소·.section·.section--{archetype}의 세로 여백(py·pt·pb·p-[N], Tailwind 기본 py-N, padding·padding-top/bottom/block)이 기준의 1.5배를 넘으면 경고다(scripts/lib/layout-rules.js). 접두 없음·mobile:·tablet:·@media 1024 미만은 모바일 기준, laptop:·pc:·@media 1024 이상은 PC 기준이다. 일반사이트·커머스(표현형)와 프로필 없는 저장소는 보지 않는다. clamp()·var()·margin·부모 gap·내부 오브젝트 여백은 잡지 못하므로 견본 페이지 렌더 채점으로 보완한다.
 

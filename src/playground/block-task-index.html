@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글자 바로가기 판 (task-index) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: cover — 분할 표제 첫 화면 -->
+    <section class="section section--intro inverse-surface cover" aria-labelledby="cover-title">
+      <figure class="cover__media">
+        <img class="cover__img" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1200'%3E%3Crect width='1600' height='1200' fill='%2354789e'/%3E%3Cpath d='M0 820 Q400 740 800 800 T1600 780 V1200 H0 Z' fill='%233b5e81'/%3E%3Ccircle cx='1180' cy='300' r='110' fill='%23dfe5ec'/%3E%3C/svg%3E" alt="" width="1600" height="1200">
+      </figure>
+      <div class="container cover__body">
+        <h1 class="cover__title" id="cover-title">바다 곁에서 여는 문화</h1>
+        <p class="cover__lead">공연·전시·교육 프로그램을 한곳에서 찾고 신청할 수 있습니다</p>
+        <div class="cover__actions">
+          <a class="btn btn--primary btn--large" href="/program">프로그램 신청하기</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 블록: task-index — 글자 바로가기 판 -->
+    <section class="section section--list task-index" aria-labelledby="task-index-title">
+      <div class="container">
+        <div class="task-index__panel">
+          <h2 class="task-index__title" id="task-index-title">자주 찾는 서비스</h2>
+          <ul class="task-index__list" role="list">
+            <li class="task-index__item"><a class="task-index__link" href="/ticket">공연·전시 예매 <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+            <li class="task-index__item"><a class="task-index__link" href="/rental">대관 신청 <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+            <li class="task-index__item"><a class="task-index__link" href="/education">교육 프로그램 신청 <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+            <li class="task-index__item"><a class="task-index__link" href="/tender">입찰·계약 정보 <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+            <li class="task-index__item"><a class="task-index__link" href="/recruit">채용 공고 <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+            <li class="task-index__item"><a class="task-index__link" href="/open/request">정보공개 청구 <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

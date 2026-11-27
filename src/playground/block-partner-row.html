@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관련 기관 로고 줄 (partner-row) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: partner-row — 관련 기관 로고 줄 -->
+    <section class="section section--list" aria-labelledby="partner-row-title">
+      <div class="container">
+        <h2 class="sr-only" id="partner-row-title">관련 기관</h2>
+        <ul class="partner-row" role="list">
+          <li><a class="partner-row__link" href="https://www.example.go.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 28'%3E%3Crect width='28' height='28' fill='%230b50d0'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E항구시청%3C/text%3E%3C/svg%3E" alt="항구시청" width="112" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://museum.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 28'%3E%3Ccircle cx='14' cy='14' r='14' fill='%23ab2b36'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E항구 미술관%3C/text%3E%3C/svg%3E" alt="항구 미술관" width="128" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://theater.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 28'%3E%3Cpath d='M0 28 L14 0 L28 28 Z' fill='%23052561'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E시립 극장%3C/text%3E%3C/svg%3E" alt="시립 극장" width="112" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://edu.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 176 28'%3E%3Crect width='28' height='28' fill='%23228738'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E문화예술 교육센터%3C/text%3E%3C/svg%3E" alt="문화예술 교육센터" width="176" height="28"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="partner-row__link" href="https://tour.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 28'%3E%3Ccircle cx='14' cy='14' r='14' fill='%2354789e'/%3E%3Ctext x='38' y='20' font-size='16' font-weight='700' fill='%231e2124'%3E항구 관광 안내%3C/text%3E%3C/svg%3E" alt="항구 관광 안내" width="144" height="28"><span class="sr-only"> 새 창</span></a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

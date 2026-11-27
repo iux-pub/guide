@@ -59,6 +59,13 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 템플릿 장식 서명(R-51 eyebrow·장식 번호·전 섹션 등장 효과·굵은 옆선) — 없으면(오래된 파생 프로젝트) 건너뛴다
+let TEMPLATE = null
+try {
+  TEMPLATE = require('./lib/template-signature')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // R-47 주민등록번호 법령 예외 — infoux.json exceptions의 { rule: 'R-47', legalBasis } (만료 전)
 let RRN_LEGAL_BASIS = null
 try {
@@ -116,13 +123,35 @@ const DIM = '\x1b[2m'
 let errorCount = 0
 let warnCount = 0
 
+// ─── 블록 예외(마크업) ─────────────────────────────────
+// 블록 카탈로그의 면 전환 그림(능선 svg)처럼 contracts/block-exceptions.json에 등록된 인라인 svg만
+// R-27 「직접 그린 인라인 svg」 경고에서 뺀다(scripts/lib/block-exceptions.js). 적용 건수는 끝에 한 줄로 보인다.
+let BLOCK_EX = null
+let BLOCK_EX_REGISTRY = null
+try {
+  BLOCK_EX = require('./lib/block-exceptions')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
+const blockExApplied = []
+
+function blockExcepted(msg, code, rule) {
+  if (!BLOCK_EX || rule !== 'R-27') return false
+  if (!BLOCK_EX_REGISTRY) BLOCK_EX_REGISTRY = BLOCK_EX.loadRegistry(ROOT)
+  const hit = BLOCK_EX.matchMarkup(BLOCK_EX_REGISTRY, rule, msg, code)
+  if (hit) blockExApplied.push(hit)
+  return !!hit
+}
+
 function error(file, line, msg, code, rule) {
+  if (blockExcepted(msg, code, rule)) return
   const loc = line ? `${file}:${line}` : file
   console.error(`${RED}[${rule}]${RESET} ${loc}\n  ${msg}${code ? `\n  ${DIM}${code}${RESET}` : ''}`)
   errorCount++
 }
 
 function warn(file, line, msg, code, rule) {
+  if (blockExcepted(msg, code, rule)) return
   const loc = line ? `${file}:${line}` : file
   console.warn(`${YELLOW}[${rule}]${RESET}  ${loc}\n  ${msg}${code ? `\n  ${DIM}${code}${RESET}` : ''}`)
   warnCount++
@@ -1085,6 +1114,12 @@ function checkHtml(html, filePath, baseLineNum = 1) {
       report(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
     }
   }
+  // 템플릿 장식 서명(R-51, 경고) — 같은 범위(스니펫·플레이그라운드·납품 페이지). 문서는 반례를 싣는다
+  if (TEMPLATE && !/^\/(?:site|references|prompts)\//.test(relPosix(filePath))) {
+    for (const f of TEMPLATE.scanHtmlTemplate(html)) {
+      warn(rel(filePath), baseLineNum + f.line - 1, `[${f.rule}] ${f.message}`, f.code, f.rule)
+    }
+  }
   // 아이콘 사용처(R-27) — 이름·스프라이트·aria-hidden은 모든 마크업, 직접 그린 svg 경고는 문서·아이콘 시연 밖
   if (ICONS) {
     const docs = /^\/(?:site|references|prompts)\//.test(relPosix(filePath)) || /\/src\/playground\/icon\.html$/.test(relPosix(filePath))
@@ -1289,6 +1324,7 @@ function main() {
 
   // 결과 요약
   console.log('')
+  if (BLOCK_EX && blockExApplied.length) console.log(`[블록 예외] ${BLOCK_EX.summaryLine(blockExApplied)}`)
   if (errorCount === 0 && warnCount === 0) {
     console.log(`${GREEN}✓ HTML 구조 위반 없음${RESET}`)
     process.exit(0)

@@ -1,0 +1,103 @@
+/**
+ * Due Track — 마감 칸 (블록 카탈로그 news-deck의 부품 · design-intelligence §5-6·§6-3 N2)
+ *   짙은 면 위의 한 칸. 남은 날수를 큰 숫자로 세우고, 그 옆에 제목·마감일, 아래에 남은 기간 막대를 둔다.
+ *   막대는 그림이다(aria-hidden). 같은 내용이 항목마다 글자로 있다.
+ *   --left: 막대 길이(마감까지 날수 ÷ 가장 먼 마감까지 날수, 최소 4%).
+ *   오늘부터 마지막 마감까지의 시간축은 뺐다 — 막대와 같은 정보를 한 번 더 그렸다.
+ *   <aside class="due-track" aria-labelledby="due-track-title" data-reveal>
+ *     <h3 class="due-track__title" id="due-track-title">접수 중인 공모·모집</h3>
+ *     <p class="due-track__asof">오늘 <time datetime="2026-11-13">11월 13일</time> 기준</p>
+ *     <ol class="due-track__list" role="list">
+ *       <li class="due-track__item"><a class="due-track__link" href="…">
+ *         <span class="due-track__days"><strong class="due-track__count">8</strong>일 남음</span>
+ *         <span class="due-track__body">
+ *           <span class="due-track__name">제목</span>
+ *           <span class="due-track__meta"><time datetime="…">11월 21일</time> 마감</span>
+ *         </span>
+ *         <span class="due-track__bar" style="--left: 47%" aria-hidden="true"><span class="due-track__fill"></span></span>
+ *       </a></li>
+ *     </ol>
+ *   </aside>
+ *   due-track__bar--warning: 마감이 7일 이내인 항목(강조색 막대). 남은 날수 글자로도 알 수 있다.
+ *   막대는 화면에 들어올 때 한 번 차오른다 — src/js/reveal.js(data-reveal). 스크립트가 없거나 움직임 줄이기면 처음부터 차 있다.
+ *   막대 채움은 단색 토큰이다(견본의 그라데이션 채움을 단색으로 바꿔 R-34 예외를 없앴다).
+ *   블록 예외(contracts/block-exceptions.json): 1.2초 채움 움직임, 숫자 행간 1.1.
+ * 레이어 밖에 둔다 — news-deck과 같은 층.
+ */
+.due-track {
+  @apply flex flex-col p-[2.4rem] rounded-[1.2rem] bg-[var(--color-primary-80)] tablet:p-[3.2rem];
+}
+
+.due-track__title {
+  @apply m-0 mb-[0.4rem] text-[2rem] font-bold leading-[1.5] [word-break:keep-all];
+}
+
+.due-track__asof {
+  @apply m-0 text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)];
+}
+
+/* 칸이 목록 높이만큼 늘어나면 항목이 남는 높이를 나눠 갖는다 */
+.due-track__list {
+  @apply flex flex-1 flex-col justify-center list-none m-0 mt-[1.6rem] p-0;
+}
+
+.due-track__item {
+  @apply border-t border-[var(--color-border-light)];
+}
+
+.due-track__link {
+  @apply grid items-center gap-x-[2rem] py-[2.4rem] text-[var(--color-text)] no-underline [grid-template-columns:auto_minmax(0,1fr)] tablet:gap-x-[2.4rem] laptop:py-[3.2rem];
+}
+
+.due-track__link:visited {
+  @apply text-[var(--color-text)];
+}
+
+.due-track__days {
+  @apply text-[1.5rem] leading-[1.7] text-[var(--color-primary-10)] whitespace-nowrap;
+}
+
+/* 남은 날수 — 이 칸에서 가장 먼저 읽히는 글자. 한 줄 고정이라 행간을 좁힌다 */
+.due-track__count {
+  @apply block [font-family:var(--font-heading)] text-[5.6rem] font-semibold leading-[1.1] text-[var(--color-point-30)] whitespace-nowrap [font-variant-numeric:tabular-nums] tablet:text-[7.2rem];
+}
+
+.due-track__body {
+  @apply flex flex-col gap-[0.4rem];
+}
+
+.due-track__name {
+  @apply text-[1.9rem] font-bold leading-[1.5] [word-break:keep-all];
+}
+
+.due-track__link:hover .due-track__name {
+  @apply underline;
+}
+
+.due-track__meta {
+  @apply text-[1.5rem] leading-[1.7] text-[var(--color-text-subtle)] [font-variant-numeric:tabular-nums];
+}
+
+.due-track__bar {
+  @apply relative block col-span-2 h-[0.8rem] mt-[1.6rem] rounded-[0.4rem] overflow-hidden;
+
+  background-color: color-mix(in srgb, var(--color-gray-0) 8%, transparent);
+}
+
+.due-track__fill {
+  @apply absolute inset-y-0 start-0 w-[var(--left)] rounded-[0.4rem] origin-left bg-[var(--color-primary-30)] [transition:transform_1.2s_cubic-bezier(0.2,0.8,0.2,1)];
+}
+
+.due-track__bar--warning .due-track__fill {
+  @apply bg-[var(--color-point-30)];
+}
+
+[data-motion="on"] .due-track[data-reveal]:not([data-revealed]) .due-track__fill {
+  transform: scaleX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .due-track__fill {
+    @apply [transition:none];
+  }
+}

@@ -2,6 +2,8 @@
 
 대상: Cursor, Copilot, Windsurf, Claude Code
 
+> 손으로 관리하는 파일이다(`npm run build:prompts`가 만들지 않는다). 기준이 바뀌면 `CLAUDE.md`·`rules.json`·`references/`에 맞춰 직접 고친다. KRDS가 언제나 우선한다.
+
 이 규칙을 따라 HTML/CSS 코드를 생성하라.
 
 ## CSS 방법론: BEM + Tailwind v4 + ITCSS 5레이어
@@ -41,32 +43,36 @@ src/styles/
 
 ## 토큰 사용
 
-색상은 하드코딩 금지. CSS Custom Properties 사용:
+색은 하드코딩하지 않는다. 어디에 쓰든 `var(--color-*)`만 쓴다(R-01).
 
-- **INFOUX 공개 토큰**:
-  - 색상: `var(--color-primary)`, `var(--color-text)`, `var(--color-bg)`, `var(--color-border)`
-  - 폰트: `var(--font-sans)`, `var(--font-mono)`
-  - 간격/크기/타이포 스케일/반경은 rem 직접값 사용 — Tailwind는 `p-[2.4rem]` 같은 임의값으로 쓰고 기본 스케일(`p-4`, `text-sm`)은 쓰지 않는다(R-37)
+- **의미 토큰을 먼저 쓴다**
+  - 글자: `--color-text`, `--color-text-bolder`, `--color-text-subtle`, `--color-text-disabled`, `--color-text-inverse`
+  - 배경·표면: `--color-bg`, `--color-bg-subtle`, `--color-bg-subtler`, `--color-bg-inverse`, `--color-surface`
+  - 테두리: `--color-border`, `--color-border-light`, `--color-border-dark`, `--color-border-control`(사용자가 조작하는 요소)
+  - 브랜드·상태: `--color-primary`, `--color-secondary`, `--color-point`, `--color-danger`, `--color-warning`, `--color-success`, `--color-info`
+- **서체**: `var(--font-sans)`(본문), `var(--font-heading)`(제목), `var(--font-mono)`(고정폭). `font-family` 직접값은 쓰지 않는다(R-26)
+- **토큰이 아닌 것**: 간격·크기·글자 크기·반경·그림자·모션·z-index는 rem 직접값이다. Tailwind는 `p-[2.4rem]` 같은 임의값으로 쓰고 기본 스케일(`p-4`, `text-sm`)은 쓰지 않는다(R-37)
+- **루트 글자 크기**: 62.5%로 고정한다(1rem = 10px). 다른 값이나 vw로 바꾸지 않는다(R-31)
 
-- **시맨틱 색상 토큰**:
-  - 색상: `var(--color-text)`, `--color-text-secondary`, `--color-text-disabled`, `--color-bg`, `--color-bg-secondary`, `--color-border`, `--color-primary` (KRDS 토큰을 가리킴)
-  - 의미 기반 작성 시 권장
-
-토큰 출처: `tokens/foundation.json` → `tokens/build/tokens.css`.
+토큰 출처: `tokens/foundation.json`(불변) + `tokens/brand.json`(프로젝트가 고치는 유일한 파일) → `tokens/build/tokens.css`.
 
 ## 반응형: 모바일 퍼스트
 
-- 모바일: 360px 기준 (기본)
-- 태블릿: 768px 이상
-- PC: 1280px+
+| 단계 | 폭 | variant | 여기서 바뀌는 것 |
+|------|-----|---------|------------------|
+| 모바일 | 360px 기준 | (기본) | — |
+| 태블릿 | 768px 이상 | `tablet:` | 글자 크기 모바일→PC, 컨테이너 여백 |
+| 노트북 | 1024px 이상 | `laptop:` | 메인 메뉴↔전체메뉴, 서브 LNB 2단 |
+| PC | 1280px 이상 | `pc:` | 레이아웃 간격 |
 
-단순 반응형 속성 변경은 CSS 파일 내부에서도 Tailwind v4 variant `tablet:` / `pc:`를 우선 사용한다.
+단순 반응형 속성 변경은 CSS 파일 내부에서도 Tailwind v4 variant `tablet:` / `laptop:` / `pc:`를 우선 사용한다.
 복잡한 중첩 선택자나 여러 하위 요소를 동시에 제어해야 할 때만 `@media`를 사용한다.
-Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 쓰지 않는다.
+Tailwind v4 variant는 `mobile:` / `tablet:` / `laptop:` / `pc:`만 사용하고 `sm:` / `md:` / `lg:` / `xl:` / `2xl:`는 쓰지 않는다.
+360px 넘는 모바일 고정 폭을 쓰지 않는다(R-48).
 
 ```css
 .card {
-  @apply p-[1.2rem] tablet:p-[2rem] pc:p-[3.2rem];
+  @apply p-[1.6rem] tablet:p-[2.4rem] pc:p-[3.2rem];
 }
 ```
 
@@ -82,7 +88,7 @@ Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md
 }
 ```
 
-순수 CSS `@media (min-width: var(--breakpoint-pc))`는 표준으로 쓰지 않는다. 직접 `@media`가 필요하면 `768px`, `1280px` 값을 명시한다.
+순수 CSS `@media (min-width: var(--breakpoint-pc))`는 표준으로 쓰지 않는다. 직접 `@media`가 필요하면 `768px`, `1024px`, `1280px` 값을 명시한다.
 
 ## HTML 기본 골격
 
@@ -117,9 +123,9 @@ Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md
 
 - A (폼/액션): btn, check-radio, file-upload, form, select, switch
 - B (컨테이너): accordion, card, disclosure, modal, side-panel, tab
-- C (내비): breadcrumb, header, main-menu, pagination
-- D (피드백): alert, badge, progress, spinner, step-indicator, tag, toast, tooltip
-- E (콘텐츠): calendar, carousel, list, table
+- C (내비): breadcrumb, footer, header, main-menu, mobile-menu, pagination
+- D (피드백): alert, badge, notice-bar, progress, spinner, step-indicator, tag, toast, tooltip
+- E (콘텐츠): calendar, carousel, error-page, list, table
 
 각 컴포넌트의 마크업은 `src/snippets/{name}.md` 참조.
 
@@ -137,19 +143,33 @@ Tailwind v4 variant는 `mobile:` / `tablet:` / `pc:`만 사용하고 `sm:` / `md
 - 색상 대비: 4.5:1 (큰 텍스트 24px/18.67px bold 3:1)
 - 키보드 네비게이션 지원
 - skip-to-content 링크: `<a href="#main" class="skip-to-content">본문 바로가기</a>`
-- 포커스: `:focus-visible` 4px primary 외곽선 (reset.css 전역 — 컴포넌트에서 제거 금지)
+- 포커스: `:focus-visible` — `outline: 0.4rem solid var(--color-border-primary)`, `outline-offset: 2px` (reset.css 전역 — 컴포넌트에서 제거 금지)
 - `!important` 금지 (사유 주석 시 허용), 인라인 스타일 금지 (CSS 변수 주입 `style="--var: val"`은 허용)
-- `prefers-reduced-motion` 대응
+- `prefers-reduced-motion` 대응. 사용자 동작에 답하는 전환은 150~250ms, 무한 반복은 로딩 표시에만, 영상은 자동 재생하지 않는다(R-22·R-33)
 - 터치 영역: 최소 44×44px (모바일 medium=48px 권장), 인접 요소 간격 8px 이상
 
 ## 레이아웃 크기 기준
 
-| 영역 | 모바일 | 태블릿 | PC |
-|------|--------|--------|-----|
-| 헤더 높이 | 최소 56px | 최소 64px | 최소 100px |
-| GNB 메뉴 폰트 | 14px | 16px | **18px 이상** |
-| 컨테이너 max-width | 100% | 100% | 1200px |
-| 컨테이너 패딩 | `2rem` | `3.2rem` | `4rem` |
+카탈로그 CSS의 현재 값이다(`src/styles/5-objects/container.css`, `6-components/header.css`·`main-menu.css`).
+
+| 영역 | 모바일 | 768px 이상 | 1280px 이상 |
+|------|--------|------------|-------------|
+| 컨테이너 최대 폭 | 100% | 100% | `124.8rem`(콘텐츠 1200px + 좌우 여백) |
+| 컨테이너 좌우 여백 | `1.6rem` | `2.4rem` | `2.4rem` |
+| 헤더 높이 | `6.4rem` | `6.4rem` | `8rem` |
+| 메인 메뉴 글자 | — (1024px 미만은 전체메뉴) | `1.7rem` 굵게(1024px 이상) | `1.7rem` 굵게 |
+| 본문 글자 | `1.7rem`, 행간 1.7 | 같음 | 같음 |
+
+## 콘텐츠·카피·형태
+
+- 가짜·자리 콘텐츠를 남기지 않는다 — 채움 문구, placeholder 이미지 핫링크, 「질문 1」 연번 레이블, 지어낸 연락처·수치(R-23)
+- 링크는 실제 목적지와 그 목적지를 말하는 이름을 가진다. `href="#"`·`javascript:` 금지, 이동은 `a`, 동작은 `button`(R-30)
+- 문체는 합쇼체 사실 서술, 버튼은 동사형(「신청하기」). 번역투·2인칭·「~하세요」 버튼·공공 화면 느낌표 금지(R-43·R-44)
+- 한국어 화면에 영문 전용 UI 레이블(VIEW MORE)을 쓰지 않는다(R-45). placeholder에는 예시만 둔다(R-50)
+- 장식 그라데이션·글래스·색 글로(R-34), 이모지 아이콘(R-36), 1.2rem 넘는 반경(R-35) 금지. 아이콘은 카탈로그 스프라이트에서 가져온다(R-27)
+- `main` 안 `h1`은 하나, 제목 단계를 건너뛰지 않는다(R-39). 메인 히어로는 첫 섹션 하나, 화면 높이를 채우지 않는다(R-42)
+- 제목 위 분류 표지(eyebrow), 순서가 아닌 01·02 번호, 모든 섹션 등장 효과, 굵은 색 옆선은 템플릿 서명이다(R-51)
+- 메인·랜딩은 `references/design-intelligence.md` 절차(컨셉 → 방향 라운드 세 안 → `docs/design-plan.md` → 별도 평가자의 렌더 비평 → 사람 판정)를 거친다
 
 ## 코딩 스타일
 

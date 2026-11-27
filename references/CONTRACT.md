@@ -1,27 +1,30 @@
 # infoUX — INFOMIND UX 작업 컨트랙트
 
-> **이것은 권장이 아니라 컨트랙트다.**
-> infoUX MCP가 연결된 이상 아래 명시된 규정 외의 결정을 LLM이 임의로 할 수 없다.
-> 위반 발견 시 **즉시 작업을 중단하고 사용자에게 보고**한다.
+> 이 문서는 권장이 아니라 컨트랙트다.
+> infoUX 기준을 쓰는 작업에서 LLM은 아래 규정 밖의 결정을 임의로 하지 않는다.
+> 오류 규칙 위반을 발견하면 작업을 중단하고 사용자에게 보고한다.
 
 ---
 
 ## 0. 컨트랙트 발효 조건
 
-다음 트리거 문구가 사용자 메시지에 등장하면 이 컨트랙트가 발효된다:
+별도 트리거 문구는 없다. 이 저장소, 또는 infoUX MCP를 등록한 프로젝트에서 CSS·HTML·UI 작업을 시작하면 컨트랙트가 발효된다.
 
-- "info-design 스킬 기준으로 가자"
-- "infomind 디자인 기준"
-- "ux 가이드대로"
-- 또는 사용자가 명시적으로 이 스킬을 호출
+- 구현 전에 `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯, 예외를 선언한다.
+- 작업 절차는 infoUX MCP `get_workflow`로, 기준 문서는 `get_reference`로 받는다.
+- 수정 파일과 가장 가까운 `AGENTS.md`를 읽는다.
 
-**발효 즉시 LLM은 아래 모든 규정을 무조건 따른다.** 발효된 후에는 LLM 자신의 판단으로 규정을 우회·예외 처리하지 않는다.
+발효된 뒤에는 LLM이 자기 판단으로 규정을 우회하거나 예외로 처리하지 않는다.
 
 ---
 
-## 1. 절대 금지 (MUST NOT)
+## 1. 금지 (MUST NOT)
 
-다음을 **위반하면 코드를 작성하지 않고 작업을 중단**한다:
+규칙 번호와 심각도의 정본은 `rules.json`이다(MCP `get_rules`). 아래 표는 자주 걸리는 항목을 추린 것이다.
+
+### 1.1 오류 규칙 — 위반하면 작업을 중단한다
+
+코드를 더 쓰지 않고 사용자에게 보고한다.
 
 | 규칙 | 항목 | 금지 사유 |
 |------|------|----------|
@@ -32,7 +35,6 @@
 | **R-37** | Tailwind 기본 타입·행간·간격·컨테이너 스케일(`text-sm`, `leading-6`, `p-4`, `max-w-md`) | 62.5% 루트에서 37.5% 작게 렌더된다 — rem 임의값(`p-[1.6rem]`) |
 | **R-23** | 가짜·자리 콘텐츠 — 채움 문구, placeholder 핫링크, '자주 묻는 질문 1·2' 연번 레이블, '새 프로젝트'·'페이지 제목' 같은 자리값 제목, 064-000-0000·○○·example 도메인 같은 비실재 표기를 납품 페이지에 남김 | 검수 신뢰가 깨진다 — 실제 문안은 `contentSources`에서 |
 | **R-30** | 실제 목적지 없는 링크(빈 값·`#`·`#none`·`javascript:`) | 이동은 실제 주소의 a, 동작은 button |
-| **R-31** | 루트 글자 크기를 62.5% 밖으로 바꿈(축소·vw) | 사용자 글자 크기 설정·rem 단계 붕괴(경고) |
 | **R-33** | 정지 버튼 없는 자동 전환·자동 재생, 무한 롤링 마키 | KRDS 캐러셀·WCAG 2.2.2 |
 | **R-35** | 1.2rem 넘는 반경, 지정 블록 밖 알약(pill) 반경 | KRDS Shape(최대 12px) |
 | **R-42** | 히어로 여러 개·중간 히어로, 화면 높이 히어로, 스크롤 유도 화살표 | 공공·업무 hero는 화면 1/2 이하(AP-7) |
@@ -41,20 +43,14 @@
 | **R-32** | 푸터에 '개인정보 처리방침' 링크가 없거나 주소가 비었음, 옛 명칭(개인정보취급방침) | KRDS 필수 명칭·공개 의무 |
 | **R-40** | 공공 화면 헤더에 통합검색 진입이 없음 | KRDS 검색 [필수] — 모든 화면에서 통합검색 |
 | **R-41** | 브레드크럼·사이드 메뉴를 본문 바로가기 목적지 안에 둠, main 첫 제목이 h1이 아님 | KRDS component_03_01 · 페이지 제목 h1 |
-| **R-44** | 근거 없는 최상급, 공공 화면 홍보 어조·해요체, 경어 혼용(경고) | 합쇼체 사실 서술 |
 | **R-45** | 영문 전용 UI 레이블(VIEW MORE), lang 없는 언어 링크, 선택만으로 이동하는 select | KRDS 국문 레이블·WCAG 3.1.2·3.2.2 |
-| **R-49** | 공공·관리자 섹션 여백이 밀도 기준의 1.5배 초과(경고) | 정보 밀도(profiles.json density) |
 | **R-46** | publicIdentity 미확정 상태에서 공식 배너·운영기관 식별자·정부 상징 생성 | 공식 정부서비스 사칭 방지 |
 | **R-47** | 개인정보 동의에 목적·항목·보유 기간·거부권 고지 없음, 동의 미리 체크, 주민등록번호 수집 | 개인정보 보호법 |
 | **R-48** | 모바일에서 360px 넘는 고정 폭, 모바일 기본 열 없는 다열 그리드 | 모바일 우선(KRDS 반응형) |
 | **R-43** | 번역투·2인칭 마케팅 카피('당신', '~을 경험하세요', '지금 바로'), '~하세요'로 끝나는 버튼, 공공 화면의 느낌표 | 합쇼체 사실 서술 — 버튼은 KRDS 동사형('신청하기') |
-| **R-02** | `!important` (정당한 사유 주석 없을 시) | 토큰 시스템 우회 위험 |
 | **R-03** | SCSS 사용 (`*.scss`, `@use`, `@forward`, `$var`) | Tailwind v4 + CSS Custom Properties만 허용 |
-| **R-04** | BEM 미준수 클래스명 — `.block__element--modifier` 형식 외 | 일관성 |
 | **R-05** | BEM element 2단계 중첩 (`.card__body__title`) | 평탄화 — `.card__title` |
-| **R-06** | 옛 variant 이름 사용 (`btn--ghost`, `btn--outline`, `btn--link`) | KRDS 4 variant만: `--primary` / `--secondary` / `--tertiary` / `--text` |
-| **R-07** | 인라인 `style="..."` (CSS 변수 주입 외) | 토큰 추적 불가 |
-| **R-08** | HTML 클래스 BEM 2단계 element 중첩 | R-05 HTML 적용 |
+| **R-06** | 시각적 modifier(`--blue`, `--gray`)와 옛 버튼 variant(`btn--ghost`, `btn--outline`, `btn--link`, `btn--sm`, `btn--lg`) | 의미적 이름을 쓴다. 버튼은 KRDS 4 유형(`--primary`·`--secondary`·`--tertiary`·`--text`)과 5 크기(`--xsmall`~`--xlarge`)만 |
 | **R-09** | 이미지 `alt` 누락 | WCAG 1.1.1 |
 | **R-10** | `div/span 클릭 핸들러 패턴` 처럼 div를 인터랙티브로 쓰는 패턴 | 시맨틱 HTML 사용 (button/a) |
 | **R-11** | `:focus { outline: none }` | 접근성 위반. focus-visible은 reset.css 전역 처리 |
@@ -68,11 +64,25 @@
 | **R-29** | CSS에 없는 BEM 클래스 (`.card--featured`, `.card__media` 등 지어낸 변형·부품) | 카탈로그 블록의 클래스는 CSS에 정의된 것만 쓴다 |
 | — | 폼 요소 `<label>` 누락 (placeholder만 사용) | WCAG 3.3.2 |
 
+### 1.2 경고·안내 규칙 — 작업을 멈추지 않고 보고한 뒤 고친다
+
+검사기가 경고(R-04는 안내)로 알린다. 납품 전에 고치거나 사유를 남긴다.
+
+| 규칙 | 항목 | 사유 |
+|------|------|----------|
+| **R-02** | `!important` (정당한 사유 주석 없을 시) | 토큰 시스템 우회 위험 |
+| **R-04** | BEM 형식(`.block__element--modifier`)을 벗어난 클래스명 — 5-objects·6-components 한정(안내) | 일관성 |
+| **R-07** | 인라인 `style="..."` (CSS 변수 주입 외) | 토큰 추적 불가 |
+| **R-08** | HTML 클래스 BEM 2단계 element 중첩 | R-05 HTML 적용 |
+| **R-31** | 루트 글자 크기를 62.5% 밖으로 바꿈(축소·vw) | 사용자 글자 크기 설정과 rem 단계가 무너진다 |
+| **R-44** | 근거 없는 최상급, 공공 화면 홍보 어조·해요체, 경어 혼용 | 합쇼체 사실 서술 |
+| **R-49** | 공공·관리자 섹션 여백이 밀도 기준의 1.5배 초과 | 정보 밀도(profiles.json density) |
+
 **모호한 케이스는 사용자에게 질문한다.** 자체 판단으로 우회하지 않는다.
 
 ---
 
-## 2. 절대 준수 (MUST)
+## 2. 준수 (MUST)
 
 | 항목 | 규정 |
 |------|------|
@@ -80,10 +90,10 @@
 | 색상 | `var(--color-*)` 시맨틱 토큰만 사용 |
 | 간격/크기 | CSS 직접값 또는 Tailwind rem 임의값(`p-[2.4rem]`). 루트가 62.5%라 Tailwind 기본 스케일(`p-4`, `gap-2`, `max-w-md`)은 37.5% 작게 렌더돼 쓰지 않는다(R-37). CMS·관리자 화면은 정보 밀도에 맞게 조정 |
 | 폰트 | `var(--font-sans)`, `var(--font-mono)` — 직접 폰트 패밀리 작성 금지 |
-| 폰트 사이즈 | 프로젝트 타입 계층 우선. 토큰화하지 않음. `text-[1.7rem]`처럼 rem 임의값으로 쓰고 `text-sm` 등 기본 크기는 쓰지 않는다(R-37) |
+| 폰트 사이즈 | KRDS 타이포 표의 단계 값만 쓴다(R-38, `references/korean-web-patterns.md` §5). 토큰으로 만들지 않고 `text-[1.7rem]`처럼 rem 임의값으로 쓴다. `text-sm` 등 Tailwind 기본 크기는 쓰지 않는다(R-37) |
 | CSS 작성 | 표준 CSS nesting 허용. Tailwind v4 `@apply`, `@theme`, `@utility` 사용 가능 |
 | 반응형 작성 | 단순 속성 변경은 `@apply tablet:*` / `@apply pc:*` 우선. 복잡한 중첩 선택자만 관련 선택자 내부 `@media` 사용 |
-| line-height | 한국어 가독성을 위해 1.4~1.6 권장. `line-height: 1` 금지 |
+| line-height | 본문 1.6~1.7(기본 1.7, 고밀도 1.6), 제목 1.5. 모든 텍스트는 150% 이상이다(R-24). `line-height: 1` 금지. 정본은 `references/art-direction.md` §2 |
 | 반경/그림자 | CSS 직접값 또는 rem 임의값(`rounded-[0.8rem]`). 그림자는 KRDS 3단계 검정 알파(`#0000000d`·`#00000014`·`#0000001f`) 조합만 — 색 있는 글로우 금지(R-34) |
 | z-index | CSS 값 또는 Tailwind 임의값(`z-[1050]`). 레이어 의미가 보이도록 주석 또는 클래스명으로 관리 |
 | 모션 | CSS 값 또는 Tailwind 임의값(`duration-[200ms]`). 접근성 `prefers-reduced-motion` 고려 |
@@ -108,19 +118,25 @@
 
 ## 3. references — 작업 맥락별 로드 순서
 
-**필요한 파일만 로드**한다. 전체를 한꺼번에 읽지 않는다.
+필요한 문서만 읽는다. 전체를 한꺼번에 읽지 않는다. MCP에서는 `get_reference("문서 이름")`으로 받는다.
 
 | 작업 맥락 | 로드 |
 |-----------|------|
 | 코드 생성 전 사이트 유형 판정 | `references/project-profiles.md` |
-| 표현 등급·타이포 페어링·팔레트 프리셋·한글 조판 판단 | `references/art-direction.md` |
+| 메인·랜딩(`pageType: main`) 설계 — 컨셉, 방향 라운드, 블록별 형식, 렌더 비평 | `references/design-intelligence.md` |
+| 시선·클릭·피로·답답함·선호의 실증 근거와 거기서 나온 화면 기준 | `references/user-behavior.md` |
+| 한국형 메인 레시피, 서브·헤더·푸터 관행, 캐러셀 규칙, 한글 타이포 규칙 | `references/korean-web-patterns.md` |
+| 표현 등급·타이포 페어링·팔레트 프리셋·한글 조판 판단, 납품 전 리뷰 | `references/art-direction.md` |
 | 토큰 결정 (색상·기본 폰트·브레이크포인트) | `references/krds-tokens.md` |
 | 컴포넌트 마크업 작성 — 시각/스타일 카탈로그 | `references/krds-components.md` |
 | 컴포넌트 마크업 작성 — 인포마인드 기본 골격·ARIA·키보드 | 기존 인포마인드 구축 사이트 HTML + `references/html-semantics.md` |
+| 클래스 이름·modifier 어휘 결정 | `references/class-naming.md` |
 | Tailwind 유틸리티 사용 | `references/tailwind-mapping.md` |
 | 접근성 검증 | `references/accessibility.md` |
 | 코드 검토 — 무엇을 막을지 | `references/forbidden-patterns.md` |
-| 이 스킬을 개발팀 레포에 임포트 | `references/guide-import.md` |
+| 원칙이 서로 충돌할 때 | `references/trade-off-rules.md` |
+| 배포·납품 전 점검 | `references/release-checklist.md` |
+| 개발팀 레포에 infoUX 기준 붙이기(MCP 등록) | `references/guide-import.md` |
 
 ---
 
@@ -189,7 +205,7 @@ npm run test
 - 새 컴포넌트를 공통화할지 일회성 프로젝트 패턴으로 둘지 모호
 - 사이트가 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 무엇인지 모호
 - 공공기관 프로젝트지만 공식 배너, 정부 상징, 운영기관 식별자 적용 여부가 확인되지 않음
-- KRDS 수치 체계를 그대로 따를지 프로젝트 밀도에 맞게 조정할지 모호
+- 간격·밀도를 프로젝트에 맞게 얼마나 조정할지 모호 (본문·제목 크기와 자간·행간은 KRDS 타이포 표 값만 쓰므로 조정 대상이 아니다 — R-38, `references/korean-web-patterns.md` §5)
 - 두 토큰 중 어느 쪽이 적절한지 모호 (예: `--color-text` vs `--color-text-bolder`)
 - 옛 시스템 흔적을 발견 — 어떻게 처리할지
 - 모바일/PC에서 다른 동작이 필요한데 어느 브레이크포인트에서 분기할지 모호
@@ -198,7 +214,7 @@ npm run test
 
 ## 8. 카탈로그에 없는 컴포넌트 요구 시
 
-`references/krds-components.md`에 정의된 28개 컴포넌트 외에 새 컴포넌트가 필요해 보이면:
+카탈로그(`references/krds-components.md`)에 없는 컴포넌트가 필요해 보이면:
 
 1. 기존 컴포넌트 조합으로 해결 가능한지 먼저 확인
 2. 새 패턴이 더 적절하면 사용자에게 근거 보고
@@ -211,28 +227,32 @@ npm run test
 
 ## 9. 출처 — 단일 소스
 
-이 스킬의 콘텐츠는 자동 생성된다. 직접 수정 금지.
+기준 본체는 이 저장소의 `references/`다. 직접 쓰는 문서와 생성물이 함께 있다. 생성물은 원본을 고친 뒤 다시 만든다.
 
-- 토큰 출처: `tokens/foundation.json`
+- 토큰 출처: `tokens/foundation.json`(불변 계층) + `tokens/brand.json`(프로젝트가 고치는 유일한 토큰 파일)
 - 컴포넌트 출처: `src/styles/6-components/*.css` + `src/snippets/*.md`
-- 빌드: `node scripts/build-skill.js` → `skill/` 폴더 갱신
-- 배포: `references/` → `npm run build:mcp` → infoUX MCP. 팀원은 서버 등록만 하면 최신 기준을 받는다
+- 규칙 출처: `rules.json`
+- 생성물: `references/krds-tokens.md`, `references/krds-components.md`, 문서 안의 자동 생성 구간. 직접 고치지 않고 `npm run build:references`로 다시 만든다
+- 배포: `npm run build:mcp` → MCP 번들(`mcp/data/`) → infoUX MCP. 팀원은 서버 등록만 하면 최신 기준을 받는다
 
 ---
 
 ## 10. 분쟁 시 우선순위
 
-여러 규정이 충돌하면 다음 순서로 우선:
+규정이 충돌하면 위에서부터 따른다. 정본은 `references/korean-web-patterns.md` KP-02이고, 판단 방법은 `references/trade-off-rules.md`에 있다.
 
-1. **접근성 (WCAG/KWCAG AA)** — 양보 불가
-2. **프로젝트 목적과 사용성** — CMS/관리자 화면은 업무 밀도와 반복 효율 우선
-3. **사이트 유형 판정** — 정부 아이덴티티 요소는 적용 조건이 확인된 경우만
-4. **INFOUX 파운데이션** — `tokens/foundation.json`의 색상·기본 폰트·브레이크포인트 기준
-5. **KRDS 정본** — 접근성·구조·색상 참고 기준
-6. **프로젝트 스타일** — 프로젝트별 CSS 확장
-7. **사용자 명시 지시** — 단, 접근성을 깨면 사용자에게 확인
+1. **접근성(WCAG 2.1 AA·KWCAG) = KRDS 컴포넌트·패턴 지침** — 둘은 같은 최상위다. 양보하지 않는다. KRDS가 금지하거나 권장하지 않는 패턴은 관찰 빈도나 절충안으로 허용하지 않는다
+2. **과업 완수** — 프로젝트 목적과 사용성. CMS·관리자 화면은 업무 밀도와 반복 효율이 먼저다
+3. **한국 관행** — `references/korean-web-patterns.md`의 레시피와 관행. 관행이 과업을 해치면 근거를 갖춰 바꾼다
+4. **브랜드 표현** — 프로젝트 스타일과 CSS 확장. 표현 등급 안에서 쓴다
+
+서열과 별개로 지키는 전제:
+
+- 사이트 유형 판정 — 정부 아이덴티티 요소는 적용 조건이 확인된 경우에만 만든다
+- 토큰 — `tokens/foundation.json`은 프로젝트에서 고치지 않는다. 브랜드 색과 기본 폰트는 `tokens/brand.json`에서 바꾼다
+- 사용자 명시 지시가 1번과 부딪히면 진행하지 않고 사용자에게 확인한다
 
 ---
 
-> 이 스킬이 활성화된 이상, 모든 LLM 출력은 위 규정의 적용 대상이다.
+> 컨트랙트가 발효된 이상 모든 LLM 출력은 위 규정의 적용 대상이다.
 > 규정에 모호한 부분이 있으면 자체 판단하지 말고 사용자에게 묻는다.

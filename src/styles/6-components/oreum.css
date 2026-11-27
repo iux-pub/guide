@@ -1,0 +1,19 @@
+/**
+ * Oreum — 둥근 능선 전환 (블록 카탈로그 field-shore의 부품)
+ *   둥근 언덕 실루엣. 윗면(dusk)의 바닥에 놓고 아랫면의 색으로 칠한다. 각진 ridge와 짝을 이루는 두 번째 전환이다.
+ *   <svg class="oreum" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+ *     <path class="oreum__near" d="…"/>
+ *   </svg>
+ *   높이는 부모의 --oreum-h. 색은 --field-shore-surface(기본 point-5)를 따른다.
+ *   모양은 프로젝트마다 대상의 지형·사물에서 온 선으로 바꾼다(블록 메타데이터의 변형 축 참고).
+ *   블록 예외(contracts/block-exceptions.json): 인라인 svg(R-27) — 아이콘이 아니라 면 전환 그림이다.
+ * 레이어 밖에 둔다 — field-shore와 같은 층.
+ */
+.oreum {
+  /* 바닥을 조금 내려 사진 면과 아랫면 사이에 실선이 비치지 않게 한다 */
+  @apply absolute inset-x-0 bottom-[-0.1rem] block w-full max-w-none h-[var(--oreum-h,12rem)] pointer-events-none;
+}
+
+.oreum__near {
+  fill: var(--field-shore-surface, var(--color-point-5));
+}

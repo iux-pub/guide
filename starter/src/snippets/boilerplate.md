@@ -21,7 +21,12 @@
 
   <header id="header" class="site-header">
     <div class="container">
-      <!-- 브랜드, GNB, 유틸리티 -->
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
     </div>
   </header>
 

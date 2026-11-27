@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정보공개 판 — 짙은 단색 면 + 대표전화 (open-panel) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: open-panel — 정보공개 판 — 짙은 단색 면 + 대표전화 -->
+    <section class="section section--list open-panel" aria-labelledby="open-panel-title">
+      <div class="container">
+        <div class="open-panel__panel">
+          <h2 class="open-panel__title" id="open-panel-title">열린경영</h2>
+          <div class="open-panel__groups">
+            <div class="open-panel__group">
+              <h3 class="open-panel__group-name">열린경영</h3>
+              <ul class="open-panel__links" role="list">
+                <li><a class="open-panel__link" href="/open/ethics">윤리경영<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/management">경영공시<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/budget">예산·결산<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+              </ul>
+            </div>
+            <div class="open-panel__group">
+              <h3 class="open-panel__group-name">정보공개</h3>
+              <ul class="open-panel__links" role="list">
+                <li><a class="open-panel__link" href="/open/disclosure">사전정보공표<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/request">정보공개 청구<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/open/data">공공데이터 제공<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+              </ul>
+            </div>
+            <div class="open-panel__group">
+              <h3 class="open-panel__group-name">고객참여</h3>
+              <ul class="open-panel__links" role="list">
+                <li><a class="open-panel__link" href="/voice">재단에 바란다<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/voice/survey">설문조사<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+                <li><a class="open-panel__link" href="/voice/report">부패·공익 신고<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+              </ul>
+            </div>
+          </div>
+          <p class="open-panel__call">대표전화 <a class="open-panel__tel" href="tel:051-000-0000">051-000-0000</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

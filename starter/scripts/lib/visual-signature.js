@@ -819,7 +819,31 @@ function scanHtml(html, ctx = {}) {
       for (const f of [...colorFindingsForDecl(dm[1], dm[2]), ...effectFindingsForDecl(dm[1], dm[2], ctx)]) out.push({ ...f, line, code: m[0].slice(0, 160) })
     }
   }
+  out.push(...presentationColorFindings(src))
   if (ctx.emoji !== false) out.push(...emojiFindingsForHtml(html))
+  return out
+}
+
+// SVG 표현 속성·bgcolor의 raw 색(R-01) — fill="#ff0000"·stroke="rgb(…)"·bgcolor="#eee".
+//   none·currentColor·transparent·var(--color-*)·url(#그라데이션)는 raw 색이 아니다(colorFindingsForDecl이 걸러 낸다).
+//   태그의 속성만 본다 — script·style 본문은 지우고, 속성은 앞에서부터 값을 통째로 읽어
+//   style 값 속 data URI의 fill='black' 같은 글자를 속성으로 읽지 않는다.
+const PRESENTATION_COLOR_ATTR = /^(?:fill|stroke|stop-color|flood-color|lighting-color|bgcolor)$/i
+function presentationColorFindings(src) {
+  const out = []
+  const html = src.replace(/(<(script|style|textarea)\b[^>]*>)([\s\S]*?)(<\/\2\s*>)/gi, (_, open, _tag, body, close) => open + blank(body) + close)
+  for (const tag of html.matchAll(/<[a-zA-Z][\w:-]*\s[^<>]*>/g)) {
+    for (const a of tag[0].matchAll(/([^\s=<>"'/]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|[^\s"'=<>`]+))?/g)) {
+      if (!PRESENTATION_COLOR_ATTR.test(a[1])) continue
+      const value = a[2] ?? a[3]
+      if (value === undefined || TEMPLATE_FRAGMENT.test(value)) continue
+      const prop = a[1].toLowerCase() === 'bgcolor' ? 'background-color' : a[1].toLowerCase()
+      const line = lineAt(html, tag.index + a.index)
+      for (const f of colorFindingsForDecl(prop, value)) {
+        out.push({ ...f, message: `${a[1]} 속성의 ${f.message}`, line, code: tag[0].replace(/\s+/g, ' ').slice(0, 160) })
+      }
+    }
+  }
   return out
 }
 
@@ -874,9 +898,65 @@ function scanMarkdown(md, ctx = {}) {
   return out
 }
 
+// 그림 자산(img·picture로 넣는 독립 .svg) 안의 그라데이션(R-34).
+//   장면의 빛·깊이·재질(하늘의 명도 변화, 물속 색 감쇠, 곡면 음영, 퇴적층)을 그리는 그라데이션은 그림 재료로 쓴다 —
+//   판·단추·글자·섹션 바탕에 까는 CSS 그라데이션과 다르다(design-intelligence §5-10).
+//   그래도 보라·남색 계열(AP-3)은 그림 안에서도 error다. 판정은 CSS 그라데이션과 같은 isViolet이다.
+//   로고·아이콘·스프라이트는 기관 표지라 호출하는 쪽이 isMarkAsset으로 거른다.
+function svgAssetFindings(svg) {
+  const out = []
+  const src = svg.replace(/<!--[\s\S]*?-->/g, blank)
+  for (const g of src.matchAll(/<(linearGradient|radialGradient)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)) {
+    const stops = []
+    for (const s of g[2].matchAll(/<stop\b[^>]*>/gi)) {
+      const attr = s[0].match(/\bstop-color\s*=\s*(?:"([^"]*)"|'([^']*)')/i)
+      const style = s[0].match(/\bstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/i)
+      let color = attr ? (attr[1] ?? attr[2]) : null
+      const inStyle = style && (style[1] ?? style[2]).match(/stop-color\s*:\s*([^;]+)/i)
+      if (inStyle) color = inStyle[1]
+      const parsed = color && stopColor(color)
+      if (parsed) stops.push(parsed)
+    }
+    if (stops.some(c => isViolet(c))) {
+      out.push({
+        rule: 'R-34',
+        severity: 'error',
+        line: lineAt(src, g.index),
+        message: '그림 자산 안 보라·남색 계열 그라데이션(AP-3) — 그림 안이어도 쓰지 않는다. 깊이·빛은 장면의 실제 색(하늘·물·지형)의 명도 단계로 낸다(design-intelligence §5-10)',
+        code: g[0].replace(/\s+/g, ' ').slice(0, 160)
+      })
+    }
+  }
+  return out
+}
+
+// 페이지가 그림으로 넣은 로컬 SVG 경로 — img src, source srcset, object data. 외부 주소·data URI는 뺀다.
+function svgAssetRefs(html) {
+  const refs = new Set()
+  const src = html.replace(/<!--[\s\S]*?-->/g, blank)
+  for (const tag of src.matchAll(/<(?:img|source|object)\b[^>]*>/gi)) {
+    for (const a of tag[0].matchAll(/\b(src|srcset|data)\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
+      const value = a[2] ?? a[3]
+      for (const part of value.split(',')) {
+        const url = part.trim().split(/\s+/)[0]
+        if (!url || /^(?:[a-z][\w+.-]*:|\/\/|#)/i.test(url)) continue
+        const clean = url.split(/[?#]/)[0]
+        if (/\.svg$/i.test(clean)) refs.add(clean)
+      }
+    }
+  }
+  return [...refs]
+}
+
+// 기관 표지(로고·엠블럼·CI·BI)와 아이콘·스프라이트 — 그림 자산 검사에서 뺀다
+const MARK_ASSET = /(?:^|[/\\._-])(?:logos?|emblems?|symbols?|icons?|sprites?|ci|bi)(?=[/\\._-]|$)/i
+function isMarkAsset(p) {
+  return MARK_ASSET.test(p)
+}
+
 module.exports = {
   // 스캐너
-  scanCss, scanHtml, scanMarkdown, splitMarkdown, isCounterFenceStart,
+  scanCss, scanHtml, scanMarkdown, splitMarkdown, isCounterFenceStart, svgAssetFindings, svgAssetRefs, isMarkAsset,
   // 규칙 단위(테스트용)
   colorFindingsForDecl, colorFindingsForToken, effectFindingsForDecl, effectFindingsForTokens,
   scaleFindingsForToken, leadingFloorFindingsForToken, emojiFindingsForHtml, emojiFindingsForContent, emojiFindingsForMarkdownProse,

@@ -1,0 +1,20 @@
+/**
+ * Partner Row — 관련 기관·연계 서비스 로고 한 줄 (블록 카탈로그 partner-row · design-intelligence §6-5)
+ *   로고 높이를 맞춰 한 줄로 둔다. 회색조로 바꾸지 않고, 굴리지 않는다(R-33).
+ *   정본: src/blocks/partner-row/. MCP get_block("partner-row")
+ *   <ul class="partner-row" role="list">
+ *     <li><a class="partner-row__link" href="…"><img class="partner-row__logo" src="…" alt="기관명"></a></li>
+ *   </ul>
+ * 레이어 밖에 둔다 — 다른 블록과 같은 층.
+ */
+.partner-row {
+  @apply flex flex-wrap items-center justify-between gap-x-[4rem] gap-y-[1.6rem] list-none m-0 p-0;
+}
+
+.partner-row__link {
+  @apply inline-flex items-center min-h-[4.4rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] hover:underline;
+}
+
+.partner-row__logo {
+  @apply block h-[2.8rem] w-auto;
+}

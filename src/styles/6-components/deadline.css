@@ -1,0 +1,71 @@
+/**
+ * Deadline — 접수 중인 항목의 남은 날수 그림 (블록 카탈로그 bulletin의 부품 · design-intelligence §5-6·§6-3 N2)
+ *   큰 숫자(남은 날수) + 제목 + 남은 기간 막대 + 마감일. 막대 길이는 --left(%)로 받고, 같은 정보를 글자로도 적는다.
+ *   <div class="deadline">
+ *     <div class="deadline__head"><h3 class="deadline__title">…</h3><p class="deadline__asof"><time datetime="…">…</time> 기준</p></div>
+ *     <ol class="deadline__list" role="list">
+ *       <li class="deadline__item">
+ *         <p class="deadline__days"><strong class="deadline__count">8</strong>일 남음</p>
+ *         <div class="deadline__body">
+ *           <a class="deadline__link" href="…">…</a>
+ *           <span class="deadline__bar" style="--left: 47%" aria-hidden="true"></span>
+ *           <p class="deadline__meta"><time datetime="…">…</time> 마감</p>
+ *         </div>
+ *       </li>
+ *     </ol>
+ *   </div>
+ * 레이어 밖에 둔다 — bulletin과 같은 층.
+ */
+.deadline {
+  @apply p-[2.4rem] bg-[var(--color-point-5)] laptop:p-[3.2rem];
+}
+
+.deadline__head {
+  @apply flex flex-wrap items-baseline justify-between gap-x-[1.6rem] gap-y-[0.4rem] mb-[2.4rem];
+}
+
+.deadline__title {
+  @apply m-0 text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text-bolder)] [word-break:keep-all];
+}
+
+.deadline__asof {
+  @apply m-0 text-[1.5rem] leading-[1.5] text-[var(--color-point-60)] [font-variant-numeric:tabular-nums];
+}
+
+.deadline__list {
+  @apply grid gap-[2.4rem] list-none m-0 p-0;
+}
+
+.deadline__item {
+  @apply grid items-center gap-x-[2rem] [grid-template-columns:7.2rem_minmax(0,1fr)] tablet:[grid-template-columns:9.6rem_minmax(0,1fr)];
+}
+
+.deadline__days {
+  @apply m-0 text-[1.5rem] leading-[1.5] text-[var(--color-point-60)] whitespace-nowrap;
+}
+
+/* KRDS display-small(4.4rem) — 숫자가 이 블록의 그림이다 */
+.deadline__count {
+  @apply block [font-family:var(--font-heading)] text-[4.4rem] font-semibold leading-[1.5] text-[var(--color-point-50)] [font-variant-numeric:tabular-nums];
+}
+
+.deadline__body {
+  @apply min-w-0;
+}
+
+.deadline__link {
+  @apply text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text-bolder)] no-underline [word-break:keep-all] [text-underline-offset:0.4rem] hover:underline;
+}
+
+/* 남은 기간 막대 — 기준일부터 마감까지. 가장 늦은 마감이 100% */
+.deadline__bar {
+  @apply relative block h-[0.4rem] mt-[1.2rem] bg-[var(--color-point-20)];
+}
+
+.deadline__bar::after {
+  @apply content-[''] absolute inset-y-0 start-0 w-[var(--left)] bg-[var(--color-point-50)];
+}
+
+.deadline__meta {
+  @apply m-0 mt-[0.8rem] text-[1.5rem] leading-[1.5] text-[var(--color-text-subtle)] [font-variant-numeric:tabular-nums];
+}

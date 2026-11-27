@@ -34,15 +34,15 @@ npm run build        # 토큰 + CSS + 사이트 빌드
 npm run dev          # http://localhost:8080
 ```
 
-토큰 변경:
-1. `tokens/foundation.json` 편집
+브랜드 색상·기본 폰트 변경:
+1. `tokens/brand.json` 편집 (`tokens/foundation.json`은 불변 계층이라 고치지 않는다)
 2. `npm run build` 재실행
 
 스타터에 동봉된 것:
-- ✅ KRDS 기반 컴포넌트 CSS
-- ✅ INFOUX 색상/기본 폰트 토큰
-- ✅ infoUX MCP 등록 안내 (`AGENTS.md`·`CLAUDE.md`) — Claude Code·Codex·Cursor 공통
-- ✅ ITCSS 5-layer 구조
+- KRDS 기반 컴포넌트 CSS
+- INFOUX 색상/기본 폰트 토큰
+- infoUX MCP 등록 안내 (`AGENTS.md`·`CLAUDE.md`) — Claude Code·Codex·Cursor 공통
+- ITCSS 5-layer 구조
 
 ### 1-B. 이 표준 저장소를 손보고 싶다 (UX팀)
 
@@ -154,11 +154,11 @@ echo "see AGENTS.md" > CONVENTIONS.md
 
 ### 4-A. 토큰 변경 (색상/기본 폰트)
 
-공개 토큰은 `tokens/foundation.json` 하나만 관리한다. 범위는 색상(`--color-*`)과 기본 폰트(`--font-*`)로 제한한다.
+토큰 파일은 두 계층이다. 프로젝트는 `tokens/brand.json`(브랜드 팔레트·기본 폰트)만 고친다. `tokens/foundation.json`(gray·상태색·의미 토큰·브레이크포인트)은 불변 계층이고, UX팀 표준 관리자만 이 저장소에서 고친다. 공개 토큰의 범위는 색상(`--color-*`)과 기본 폰트(`--font-*`)다.
 
 ```bash
-# 1. 편집
-vi tokens/foundation.json
+# 1. 편집 (light·high-contrast 두 모드 모두)
+vi tokens/brand.json
 
 # 2. 빌드
 npm run build:tokens   # tokens/build/tokens.css 재생성
@@ -268,7 +268,7 @@ npx @11ty/eleventy --serve --port=8081
 A. 이 저장소는 **단일 소스**(SoT). `iux-pub/starter`는 발행 결과물. `npm run sync:starter`로 한 방향 동기화.
 
 **Q. KRDS 새 버전 출시 시?**
-A. KRDS 변경사항을 검토한 뒤 필요한 색상/폰트만 `tokens/foundation.json`에 반영한다. 간격·크기·컴포넌트 치수는 그대로 복제하지 않고, 가이드 원칙과 패턴 준수 여부를 기준으로 판단한다.
+A. UX팀 표준 관리자가 KRDS 변경사항을 검토한 뒤 필요한 색상/폰트만 이 저장소의 `tokens/foundation.json`에 반영한다. 프로젝트에서는 이 파일을 고치지 않는다. 간격·크기·컴포넌트 치수는 그대로 복제하지 않고, 가이드 원칙과 패턴 준수 여부를 기준으로 판단한다.
 
 **Q. 다운스트림 프로젝트가 토큰 변경을 자동으로 받을 방법?**
 A. 현재는 없음. starter는 1회 클론 모델. 후속에 `npx infomind-ux upgrade` 같은 명령 도입 예정.

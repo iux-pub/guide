@@ -1,0 +1,50 @@
+/**
+ * Photo Header — 첫 화면 사진 위에서는 투명, 내리면 카탈로그 기본(흰 바탕)이 되는 머리글 (블록 카탈로그 photo-gate의 부품, design-intelligence §6-1 H7)
+ *   <header id="header" class="site-header photo-header">…카탈로그 헤더 마크업 그대로…</header>
+ *   src/js/photo-header.js가 첫 화면 사진(.photo-gate) 위에 있을 때(스크롤 8px 이하) data-on-photo를 붙인다.
+ *   그동안 머리글 안에서 의미 토큰을 흰색 계열로 다시 선언한다 — 바탕 투명, 글자 · 선 · 초점 링 흰색.
+ *   카탈로그 부품(site-header · btn)의 선택자는 덮어쓰지 않는다(§5-2, R-29). 입력 안내문 색만 사진 위에서 바꾼다.
+ *   스크립트가 없으면 data-on-photo가 붙지 않아 카탈로그 기본(흰 바탕)으로 남는다 — 글자가 사진에 묻히지 않는다.
+ *   로고는 어디서나 그림이다(§5-2). 사진 위 반전 로고는 브랜드 링크 안에 <img class="photo-header__inverse" …>를 하나 더 두면
+ *   사진 위에서만 보이고 원래 로고(.photo-header__logo)는 숨는다. 반전 로고가 재료에 없으면 로고 SVG의 글자 경로만 흰색으로 바꾼
+ *   시안용 반전본을 만들고 교체 목록에 적는다. 색을 필터로 뒤집지 않는다.
+ * 레이어 밖에 둔다 — header.css(components 레이어)보다 뒤에서 조정한다.
+ */
+.photo-header {
+  @apply [transition:background-color_0.2s_ease,border-color_0.2s_ease];
+}
+
+.photo-header[data-on-photo] {
+  --color-bg: transparent;
+  --color-text: var(--color-gray-0);
+  --color-primary: var(--color-primary-20);
+  --color-border-light: transparent;
+  --color-border-control: var(--color-gray-0);
+  --color-border-primary: var(--color-gray-0);
+  --color-text-disabled: var(--color-gray-20);
+  --color-button-text-fill-hover: var(--color-alpha-black-50);
+  --color-button-text-fill-pressed: var(--color-alpha-black-75);
+
+  /* 통합검색의 보조 단추(btn--secondary) — 사진 위에서는 흰 선 단추(바탕 투명). 밝은 바탕 그대로면 흰 상자로 튄다 */
+  --color-text-primary: var(--color-gray-0);
+  --color-button-secondary-fill: transparent;
+  --color-button-secondary-fill-hover: var(--color-alpha-black-50);
+  --color-button-secondary-fill-pressed: var(--color-alpha-black-75);
+  --color-button-secondary-border: var(--color-gray-0);
+}
+
+.photo-header__inverse {
+  @apply hidden;
+}
+
+.photo-header[data-on-photo] .photo-header__inverse {
+  @apply block;
+}
+
+.photo-header[data-on-photo] .photo-header__logo {
+  @apply hidden;
+}
+
+.photo-header[data-on-photo] .site-header__search-input::placeholder {
+  @apply text-[var(--color-gray-20)];
+}

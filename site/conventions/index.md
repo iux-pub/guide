@@ -21,13 +21,13 @@ order: 1
 | ID | 규칙 | 심각도 | 카테고리 |
 |----|------|--------|----------|
 | R-01 | 색은 어디에 쓰든 var(--color-*)만 — 선언 값·Tailwind 팔레트·흑백·임의값·style 속성 안까지. 간격·크기는 rem 임의값(R-37) | error | [CSS 규칙](/conventions/css-rules/) |
-| R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warning | [CSS 규칙](/conventions/css-rules/) |
+| R-02 | !important 사용 금지 — 부득이한 경우 주석으로 사유 필수 | warn | [CSS 규칙](/conventions/css-rules/) |
 | R-03 | SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-04 | BEM 사용 (5-objects, 6-components 레이어에만 적용) | info | [BEM 네이밍](/conventions/bem/) |
 | R-05 | element 2단계 중첩 금지 — 평탄화 | error | [BEM 네이밍](/conventions/bem/) |
 | R-06 | 시각적 modifier 금지 — 의미적 이름 사용 | error | [BEM 네이밍](/conventions/bem/) |
-| R-07 | inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용 | warning | [HTML/마크업 규칙](/conventions/html-rules/) |
-| R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warning | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-07 | inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-09 | img alt 속성 필수 — 일반 어휘·파일명·연번 alt는 경고 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-11 | 포커스 스타일 필수 — :focus { outline: none } 금지 | error | [접근성 규칙](/conventions/a11y-rules/) |
@@ -41,9 +41,9 @@ order: 1
 | R-19 | 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-20 | 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-21 | html lang 속성 필수 — 문서 기본 언어 명시 | error | [접근성 규칙](/conventions/a11y-rules/) |
-| R-22 | 모션 최소화 선호 존중과 표현 등급별 모션 예산 — 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션 금지 | warning | [접근성 규칙](/conventions/a11y-rules/) |
+| R-22 | 모션 최소화 선호 존중과 표현 등급별 모션 예산 — 로더 밖 무한 반복·기능형 화면의 스크롤 진입 모션 금지 | warn | [접근성 규칙](/conventions/a11y-rules/) |
 | R-23 | 가짜·자리 콘텐츠 금지 — 채움 문구·placeholder 핫링크·'질문 1' 연번 레이블·자리값 제목·지어낸 연락처 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
-| R-24 | 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류) | error | [CSS 규칙](/conventions/css-rules/) |
+| R-24 | 한글 조판 하한 — keep-all 존재 필수·음수 자간(2.4rem 이상 제목 -0.03em 이내 예외)·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류) | error | [CSS 규칙](/conventions/css-rules/) |
 | R-25 | 섹션 리듬 — 동일 archetype 3연속·카드형 중첩 금지, archetype 선언 필수, 카드 그리드 남발 경고(납품 페이지는 3연속·3개부터 오류) | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-26 | 폰트 스택 — 1순위는 카탈로그 한글 폰트, 서체는 토큰으로만(font-family 직접값·font-serif·외부 폰트 호스트 금지) | error | [CSS 규칙](/conventions/css-rules/) |
 | R-27 | 아이콘은 카탈로그에서 가져온다 — 임의 SVG 삽입 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
@@ -63,13 +63,14 @@ order: 1
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-42 | 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
-| R-44 | 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-44 | 근거 없는 최상급·공공 화면의 성과 홍보 어조·대비 구문 표어와 해요체·경어 혼용을 경고한다 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-45 | 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-46 | publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-47 | 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다 | error | [HTML/마크업 규칙](/conventions/html-rules/) |
 | R-48 | 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고 | error | [CSS 규칙](/conventions/css-rules/) |
 | R-49 | 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고) | warn | [CSS 규칙](/conventions/css-rules/) |
 | R-50 | placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
+| R-51 | 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선, 아이콘 타일 바로가기 반복은 경고 | warn | [HTML/마크업 규칙](/conventions/html-rules/) |
 <!-- RULES_TABLE_END -->
 
 ## 검증 도구

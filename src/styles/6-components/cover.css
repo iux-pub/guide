@@ -1,0 +1,46 @@
+/**
+ * Cover — 분할 표제 첫 화면 (블록 카탈로그 cover · design-intelligence §6-1 H1)
+ *   짙은 글 면 + 화면 가장자리까지 닿는 사진. 1024px 미만은 사진 위, 글 면 아래로 쌓는다.
+ *   정본: src/blocks/cover/ (메타데이터·마크업). MCP get_block("cover")
+ *   <section class="section section--intro inverse-surface cover" aria-labelledby="cover-title">
+ *     <figure class="cover__media"><img class="cover__img" src="…" alt=""></figure>
+ *     <div class="container cover__body">
+ *       <h1 class="cover__title" id="cover-title">…</h1>
+ *       <p class="cover__lead">…</p>
+ *       <div class="cover__actions"><a class="btn btn--primary btn--large" href="…">…</a></div>
+ *     </div>
+ *   </section>
+ *   --cover-overlap: 바로 아래 블록(task-index)이 걸쳐 올라오는 높이. 걸치는 블록이 없으면
+ *   section에 style="--cover-overlap: 0rem"을 준다.
+ * 레이어 밖에 둔다 — section.css(5-objects)의 섹션 여백과 같은 층에서 조정한다.
+ */
+.cover {
+  --cover-overlap: 8rem;
+
+  @apply relative p-0 bg-[var(--color-primary-90)];
+}
+
+.cover__media {
+  @apply m-0 h-[26rem] overflow-hidden tablet:h-[36rem] laptop:absolute laptop:inset-y-0 laptop:end-0 laptop:h-auto laptop:w-[58.333%];
+}
+
+.cover__img {
+  @apply block w-full h-full object-cover [object-position:60%_50%];
+}
+
+.cover__body {
+  @apply relative flex flex-col justify-center gap-[2.4rem] pt-[4rem] pb-[calc(4rem+var(--cover-overlap))] tablet:pt-[5.6rem] laptop:min-h-[76rem] laptop:pt-[6.4rem] laptop:pb-[calc(8rem+var(--cover-overlap))];
+}
+
+/* KRDS display-large(mobile 4.4 / pc 6rem) · 행간 150% · 자간 0.1rem */
+.cover__title {
+  @apply m-0 max-w-[6em] [font-family:var(--font-heading)] text-[4.4rem] font-semibold leading-[1.5] tracking-[0.1rem] text-[var(--color-gray-0)] [word-break:keep-all] tablet:text-[6rem];
+}
+
+.cover__lead {
+  @apply m-0 max-w-[16em] text-[1.9rem] leading-[1.7] text-[var(--color-primary-20)] [word-break:keep-all];
+}
+
+.cover__actions {
+  @apply flex mt-[0.8rem];
+}

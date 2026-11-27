@@ -110,3 +110,117 @@ test('사내 운영 문서는 납품본에서 제외한다', () => {
     assert.ok(internal.includes(name), `${name}이 납품본 제외 목록에 없다`)
   }
 })
+
+// ─── CLI 동작 (네트워크 없이) ─────────────────────────────
+
+const os = require('node:os')
+const { PassThrough } = require('node:stream')
+const { EventEmitter } = require('node:events')
+const cli = require('../../cli/bin/create.js')
+
+const argv = (...rest) => ['node', 'create.js', ...rest]
+
+test('인자: --profile·--brand는 값이 없으면 오류다(조용히 무시하지 않는다)', () => {
+  assert.throws(() => cli.parseArgs(argv('my-app', '--profile')), /--profile 옵션에는 값이 필요합니다/)
+  assert.throws(() => cli.parseArgs(argv('my-app', '--profile', '--no-git')), /--profile 옵션에는 값이 필요합니다/)
+  assert.throws(() => cli.parseArgs(argv('my-app', '--brand')), /--brand 옵션에는 값이 필요합니다/)
+  const ok = cli.parseArgs(argv('my-app', '--profile', 'public-service', '--brand', './b.json', '--deliver', '--skip-install', '--no-git'))
+  assert.deepEqual(ok._, ['my-app'])
+  assert.deepEqual(ok.flags, { profile: 'public-service', brand: './b.json', deliver: true, skipInstall: true, noGit: true })
+})
+
+test('인자: 없어진 --template과 모르는 옵션은 오류다', () => {
+  assert.throws(() => cli.parseArgs(argv('my-app', '--template', 'starter')), /--template 옵션은 없어졌습니다/)
+  assert.throws(() => cli.parseArgs(argv('my-app', '--template=starter')), /--template 옵션은 없어졌습니다/)
+  assert.throws(() => cli.parseArgs(argv('my-app', '--nope')), /알 수 없는 옵션: --nope/)
+  // 도움말·README도 없어진 옵션을 안내하지 않는다
+  assert.doesNotMatch(CLI, /--template <name>/)
+  assert.doesNotMatch(fs.readFileSync(path.join(ROOT, 'cli', 'README.md'), 'utf8'), /--template/)
+})
+
+test('완료 안내는 스타터에 실제로 있는 npm 스크립트만 말한다', () => {
+  const starterScripts = JSON.parse(fs.readFileSync(path.join(ROOT, 'starter', 'package.json'), 'utf8')).scripts
+  const steps = cli.nextSteps(starterScripts)
+  assert.ok(steps.length >= 2, '빌드·검사 안내가 있다')
+  for (const step of steps) {
+    const name = step.command.replace(/^npm run /, '')
+    assert.ok(starterScripts[name], `스타터에 없는 명령을 안내한다: ${step.command}`)
+  }
+  assert.deepEqual(cli.nextSteps({ build: 'x' }).map(s => s.command), ['npm run build'], '없는 스크립트는 빼고 안내한다')
+  // 소스와 README에 스타터에 없는 npm run <이름>이 남아 있지 않다
+  for (const [label, text] of [['cli/bin/create.js', CLI], ['cli/README.md', fs.readFileSync(path.join(ROOT, 'cli', 'README.md'), 'utf8')]]) {
+    for (const m of text.matchAll(/npm run ([a-z][\w:-]*)/g)) {
+      assert.ok(starterScripts[m[1]], `${label}가 스타터에 없는 npm run ${m[1]}을 안내한다`)
+    }
+  }
+})
+
+test('npm 호출: Windows에서는 셸로 부른다(npm.cmd — 셸 없이는 ENOENT)', () => {
+  const result = cli.runNpm(['--version'], { encoding: 'utf8' })
+  assert.equal(result.error, undefined, String(result.error))
+  assert.equal(result.status, 0, result.stderr)
+  assert.match(result.stdout.trim(), /^\d+\.\d+\.\d+/)
+})
+
+// https.get 흉내 — 주소마다 { status, location, body, fail } 응답을 돌려준다
+function fakeGet(route) {
+  const calls = []
+  const get = (url, onResponse) => {
+    calls.push(url)
+    const req = new EventEmitter()
+    req.setTimeout = () => {}
+    req.destroy = () => {}
+    const spec = route(url, calls.length)
+    setImmediate(() => {
+      if (spec.requestError) return req.emit('error', new Error(spec.requestError))
+      const res = new PassThrough()
+      res.statusCode = spec.status
+      res.headers = spec.location ? { location: spec.location } : {}
+      onResponse(res)
+      if (spec.streamError) {
+        res.write('partial')
+        setImmediate(() => res.destroy(new Error(spec.streamError)))
+      } else {
+        res.end(spec.body || '')
+      }
+    })
+    return req
+  }
+  return { get, calls }
+}
+const tmpDest = () => path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'iux-dl-')), 'starter.tar.gz')
+
+test('다운로드: 리다이렉트를 따라가 파일을 쓴다', async () => {
+  const dest = tmpDest()
+  const { get, calls } = fakeGet(url => (url.endsWith('/a') ? { status: 302, location: '/b' } : { status: 200, body: 'tarball' }))
+  await cli.download('https://example.test/a', dest, { get })
+  assert.deepEqual(calls, ['https://example.test/a', 'https://example.test/b'], '상대 주소 리다이렉트를 원래 주소 기준으로 푼다')
+  assert.equal(fs.readFileSync(dest, 'utf8'), 'tarball')
+})
+
+test('다운로드: 리다이렉트가 끝나지 않으면 횟수 제한에서 멈춘다', async () => {
+  const dest = tmpDest()
+  const { get, calls } = fakeGet(() => ({ status: 302, location: 'https://example.test/loop' }))
+  await assert.rejects(cli.download('https://example.test/loop', dest, { get }), /리다이렉트가 5번을 넘었습니다/)
+  assert.equal(calls.length, cli.MAX_REDIRECTS + 1)
+  assert.equal(fs.existsSync(dest), false)
+})
+
+test('다운로드: https가 아닌 주소로는 리다이렉트를 따라가지 않는다', async () => {
+  const dest = tmpDest()
+  const { get } = fakeGet(() => ({ status: 301, location: 'http://example.test/plain' }))
+  await assert.rejects(cli.download('https://example.test/a', dest, { get }), /https가 아닌 주소/)
+})
+
+test('다운로드: 실패하면 임시 파일을 남기지 않는다 — HTTP 오류·요청 오류·받는 중 끊김', async () => {
+  for (const [spec, pattern] of [
+    [{ status: 404 }, /HTTP 404/],
+    [{ requestError: 'ENOTFOUND' }, /ENOTFOUND/],
+    [{ status: 200, streamError: 'ECONNRESET' }, /ECONNRESET/]
+  ]) {
+    const dest = tmpDest()
+    const { get } = fakeGet(() => spec)
+    await assert.rejects(cli.download('https://example.test/a', dest, { get }), pattern)
+    assert.equal(fs.existsSync(dest), false, `반쯤 받은 파일이 남았다: ${JSON.stringify(spec)}`)
+  }
+})

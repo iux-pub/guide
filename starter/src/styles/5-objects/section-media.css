@@ -22,10 +22,6 @@
   @apply flex flex-col gap-[1.6rem];
 }
 
-.section-media__eyebrow {
-  @apply text-[1.5rem] font-bold text-[var(--color-primary)];
-}
-
 /* KRDS heading large(mobile 2.4 / pc 3.2rem) · 행간 150% · 자간 0.1rem — h2 자리 */
 .section-media__title {
   @apply text-[2.4rem] font-bold leading-[1.5] tracking-[0.1rem] text-[var(--color-text)] m-0 tablet:text-[3.2rem];

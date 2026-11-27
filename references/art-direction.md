@@ -22,13 +22,14 @@ brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디�
 | 커머스·예약 (`commerce-reservation`) | 표현형 (`expressive`) | standard-gov, product-modern | market-terracotta, trust-blue | 상품·프로모션 중심, 전환 CTA 1개 원칙. 결제 플로우는 utility 강등 | 합쇼체 기본. 근거 없는 최상급 금지. 가격·기간 사실 정보 우선 |
 <!-- art-direction:expression:end -->
 
-등급 운용은 다섯 원칙을 따른다.
+등급 운용은 여섯 원칙을 따른다.
 
 1. 등급은 상한이지 목표가 아니다 — "허용되니까"는 근거가 아니다.
 2. 상향은 task contract `expression` 필드로만 하고, 근거 기록이 필수다. 하향은 언제나 자유다.
 3. 페이지 단위 강등 — 폼·결제·인증·오류·검색결과는 사이트 등급 무관 utility~restrained 수위로 작성한다. 운반체는 페이지 단위 task contract, 확인은 납품 전 리뷰 체크리스트(§9)다.
 4. 축 단위 예외 — 등급 묶음에서 축 하나만 열 때는 `exceptions[]`에 `"rule": "expression.hero"` 형식으로 근거와 함께 기록한다(예: 공공기관 메인 영상 배경 발주 요구). 통째 상향보다 이 경로를 우선한다.
 5. publicIdentity 캡 — `required` 확정 시 상한은 restrained다(task contract 스키마가 강제). `unconfirmed` 상태에서는 상향을 보류한다.
+6. 메인·랜딩 예외 — 메인·랜딩 생성에서는 이 등급을 디자인 상한으로 쓰지 않는다(`design-intelligence.md` §1-3). 바닥 검사(R-번호)와 KRDS 대조는 그대로 적용한다.
 
 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing 소유로 등급 무관이다. 위 표의 모션 수치는 장식·스크롤 진입 모션에만 적용된다.
 
@@ -46,7 +47,7 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 | 제목 최대 줄수 | 2 |
 | weight | 본문 기본 400 · 인라인 강조 상한 700 · 제목 상한 700 · 화면당 4종 이하 |
 
-> lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0)은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2.
+> lintFloor는 R-24 검출기의 warn 임계(이 값 미만이 warn), min~max는 저작 기준값. 제목 line-height 1.5와 letter-spacing(3.2rem 이상 제목·디스플레이 0.1rem, 그 밖 0. 예외: 2.4rem 이상 제목 블록만 -0.03em 이내(em 단위, 2026-11-23 오너 승인 — 국내 수상 공공사이트 다섯 곳 모두 제목 자간 -0.01~-0.06em, R-24 검출기가 같은 블록의 글자 크기를 본다))은 KRDS 타이포그래피 표(모든 스타일 150%, display·heading xlarge·large 1px)를 따른다 — 음수 자간은 쓰지 않는다. bodyEmphasisMax 700은 인라인 강조 한정 — 연속 문단 볼드 금지. headingMax 700은 h1~h2급 한정. 상세 산문: references/art-direction.md §2.
 <!-- art-direction:hangul:end -->
 
 - 본문 줄길이는 28~42자(공백 포함)를 권장한다. 게시판 목록·약관·표처럼 문서형 콘텐츠는 예외다 — 줄길이를 맞추려고 컨테이너를 쪼개지 않는다.
@@ -74,7 +75,7 @@ point 색 사용 수위 — point는 시선을 한 곳으로 모으는 색이다
 - **retro-display** [error] hero·배너·섹션 타이틀 전용 — 본문·폼·표 사용 금지.
 - **retro-display** [warn] 글리프 커버리지 검수 — 프로젝트 실제 카피(기관명·고유명사)로 누락 음절을 확인한 뒤 채택한다.
 - **technical-global** [warn] 한글 글리프가 완성형 중심 — 실제 카피로 누락 음절 검수.
-- **technical-global** [info] foundation의 --font-mono(Plex Mono 계열)와 가족 정합 — 데이터 화면에서 강점. admin에서는 standard-gov 단일 서체도 유효한 대안.
+- **technical-global** [info] 데이터 화면에서 강점. foundation의 --font-mono는 JetBrains Mono라 고정폭 표기는 같은 가족이 아니다. admin에서는 standard-gov 단일 서체도 유효한 대안.
 <!-- art-direction:typography:end -->
 
 - 입수 원칙 — 원 배포처가 공식 woff2를 제공하는 폰트만 카탈로그에 들어온다. TTF만 배포되는 폰트는 포맷 변환의 라이선스(RFN)·품질 문제가 있어 후보 풀(부록)에 남긴다. CI는 외부 URL을 fetch하지 않는다 — 라이선스 판단은 원 배포처 페이지 기준으로 사람이 확정하고, 파일은 라이선스 전문과 함께 `assets/fonts/<pairing-id>/`에 벤더링한다.
@@ -145,6 +146,8 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 
 - 버튼 레이블은 실행될 기능을 예측할 수 있는 **동사형**을 기본으로 한다("신청하기", "파일 내려받기", "변경사항 저장"). 명사형은 KRDS가 정한 예외 — "완료", "닫기", "취소", "추가", "삭제" 같은 일반 작업이거나 동사로 쓰면 버튼 길이·해석에 문제가 생기는 경우 — 에만 쓴다(KRDS 버튼 component_05_02).
 - 근거 없는 최상급·성과 홍보 어조·느낌표 남발을 금지한다. 사실 서술이 기본이다.
+- 대비 구문 표어를 쓰지 않는다 — 「~을 넘어, ~로」「~ 그 이상의 ~」「단순한 ~가 아닌」. 해외·AI 표어(beyond · more than · not just)를 옮긴 틀로, 비교만 하고 무엇을 하는 곳인지 말하지 않는다. 미덕어 나열(「따뜻하고 든든한」)도 같다. 제목·도입부는 기관이 누구에게 무엇을 하는지 사실로 쓴다. 기계 검출은 R-44(4) 경고다. 「~하세요」 재촉형을 막자 이런 표어로 옮겨 간 것이 2세대 문구 슬롭이다(`design-intelligence.md` §7-3).
+- 같은 동작은 화면 내내 같은 이름을 쓴다(버튼 「신청하기」 → 완료 안내 「신청했습니다」). 오류 문구는 사과보다 무엇이 잘못됐고 어떻게 고치는지를 먼저 쓴다.
 - 번역투 금지 — "지금 시작하세요", 2인칭 "당신", "~을 경험하세요" 류. 기계 검출은 R-43이 맡는다 — 어휘는 `contracts/copy-lexicon.json`, '~하세요'로 끝나는 버튼과 공공 화면 느낌표도 함께 본다. 바꿀 수 없는 공식 슬로건은 `infoux.json`의 `copyAllow`에 둔다.
 - 문장 공식·에러 메시지 3-part 구조는 microcopy 소유다(site/design/microcopy.md).
 - 실제 기관 용어·메뉴명은 task contract의 `contentSources`에서 가져온다. 출처가 비어 있으면 카피는 임시 초안 신분을 벗어날 수 없다.
@@ -154,6 +157,9 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 납품 전 1회, 페이지 전량을 대상으로 실행한다. `release-checklist.md`의 게이트와 연결된다.
 
 - [ ] 안티패턴 색인(§10) 10건 각각에 대해 해당 없음을 확인했다.
+- [ ] 메인·랜딩에 `docs/design-plan.md`(컨셉·방향·색·서체·레이아웃·원칙·비평 기록)가 있고, 방향 라운드에서 고른 안과 이유가 적혀 있다(`design-intelligence.md` §2~§4).
+- [ ] 360·768·1024·1280·1440 캡처로 `design-intelligence.md` §8 렌더 비평을 받았다. 만든 에이전트가 아닌 별도 평가자가 평가했고, 기계 검사를 통과했고, 무거운 결함 문항 「예」가 없고 일반 문항 「예」가 두 개 이하다. 전형 조립 서명(§7-1)은 한 개 이하, 템플릿 장식(§7-2)은 없다.
+- [ ] 운영자·발주자의 사람 판정 「승인」과 사유 원문이 계획에 적혀 있다(§8-7).
 - [ ] 섹션 교차 리듬 — "중앙 제목+그리드" 3연속이 없다. 좌정렬·교차·풀블리드 변주가 있다.
 - [ ] 카드화 필요성 — 카드가 아니어도 되는 콘텐츠를 카드로 감싸지 않았다. 카드 안 카드 중첩이 없다.
 - [ ] 결제·인증·폼 페이지의 task contract가 utility로 강등돼 있다.
@@ -188,9 +194,11 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 5. 근거 없는 통계 히어로·가짜 후기 캐러셀. [owner: art-direction / 수치 근거는 수동 검수]
 6. 직역 마케팅 카피 — "지금 시작하세요"·"당신"·느낌표 남발. [owner: microcopy — 세부 위임]
 7. 어두운 오버레이+중앙 흰 문구+스크롤 화살표 히어로. [owner: art-direction]
-8. 무한 롤링 로고 마키·scroll-jacking·500ms 초과 장식 모션·**장식/스크롤 진입 모션의** overshoot easing. 모달·토스트·인풋 전환 같은 컴포넌트 피드백 모션의 Spring 프리셋은 이 금지의 대상이 아니다 — interaction-timing 소유(등급 무관, `contracts/profiles.json` 모션 note). [owner: interaction-timing / R-22]
+8. 무한 롤링 로고 마키·scroll-jacking·500ms 초과 장식 모션·**장식/스크롤 진입 모션의** overshoot easing. 모달·토스트·인풋 전환 같은 컴포넌트 피드백 모션은 이 금지의 대상이 아니다 — interaction-timing 소유(등급 무관, `contracts/profiles.json` 모션 note). [owner: interaction-timing / R-22]
 9. 요구에 없는 다크모드 토글 — infoUX는 high-contrast 2모드 체계다. [owner: tokens]
 10. weight 700 남발·영문 display 폰트의 한글 fallback 미설계. [owner: art-direction hangul / R-26]
+
+서명 목록은 `design-intelligence.md` §7이 정본이다. §7-1은 검사를 통과하는 전형 조립(사진 히어로 → 원형 아이콘 바로가기 → 탭 게시판 → 링크 3열), §7-2는 템플릿 장식(제목 위 분류 표지, 장식 번호, 전 섹션 등장 효과, 굵은 색 옆선, 같은 크기 카드 구조 등)이다. 기계 검출은 R-51(경고)이고 전형 조립은 렌더 비평의 결함 문항(§8-3)으로 본다.
 
 ## 부록. 검증 대기 후보 풀
 
@@ -203,7 +211,7 @@ krds-heritage 용법 제한 — trust-blue의 크림슨 point는 금지 밴드·
 | SUIT | sunn.us/suit | unverified — OFL 추정 |
 | Freesentation | 원 배포처 재확인 필요 | unverified |
 | 나눔스퀘어 네오 | hangeul.naver.com | unverified — 네이버 공식 원문 재확인 필요 |
-| Paperlogy | 원 배포처 재확인 필요 | unverified |
+| Paperlogy | 원 배포처 재확인 필요(OFL로 받음) | unverified — 2026-11 운영자가 제주관광공사 시안 표제용으로 승인. 승인한 프로젝트에서만 `--font-heading` 1순위로 쓰고(R-26 검사가 한글 폰트로 인정), TTF를 변환하지 않고 그대로 둔다. 다른 프로젝트는 승인 전까지 쓰지 않는다 |
 | Gowun Batang | fonts.google.com/specimen/Gowun+Batang | unverified — OFL 추정 |
 | MaruBuri | hangeul.naver.com | unverified — 네이버 공식 원문 재확인 필요 |
 | Spoqa Han Sans Neo | spoqa.github.io/spoqa-han-sans | unverified — OFL 추정 |

@@ -2,7 +2,7 @@
 
 > 자동 생성됨. 직접 수정 금지.
 > 출처: `src/snippets/*.md`
-> 빌드: 762a5f9
+> 기준 버전: 4.0.0
 
 아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.
 
@@ -20,7 +20,7 @@
 
 ## 그룹 A — 폼/액션
 
-##### 버튼 (Button) — KRDS {#btn}
+### 버튼 (Button) — KRDS {#btn}
 
 #### 기본 마크업
 
@@ -87,7 +87,7 @@
 
 ---
 
-##### 체크박스 & 라디오 — KRDS Form check {#check-radio}
+### 체크박스 & 라디오 — KRDS Form check {#check-radio}
 
 #### 기본 마크업
 
@@ -125,7 +125,7 @@
 - **자식**: `<input type="checkbox|radio">` → `<span __box aria-hidden="true">` (시각 박스) → `<span __label>` (텍스트)
 - **그룹**: 라디오는 `<fieldset>` + `<legend>` 필수
 - **필수 ARIA**: 시각 박스에 `aria-hidden="true"` — native input이 정보를 담당
-- 상세: `skill/references/html-semantics.md#check-radio`
+- 상세: `references/html-semantics.md#check-radio`
 
 #### 사양
 
@@ -146,7 +146,7 @@
 
 ---
 
-##### 파일 업로드 (File Upload) — KRDS {#file-upload}
+### 파일 업로드 (File Upload) — KRDS {#file-upload}
 
 #### 기본 마크업
 
@@ -184,7 +184,7 @@
 
 ---
 
-##### 폼 필드 (Form Field) — KRDS {#form}
+### 폼 필드 (Form Field) — KRDS {#form}
 
 KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스템메시지** (요소 간 8px gap)
 
@@ -256,7 +256,7 @@ KRDS 입력폼 구성: **레이블 → 보조설명 → 입력박스 → 시스�
 
 ---
 
-##### 셀렉트 (Select) — KRDS {#select}
+### 셀렉트 (Select) — KRDS {#select}
 
 native `<select>` 기반. input과 동일 사이즈/패딩 토큰.
 
@@ -294,7 +294,7 @@ native `<select>` 기반. input과 동일 사이즈/패딩 토큰.
 
 ---
 
-##### 토글 스위치 (Switch) — KRDS {#switch}
+### 토글 스위치 (Switch) — KRDS {#switch}
 
 #### 기본 마크업
 
@@ -332,7 +332,7 @@ native `<select>` 기반. input과 동일 사이즈/패딩 토큰.
 
 ## 그룹 B — 컨테이너/레이아웃
 
-##### 아코디언 (Accordion) — KRDS {#accordion}
+### 아코디언 (Accordion) — KRDS {#accordion}
 
 native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
@@ -387,7 +387,7 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
 ---
 
-##### 카드 (Card) — KRDS {#card}
+### 카드 (Card) — KRDS {#card}
 
 #### 기본 마크업
 
@@ -441,7 +441,7 @@ native `<details>`/`<summary>` 활용 — JS 없이 동작.
 
 ---
 
-##### 디스클로저 (Disclosure) — KRDS {#disclosure}
+### 디스클로저 (Disclosure) — KRDS {#disclosure}
 
 단일 "더보기/접기" 토글. Accordion(다중 그룹)과 달리 단독 토글에 사용.
 
@@ -489,7 +489,7 @@ trigger.addEventListener('click', () => {
 
 ---
 
-##### 모달 (Modal / Dialog) — KRDS {#modal}
+### 모달 (Modal / Dialog) — KRDS {#modal}
 
 #### 기본 마크업
 
@@ -547,7 +547,7 @@ trigger.addEventListener('click', () => {
 
 ---
 
-##### 사이드 패널 (Side Panel) — KRDS Help panel 응용 {#side-panel}
+### 사이드 패널 (Side Panel) — KRDS Help panel 응용 {#side-panel}
 
 우측에서 슬라이드 인하는 보조 패널. 모달과 달리 본문 스크롤을 차단하지 않는다.
 
@@ -611,7 +611,7 @@ trigger.addEventListener('click', () => {
 
 ---
 
-##### 탭 (Tab) — KRDS {#tab}
+### 탭 (Tab) — KRDS {#tab}
 
 KRDS 탭(component_04_10) — 같은 영역 안에서 상호배타적인 콘텐츠 섹션을 버튼으로 전환한다. 동작은 `src/js/tab.js`.
 
@@ -688,7 +688,7 @@ KRDS 탭(component_04_10) — 같은 영역 안에서 상호배타적인 콘텐�
 
 ## 그룹 C — 내비게이션
 
-##### 브레드크럼 (Breadcrumb) — KRDS {#breadcrumb}
+### 브레드크럼 (Breadcrumb) — KRDS {#breadcrumb}
 
 페이지 경로 표시. 사용자의 현재 위치를 보여주고 상위 페이지로 빠르게 이동할 수 있게 한다.
 
@@ -725,7 +725,7 @@ KRDS 탭(component_04_10) — 같은 영역 안에서 상호배타적인 콘텐�
 
 ---
 
-##### 푸터 (Site Footer) — KRDS {#footer}
+### 푸터 (Site Footer) — KRDS {#footer}
 
 KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지 shell의 `footer#footer` 랜드마크 안에 쓴다. 사이트 유형에 따라 항목을 덜어 쓰되, **정보 순서는 바꾸지 않는다**.
 
@@ -921,7 +921,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ---
 
-##### 사이트 헤더 (Site Header) {#header}
+### 사이트 헤더 (Site Header) {#header}
 
 사이트 유형과 무관하게 사용할 수 있는 공통 헤더 패턴. 브랜드 + 메인 메뉴 + 액션 영역을 기본으로 하며, 공식 배너·정부 상징·운영기관 식별자는 공공서비스/공공기관에서 적용 대상이 확인된 경우에만 별도 추가한다.
 
@@ -968,6 +968,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 - 1024px 이상(KRDS large): 메인 메뉴 노출 + 햄버거 숨김. PC에는 전체메뉴 버튼을 두지 않는다(KRDS 공식 코드). 전체 구조가 필요하면 헤더 유틸리티에 「사이트맵」 페이지 링크를 둔다
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
 - 통합검색 — KRDS 검색 [필수]는 모든 화면에서 통합검색을 실행할 수 있어야 한다(공공 프로필은 R-40 오류). 1024px 이상은 헤더 안 입력창(`.site-header__search`), 미만은 검색 페이지 링크(`.site-header__search-link`, 아이콘 + sr-only 「통합검색」). 검색 결과는 별도 페이지(`pageType: search-result`)로 보낸다
+- 접힌 통합검색 — 메인 첫 화면에 통합검색 입력을 둔 경우(service-gate 같은 과업 히어로) 머리글에는 form과 search-link 대신 `<a class="site-header__search-button" href="/search"><svg class="icon" aria-hidden="true">…#search</svg><span class="sr-only">통합검색</span></a>` 하나만 둔다. 모든 폭에서 아이콘으로 보여 화면의 검색 입력이 하나로 남는다(R-40은 이름이 「통합검색」인 링크로 통과, design-intelligence §6-1)
 
 #### 접근성
 
@@ -994,7 +995,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ---
 
-##### 메인 메뉴 (Main Menu) — KRDS {#main-menu}
+### 메인 메뉴 (Main Menu) — KRDS {#main-menu}
 
 드롭다운형·메가형 주 내비게이션. 헤더 안에서 사용한다. 하위 메뉴는 **disclosure 패턴**(버튼이 링크 목록을 열고 닫는다)이다.
 
@@ -1114,7 +1115,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ---
 
-##### 모바일 메뉴 (Mobile Menu) — infoUX {#mobile-menu}
+### 모바일 메뉴 (Mobile Menu) — infoUX {#mobile-menu}
 
 헤더 햄버거로 여는 전체 화면 메뉴(KRDS 메인 메뉴의 모바일 형태). 1024px 미만(모바일·태블릿)에서 [메인 메뉴](main-menu.md)를 대신한다. 화면 전체를 덮으므로 모달처럼 초점을 가둔다.
 
@@ -1217,7 +1218,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ---
 
-##### 페이지네이션 (Pagination) — KRDS {#pagination}
+### 페이지네이션 (Pagination) — KRDS {#pagination}
 
 목록을 여러 페이지로 나눠 탐색.
 
@@ -1264,7 +1265,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ## 그룹 D — 피드백
 
-##### 알림 (Alert / Critical Alerts) — KRDS {#alert}
+### 알림 (Alert / Critical Alerts) — KRDS {#alert}
 
 페이지에 고정 노출되는 정보/경고/오류 메시지.
 
@@ -1305,7 +1306,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ---
 
-##### 배지 (Badge) — KRDS {#badge}
+### 배지 (Badge) — KRDS {#badge}
 
 작은 알림 표시기 (카운트 / 상태 / 새 항목).
 
@@ -1338,7 +1339,7 @@ KRDS 푸터(component_02_04) 기준의 페이지 하단 공통 영역. 페이지
 
 ---
 
-##### 긴급 공지 (Notice Bar) — KRDS {#notice-bar}
+### 긴급 공지 (Notice Bar) — KRDS {#notice-bar}
 
 KRDS 긴급 공지(Critical alerts) — 지금 대부분의 사용자가 알아야 하는 **한시적 사실 하나**를 본문 맨 위에 띠로 알린다. 블록 이름은 `notice-bar`다.
 
@@ -1459,7 +1460,7 @@ KRDS는 긴급 공지를 메인 메뉴와 히어로 사이, **본문 콘텐츠�
 
 ---
 
-##### 진행률 (Progress) — KRDS {#progress}
+### 진행률 (Progress) — KRDS {#progress}
 
 native `<progress>` + 시각 커스텀.
 
@@ -1493,7 +1494,7 @@ native `<progress>` + 시각 커스텀.
 
 ---
 
-##### 스피너 (Spinner) — KRDS {#spinner}
+### 스피너 (Spinner) — KRDS {#spinner}
 
 로딩 표시기. 진행 시간을 알 수 없을 때 사용.
 
@@ -1521,7 +1522,7 @@ native `<progress>` + 시각 커스텀.
 
 ---
 
-##### 단계 표시기 (Step Indicator) — KRDS {#step-indicator}
+### 단계 표시기 (Step Indicator) — KRDS {#step-indicator}
 
 다단계 폼/프로세스의 현재 단계 표시.
 
@@ -1563,7 +1564,7 @@ native `<progress>` + 시각 커스텀.
 
 ---
 
-##### 태그 (Tag) — KRDS {#tag}
+### 태그 (Tag) — KRDS {#tag}
 
 카테고리, 필터, 속성 라벨.
 
@@ -1609,7 +1610,7 @@ native `<progress>` + 시각 커스텀.
 
 ---
 
-##### 토스트 (Toast) — KRDS {#toast}
+### 토스트 (Toast) — KRDS {#toast}
 
 일시적 피드백 메시지. 화면 우측 상단/하단에 잠시 노출 후 자동 사라짐.
 
@@ -1661,7 +1662,7 @@ native `<progress>` + 시각 커스텀.
 
 ---
 
-##### 툴팁 (Tooltip) — KRDS {#tooltip}
+### 툴팁 (Tooltip) — KRDS {#tooltip}
 
 짧은 보조 설명 팝업. **JS 트리거 변형 권장** (키보드/터치 호환).
 
@@ -1705,7 +1706,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 
 ## 그룹 E — 콘텐츠/표현
 
-##### 달력 (Calendar) — KRDS {#calendar}
+### 달력 (Calendar) — KRDS {#calendar}
 
 날짜 선택 그리드. 단독 사용 또는 date input의 팝업으로 사용.
 
@@ -1773,7 +1774,7 @@ JS: focus/mouseenter 시 `tooltip.removeAttribute('hidden')`, blur/mouseleave �
 
 ---
 
-##### 캐러셀 (Carousel) — KRDS {#carousel}
+### 캐러셀 (Carousel) — KRDS {#carousel}
 
 KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작은 `src/js/carousel.js`가 맡는다.
 메인 비주얼, 본문 안 팝업존처럼 여러 항목을 한 자리에서 번갈아 보여 줄 때 쓴다.
@@ -1917,7 +1918,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
 
 ---
 
-##### 오류 페이지 (Error Page) — infoUX {#error-page}
+### 오류 페이지 (Error Page) — infoUX {#error-page}
 
 요청한 페이지를 보여줄 수 없을 때(404 · 403 · 500 · 점검) 한 화면으로 보여주는 패턴. 사용자는 이 화면을 구경하러 온 것이 아니라 **빠져나가러** 왔다. 장식보다 탈출 경로가 먼저다.
 
@@ -1930,7 +1931,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
   <div class="container">
     <div class="error-page">
       <h1 class="error-page__title" id="error-title">요청하신 페이지를 찾을 수 없습니다</h1>
-      <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 방법으로 원하시는 내용을 찾아보세요.</p>
+      <p class="error-page__desc">주소가 바뀌었거나 삭제된 페이지일 수 있습니다. 아래 방법으로 원하는 내용을 찾을 수 있습니다.</p>
 
       <div class="error-page__actions">
         <a class="btn btn--primary" href="/">홈으로 이동</a>
@@ -1953,7 +1954,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
         </ul>
       </nav>
 
-      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-000-0000(평일 09:00~18:00)로 알려 주세요.</p>
+      <p class="error-page__contact">계속 같은 화면이 나오면 대표전화 064-000-0000(평일 09:00~18:00)로 알려 주십시오.</p>
     </div>
   </div>
 </section>
@@ -1977,7 +1978,7 @@ KRDS 캐러셀(component_04_09) 기준의 스크롤 스냅 슬라이드. 동작�
 |------|---------|---------|---------|
 | 404 없는 페이지 | 요청하신 페이지를 찾을 수 없습니다 | 주소가 바뀌었거나 삭제된 페이지일 수 있습니다. | 홈 · 검색 · 바로가기 |
 | 403 접근 권한 없음 | 이 페이지를 볼 수 있는 권한이 없습니다 | 로그인이 필요하거나 접근이 제한된 페이지입니다. | 로그인 · 권한 신청 |
-| 500 서버 오류 | 일시적으로 페이지를 보여드릴 수 없습니다 | 잠시 뒤에 다시 시도해 주세요. 문제가 계속되면 문의해 주세요. | 새로고침 · 문의 |
+| 500 서버 오류 | 일시적으로 페이지를 보여드릴 수 없습니다 | 잠시 뒤에 다시 시도해 주십시오. 문제가 계속되면 문의해 주십시오. | 새로고침 · 문의 |
 | 503 점검 | 서비스 점검 중입니다 | 점검 시간 안내(확인된 일시만) | 점검 종료 후 이동 · 공지 |
 
 - 점검 문안의 **일시·기간은 확인된 값만** 쓴다. 지어내거나 "곧 완료됩니다" 같은 추측을 쓰지 않는다 (R-23)
@@ -2028,7 +2029,7 @@ HTML만으로 끝나지 않는다. 아래는 구현팀과 함께 확인한다.
 
 ---
 
-##### 아이콘 (Icon) — infoUX {#icon}
+### 아이콘 (Icon) — infoUX {#icon}
 
 세트에 등재된 아이콘만 쓴다. 목록은 `npm run icons:sheet`로 보거나
 AI 도구에서는 MCP `list_icons`로 받는다. 세트에 없어도 구글 Material Symbols 카탈로그(3,900여 종)에 있으면
@@ -2136,7 +2137,7 @@ SVG 방식은 `.icon` + 같은 어휘(`.icon--small` 등)를 쓴다. 시각적 �
 
 ---
 
-##### 목록 (List) — KRDS Text list / Structured list {#list}
+### 목록 (List) — KRDS Text list / Structured list {#list}
 
 두 가지 변형 — 텍스트 목록과 구조화 목록(정의 목록).
 
@@ -2189,7 +2190,7 @@ KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
 - **자식**: `<li>` (ul/ol) 또는 `<dt>` + `<dd>` (dl)
 - **변형 클래스**: `.list--text` · `.list--ordered` · `.list--structured`
 - **필수 ARIA**: — (시맨틱 태그만으로 충분)
-- 상세: `skill/references/html-semantics.md#list`
+- 상세: `references/html-semantics.md#list`
 
 #### 접근성
 
@@ -2204,7 +2205,7 @@ KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
 
 ---
 
-##### 표 (Table) — KRDS {#table}
+### 표 (Table) — KRDS {#table}
 
 데이터 표. 모바일에서는 가로 스크롤 컨테이너로 감싸서 사용.
 

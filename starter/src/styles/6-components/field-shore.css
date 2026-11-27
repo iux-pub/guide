@@ -1,0 +1,13 @@
+/**
+ * Field Shore — 사진 면과 색인을 한 구획으로 묶는 섹션 (블록 카탈로그 field-shore · design-intelligence §6-4)
+ *   <section class="section section--content field-shore" aria-labelledby="field-shore-title">
+ *     <div class="dusk">…<h2 class="display-title dusk__title" id="field-shore-title">…</h2>…<svg class="oreum">…</svg></div>
+ *     <div class="container"><ul class="field-index" role="list">…</ul></div>
+ *   </section>
+ *   짙은 면에서 녹아 나오는 큰 사진(dusk) → 둥근 능선(oreum) → 옅은 색 면의 색인(field-index) 순이다.
+ *   섹션 여백은 없애고 안쪽 부품이 정한다. 면 색은 --field-shore-surface로 바꾼다(기본 point-5).
+ * 레이어 밖에 둔다 — section.css(5-objects)와 같은 층에서 여백을 없앤다.
+ */
+.field-shore {
+  @apply p-0 bg-[var(--field-shore-surface,var(--color-point-5))] laptop:p-0;
+}

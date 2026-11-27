@@ -21,6 +21,18 @@ test('R-24: 음수 자간·전역 자간·keep-all 무력화는 오류', () => {
   assert.ok(has(scanHtmlHangul('<h2 style="letter-spacing:-0.5px">제목</h2>'), 'error'))
 })
 
+test('R-24: 2.4rem 이상 제목 블록의 -0.03em 이내 자간은 예외(2026-11-23 오너 승인)', () => {
+  const neg = r => r.filter(f => /자간/.test(f.message))
+  assert.equal(neg(scanCssHangul('.hero__title { @apply text-[4rem] tracking-[-0.02em]; }')).length, 0)
+  assert.equal(neg(scanCssHangul('.s__title { @apply text-[2.8rem] laptop:text-[4.8rem] laptop:tracking-[-0.03em]; }')).length, 0)
+  assert.equal(neg(scanCssHangul('.s__title { font-size: 3.2rem; letter-spacing: -0.02em; }')).length, 0)
+  // 본문 크기·한도 초과·px 단위·tracking-tight는 그대로 오류
+  assert.ok(has(scanCssHangul('.card__text { @apply text-[1.7rem] tracking-[-0.02em]; }'), 'error'))
+  assert.ok(has(scanCssHangul('.hero__title { @apply text-[4rem] tracking-[-0.05em]; }'), 'error'))
+  assert.ok(has(scanCssHangul('.hero__title { @apply text-[4rem] tracking-[-1px]; }'), 'error'))
+  assert.ok(has(scanCssHangul('.hero__title { @apply text-[4rem] tracking-tight; }'), 'error'))
+})
+
 test('R-24: 저장소 실제 형태는 통과', () => {
   for (const css of [
     'pre,\n  code {\n  word-break: normal;\n}',

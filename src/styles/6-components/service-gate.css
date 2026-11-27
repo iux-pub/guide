@@ -1,0 +1,122 @@
+/**
+ * Service Gate — 업무 판 첫 화면 (블록 카탈로그 service-gate · design-intelligence §6-1 H3 + §6-2 Q4)
+ *   화면 폭 사진 위에 표제, 사진 아래 가장자리에 걸친 흰 업무 판(통합검색 + 자주 찾는 서비스 6)을 둔다.
+ *   공기업·기관 메인처럼 업무 진입이 1순위인 메인의 첫 화면이다(design-intelligence §3-5).
+ *   정본: src/blocks/service-gate/. MCP get_block("service-gate")
+ *   <section class="section section--intro service-gate" aria-labelledby="service-gate-title">
+ *     <img class="service-gate__photo" …>
+ *     <div class="container service-gate__body"><h1 class="service-gate__title">…</h1><p class="service-gate__lead">…</p></div>
+ *     <div class="container service-gate__panel">
+ *       <form class="service-gate__search" role="search">…</form>
+ *       <nav class="service-gate__services"><ul class="service-gate__list">
+ *         <li><a class="service-gate__service"><img class="service-gate__art" alt=""> 또는 <svg class="icon service-gate__icon">…</svg><span>이름</span></a></li>
+ *       </ul></nav>
+ *     </div>
+ *   </section>
+ *   아이콘 자리는 두 가지를 받는다 — 입체 아이콘 이미지(.service-gate__art, 투명 PNG)와 스프라이트 아이콘(.service-gate__icon).
+ *   블록 예외(contracts/block-exceptions.json): 표제 행간 1.3(KRDS 기준 밖 — 운영자 승인 대기).
+ * 레이어 밖에 둔다 — section.css(5-objects)의 섹션 여백과 같은 층에서 조정한다.
+ */
+.service-gate {
+  @apply relative p-0 bg-[var(--color-surface)];
+}
+
+/* 사진은 판 뒤에 깔린다 — 위쪽이 밝고 단순한 사진(하늘·물·흰 벽)이어야 짙은 표제가 읽힌다 */
+.service-gate__photo {
+  @apply absolute inset-x-0 top-0 block w-full h-[46rem] object-cover [object-position:70%_75%] tablet:h-[56rem] laptop:h-[64rem];
+}
+
+.service-gate__body {
+  @apply relative pt-[8rem] h-[46rem] tablet:pt-[10.4rem] tablet:h-[56rem] laptop:pt-[12rem] laptop:h-[64rem];
+}
+
+/* KRDS display-large 상한 6rem. 두 줄 표제라 행간을 좁힌다(블록 예외 R-24) */
+.service-gate__title {
+  @apply m-0 [font-family:var(--font-heading)] font-bold tracking-normal text-[var(--color-text-bolder)] [word-break:keep-all];
+
+  font-size: clamp(3.2rem, 4.4vw, 6rem);
+  line-height: 1.3;
+}
+
+.service-gate__lead {
+  @apply m-0 mt-[1.6rem] text-[1.7rem] font-medium leading-[1.6] text-[var(--color-text)] [word-break:keep-all] tablet:text-[1.9rem];
+}
+
+/* 업무 판 — 사진 아래 가장자리에 걸친다. 검정 알파 토큰 그림자로 사진에서 띄운다 */
+.service-gate__panel {
+  @apply relative z-[1] grid -mt-[9.6rem] p-0 rounded-[1.2rem] bg-[var(--color-surface)] [box-shadow:0_0.8rem_2.4rem_-0.8rem_var(--color-alpha-black-50)] laptop:-mt-[12rem] laptop:[grid-template-columns:minmax(0,5fr)_minmax(0,7fr)];
+}
+
+.service-gate__search {
+  @apply p-[2.4rem] border-b border-[var(--color-border-light)] laptop:p-[4rem] laptop:border-b-0 laptop:border-e;
+}
+
+.service-gate__search-label {
+  @apply block text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text-bolder)] [word-break:keep-all] laptop:text-[2.2rem];
+}
+
+/* 입력은 밑줄 한 줄. 초점은 줄 전체가 굵은 브랜드 색 밑줄로 바뀌어 보인다 */
+.service-gate__search-row {
+  @apply flex mt-[1.6rem] border-b-2 border-[var(--color-text-bolder)];
+}
+
+.service-gate__search-row:focus-within {
+  @apply border-[var(--color-border-primary)] shadow-[0_0.2rem_0_0_var(--color-border-primary)];
+}
+
+.service-gate__search-input {
+  @apply flex-1 min-w-0 h-[5.6rem] px-0 border-0 bg-transparent text-[1.7rem] text-[var(--color-text-bolder)] placeholder:text-[var(--color-text-subtle)] [outline-offset:0.2rem];
+}
+
+.service-gate__search-btn {
+  @apply inline-flex items-center justify-center w-[5.6rem] h-[5.6rem] border-0 bg-transparent text-[var(--color-text-bolder)] cursor-pointer;
+}
+
+.service-gate__keywords {
+  @apply flex flex-wrap items-center gap-x-[0.8rem] gap-y-[0.4rem] m-0 mt-[1.6rem] text-[1.5rem] leading-[1.6] [word-break:keep-all];
+}
+
+.service-gate__keywords-label {
+  @apply me-[0.4rem] text-[var(--color-text-subtle)];
+}
+
+.service-gate__keyword {
+  @apply inline-flex items-center min-h-[4.4rem] px-[1.2rem] rounded-[0.6rem] bg-[var(--color-gray-5)] text-[var(--color-text)] no-underline hover:bg-[var(--color-gray-10)];
+}
+
+.service-gate__services {
+  @apply p-[1.6rem] laptop:p-[2.4rem];
+}
+
+.service-gate__list {
+  @apply grid grid-cols-2 list-none m-0 p-0 tablet:grid-cols-3;
+}
+
+/* 서비스 칸 — 좁은 화면은 아이콘 위·이름 아래, 넓은 화면은 아이콘 옆에 이름 */
+.service-gate__service {
+  @apply flex flex-col items-start justify-between gap-[0.8rem] min-h-[10.4rem] p-[1.6rem] rounded-[0.8rem] text-[1.6rem] font-bold leading-[1.5] text-[var(--color-text-bolder)] no-underline [word-break:keep-all] [outline-offset:-0.3rem] [transition:background-color_0.2s_ease] tablet:flex-row tablet:items-center tablet:justify-start tablet:gap-[1.6rem] tablet:min-h-[11.2rem] tablet:p-[2rem] tablet:text-[1.7rem];
+}
+
+.service-gate__service:visited {
+  @apply text-[var(--color-text-bolder)];
+}
+
+.service-gate__service:hover {
+  @apply bg-[var(--color-gray-5)];
+}
+
+/* 입체 아이콘 이미지 — 투명 PNG(흰 바탕 그림은 scripts/capture.js alpha로 바꾼다) */
+.service-gate__art {
+  @apply block shrink-0 w-[5.6rem] h-[5.6rem] object-contain tablet:w-[6.4rem] tablet:h-[6.4rem];
+}
+
+/* 스프라이트 아이콘 — 입체 아이콘이 없을 때 */
+.service-gate__icon {
+  @apply shrink-0 w-[3.2rem] h-[3.2rem] text-[var(--color-primary-50)];
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-gate__service {
+    @apply [transition:none];
+  }
+}

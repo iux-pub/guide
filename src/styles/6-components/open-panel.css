@@ -1,0 +1,71 @@
+/**
+ * Open Panel — 정보공개 판: 짙은 단색 면 + 세 갈래 링크 + 대표전화 (블록 카탈로그 open-panel · design-intelligence §6-5)
+ *   왼쪽에 문장형 제목과 대표전화, 오른쪽에 「열린경영·정보공개·고객참여」 같은 세 갈래 링크 묶음을 둔다.
+ *   판 하나가 짙은 브랜드 색의 넓은 면이다 — 사진 층을 깔지 않는다(design-intelligence §3-5 넓은 색 면).
+ *   정본: src/blocks/open-panel/. MCP get_block("open-panel")
+ *   <section class="section section--list open-panel" aria-labelledby="open-panel-title">
+ *     <div class="container">
+ *       <div class="open-panel__panel">
+ *         <h2 class="open-panel__title">…</h2>
+ *         <div class="open-panel__groups"><div class="open-panel__group"><h3 class="open-panel__group-name">…</h3><ul class="open-panel__links">…</ul></div></div>
+ *         <p class="open-panel__call">대표전화 <a class="open-panel__tel" href="tel:…">…</a></p>
+ *       </div>
+ *     </div>
+ *   </section>
+ * 레이어 밖에 둔다.
+ */
+
+/* 섹션 세로 여백은 .section(5-objects)이 맡는다 — 블록에서 덮어쓰지 않는다(design-intelligence §5-4) */
+.open-panel {
+  @apply relative;
+}
+
+.open-panel__panel {
+  @apply grid gap-[3.2rem] p-[2.4rem] rounded-[1.2rem] bg-[var(--color-primary-80)] tablet:p-[4rem] laptop:[grid-template-columns:minmax(0,4fr)_minmax(0,8fr)] laptop:p-[5.6rem];
+}
+
+/* KRDS heading-large(mobile 2.4 / pc 3.2rem) */
+.open-panel__title {
+  @apply m-0 [font-family:var(--font-heading)] text-[2.4rem] font-bold leading-[1.5] tracking-normal text-[var(--color-gray-0)] [word-break:keep-all] tablet:text-[3.2rem] laptop:col-start-1 laptop:row-start-1;
+}
+
+.open-panel__groups {
+  @apply grid gap-[2.4rem] tablet:grid-cols-3 laptop:col-start-2 laptop:row-start-1 laptop:row-span-2;
+}
+
+.open-panel__group-name {
+  @apply m-0 pb-[1.2rem] border-b-2 border-[var(--color-primary-30)] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all];
+}
+
+.open-panel__links {
+  @apply list-none m-0 p-0;
+}
+
+.open-panel__link {
+  @apply flex items-center justify-between gap-[0.8rem] min-h-[4.8rem] border-b border-[var(--color-primary-60)] text-[1.6rem] leading-[1.5] text-[var(--color-gray-0)] no-underline [word-break:keep-all] hover:text-[var(--color-primary-20)] hover:underline;
+}
+
+.open-panel__link:visited {
+  @apply text-[var(--color-gray-0)];
+}
+
+.open-panel__link .icon {
+  @apply shrink-0 text-[var(--color-primary-30)];
+}
+
+.open-panel__call {
+  @apply m-0 flex flex-wrap items-baseline gap-x-[1.6rem] text-[1.6rem] font-bold leading-[1.5] text-[var(--color-primary-20)] laptop:col-start-1 laptop:row-start-2 laptop:self-end;
+}
+
+.open-panel__tel {
+  @apply [font-family:var(--font-heading)] text-[3.2rem] font-bold leading-[1.5] text-[var(--color-gray-0)] no-underline [font-variant-numeric:tabular-nums] hover:underline tablet:text-[4rem];
+}
+
+.open-panel__tel:visited {
+  @apply text-[var(--color-gray-0)];
+}
+
+/* 묶음 칸 — 격자 칸이 긴 링크 이름 때문에 넘치지 않게 */
+.open-panel__group {
+  @apply min-w-0;
+}

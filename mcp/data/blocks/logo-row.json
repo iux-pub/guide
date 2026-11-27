@@ -1,0 +1,207 @@
+{
+  "id": "logo-row",
+  "name": "옅은 면 로고 줄과 푸터 능선",
+  "slot": "logo-row",
+  "forms": [],
+  "reference": "design-intelligence §6-5 관련 기관 로고, §6-6 푸터의 색",
+  "tags": [
+    "관련 기관",
+    "연계 서비스",
+    "로고",
+    "격자",
+    "능선",
+    "푸터 전환",
+    "옅은 면",
+    "쇼케이스"
+  ],
+  "summary": "윗 블록과 같은 옅은 색 면에 로고를 6단 격자로 놓고, 바닥에 푸터 색의 능선을 깔아 반전 푸터로 넘어간다.",
+  "bundle": {
+    "parts": [
+      "logo-row",
+      "ridge"
+    ],
+    "reason": "이 블록은 페이지의 마지막 면이고 능선이 그 바닥에 붙어 푸터의 색으로 칠해진다. 바닥 여백을 능선 높이(--ridge-h)로 계산하므로 능선 없이 쓰면 아래가 비고, 능선만 따로 쓰면 놓일 면이 없다."
+  },
+  "useWhen": [
+    "바로 위가 같은 옅은 색 면(link-lines)이고 이 블록이 푸터 바로 앞의 마지막 블록이다.",
+    "푸터가 반전 푸터(site-footer--inverse, gray-90)다 — 능선이 그 색으로 칠해져 본문과 푸터의 경계가 대상의 윤곽으로 그려진다.",
+    "관련 기관·연계 서비스가 3~6곳이고 로고 파일을 받을 수 있다(없는 곳은 글자로 둔다)."
+  ],
+  "avoidWhen": [
+    "능선 모양을 그대로 쓰려 한다 — 이 실루엣은 견본 기관의 지형에서 온 선이다. 대상에서 온 선으로 바꾸지 않을 거면 partner-row를 쓰고 직선 경계로 둔다.",
+    "푸터가 밝은 면이다 — 짙은 능선 뒤에 밝은 푸터가 와서 띠만 남는다. 능선 색을 푸터 색으로 바꾸거나 partner-row를 쓴다.",
+    "뒤에 다른 블록이 온다 — 이 블록은 페이지의 마지막 면이다.",
+    "기관이 7곳을 넘는다 — 격자가 두 줄이 된다. 푸터의 「관련 기관」 펼침 목록을 쓴다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "섹션 이름(화면에는 안 보인다)",
+      "spec": "한글 4~8자. 스크린리더가 읽는 섹션 제목이다(「관련 기관」「연계 서비스」).",
+      "example": "관련 기관"
+    },
+    {
+      "key": "partners",
+      "kind": "list",
+      "label": "기관",
+      "min": 3,
+      "max": 6,
+      "spec": "3~6곳. 넓은 화면 6단, 768px 이상 3단, 그 아래 2단이다 — 6곳이면 어느 폭에서도 빈 칸이 없다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "기관 이름",
+          "spec": "로고의 대체 텍스트가 된다. 기관의 공식 이름을 적는다."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "기관 누리집 주소",
+          "spec": "https로 시작하는 실제 주소."
+        },
+        {
+          "key": "logo_src",
+          "kind": "image",
+          "label": "로고 파일",
+          "ratio": "가로형 로고. 높이 3.2rem(32px) 안에 맞춰 표시한다",
+          "spec": "기관이 배포하는 공식 가로형 로고(SVG 권장). 흰 바탕 파일이어도 곱하기 혼합으로 면 색에 섞인다 — 짙은 바탕 로고는 쓰지 않는다. 색을 바꾸거나 회색조로 만들지 않는다."
+        },
+        {
+          "key": "logo_width",
+          "kind": "number",
+          "label": "로고 표시 너비(px)",
+          "spec": "높이 32px일 때의 너비 정수. 레이아웃 밀림을 막는 width 속성 값이다."
+        }
+      ],
+      "examples": [
+        {
+          "name": "항구시청",
+          "href": "https://www.example.go.kr/",
+          "logo_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 32'%3E%3Crect width='32' height='32' fill='%230b50d0'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E항구시청%3C/text%3E%3C/svg%3E",
+          "logo_width": 128
+        },
+        {
+          "name": "항구 미술관",
+          "href": "https://museum.example.or.kr/",
+          "logo_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23ab2b36'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E항구 미술관%3C/text%3E%3C/svg%3E",
+          "logo_width": 144
+        },
+        {
+          "name": "시립 극장",
+          "href": "https://theater.example.or.kr/",
+          "logo_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 32'%3E%3Cpath d='M0 32 L16 0 L32 32 Z' fill='%23052561'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E시립 극장%3C/text%3E%3C/svg%3E",
+          "logo_width": 128
+        },
+        {
+          "name": "문화예술 교육센터",
+          "href": "https://edu.example.or.kr/",
+          "logo_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 32'%3E%3Crect width='32' height='32' fill='%23228738'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E문화예술 교육센터%3C/text%3E%3C/svg%3E",
+          "logo_width": 192
+        },
+        {
+          "name": "항구 관광 안내",
+          "href": "https://tour.example.or.kr/",
+          "logo_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2354789e'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E항구 관광 안내%3C/text%3E%3C/svg%3E",
+          "logo_width": 160
+        },
+        {
+          "name": "지역 축제 기록관",
+          "href": "https://archive.example.or.kr/",
+          "logo_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 176 32'%3E%3Crect width='32' height='32' fill='%238a5a1c'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E지역 축제 기록관%3C/text%3E%3C/svg%3E",
+          "logo_width": 176
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "능선 모양",
+      "options": [
+        "견본의 각진 능선(예시)",
+        "대상의 지형·사물에서 온 선"
+      ],
+      "how": "이 모양을 그대로 쓰지 않는다. 만드는 법은 get_block(\"scene\")의 「능선 모양」 변형 축과 같다. 첫 화면 능선과 같은 대상에서 따되 다른 구간을 써서 두 실루엣이 똑같지 않게 한다."
+    },
+    {
+      "axis": "능선 색",
+      "options": [
+        "반전 푸터 색(기본, gray-90)",
+        "프로젝트 푸터의 색"
+      ],
+      "how": "푸터 색이 gray-90이 아니면 section에 style=\"--ridge-ground: var(--color-…); --ridge-slope: …; --ridge-far: …; --ridge-near: …\"로 네 값을 푸터 면 토큰에 맞춘다."
+    },
+    {
+      "axis": "로고 없는 기관",
+      "options": [
+        "로고(기본)",
+        "기관 이름 글자"
+      ],
+      "how": "로고 파일이 없는 기관은 img를 빼고 링크 안에 기관 이름을 글자로 적는다."
+    },
+    {
+      "axis": "면 색",
+      "options": [
+        "point-5(기본)",
+        "윗 블록과 같은 옅은 면 토큰"
+      ],
+      "how": "section에 style=\"--logo-row-surface: var(--color-…)\"를 준다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "link-lines"
+    ],
+    "after": [],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "tinted",
+    "joinsAbove": "tinted",
+    "note": "--logo-row-surface(기본 --color-point-5). 바닥의 능선은 푸터 색(--color-gray-90·80·70)으로 칠한다. 로고 호버 면은 --color-point-10."
+  },
+  "section": {
+    "archetype": "list"
+  },
+  "shell": {
+    "footerClass": "site-footer--inverse"
+  },
+  "styles": [
+    "src/styles/6-components/logo-row.css",
+    "src/styles/6-components/ridge.css"
+  ],
+  "requires": {
+    "components": [
+      "footer"
+    ],
+    "icons": [],
+    "scripts": []
+  },
+  "accessibility": [
+    "로고 img의 alt는 기관 이름이다(R-09). 링크 이름이 된다.",
+    "새 창으로 열리는 링크는 숨김 글자 「새 창」으로 알린다.",
+    "화면에 제목을 보이지 않아도 section에는 이름이 있어야 한다 — sr-only h2를 aria-labelledby로 잇는다.",
+    "링크 칸 높이는 8rem으로 터치 영역 44px을 넘는다(R-13).",
+    "능선은 장식이라 aria-hidden과 focusable=\"false\"를 둔다.",
+    "자동으로 굴리지 않는다(R-33)."
+  ],
+  "krdsPending": [
+    "면과 면의 경계를 직선이 아닌 능선 그림으로 긋는다 — KRDS에 해당 형식이 없다(인라인 svg는 scene 블록의 R-27 예외로 통과)."
+  ],
+  "origin": "제주관광공사 메인 E안(2026-11, 견본 — 운영자 판정: 불통과)의 logo-row와 푸터 앞 능선을 옮겼다.",
+  "tokens": [
+    "--color-border",
+    "--color-gray-70",
+    "--color-gray-80",
+    "--color-gray-90",
+    "--color-point-10",
+    "--color-point-5",
+    "--color-primary-70",
+    "--color-primary-80",
+    "--color-primary-90",
+    "--color-text"
+  ],
+  "markup": "<section class=\"section section--list logo-row\" aria-labelledby=\"logo-row-title\">\n  <div class=\"container\">\n    <h2 class=\"sr-only\" id=\"logo-row-title\">{{title}}</h2>\n    <ul class=\"logo-row__list\" role=\"list\">\n      <!-- @each partners as partner -->\n      <li><a class=\"logo-row__link\" href=\"{{partner.href}}\" target=\"_blank\" rel=\"noopener noreferrer\"><img class=\"logo-row__logo\" src=\"{{partner.logo_src}}\" alt=\"{{partner.name}}\" width=\"{{partner.logo_width}}\" height=\"32\"><span class=\"sr-only\"> 새 창</span></a></li>\n      <!-- @end -->\n    </ul>\n  </div>\n  <svg class=\"ridge\" viewBox=\"0 0 1440 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\">\n    <path class=\"ridge__slope\" d=\"M0 18L20.6 -2.3L41.1 44.5ZM152.2 23.7L188.6 -4.5L225 61.7ZM345.7 25.9L371.1 -4.2L396.5 34.1ZM488.8 75.3L521.9 36.9L555 60.2ZM661.6 50.3L685.1 0.8L708.6 26.1ZM819.6 83.6L853.3 8.6L887.1 20.5ZM998.4 56.5L1023.8 35.2L1049.2 73.6ZM1166 61.5L1189.7 51.1L1213.3 86.9ZM1324.7 37.1L1347.7 12.9L1370.7 62.1Z\"/>\n    <path class=\"ridge__slope-far\" d=\"M41.1 44.5L76.7 18.7L112.2 35.8ZM225 61.7L250.9 47.5L276.9 75.4ZM396.5 34.1L415.1 15.4L433.6 48.6ZM555 60.2L586.5 27L618.1 56.3ZM708.6 26.1L735.1 8.1L761.6 57.8ZM887.1 20.5L908.2 -7L929.3 83.1ZM1049.2 73.6L1077 37.4L1104.8 65.7ZM1213.3 86.9L1246.1 40.9L1279 54.9ZM1370.7 62.1L1405.4 48.7L1440 87.1Z\"/>\n    <path class=\"ridge__slope-near\" d=\"M112.2 35.8L132.2 8L152.2 23.7ZM276.9 75.4L311.3 1.6L345.7 25.9ZM433.6 48.6L461.2 20.8L488.8 75.3ZM618.1 56.3L639.9 32.9L661.6 50.3ZM761.6 57.8L790.6 45.1L819.6 83.6ZM929.3 83.1L963.8 31.2L998.4 56.5ZM1104.8 65.7L1135.4 43.3L1166 61.5ZM1279 54.9L1301.8 12.1L1324.7 37.1Z\"/>\n    <path class=\"ridge__ground\" d=\"M0 18L41.1 44.5V100H0ZM41.1 44.5L112.2 35.8V100H41.1ZM112.2 35.8L152.2 23.7V100H112.2ZM152.2 23.7L225 61.7V100H152.2ZM225 61.7L276.9 75.4V100H225ZM276.9 75.4L345.7 25.9V100H276.9ZM345.7 25.9L396.5 34.1V100H345.7ZM396.5 34.1L433.6 48.6V100H396.5ZM433.6 48.6L488.8 75.3V100H433.6ZM488.8 75.3L555 60.2V100H488.8ZM555 60.2L618.1 56.3V100H555ZM618.1 56.3L661.6 50.3V100H618.1ZM661.6 50.3L708.6 26.1V100H661.6ZM708.6 26.1L761.6 57.8V100H708.6ZM761.6 57.8L819.6 83.6V100H761.6ZM819.6 83.6L887.1 20.5V100H819.6ZM887.1 20.5L929.3 83.1V100H887.1ZM929.3 83.1L998.4 56.5V100H929.3ZM998.4 56.5L1049.2 73.6V100H998.4ZM1049.2 73.6L1104.8 65.7V100H1049.2ZM1104.8 65.7L1166 61.5V100H1104.8ZM1166 61.5L1213.3 86.9V100H1166ZM1213.3 86.9L1279 54.9V100H1213.3ZM1279 54.9L1324.7 37.1V100H1279ZM1324.7 37.1L1370.7 62.1V100H1324.7ZM1370.7 62.1L1440 87.1V100H1370.7Z\"/>\n  </svg>\n</section>\n",
+  "css": "/* src/styles/6-components/logo-row.css */\n/**\n * Logo Row — 옅은 색 면의 마지막 로고 줄 + 푸터로 넘어가는 능선 (블록 카탈로그 logo-row · design-intelligence §6-5)\n *   따로 흰 띠를 만들지 않고 윗 블록(link-lines)과 같은 면에 이어 붙인다. 바닥에 푸터 색의 ridge를 놓는다.\n *   <section class=\"section section--list logo-row\" aria-labelledby=\"logo-row-title\">\n *     <div class=\"container\">\n *       <h2 class=\"sr-only\" id=\"logo-row-title\">연계 서비스</h2>\n *       <ul class=\"logo-row__list\" role=\"list\">\n *         <li><a class=\"logo-row__link\" href=\"…\"><img class=\"logo-row__logo\" src=\"…\" alt=\"기관명\"></a></li>\n *       </ul>\n *     </div>\n *     <svg class=\"ridge\" …>…</svg>\n *   </section>\n *   면 색은 --logo-row-surface(기본 point-5). ridge 색은 반전 푸터(site-footer--inverse, gray-90)에 맞췄다.\n *   로고 파일의 흰 바탕이 색 면 위에서 상자로 보이지 않게 곱하기 혼합을 쓴다.\n * 레이어 밖에 둔다 — section.css(5-objects)와 같은 층에서 여백을 조정한다.\n */\n.logo-row {\n  --ridge-h: clamp(3.2rem, 4.5vw, 6.4rem);\n  --ridge-ground: var(--color-gray-90);\n  --ridge-slope: var(--color-gray-80);\n  --ridge-far: var(--color-gray-70);\n  --ridge-near: color-mix(in srgb, var(--color-gray-90) 50%, var(--color-gray-80));\n\n  @apply relative pt-0 pb-[calc(var(--ridge-h)+4rem)] bg-[var(--logo-row-surface,var(--color-point-5))] laptop:pt-0 laptop:pb-[calc(var(--ridge-h)+5.6rem)];\n}\n\n.logo-row__list {\n  @apply grid grid-cols-2 items-center gap-[0.8rem] list-none m-0 px-0 pt-[2.4rem] pb-0 border-t border-[var(--color-border)] tablet:grid-cols-3 laptop:grid-cols-6;\n}\n\n.logo-row__link {\n  @apply flex items-center justify-center min-h-[8rem] p-[1.2rem] rounded-[0.8rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] [transition:background-color_0.2s_ease];\n}\n\n.logo-row__link:visited {\n  @apply text-[var(--color-text)];\n}\n\n.logo-row__link:hover {\n  @apply bg-[var(--color-point-10)];\n}\n\n.logo-row__logo {\n  @apply w-auto max-h-[3.2rem] [mix-blend-mode:multiply];\n}\n\n/* src/styles/6-components/ridge.css */\n/**\n * Ridge — 능선 전환 (블록 카탈로그 scene·logo-row의 부품)\n *   윗면의 바닥에 놓고 아랫면의 색으로 칠하는 각진 실루엣. 면과 면 사이를 직선 대신 대상의 윤곽으로 넘긴다.\n *   <svg class=\"ridge\" viewBox=\"0 0 1440 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\">\n *     <path class=\"ridge__slope\" d=\"…\"/> <path class=\"ridge__slope-far\" d=\"…\"/> <path class=\"ridge__slope-near\" d=\"…\"/>\n *     <path class=\"ridge__ground\" d=\"…\"/>\n *   </svg>\n *   높이는 부모의 --ridge-h. 색은 --ridge-ground·--ridge-slope·--ridge-far·--ridge-near로 받는다.\n *   기본값은 짙은 면(primary-90) 색이다 — 아랫면이 다른 색이면 부모에서 네 값을 그 면의 토큰으로 바꾼다.\n *   모양은 프로젝트마다 대상의 지형·사물에서 온 선으로 바꾼다(블록 메타데이터의 변형 축 참고).\n *   블록 예외(contracts/block-exceptions.json): 인라인 svg(R-27) — 아이콘이 아니라 면 전환 그림이다.\n * 레이어 밖에 둔다 — scene과 같은 층.\n */\n.ridge {\n  @apply absolute inset-x-0 bottom-0 block w-full max-w-none h-[var(--ridge-h,8rem)] pointer-events-none;\n}\n\n.ridge__ground {\n  fill: var(--ridge-ground, var(--color-primary-90));\n}\n\n.ridge__slope {\n  fill: var(--ridge-slope, var(--color-primary-80));\n}\n\n.ridge__slope-far {\n  fill: var(--ridge-far, color-mix(in srgb, var(--color-primary-80) 55%, var(--color-primary-70)));\n}\n\n.ridge__slope-near {\n  fill: var(--ridge-near, color-mix(in srgb, var(--color-primary-90) 50%, var(--color-primary-80)));\n}"
+}

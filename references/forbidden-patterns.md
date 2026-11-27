@@ -1,4 +1,4 @@
-# 금지 패턴 — info-design 컨트랙트
+# 금지 패턴 — infoUX 컨트랙트
 
 이 문서의 패턴이 코드에서 발견되면 **즉시 작업 중단**하고 사용자에게 보고한다.
 
@@ -132,16 +132,19 @@ body { font-family: var(--font-sans); }
 }
 ```
 
-폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 폰트 크기, 굵기, 행간은 화면 맥락에 맞춰 정하되, 크기와 행간은 rem 임의값과 비율(`text-[1.7rem] leading-[1.6]`) 또는 CSS 직접값으로 작성한다. Tailwind 기본 글자 크기(`text-xs`~`text-9xl`)와 숫자 행간(`leading-6` 등)은 쓰지 않는다(R-37). 이름 행간(`leading-relaxed` 등)은 허용하지만 한글 본문은 1.5 이상을 지킨다(R-24).
+폰트 패밀리는 `--font-sans`, `--font-mono`만 사용한다. 글자 크기와 자간·행간은 KRDS 타이포 표 값만 쓴다(R-38, `references/korean-web-patterns.md` §5). 토큰으로 만들지 않고 rem 임의값과 비율(`text-[1.7rem] leading-[1.6]`) 또는 CSS 직접값으로 작성한다. Tailwind 기본 글자 크기(`text-xs`~`text-9xl`)와 숫자 행간(`leading-6` 등)은 쓰지 않는다(R-37). 이름 행간(`leading-relaxed` 등)은 허용하지만 한글 본문은 1.5 이상을 지킨다(R-24).
 
 ---
 
-## 4. 버튼 — 옛 variant 사용 금지 (R-06)
+## 4. 버튼 — 시각적 modifier·옛 variant 금지 (R-06)
+
+R-06은 시각적 modifier(`--blue`, `--gray`)를 금지하고 의미적 이름을 쓰게 하는 규칙이다. KRDS에서 폐기된 옛 버튼 variant도 이 규칙이 함께 막는다. modifier 어휘 검사는 R-18이 맡는다(§10.4).
 
 ### ❌ 금지
 
 ```html
-<button class="btn btn--ghost">고스트</button>
+<button class="btn btn--gray">회색</button>      <!-- 시각적 modifier -->
+<button class="btn btn--ghost">고스트</button>   <!-- 이하 옛 variant -->
 <button class="btn btn--outline">아웃라인</button>
 <button class="btn btn--link">링크</button>
 <button class="btn btn--sm">작은 버튼</button>
@@ -177,7 +180,7 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 5. CSS 작성 — 시스템 우회 금지 (R-02 · R-05 · R-07 · R-08)
+## 5. CSS 작성 — 시스템 우회 금지 (R-02 · R-03 · R-05)
 
 ### ❌ 금지
 
@@ -281,9 +284,11 @@ body { font-family: var(--font-sans); }
 
 ---
 
-## 8. 컴포넌트 — 카탈로그 외 임의 생성 금지 (R-15 카탈로그 정합)
+## 8. 컴포넌트 — 카탈로그 외 임의 생성 금지
 
-`references/krds-components.md`에 없는 컴포넌트가 필요해 보이면:
+규칙 번호가 따로 없는 설계 판단이다(`references/trade-off-rules.md` §4, `references/korean-web-patterns.md` KP-08). 카탈로그 블록에 없는 변형·부품을 지어내는 것은 R-29가 잡는다.
+
+카탈로그(`references/krds-components.md`)에 없는 컴포넌트가 필요해 보이면:
 
 ### ❌ 금지
 
@@ -327,17 +332,18 @@ body { font-family: var(--font-sans); }
 
 ## 10. HTML 구조 위반 (R-15 / R-16 / R-17 / R-18)
 
-> 단일 소스: `references/html-semantics.md` (28개 컴포넌트의 Root 태그·자식 시맨틱·필수 ARIA·키보드 매핑)
+> 단일 소스: `references/html-semantics.md` (카탈로그 컴포넌트의 Root 태그·자식 시맨틱·필수 ARIA·키보드 매핑)
 
-### 10.1 컴포넌트 root 태그 불일치 (R-15)
+### 10.1 HTML 기본 구조·컴포넌트 root 태그 (R-15)
 
-KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스를 다른 root 태그에 붙이면 검색·접근성·SEO 일관성이 깨진다.
+R-15는 HTML 기본 구조를 기존 인포마인드 패턴(`header#header`·`main#main`·`footer#footer`, `main > section > .container`)대로 유지하라는 규칙이다. 컴포넌트 root 태그도 이 규칙으로 점검한다. 매핑과 다른 태그에 BEM Block 클래스를 붙이면 검사기가 경고한다.
 
 #### ❌ 금지
 
 ```html
+<div id="content"><div class="header">...</div><div class="footer">...</div></div>  <!-- 기본 골격과 다른 임의 구조 -->
 <div class="card">...</div>
-<div class="modal">...</div>
+<div class="modal">...</div>  <!-- role="dialog"·aria-modal 없음 -->
 <div class="breadcrumb">...</div>
 <div class="main-menu">...</div>
 <div class="pagination">...</div>
@@ -347,13 +353,15 @@ KRDS 컴포넌트는 시맨틱 의미가 정해져 있다. BEM Block 클래스�
 
 ```html
 <article class="card">...</article>
-<dialog class="modal">...</dialog>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>...</div>
 <nav class="breadcrumb" aria-label="브레드크럼"><ol>...</ol></nav>
 <nav class="main-menu" aria-label="메인 메뉴"><ul>...</ul></nav>
 <nav class="pagination" aria-label="페이지 내비게이션"><ol>...</ol></nav>
 ```
 
-전체 28종 매핑은 `references/html-semantics.md` 참조.
+모달은 카탈로그(`src/snippets/modal.md`)가 `<div class="modal" role="dialog">`를 쓴다. 카탈로그 CSS와 `src/js/modal.js`가 이 구조와 `hidden` 속성을 전제로 한다. `<dialog class="modal">`은 프로젝트가 `showModal()`로 열고 덮개(`::backdrop`)와 표시 상태(`open`)를 직접 구현할 때만 쓴다.
+
+전체 매핑은 `references/html-semantics.md` 참조.
 
 ---
 
@@ -485,7 +493,7 @@ modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 �
 
 ## 12. 이모지 — 아이콘·장식 대용 금지 (R-36)
 
-이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고, 플랫폼마다 모양이 다르다. 국내 사이트 99곳 중 1곳만 쓴다. 제목·버튼·링크·목록·배지·CSS content의 이모지는 오류, 본문 문장 안은 경고다. ©·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니다.
+이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고, 플랫폼마다 모양이 다르다. 국내 사이트 96곳 중 1곳만 쓴다. 제목·버튼·링크·목록·배지·CSS content의 이모지는 오류, 본문 문장 안은 경고다. ©·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니다.
 
 ### ❌ 금지
 
@@ -592,9 +600,9 @@ modifier 이름은 의미를 담아야 한다. 색·모양을 직접 명시한 �
 ## 위반 발견 시 보고 형식
 
 ```
-[info-design 컨트랙트 위반 감지]
+[infoUX 컨트랙트 위반 감지]
 
-위반 항목: [위 1~9 중 어느 카테고리]
+위반 항목: [위 1~15절 중 어느 절, 규칙 번호]
 구체 내용: [어느 줄에서 무엇을]
 근거: [이 문서의 어느 항목]
 

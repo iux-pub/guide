@@ -1,0 +1,203 @@
+{
+  "id": "field-accordion",
+  "name": "사업영역 사진 아코디언",
+  "slot": "business",
+  "forms": [
+    "B2"
+  ],
+  "reference": "design-intelligence §6-4 B2 변주, §3-5 공기업·기관 메인(사업영역 사진 판)",
+  "tags": [
+    "사업영역",
+    "주요사업",
+    "사진",
+    "아코디언",
+    "펼침",
+    "공기업",
+    "기관",
+    "세로 판"
+  ],
+  "summary": "넓은 화면에서 세로로 긴 사진 판 4~6장이 가로로 늘어서고, 가리키거나 키보드 초점이 들어온 판이 넓어지며 사업 설명이 나타난다. 좁은 화면에서는 2·3열 사진 카드다.",
+  "useWhen": [
+    "기관이 하는 일(사업영역)이 4~6개이고 분야마다 그 일을 보여 주는 사진이 있다.",
+    "사진 카드 3×2 격자(D05·D06)보다 무게 있는 사업 소개가 필요하다 — 공기업 고평점 메인의 사업영역 판 장치다."
+  ],
+  "avoidWhen": [
+    "분야 사진이 없거나 분야마다 질이 고르지 않다 — 판 하나가 탁하면 전체가 무너진다. 사진 한 장 + 줄 목록(field-list)을 쓴다.",
+    "분야가 7개 이상이다 — 접힌 판이 너무 좁아 이름이 세로로도 들어가지 않는다. 줄 목록(B1)을 쓴다.",
+    "사업 설명이 판마다 꼭 보여야 한다(가리키기 전에는 첫 판 설명만 보인다) — field-list를 쓴다.",
+    "생성 이미지로만 판을 채워야 한다 — 평가자가 「생성 이미지처럼 보여 신뢰감을 깎는다」고 본 장치다. 기관 사진을 먼저 요청한다(design-intelligence §5-5).",
+    "분야 이름이 길다(9자 이상) — 접힌 판에 이름을 한 글자씩 세로로 쌓게 되어 읽기 어렵다(D14). 접힌 판의 이름은 판 아래쪽에 가로 두 줄 이내로 쓰고, 그럴 수 없으면 field-list를 쓴다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "섹션 제목",
+      "spec": "한글 2~10자. 메뉴 이름(예: 「사업영역」「열린경영」)을 쓴다. 표어·문장형 제목·소개 문장을 지어 붙이지 않는다(design-intelligence §2-2).",
+      "example": "사업영역"
+    },
+    {
+      "key": "lead",
+      "kind": "text",
+      "label": "한 줄 소개",
+      "spec": "선택. 사업영역의 범위를 사실로 한 줄(예: 「여섯 분야 사업」). 비워 두어도 된다 — 소개 문장을 지어 붙이지 않는다.",
+      "example": "공연·전시·예술 교육·예술인 지원·시설 운영"
+    },
+    {
+      "key": "more_href",
+      "kind": "url",
+      "label": "사업영역 페이지 주소",
+      "spec": "사업영역 소개 페이지.",
+      "example": "/business"
+    },
+    {
+      "key": "more_label",
+      "kind": "text",
+      "label": "사업영역 링크 이름",
+      "spec": "「사업영역 자세히 보기」처럼 목적지를 말하는 이름(R-30).",
+      "example": "사업영역 자세히 보기"
+    },
+    {
+      "key": "fields",
+      "kind": "list",
+      "label": "사업 분야",
+      "min": 4,
+      "max": 6,
+      "spec": "4~6개. 대표 사업을 첫 판에 둔다 — 아무것도 가리키지 않을 때 첫 판이 넓게 펼쳐져 있다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "분야 이름",
+          "spec": "한글 4~10자. 접힌 판에서 세로로 세워지므로 짧게 쓴다."
+        },
+        {
+          "key": "desc",
+          "kind": "text",
+          "label": "하는 일",
+          "spec": "한글 16~30자 한 줄. 넓은 화면에서 펼친 판에만 보인다."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "분야 페이지 주소",
+          "spec": "그 사업 분야 소개 페이지. 판 전체가 이 링크다."
+        },
+        {
+          "key": "img_src",
+          "kind": "image",
+          "label": "분야 사진",
+          "ratio": "4:5 세로, 긴 변 1400px 이상",
+          "spec": "그 분야의 실제 현장 사진(사람이 일하는 모습·시설). 접힌 판에서는 가운데 세로 띠만 보이므로 주인공을 가운데에 둔다. 아래쪽은 글자 스크림이 덮는다. 접힌 판은 좁은 세로 띠라 주인공이 가운데 있는 세로 구도 사진을 고른다. 하늘이 바랜 사진, 주인공이 가장자리에 있는 사진은 띠에서 잘린다(D12)."
+        },
+        {
+          "key": "img_alt",
+          "kind": "text",
+          "label": "사진 대체 텍스트",
+          "spec": "한글 10~40자. 사진에 보이는 장면."
+        }
+      ],
+      "examples": [
+        {
+          "name": "공연·전시 기획",
+          "desc": "시립 극장 기획 공연과 항구 미술관 전시 운영",
+          "href": "/business/stage",
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%233d5f80'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%2323394f'/%3E%3C/svg%3E",
+          "img_alt": "객석에서 바라본 시립 극장 무대의 리허설"
+        },
+        {
+          "name": "문화예술 교육",
+          "desc": "어린이·청소년 예술 교실과 시민 예술 아카데미",
+          "href": "/business/education",
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%23c98a3d'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%237a5222'/%3E%3C/svg%3E",
+          "img_alt": "미술 교실에서 그림을 그리는 어린이들"
+        },
+        {
+          "name": "예술인 지원",
+          "desc": "창작 지원금 공모와 청년 예술가 작업실 임대",
+          "href": "/business/artist",
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%236f8f5a'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%233f5733'/%3E%3C/svg%3E",
+          "img_alt": "작업실 창가에서 조각을 다듬는 작가"
+        },
+        {
+          "name": "축제·지역 행사",
+          "desc": "등대 축제와 거리 공연 축제 개최",
+          "href": "/business/festival",
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%238a5a7a'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%234f3346'/%3E%3C/svg%3E",
+          "img_alt": "부두 광장의 저녁 거리 공연"
+        },
+        {
+          "name": "문화시설 운영",
+          "desc": "소극장·전시실 대관과 시설 관리",
+          "href": "/business/facility",
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 1400'%3E%3Crect width='1120' height='1400' fill='%235a7a8f'/%3E%3Cpath d='M0 900 Q280 820 560 880 T1120 860 V1400 H0 Z' fill='%232f4352'/%3E%3C/svg%3E",
+          "img_alt": "조명을 켠 빈 소극장 객석"
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "판 수",
+      "options": [
+        "4개",
+        "5개(기본 예시)",
+        "6개(견본)"
+      ],
+      "how": "목록 항목만 더하거나 뺀다. 넓은 화면은 flex라 판 폭이 저절로 나뉜다. 좁은 화면 격자는 2·3열이라 5개면 마지막 줄이 빈다 — 좁은 화면 빈 칸이 거슬리면 4·6개를 고른다."
+    },
+    {
+      "axis": "펼친 판의 넓이",
+      "options": [
+        "다른 판의 3.2배(기본)"
+      ],
+      "how": ".field-accordion__item:first-child와 :hover·:focus-within의 grow-[3.2]를 같은 값으로 함께 바꾼다."
+    },
+    {
+      "axis": "섹션 면",
+      "options": [
+        "바탕 면(기본)",
+        "gray-5 옅은 면 — 페이지에 옅은 색 섹션이 이 한 곳일 때만"
+      ],
+      "how": ".field-accordion에 배경 토큰을 준다. 앞뒤에 다른 옅은 색 섹션이 있으면 바탕 면으로 둔다 — 순서 점검이 흰색 ↔ 연회색 교대(striped-surface)를 잡는다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "notice-board"
+    ],
+    "after": [
+      "open-panel"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "plain",
+    "framed": true,
+    "note": "섹션은 바탕 면(흰색)이다. 판은 사진이고 글자 자리만 아래에서 검정 알파 토큰 스크림(--color-alpha-black-75)으로 어둡게 한다. 섹션 바탕을 연회색으로 칠하지 않는다 — 흰 섹션과 연회색 섹션의 교대는 띠 나열이다(design-intelligence §5-2, D04)."
+  },
+  "section": {
+    "archetype": "content"
+  },
+  "styles": [
+    "src/styles/6-components/field-accordion.css"
+  ],
+  "requires": {
+    "components": [
+      "icon"
+    ],
+    "icons": [
+      "arrow-right"
+    ],
+    "scripts": []
+  },
+  "accessibility": [
+    "펼침은 CSS만으로 한다 — :has()를 쓰지 않고(R-20) 목록과 판의 :hover·:focus-within으로 바꾼다. 스크립트가 없어도 동작한다.",
+    "판마다 분야 이름이 링크이고 ::after로 판 전체를 덮는다. 키보드 초점이 그 링크에 오면 판이 펼쳐지고 설명이 보인다.",
+    "접힌 판의 설명은 opacity 0이지만 읽기 순서에 남아 있다 — 스크린리더는 모든 분야의 이름과 하는 일을 읽는다.",
+    "초점 링은 링크 둘레와 판 안쪽(::after)에 흰 실선으로 그린다. outline을 지우지 않는다(R-11).",
+    "판 크기·사진 확대 전환은 prefers-reduced-motion에서 꺼진다(R-22).",
+    "좁은 판의 세로쓰기(writing-mode)는 화면 표시만 바꾼다. 읽는 순서와 글자는 같다."
+  ],
+  "origin": "견본 — 운영자 판정 대기. 제주관광공사 메인 J안(2026-11-13)의 biz-j(사업영역 아코디언)를 기관 이름·문구를 빼고 옮겼다. 견본의 판에는 링크가 없어 키보드로 펼칠 수 없었다 — 분야 이름을 판 전체를 덮는 링크로 바꿔 초점으로도 펼쳐지게 했다."
+}

@@ -1,14 +1,14 @@
-# HTML 구조 매핑 — KRDS 컴포넌트 28종 + infoUX 확장 4종
+# HTML 구조 매핑 — 카탈로그 컴포넌트
 
-> **단일 소스(SoT).** 28개 KRDS 컴포넌트와 infoUX 확장 4종(`footer` · `mobile-menu` · `notice-bar` · `error-page`)의 Root 태그 · 자식 시맨틱 · 필수 ARIA · 키보드 패턴을 KRDS 표준에 따라 명시한다.
+> **단일 소스(SoT).** 카탈로그(`references/krds-components.md`)의 KRDS 컴포넌트와 infoUX 확장(`footer` · `mobile-menu` · `notice-bar` · `error-page`)의 Root 태그 · 자식 시맨틱 · 필수 ARIA · 키보드 패턴을 KRDS 표준에 따라 명시한다.
 > 출처: KRDS-uiux v1.0.0 / WAI-ARIA 1.2 Authoring Practices / `src/snippets/*.md` 실측.
-> 본 문서의 매핑과 다른 마크업은 **R-15 위반**으로 자동 차단된다.
+> 매핑과 다른 root 태그는 `scripts/check-html-structure.js`가 R-15 경고로 알린다. 필수 ARIA 누락(R-16)은 오류다.
 
 ---
 
 ## 0. 적용 원칙 (KRDS 기반)
 
-1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<dialog>` 등).
+1. **시맨틱 우선** — 의미가 일치하는 HTML5 태그를 최우선 (`<button>` `<nav>` `<article>` `<ol>` 등).
 2. **ARIA는 보완** — 네이티브 시맨틱으로 표현 불가한 경우에만 `role`/`aria-*` 사용 (WAI-ARIA 1st rule).
 3. **상태는 ARIA·hidden 속성 먼저** — 열림·선택·현재·비활성·숨김은 `aria-*`·`hidden`·`disabled`로 표현하고 CSS가 그 속성으로 모양을 바꾼다. ARIA로 표현할 수 없을 때만 BEM modifier. `.is-*`·`.has-*` 같은 비-BEM 상태 클래스 금지(R-17, § 6.2).
 4. **키보드 동등성** — 마우스로 가능한 모든 조작이 키보드로도 가능해야 한다 (KWCAG 2.1.1).
@@ -72,7 +72,7 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 본 문서의 컴포넌트 섹션 이름(예: `check-radio`)은 **KRDS 카테고리** 기준이다. 실제 CSS BEM Block 클래스명은 다를 수 있다. `scripts/check-html-structure.js`의 `COMPONENT_ROOT_MAPPING`은 BEM Block 기준이다.
 
-다음은 두 식별자가 다른 28개 케이스 매핑:
+두 식별자가 다른 경우는 다음과 같다.
 
 | 카테고리 (이 문서 섹션) | BEM Block(s) (실제 클래스) | 비고 |
 |--------------------------|---------------------------|------|
@@ -189,11 +189,12 @@ Section modifier는 목적 기반 archetype만 사용한다.
 
 | 항목 | 값 |
 |------|-----|
-| Root 태그 | **A안 (권장)**: `<dialog class="modal">` (네이티브) <br>**B안 (폴백)**: `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">` |
-| 자식 시맨틱 | `<header class="modal__header">` → `<h2 id="modal-title" class="modal__title">` → `<div class="modal__body">` → `<footer class="modal__footer">` |
-| 필수 ARIA (B안) | `role="dialog"` · `aria-modal="true"` · `aria-labelledby="modal-title"` (또는 `aria-label`) / 닫기 버튼 `aria-label="닫기"` |
+| Root 태그 | **카탈로그**: `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>` — `src/snippets/modal.md`, `modal.css`, `src/js/modal.js`가 이 구조와 `hidden` 속성을 전제로 한다 <br>**조건부**: `<dialog class="modal">` — 프로젝트가 `showModal()`로 열고, 덮개를 `::backdrop`으로, 표시 상태를 `open` 속성으로 직접 구현할 때만 쓴다. 카탈로그 CSS·JS는 그대로 맞지 않으므로 함께 고친다 |
+| 자식 시맨틱 | `<div class="modal__overlay">`(덮개) → `<div class="modal__content">` → `<header class="modal__header">` → `<h2 id="modal-title" class="modal__title">` + `<button class="modal__close" aria-label="닫기">` → `<div class="modal__body">` → `<footer class="modal__footer">` |
+| 필수 ARIA | `role="dialog"` · `aria-modal="true"` · `aria-labelledby="modal-title"` (또는 `aria-label`) / 닫기 버튼 `aria-label="닫기"`. `<dialog>`는 `role`을 생략할 수 있고 제목 연결은 같다 |
+| 상태 | 여닫기는 `hidden` 속성으로 한다 — CSS `.modal[hidden]` (R-17) |
 | 키보드 | `Esc` 닫기 · `Tab`/`Shift+Tab` 모달 내부 포커스 트랩 · 열릴 때 첫 인터랙티브 요소로 포커스 이동 · 닫힐 때 트리거로 포커스 복귀 |
-| 금지 | `<dialog>` 단독 사용 (Safari 15.4 미만 폴백 필요) |
+| 쓰지 않는 것 | `role="dialog"`·`aria-modal`이 없는 `<div class="modal">`(R-16) · `.is-open` 같은 상태 클래스(R-17) · 한 프로젝트 안에서 두 방식을 섞어 쓰기 |
 
 ### `side-panel` — 사이드 패널
 
@@ -516,7 +517,7 @@ modifier 이름의 정본은 `contracts/class-naming.json`이고, 결정 순서�
 `contracts/html-page-contract.json`과 `scripts/check-html-structure.js`가 page shell 및 컴포넌트 구조를 자동 검증:
 
 1. **R-14/R-15** — page shell의 skip link, `header#header`, `main#main`, `footer#footer`, `main > section > .container`, section 접근 이름
-2. **R-15** — 컴포넌트 BEM Block(`.card`/`.modal` 등) 사용 시 root 태그가 매핑과 일치하는지
+2. **R-15** — 컴포넌트 BEM Block(`.card`/`.modal` 등) 사용 시 root 태그가 매핑과 일치하는지. 다르면 warn
 3. **R-16** — 인터랙티브 컴포넌트(`modal`/`tab`/`accordion`/`tooltip`/`disclosure`/`carousel`/`calendar`/`mobile-menu`/`notice-bar`)와 disclosure 내비게이션(`main-menu__toggle` · `data-mobile-menu-open` 햄버거)은 필수 ARIA 속성 누락 시 error. 토글에 `aria-haspopup`/`role="menu"`를 붙이면 warn
 4. **R-17** — `.is-*`/`.has-*` 비-BEM 상태 클래스 사용 시 error. ARIA·네이티브 대응이 있는 상태 modifier(`--current`·`--selected`·`--disabled`)를 그 속성 없이 쓰면 warn
 5. **R-18** — `contracts/class-naming.json` `forbiddenWords`의 금지어 modifier error · 폐기 예정 modifier(`deprecated`) warn. 어휘 밖 modifier를 CSS에 정의하면 `check-violations.js`가 warn
@@ -529,10 +530,10 @@ modifier 이름의 정본은 `contracts/class-naming.json`이고, 결정 순서�
 - KRDS-uiux v1.0.0 공식 컴포넌트 가이드
 - WAI-ARIA 1.2 Authoring Practices Guide (APG)
 - WCAG 2.1 Level AA + KWCAG 2.1/2.2
-- `src/snippets/*.md` 실측 패턴 (28종, 2026-05-04 빌드 기준)
+- `src/snippets/*.md` 실측 패턴
 - `references/krds-source.md` (KRDS 원본 수집 자료, 2026-04-30)
 
 ---
 
-> 본 문서는 단일 소스(SoT)다. 28종 외 컴포넌트 추가 또는 매핑 변경 시:
-> 1. UX팀 결정 → 2. `src/snippets/*.md` 갱신 → 3. 본 문서 갱신 → 4. `npm run build:rules` → 5. CLAUDE.md/site 자동 반영
+> 본 문서는 단일 소스(SoT)다. 카탈로그에 컴포넌트를 추가하거나 매핑을 바꿀 때:
+> 1. UX팀 결정 → 2. `src/snippets/*.md` 갱신 → 3. 본 문서 갱신 → 4. `scripts/check-html-structure.js`의 `COMPONENT_ROOT_MAPPING` 갱신 → 5. `npm run build:references && npm run build:mcp`

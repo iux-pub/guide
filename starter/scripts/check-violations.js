@@ -59,10 +59,25 @@ try {
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
+// 템플릿 장식 서명(R-51 색 있는 굵은 옆선, 경고) — 마크업 쪽(eyebrow·장식 번호·등장 효과)은 check-html-structure.js
+let TEMPLATE = null
+try {
+  TEMPLATE = require('./lib/template-signature')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
 // 카피 규칙(R-23 가짜·자리 콘텐츠, R-43 카피 톤) — 없으면 옛 줄 단위 R-23 검사로 돌아간다
 let COPY = null
 try {
   COPY = require('./lib/copy-rules')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
+
+// 요소 트리(R-10 클릭 핸들러·R-11 class의 초점 제거) — 없으면 예전 줄 단위 판정으로 돌아간다
+let TREE = null
+try {
+  TREE = require('./lib/html-tree')
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
 }
@@ -104,13 +119,44 @@ const DIM = '\x1b[2m'
 let errorCount = 0
 let warnCount = 0
 
+// ─── 블록 예외 ─────────────────────────────────────────
+// 카탈로그 블록의 스타일 파일에 한해, contracts/block-exceptions.json에 「파일 + 규칙 + 선택자 + 값」이 모두 맞게
+// 등록된 위반만 통과시킨다(scripts/lib/block-exceptions.js). 등록부에 없는 위반은 블록 파일 안에서도 그대로 잡는다.
+// 통과시킨 건수는 끝에 한 줄로 보인다 — 숨기지 않는다. 라이브러리가 없으면(오래된 스타터) 예외 없이 검사한다.
+let BLOCK_EX = null
+let BLOCK_EX_REGISTRY = null
+try {
+  BLOCK_EX = require('./lib/block-exceptions')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
+const blockExApplied = []
+const blockExCssCache = new Map()
+
+function blockExcepted(file, line, msg) {
+  if (!BLOCK_EX || !line || !/\.css$/.test(file)) return false
+  const rule = (/\[(R-\d+)\]/.exec(msg) || [])[1]
+  if (!rule) return false
+  if (!BLOCK_EX_REGISTRY) BLOCK_EX_REGISTRY = BLOCK_EX.loadRegistry(ROOT)
+  if (!BLOCK_EX_REGISTRY.css.length) return false
+  if (!blockExCssCache.has(file)) {
+    const abs = path.resolve(ROOT, file)
+    blockExCssCache.set(file, fs.existsSync(abs) ? fs.readFileSync(abs, 'utf-8') : null)
+  }
+  const hit = BLOCK_EX.matchCss(BLOCK_EX_REGISTRY, file, rule, line, blockExCssCache.get(file))
+  if (hit) blockExApplied.push(hit)
+  return !!hit
+}
+
 function error(file, line, msg, code) {
+  if (blockExcepted(file, line, msg)) return
   const loc = line ? `${file}:${line}` : file
   console.error(`${RED}[ERROR]${RESET} ${loc}\n  ${msg}${code ? `\n  ${DIM}${code}${RESET}` : ''}`)
   errorCount++
 }
 
 function warn(file, line, msg, code) {
+  if (blockExcepted(file, line, msg)) return
   const loc = line ? `${file}:${line}` : file
   console.warn(`${YELLOW}[WARN]${RESET}  ${loc}\n  ${msg}${code ? `\n  ${DIM}${code}${RESET}` : ''}`)
   warnCount++
@@ -195,7 +241,8 @@ const INLINE_STYLE = /\bstyle\s*=/
 const INLINE_STYLE_CUSTOM_PROP = /\bstyle\s*=\s*["'][^"']*--[\w-]+:[^"']*["']/
 // 실제 <img> 태그만 검출 — src= 필수 (마크다운 안 인라인 `<img>` 같은 문서적 언급 제외)
 const MISSING_ALT = /<img(?![^>]*\balt\s*=)[^>]*\bsrc\s*=[^>]*>/
-const CLICK_ON_DIV = /<(?:div|span)[^>]+onclick/
+// 요소 트리가 없을 때만 쓰는 줄 단위 판정(여러 줄 태그는 못 본다)
+const CLICK_ON_DIV = /<(?:div|span)\b[^>]*\son(?:click|dblclick|mousedown|mouseup|keydown|keyup|keypress|touchstart|touchend|pointerdown|pointerup)\s*=/i
 
 // 11. 가짜 콘텐츠 (R-23) — 시안·납품물에 채움 콘텐츠 잔존 금지
 //   placeholder 핫링크는 외부 서비스 의존이라 납품 self-contained 정책과 이중 실격이다.
@@ -282,6 +329,180 @@ function reportVisual(relPath, findings, baseLine = 0) {
     if (f.severity === 'error') error(relPath, line, msg, f.code)
     else warn(relPath, line, msg, f.code)
   }
+}
+
+// ─── R-02 !important 사유 주석 ─────────────────────────
+// 주석을 같은 길이의 공백으로 바꾼다(줄 수 유지) — 주석 속 글자를 코드로 읽지 않으려는 것이다
+const blankCssComments = css => css.replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' '))
+
+// CSS 원문 → 사유 주석 없는 !important 줄 [{ line, code }]
+//   !important가 있는지는 주석을 지운 줄에서 보고, 사유 주석이 있는지는 원본 줄에서 본다.
+//   (예전에는 주석을 지운 줄에서 주석을 찾아 `…!important; /* 사유 */`에도 경고가 났다)
+function importantFindings(css) {
+  const rawLines = css.split('\n')
+  const codeLines = blankCssComments(css).split('\n')
+  const out = []
+  codeLines.forEach((codeLine, i) => {
+    if (!IMPORTANT_USED.test(codeLine)) return
+    const sameLine = /\/\*|\*\//.test(rawLines[i])
+    const prev = rawLines[i - 1] || ''
+    const lineAbove = prev.includes('/*') || /\*\/\s*$/.test(prev)
+    if (!sameLine && !lineAbove) out.push({ line: i + 1, code: codeLine.trim() })
+  })
+  return out
+}
+
+// ─── R-10 div·span 클릭 핸들러 ─────────────────────────
+// 인라인 핸들러(대소문자 무시 — JSX의 onClick 포함)와 프레임워크 바인딩(@click·v-on:click·x-on:click)
+const CLICK_ATTR = /^(?:on(?:click|dblclick|mousedown|mouseup|keydown|keyup|keypress|touchstart|touchend|pointerdown|pointerup)|@click(?:\.[\w.]+)?|(?:v-on|x-on):click(?:\.[\w.]+)?)$/
+
+// HTML 원문 → div·span의 클릭·키 핸들러 [{ line, code }]. 여러 줄에 걸친 태그도 속성이 실제로 있는 줄을 가리킨다
+function clickHandlerFindings(html) {
+  const out = []
+  if (!TREE) {
+    html.split('\n').forEach((l, i) => { if (CLICK_ON_DIV.test(l)) out.push({ line: i + 1, code: l.trim().slice(0, 100) }) })
+    return out
+  }
+  TREE.walk(TREE.parseHtml(html), n => {
+    if (n.tag !== 'div' && n.tag !== 'span') return
+    const attr = Object.keys(n.attrs).find(a => CLICK_ATTR.test(a))
+    if (!attr) return
+    out.push({ line: TREE.attrLine(n, attr), code: n.src.replace(/\s+/g, ' ').slice(0, 100) })
+  })
+  return out
+}
+
+// ─── R-11 초점 표시 제거 ───────────────────────────────
+// :focus·:focus-visible 블록에서 outline을 지우는 선언을 블록 단위로 본다.
+//   통과: 같은 블록이나 같은 선택자(·그 선택자의 ::after·자손)에 대체 초점 표시(box-shadow 링·outline 재지정·border 변화)가 있다.
+//   통과: :focus:not(:focus-visible)(마우스 클릭 때만 지우는 폴백), :not(:focus…)(초점이 아닐 때).
+//   한계: 초점 선택자가 아닌 블록의 outline: none(.input { outline: none })은 보지 않는다.
+const FOCUS_PSEUDO = /:focus(?:-visible)?(?![-\w])/
+function isFocusSelector(sel) {
+  if (/:not\(\s*:focus-visible\s*\)/.test(sel)) return false
+  return FOCUS_PSEUDO.test(sel.replace(/:not\([^()]*\)/g, ''))
+}
+const ZERO = '0(?:px|rem|em)?'
+// Tailwind 토큰 — 지우는 것: outline-none·outline-hidden·outline-0·[outline:0]·[outline:none]·[outline-width:0]·[outline-style:none]
+const OUTLINE_OFF_TOKEN = new RegExp(`^(?:outline-(?:none|hidden|0)|\\[outline:(?:none|${ZERO})(?:_[^\\]]*)?\\]|\\[outline-width:${ZERO}\\]|\\[outline-style:none\\])$`)
+// 대체 초점 표시 토큰 — ring·shadow·border 변화·outline 재지정
+const FOCUS_ALT_TOKEN = new RegExp(`^(?:ring(?:-(?!0$).+)?|(?:inset-)?shadow(?:-(?!none$).+)?|border(?:-(?!0$|none$|transparent$).+)?|outline|outline-(?:[1-9]\\d*|\\[[^\\]]+\\])|\\[outline:(?!none|${ZERO}(?:_|\\]))[^\\]]+\\]|\\[box-shadow:(?!none)[^\\]]+\\]|\\[border[\\w-]*:(?!none|${ZERO}\\])[^\\]]+\\])$`)
+// 'tablet:focus:!outline-none' → { variants: ['tablet', 'focus'], base: 'outline-none' }
+function splitTwToken(tok) {
+  const variants = []
+  let depth = 0
+  let cur = ''
+  for (const ch of tok) {
+    if (ch === '[' || ch === '(') depth++
+    else if (ch === ']' || ch === ')') depth--
+    if (ch === ':' && depth === 0) { variants.push(cur); cur = '' } else cur += ch
+  }
+  return { variants, base: cur.replace(/^!|!$/g, '') }
+}
+const isFocusVariant = v => v === 'focus' || v === 'focus-visible'
+const isFocusAltVariant = v => isFocusVariant(v) || v === 'focus-within'
+
+// outline 선언이 초점 표시를 지우는가
+function outlineOffDecl(prop, value) {
+  const v = String(value).replace(/!important/i, '').trim().toLowerCase()
+  if (prop === 'outline') return new RegExp(`(?:^|\\s)(?:none|transparent|${ZERO})(?:\\s|$)`).test(v)
+  if (prop === 'outline-width') return new RegExp(`^${ZERO}$`).test(v)
+  if (prop === 'outline-style') return v === 'none'
+  if (prop === 'outline-color') return v === 'transparent'
+  return false
+}
+// 선언이 대체 초점 표시인가
+function focusAltDecl(prop, value) {
+  const v = String(value).replace(/!important/i, '').trim().toLowerCase()
+  if (!v || /^(?:none|0|0px|inherit|initial|unset|revert)$/.test(v)) return false
+  if (prop === 'box-shadow') return true
+  if (prop === 'outline') return !outlineOffDecl(prop, value)
+  return /^border(?:-(?:top|right|bottom|left|block|inline)(?:-(?:start|end))?)?(?:-(?:color|width|style))?$/.test(prop)
+}
+
+// 블록 하나의 초점 관련 사실
+function focusFacts(block) {
+  const facts = { off: [], alt: false, variantOff: [], variantAlt: false }
+  for (const d of block.decls) {
+    if (d.prop === '@apply') {
+      for (const tok of d.value.split(/\s+/).filter(Boolean)) {
+        const { variants, base } = splitTwToken(tok)
+        const focusVariant = variants.some(isFocusVariant)
+        if (OUTLINE_OFF_TOKEN.test(base)) {
+          if (focusVariant) facts.variantOff.push({ line: d.line, text: `@apply ${tok}` })
+          else if (!variants.some(isFocusAltVariant)) facts.off.push({ line: d.line, text: `@apply ${tok}` })
+        } else if (FOCUS_ALT_TOKEN.test(base)) {
+          if (variants.some(isFocusAltVariant)) facts.variantAlt = true
+          else facts.alt = true
+        }
+      }
+    } else if (outlineOffDecl(d.prop, d.value)) {
+      facts.off.push({ line: d.line, text: `${d.prop}: ${d.value}` })
+    } else if (focusAltDecl(d.prop, d.value)) {
+      facts.alt = true
+    }
+  }
+  return facts
+}
+
+const FOCUS_MSG = '대체 초점 표시(box-shadow 링·outline 재지정·border 변화)가 같은 블록·같은 선택자에 없다. 키보드 사용자가 현재 위치를 잃는다 — 전역 :focus-visible 링(reset.css)을 지우지 않는다.'
+
+// CSS 원문 → 초점 표시 제거 [{ line, message, code }] (줄은 지우는 선언의 줄, 파일당 여러 건)
+function focusFindingsCss(css) {
+  if (!TYPE?.cssBlocks) return null // 블록 판독이 없으면 호출자가 예전 정규식으로 본다
+  const blocks = TYPE.cssBlocks(css).map(b => ({ ...b, facts: focusFacts(b) }))
+  // 같은 선택자, 그 선택자의 가상 요소·자손·형제, :focus를 :focus-visible로 바꾼 선택자의 블록에 대체 표시가 있는가
+  const covered = (sel, self) => blocks.some(o => o !== self && o.facts.alt && o.selectors.some(os =>
+    os === sel ||
+    (os.startsWith(sel) && /^(?:::|\s|>|~|\+)/.test(os.slice(sel.length))) ||
+    os === sel.replace(/:focus(?![-\w])/, ':focus-visible')))
+  const out = []
+  for (const b of blocks) {
+    const { facts } = b
+    const focusSels = b.selectors.filter(isFocusSelector)
+    if (focusSels.length && facts.off.length && !facts.alt) {
+      const bare = focusSels.find(sel => !covered(sel, b))
+      if (bare) for (const off of facts.off) out.push({ line: off.line, message: `초점 표시 제거 — ${FOCUS_MSG}`, code: `${bare} { ${off.text} }`.replace(/\s+/g, ' ').slice(0, 120) })
+    }
+    if (facts.variantOff.length && !facts.variantAlt) {
+      // .x { @apply focus:outline-none } — .x:focus·.x:focus-visible 블록이 대체 표시를 주면 통과
+      const bare = b.selectors.find(sel => !blocks.some(o => o !== b && o.facts.alt && o.selectors.some(os => os === `${sel}:focus` || os === `${sel}:focus-visible`)))
+      if (bare !== undefined) for (const off of facts.variantOff) out.push({ line: off.line, message: `초점 표시 제거 — ${FOCUS_MSG}`, code: `${bare} { ${off.text} }`.replace(/\s+/g, ' ').slice(0, 120) })
+    }
+  }
+  return out.sort((a, b) => a.line - b.line)
+}
+
+// HTML 원문 → class의 focus:outline-none(대체 표시 없는 것)과 <style> 블록 [{ line, message, code }]
+function focusFindingsHtml(html) {
+  if (!TREE) return []
+  const out = []
+  TREE.walk(TREE.parseHtml(html), n => {
+    if (n.tag === '#root') return
+    if (n.tag === '#text') {
+      if (n.rawText && n.parent.tag === 'style') for (const f of focusFindingsCss(n.text) || []) out.push({ ...f, line: n.lineStart + f.line - 1 })
+      return
+    }
+    const tokens = TREE.classesOf(n).map(tok => ({ tok, ...splitTwToken(tok) }))
+    const off = tokens.filter(t => t.variants.some(isFocusVariant) && OUTLINE_OFF_TOKEN.test(t.base))
+    if (!off.length) return
+    if (tokens.some(t => t.variants.some(isFocusAltVariant) && FOCUS_ALT_TOKEN.test(t.base))) return
+    out.push({ line: TREE.attrLine(n, 'class'), message: `초점 표시 제거 class "${off.map(t => t.tok).join(' ')}" — ${FOCUS_MSG}`, code: n.src.replace(/\s+/g, ' ').slice(0, 120) })
+  })
+  return out
+}
+
+// 문서의 예시 펜스는 한 펜스에 권장·금지 예시를 함께 싣기도 한다(// DO … // DON'T …).
+// 금지 표시 주석 줄부터 다음 권장 표시 주석 줄 앞까지는 반례이므로 공백으로 지운다(줄 수 유지).
+const COUNTER_PART = /^\s*(?:<!--|\/\*|\/\/)\s*(?:❌|✗|금지|잘못된\s*예|나쁜\s*예|bad\b|don'?t\b)/i
+const GOOD_PART = /^\s*(?:<!--|\/\*|\/\/)\s*(?:✅|✓|⭕|권장|올바른|좋은\s*예|good\b|do\b)/i
+function blankCounterParts(text) {
+  let counter = false
+  return text.split('\n').map(l => {
+    if (COUNTER_PART.test(l)) counter = true
+    else if (GOOD_PART.test(l)) counter = false
+    return counter ? '' : l
+  }).join('\n')
 }
 
 // ─── 검사 함수 ────────────────────────────────────────
@@ -386,6 +607,8 @@ function checkCssFile(filePath) {
     // 섹션 세로 여백(R-49)
     if (getDensityBase()) reportVisual(relPath, LAYOUT.sectionPaddingCss(content, getDensityBase()))
   }
+  // 템플릿 장식 서명(R-51) — 색 있는 굵은 옆선. 문서 사이트 크롬(docs.css)은 뺀다
+  if (TEMPLATE && !/(^|\/)src\/styles\/docs\.css$/.test(posixPath)) reportVisual(relPath, TEMPLATE.scanCssTemplate(content))
 
   // placeholder 이미지 핫링크(R-23) — background: url(https://picsum.photos/…) 같은 외부 의존
   if (COPY) {
@@ -404,9 +627,11 @@ function checkCssFile(filePath) {
   // 이 파일 안에서 직접 선언한 커스텀 프로퍼티는 정의된 것으로 본다
   const localDeclared = new Set([...content.matchAll(/(--[a-z0-9-]+)\s*:/gi)].map(m => m[1]))
 
-  lines.forEach((line, i) => {
+  // 줄 단위 검사는 주석을 지운 줄에서 한다 — 여러 줄 주석의 본문(예전 선택자·값을 설명하는 글)을 코드로 읽지 않는다
+  const codeLines = blankCssComments(content).split('\n')
+  lines.forEach((_line, i) => {
     const lineNum = i + 1
-    const trimmed = line.replace(/\/\*.*?\*\//g, '').trim()
+    const trimmed = codeLines[i].trim()
     if (!trimmed) return
 
     // SCSS 문법 — 폐기됨 (R-03)
@@ -484,15 +709,6 @@ function checkCssFile(filePath) {
       }
     }
 
-    // !important (R-02) — components/utilities 외 금지
-    if (IMPORTANT_USED.test(trimmed) && !filePath.includes('7-utilities')) {
-      // 외부 라이브러리 오버라이드 사유 주석이 있으면 허용
-      const hasJustification = trimmed.includes('/* ') || (lines[i - 1] || '').includes('/*')
-      if (!hasJustification) {
-        warn(relPath, lineNum, '[R-02] !important 사용 시 사유 주석 필수.', trimmed)
-      }
-    }
-
     // 폴백 없는 :has() 의존 (R-20)
     if (CSS_HAS_SELECTOR.test(trimmed)) {
       error(relPath, lineNum, '[R-20] 핵심 CSS에서 :has() 선택자 사용 금지. sibling selector, 상태 class, ARIA 속성 selector로 대체.', trimmed)
@@ -512,9 +728,18 @@ function checkCssFile(filePath) {
     }
   })
 
-  // focus outline none 패턴 (R-11) — 멀티라인 스캔
+  // !important (R-02) — utilities 외 금지. 같은 줄이나 바로 윗줄의 사유 주석(외부 라이브러리 오버라이드 등)이 있으면 허용
+  if (!filePath.includes('7-utilities')) {
+    for (const f of importantFindings(content)) warn(relPath, f.line, '[R-02] !important 사용 시 사유 주석 필수.', f.code)
+  }
+
+  // 초점 표시 제거 (R-11) — 블록 단위. 지우는 선언마다 그 줄을 알린다
   const contentNoComments = content.replace(/\/\*[\s\S]*?\*\//g, '')
-  if (FOCUS_OUTLINE_NONE.test(contentNoComments)) {
+  const focusFindings = focusFindingsCss(content)
+  if (focusFindings) {
+    for (const f of focusFindings) error(relPath, f.line, `[R-11] ${f.message}`, f.code)
+  } else if (FOCUS_OUTLINE_NONE.test(contentNoComments)) {
+    // 블록 판독(lib/type-floor.js)이 없는 오래된 파생 프로젝트 — 예전 정규식 판정
     const matchLine = lines.findIndex(l => l.match(/:focus(?![-:\w])\s*\{/))
     error(relPath, matchLine + 1, '[R-11] :focus { outline: none } 금지. KRDS 4px primary outline 유지.', '')
   }
@@ -612,7 +837,9 @@ function checkHtmlFile(filePath, opts = {}) {
     else if (VISUAL) {
       for (const seg of VISUAL.splitMarkdown(content)) {
         if (seg.counter) continue
-        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text), ...hangulCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text), ...hangulHtml(seg.text)] : []
+        // 템플릿 장식 서명(R-51) css 펜스는 스니펫만 — 마크업 펜스는 check-html-structure.js가 본다
+        const templateCss = t => (TEMPLATE && isSnippet ? TEMPLATE.scanCssTemplate(t) : [])
+        const found = seg.lang === 'css' ? [...TYPE.scanCssType(seg.text), ...shapeCss(seg.text), ...hangulCss(seg.text), ...templateCss(seg.text)] : ['html', 'njk', 'nunjucks'].includes(seg.lang) ? [...TYPE.scanHtmlType(seg.text), ...shapeHtml(seg.text), ...hangulHtml(seg.text)] : []
         reportVisual(relPath, found.map(f => ({ ...f, line: seg.startLine + (f.line || 1) - 1 })))
       }
     }
@@ -631,6 +858,26 @@ function checkHtmlFile(filePath, opts = {}) {
       error(relPath, null, `[R-23·R-43] 카피 검사를 끝내지 못했다(${e.message}) — 이 파일의 문구는 검사되지 않았다.`)
     }
   }
+  // div·span 클릭 핸들러(R-10)·class의 초점 제거(R-11) — 요소 트리로 본다(여러 줄 태그·onClick 대소문자).
+  //   마크다운은 마크업 펜스(금지 예시 펜스 제외)와 본문의 원시 HTML(인라인 코드는 지운다), css 펜스는 R-11만
+  {
+    const report = (base, text, css) => {
+      const at = f => base + f.line - 1
+      if (css) { for (const f of focusFindingsCss(text) || []) error(relPath, at(f), `[R-11] ${f.message}`, f.code); return }
+      for (const f of clickHandlerFindings(text)) error(relPath, at(f), '[R-10] <div>/<span> 클릭 핸들러 금지. <button> 또는 <a> 사용.', f.code)
+      for (const f of focusFindingsHtml(text)) error(relPath, at(f), `[R-11] ${f.message}`, f.code)
+    }
+    if (!isMarkdown) report(1, content, false)
+    else if (VISUAL) {
+      for (const seg of VISUAL.splitMarkdown(content)) {
+        if (seg.counter) continue
+        if (seg.lang === 'prose') report(seg.startLine, seg.text.replace(/`[^`\n]*`/g, m => m.replace(/[^\n]/g, ' ')), false)
+        else if (seg.lang === 'css') report(seg.startLine, blankCounterParts(seg.text), true)
+        else if (['html', 'njk', 'nunjucks', ''].includes(seg.lang)) report(seg.startLine, blankCounterParts(seg.text), false)
+      }
+    }
+  }
+
   const markupLines = new Set()
   const counterLines = new Set() // 금지 예시 펜스(첫 줄 주석에 ❌·금지 예시·DON'T 등) — 마크업 규칙을 적용하지 않는다
   if (isMarkdown) {
@@ -683,8 +930,8 @@ function checkHtmlFile(filePath, opts = {}) {
       error(relPath, lineNum, '[R-09] <img> alt 속성 누락. 장식이면 alt="".', trimmed.slice(0, 100))
     }
 
-    // div onclick (R-10)
-    if (CLICK_ON_DIV.test(trimmed)) {
+    // div onclick (R-10) — 마크다운인데 펜스 분할(lib/visual-signature.js)이 없는 오래된 파생 프로젝트만 줄 단위로 본다
+    if (isMarkdown && !VISUAL && CLICK_ON_DIV.test(trimmed)) {
       error(relPath, lineNum, '[R-10] <div>/<span> onclick 금지. <button> 또는 <a> 사용.', trimmed.slice(0, 100))
     }
 
@@ -815,6 +1062,30 @@ function checkComponentIndex() {
   })
 }
 
+// ─── 그림 자산 SVG(R-34) ──────────────────────────────
+// img·picture로 넣은 독립 .svg 안의 그라데이션 — 장면 재료로 쓰되 보라·남색 계열은 그림 안에서도 오류다.
+// 로고·아이콘·스프라이트는 기관 표지라 보지 않는다(isMarkAsset).
+function checkSvgAsset(abs) {
+  if (!VISUAL || !VISUAL.svgAssetFindings || VISUAL.isMarkAsset(relPosix(abs))) return
+  reportVisual(rel(abs), VISUAL.svgAssetFindings(fs.readFileSync(abs, 'utf8')))
+}
+
+// 납품 페이지가 그림으로 넣은 로컬 SVG — 페이지 폴더 기준으로 풀고, `/`로 시작하면 저장소 루트 기준이다
+function svgAssetsOfPages(pageFiles) {
+  if (!VISUAL || !VISUAL.svgAssetRefs) return []
+  const found = new Set()
+  for (const page of pageFiles) {
+    if (!/\.(?:html|njk)$/i.test(page)) continue
+    for (const ref of VISUAL.svgAssetRefs(fs.readFileSync(page, 'utf8'))) {
+      let decoded = ref
+      try { decoded = decodeURI(ref) } catch { /* 잘못된 퍼센트 인코딩이면 원문 경로로 찾는다 */ }
+      const abs = decoded.startsWith('/') ? path.join(ROOT, decoded) : path.resolve(path.dirname(page), decoded)
+      if (fs.existsSync(abs)) found.add(abs)
+    }
+  }
+  return [...found]
+}
+
 // ─── 파일 수집 ────────────────────────────────────────
 
 function collectFiles(dir, ext, excludes = []) {
@@ -857,6 +1128,7 @@ function main() {
         checkHtmlFile(abs, { isPage: isPagePath(ROOT, toPosix(path.relative(ROOT, abs))) })
       }
       if (abs.endsWith('.js') && /^\/src\/js\//.test(relPosix(abs))) checkJsFile(abs)
+      if (abs.endsWith('.svg')) checkSvgAsset(abs)
     }
   } else {
     const cssFiles = collectFiles(STYLES_DIR, '.css', ['node_modules'])
@@ -890,11 +1162,14 @@ function main() {
       if (!htmlFiles.includes(page)) htmlFiles.push(page)
     }
     htmlFiles.forEach(file => checkHtmlFile(file, { isPage: pages.has(file) }))
+    svgAssetsOfPages(pageScope.files).forEach(checkSvgAsset)
 
     checkComponentIndex()
   }
 
   console.log('')
+
+  if (BLOCK_EX && blockExApplied.length) console.log(`${CYAN}[블록 예외]${RESET} ${BLOCK_EX.summaryLine(blockExApplied)}`)
 
   if (errorCount === 0 && warnCount === 0) {
     console.log(`${GREEN}✓ info-design 컨트랙트 위반 없음${RESET}`)
@@ -911,4 +1186,7 @@ function main() {
   process.exit(process.env.STRICT === '1' ? 1 : 0)
 }
 
-main()
+// 단위 테스트가 판정 함수를 require로 불러 쓸 수 있게 직접 실행할 때만 검사를 돈다
+module.exports = { importantFindings, clickHandlerFindings, focusFindingsCss, focusFindingsHtml, blankCounterParts }
+
+if (require.main === module) main()

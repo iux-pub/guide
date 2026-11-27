@@ -59,3 +59,37 @@
 @import "./error-page.css";
 @import "./list.css";
 @import "./table.css";
+
+/* ─── 그룹 F: 페이지 블록 (블록 카탈로그 — 정본 src/blocks/, MCP list_blocks) ─── */
+
+/* 메인·랜딩의 섹션 단위 실물이다. 블록 하나가 여러 파일을 쓸 수 있다(block.json의 styles). */
+@import "./bulletin.css";
+@import "./cover.css";
+@import "./deadline.css";
+@import "./display-title.css";
+@import "./due-track.css";
+@import "./dusk.css";
+@import "./field-accordion.css";
+@import "./field-index.css";
+@import "./field-list.css";
+@import "./field-shore.css";
+@import "./float-panel.css";
+@import "./inverse-surface.css";
+@import "./link-lines.css";
+@import "./link-rows.css";
+@import "./logo-row.css";
+@import "./more-link.css";
+@import "./news-deck.css";
+@import "./notice-board.css";
+@import "./open-panel.css";
+@import "./oreum.css";
+@import "./partner-row.css";
+@import "./photo-gate.css";
+@import "./photo-header.css";
+@import "./post-list.css";
+@import "./quick-row.css";
+@import "./ridge.css";
+@import "./scene.css";
+@import "./scene-header.css";
+@import "./service-gate.css";
+@import "./task-index.css";

@@ -29,6 +29,10 @@ jobs:
       - name: 의존성 설치
         run: npm ci --legacy-peer-deps
 
+      # MCP 서버는 독립 패키지다(mcp/package.json). 설치하지 않으면 실제 서버를 띄우는 단위 테스트가 건너뛰어진다
+      - name: MCP 서버 의존성 설치
+        run: npm ci --prefix mcp
+
       - name: 컨트랙트 위반 검사 (rules.json 전체) — 토큰/BEM/접근성
         run: node scripts/check-violations.js
 
@@ -41,6 +45,9 @@ jobs:
       - name: Stylelint
         run: npm run lint:css
 
+      - name: ESLint (scripts · studio · mcp/bin · cli/bin)
+        run: npm run lint:js
+
       - name: 검사기 단위 테스트
         run: npm run test:unit
 
@@ -50,6 +57,12 @@ jobs:
       - name: AI 프롬프트 자동 생성 검증
         run: npm run build:prompts
 
+      - name: 레퍼런스 자동 생성 검증 (tokens.css·스니펫 → references/)
+        run: npm run build:references
+
+      - name: MCP 번들 자동 생성 검증 (references·rules·contracts → mcp/data/)
+        run: npm run build:mcp
+
       - name: 스타터 로컬 동기화 및 하네스 검증
         run: |
           npm run sync:starter
@@ -58,15 +71,21 @@ jobs:
 
       - name: 자동 생성물 drift 검사
         run: |
-          # 빌드 sha 라인은 매 커밋마다 다르므로 검사에서 제외 (정보성 메타이며 콘텐츠 결정성과 무관)
-          # -I <regex>: 매칭 라인 변경만 있는 hunk는 diff에서 무시 (git 2.30+)
-          if ! git diff --exit-code -I '^> 빌드: ' -I '"sha":' -- CLAUDE.md AGENTS.md site/conventions/ site/prompts/ prompts/ tokens/build/ starter/; then
+          # 생성물에는 커밋 sha를 싣지 않는다(package.json version만) — 같은 원본이면 같은 결과가 나와야 한다
+          if ! git diff --exit-code -- CLAUDE.md AGENTS.md site/conventions/ site/prompts/ prompts/ tokens/build/ references/ mcp/data/ mcp/bin/icon-search.js starter/; then
             echo ""
             echo "❌ 자동 생성물이 최신이 아닙니다."
             echo "   다음 명령을 실행하고 결과를 커밋하세요:"
             echo ""
-            echo "   npm run build:tokens && npm run build:rules && npm run build:prompts"
+            echo "   npm run build:tokens && npm run build:rules && npm run build:prompts && npm run build:references && npm run build:mcp && npm run sync:starter"
             echo ""
+            exit 1
+          fi
+          # 새로 생긴 생성물(추적되지 않은 파일)도 drift다 — git diff는 추적 파일만 본다
+          untracked="$(git ls-files --others --exclude-standard -- references/ mcp/data/ starter/ prompts/ site/conventions/)"
+          if [ -n "$untracked" ]; then
+            echo "❌ 커밋되지 않은 새 생성물:"
+            echo "$untracked"
             exit 1
           fi
 

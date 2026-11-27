@@ -1,0 +1,20 @@
+<section class="section section--content field-accordion" aria-labelledby="field-accordion-title">
+  <div class="container">
+    <div class="field-accordion__head">
+      <h2 class="field-accordion__title" id="field-accordion-title">{{title}}</h2>
+      <p class="field-accordion__lead">{{lead}}</p>
+      <a class="field-accordion__more" href="{{more_href}}">{{more_label}}<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#arrow-right"></use></svg></a>
+    </div>
+    <ul class="field-accordion__list" role="list">
+      <!-- @each fields as field -->
+      <li class="field-accordion__item">
+        <img class="field-accordion__img" src="{{field.img_src}}" alt="{{field.img_alt}}" width="1120" height="1400" loading="lazy">
+        <div class="field-accordion__text">
+          <h3 class="field-accordion__name"><a class="field-accordion__link" href="{{field.href}}">{{field.name}}</a></h3>
+          <p class="field-accordion__desc">{{field.desc}}</p>
+        </div>
+      </li>
+      <!-- @end -->
+    </ul>
+  </div>
+</section>

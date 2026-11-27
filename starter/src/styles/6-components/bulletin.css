@@ -1,0 +1,38 @@
+/**
+ * Bulletin — 소식 2단: 제목·마감 그림 열 + 탭 게시판 열 (블록 카탈로그 bulletin · design-intelligence §6-3 N2 + N1)
+ *   왼쪽 열에 섹션 제목과 deadline(접수 중 항목의 남은 날수 그림), 오른쪽 열에 KRDS 탭 + post-list.
+ *   게시판 첫 글은 대표 글로 키워 목록에 위계를 준다(N1).
+ *   정본: src/blocks/bulletin/. MCP get_block("bulletin")
+ *   <div class="container bulletin">
+ *     <div class="bulletin__aside"><h2 class="bulletin__title">…</h2><div class="deadline">…</div></div>
+ *     <div class="bulletin__board"><div class="tab">…</div></div>
+ *   </div>
+ * 레이어 밖에 둔다 — 탭·목록의 간격을 이 블록 안에서 조정한다.
+ */
+.bulletin {
+  @apply grid gap-[4rem] laptop:gap-[6.4rem] laptop:[grid-template-columns:minmax(0,5fr)_minmax(0,7fr)];
+}
+
+/* 격자 칸이 내용 폭 때문에 넘치지 않게 */
+.bulletin__aside,
+.bulletin__board {
+  @apply min-w-0;
+}
+
+/* KRDS heading-xlarge(mobile 2.8 / pc 4rem) */
+.bulletin__title {
+  @apply m-0 mb-[2.4rem] [font-family:var(--font-heading)] text-[2.8rem] font-semibold leading-[1.5] tracking-[0.1rem] text-[var(--color-text-bolder)] [word-break:keep-all] tablet:text-[4rem] laptop:mb-[4rem];
+}
+
+.bulletin__board .tab__list {
+  @apply mb-[0.8rem];
+}
+
+/* 게시판 첫 글은 대표 글 — heading-medium으로 키운다 */
+.bulletin__board .post-list__item:first-child {
+  @apply py-[2.4rem];
+}
+
+.bulletin__board .post-list__item:first-child .post-list__link {
+  @apply text-[2.2rem] font-bold leading-[1.5] tablet:text-[2.4rem];
+}

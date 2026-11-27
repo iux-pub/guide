@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 // build-prompts.js — AI 프롬프트 파일 자동 재생성 스크립트
-// 입력: tokens/build/tokens.css (토큰), src/snippets/*.md (28컴포넌트 스니펫),
-//       site/design/*.md (디자인 규칙), references/* (KRDS 카탈로그)
-// 출력: site/prompts/{design,components,context}.md (사람이 복붙)
-//       prompts/{design-rules,design-audit}.md (스킬이 fetch)
+// 입력: tokens/build/tokens.css (토큰), src/snippets/*.md (컴포넌트 스니펫),
+//       site/design/*.md (디자인 규칙), references/*.md (기준 본체)
+// 출력: site/prompts/{design,components,context}.md (사람이 복사해 붙인다)
+//       prompts/{design-rules,design-audit}.md (LLM 컨텍스트 묶음)
 //
-// KRDS+Tailwind v4 시대 — SCSS 의존 일체 없음
+// prompts/의 나머지 다섯 파일(context·publishing·review·tokens·components)은
+// 이 스크립트가 만들지 않는다 — 손으로 관리한다.
 
 const fs = require('fs')
 const path = require('path')
@@ -110,12 +111,15 @@ function parseSnippet(filePath) {
   return { title, markup, variants, a11y }
 }
 
+// 스니펫 폴더에 있지만 컴포넌트가 아닌 파일 — 작업 지침(AGENTS.md)과 페이지 골격(boilerplate.md)
+const NON_COMPONENT_SNIPPETS = ['AGENTS.md', 'boilerplate.md']
+
 /**
- * 스니펫 디렉토리를 스캔해 컴포넌트 이름 목록을 반환한다 (boilerplate 제외).
+ * 스니펫 디렉토리를 스캔해 컴포넌트 이름 목록을 반환한다.
  */
 function getComponentList() {
   return fs.readdirSync(SNIPPETS_DIR)
-    .filter(f => f.endsWith('.md') && f !== 'boilerplate.md')
+    .filter(f => f.endsWith('.md') && !NON_COMPONENT_SNIPPETS.includes(f))
     .map(f => f.replace(/\.md$/, ''))
     .sort()
 }
@@ -488,7 +492,8 @@ HTML 컴포넌트화는 페이지 전체가 아니라 \`main\` 내부의 section
 ## 반응형
 
 - **모바일 퍼스트** 접근
-- 단순 속성 변경은 CSS에서도 Tailwind v4 variant \`tablet:\` / \`pc:\` 우선
+- 브레이크포인트는 4단계 — 모바일 360 / \`tablet:\` 768 / \`laptop:\` 1024 / \`pc:\` 1280
+- 단순 속성 변경은 CSS에서도 Tailwind v4 variant \`tablet:\` / \`laptop:\` / \`pc:\` 우선
 - 직접 \`@media\`는 복잡한 중첩 선택자나 여러 하위 요소 동시 제어에만 사용
 - 직접 \`@media\`는 관련 선택자 내부에 중첩하고, 파일 하단에 브레이크포인트별로 몰아두지 않음
 - \`@media (min-width: var(--breakpoint-*))\`는 표준으로 쓰지 않음
@@ -533,10 +538,23 @@ ${promptContent}
 
 // ─── prompts/ root 출력 (스킬 fetch용) ───
 
+/**
+ * 문서에서 프롬프트에 필요 없는 것을 걷어 낸다 — front matter, 「관련 문서」 절, HTML 태그, 사이트 내부 링크.
+ * 코드(펜스 블록·인라인 코드) 안의 `<time datetime>` 같은 표기는 지우지 않는다.
+ */
 function cleanMarkdown(content) {
-  let cleaned = content.replace(/^---[\s\S]*?---\n/, '')
-  cleaned = cleaned.replace(/^## 관련 문서[\s\S]*?(?=\n## |\n# |$)/m, '')
+  let cleaned = content.replace(/\r\n/g, '\n').replace(/^---\n[\s\S]*?\n---\n/, '')
+  // m 플래그를 쓰지 않는다 — m이 있으면 $가 제목 줄 끝에 맞아 제목 한 줄만 지워진다
+  cleaned = cleaned.replace(/(^|\n)## 관련(?: 문서)?[ \t]*\n[\s\S]*?(?=\n## |\n# |$)/, '$1')
+
+  const kept = []
+  const keep = (m) => { kept.push(m); return `@@KEEP${kept.length - 1}@@` }
+  cleaned = cleaned.replace(/```[\s\S]*?```/g, keep).replace(/`[^`\n]+`/g, keep)
+  cleaned = cleaned.replace(/<br\s*\/?>/gi, ' / ')
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   cleaned = cleaned.replace(/<[^>]+>/g, '')
+  cleaned = cleaned.replace(/@@KEEP(\d+)@@/g, (_, i) => kept[Number(i)])
+
   cleaned = cleaned.replace(/^- \[.*?\]\(\/.*?\).*$/gm, '')
   cleaned = cleaned.replace(/\[([^\]]+)\]\(\/[^)]+\)/g, '$1')
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n')
@@ -561,36 +579,136 @@ function readSorted(dir) {
     .sort((a, b) => a.order - b.order)
 }
 
+/**
+ * 제목 줄(정규식)에서 시작해 같은 단계 이상의 다음 제목 앞까지를 뽑는다.
+ * 코드 펜스 안의 # 줄은 제목으로 보지 않는다.
+ * @returns {{heading: string, body: string} | null}
+ */
+function extractSection(markdown, headingRe) {
+  const lines = markdown.split('\n')
+  let inFence = false
+  let start = -1
+  let level = 0
+  let end = lines.length
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    if (/^\s*```/.test(line)) { inFence = !inFence; continue }
+    if (inFence) continue
+    const h = line.match(/^(#{1,6})\s+(.*)$/)
+    if (!h) continue
+    if (start < 0) {
+      if (headingRe.test(line)) { start = i; level = h[1].length }
+    } else if (h[1].length <= level) {
+      end = i
+      break
+    }
+  }
+  if (start < 0) return null
+  const heading = lines[start].replace(/^#{1,6}\s+/, '').trim()
+  // 구분선과 끝 공백을 걷어 낸다. 안쪽 제목은 #### 로 내려 묶음의 ##·### 와 겹치지 않게 한다
+  let fence = false
+  const body = lines.slice(start + 1, end)
+    .map(l => {
+      if (/^\s*```/.test(l)) { fence = !fence; return l }
+      if (fence) return l
+      if (/^---\s*$/.test(l)) return ''
+      return l.replace(/^#{1,6}\s+/, '#### ')
+    })
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+  return { heading, body }
+}
+
+// site/design 문서가 references/ 원문을 통째로 싣는 래퍼인지 — {{ "references/x.md" | sourceBodyAsSection }}
+const INCLUDE_WRAPPER = /\{\{\s*["'](references\/[^"']+\.md)["']\s*\|\s*sourceBodyAsSection/
+
+/**
+ * 요약의 재료가 되는 본문과 원문 경로를 정한다.
+ * 래퍼 문서는 본문이 include 한 줄뿐이라 references/ 원문을 읽는다.
+ */
+function resolveDesignDoc(doc) {
+  const wrapped = doc.content.match(INCLUDE_WRAPPER)
+  if (wrapped) {
+    const sourcePath = path.join(ROOT, wrapped[1])
+    if (fs.existsSync(sourcePath)) {
+      const body = fs.readFileSync(sourcePath, 'utf-8').replace(/\r\n/g, '\n').replace(/^\s*#\s+.*\n/, '')
+      return { title: doc.title, source: wrapped[1], body: cleanMarkdown(body) }
+    }
+  }
+  return { title: doc.title, source: `site/design/${doc.file}`, body: cleanMarkdown(doc.content) }
+}
+
+// 문서별로 통째로 실을 절. 지정한 제목이 문서에서 사라지면 일반 추출(규칙 줄 + Do/Don't 또는 첫 표)로 돌아간다.
+// 키는 원문 파일 이름이다.
+const SECTION_PICKS = {
+  'project-profiles.md': [/^## 사이트 유형\s*$/, /^## 유형별 Page Shell/],
+  'interaction-timing.md': [/^## 전환 시간/, /^## Do \/ Don't/],
+  'ui-states.md': [/^## 컴포넌트별 상태 셋/],
+  'art-direction.md': [/^## 1\. 표현 등급/, /^## 2\. 한글 조판/, /^## 10\. 안티패턴 색인/],
+  'korean-web-patterns.md': [/^## 9\. AI 슬롭 방지/],
+  'design-intelligence.md': [/^## 1\. 절차/, /^## 2\. 하네스가 하지 않는 것/, /^## 3\. 충돌하면/]
+}
+
+// site/design에 페이지가 없는 기준 문서 — references/에서 바로 읽어 묶음에 넣는다
+const EXTRA_DESIGN_SOURCES = [
+  { title: '디자인 디렉션', source: 'references/design-intelligence.md' }
+]
+
+const RULE_LINE = /^- .*(금지|필수|않는다|안 된다|사용하지|제공한다|준수|확보|쓴다|둔다|한다)/
+
+/**
+ * 문서 하나의 요약 본문을 만든다. 실을 내용이 없으면 빈 문자열을 돌려준다 — 제목만 있는 절을 만들지 않는다.
+ */
+function summarizeDesignDoc({ source, body }) {
+  const parts = []
+  const picks = SECTION_PICKS[path.basename(source)] || []
+  for (const re of picks) {
+    const section = extractSection(body, re)
+    if (section && section.body) parts.push(`### ${section.heading}\n\n${section.body}`)
+  }
+
+  if (parts.length === 0) {
+    const text = body.replace(/```[\s\S]*?```/g, '')
+    const ruleLines = text.split('\n').filter(l => RULE_LINE.test(l))
+    if (ruleLines.length > 0) parts.push(ruleLines.slice(0, 10).join('\n'))
+
+    const doDont = extractSection(text, /^#{2,3} Do \/ Don't/)
+    if (doDont && doDont.body) {
+      parts.push(`### Do / Don't\n\n${doDont.body}`)
+    } else {
+      const table = text.match(/(?:^|\n)(\|[^\n]+\n\|[-:| ]+\n(?:\|[^\n]+(?:\n|$)){1,8})/)
+      if (table) parts.push(table[1].trim())
+    }
+  }
+
+  return parts.join('\n\n')
+}
+
 function buildDesignRules() {
-  // design-audit.md는 전용 산출물(buildDesignAudit)이 있고,
-  // art-direction.md는 references/ 원본을 읽는 njk 래퍼라 본문이 없다 — 둘 다 제외
-  const files = readSorted(DESIGN_DIR).filter(f => f.file !== 'design-audit.md' && f.file !== 'art-direction.md')
+  // design-audit.md는 전용 산출물(buildDesignAudit)이 있다
+  const docs = readSorted(DESIGN_DIR)
+    .filter(f => f.file !== 'design-audit.md')
+    .map(resolveDesignDoc)
 
-  const sections = files.map(f => {
-    const cleaned = cleanMarkdown(f.content)
-    const text = cleaned.replace(/```[\s\S]*?```/g, '')
-    const doDontMatch = text.match(/## Do \/ Don't[\s\S]*?(?=\n## |\n# |$)/m)
+  for (const extra of EXTRA_DESIGN_SOURCES) {
+    const sourcePath = path.join(ROOT, extra.source)
+    if (!fs.existsSync(sourcePath)) continue
+    if (docs.some(d => d.source === extra.source)) continue
+    const body = fs.readFileSync(sourcePath, 'utf-8').replace(/\r\n/g, '\n').replace(/^\s*#\s+.*\n/, '')
+    docs.push({ title: extra.title, source: extra.source, body: cleanMarkdown(body) })
+  }
 
-    const smallTables = []
-    const tableRegex = /(\|[^\n]+\n\|[-| ]+\n(?:\|[^\n]+\n){1,8})/g
-    let m
-    while ((m = tableRegex.exec(text)) !== null) smallTables.push(m[1].trim())
-
-    const ruleLines = text.split('\n').filter(l =>
-      /^- .*(금지|필수|않는다|안 된다|사용하지|제공한다|준수|확보)/.test(l)
-    )
-
-    let section = `## ${f.title}\n\n`
-    if (ruleLines.length > 0) section += ruleLines.slice(0, 10).join('\n') + '\n\n'
-    if (doDontMatch) section += doDontMatch[0].trim() + '\n\n'
-    if (!doDontMatch && smallTables.length > 0) section += smallTables[0] + '\n\n'
-    section += `> 상세: site/design/${f.file}\n`
-    return section
-  }).join('\n\n---\n\n')
+  const sections = docs
+    .map(doc => ({ doc, summary: summarizeDesignDoc(doc) }))
+    .filter(({ summary }) => summary.trim() !== '')
+    .map(({ doc, summary }) => `## ${doc.title}\n\n${summary}\n\n> 상세: ${doc.source}\n`)
+    .join('\n\n---\n\n')
 
   return `# 디자인 규칙
 
-> 핵심 규칙만 압축. 상세 내용은 각 섹션의 원본 파일을 참조하라.
+> 생성물이다 — \`npm run build:prompts\`가 site/design/*.md와 references/*.md에서 만든다. 직접 고치지 않는다.
+> 핵심만 추렸다. 전체 내용은 절마다 적힌 원문을 본다. KRDS가 언제나 우선한다.
 
 ${sections}
 `
@@ -603,12 +721,14 @@ function buildDesignAudit() {
   }
   const content = fs.readFileSync(filePath, 'utf-8')
   const cleaned = cleanMarkdown(content)
-  const quick5Match = cleaned.match(/## Quick 5[\s\S]*/)
+  const scoring = extractSection(cleaned, /^## 점수 체계/)
+  const quick5 = extractSection(cleaned, /^## Quick 5/)
 
   const categories = []
   const lines = cleaned.split('\n')
   let current = null
   for (const line of lines) {
+    if (line.startsWith('## Quick 5')) break
     const heading = line.match(/^### (\d+)\. (.+)/)
     if (heading) {
       if (current) categories.push(current)
@@ -616,30 +736,24 @@ function buildDesignAudit() {
       continue
     }
     if (current && line.startsWith('- [ ]')) current.items.push(line)
-    if (line.startsWith('## Quick 5')) break
   }
   if (current) categories.push(current)
 
-  const categoryText = categories.map(c => `### ${c.title}\n\n${c.items.join('\n')}`).join('\n\n')
+  const categoryText = categories
+    .filter(c => c.items.length > 0)
+    .map(c => `### ${c.title}\n\n${c.items.join('\n')}`)
+    .join('\n\n')
 
-  return `# 디자인 감사 체크리스트
+  const parts = [
+    `# 디자인 감사 체크리스트
 
-> 17개 카테고리 기반 디자인 품질 평가.
-> 100점 시작, Critical -8 / Warning -4 / Tip -1.
-
-## 점수 기준
-
-| 점수 | 판정 |
-|------|------|
-| 90~100 | 출시 가능 |
-| 70~89 | 소폭 수정 |
-| 50~69 | 보완 필요 |
-| 50 미만 | 재작업 |
-
-${categoryText}
-
-${quick5Match ? quick5Match[0] : ''}
-`
+> 생성물이다 — \`npm run build:prompts\`가 site/design/design-audit.md에서 만든다. 직접 고치지 않는다.
+> ${categories.length}개 카테고리로 화면을 점검한다. 메인·랜딩의 시각 품질은 이 체크리스트가 아니라 사람이 판정한다(references/design-intelligence.md §1-5).`
+  ]
+  if (scoring && scoring.body) parts.push(`## 점수 체계\n\n${scoring.body}`)
+  if (categoryText) parts.push(categoryText)
+  if (quick5 && quick5.body) parts.push(`## ${quick5.heading}\n\n${quick5.body}`)
+  return parts.join('\n\n') + '\n'
 }
 
 // ─── 메인 ──────────────────────────────────────────────
@@ -668,4 +782,15 @@ function main() {
   console.log('[build-prompts] 완료!')
 }
 
-main()
+if (require.main === module) main()
+
+module.exports = {
+  getComponentList,
+  cleanMarkdown,
+  extractSection,
+  resolveDesignDoc,
+  summarizeDesignDoc,
+  buildComponentsPrompt,
+  buildDesignRules,
+  buildDesignAudit
+}

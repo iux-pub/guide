@@ -40,7 +40,7 @@
 
   /* 브랜드 영역 */
   .site-header__brand {
-    @apply inline-flex items-center gap-[1.6rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
+    @apply inline-flex items-center gap-[1.6rem] min-h-[4.4rem] no-underline text-[var(--color-text)] text-[1.9rem] font-bold;
 
 
   }
@@ -88,8 +88,14 @@
     @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] text-[var(--color-text)] laptop:hidden;
   }
 
+  /* 접힌 통합검색 — 첫 화면에 검색 입력을 둔 메인은 form·search-link 대신 이것 하나를 둔다.
+     모든 폭에서 아이콘 링크로 보여 화면의 검색 입력이 하나로 남는다(design-intelligence §6-1) */
+  .site-header__search-button {
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] text-[var(--color-text)];
+  }
+
   /* 모바일 햄버거 토글 */
   .site-header__toggle {
-    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] cursor-pointer laptop:hidden;
+    @apply inline-flex items-center justify-center w-[4.4rem] h-[4.4rem] bg-transparent border border-[var(--color-border-control)] rounded-[0.6rem] text-[var(--color-text)] cursor-pointer laptop:hidden;
   }
 }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>알림마당 — 탭 게시판 + 접수 중 색 면 상자 (notice-board) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: notice-board — 알림마당 — 탭 게시판 + 접수 중 색 면 상자 -->
+    <section class="section section--notice notice-board" aria-labelledby="notice-board-title">
+      <div class="container notice-board__grid">
+        <div class="notice-board__board">
+          <h2 class="notice-board__title" id="notice-board-title">알림마당</h2>
+          <div class="tab">
+            <div class="tab__list" role="tablist" aria-label="알림마당 게시판">
+              <button type="button" class="tab__item" role="tab" aria-selected="true" aria-controls="notice-board-panel-1" id="notice-board-tab-1">공지사항</button>
+              <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="notice-board-panel-2" id="notice-board-tab-2">입찰·계약</button>
+              <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="notice-board-panel-3" id="notice-board-tab-3">채용</button>
+              <button type="button" class="tab__item" role="tab" aria-selected="false" aria-controls="notice-board-panel-4" id="notice-board-tab-4">보도자료</button>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-1" aria-labelledby="notice-board-tab-1">
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1575">청년 예술가 창작 지원 공모 안내</a>
+                  <time class="post-list__date" datetime="2026-11-02">2026.11.02</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1559">시민 합창단 신규 단원 모집</a>
+                  <time class="post-list__date" datetime="2026-10-28">2026.10.28</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1551">겨울 방학 어린이 미술 교실 수강 신청 일정</a>
+                  <time class="post-list__date" datetime="2026-10-21">2026.10.21</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1544">소극장 무대 조명 교체 공사에 따른 대관 일시 중단 안내</a>
+                  <time class="post-list__date" datetime="2026-10-14">2026.10.14</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/notice/1538">누리집 개인정보 처리방침 개정 안내</a>
+                  <time class="post-list__date" datetime="2026-10-06">2026.10.06</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/notice">공지사항 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-2" aria-labelledby="notice-board-tab-2" hidden>
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/tender/991">전시실 항온항습 설비 유지관리 용역</a>
+                  <time class="post-list__date" datetime="2026-10-21">2026.10.21</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/tender/990">거리 공연 축제 무대 설치 및 운영 용역</a>
+                  <time class="post-list__date" datetime="2026-10-16">2026.10.16</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/tender/989">예매 시스템 통합 유지관리 용역</a>
+                  <time class="post-list__date" datetime="2026-10-14">2026.10.14</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/tender">입찰·계약 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-3" aria-labelledby="notice-board-tab-3" hidden>
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/recruit/702">2026년 제3차 정규직 채용 필기시험 일시와 장소 공고</a>
+                  <time class="post-list__date" datetime="2026-10-08">2026.10.08</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/recruit/700">공연 기획 분야 기간제 근로자 채용 공고</a>
+                  <time class="post-list__date" datetime="2026-09-10">2026.09.10</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/recruit/699">청년 인턴(체험형) 최종 합격자 임용 등록 안내</a>
+                  <time class="post-list__date" datetime="2026-09-03">2026.09.03</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/recruit">채용 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+            <div class="tab__panel" role="tabpanel" id="notice-board-panel-4" aria-labelledby="notice-board-tab-4" hidden>
+              <ul class="post-list" role="list">
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/press/2873">항구 미술관 겨울 기획전 개막</a>
+                  <time class="post-list__date" datetime="2026-10-21">2026.10.21</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/press/2872">등대 축제 관람객 집계 결과 발표</a>
+                  <time class="post-list__date" datetime="2026-10-20">2026.10.20</time>
+                </li>
+                <li class="post-list__item">
+                  <a class="post-list__link" href="/press/2871">시민 예술 아카데미 수료식 개최</a>
+                  <time class="post-list__date" datetime="2026-10-19">2026.10.19</time>
+                </li>
+              </ul>
+              <a class="more-link" href="/press">보도자료 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#chevron-right"></use></svg></a>
+            </div>
+          </div>
+        </div>
+        <aside class="notice-board__due" aria-labelledby="notice-board-due-title">
+          <h3 class="notice-board__due-title" id="notice-board-due-title">접수 중인 공모·모집</h3>
+          <p class="notice-board__asof"><time datetime="2026-11-13">11월 13일</time> 기준</p>
+          <ul class="notice-board__due-list" role="list">
+            <li><a class="notice-board__due-item" href="/notice/1575">
+              <span class="notice-board__dday">D-8</span>
+              <span class="notice-board__due-name">청년 예술가 창작 지원 공모</span>
+              <span class="notice-board__due-date"><time datetime="2026-11-21">11.21</time> 마감</span>
+            </a></li>
+            <li><a class="notice-board__due-item" href="/notice/1559">
+              <span class="notice-board__dday">D-17</span>
+              <span class="notice-board__due-name">시민 합창단 신규 단원 모집</span>
+              <span class="notice-board__due-date"><time datetime="2026-11-30">11.30</time> 마감</span>
+            </a></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+  <script src="../js/tab.js"></script>
+</body>
+</html>

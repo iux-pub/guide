@@ -11,7 +11,7 @@
 ## 1. 이 저장소가 무엇인가
 
 **KRDS(범정부 UI/UX 디자인 시스템)의 품질 원칙 + INFOMIND 실무 표준**의 단일 소스(SoT) 저장소다.
-색상/상태 토큰 · CSS 컴포넌트 패턴 · 마크업 스니펫 · AI 컨트랙트(`info-design` 스킬)를 한 곳에서 발행한다.
+색상/상태 토큰 · CSS 컴포넌트 패턴 · 마크업 스니펫 · AI 컨트랙트(`references/` 기준 문서와 infoUX MCP)를 한 곳에서 발행한다.
 
 발행 채널 4개:
 - 스타터 키트 → `iux-pub/starter`
@@ -48,12 +48,24 @@
 UI/CSS/HTML은 검사부터 시작하지 않는다. 다음 순서로 올바른 생성 경로를 먼저 확정한다.
 
 1. `contracts/task-contract.md` 형식으로 사이트 유형, 핵심 과업, 페이지 패턴, 재사용 컴포넌트, 위젯, 예외를 선언한다.
-2. 현재 작업에 맞는 스킬을 적용한다: `design-page`, `create-component`, `design-form`, `design-widget`, `change-token`, `review-ui`.
+2. 현재 작업에 맞는 절차(`references/workflows/`, MCP `get_workflow`)를 적용한다: `design-page`, `create-component`, `design-form`, `design-widget`, `change-token`, `review-ui`.
 3. 수정 파일과 가장 가까운 `AGENTS.md`를 추가로 읽는다.
 4. 기존 카탈로그와 승인 패턴을 조합해 구현한다.
 5. `npm run check`는 선택과 설계를 대신하지 않는 마지막 안전망으로 실행한다.
 
 Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않는다. 단순 수정은 작업 응답에 짧게 선언하고, 페이지·기능 단위 작업은 계약 파일을 남긴다.
+
+### 메인·랜딩 페이지 — 생성은 자유롭게, 하네스는 바닥만
+
+메인 디자인을 규칙으로 가르치면 결과가 나빠졌다(견본 17건 중 통과 2건, 하네스 없는 생성보다 못한 결과 — `references/design-intelligence.md` §0). `pageType: main`이거나 랜딩이면 `references/design-intelligence.md`(MCP `get_reference("design-intelligence")`)를 읽고 아래를 순서대로 한다.
+
+1. 실제 콘텐츠(`contentSources`)와 기관 사진(출처·라이선스)을 확보한다. 사진이 없으면 실제 비율의 이미지 자리와 교체 목록을 둔다.
+2. 기관·1순위 과업·사용자·기준 수준·피할 것을 다섯 줄 이내 브리프로 쓴다.
+3. 브리프와 재료만으로 자유롭게 디자인한다. 옛 형식표·블록 카탈로그·견본·결함 문항을 생성 맥락에 넣지 않는다.
+4. 바닥만 교정한다 — check·lint 오류, 접근성·과업 흐름, KRDS 대조, 카피 사실성. 위반한 지점만 가장 좁게 고치고 디자인을 다시 하지 않는다. 검사 규칙과 디자인이 정면으로 부딪치면 지우기 전에 `exceptions[]`에 예외로 올린다. 바꾼 것을 `docs/design-plan.md` 「교정 기록」에 적는다.
+5. 디자이너가 수정하고, 운영자·발주자가 「승인」 또는 「불통과」와 사유 원문을 「사람 판정」에 적는다.
+
+`docs/design-plan.md`에 사람 판정 「승인」이 없으면 `npm run check:release`가 실패한다.
 
 ---
 
@@ -113,15 +125,15 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - **R-03** `error` — SCSS 사용 금지 — 표준 CSS nesting + Tailwind v4 문법 허용
 - **R-19** `error` — 스타일 CSS는 Tailwind v4 @apply 우선 — 토큰 값은 var(--token) 유지
 - **R-20** `error` — 호환성 위험 CSS 선택자 금지 — 핵심 CSS에서 :has() 사용 금지
-- **R-24** `error` — 한글 조판 하한 — keep-all 존재 필수·음수 자간·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류)
+- **R-24** `error` — 한글 조판 하한 — keep-all 존재 필수·음수 자간(2.4rem 이상 제목 -0.03em 이내 예외)·keep-all 무력화 금지, 1.5 미만 행간 경고(마크업은 오류)
 - **R-26** `error` — 폰트 스택 — 1순위는 카탈로그 한글 폰트, 서체는 토큰으로만(font-family 직접값·font-serif·외부 폰트 호스트 금지)
-- **R-31** warn — 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)
+- **R-31** `warn` — 루트 글자 크기는 62.5%로 고정한다 — 다른 값·vw 금지(경고)
 - **R-34** `error` — 장식 효과 금지 — 장식 그라데이션·그라데이션 글자·글래스(backdrop)·큰 블러·컬러 글로우 그림자
 - **R-35** `error` — 반경은 KRDS 상한 1.2rem, 완전 원형은 지정 블록·정사각 원형만, 그림자 blur는 2.4rem 이하
 - **R-37** `error` — Tailwind 기본 타입·행간·간격·컨테이너 스케일 금지 — 62.5% 루트에서 37.5% 작아진다, rem 임의값을 쓴다
 - **R-38** `error` — KRDS 최소 글자 — 1.3rem 미만 금지, body 1.6rem·본문 성격 요소 1.5rem 이상, 단계 밖 크기 경고
 - **R-48** `error` — 모바일 우선 — 360px 넘는 모바일 고정 폭 금지, 모바일 기본 열 없는 3열 이상 그리드 경고
-- **R-49** warn — 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고)
+- **R-49** `warn` — 공공·관리자 화면의 섹션 세로 여백은 밀도 프리셋의 1.5배를 넘지 않는다(경고)
 
 ### BEM 네이밍
 - **R-04** `info` — BEM 사용 (5-objects, 6-components 레이어에만 적용)
@@ -148,11 +160,12 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 - **R-41** `error` — 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다
 - **R-42** `error` — 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다
 - **R-43** `error` — 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지
-- **R-44** warn — 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다
+- **R-44** `warn` — 근거 없는 최상급·공공 화면의 성과 홍보 어조·대비 구문 표어와 해요체·경어 혼용을 경고한다
 - **R-45** `error` — 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다
 - **R-46** `error` — publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다
 - **R-47** `error` — 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다
-- **R-50** warn — placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고
+- **R-50** `warn` — placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고
+- **R-51** `warn` — 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선, 아이콘 타일 바로가기 반복은 경고
 
 ### 접근성 규칙
 - **R-11** `error` — 포커스 스타일 필수 — :focus { outline: none } 금지
@@ -194,6 +207,8 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 | 작업 맥락 | 파일 |
 |----------|------|
 | 코드 생성 전 사이트 유형 판정 | `references/project-profiles.md` |
+| 메인·랜딩의 생성·바닥 교정·사람 판정 | `references/design-intelligence.md`, 서식 `contracts/design-plan.md` (선택 도구: 평가자 지시문 `contracts/render-critique-evaluator.md`, 견본 `assets/exemplars/index.json`) |
+| 한국형 메인 레시피·서브 골격·헤더·푸터 | `references/korean-web-patterns.md` |
 | 표현 등급·타이포 페어링·팔레트 프리셋·한글 조판 판단 | `references/art-direction.md` |
 | 컴포넌트 마크업 작성 (시각/스타일) | `references/krds-components.md` |
 | 컴포넌트 마크업 작성 (root/ARIA/키보드) | `references/html-semantics.md` |

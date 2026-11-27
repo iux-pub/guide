@@ -12,16 +12,11 @@
 const fs = require('node:fs')
 const path = require('node:path')
 
-const { Server } = require('@modelcontextprotocol/sdk/server/index.js')
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js')
-const {
-  CallToolRequestSchema,
-  ListToolsRequestSchema
-} = require('@modelcontextprotocol/sdk/types.js')
-
 // 아이콘 검색은 아이콘 스튜디오·CLI와 같은 코드다(scripts/lib/icon-search.js의 복사본).
 // 사람이 스튜디오에서 찾는 결과와 AI가 여기서 찾는 결과가 달라지지 않게 한다 — check-harness가 지킨다.
 const { search: searchIcons } = require('./icon-search.js')
+// 블록 조립·순서 점검도 저장소의 미리보기 생성기와 같은 코드다(scripts/lib/block-catalog.js의 복사본).
+const { SLOTS: BLOCK_SLOTS, composePage, placeholderLines } = require('./block-catalog.js')
 
 const DATA_DIR = path.resolve(__dirname, '..', 'data')
 
@@ -50,6 +45,11 @@ const RULE_IDS = (rules.rules || []).map((r) => r.id)
 const RULE_RANGE = RULE_IDS.length
   ? `${RULE_IDS[0]}~${RULE_IDS[RULE_IDS.length - 1]}(${RULE_IDS.length}개)`
   : 'rules.json 전체'
+// get_rules 필터 허용값 — 분류는 rules.json categories에서 읽는다(문구에 박아 두면 분류가 늘 때 낡는다)
+const RULE_CATEGORIES = (rules.categories || []).map(c => ({ id: c.id, title: c.title }))
+const RULE_SEVERITIES = ['error', 'warn', 'info']
+// 심각도 표기는 warn으로 통일했다. 예전 표기 warning으로 물어도 같은 값으로 받는다
+const SEVERITY_ALIAS = { warning: 'warn', warnings: 'warn', errors: 'error' }
 
 // ─────────────────────────────────────────────────────
 // 서버 지시문 — 에이전트가 도구를 언제 써야 하는지 알려준다
@@ -80,7 +80,17 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
 7. 원칙이 충돌하면 get_reference("trade-off-rules")의 우선순위를 따른다. 접근성이 1순위다.
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
    100% 통과가 조건이다.
-8. 페이지는 프로젝트 루트(*.html)나 pages/ 아래에 둔다. 다른 폴더에 두면 infoux.json "pages"에
+8. 메인·랜딩 페이지(pageType main)는 코드를 쓰기 전에 get_reference("design-intelligence")를 읽는다.
+   생성은 자유롭게, 하네스는 바닥만 지킨다. 실제 콘텐츠(contentSources)와 기관 사진(출처·라이선스)을
+   확보하고, 기관·1순위 과업·사용자·기준 수준·피할 것을 다섯 줄 브리프로 쓴 뒤, 브리프와 재료만으로
+   자유롭게 디자인한다. 블록 카탈로그·형식표·견본·결함 문항을 생성 맥락에 넣지 않는다 — 블록 카탈로그
+   (list_blocks·get_block·compose_page)는 서브 페이지와 마크업 참고용이다.
+   그 뒤 바닥만 교정한다: npm run check·lint 오류, 접근성·과업 흐름, KRDS 대조, 카피 사실성.
+   위반한 지점만 가장 좁게 고치고 디자인을 다시 하지 않는다. 검사 규칙과 디자인이 정면으로 부딪치면
+   지우기 전에 exceptions[]에 예외로 올리고 사람에게 넘긴다. 바꾼 것은 get_reference("design-plan")
+   서식의 docs/design-plan.md 「교정 기록」에 적는다. 생성 결과는 디자이너가 수정하는 출발점이고,
+   운영자·발주자의 사람 판정 「승인」이 없으면 npm run check:release가 실패한다.
+9. 페이지는 프로젝트 루트(*.html)나 pages/ 아래에 둔다. 다른 폴더에 두면 infoux.json "pages"에
    글롭을 더한다 — npm run check가 그 범위의 페이지만 page 계약으로 검사한다. 검사를 끄거나
    실패를 숨기는 훅·스크립트(|| true, 2>/dev/null)를 만들지 않는다.
 
@@ -164,8 +174,8 @@ const TOOLS = [
       type: 'object',
       properties: {
         id: { type: 'string', description: '규칙 ID 단건 조회 (예: R-12)' },
-        category: { type: 'string', description: '분류로 필터' },
-        severity: { type: 'string', description: 'error / warn / info' }
+        category: { type: 'string', description: `분류로 필터 — ${RULE_CATEGORIES.map(c => `${c.id}(${c.title})`).join(', ')}` },
+        severity: { type: 'string', description: 'error / warn / info (warning도 warn으로 받는다)' }
       }
     }
   },
@@ -173,7 +183,8 @@ const TOOLS = [
     name: 'get_reference',
     description:
       '레퍼런스 문서를 반환한다. name 없이 부르면 목록을 준다. ' +
-      '접근성 기준, 금지 패턴, Tailwind 매핑, HTML 시맨틱, 사이트 유형 프로필 등이 있다.',
+      '접근성 기준, 금지 패턴, Tailwind 매핑, HTML 시맨틱, 사이트 유형 프로필, 디자인 판단 절차(design-intelligence), ' +
+      '계약 서식(task-contract·design-plan), 선택 도구인 평가자 지시문(render-critique-evaluator)·기준 견본 색인(exemplars) 등이 있다.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -220,13 +231,62 @@ const TOOLS = [
     }
   },
   {
-    name: 'search_docs',
+    name: 'list_blocks',
     description:
-      'infoUX 문서 전체(레퍼런스·스니펫·규칙)에서 문자열을 찾는다. 어느 문서를 봐야 할지 모를 때 먼저 쓴다.',
+      '블록 카탈로그(메인·랜딩의 섹션 단위 실물)를 찾는다. 섹션을 손으로 짓기 전에 먼저 부른다. ' +
+      '자리(slot)·형식(form)·검색어(tag)로 거르고, 결과마다 한 줄 설명·언제 쓰나·언제 쓰지 않나·필요한 콘텐츠·어울리는 이웃을 준다. ' +
+      '목록 끝에 견본 조합(한 페이지를 이루는 블록 순서와 면 흐름 — 조합 id를 compose_page의 set에 넘기면 그대로 조립된다)을 함께 준다. ' +
+      '다음 단계: 고른 블록을 get_block(id)로 받아 「언제 쓰지 않나」와 필요한 콘텐츠를 확인한 뒤 compose_page로 조립한다.',
     inputSchema: {
       type: 'object',
       properties: {
-        query: { type: 'string', description: '찾을 문자열' }
+        slot: { type: 'string', description: `자리 — ${BLOCK_SLOTS.map(s => `${s.id}(${s.label})`).join(', ')}` },
+        form: { type: 'string', description: '블록 형식 기호 (예: H1, Q1, N2, B1 — 옛 형식표 docs/archive/design-intelligence-2026-11.md §6)' },
+        tag: { type: 'string', description: '검색어 — 이름·설명·태그에서 찾는다 (예: 사진, 마감, 로고)' }
+      }
+    }
+  },
+  {
+    name: 'get_block',
+    description:
+      '블록 하나의 전부를 반환한다 — 메타데이터(언제 쓰나·쓰지 않나, 필요한 콘텐츠와 문구 길이·사진 비율·항목 수, 변형 축, 이웃, 면 색·토큰, 접근성 주의), ' +
+      '마크업 틀, 스타일(CSS). 마크업의 클래스는 이 CSS에 있는 것만 쓴다 — 새 modifier를 지어내지 않는다(R-29). ' +
+      '다음 단계: 페이지에 놓을 블록 id를 순서대로 compose_page에 넘긴다. 블록 하나만 기존 페이지에 끼울 때는 이 응답의 마크업을 main 안 section으로 넣는다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: '블록 id (예: cover, task-index, bulletin). list_blocks가 알려 준다' }
+      },
+      required: ['id']
+    }
+  },
+  {
+    name: 'compose_page',
+    description:
+      '블록 id 목록(blocks)이나 견본 조합 id(set — list_blocks가 알려 준다. 예: scene-showcase)를 받아 공통 틀(건너뛰기 링크·헤더·main·푸터)에 끼운 완성 HTML을 만든다. ' +
+      '함께 돌려주는 것: ① 순서 점검(첫 화면 블록 유무·위치, 같은 면 색 연속과 이어지게 설계된 면, 이웃 궁합, 같은 archetype 3연속) ' +
+      '② 실제 내용으로 채워야 할 자리 목록({{…}} — 문구 길이·사진 비율·항목 수 포함) ③ 필요한 스크립트. ' +
+      '틀과 블록의 구조·클래스는 고치지 않고 {{…}} 자리만 발주처 자료(contentSources)로 채운다 — 예시 문구를 지어내 채우지 않는다(R-23). ' +
+      '다음 단계: 순서 점검의 오류를 고쳐 다시 조립 → 자리 채우기 → npm run check → 사람 판정.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        blocks: { type: 'array', items: { type: 'string' }, description: '놓을 순서대로 적은 블록 id 목록 (예: ["cover", "task-index", "bulletin"]). set을 주면 생략한다' },
+        set: { type: 'string', description: '견본 조합 id — 그 조합의 블록 순서로 조립한다 (예: scene-showcase, split-cover, public-enterprise). blocks와 함께 주지 않는다' },
+        assetBase: { type: 'string', description: '자산 경로 앞머리. 기본값은 빈 문자열(프로젝트 루트의 페이지 — assets/…·dist/…). pages/ 아래 페이지면 "../"' },
+        title: { type: 'string', description: '<title>에 넣을 문구. 생략하면 {{page_title}} 자리로 남는다' }
+      }
+    }
+  },
+  {
+    name: 'search_docs',
+    description:
+      'infoUX 문서 전체(작업 컨트랙트·레퍼런스·작업 절차·스니펫·규칙·사이트 유형 프리셋·아트 디렉션)에서 문자열을 찾는다. ' +
+      '어느 문서를 봐야 할지 모를 때 먼저 쓴다. 대소문자는 구분하지 않는다.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: '찾을 문자열 (빈 문자열은 받지 않는다)' }
       },
       required: ['query']
     }
@@ -241,15 +301,30 @@ function text(body) {
   return { content: [{ type: 'text', text: body }] }
 }
 
+// 잘못된 입력·없는 이름은 isError로 돌려준다 — 정상 응답처럼 보이면 에이전트가 「없다」는 답을 본문으로 읽고 지나간다
+function fail(body) {
+  return { ...text(body), isError: true }
+}
+
 function notFound(what, available) {
-  return text(`${what}을(를) 찾을 수 없다.\n\n사용 가능: ${available.join(', ')}`)
+  return fail(`${what}을(를) 찾을 수 없다.\n\n사용 가능: ${available.join(', ')}`)
 }
 
 function listComponents() {
+  const isComponent = item => (item.kind || 'component') === 'component'
+  const components = manifest.snippets.filter(isComponent)
+  const others = manifest.snippets.filter(item => !isComponent(item))
   const lines = ['# infoUX 컴포넌트 카탈로그', '']
-  lines.push(`총 ${manifest.snippets.length}종. get_component(name)으로 마크업을 가져온다.`, '')
-  for (const item of manifest.snippets) {
+  lines.push(`컴포넌트·패턴 ${components.length}종. get_component(name)으로 마크업을 가져온다.`, '')
+  for (const item of components) {
     lines.push(`- **${item.id}** — ${item.summary || '(설명 없음)'}`)
+  }
+  if (others.length > 0) {
+    // 페이지 골격은 화면에 놓는 부품이 아니라 문서의 뼈대다 — 같은 목록에 섞으면 컴포넌트로 센다
+    lines.push('', '## 페이지 골격 (컴포넌트 아님)', '')
+    for (const item of others) {
+      lines.push(`- **${item.id}** — ${item.summary || '(설명 없음)'} get_component("${item.id}")로 받는다.`)
+    }
   }
   lines.push('', '카탈로그에 없는 컴포넌트는 임의로 만들지 않는다. UX팀 판단이 필요하다.')
   return text(lines.join('\n'))
@@ -565,31 +640,47 @@ function getTokens({ query, raw } = {}) {
   if (raw) return text(readData('tokens.css'))
 
   const body = readData('references', 'krds-tokens.md')
-  if (!query) return text(body)
+  if (query === undefined || query === null || String(query).trim() === '') return text(body)
 
-  const needle = query.toLowerCase()
+  const needle = String(query).trim().toLowerCase()
   const matched = body.split('\n').filter(line => line.toLowerCase().includes(needle))
   if (matched.length === 0) {
-    return text(`"${query}"에 해당하는 토큰이 없다. 토큰명을 지어내지 말고 get_tokens()로 전체 목록을 확인한다.`)
+    return fail(`"${query}"에 해당하는 토큰이 없다. 토큰명을 지어내지 말고 get_tokens()로 전체 목록을 확인한다.`)
   }
   return text([`# 토큰 검색 — "${query}" (${matched.length}건)`, '', ...matched].join('\n'))
+}
+
+/** 심각도 표기를 한 값으로 — warn·warning·WARN을 같은 값으로 받는다. 번들 규칙의 옛 표기(warning)도 같이 맞춘다 */
+function normalizeSeverity(value) {
+  const key = String(value ?? '').trim().toLowerCase()
+  return SEVERITY_ALIAS[key] || key
 }
 
 function getRules({ id, category, severity } = {}) {
   let found = rules.rules
 
   if (id) {
-    const wanted = id.toUpperCase()
+    const wanted = String(id).trim().toUpperCase()
     found = found.filter(rule => rule.id.toUpperCase() === wanted)
     if (found.length === 0) return notFound(`규칙 "${id}"`, rules.rules.map(r => r.id))
   }
-  if (category) found = found.filter(rule => rule.category === category)
-  if (severity) found = found.filter(rule => rule.severity === severity)
+  if (category) {
+    const wanted = String(category).trim().toLowerCase()
+    if (!RULE_CATEGORIES.some(c => c.id === wanted)) {
+      return notFound(`규칙 분류 "${category}"`, RULE_CATEGORIES.map(c => `${c.id}(${c.title})`))
+    }
+    found = found.filter(rule => rule.category === wanted)
+  }
+  if (severity) {
+    const wanted = normalizeSeverity(severity)
+    if (!RULE_SEVERITIES.includes(wanted)) return notFound(`심각도 "${severity}"`, RULE_SEVERITIES)
+    found = found.filter(rule => normalizeSeverity(rule.severity) === wanted)
+  }
 
   const lines = [`# infoUX 규칙 (${found.length}건)`, '']
   for (const rule of found) {
     lines.push(`## ${rule.id} — ${rule.summary}`)
-    lines.push(`- 심각도: ${rule.severity} / 분류: ${rule.category}`)
+    lines.push(`- 심각도: ${normalizeSeverity(rule.severity)} / 분류: ${rule.category}`)
     if (rule.enforcement?.length) lines.push(`- 검사: ${rule.enforcement.join(', ')}`)
     if (rule.rationale) lines.push(`- 이유: ${rule.rationale}`)
     if (rule.bad) lines.push('', '위반:', '```', examplesText(rule.bad), '```')
@@ -599,6 +690,7 @@ function getRules({ id, category, severity } = {}) {
     if (id && rule.id === 'R-43' && copyLexicon) lines.push('', ...copyLexiconLines())
     lines.push('')
   }
+  if (rules.meta?.blockExceptions) lines.push(`> 블록 예외 — ${rules.meta.blockExceptions}`, '')
   if (!id && found.some(r => r.id === 'R-23' || r.id === 'R-43')) {
     lines.push('> R-23 자리값 목록·R-43 번역투 어휘는 get_rules(id)로 단건 조회하면 함께 나온다(contracts/fake-content.json·copy-lexicon.json).')
   }
@@ -744,7 +836,9 @@ function hangulLines() {
 function antiPatternLines() {
   return [
     '- 기계 검출: 가짜 콘텐츠(R-23) · 한글 조판 하한(R-24) · 섹션 리듬(R-25) · 폰트 한글 fallback(R-26)',
-    '- 산문 안티패턴 10건·납품 전 리뷰 체크리스트: get_reference("art-direction")'
+    '- 산문 안티패턴 10건·납품 전 리뷰 체크리스트: get_reference("art-direction")',
+    '- 메인·랜딩의 자유 생성·바닥 교정·사람 판정 절차: get_reference("design-intelligence")',
+    '- 선택 도구(사람이 원할 때만): 평가자 지시문 get_reference("render-critique-evaluator") / 기준 견본 get_reference("exemplars")'
   ]
 }
 
@@ -861,64 +955,378 @@ function getArtDirection({ profile, expression } = {}) {
   return text(lines.join('\n'))
 }
 
-function searchDocs(query) {
-  const needle = query.toLowerCase()
-  const hits = []
+// ─── 블록 카탈로그 ─────────────────────────────────────
 
-  const scan = (kind, dir, items) => {
-    for (const item of items) {
-      const body = readData(dir, item.file)
-      const lines = body.split('\n')
-      const matched = lines
-        .map((line, index) => ({ line: line.trim(), index }))
-        .filter(({ line }) => line.toLowerCase().includes(needle))
-      if (matched.length === 0) continue
-      hits.push({ kind, id: item.id, count: matched.length, samples: matched.slice(0, 3) })
-    }
+// 오래된 번들에는 블록이 없다 — 빈 목록으로 답한다
+const blockIndex = () => manifest.blocks || []
+const blockSetIndex = () => manifest.blockSets || []
+const TONE_LABEL = { plain: '바탕 면', tinted: '옅은 색 면', inverse: '짙은 면', scene: '장면·사진 면', overlap: '앞 블록 위에 걸침' }
+/** 블록의 면을 한마디로 — 위아래가 다르면 「위 → 아래」로 적는다 */
+function surfaceLabel(block) {
+  const { tone, top, bottom } = block.surface
+  const a = top || tone
+  const b = bottom || tone
+  return a === b ? TONE_LABEL[tone] : `${TONE_LABEL[a]} → ${TONE_LABEL[b]}`
+}
+/** 견본 조합 목록 줄 */
+function blockSetLines() {
+  const sets = blockSetIndex()
+  if (sets.length === 0) return []
+  const lines = ['## 견본 조합', '', '한 페이지를 이루는 블록 순서의 견본이다. compose_page({ set: "id" })가 그대로 조립한다. 블록을 바꿔 끼우면 순서 점검이 면 흐름을 다시 본다.', '']
+  for (const set of sets) {
+    lines.push(
+      `### ${set.id} — ${set.name}`,
+      '',
+      `- ${set.summary}`,
+      `- 블록 순서: ${set.blocks.join(' → ')}`,
+      `- 면 흐름: ${set.flow}`,
+      `- 언제 쓰나: ${set.useWhen}`,
+      ''
+    )
+  }
+  return lines
+}
+const slotLabel = id => BLOCK_SLOTS.find(s => s.id === id)?.label || id
+
+function readBlock(id) {
+  const entry = blockIndex().find(item => item.id === id)
+  return entry ? JSON.parse(readData('blocks', entry.file)) : null
+}
+
+/** 필요한 콘텐츠를 한 줄로 — 목록에서 「이 블록을 쓰려면 무엇이 있어야 하나」를 바로 본다 */
+function contentSummary(block) {
+  return block.content.map(def => {
+    if (def.kind === 'list') return `${def.label} ${def.min}~${def.max}개`
+    if (def.kind === 'image') return `${def.label}(${def.ratio})`
+    return def.label
+  }).join(' · ')
+}
+
+function listBlocks({ slot, form, tag } = {}) {
+  const all = blockIndex()
+  if (all.length === 0) return text('블록 카탈로그가 이 번들에 없다. npm run build:mcp로 다시 만든다.')
+
+  if (slot !== undefined && !BLOCK_SLOTS.some(s => s.id === slot)) {
+    return notFound(`자리 "${slot}"`, BLOCK_SLOTS.map(s => `${s.id}(${s.label})`))
+  }
+  const wantedForm = form === undefined ? null : String(form).trim().toUpperCase()
+  if (wantedForm !== null && !/^[HQNB][1-9]$/.test(wantedForm)) {
+    return fail(`형식 "${form}"은(는) 블록 형식 기호가 아니다. H1~H6(메인 비주얼)·Q1~Q4(자주 찾는 서비스)·N1~N4(공지·소식)·B1~B4(사업 소개) 가운데 하나를 쓴다.`)
+  }
+  const needle = tag === undefined ? null : String(tag).trim().toLowerCase()
+
+  const found = all.filter(item =>
+    (slot === undefined || item.slot === slot) &&
+    (wantedForm === null || item.forms.includes(wantedForm)) &&
+    (!needle || [item.id, item.name, item.summary, ...item.tags].some(s => s.toLowerCase().includes(needle)))
+  )
+
+  const filters = [slot && `자리 ${slot}`, wantedForm && `형식 ${wantedForm}`, needle && `검색어 "${tag}"`].filter(Boolean).join(' · ')
+  const lines = ['# infoUX 블록 카탈로그', '']
+  lines.push(`${filters ? `${filters} — ` : ''}${found.length}종 (전체 ${all.length}종)`, '')
+
+  if (found.length === 0) {
+    lines.push(
+      '조건에 맞는 블록이 없다. 조건을 줄여 다시 찾는다 — list_blocks()는 전체를 준다.',
+      '맞는 블록이 없으면 프로젝트 블록으로 만든다(get_reference("class-naming") 결정 순서). 카탈로그에 있는 블록의 클래스를 바꿔 지어내지 않는다(R-29).'
+    )
+    return text(lines.join('\n'))
   }
 
-  scan('reference', 'references', manifest.references)
-  scan('workflow', 'workflows', manifest.workflows)
-  scan('component', 'snippets', manifest.snippets)
+  for (const item of found) {
+    const block = readBlock(item.id)
+    const n = block.neighbors
+    lines.push(
+      `## ${block.id} — ${block.name}`,
+      '',
+      `- 자리: ${block.slot}(${slotLabel(block.slot)}) · 형식: ${block.forms.join('·') || '기호 없음'} (${block.reference}) · 면: ${surfaceLabel(block)}`,
+      `- ${block.summary}`,
+      `- 언제 쓰나: ${block.useWhen.join(' / ')}`,
+      `- 언제 쓰지 않나: ${block.avoidWhen.join(' / ')}`,
+      `- 필요한 콘텐츠: ${contentSummary(block)}`,
+      `- 어울리는 이웃: 앞 ${n.before.join('·') || '없음'} / 뒤 ${n.after.join('·') || '없음'}${n.requiresBeforeSlot ? ` — 바로 앞이 ${n.requiresBeforeSlot} 자리 블록이어야 한다` : ''}`,
+      ...(block.bundle ? [`- 묶음: ${block.bundle.parts.join(' + ')}를 한 블록으로 준다`] : []),
+      ...(block.krdsPending?.length ? [`- **KRDS 기준 밖 — 운영자 승인 대기** ${block.krdsPending.length}건(표제 크기·행간 등). get_block이 항목을 보여 준다`] : []),
+      ''
+    )
+  }
+  // 견본 조합은 걸러 낸 블록이 들어 있는 것만 보인다(거르지 않았으면 전부)
+  const shownIds = new Set(found.map(item => item.id))
+  const setLines = blockSetLines()
+  if (setLines.length && blockSetIndex().some(set => set.blocks.some(id => shownIds.has(id)))) lines.push(...setLines)
+  lines.push(
+    '## 다음 단계',
+    '',
+    '1. 「언제 쓰지 않나」에 걸리는 블록은 뺀다. 필요한 콘텐츠(사진·실데이터)를 구할 수 없는 블록도 뺀다.',
+    '2. get_block(id)로 마크업 틀·스타일·문구 길이·사진 비율을 받는다.',
+    '3. compose_page({ blocks: [id, …] })로 공통 틀에 조립하고 순서 점검을 받는다.',
+    '4. 자리를 채운 뒤 npm run check를 돌린다.',
+    '',
+    '블록은 자리마다 하나의 형식을 실물로 준 것이다 — 서브 페이지와 마크업 참고용이다. 메인·랜딩 디자인을 블록 조립으로 정하지 않는다(design-intelligence §1-3).'
+  )
+  return text(lines.join('\n'))
+}
+
+function getBlock(id) {
+  const block = readBlock(id)
+  if (!block) return notFound(`블록 "${id}"`, blockIndex().map(item => item.id))
+
+  const n = block.neighbors
+  const req = block.requires
+  const lines = [
+    `# ${block.id} — ${block.name}`,
+    '',
+    block.summary,
+    '',
+    `- 자리: ${block.slot}(${slotLabel(block.slot)})`,
+    `- 형식: ${block.forms.join('·') || '기호 없음'} — ${block.reference}`,
+    `- section archetype: section--${block.section.archetype}`,
+    `- 면: ${surfaceLabel(block)} — ${block.surface.note}`,
+    ...(block.bundle ? ['', '## 묶음', '', `${block.bundle.parts.join(' + ')}를 한 블록으로 준다. ${block.bundle.reason}`] : []),
+    ...(block.krdsPending?.length ? ['', '## KRDS 기준 밖 — 운영자 승인 대기', '', '아래 항목은 KRDS 기준과 직접 부딪힌다. 운영자가 승인하기 전에는 발주처에 이 사실을 알리고 쓴다.', '', ...block.krdsPending.map(p => `- ${p}`)] : []),
+    '',
+    '## 언제 쓰나',
+    '',
+    ...block.useWhen.map(s => `- ${s}`),
+    '',
+    '## 언제 쓰지 않나',
+    '',
+    ...block.avoidWhen.map(s => `- ${s}`),
+    '',
+    '## 필요한 콘텐츠 (채울 자리)',
+    '',
+    ...placeholderLines(block),
+    '',
+    '값은 발주처 자료(Task Contract contentSources)에서만 가져온다. 길이·비율·항목 수가 맞지 않으면 문구를 늘이거나 지어내지 말고 다른 블록을 고른다(R-23).',
+    '',
+    '## 변형 축',
+    '',
+    ...(block.variants.length
+      ? block.variants.map(v => `- **${v.axis}**${v.options?.length ? ` (${v.options.join(' / ')})` : ''} — ${v.how}`)
+      : ['- 없음']),
+    '',
+    '여기 없는 변형이 필요하면 클래스를 지어내지 않고 프로젝트 블록을 따로 만든다(R-18·R-29).',
+    '',
+    '## 어울리는 이웃',
+    '',
+    `- 앞: ${n.before.join(', ') || '없음'}`,
+    `- 뒤: ${n.after.join(', ') || '없음'}`,
+    ...(n.avoid.length ? [`- 붙여 놓지 않는다: ${n.avoid.join(', ')}`] : []),
+    ...(n.requiresBeforeSlot ? [`- 바로 앞이 ${n.requiresBeforeSlot}(${slotLabel(n.requiresBeforeSlot)}) 자리 블록이어야 한다.`] : []),
+    ...(n.expectsAfter?.length ? [`- 바로 뒤에 ${n.expectsAfter.join('·')}가 오는 것을 전제로 여백을 잡았다 — 아니면 변형 축대로 고친다.`] : []),
+    '',
+    '## 접근성 주의',
+    '',
+    ...block.accessibility.map(s => `- ${s}`),
+    '',
+    ...(block.exceptions?.length ? [
+      '## 블록 예외',
+      '',
+      '이 블록의 스타일·마크업에 한해 검사기가 통과시키는 규칙 위반이다(contracts/block-exceptions.json). 「파일 + 규칙 + 선택자 + 값」이 모두 맞을 때만 통과하고, 값을 바꾸거나 다른 선택자에 같은 표현을 쓰면 그대로 잡힌다. 프로젝트에서 예외를 넓히지 않는다.',
+      '',
+      ...block.exceptions.map(e => e.markup
+        ? `- ${e.rule} · 마크업 \`${e.markup}\` — ${e.reason}`
+        : `- ${e.rule} · \`${e.selector}\` (\`${e.match}\`)${e.krds === 'pending' ? ' · KRDS 기준 밖, 운영자 승인 대기' : ''} — ${e.reason}`),
+      ''
+    ] : []),
+    ...(block.shell ? [
+      '## 공통 틀 변형',
+      '',
+      ...(block.shell.headerClass ? [`- header에 \`${block.shell.headerClass}\` 클래스를 더한다 — compose_page가 넣어 준다.`] : []),
+      ...(block.shell.footerClass ? [`- footer에 \`${block.shell.footerClass}\` 클래스를 더한다 — compose_page가 넣어 준다.`] : []),
+      ''
+    ] : []),
+    '## 필요한 것',
+    '',
+    `- 컴포넌트: ${req.components.join(', ') || '없음'}${req.components.length ? ' — get_component(name)' : ''}`,
+    `- 아이콘: ${req.icons.join(', ') || '없음'}${req.icons.length ? ' — 세트에 있다. 스프라이트 경로를 프로젝트에 맞춘다' : ''}`,
+    `- 스크립트: ${req.scripts.map(s => `src/js/${s}`).join(', ') || '없음'}`,
+    `- 토큰: ${block.tokens.join(', ')}`,
+    '',
+    '## 마크업 틀',
+    '',
+    '`{{key}}`는 채울 자리다. `<!-- @each 목록 as 항목 -->` … `<!-- @end -->` 사이는 항목 수만큼 되풀이한다. ' +
+      '`{{항목.@n}}`은 항목 번호(1부터), `{{항목.@count}}`·`{{목록.@count}}`는 항목 수, `{{항목.@first:A|B}}`는 첫 항목이면 A, 아니면 B다. compose_page가 이 표기를 풀어 준다.',
+    '',
+    '```html',
+    block.markup.trimEnd(),
+    '```',
+    '',
+    '## 스타일',
+    '',
+    `infoUX 스타일(src/styles/6-components/)에 들어 있다 — 스타터를 쓰는 프로젝트는 dist/css/style.css에 이미 있다. ` +
+      `프로젝트 스타일에 없으면(오래된 스타터) 아래 파일을 그대로 더하고 6-components/index.css에 @import를 등록한다. 값은 토큰과 rem만 쓴다.`,
+    '',
+    '```css',
+    block.css,
+    '```',
+    '',
+    '## 다음 단계',
+    '',
+    `compose_page({ blocks: [..., "${block.id}", ...] })로 조립한다. 순서 점검이 면 색 연속과 이웃 궁합을 알려 준다.`
+  ]
+  return text(lines.join('\n'))
+}
+
+function composeBlocks({ blocks: given, set, assetBase, title } = {}) {
+  let ids = given
+  let picker = null
+  if (set !== undefined) {
+    if (given !== undefined) return fail('compose_page에는 blocks와 set 가운데 하나만 준다. 조합을 고쳐 쓰려면 그 조합의 블록 순서를 blocks로 적는다.')
+    picker = blockSetIndex().find(item => item.id === (typeof set === 'string' ? set.trim() : set))
+    if (!picker) return notFound(`견본 조합 "${set}"`, blockSetIndex().map(item => item.id))
+    ids = picker.blocks
+  }
+  if (!Array.isArray(ids) || ids.length === 0 || !ids.every(id => typeof id === 'string' && id.trim())) {
+    return fail('compose_page에는 blocks(블록 id 배열)나 set(견본 조합 id)이 필요하다. 예: compose_page({ blocks: ["cover", "task-index", "bulletin"] }), compose_page({ set: "scene-showcase" })')
+  }
+  if (assetBase !== undefined && (typeof assetBase !== 'string' || /["<>\s]/.test(assetBase))) {
+    return fail('assetBase는 경로 앞머리 문자열이다. 예: "", "../", "/"')
+  }
+  const wanted = ids.map(id => id.trim())
+  const unknown = wanted.filter(id => !blockIndex().some(item => item.id === id))
+  if (unknown.length) return notFound(`블록 ${unknown.map(id => `"${id}"`).join(', ')}`, blockIndex().map(item => item.id))
+
+  const picked = wanted.map(readBlock)
+  const shell = {
+    boilerplate: readData('snippets', 'boilerplate.md'),
+    header: readData('snippets', 'header.md'),
+    footer: readData('snippets', 'footer.md')
+  }
+  const safeTitle = typeof title === 'string' && title.trim() ? title.trim().replace(/[<>]/g, '') : undefined
+  const result = composePage(picked, shell, { mode: 'slots', assetBase: assetBase ?? '', title: safeTitle })
+
+  const mark = { error: '오류', warn: '경고', info: '참고' }
+  const count = level => result.findings.filter(f => f.level === level).length
+  const lines = [`# 조립 결과 — ${wanted.join(' → ')}`, '']
+  if (picker) lines.push(`견본 조합 **${picker.id}** — ${picker.name}`, '', `- ${picker.summary}`, `- 면 흐름: ${picker.flow}`, `- 언제 쓰나: ${picker.useWhen}`, '')
+
+  lines.push(`## 순서 점검 (오류 ${count('error')} · 경고 ${count('warn')})`, '')
+  for (const f of result.findings) lines.push(`- [${mark[f.level]}] ${f.message}`)
+  if (count('error') > 0) lines.push('', '**오류가 있다 — 아래 HTML을 쓰지 말고 블록 순서를 고쳐 다시 조립한다.**')
+  lines.push(
+    '',
+    '면 흐름: ' + picked.map(b => `${b.id}(${surfaceLabel(b)})`).join(' → '),
+    '이 점검은 순서만 본다. 색 대비·제목 구조·링크·카피는 npm run check가, 화면의 완성도는 사람이 판정한다.'
+  )
+
+  lines.push('', '## 채울 자리', '', '### 공통 틀', '')
+  if (!safeTitle) lines.push('- `{{page_title}}` 페이지 제목 — 「기관명」 또는 「페이지 이름 | 기관명」. 자리값 제목을 남기지 않는다(R-23).')
+  lines.push(
+    '- 헤더: 로고 파일과 기관명, 메인 메뉴 항목과 주소, 통합검색 action. 스니펫의 예시 값(기관명·소개·서비스·공지)을 실제 값으로 바꾼다. 상세 get_component("header")',
+    '- 헤더의 전체메뉴 버튼은 id="mobile-menu" 패널을 가리킨다 — get_component("mobile-menu")의 패널을 body 끝에 더한다.',
+    '- 푸터: 주소·대표전화·운영시간, 푸터 메뉴, 정책 링크 주소, 저작권 표기. ○○·000-0000은 형식 예시다 — 납품 페이지에 남으면 R-23 오류다. 상세 get_component("footer")',
+    '- 공식 배너·운영기관 식별자는 publicIdentity가 required일 때만 더한다(R-46).'
+  )
+  for (const b of picked.filter(b => b.shell?.headerClass)) lines.push(`- header에 \`${b.shell.headerClass}\`를 더해 두었다(${b.id}) — 흰색 로고 파일을 쓴다. get_block("${b.id}")의 변형 축 「머리글」을 본다.`)
+  for (const b of picked.filter(b => b.shell?.footerClass)) lines.push(`- footer에 \`${b.shell.footerClass}\`를 더해 두었다(${b.id}) — 바닥 전환 그림이 이 푸터 색으로 칠해져 있다.`)
+  for (const group of result.placeholders) {
+    lines.push('', `### ${group.block} — ${group.name}`, '', ...group.lines)
+  }
+  lines.push(
+    '',
+    '자리 이름 앞의 말은 블록 id다(`{{cover.title}}`). 목록 자리는 기본 개수만큼 펼쳐 번호를 붙였다(`{{task-index.tasks.1.label}}`). 항목 수를 바꾸려면 범위 안에서 줄을 통째로 더하거나 뺀다.',
+    '탭처럼 id가 짝지어진 항목은 번호(aria-controls·id·aria-labelledby)를 함께 맞춘다.'
+  )
+
+  const pending = picked.filter(b => b.krdsPending?.length)
+  if (pending.length) {
+    lines.push('', '## KRDS 기준 밖 — 운영자 승인 대기', '', '이 조합에는 KRDS 기준과 직접 부딪히는 항목이 있다. 운영자가 승인하기 전에는 발주처에 이 사실을 알리고 쓴다.', '')
+    for (const b of pending) for (const p of b.krdsPending) lines.push(`- ${b.id}: ${p}`)
+  }
+  const excepted = picked.flatMap(b => (b.exceptions || []).map(e => ({ ...e, block: b.id })))
+  if (excepted.length) {
+    lines.push('', '## 블록 예외', '', `등록된 예외 ${excepted.length}건이 검사에서 통과한다(contracts/block-exceptions.json — npm run check 출력에 적용 건수가 나온다). 블록 CSS의 값을 고치거나 같은 표현을 다른 곳에 쓰면 그대로 잡힌다.`, '')
+    for (const e of excepted) lines.push(`- ${e.block} · ${e.rule} · ${e.markup ? `마크업 ${e.markup}` : e.selector}`)
+  }
+
+  lines.push('', '## 필요한 것', '')
+  lines.push(`- 스크립트: ${result.scripts.length ? result.scripts.map(s => `src/js/${s}`).join(', ') + ' — 틀 끝에 넣어 두었다' : '없음'}`)
+  lines.push('- 스타일: 블록 CSS는 infoUX 스타일에 들어 있다. 프로젝트 스타일에 없으면 get_block(id)의 스타일을 더한다.')
+  lines.push(`- 컴포넌트: ${[...new Set(picked.flatMap(b => b.requires.components))].join(', ') || '없음'}`)
+
+  lines.push('', '## 완성 HTML', '', '```html', result.html.trimEnd(), '```')
+
+  lines.push(
+    '',
+    '## 다음 단계',
+    '',
+    '1. `{{…}}` 자리를 발주처 자료로 채운다. 구조·클래스·제목 단계는 고치지 않는다. 채울 자료가 없는 자리가 있으면 사용자에게 묻는다.',
+    '2. 변형이 필요하면 get_block(id)의 변형 축 안에서만 고친다.',
+    '3. 블록의 사진 자리는 프로젝트 자산으로 채우고, 능선처럼 견본에서 온 모양은 대상의 선으로 바꾼다(get_block의 변형 축).',
+    '4. npm run check로 규칙 검사를 통과시킨다.',
+    '5. 메인·랜딩이면 블록 조립은 참고일 뿐이다 — 자유 생성한 디자인에 바닥 교정만 하고 사람 판정을 받는다(get_reference("design-intelligence") §1).'
+  )
+  return text(lines.join('\n'))
+}
+
+function searchDocs(query) {
+  // 빈 문자열은 모든 줄에 걸린다 — 문서 전체가 「검색 결과」로 돌아오지 않게 먼저 막는다
+  const needle = typeof query === 'string' ? query.trim().toLowerCase() : ''
+  if (!needle) return fail('search_docs에는 찾을 문자열(query)이 필요하다. 예: search_docs("포커스"), search_docs("border-left")')
+
+  const hits = []
+  const scanBody = (kind, id, getter, body) => {
+    const matched = body.split('\n')
+      .map((line, index) => ({ line: line.trim(), index }))
+      .filter(({ line }) => line.toLowerCase().includes(needle))
+    if (matched.length > 0) hits.push({ kind, id, getter, count: matched.length, samples: matched.slice(0, 3) })
+  }
+  const scan = (kind, dir, items, getter) => {
+    for (const item of items) scanBody(kind, item.id, `${getter}("${item.id}")`, readData(dir, item.file))
+  }
+
+  // 작업 컨트랙트·사이트 유형 프리셋·아트 디렉션도 본다 — 예전에는 이 셋이 검색에서 빠져 「결과 없음」으로 답했다
+  scanBody('contract', 'contract', 'get_contract()', readData('contract.md'))
+  scan('reference', 'references', manifest.references, 'get_reference')
+  scan('workflow', 'workflows', manifest.workflows, 'get_workflow')
+  scan('component', 'snippets', manifest.snippets, 'get_component')
+  // 블록은 메타데이터와 마크업 틀만 훑는다 — 스타일까지 훑으면 토큰 이름마다 모든 블록이 걸린다
+  for (const item of blockIndex()) {
+    const { css: _css, tokens: _tokens, ...meta } = readBlock(item.id)
+    scanBody('block', item.id, `get_block("${item.id}")`, JSON.stringify(meta, null, 2).replace(/\\n/g, '\n'))
+  }
+  scanBody('profile', 'profiles', 'get_profile()', JSON.stringify(profileSpec, null, 2))
+  scanBody('art-direction', 'art-direction', 'get_art_direction()', JSON.stringify(artDirection, null, 2))
 
   const ruleHits = rules.rules.filter(rule =>
     JSON.stringify(rule).toLowerCase().includes(needle)
   )
 
   if (hits.length === 0 && ruleHits.length === 0) {
-    return text(`"${query}" 검색 결과 없음.`)
+    return text(`"${query.trim()}" 검색 결과 없음. 다른 말(동의어·영문 클래스 이름·규칙 번호)로 다시 찾는다.`)
   }
 
-  const lines = [`# 검색 — "${query}"`, '']
+  const lines = [`# 검색 — "${query.trim()}"`, '']
   if (ruleHits.length) {
     lines.push(`## 규칙 ${ruleHits.length}건`, '')
     for (const rule of ruleHits) lines.push(`- ${rule.id} — ${rule.summary} (get_rules로 상세 조회)`)
     lines.push('')
   }
   for (const hit of hits) {
-    const getter =
-      hit.kind === 'reference' ? 'get_reference' : hit.kind === 'workflow' ? 'get_workflow' : 'get_component'
-    lines.push(`## ${hit.id} (${hit.kind}, ${hit.count}건) — ${getter}("${hit.id}")`)
-    for (const sample of hit.samples) lines.push(`  ${sample.index + 1}: ${sample.line}`)
+    lines.push(`## ${hit.id} (${hit.kind}, ${hit.count}건) — ${hit.getter}`)
+    for (const sample of hit.samples) lines.push(`  ${sample.index + 1}: ${sample.line.length > 200 ? `${sample.line.slice(0, 197)}...` : sample.line}`)
     lines.push('')
   }
   return text(lines.join('\n'))
 }
 
 // ─────────────────────────────────────────────────────
-// 서버 기동
+// 도구 호출 — 서버 핸들러와 단위 테스트가 같은 함수를 쓴다
 // ─────────────────────────────────────────────────────
 
-const server = new Server(
-  { name: 'infoux', version: require('../package.json').version },
-  { capabilities: { tools: {} }, instructions: INSTRUCTIONS }
-)
+/** 이름을 받는 도구에 문자열이 아닌 값이 오면(누락·숫자·객체) 조용히 undefined로 찾지 않는다 */
+function requireName(tool, value, example) {
+  if (typeof value === 'string' && value.trim()) return null
+  return fail(`${tool}에는 name이 필요하다. 예: ${tool}("${example}")`)
+}
 
-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }))
+function requireId(tool, value, example) {
+  if (typeof value === 'string' && value.trim()) return null
+  return fail(`${tool}에는 id가 필요하다. 예: ${tool}("${example}")`)
+}
 
-server.setRequestHandler(CallToolRequestSchema, async request => {
-  const { name, arguments: args = {} } = request.params
-
+function callTool(name, args = {}) {
   try {
     switch (name) {
       case 'get_contract':
@@ -926,11 +1334,11 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
       case 'list_components':
         return listComponents()
       case 'get_component':
-        return getComponent(args.name)
+        return requireName('get_component', args.name, 'btn') || getComponent(args.name.trim())
       case 'list_icons':
         return listIcons(args)
       case 'get_icon':
-        return getIcon(args.name)
+        return requireName('get_icon', args.name, 'search') || getIcon(args.name.trim())
       case 'get_tokens':
         return getTokens(args)
       case 'get_rules':
@@ -943,23 +1351,52 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
         return getProfile(args.name)
       case 'get_art_direction':
         return getArtDirection(args)
+      case 'list_blocks':
+        return listBlocks(args)
+      case 'get_block':
+        return requireId('get_block', args.id, 'cover') || getBlock(args.id.trim())
+      case 'compose_page':
+        return composeBlocks(args)
       case 'search_docs':
         return searchDocs(args.query)
       default:
-        return { ...text(`알 수 없는 도구: ${name}`), isError: true }
+        return fail(`알 수 없는 도구: ${name}`)
     }
   } catch (error) {
-    return { ...text(`도구 실행 실패 (${name}): ${error.message}`), isError: true }
+    return fail(`도구 실행 실패 (${name}): ${error.message}`)
   }
-})
-
-async function main() {
-  await server.connect(new StdioServerTransport())
-  // stdout은 프로토콜 채널이다. 로그는 stderr로만 낸다.
-  console.error(`infoUX MCP 준비됨 — 빌드 ${manifest.version}, 도구 ${TOOLS.length}종`)
 }
 
-main().catch(error => {
-  console.error(`infoUX MCP 기동 실패: ${error.message}`)
-  process.exit(1)
-})
+// ─────────────────────────────────────────────────────
+// 서버 기동
+// ─────────────────────────────────────────────────────
+
+async function main() {
+  const { Server } = require('@modelcontextprotocol/sdk/server/index.js')
+  const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js')
+  const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js')
+
+  const server = new Server(
+    { name: 'infoux', version: require('../package.json').version },
+    { capabilities: { tools: {} }, instructions: INSTRUCTIONS }
+  )
+  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }))
+  server.setRequestHandler(CallToolRequestSchema, async request => {
+    const { name, arguments: args } = request.params
+    return callTool(name, args || {})
+  })
+
+  await server.connect(new StdioServerTransport())
+  // stdout은 프로토콜 채널이다. 로그는 stderr로만 낸다.
+  console.error(`infoUX MCP 준비됨 — 기준 ${manifest.version}, 도구 ${TOOLS.length}종`)
+}
+
+module.exports = { TOOLS, INSTRUCTIONS, callTool, normalizeSeverity }
+
+// 단위 테스트가 require로 불러 쓸 수 있게 직접 실행할 때만 서버를 띄운다
+if (require.main === module) {
+  main().catch(error => {
+    console.error(`infoUX MCP 기동 실패: ${error.message}`)
+    process.exit(1)
+  })
+}

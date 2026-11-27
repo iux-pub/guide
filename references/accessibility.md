@@ -1,6 +1,6 @@
-# 접근성 — info-design 강제 규정
+# 접근성 — infoUX 강제 규정
 
-KRDS는 **WCAG 2.1 Level AA 이상 + KWCAG 2.1/2.2** 준수를 강제한다. 본 스킬도 이를 그대로 따른다.
+KRDS는 **WCAG 2.1 Level AA 이상 + KWCAG 2.1/2.2** 준수를 강제한다. infoUX 컨트랙트도 이를 그대로 따른다.
 
 ---
 
@@ -48,13 +48,13 @@ button:focus { outline: 0; }
 
 | 컨텍스트 | 최소 크기 |
 |---------|----------|
-| 모바일 | **44 × 44px** (`var(--touch-target-min)`) |
+| 모바일 | **44 × 44px** (`min-h-[4.4rem]`·`min-w-[4.4rem]`, R-13) |
 | 데스크탑 dense UI | 32 × 32px (KRDS xsmall) 허용 |
 | 권장 기본 | 48 × 48px (KRDS medium = button medium 기본) |
 
 작은 시각 요소(체크박스 24×24, 토글 트랙 44×24)에서 터치 영역 확보:
 - `<label>`로 감싸 클릭 영역 확장
-- `min-height: var(--touch-target-min)` 적용
+- `min-h-[4.4rem]`(CSS 직접값이면 `min-height: 4.4rem`)을 준다. 터치 영역 토큰은 없다 — rem 직접값을 쓴다
 
 ---
 
@@ -85,12 +85,13 @@ button:focus { outline: 0; }
 
 <!-- 아이콘으로 고지할 때 — 아이콘은 장식, 고지는 텍스트가 담당 -->
 <a href="..." target="_blank" rel="noopener" aria-label="이용약관 (새 창 열림)">
-  이용약관 <i class="icon-external" aria-hidden="true"></i>
+  이용약관 <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#external-link"></use></svg>
 </a>
 ```
 
 - `target="_blank"`에는 `rel="noopener"` 필수
 - 고지는 시각(아이콘·문구)과 스크린리더(`sr-only`·`aria-label`) 양쪽에 전달한다
+- 아이콘은 카탈로그 스프라이트에서 가져온다(R-27, `src/snippets/icon.md`). 아이콘은 `aria-hidden="true"`로 숨기고 뜻은 텍스트가 전한다
 - 예고 없는 새 창은 KWCAG 심사에서 걸린다 — 꼭 필요한 곳에만 쓰고, 기본은 같은 창 이동
 
 ---
@@ -191,7 +192,7 @@ button:focus { outline: 0; }
 | Tab (KRDS) | `Tab`·`Shift+Tab`으로 모든 탭에 닿는다. `Enter`·`Space`·클릭으로 선택(수동). `←→`·`Home/End`는 초점만 옮기는 보조 수단 |
 | Accordion | `Tab` 항목 간 이동, `Space/Enter` 펼침 |
 | Calendar | `←→` 일, `↑↓` 주, `Page Up/Down` 월, `Home/End` 주 시작/끝 |
-| Carousel | `←→` 슬라이드 이동 |
+| Carousel | `Tab`으로 컨트롤과 현재 슬라이드를 지난다. `Enter`·`Space`로 정지/재생·이전·다음 버튼 실행. 점(식별자) 그룹에서 `←→`로 이전/다음 슬라이드. 초점이 들어오면 자동 회전이 멈춘다 |
 
 모든 인터랙티브 요소는 **마우스만으로 가능한 모든 것이 키보드로도 가능**해야 한다.
 
@@ -210,8 +211,12 @@ button:focus { outline: 0; }
 ## 9. 동작·모션
 
 - `prefers-reduced-motion: reduce` 미디어 쿼리로 **자동 비활성화** — 불필요한 transition·animation은 모션 감소 시 제거
-- **자동 재생 슬라이드/캐러셀 금지** (사용자가 명시 활성화 안 했으면 OFF) — WCAG 2.2.2
-- 자동 재생 시 **일시정지 버튼 필수**
+- 캐러셀 자동 회전은 조건부로 허용한다(R-33, WCAG 2.2.2). 기본은 끄고, 지정할 때만 켠다. 켜면 아래를 모두 지킨다 — 정본은 `references/korean-web-patterns.md` §8 캐러셀 규칙과 `src/snippets/carousel.md`
+  - 정지/재생 버튼이 캐러셀의 첫 상호작용 요소다
+  - 키보드 초점이 들어오면 멈추고, 사용자가 재생을 누르기 전에는 다시 돌지 않는다. 마우스를 올려도 멈춘다
+  - 슬라이드는 5장 이내다. 6건 이상이면 목록과 전체 목록 링크를 쓴다
+  - `prefers-reduced-motion: reduce`면 자동 회전을 시작하지 않는다
+- 무한 롤링 마키는 쓰지 않는다(R-33). 영상은 자동 재생하지 않는다(KRDS, `references/korean-web-patterns.md` §8)
 - **초당 3회를 넘는 번쩍임 금지** — WCAG 2.3.1 / KWCAG 광과민성 발작 예방. 점멸 배너·경고 강조·로딩 효과 전부 해당하며, 예외 없이 금지다
 
 ```css

@@ -19,7 +19,7 @@
 ## 실행 절차
 
 1. 스타터를 clone하고 새 Git 저장소로 초기화한다.
-2. `tokens/foundation.json`의 primitive 및 semantic 매핑을 프로젝트 값으로 수정한다.
+2. `tokens/brand.json`의 브랜드 팔레트(primary / secondary / point)와 `--font-sans`를 프로젝트 값으로 바꾼다. `light`와 `high-contrast` 두 모드를 모두 채운다. `tokens/foundation.json`은 불변 계층이라 고치지 않는다.
 3. 프로젝트 고유 CSS가 필요하면 `src/styles/project.css`를 만들고 `style.css`에서 import한다.
 4. 루트 `AGENTS.md`에 프로젝트 유형, 실행 명령, 수정 금지 영역, 검증 명령을 명시한다.
 5. 토큰·CSS를 빌드하고 전체 정적 검사를 실행한다.
@@ -66,7 +66,7 @@ npm run check:contrast
 }
 ```
 
-브랜드 raw 색상은 CSS에 직접 쓰지 않고 `tokens/foundation.json`의 토큰 정의에서만 관리한다.
+브랜드 raw 색상은 CSS에 직접 쓰지 않고 `tokens/brand.json`의 팔레트 정의에서만 관리한다. gray·상태색·의미 토큰은 `tokens/foundation.json`이 갖고 있으며 프로젝트에서 고치지 않는다.
 
 ## 생성하는 AGENTS.md 핵심
 
@@ -81,6 +81,7 @@ npm run check:contrast
 
 - 전처리기 도입
 - CSS에 raw hex/rgb/hsl 작성
+- `tokens/foundation.json` 수정 — 프로젝트가 고치는 토큰 파일은 `tokens/brand.json` 하나다
 - 폐기된 토큰 별칭 생성
 - 정부 상징이나 공식 배너를 확인 없이 생성
 - 검사 실패 상태로 초기화 완료 보고

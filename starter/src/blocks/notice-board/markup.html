@@ -1,0 +1,40 @@
+<section class="section section--notice notice-board" aria-labelledby="notice-board-title">
+  <div class="container notice-board__grid">
+    <div class="notice-board__board">
+      <h2 class="notice-board__title" id="notice-board-title">{{title}}</h2>
+      <div class="tab">
+        <div class="tab__list" role="tablist" aria-label="{{board_label}}">
+          <!-- @each boards as board -->
+          <button type="button" class="tab__item" role="tab" aria-selected="{{board.@first:true|false}}" aria-controls="notice-board-panel-{{board.@n}}" id="notice-board-tab-{{board.@n}}">{{board.name}}</button>
+          <!-- @end -->
+        </div>
+        <!-- @each boards as board -->
+        <div class="tab__panel" role="tabpanel" id="notice-board-panel-{{board.@n}}" aria-labelledby="notice-board-tab-{{board.@n}}"{{board.@first:| hidden}}>
+          <ul class="post-list" role="list">
+            <!-- @each board.posts as post -->
+            <li class="post-list__item">
+              <a class="post-list__link" href="{{post.href}}">{{post.title}}</a>
+              <time class="post-list__date" datetime="{{post.datetime}}">{{post.date_label}}</time>
+            </li>
+            <!-- @end -->
+          </ul>
+          <a class="more-link" href="{{board.more_href}}">{{board.name}} 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg></a>
+        </div>
+        <!-- @end -->
+      </div>
+    </div>
+    <aside class="notice-board__due" aria-labelledby="notice-board-due-title">
+      <h3 class="notice-board__due-title" id="notice-board-due-title">{{due_title}}</h3>
+      <p class="notice-board__asof"><time datetime="{{asof_datetime}}">{{asof_label}}</time> 기준</p>
+      <ul class="notice-board__due-list" role="list">
+        <!-- @each dues as due -->
+        <li><a class="notice-board__due-item" href="{{due.href}}">
+          <span class="notice-board__dday">D-{{due.days}}</span>
+          <span class="notice-board__due-name">{{due.title}}</span>
+          <span class="notice-board__due-date"><time datetime="{{due.datetime}}">{{due.date_label}}</time> 마감</span>
+        </a></li>
+        <!-- @end -->
+      </ul>
+    </aside>
+  </div>
+</section>

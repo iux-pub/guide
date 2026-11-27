@@ -1,0 +1,10 @@
+<section class="section section--list" aria-labelledby="partner-row-title">
+  <div class="container">
+    <h2 class="sr-only" id="partner-row-title">{{title}}</h2>
+    <ul class="partner-row" role="list">
+      <!-- @each partners as partner -->
+      <li><a class="partner-row__link" href="{{partner.href}}" target="_blank" rel="noopener noreferrer"><img class="partner-row__logo" src="{{partner.logo_src}}" alt="{{partner.name}}" width="{{partner.logo_width}}" height="28"><span class="sr-only"> 새 창</span></a></li>
+      <!-- @end -->
+    </ul>
+  </div>
+</section>

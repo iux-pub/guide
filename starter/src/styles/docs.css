@@ -413,6 +413,12 @@ pre[class*='language-']::-webkit-scrollbar-thumb:hover { @apply [background:var(
   @apply my-[2.4rem] mx-0 p-[1.6rem_2.4rem] bg-[var(--color-surface-primary-subtler)] text-[var(--color-text-subtle)] [border-left:4px_solid_var(--color-primary-30)] [border-radius:0_0.8rem_0.8rem_0];
 }
 
+/* 인용 블록의 옅은 primary 바탕 위에서는 기본 링크색이 4.5:1에 못 미친다(pa11y G18) — 상태와 무관하게 pressed 색으로 올린다 */
+.docs-layout__content blockquote a,
+.docs-layout__content blockquote a:visited {
+  @apply text-[var(--color-primary-pressed)];
+}
+
 .docs-layout__content hr {
   @apply border-0 border-t border-[var(--color-border-light)] my-[4.8rem] mx-0;
 }

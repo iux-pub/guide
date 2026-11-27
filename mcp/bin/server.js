@@ -81,25 +81,15 @@ const INSTRUCTIONS = `INFOMIND UX팀의 HTML/CSS 퍼블리싱 기준(infoUX)을 
    화면을 마무리했으면 get_reference("release-checklist")로 점검한다 — 접근성·과업 흐름·품질은
    100% 통과가 조건이다.
 8. 메인·랜딩 페이지(pageType main)는 코드를 쓰기 전에 get_reference("design-intelligence")를 읽는다.
-   레시피(get_reference("korean-web-patterns") §2)는 무엇을 어떤 순서로 실을지만 정한다 —
-   블록을 기본 모양 그대로 쌓으면 「사진 히어로 → 원형 아이콘 바로가기 → 탭 게시판 → 링크 목록」이라는
-   어디서나 본 화면이 되고, 검사를 모두 통과해도 거절된다.
-   **형식 설명을 읽고 섹션을 손으로 다시 짓지 않는다 — 블록 카탈로그를 먼저 본다.**
-   list_blocks(자리·형식으로 찾는다) → get_block(마크업 틀·스타일·언제 쓰지 않나) →
-   compose_page(공통 틀에 조립하고 채울 자리 목록과 순서 점검을 받는다) → npm run check.
-   카탈로그에 맞는 블록이 없는 자리만 프로젝트 블록으로 새로 만든다.
-   list_blocks 끝의 「견본 조합」은 한 페이지를 이루는 블록 순서와 면 흐름이다 — compose_page({ set })로 통째로 받는다.
-   블록 스타일의 규칙 예외는 등록된 것만 통과한다(contracts/block-exceptions.json). 블록 CSS의 값을 고쳐 예외를 넓히지 않는다. 순서는 이렇다:
-   컨셉 한 문장과 시그니처 장면 → 두 축 이상 서로 다른 세 방향의 첫 화면을 만들어 발주자가 고르기
-   (완성본을 먼저 만들지 않는다) → get_reference("design-plan") 서식으로 docs/design-plan.md 작성,
-   블록마다 형식 고르기 → 블록 카탈로그로 조립해 구현 →360·768·1024·1280·1440 캡처로 렌더 비평(§8).
-   **자기 화면을 스스로 평가하지 않는다.** 기계 검사를 통과시킨 뒤 캡처와
-   get_reference("render-critique-evaluator") 지시문만 별도 평가자(하위 에이전트·새 세션)에게 주고,
-   결함 문항의 예·아니오와 순서를 바꾼 두 번의 짝 비교를 받는다. 디자인 계획과 의도 설명은 주지 않는다.
-   짝 비교 상대는 직전 최고안과 get_reference("exemplars")의 통과 견본이다. 고친 안은 직전 최고안을
-   두 번 모두 이길 때만 채택한다. 평가자를 따로 둘 수 없으면 통과를 선언하지 않고 「사람 판정 필요」로 남긴다.
-   평가자 통과는 확연히 못한 안을 걸렀다는 뜻이다 — 마지막 판정은 사람이 한다.
-   계획, 별도 평가자의 비평 기록, 사람 판정 「승인」이 없으면 npm run check:release가 실패한다.
+   생성은 자유롭게, 하네스는 바닥만 지킨다. 실제 콘텐츠(contentSources)와 기관 사진(출처·라이선스)을
+   확보하고, 기관·1순위 과업·사용자·기준 수준·피할 것을 다섯 줄 브리프로 쓴 뒤, 브리프와 재료만으로
+   자유롭게 디자인한다. 블록 카탈로그·형식표·견본·결함 문항을 생성 맥락에 넣지 않는다 — 블록 카탈로그
+   (list_blocks·get_block·compose_page)는 서브 페이지와 마크업 참고용이다.
+   그 뒤 바닥만 교정한다: npm run check·lint 오류, 접근성·과업 흐름, KRDS 대조, 카피 사실성.
+   위반한 지점만 가장 좁게 고치고 디자인을 다시 하지 않는다. 검사 규칙과 디자인이 정면으로 부딪치면
+   지우기 전에 exceptions[]에 예외로 올리고 사람에게 넘긴다. 바꾼 것은 get_reference("design-plan")
+   서식의 docs/design-plan.md 「교정 기록」에 적는다. 생성 결과는 디자이너가 수정하는 출발점이고,
+   운영자·발주자의 사람 판정 「승인」이 없으면 npm run check:release가 실패한다.
 9. 페이지는 프로젝트 루트(*.html)나 pages/ 아래에 둔다. 다른 폴더에 두면 infoux.json "pages"에
    글롭을 더한다 — npm run check가 그 범위의 페이지만 page 계약으로 검사한다. 검사를 끄거나
    실패를 숨기는 훅·스크립트(|| true, 2>/dev/null)를 만들지 않는다.
@@ -194,7 +184,7 @@ const TOOLS = [
     description:
       '레퍼런스 문서를 반환한다. name 없이 부르면 목록을 준다. ' +
       '접근성 기준, 금지 패턴, Tailwind 매핑, HTML 시맨틱, 사이트 유형 프로필, 디자인 판단 절차(design-intelligence), ' +
-      '계약 서식(task-contract·design-plan), 렌더 비평 평가자 지시문(render-critique-evaluator)·기준 견본 색인(exemplars) 등이 있다.',
+      '계약 서식(task-contract·design-plan), 선택 도구인 평가자 지시문(render-critique-evaluator)·기준 견본 색인(exemplars) 등이 있다.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -251,7 +241,7 @@ const TOOLS = [
       type: 'object',
       properties: {
         slot: { type: 'string', description: `자리 — ${BLOCK_SLOTS.map(s => `${s.id}(${s.label})`).join(', ')}` },
-        form: { type: 'string', description: 'design-intelligence §6의 형식 기호 (예: H1, Q1, N2, B1)' },
+        form: { type: 'string', description: '블록 형식 기호 (예: H1, Q1, N2, B1 — 옛 형식표 docs/archive/design-intelligence-2026-11.md §6)' },
         tag: { type: 'string', description: '검색어 — 이름·설명·태그에서 찾는다 (예: 사진, 마감, 로고)' }
       }
     }
@@ -277,7 +267,7 @@ const TOOLS = [
       '함께 돌려주는 것: ① 순서 점검(첫 화면 블록 유무·위치, 같은 면 색 연속과 이어지게 설계된 면, 이웃 궁합, 같은 archetype 3연속) ' +
       '② 실제 내용으로 채워야 할 자리 목록({{…}} — 문구 길이·사진 비율·항목 수 포함) ③ 필요한 스크립트. ' +
       '틀과 블록의 구조·클래스는 고치지 않고 {{…}} 자리만 발주처 자료(contentSources)로 채운다 — 예시 문구를 지어내 채우지 않는다(R-23). ' +
-      '다음 단계: 순서 점검의 오류를 고쳐 다시 조립 → 자리 채우기 → npm run check → 캡처해 렌더 비평(별도 평가자).',
+      '다음 단계: 순서 점검의 오류를 고쳐 다시 조립 → 자리 채우기 → npm run check → 사람 판정.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -847,8 +837,8 @@ function antiPatternLines() {
   return [
     '- 기계 검출: 가짜 콘텐츠(R-23) · 한글 조판 하한(R-24) · 섹션 리듬(R-25) · 폰트 한글 fallback(R-26)',
     '- 산문 안티패턴 10건·납품 전 리뷰 체크리스트: get_reference("art-direction")',
-    '- 메인·랜딩의 컨셉·방향 라운드·블록 형식·렌더 비평, 전형 조립 서명: get_reference("design-intelligence")',
-    '- 렌더 비평 평가자 지시문(별도 평가자에게 그대로 준다): get_reference("render-critique-evaluator") / 기준 견본: get_reference("exemplars")'
+    '- 메인·랜딩의 자유 생성·바닥 교정·사람 판정 절차: get_reference("design-intelligence")',
+    '- 선택 도구(사람이 원할 때만): 평가자 지시문 get_reference("render-critique-evaluator") / 기준 견본 get_reference("exemplars")'
   ]
 }
 
@@ -1021,7 +1011,7 @@ function listBlocks({ slot, form, tag } = {}) {
   }
   const wantedForm = form === undefined ? null : String(form).trim().toUpperCase()
   if (wantedForm !== null && !/^[HQNB][1-9]$/.test(wantedForm)) {
-    return fail(`형식 "${form}"은(는) design-intelligence §6의 기호가 아니다. H1~H6(메인 비주얼)·Q1~Q4(자주 찾는 서비스)·N1~N4(공지·소식)·B1~B4(사업 소개) 가운데 하나를 쓴다.`)
+    return fail(`형식 "${form}"은(는) 블록 형식 기호가 아니다. H1~H6(메인 비주얼)·Q1~Q4(자주 찾는 서비스)·N1~N4(공지·소식)·B1~B4(사업 소개) 가운데 하나를 쓴다.`)
   }
   const needle = tag === undefined ? null : String(tag).trim().toLowerCase()
 
@@ -1038,7 +1028,7 @@ function listBlocks({ slot, form, tag } = {}) {
   if (found.length === 0) {
     lines.push(
       '조건에 맞는 블록이 없다. 조건을 줄여 다시 찾는다 — list_blocks()는 전체를 준다.',
-      '맞는 블록이 정말 없으면 get_reference("design-intelligence") §6에서 형식을 고르고 프로젝트 블록으로 만든다(get_reference("class-naming") 결정 순서). 카탈로그에 있는 블록의 클래스를 바꿔 지어내지 않는다(R-29).'
+      '맞는 블록이 없으면 프로젝트 블록으로 만든다(get_reference("class-naming") 결정 순서). 카탈로그에 있는 블록의 클래스를 바꿔 지어내지 않는다(R-29).'
     )
     return text(lines.join('\n'))
   }
@@ -1072,7 +1062,7 @@ function listBlocks({ slot, form, tag } = {}) {
     '3. compose_page({ blocks: [id, …] })로 공통 틀에 조립하고 순서 점검을 받는다.',
     '4. 자리를 채운 뒤 npm run check를 돌린다.',
     '',
-    '블록은 자리마다 하나의 형식을 실물로 준 것이다 — 세 방향 라운드(design-intelligence §3)에서는 방향마다 다른 블록·다른 변형 축을 고른다.'
+    '블록은 자리마다 하나의 형식을 실물로 준 것이다 — 서브 페이지와 마크업 참고용이다. 메인·랜딩 디자인을 블록 조립으로 정하지 않는다(design-intelligence §1-3).'
   )
   return text(lines.join('\n'))
 }
@@ -1217,7 +1207,7 @@ function composeBlocks({ blocks: given, set, assetBase, title } = {}) {
   lines.push(
     '',
     '면 흐름: ' + picked.map(b => `${b.id}(${surfaceLabel(b)})`).join(' → '),
-    '이 점검은 순서만 본다. 색 대비·제목 구조·링크·카피는 npm run check가, 화면의 완성도는 렌더 비평(별도 평가자)이 본다.'
+    '이 점검은 순서만 본다. 색 대비·제목 구조·링크·카피는 npm run check가, 화면의 완성도는 사람이 판정한다.'
   )
 
   lines.push('', '## 채울 자리', '', '### 공통 틀', '')
@@ -1265,7 +1255,7 @@ function composeBlocks({ blocks: given, set, assetBase, title } = {}) {
     '2. 변형이 필요하면 get_block(id)의 변형 축 안에서만 고친다.',
     '3. 블록의 사진 자리는 프로젝트 자산으로 채우고, 능선처럼 견본에서 온 모양은 대상의 선으로 바꾼다(get_block의 변형 축).',
     '4. npm run check로 규칙 검사를 통과시킨다.',
-    '5. 360·768·1024·1280·1440 캡처를 별도 평가자에게 넘겨 렌더 비평을 받는다 — 자기 화면을 스스로 평가하지 않는다(get_reference("design-intelligence") §8).'
+    '5. 메인·랜딩이면 블록 조립은 참고일 뿐이다 — 자유 생성한 디자인에 바닥 교정만 하고 사람 판정을 받는다(get_reference("design-intelligence") §1).'
   )
   return text(lines.join('\n'))
 }

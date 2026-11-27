@@ -42,13 +42,14 @@ test('design-audit: 제목만 있는 빈 절이 없다', () => {
   assert.deepEqual(emptyHeadings(buildDesignAudit()), [])
 })
 
-test('design-rules: 디자인 디렉션의 절차·전형 조립·결함 문항·평가자 분리와 아트 디렉션 요약이 들어간다', () => {
+test('design-rules: 디자인 디렉션의 절차·하지 않는 것·충돌 순서와 아트 디렉션 요약이 들어간다', () => {
   const out = buildDesignRules()
   assert.match(out, /^## 디자인 디렉션$/m)
   assert.match(out, /^### 1\. 절차$/m)
-  assert.match(out, /^### 7-1\. 전형 조립/m)
-  assert.match(out, /^### 8-3\. 결함 찾기$/m)
-  assert.match(out, /^### 8-5\. 평가자 분리$/m)
+  assert.match(out, /^### 2\. 하네스가 하지 않는 것$/m)
+  assert.match(out, /^### 3\. 충돌하면$/m)
+  // 옛 미감 규칙(결함 문항·전형 조립 서명)은 생성 맥락에 싣지 않는다
+  assert.doesNotMatch(out, /^### (7-1|8-3|8-5)\. /m)
   // 옛 자기 채점 표현이 남지 않는다
   assert.doesNotMatch(out, /20점 중 16점/)
   assert.match(out, /^## 아트 디렉션$/m)

@@ -647,7 +647,7 @@ const SECTION_PICKS = {
   'ui-states.md': [/^## 컴포넌트별 상태 셋/],
   'art-direction.md': [/^## 1\. 표현 등급/, /^## 2\. 한글 조판/, /^## 10\. 안티패턴 색인/],
   'korean-web-patterns.md': [/^## 9\. AI 슬롭 방지/],
-  'design-intelligence.md': [/^## 1\. 절차/, /^### 7-1\. /, /^### 8-3\. /, /^### 8-5\. /]
+  'design-intelligence.md': [/^## 1\. 절차/, /^## 2\. 하네스가 하지 않는 것/, /^## 3\. 충돌하면/]
 }
 
 // site/design에 페이지가 없는 기준 문서 — references/에서 바로 읽어 묶음에 넣는다
@@ -748,7 +748,7 @@ function buildDesignAudit() {
     `# 디자인 감사 체크리스트
 
 > 생성물이다 — \`npm run build:prompts\`가 site/design/design-audit.md에서 만든다. 직접 고치지 않는다.
-> ${categories.length}개 카테고리로 화면을 점검한다. 메인·랜딩의 시각 품질은 이 체크리스트가 아니라 references/design-intelligence.md §8 렌더 비평(별도 평가자의 결함 문항·짝 비교와 사람 판정)으로 본다.`
+> ${categories.length}개 카테고리로 화면을 점검한다. 메인·랜딩의 시각 품질은 이 체크리스트가 아니라 사람이 판정한다(references/design-intelligence.md §1-5).`
   ]
   if (scoring && scoring.body) parts.push(`## 점수 체계\n\n${scoring.body}`)
   if (categoryText) parts.push(categoryText)

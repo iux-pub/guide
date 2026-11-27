@@ -1,7 +1,7 @@
 # 디자인 감사 체크리스트
 
 > 생성물이다 — `npm run build:prompts`가 site/design/design-audit.md에서 만든다. 직접 고치지 않는다.
-> 17개 카테고리로 화면을 점검한다. 메인·랜딩의 시각 품질은 이 체크리스트가 아니라 references/design-intelligence.md §8 렌더 비평(별도 평가자의 결함 문항·짝 비교와 사람 판정)으로 본다.
+> 17개 카테고리로 화면을 점검한다. 메인·랜딩의 시각 품질은 이 체크리스트가 아니라 사람이 판정한다(references/design-intelligence.md §1-5).
 
 ## 점수 체계
 

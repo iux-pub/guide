@@ -55,17 +55,17 @@ UI/CSS/HTML은 검사부터 시작하지 않는다. 다음 순서로 올바른 �
 
 Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않는다. 단순 수정은 작업 응답에 짧게 선언하고, 페이지·기능 단위 작업은 계약 파일을 남긴다.
 
-### 메인·랜딩 페이지는 디자인 디렉션을 거친다
+### 메인·랜딩 페이지 — 생성은 자유롭게, 하네스는 바닥만
 
-검사를 모두 통과한 화면이 좋은 화면은 아니다. 메인 레시피의 블록을 기본 모양 그대로 쌓으면 「사진 히어로 → 원형 아이콘 바로가기 → 탭 게시판 → 링크 목록」이라는 어디서나 본 화면이 나온다. `pageType: main`이거나 랜딩이면 `references/design-intelligence.md`(MCP `get_reference("design-intelligence")`)를 읽고 아래를 순서대로 한다.
+메인 디자인을 규칙으로 가르치면 결과가 나빠졌다(견본 17건 중 통과 2건, 하네스 없는 생성보다 못한 결과 — `references/design-intelligence.md` §0). `pageType: main`이거나 랜딩이면 `references/design-intelligence.md`(MCP `get_reference("design-intelligence")`)를 읽고 아래를 순서대로 한다.
 
-1. 컨셉 한 문장과 시그니처 장면을 정한다. 이름만 바꿔 다른 기관에 쓸 수 있으면 다시 쓴다.
-2. 두 축 이상에서 서로 다른 세 방향의 첫 화면을 만들어 발주자가 고르게 한다. 완성본을 먼저 만들지 않는다.
-3. `contracts/design-plan.md` 서식으로 `docs/design-plan.md`를 쓰고 블록마다 형식을 고른다.
-4. 구현한 뒤 360·768·1024·1280·1440 캡처를 찍어 렌더 비평을 받는다(§8). 만든 에이전트는 자기 화면을 평가하지 않는다. 기계 검사를 통과한 캡처와 평가자 지시문(`contracts/render-critique-evaluator.md`)만 별도 평가자에게 주고, 결함 문항의 예·아니오와 순서를 바꾼 두 번의 짝 비교를 받는다. 고친 안은 직전 최고안을 두 번 모두 이길 때만 채택한다.
-5. 평가자 통과는 확연히 못한 안을 걸렀다는 뜻이다. 운영자·발주자의 판정을 받아 사유 원문과 함께 적는다. 평가자를 따로 둘 수 없으면 통과를 선언하지 않고 「사람 판정 필요」로 남긴다.
+1. 실제 콘텐츠(`contentSources`)와 기관 사진(출처·라이선스)을 확보한다. 사진이 없으면 실제 비율의 이미지 자리와 교체 목록을 둔다.
+2. 기관·1순위 과업·사용자·기준 수준·피할 것을 다섯 줄 이내 브리프로 쓴다.
+3. 브리프와 재료만으로 자유롭게 디자인한다. 옛 형식표·블록 카탈로그·견본·결함 문항을 생성 맥락에 넣지 않는다.
+4. 바닥만 교정한다 — check·lint 오류, 접근성·과업 흐름, KRDS 대조, 카피 사실성. 위반한 지점만 가장 좁게 고치고 디자인을 다시 하지 않는다. 검사 규칙과 디자인이 정면으로 부딪치면 지우기 전에 `exceptions[]`에 예외로 올린다. 바꾼 것을 `docs/design-plan.md` 「교정 기록」에 적는다.
+5. 디자이너가 수정하고, 운영자·발주자가 「승인」 또는 「불통과」와 사유 원문을 「사람 판정」에 적는다.
 
-계획, 별도 평가자의 비평 기록, 사람 판정 「승인」이 없으면 `npm run check:release`가 실패한다.
+`docs/design-plan.md`에 사람 판정 「승인」이 없으면 `npm run check:release`가 실패한다.
 
 ---
 
@@ -207,7 +207,7 @@ Task Contract의 필수 판단이 비어 있으면 UI 구현을 시작하지 않
 | 작업 맥락 | 파일 |
 |----------|------|
 | 코드 생성 전 사이트 유형 판정 | `references/project-profiles.md` |
-| 메인·랜딩의 컨셉·방향 라운드·블록 형식·렌더 비평 | `references/design-intelligence.md`, 서식 `contracts/design-plan.md`, 평가자 지시문 `contracts/render-critique-evaluator.md`, 기준 견본 `assets/exemplars/index.json` |
+| 메인·랜딩의 생성·바닥 교정·사람 판정 | `references/design-intelligence.md`, 서식 `contracts/design-plan.md` (선택 도구: 평가자 지시문 `contracts/render-critique-evaluator.md`, 견본 `assets/exemplars/index.json`) |
 | 한국형 메인 레시피·서브 골격·헤더·푸터 | `references/korean-web-patterns.md` |
 | 표현 등급·타이포 페어링·팔레트 프리셋·한글 조판 판단 | `references/art-direction.md` |
 | 컴포넌트 마크업 작성 (시각/스타일) | `references/krds-components.md` |

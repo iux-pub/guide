@@ -353,12 +353,13 @@ test('MCP로 가는 사본과 번들이 정본과 같다 — npm run build:mcp',
   }
 })
 
-test('문서가 블록 id를 잇는다 — design-intelligence §6, design-page 구현 단계', () => {
-  const doc = read('references/design-intelligence.md')
+test('옛 형식표가 블록 id를 잇고, design-page는 메인을 블록 조립으로 정하지 않는다', () => {
+  // 블록 형식의 기록은 옛 디자인 디렉션 문서 §6에 남아 있다(생성 맥락에는 넣지 않는다)
+  const doc = read('docs/archive/design-intelligence-2026-11.md')
   const section6 = doc.slice(doc.indexOf('## 6. 블록별 형식'), doc.indexOf('## 7. '))
   for (const block of BLOCKS) {
     assert.ok(section6.includes(`\`${block.id}\``), `design-intelligence §6에 ${block.id}가 없다`)
     for (const form of block.forms) assert.ok(new RegExp(`블록: [^\\n]*${form}[^\\n]*\`${block.id}\``).test(section6), `§6이 ${form} → ${block.id}를 잇지 않는다`)
   }
-  assert.match(read('references/workflows/design-page.md'), /list_blocks[\s\S]*get_block[\s\S]*compose_page/)
+  assert.match(read('references/workflows/design-page.md'), /메인·랜딩은 카탈로그 조합을 강제하지 않는다/)
 })

@@ -16,17 +16,20 @@ test('도구 세 개가 등록돼 있고 설명문이 다음 단계를 말한다
 
   assert.match(tool('list_blocks').description, /다음 단계: .*get_block.*compose_page/)
   assert.match(tool('get_block').description, /다음 단계: .*compose_page/)
-  assert.match(tool('compose_page').description, /다음 단계: .*npm run check.*렌더 비평/)
+  assert.match(tool('compose_page').description, /다음 단계: .*npm run check.*사람 판정/)
   assert.deepEqual(tool('get_block').inputSchema.required, ['id'])
   assert.ok(tool('compose_page').inputSchema.properties.set, 'compose_page는 견본 조합 id(set)도 받는다')
   // 자리 허용값은 설명에 나온다 — 에이전트가 값을 지어내지 않게
   assert.match(tool('list_blocks').inputSchema.properties.slot.description, /first-screen\(첫 화면\)/)
 })
 
-test('서버 지시문의 메인·랜딩 절차가 블록 카탈로그를 먼저 보게 한다', () => {
+test('서버 지시문의 메인·랜딩 절차는 자유 생성 뒤 바닥 교정이고, 블록 카탈로그는 참고용이다', () => {
   const item8 = INSTRUCTIONS.slice(INSTRUCTIONS.indexOf('8. 메인·랜딩'), INSTRUCTIONS.indexOf('\n9. '))
-  assert.match(item8, /블록 카탈로그를 먼저 본다/)
-  assert.match(item8, /list_blocks[\s\S]*get_block[\s\S]*compose_page[\s\S]*npm run check/)
+  assert.match(item8, /자유롭게 디자인/)
+  assert.match(item8, /블록 카탈로그[\s\S]*참고용/)
+  assert.match(item8, /바닥만 교정[\s\S]*npm run check/)
+  assert.match(item8, /사람 판정 「승인」/)
+  assert.doesNotMatch(item8, /블록 카탈로그를 먼저 본다|별도 평가자/)
 })
 
 test('list_blocks — 인자 없이 전체, 결과마다 설명·언제 쓰나·쓰지 않나·필요 콘텐츠를 준다', () => {
@@ -141,7 +144,7 @@ test('compose_page — 완성 HTML, 채울 자리 목록, 순서 점검을 함�
   assert.match(html, /<script src="src\/js\/tab\.js"><\/script>/)
   assert.match(html, /href="dist\/css\/style\.css"/)
 
-  assert.match(text, /## 다음 단계[\s\S]*npm run check[\s\S]*별도 평가자/)
+  assert.match(text, /## 다음 단계[\s\S]*npm run check[\s\S]*사람 판정/)
 })
 
 test('compose_page — 순서 문제를 오류·경고로 돌려준다', () => {

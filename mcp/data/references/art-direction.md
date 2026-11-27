@@ -22,13 +22,14 @@ brand.json과 `--font-*` 토큰에 무엇을 넣을지, 표현 수위를 어디�
 | 커머스·예약 (`commerce-reservation`) | 표현형 (`expressive`) | standard-gov, product-modern | market-terracotta, trust-blue | 상품·프로모션 중심, 전환 CTA 1개 원칙. 결제 플로우는 utility 강등 | 합쇼체 기본. 근거 없는 최상급 금지. 가격·기간 사실 정보 우선 |
 <!-- art-direction:expression:end -->
 
-등급 운용은 다섯 원칙을 따른다.
+등급 운용은 여섯 원칙을 따른다.
 
 1. 등급은 상한이지 목표가 아니다 — "허용되니까"는 근거가 아니다.
 2. 상향은 task contract `expression` 필드로만 하고, 근거 기록이 필수다. 하향은 언제나 자유다.
 3. 페이지 단위 강등 — 폼·결제·인증·오류·검색결과는 사이트 등급 무관 utility~restrained 수위로 작성한다. 운반체는 페이지 단위 task contract, 확인은 납품 전 리뷰 체크리스트(§9)다.
 4. 축 단위 예외 — 등급 묶음에서 축 하나만 열 때는 `exceptions[]`에 `"rule": "expression.hero"` 형식으로 근거와 함께 기록한다(예: 공공기관 메인 영상 배경 발주 요구). 통째 상향보다 이 경로를 우선한다.
 5. publicIdentity 캡 — `required` 확정 시 상한은 restrained다(task contract 스키마가 강제). `unconfirmed` 상태에서는 상향을 보류한다.
+6. 메인·랜딩 예외 — 메인·랜딩 생성에서는 이 등급을 디자인 상한으로 쓰지 않는다(`design-intelligence.md` §1-3). 바닥 검사(R-번호)와 KRDS 대조는 그대로 적용한다.
 
 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing 소유로 등급 무관이다. 위 표의 모션 수치는 장식·스크롤 진입 모션에만 적용된다.
 

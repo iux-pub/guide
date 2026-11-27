@@ -141,7 +141,7 @@ test('KRDS와 직접 부딪히는 예외는 운영자 승인 대기로 표시돼
     const block = BLOCKS.find(b => b.id === id)
     assert.ok(block.krdsPending?.some(p => /크기/.test(p)), `${id}: krdsPending에 표제·제목 크기가 없다`)
   }
-  const doc = read('references/design-intelligence.md')
+  const doc = read('docs/archive/design-intelligence-2026-11.md')
   const section6 = doc.slice(doc.indexOf('## 6. 블록별 형식'), doc.indexOf('## 7. '))
   for (const id of ['scene', 'news-deck', 'field-shore', 'link-lines']) {
     assert.ok(new RegExp(`\`${id}\`\\([^\\n]*?KRDS 기준 밖 — 운영자 승인 대기`).test(section6), `design-intelligence §6의 ${id} 줄에 표시가 없다`)

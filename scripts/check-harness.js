@@ -20,11 +20,14 @@ function read(relativePath) {
   return fs.readFileSync(filePath, 'utf8')
 }
 
+// 사본이 원본과 같은지 본다. 고치는 명령은 사본이 어디 것이냐에 따라 다르다 —
+// 스타터 사본은 npm run sync:starter(Node 스크립트라 Windows에서도 돈다), MCP 번들은 npm run build:mcp
 function requireSame(source, target) {
   const sourceContent = read(source)
   const targetContent = read(target)
   if (sourceContent && targetContent && sourceContent !== targetContent) {
-    fail(`스타터 drift: ${target}가 ${source}와 다릅니다. npm run sync:starter를 실행하세요.`)
+    const bundle = target.startsWith('mcp/')
+    fail(`${bundle ? 'MCP 번들' : '스타터'} drift: ${target}가 ${source}와 다릅니다. ${bundle ? 'npm run build:mcp' : 'npm run sync:starter'}를 실행하세요.`)
   }
 }
 
@@ -50,18 +53,40 @@ for (const rule of rules.rules || []) {
   }
 }
 
-requireSame('scripts/check-violations.js', 'starter/scripts/check-violations.js')
-requireSame('scripts/check-html-structure.js', 'starter/scripts/check-html-structure.js')
-requireSame('scripts/check-contrast.js', 'starter/scripts/check-contrast.js')
-requireSame('scripts/check-icons.js', 'starter/scripts/check-icons.js')
-requireSame('scripts/build-icon-sheet.js', 'starter/scripts/build-icon-sheet.js')
-requireSame('scripts/lib/svg-path.js', 'starter/scripts/lib/svg-path.js')
-requireSame('scripts/lib/svg-geometry.js', 'starter/scripts/lib/svg-geometry.js')
-requireSame('scripts/lib/token-source.js', 'starter/scripts/lib/token-source.js')
-requireSame('scripts/lib/contrast.js', 'starter/scripts/lib/contrast.js')
+// 스타터 스크립트 사본 — 목록을 손으로 늘리지 않는다(template-signature.js가 목록에서 빠져 스타터의 R-51 검사가
+// 조용히 꺼져 있었다). 두 방향으로 본다:
+//   ① 원본에서 스타터로 가야 하는 파일(sync-starter.js의 진입 스크립트 + 훅 + 그들이 require로 부르는 lib)이
+//      스타터에 있고 원본과 같다.
+//   ② 스타터에 있는 스크립트(starter/scripts/*.js·hooks·lib)가 require('./lib/…')로 부르는 파일이
+//      스타터에 있고 원본과 같다 — try/catch로 감싼 선택 모듈이 스타터에서만 빠진 경우를 잡는다.
+const { starterScriptFiles, requireClosure, scriptFilesIn } = require('./sync-starter')
+const starterScriptsDir = path.join(ROOT, 'starter', 'scripts')
+const checkedScripts = new Set()
+function requireSameScript(rel) {
+  if (checkedScripts.has(rel)) return
+  checkedScripts.add(rel)
+  requireSame(`scripts/${rel}`, `starter/scripts/${rel}`)
+}
+for (const rel of starterScriptFiles(ROOT)) requireSameScript(rel)
+if (fs.existsSync(starterScriptsDir)) {
+  const starterEntries = ['', 'hooks', 'lib'].flatMap(sub => scriptFilesIn(starterScriptsDir, sub))
+  const { files, missing } = requireClosure(starterScriptsDir, starterEntries)
+  for (const rel of files) {
+    // 원본에 없는 파일은 스타터 전용이 아니라 남은 찌꺼기다 — 원본에서 지운 lib이 스타터에 남아 계속 돈다
+    if (!fs.existsSync(path.join(ROOT, 'scripts', rel))) fail(`스타터에만 있는 스크립트: starter/scripts/${rel} (원본 scripts/${rel} 없음)`)
+    else requireSameScript(rel)
+  }
+  for (const rel of missing) {
+    // 원본에도 없으면 어디에도 없는 선택 모듈이다. 원본에는 있는데 스타터에 없으면 그 검사가 스타터에서 꺼져 있다
+    if (fs.existsSync(path.join(ROOT, 'scripts', rel))) {
+      fail(`스타터 스크립트가 부르는 starter/scripts/${rel}가 없습니다(그 검사가 스타터에서 조용히 꺼진다). npm run sync:starter를 실행하세요.`)
+    }
+  }
+}
 // MCP는 저장소의 scripts/를 볼 수 없어 검색 코드를 복사해 싣는다. 어긋나면 AI와 사람이 다르게 찾는다
 requireSame('scripts/lib/icon-search.js', 'mcp/bin/icon-search.js')
-requireSame('scripts/lib/build-tokens-css.js', 'starter/scripts/lib/build-tokens-css.js')
+// 블록 조립·순서 점검 코드도 같다 — 어긋나면 미리보기와 MCP compose_page가 다른 페이지를 만든다
+requireSame('scripts/lib/block-catalog.js', 'mcp/bin/block-catalog.js')
 // 브랜드 계층은 프로젝트가 갈아끼우는 파일이라 값 동일성을 요구하지 않는다.
 // 다만 스타터가 세 파일을 모두 갖추지 못하면 브랜드 교체 구조 자체가 성립하지 않는다.
 for (const required of [
@@ -73,11 +98,10 @@ for (const required of [
     fail(`스타터에 ${required}가 없습니다. npm run sync:starter를 실행하세요.`)
   }
 }
-requireSame('contracts/html-page-contract.json', 'starter/contracts/html-page-contract.json')
-requireSame('contracts/agent-workflow.json', 'starter/contracts/agent-workflow.json')
-requireSame('contracts/task-contract.schema.json', 'starter/contracts/task-contract.schema.json')
-requireSame('contracts/task-contract.md', 'starter/contracts/task-contract.md')
-requireSame('contracts/profiles.json', 'starter/contracts/profiles.json')
+// 계약 파일 — 폴더의 파일 전부를 대조한다(sync-starter.js가 폴더째 옮긴다). 새 계약 파일을 더해도 목록을 고칠 일이 없다
+for (const name of fs.readdirSync(path.join(ROOT, 'contracts'), { withFileTypes: true }).filter(e => e.isFile()).map(e => e.name).sort()) {
+  requireSame(`contracts/${name}`, `starter/contracts/${name}`)
+}
 requireSame('tokens/AGENTS.md', 'starter/tokens/AGENTS.md')
 // 팔레트 프리셋은 원본·스타터·MCP 번들 세 곳이 항상 같아야 한다 — 낡은 hex가 퍼지는 사고를 막는다.
 const presetsDir = path.join(ROOT, 'tokens', 'presets')
@@ -190,23 +214,6 @@ if (JSON.stringify(codexHooks.hooks) !== JSON.stringify(claudeHooks.hooks)) {
 }
 requireSame('.claude/settings.json', 'starter/.claude/settings.json')
 requireSame('.codex/hooks.json', 'starter/.codex/hooks.json')
-requireSame('scripts/hooks/post-edit.js', 'starter/scripts/hooks/post-edit.js')
-requireSame('scripts/lib/page-scope.js', 'starter/scripts/lib/page-scope.js')
-requireSame('scripts/lib/visual-signature.js', 'starter/scripts/lib/visual-signature.js')
-// 카피 검사(R-23·R-43) — 라이브러리와 판정 자료가 스타터와 같아야 파생 프로젝트가 같은 기준으로 검사한다
-requireSame('scripts/lib/html-tree.js', 'starter/scripts/lib/html-tree.js')
-requireSame('scripts/lib/copy-rules.js', 'starter/scripts/lib/copy-rules.js')
-requireSame('scripts/lib/page-rules.js', 'starter/scripts/lib/page-rules.js')
-requireSame('scripts/lib/type-floor.js', 'starter/scripts/lib/type-floor.js')
-requireSame('scripts/lib/shape-motion.js', 'starter/scripts/lib/shape-motion.js')
-requireSame('scripts/lib/content-quality.js', 'starter/scripts/lib/content-quality.js')
-requireSame('scripts/lib/font-rules.js', 'starter/scripts/lib/font-rules.js')
-requireSame('scripts/lib/icon-usage.js', 'starter/scripts/lib/icon-usage.js')
-requireSame('scripts/check-contract.js', 'starter/scripts/check-contract.js')
-requireSame('scripts/lib/contract-exceptions.js', 'starter/scripts/lib/contract-exceptions.js')
-requireSame('scripts/lib/layout-rules.js', 'starter/scripts/lib/layout-rules.js')
-requireSame('contracts/fake-content.json', 'starter/contracts/fake-content.json')
-requireSame('contracts/copy-lexicon.json', 'starter/contracts/copy-lexicon.json')
 // 스타터 index.html은 틀 표시를 달고 나간다 — 없으면 자리값 제목이 납품 오류로 잡히고, create는 지울 표시가 없다
 const starterIndex = read('starter/index.html')
 if (starterIndex && !/<meta\s+name=["']infoux:template["']/.test(starterIndex)) {
@@ -217,6 +224,18 @@ if (starterIndex && !/<meta\s+name=["']infoux:template["']/.test(starterIndex)) 
 const syncScript = read('scripts/sync-starter.sh')
 if (syncScript && !/^set -o pipefail/m.test(syncScript)) {
   fail('scripts/sync-starter.sh에 set -o pipefail이 없습니다 — 스타터 검사 실패가 tail 파이프에 묻힙니다.')
+}
+// 복사 목록은 sync-starter.js 한 곳에만 둔다 — bash 스크립트가 cp 목록을 따로 가지면 두 벌이 어긋난다
+if (syncScript && !/^\s*node "\$GUIDE_DIR\/scripts\/sync-starter\.js"/m.test(syncScript)) {
+  fail('scripts/sync-starter.sh가 로컬 갱신을 scripts/sync-starter.js에 맡기지 않습니다 — 복사 목록이 두 벌이 됩니다.')
+}
+if (syncScript && /^\s*cp\s+(?:-\w+\s+)?"\$GUIDE_DIR\//m.test(syncScript)) {
+  fail('scripts/sync-starter.sh에 guide → starter 복사 줄(cp "$GUIDE_DIR/…")이 남아 있습니다 — 목록은 scripts/sync-starter.js에만 둡니다.')
+}
+// npm run sync:starter는 bash 없이 돌아야 한다(Windows) — 위 drift 안내가 이 명령을 가리킨다
+const rootPackage = JSON.parse(read('package.json') || '{}')
+if (rootPackage.scripts?.['sync:starter'] !== 'node scripts/sync-starter.js') {
+  fail('package.json sync:starter가 node scripts/sync-starter.js가 아닙니다 — Windows에서 스타터를 갱신할 수 없습니다.')
 }
 
 // HX-07 기준 문서 정합 — 정본과 모순되는 처방(슬롭 유도 문구)을 references·site/design·prompts에 두지 않는다

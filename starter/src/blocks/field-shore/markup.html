@@ -1,0 +1,27 @@
+<section class="section section--content field-shore" aria-labelledby="field-shore-title">
+  <div class="dusk">
+    <img class="dusk__photo" src="{{photo_src}}" alt="" width="2000" height="760" loading="lazy">
+    <div class="dusk__veil" aria-hidden="true"></div>
+    <svg class="oreum" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path class="oreum__near" d="M-120 160V124C-15 124 -15 62 90 62C195 62 195 124 300 124V160ZM240 160V124C335 124 335 84 430 84C525 84 525 124 620 124V160ZM520 160V124C660 124 660 38 800 38C940 38 940 124 1080 124V160ZM950 160V124C1050 124 1050 76 1150 76C1250 76 1250 124 1350 124V160ZM1220 160V124C1310 124 1310 52 1400 52C1490 52 1490 124 1580 124V160ZM0 124H1440V160H0Z"/>
+    </svg>
+    <div class="container dusk__body">
+      <h2 class="display-title dusk__title" id="field-shore-title">{{title}}</h2>
+      <a class="dusk__more" href="{{more_href}}">{{more_label}} <svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#arrow-right"></use></svg></a>
+    </div>
+  </div>
+  <div class="container">
+    <ul class="field-index" role="list">
+      <!-- @each fields as field -->
+      <li class="field-index__item">
+        <h3 class="field-index__name">{{field.name}}</h3>
+        <ul class="field-index__work" role="list">
+          <!-- @each field.work as work -->
+          <li class="field-index__task">{{work.text}}</li>
+          <!-- @end -->
+        </ul>
+      </li>
+      <!-- @end -->
+    </ul>
+  </div>
+</section>

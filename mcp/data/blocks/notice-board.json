@@ -1,0 +1,368 @@
+{
+  "id": "notice-board",
+  "name": "알림마당 — 탭 게시판 + 접수 중 색 면 상자",
+  "slot": "news",
+  "forms": [
+    "N2"
+  ],
+  "reference": "design-intelligence §6-3 N2 마감 축 결합, §3-5 공기업·기관 메인(두 번째 자리 알림마당)",
+  "tags": [
+    "알림마당",
+    "공지",
+    "게시판",
+    "탭",
+    "접수 중",
+    "공모",
+    "모집",
+    "마감",
+    "넓은 색 면",
+    "공기업"
+  ],
+  "summary": "왼쪽 8열에 섹션 제목과 KRDS 탭 게시판, 오른쪽 4열에 접수 중인 공모·모집을 짙은 브랜드 색 면 상자로 둔다. 상자는 게시판 높이까지 늘어나 두 단의 아랫선이 맞는다.",
+  "useWhen": [
+    "공기업·기관 메인의 두 번째 자리다 — 첫 화면 바로 아래에서 공지·입찰·채용·보도자료를 한 섹션에 묶는다.",
+    "접수 중인 공모·모집이 한 건 이상 있고, 브랜드 색을 넓은 면으로 쓸 자리가 필요하다(D10 강조색 점점이)."
+  ],
+  "avoidWhen": [
+    "접수 중인 항목이 없다 — 색 면 상자가 빈다. 게시판만 쓰거나 대표 + 목록(N1)을 쓴다.",
+    "운영 페이지인데 남은 날수를 서버에서 계산해 줄 수 없다 — 정적 HTML에 적은 D-숫자는 다음 날 틀린 정보가 된다. 정적 시안은 기준일을 화면에 적고 쓴다(design-intelligence §5-6).",
+    "마감 사이의 길이 차이를 그림으로 보여 주고 싶다 — 막대가 있는 bulletin(N2 + N1)을 쓴다.",
+    "게시판이 하나뿐이다 — 탭을 빼거나 다른 형식을 고른다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "섹션 제목",
+      "spec": "한글 2~8자. 기관이 쓰는 메뉴 이름(「알림마당」「새소식」).",
+      "example": "알림마당"
+    },
+    {
+      "key": "board_label",
+      "kind": "text",
+      "label": "탭 묶음의 이름",
+      "spec": "스크린리더가 읽는 tablist 이름. 「<섹션 제목> 게시판」.",
+      "example": "알림마당 게시판"
+    },
+    {
+      "key": "boards",
+      "kind": "list",
+      "label": "게시판(탭)",
+      "min": 2,
+      "max": 4,
+      "spec": "탭은 2~4개. 공지사항을 첫 탭에 두고 입찰·계약, 채용, 보도자료 순으로 놓는다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "게시판 이름",
+          "spec": "한글 2~6자. 탭 이름이자 「<이름> 전체 보기」 링크의 이름이 된다."
+        },
+        {
+          "key": "more_href",
+          "kind": "url",
+          "label": "게시판 목록 주소",
+          "spec": "해당 게시판 목록 페이지."
+        },
+        {
+          "key": "posts",
+          "kind": "list",
+          "label": "최신 글",
+          "min": 3,
+          "max": 6,
+          "spec": "게시판마다 최신 글 3~6건(기본 5건).",
+          "fields": [
+            {
+              "key": "title",
+              "kind": "text",
+              "label": "글 제목",
+              "spec": "게시판 원문 제목 그대로."
+            },
+            {
+              "key": "href",
+              "kind": "url",
+              "label": "글 주소",
+              "spec": "해당 게시글 주소."
+            },
+            {
+              "key": "datetime",
+              "kind": "date",
+              "label": "게시일(기계용)",
+              "spec": "YYYY-MM-DD."
+            },
+            {
+              "key": "date_label",
+              "kind": "text",
+              "label": "게시일(표시용)",
+              "spec": "YYYY.MM.DD 형식."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "공지사항",
+          "more_href": "/notice",
+          "posts": [
+            {
+              "title": "청년 예술가 창작 지원 공모 안내",
+              "href": "/notice/1575",
+              "datetime": "2026-11-02",
+              "date_label": "2026.11.02"
+            },
+            {
+              "title": "시민 합창단 신규 단원 모집",
+              "href": "/notice/1559",
+              "datetime": "2026-10-28",
+              "date_label": "2026.10.28"
+            },
+            {
+              "title": "겨울 방학 어린이 미술 교실 수강 신청 일정",
+              "href": "/notice/1551",
+              "datetime": "2026-10-21",
+              "date_label": "2026.10.21"
+            },
+            {
+              "title": "소극장 무대 조명 교체 공사에 따른 대관 일시 중단 안내",
+              "href": "/notice/1544",
+              "datetime": "2026-10-14",
+              "date_label": "2026.10.14"
+            },
+            {
+              "title": "누리집 개인정보 처리방침 개정 안내",
+              "href": "/notice/1538",
+              "datetime": "2026-10-06",
+              "date_label": "2026.10.06"
+            }
+          ]
+        },
+        {
+          "name": "입찰·계약",
+          "more_href": "/tender",
+          "posts": [
+            {
+              "title": "전시실 항온항습 설비 유지관리 용역",
+              "href": "/tender/991",
+              "datetime": "2026-10-21",
+              "date_label": "2026.10.21"
+            },
+            {
+              "title": "거리 공연 축제 무대 설치 및 운영 용역",
+              "href": "/tender/990",
+              "datetime": "2026-10-16",
+              "date_label": "2026.10.16"
+            },
+            {
+              "title": "예매 시스템 통합 유지관리 용역",
+              "href": "/tender/989",
+              "datetime": "2026-10-14",
+              "date_label": "2026.10.14"
+            }
+          ]
+        },
+        {
+          "name": "채용",
+          "more_href": "/recruit",
+          "posts": [
+            {
+              "title": "2026년 제3차 정규직 채용 필기시험 일시와 장소 공고",
+              "href": "/recruit/702",
+              "datetime": "2026-10-08",
+              "date_label": "2026.10.08"
+            },
+            {
+              "title": "공연 기획 분야 기간제 근로자 채용 공고",
+              "href": "/recruit/700",
+              "datetime": "2026-09-10",
+              "date_label": "2026.09.10"
+            },
+            {
+              "title": "청년 인턴(체험형) 최종 합격자 임용 등록 안내",
+              "href": "/recruit/699",
+              "datetime": "2026-09-03",
+              "date_label": "2026.09.03"
+            }
+          ]
+        },
+        {
+          "name": "보도자료",
+          "more_href": "/press",
+          "posts": [
+            {
+              "title": "항구 미술관 겨울 기획전 개막",
+              "href": "/press/2873",
+              "datetime": "2026-10-21",
+              "date_label": "2026.10.21"
+            },
+            {
+              "title": "등대 축제 관람객 집계 결과 발표",
+              "href": "/press/2872",
+              "datetime": "2026-10-20",
+              "date_label": "2026.10.20"
+            },
+            {
+              "title": "시민 예술 아카데미 수료식 개최",
+              "href": "/press/2871",
+              "datetime": "2026-10-19",
+              "date_label": "2026.10.19"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "due_title",
+      "kind": "text",
+      "label": "접수 중 상자 제목",
+      "spec": "한글 6~14자. 무엇의 마감인지 적는다.",
+      "example": "접수 중인 공모·모집"
+    },
+    {
+      "key": "asof_datetime",
+      "kind": "date",
+      "label": "기준일(기계용)",
+      "spec": "YYYY-MM-DD. 남은 날수를 계산한 날이다. 페이지를 만들 때마다 서버가 채운다.",
+      "example": "2026-11-13"
+    },
+    {
+      "key": "asof_label",
+      "kind": "text",
+      "label": "기준일(표시용)",
+      "spec": "「11월 13일」 형식.",
+      "example": "11월 13일"
+    },
+    {
+      "key": "dues",
+      "kind": "list",
+      "label": "접수 중인 항목",
+      "min": 1,
+      "max": 3,
+      "spec": "마감이 가까운 순서로 1~3건. 마감이 지난 항목은 싣지 않는다. 게시판의 실제 공고에서 가져온다.",
+      "fields": [
+        {
+          "key": "days",
+          "kind": "number",
+          "label": "남은 날수",
+          "spec": "정수. 기준일부터 마감일까지. D-0은 「오늘 마감」으로 바꿔 적는다."
+        },
+        {
+          "key": "title",
+          "kind": "text",
+          "label": "공고 이름",
+          "spec": "한글 10~28자. 원문 제목에서 접수 기간 머리말은 뺀다."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "공고 주소",
+          "spec": "해당 게시글 주소."
+        },
+        {
+          "key": "datetime",
+          "kind": "date",
+          "label": "마감일(기계용)",
+          "spec": "YYYY-MM-DD."
+        },
+        {
+          "key": "date_label",
+          "kind": "text",
+          "label": "마감일(표시용)",
+          "spec": "MM.DD 형식."
+        }
+      ],
+      "examples": [
+        {
+          "days": 8,
+          "title": "청년 예술가 창작 지원 공모",
+          "href": "/notice/1575",
+          "datetime": "2026-11-21",
+          "date_label": "11.21"
+        },
+        {
+          "days": 17,
+          "title": "시민 합창단 신규 단원 모집",
+          "href": "/notice/1559",
+          "datetime": "2026-11-30",
+          "date_label": "11.30"
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "탭 수",
+      "options": [
+        "2개",
+        "4개(기본)"
+      ],
+      "how": "탭 버튼과 패널을 짝으로 더하거나 뺀다. aria-controls·id·aria-labelledby 번호를 맞추고, 첫 패널만 hidden이 없다."
+    },
+    {
+      "axis": "상자 면 색",
+      "options": [
+        "primary-70(기본) + 항목 primary-80",
+        "첫 화면·다른 짙은 면과 겹치면 primary-80 + 항목 primary-90"
+      ],
+      "how": ".notice-board__due와 .notice-board__due-item의 토큰을 함께 한 단계씩 옮긴다. 글자색은 gray-0·primary-20이라 대비를 npm run check:contrast로 다시 잰다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "service-gate"
+    ],
+    "after": [
+      "field-accordion"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "plain",
+    "note": "섹션은 바탕 면이다. 접수 중 상자만 --color-primary-70 면이고 항목 칸이 --color-primary-80, 남은 날수 표지가 --color-point-30이다.",
+    "framed": true
+  },
+  "section": {
+    "archetype": "notice"
+  },
+  "styles": [
+    "src/styles/6-components/notice-board.css",
+    "src/styles/6-components/post-list.css",
+    "src/styles/6-components/more-link.css"
+  ],
+  "requires": {
+    "components": [
+      "tab",
+      "icon"
+    ],
+    "icons": [
+      "chevron-right"
+    ],
+    "scripts": [
+      "tab.js"
+    ]
+  },
+  "accessibility": [
+    "탭은 KRDS 탭 마크업 그대로다 — role=tablist·tab·tabpanel, aria-selected, aria-controls, 첫 패널 밖은 hidden. 동작은 src/js/tab.js가 맡는다(R-16).",
+    "섹션 제목은 h2, 접수 중 상자 제목은 h3이고 aside의 aria-labelledby가 가리킨다(R-39).",
+    "남은 날수는 「D-8」 글자와 「11.21 마감」으로 함께 적는다. 날짜는 time[datetime]이다.",
+    "「전체 보기」 링크는 게시판 이름을 앞에 붙인다(R-30).",
+    "짙은 면 위 글자는 gray-0·primary-20이고, 남은 날수 표지는 point-30 위 gray-95다. 브랜드를 바꾸면 npm run check:contrast로 다시 잰다."
+  ],
+  "origin": "견본 — 운영자 판정 대기. 제주관광공사 메인 J안(2026-11-13)의 notice-i(알림마당) 블록과 page-j의 접수 중 색 면을 기관 이름·문구를 빼고 옮겼다.",
+  "tokens": [
+    "--color-border",
+    "--color-border-light",
+    "--color-gray-0",
+    "--color-gray-95",
+    "--color-link-hover",
+    "--color-point-30",
+    "--color-primary-20",
+    "--color-primary-70",
+    "--color-primary-80",
+    "--color-text",
+    "--color-text-bolder",
+    "--color-text-subtle",
+    "--font-heading"
+  ],
+  "markup": "<section class=\"section section--notice notice-board\" aria-labelledby=\"notice-board-title\">\n  <div class=\"container notice-board__grid\">\n    <div class=\"notice-board__board\">\n      <h2 class=\"notice-board__title\" id=\"notice-board-title\">{{title}}</h2>\n      <div class=\"tab\">\n        <div class=\"tab__list\" role=\"tablist\" aria-label=\"{{board_label}}\">\n          <!-- @each boards as board -->\n          <button type=\"button\" class=\"tab__item\" role=\"tab\" aria-selected=\"{{board.@first:true|false}}\" aria-controls=\"notice-board-panel-{{board.@n}}\" id=\"notice-board-tab-{{board.@n}}\">{{board.name}}</button>\n          <!-- @end -->\n        </div>\n        <!-- @each boards as board -->\n        <div class=\"tab__panel\" role=\"tabpanel\" id=\"notice-board-panel-{{board.@n}}\" aria-labelledby=\"notice-board-tab-{{board.@n}}\"{{board.@first:| hidden}}>\n          <ul class=\"post-list\" role=\"list\">\n            <!-- @each board.posts as post -->\n            <li class=\"post-list__item\">\n              <a class=\"post-list__link\" href=\"{{post.href}}\">{{post.title}}</a>\n              <time class=\"post-list__date\" datetime=\"{{post.datetime}}\">{{post.date_label}}</time>\n            </li>\n            <!-- @end -->\n          </ul>\n          <a class=\"more-link\" href=\"{{board.more_href}}\">{{board.name}} 전체 보기 <svg class=\"icon icon--xsmall\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#chevron-right\"></use></svg></a>\n        </div>\n        <!-- @end -->\n      </div>\n    </div>\n    <aside class=\"notice-board__due\" aria-labelledby=\"notice-board-due-title\">\n      <h3 class=\"notice-board__due-title\" id=\"notice-board-due-title\">{{due_title}}</h3>\n      <p class=\"notice-board__asof\"><time datetime=\"{{asof_datetime}}\">{{asof_label}}</time> 기준</p>\n      <ul class=\"notice-board__due-list\" role=\"list\">\n        <!-- @each dues as due -->\n        <li><a class=\"notice-board__due-item\" href=\"{{due.href}}\">\n          <span class=\"notice-board__dday\">D-{{due.days}}</span>\n          <span class=\"notice-board__due-name\">{{due.title}}</span>\n          <span class=\"notice-board__due-date\"><time datetime=\"{{due.datetime}}\">{{due.date_label}}</time> 마감</span>\n        </a></li>\n        <!-- @end -->\n      </ul>\n    </aside>\n  </div>\n</section>\n",
+  "css": "/* src/styles/6-components/notice-board.css */\n/**\n * Notice Board — 알림마당 탭 게시판 + 접수 중 색 면 상자 (블록 카탈로그 notice-board · design-intelligence §6-3 N2)\n *   왼쪽 8열에 섹션 제목과 KRDS 탭 게시판, 오른쪽 4열에 접수 중인 공모·모집을 짙은 브랜드 색의 넓은 면으로 둔다.\n *   공기업·기관 메인의 두 번째 자리(첫 화면 바로 아래)다(design-intelligence §3-5).\n *   정본: src/blocks/notice-board/. MCP get_block(\"notice-board\")\n *   <section class=\"section section--notice notice-board\" aria-labelledby=\"notice-board-title\">\n *     <div class=\"container notice-board__grid\">\n *       <div class=\"notice-board__board\"><h2 class=\"notice-board__title\">…</h2><div class=\"tab\">…</div></div>\n *       <aside class=\"notice-board__due\">… <ul class=\"notice-board__due-list\"><li><a class=\"notice-board__due-item\">…</a></li></ul></aside>\n *     </div>\n *   </section>\n *   두 단은 아랫선을 맞춘다 — 색 면 상자가 게시판 높이까지 늘어난다.\n * 레이어 밖에 둔다 — 탭·목록의 간격을 이 블록 안에서 조정한다.\n */\n\n/* 섹션 세로 여백은 .section(5-objects)이 맡는다 — 블록에서 덮어쓰지 않는다(design-intelligence §5-4) */\n.notice-board {\n  @apply relative;\n}\n\n.notice-board__grid {\n  @apply grid gap-[4rem] laptop:gap-[4.8rem] laptop:items-stretch laptop:[grid-template-columns:minmax(0,8fr)_minmax(0,4fr)];\n}\n\n.notice-board__board {\n  @apply min-w-0;\n}\n\n/* KRDS heading-xlarge(mobile 2.8 / pc 4rem) */\n.notice-board__title {\n  @apply m-0 mb-[2.4rem] [font-family:var(--font-heading)] text-[2.8rem] font-bold leading-[1.5] tracking-normal text-[var(--color-text-bolder)] [word-break:keep-all] tablet:text-[4rem];\n}\n\n/* 접수 중 — 넓은 브랜드 색 면. 강조색은 남은 날수 표지에만 */\n.notice-board__due {\n  @apply p-[2.4rem] rounded-[1.2rem] bg-[var(--color-primary-70)] laptop:mt-[8.4rem] laptop:p-[3.2rem];\n}\n\n.notice-board__due-title {\n  @apply m-0 text-[1.9rem] font-bold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all];\n}\n\n.notice-board__asof {\n  @apply m-0 mt-[0.4rem] text-[1.5rem] leading-[1.5] text-[var(--color-primary-20)];\n}\n\n.notice-board__due-list {\n  @apply grid gap-[1.2rem] list-none m-0 mt-[2rem] p-0;\n}\n\n.notice-board__due-item {\n  @apply grid gap-y-[0.4rem] p-[2rem] rounded-[0.8rem] bg-[var(--color-primary-80)] no-underline [outline-offset:0.2rem] [transition:box-shadow_0.2s_ease] hover:shadow-[inset_0_0_0_0.2rem_var(--color-point-30)];\n}\n\n.notice-board__dday {\n  @apply justify-self-start px-[0.8rem] rounded-[0.4rem] bg-[var(--color-point-30)] text-[1.5rem] font-bold leading-[1.6] text-[var(--color-gray-95)] [font-variant-numeric:tabular-nums];\n}\n\n.notice-board__due-name {\n  @apply mt-[0.4rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all];\n}\n\n.notice-board__due-date {\n  @apply text-[1.5rem] leading-[1.5] text-[var(--color-primary-20)] [font-variant-numeric:tabular-nums];\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .notice-board__due-item {\n    @apply [transition:none];\n  }\n}\n\n/* src/styles/6-components/post-list.css */\n/**\n * Post List — 게시판 최신 글 목록: 제목 + 날짜 (블록 카탈로그 bulletin의 부품 · KS-04 목록 자리)\n *   제목은 768px 이상에서 두 줄까지 보이고(좁은 화면은 전부 보인다) 날짜는 오른쪽 열에 자릿수를 맞춘다.\n *   <ul class=\"post-list\" role=\"list\">\n *     <li class=\"post-list__item\">\n *       <a class=\"post-list__link\" href=\"…\">제목</a>\n *       <time class=\"post-list__date\" datetime=\"2026-10-15\">2026.10.15</time>\n *     </li>\n *   </ul>\n * 레이어 밖에 둔다 — bulletin이 첫 글의 크기를 바꾼다.\n */\n.post-list {\n  @apply list-none m-0 p-0 border-t border-[var(--color-border)];\n}\n\n.post-list__item {\n  @apply flex flex-col gap-[0.2rem] py-[0.4rem] border-b border-[var(--color-border-light)] tablet:flex-row tablet:items-baseline tablet:gap-[2.4rem] tablet:py-[1.2rem];\n}\n\n.post-list__link {\n  @apply flex flex-1 items-center min-w-0 min-h-[4.4rem] tablet:min-h-0 text-[1.7rem] leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] tablet:overflow-hidden tablet:[display:-webkit-box] tablet:[-webkit-box-orient:vertical] tablet:[-webkit-line-clamp:2] [transition:color_0.15s_ease-in-out];\n}\n\n.post-list__link:visited {\n  @apply text-[var(--color-text)];\n}\n\n.post-list__link:hover {\n  @apply text-[var(--color-link-hover)] underline;\n}\n\n.post-list__date {\n  @apply shrink-0 text-[1.5rem] leading-[1.5] text-[var(--color-text-subtle)] [font-variant-numeric:tabular-nums];\n}\n\n/* src/styles/6-components/more-link.css */\n/**\n * More Link — 「<게시판명> 전체 보기」 링크 (블록 카탈로그 bulletin의 부품)\n *   이름에 목적지를 적는다 — 「더보기」만 쓰지 않는다(R-30).\n *   <a class=\"more-link\" href=\"…\">공지사항 전체 보기\n *     <svg class=\"icon icon--xsmall\" aria-hidden=\"true\"><use href=\"/assets/icons/sprite.svg#chevron-right\"></use></svg>\n *   </a>\n * 레이어 밖에 둔다 — bulletin과 같은 층.\n */\n.more-link {\n  @apply inline-flex items-center gap-[0.4rem] min-h-[4.4rem] mt-[0.8rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [transition:color_0.15s_ease-in-out];\n}\n\n.more-link:visited {\n  @apply text-[var(--color-text)];\n}\n\n.more-link:hover {\n  @apply text-[var(--color-link-hover)] underline;\n}"
+}

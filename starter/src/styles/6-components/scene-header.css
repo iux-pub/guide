@@ -1,0 +1,58 @@
+/**
+ * Scene Header — 장면 위 투명 머리글 (블록 카탈로그 scene의 부품)
+ *   <header id="header" class="site-header scene-header">…카탈로그 헤더 마크업 그대로…</header>
+ *   카탈로그 부품을 덮어쓰지 않고, 머리글 안에서 의미 토큰이 가리키는 값을 흰색 계열로 바꾼다.
+ *   src/js/scene-header.js가 첫 화면을 벗어나면 data-scrolled를 붙여 짙은 바탕을 입힌다.
+ *   로고는 흰색 파일을 쓴다(색을 필터로 뒤집지 않는다).
+ *   블록 예외(contracts/block-exceptions.json): 통합검색 알약 반경.
+ *   KRDS 헤더는 sticky + 밝은 바탕이 기본이다. 이 변형은 scene 블록과 함께일 때만 쓴다.
+ * 레이어 밖에 둔다 — header.css(components 레이어)보다 뒤에서 조정한다.
+ */
+.scene-header {
+  --color-text: var(--color-gray-0);
+  --color-primary: var(--color-primary-20);
+  --color-border-control: color-mix(in srgb, var(--color-gray-0) 50%, transparent);
+  --color-button-text-fill-hover: color-mix(in srgb, var(--color-gray-0) 16%, transparent);
+  --color-button-text-fill-pressed: color-mix(in srgb, var(--color-gray-0) 24%, transparent);
+
+  @apply fixed inset-x-0 top-0 border-b-0 bg-transparent text-[var(--color-text)] [transition:background-color_0.3s_ease,box-shadow_0.3s_ease];
+}
+
+.scene-header[data-scrolled] {
+  background-color: color-mix(in srgb, var(--color-primary-90) 92%, transparent);
+  box-shadow: 0 0.1rem 0 color-mix(in srgb, var(--color-gray-0) 8%, transparent);
+}
+
+.scene-header .site-header__brand,
+.scene-header .site-header__menu a,
+.scene-header .site-header__search-link,
+.scene-header .site-header__toggle {
+  @apply text-[var(--color-text)];
+}
+
+/* 통합검색 — 흰 선 알약 안에 입력창과 글자 버튼 */
+.scene-header .site-header__search {
+  @apply gap-0 ps-[1.6rem] border border-[var(--color-border-control)] rounded-[99rem];
+}
+
+.scene-header .site-header__search-input {
+  @apply w-[18rem] px-0 border-0 bg-transparent text-[1.5rem] text-[var(--color-text)];
+}
+
+.scene-header .site-header__search-input::placeholder {
+  color: color-mix(in srgb, var(--color-gray-0) 75%, transparent);
+}
+
+.scene-header .site-header__search .btn {
+  @apply border-transparent bg-transparent rounded-[99rem] text-[1.5rem] text-[var(--color-text)];
+}
+
+.scene-header .site-header__actions .btn--text {
+  @apply text-[var(--color-text)];
+}
+
+/* 펼친 하위 메뉴는 흰 판이다 — 그 안에서는 토큰을 밝은 면 값으로 되돌린다 */
+.scene-header .main-menu__submenu {
+  --color-text: var(--color-gray-90);
+  --color-primary: var(--color-primary-50);
+}

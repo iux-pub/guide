@@ -1,0 +1,102 @@
+{
+  "id": "cover",
+  "name": "분할 표제 첫 화면",
+  "slot": "first-screen",
+  "forms": ["H1"],
+  "reference": "design-intelligence §6-1 H1 분할 표제",
+  "tags": ["히어로", "메인 비주얼", "분할", "사진", "짙은 면", "표제"],
+  "summary": "짙은 글 면에 큰 표제와 주 행동 하나를 두고, 화면 가장자리까지 닿는 사진을 옆에 붙인 첫 화면이다.",
+  "useWhen": [
+    "기관의 대상을 한 장으로 보여 주는 좋은 사진이 있다.",
+    "표제가 짧다(두세 줄, 한 줄 6자 안팎). 표제는 기관 이름이 아니라 컨셉 문장이다.",
+    "주 행동이 하나로 정해진다. 나머지 과업은 바로 아래 바로가기 블록이 맡는다."
+  ],
+  "avoidWhen": [
+    "검색이나 민원 신청이 1순위 과업이다 — 과업 히어로(H3)를 쓴다.",
+    "쓸 사진이 없거나 어둡고 탁하다 — 사진 없이 색 면과 글자로 가는 형식을 고른다.",
+    "공지 한 건이 정체성만큼 중요하다 — 소식 결합(H6)을 쓴다.",
+    "서브 페이지 — 서브 첫 섹션은 비주얼 히어로가 아니다(R-41)."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "표제",
+      "spec": "한글 8~14자. 한 줄에 6자 안팎이 들어가 두세 줄로 바뀐다. 어절 단위로 끊기므로 긴 어절(7자 이상)을 넣지 않는다.",
+      "example": "바다 곁에서 여는 문화"
+    },
+    {
+      "key": "lead",
+      "kind": "text",
+      "label": "표제 아래 한 문장",
+      "spec": "한글 20~34자, 한 문장. 기관이 하는 일을 사실로 적는다(합쇼체, 느낌표 없음).",
+      "example": "공연·전시·교육 프로그램을 한곳에서 찾고 신청할 수 있습니다"
+    },
+    {
+      "key": "action_label",
+      "kind": "text",
+      "label": "주 행동 버튼 이름",
+      "spec": "동사형 4~9자(「~하기」「~ 보기」). 버튼은 하나만 둔다.",
+      "example": "프로그램 신청하기"
+    },
+    {
+      "key": "action_href",
+      "kind": "url",
+      "label": "주 행동 버튼 주소",
+      "spec": "실제 목적지 주소. 빈 값·#을 쓰지 않는다(R-30).",
+      "example": "/program"
+    },
+    {
+      "key": "photo_src",
+      "kind": "image",
+      "label": "첫 화면 사진",
+      "ratio": "원본 4:3 또는 3:2 가로, 긴 변 1600px 이상",
+      "spec": "밝고 맑은 사진 한 장. 넓은 화면에서는 거의 정사각으로, 좁은 화면에서는 가로 띠로 잘린다 — 주제가 가운데에서 조금 오른쪽에 있고 사방에 잘려도 되는 여유가 있어야 한다. 글이 사진 위에 올라가지 않으므로 스크림은 쓰지 않는다. 장식이라 alt는 비운다.",
+      "example": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1200'%3E%3Crect width='1600' height='1200' fill='%2354789e'/%3E%3Cpath d='M0 820 Q400 740 800 800 T1600 780 V1200 H0 Z' fill='%233b5e81'/%3E%3Ccircle cx='1180' cy='300' r='110' fill='%23dfe5ec'/%3E%3C/svg%3E"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "아래 걸침",
+      "options": ["task-index가 걸친다(기본)", "걸치는 블록 없음"],
+      "how": "걸치는 블록이 없으면 section에 style=\"--cover-overlap: 0rem\"을 준다. 아래 여백이 걸침 몫만큼 줄어든다."
+    },
+    {
+      "axis": "면 색",
+      "options": ["primary-90(기본)", "프로젝트 브랜드의 가장 짙은 단계"],
+      "how": "면 색은 .cover의 배경 토큰 하나다. 프로젝트 블록에서 다른 --color-* 단계로 바꾼다. 원시 색 값을 쓰지 않는다."
+    },
+    {
+      "axis": "사진 초점",
+      "options": ["60% 50%(기본)"],
+      "how": "주제가 잘리면 프로젝트 CSS에서 .cover__img의 object-position을 고친다."
+    }
+  ],
+  "neighbors": {
+    "before": [],
+    "after": ["task-index"],
+    "avoid": [],
+    "expectsAfter": ["task-index"]
+  },
+  "surface": {
+    "tone": "inverse",
+    "note": "글 면 --color-primary-90. inverse-surface가 버튼·링크·초점 링의 의미 토큰을 밝은 단계로 바꾼다."
+  },
+  "section": { "archetype": "intro" },
+  "styles": [
+    "src/styles/6-components/inverse-surface.css",
+    "src/styles/6-components/cover.css"
+  ],
+  "requires": {
+    "components": ["btn"],
+    "icons": [],
+    "scripts": []
+  },
+  "accessibility": [
+    "표제가 페이지의 h1이다. main 안에 h1을 하나만 둔다(R-39).",
+    "사진은 장식이라 alt=\"\"다. 사진이 정보를 전하면 본문 콘텐츠로 옮긴다.",
+    "표제·문장은 짙은 단색 면 위에 있다 — 사진 위에 글을 올리지 않는다. 면 색을 바꾸면 흰 글자와의 대비 4.5:1을 다시 잰다.",
+    "화면 높이를 채우지 않고 스크롤 유도 표시를 두지 않는다(R-42)."
+  ],
+  "origin": "제주관광공사 메인 D안(2026-11)의 cover 블록을 기관 문구 없이 옮겼다."
+}

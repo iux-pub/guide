@@ -1,0 +1,196 @@
+{
+  "id": "open-panel",
+  "name": "정보공개 판 — 짙은 단색 면 + 대표전화",
+  "slot": "link-group",
+  "forms": [],
+  "reference": "design-intelligence §6-5 열린 경영·정보공개, §3-5 공기업·기관 메인(정보공개·대표전화)",
+  "tags": [
+    "정보공개",
+    "열린경영",
+    "경영공시",
+    "고객참여",
+    "대표전화",
+    "링크 묶음",
+    "넓은 색 면",
+    "공기업"
+  ],
+  "summary": "짙은 브랜드 색 판 하나에 왼쪽은 판 제목(「열린경영」 같은 메뉴 이름)과 큰 대표전화, 오른쪽은 「열린경영·정보공개·고객참여」 같은 세 갈래 링크 묶음을 둔다.",
+  "useWhen": [
+    "공기업·기관 메인의 끝자리다 — 정보공개·경영공시 링크와 대표전화를 한곳에 모은다.",
+    "페이지에 브랜드 색이 넓은 면을 맡은 곳이 더 필요하다(D10)."
+  ],
+  "avoidWhen": [
+    "링크 묶음이 하나뿐이거나 묶음마다 링크가 한 개뿐이다 — 판이 비어 보인다. 분할 줄 목록(link-rows)을 쓴다.",
+    "대표전화가 없거나 확인되지 않았다 — 번호를 지어내지 않는다(R-23). 대표전화 줄을 빼고 제목 아래를 비운다.",
+    "바로 위 블록이 짙은 면이다 — 짙은 판이 이어져 경계가 사라진다. 판 색을 다른 단계로 바꾼다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "판 제목",
+      "spec": "한글 2~10자, 한 줄. 메뉴 이름(예: 「사업영역」「열린경영」)을 쓴다. 표어·문장형 제목·소개 문장을 지어 붙이지 않는다(design-intelligence §2-2).",
+      "example": "열린경영"
+    },
+    {
+      "key": "groups",
+      "kind": "list",
+      "label": "링크 묶음",
+      "min": 2,
+      "max": 3,
+      "spec": "2~3묶음. 「열린경영·정보공개·고객참여」처럼 기관의 메뉴 이름을 쓴다. 묶음 순서는 무거운 묶음(링크가 가장 많거나 수치가 든 묶음)을 앞에, 짧은 묶음을 끝에 둔다 — 빈 곳이 판 오른쪽 아래로 간다(design-intelligence §5-3, 시안 27회차 가린 평가 두 번).",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "묶음 이름",
+          "spec": "한글 2~6자."
+        },
+        {
+          "key": "links",
+          "kind": "list",
+          "label": "링크",
+          "min": 2,
+          "max": 4,
+          "spec": "묶음마다 2~4개, 묶음끼리 수를 맞춘다.",
+          "fields": [
+            {
+              "key": "label",
+              "kind": "text",
+              "label": "링크 이름",
+              "spec": "한글 4~14자. 목적지 메뉴 이름 그대로."
+            },
+            {
+              "key": "href",
+              "kind": "url",
+              "label": "목적지 주소",
+              "spec": "실제 목적지 주소(R-30)."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "열린경영",
+          "links": [
+            {
+              "label": "윤리경영",
+              "href": "/open/ethics"
+            },
+            {
+              "label": "경영공시",
+              "href": "/open/management"
+            },
+            {
+              "label": "예산·결산",
+              "href": "/open/budget"
+            }
+          ]
+        },
+        {
+          "name": "정보공개",
+          "links": [
+            {
+              "label": "사전정보공표",
+              "href": "/open/disclosure"
+            },
+            {
+              "label": "정보공개 청구",
+              "href": "/open/request"
+            },
+            {
+              "label": "공공데이터 제공",
+              "href": "/open/data"
+            }
+          ]
+        },
+        {
+          "name": "고객참여",
+          "links": [
+            {
+              "label": "재단에 바란다",
+              "href": "/voice"
+            },
+            {
+              "label": "설문조사",
+              "href": "/voice/survey"
+            },
+            {
+              "label": "부패·공익 신고",
+              "href": "/voice/report"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "call_label",
+      "kind": "text",
+      "label": "전화 레이블",
+      "spec": "「대표전화」.",
+      "example": "대표전화"
+    },
+    {
+      "key": "tel",
+      "kind": "text",
+      "label": "대표전화 번호",
+      "spec": "기관이 공시한 실제 대표번호를 하이픈 포함으로 적는다. tel: 링크에도 같은 값이 들어간다. 확인되지 않은 번호는 쓰지 않는다(R-23).",
+      "example": "051-000-0000"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "판 색",
+      "options": [
+        "primary-80(기본)",
+        "primary-90·gray-90"
+      ],
+      "how": ".open-panel__panel의 배경 토큰을 바꾸고 선 색(primary-30·primary-60)을 같은 쪽으로 한 단계 옮긴다. npm run check:contrast로 다시 잰다."
+    },
+    {
+      "axis": "묶음 수",
+      "options": [
+        "3묶음(기본)",
+        "2묶음"
+      ],
+      "how": ".open-panel__groups의 tablet:grid-cols-3을 2로 바꾼다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "field-accordion"
+    ],
+    "after": [
+      "partner-row"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "plain",
+    "note": "섹션은 바탕 면이고 판 하나가 --color-primary-80 짙은 단색 면이다(반경 1.2rem). 묶음 밑줄은 --color-primary-30, 링크 줄 선은 --color-primary-60.",
+    "framed": true
+  },
+  "section": {
+    "archetype": "list"
+  },
+  "styles": [
+    "src/styles/6-components/open-panel.css"
+  ],
+  "requires": {
+    "components": [
+      "icon"
+    ],
+    "icons": [
+      "chevron-right"
+    ],
+    "scripts": []
+  },
+  "accessibility": [
+    "판 제목은 h2, 묶음 이름은 h3이다(R-39).",
+    "링크 목록은 ul이다. 목록 표시를 지웠으므로 role=\"list\"를 남긴다.",
+    "링크 줄 높이는 4.8rem으로 터치 영역 44px을 넘는다(R-13).",
+    "대표전화는 tel: 링크다. 번호 글자가 링크 이름이고 앞의 「대표전화」가 무엇의 번호인지 알린다.",
+    "짙은 면 위 글자는 gray-0, 레이블은 primary-20이다. 판 색을 바꾸면 npm run check:contrast로 다시 잰다."
+  ],
+  "origin": "견본 — 운영자 판정 대기. 제주관광공사 메인 J안(2026-11-13)의 open-i·open-j(정보공개 판 + 대표전화)를 기관 이름·문구를 빼고 옮겼다. 연계 서비스 로고 줄은 partner-row 블록으로 따로 둔다."
+}

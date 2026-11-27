@@ -47,6 +47,12 @@ test('R-26: 토큰 스택의 1순위는 카탈로그 한글 폰트', () => {
   assert.equal(firstFamily('var(--font-sans), serif', "'Hahmlet', serif"), 'Hahmlet')
 })
 
+test('R-26: 한글 디스플레이 서체 페이퍼로지(OFL)는 1순위 한글 폰트로 인정한다', () => {
+  const stack = v => ({ font: { family: { sans: { value: "'Pretendard GOV', sans-serif" }, heading: { value: v } } } })
+  assert.doesNotThrow(() => assertHangulFontFallback(stack('Paperlogy, var(--font-sans)')))
+  assert.doesNotThrow(() => assertHangulFontFallback(stack("'Paperlogy', 'Pretendard GOV', sans-serif")))
+})
+
 const cat = loadIconCatalog(ROOT)
 
 test('R-27: 대장 밖 이름·표정·외부 스프라이트·aria-hidden 누락은 오류', () => {

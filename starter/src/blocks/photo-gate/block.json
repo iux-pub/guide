@@ -1,0 +1,269 @@
+{
+  "id": "photo-gate",
+  "name": "움직이는 사진 표지 첫 화면 — 사진 장면 전환 + 사명 표제 + 바닥 바로가기 줄",
+  "slot": "first-screen",
+  "forms": [
+    "H7",
+    "Q3"
+  ],
+  "reference": "design-intelligence §6-1 H7 전면 사진 표지 + §6-2 Q3 히어로에 붙은 띠, §3-4 2025 개편 공기업 메인",
+  "tags": [
+    "첫 화면",
+    "히어로",
+    "전면 사진",
+    "장면 전환",
+    "투명 머리글",
+    "자주 찾는 서비스",
+    "바로가기",
+    "공기업",
+    "관광",
+    "문화",
+    "기관"
+  ],
+  "summary": "기관 대상을 담은 사진 1~5장이 투명 머리글 뒤까지 첫 화면을 통째로 맡고 7초마다 겹쳐 바뀐다. 왼쪽 위에 기관의 사명 표제(h1)와 설명, 그 아래 정지 단추 · 장면 번호 · 진행 막대, 사진 바닥에 자주 찾는 서비스 흰 글자 줄이 놓인다.",
+  "useWhen": [
+    "관광 · 문화 · 지역 공사처럼 기관 대상을 보여 주는 좋은 가로 사진이 있는 공기업 · 기관 메인이다(design-intelligence §6-1 H7). 2025 개편 공기업 메인 다섯 곳이 모두 첫 화면을 움직이는 장면으로 열었다(§3-4).",
+    "표제로 쓸 기관의 사명 · 비전 원문이 있다. 기관명은 로고가 말하므로 표제에 되풀이하지 않는다.",
+    "자주 찾는 업무 메뉴가 4~6개이고 이름이 짧다(한글 4~7자) — 사진 바닥 한 줄에 들어간다.",
+    "통합검색을 머리글에 둔다(입력칸이나 「통합검색」 버튼). 첫 화면에 검색 입력을 따로 세우지 않는다."
+  ],
+  "avoidWhen": [
+    "검색이 1순위 과업인 단일 업무형 공공 서비스다 — 검색 결합 업무 판(service-gate)을 쓴다.",
+    "가로 사진이 없거나 사진 바닥 전체가 하얗다(설경 · 흰 모래 · 안개) — 바닥 바로가기 줄을 읽히게 하려면 바닥을 검게 덮어야 한다. 짙은 글 면과 사진을 나눈 분할 표제(cover)를 쓴다.",
+    "사진이 그 기관 · 지역에만 있는 장면이 아니다(흔한 해변 · 건물) — 크기가 커도 D01이다(design-intelligence §5-5). 사진을 먼저 구한다.",
+    "사진 원본의 긴 변이 1440px에 못 미친다 — 1440 첫 화면에서 1.15배 넘게 늘어나 흐려진다(§6-1 H7, 렌더 관문). 큰 원본을 구하거나 cover를 쓴다.",
+    "바로가기를 사진 밖 흰 줄로 빼서 사진을 밝게 보이려 한다 — 첫 화면이 사진 층과 흰 칸 층으로 갈린다(D03, design-intelligence §6-1 H7 근거). 사진 바닥에 두고 스크림 · 부분 굽기로 대비를 맞춘다.",
+    "머리글의 통합검색만으로 충분한 기능형(utility) 화면이다 — 히어로를 쓰지 않는다(R-42)."
+  ],
+  "content": [
+    {
+      "key": "scenes",
+      "kind": "list",
+      "label": "장면 사진",
+      "min": 1,
+      "max": 5,
+      "spec": "기관 대상을 담은 맑은 낮 가로 사진 1~5장(design-intelligence §6-1 H7). 긴 변 2560px 이상이 좋고 1440px 미만은 쓰지 않는다. 첫 장이 첫인상이다 — 기관을 가장 잘 말하는 사진을 첫 장에 둔다. 표제가 놓일 왼쪽 위와 바로가기가 놓일 바닥에 주인공이 걸리지 않게 고르고, 초점(object-position)으로 맞춘다. 한 장이면 정지 단추가 숨는다. 생성 이미지로 채우지 않는다.",
+      "fields": [
+        {
+          "key": "src",
+          "kind": "image",
+          "label": "사진",
+          "ratio": "16:9 안팎 가로, 긴 변 2560px 이상",
+          "spec": "승인된 실제 사진. 출처는 재료 파일(MATERIALS.md)에 적는다. 기관 자체 자료는 화면에 출처를 쓰지 않는다(design-intelligence §5-5)."
+        },
+        {
+          "key": "alt",
+          "kind": "text",
+          "label": "사진 대체 텍스트",
+          "spec": "한글 15~40자. 사진에 보이는 장소 · 사물을 적는다. 「메인 이미지」 같은 일반 어휘를 쓰지 않는다(R-09)."
+        },
+        {
+          "key": "focus",
+          "kind": "text",
+          "label": "초점",
+          "spec": "object-position 값(가로% 세로%). 1024 이상에서 이 값으로 사진을 맞춘다. 1024 미만을 따로 맞추려면 style에 --focus-narrow를 더한다. 모르면 50% 50%."
+        }
+      ],
+      "examples": [
+        {
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%2386b3d1'/%3E%3Cpath d='M0 520 Q400 470 800 520 T1600 500 V900 H0 Z' fill='%23356e96'/%3E%3Cpath d='M900 520 L1120 300 L1260 410 L1400 330 L1600 520 Z' fill='%23476b4a'/%3E%3C/svg%3E",
+          "alt": "맑은 낮, 방파제 너머로 등대와 부두 크레인이 보이는 항구",
+          "focus": "50% 45%"
+        },
+        {
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23a9c6db'/%3E%3Cpath d='M0 600 L1600 560 V900 H0 Z' fill='%23596b4f'/%3E%3Crect x='980' y='300' width='220' height='300' fill='%23d8d2c4'/%3E%3C/svg%3E",
+          "alt": "항구 언덕 위 붉은 벽돌 공연장과 앞마당 잔디밭",
+          "focus": "60% 50%"
+        },
+        {
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%2397b8cf'/%3E%3Cpath d='M0 640 Q500 600 1000 650 T1600 620 V900 H0 Z' fill='%23305a78'/%3E%3C/svg%3E",
+          "alt": "해 질 무렵 전 바다 위로 이어진 해안 산책로",
+          "focus": "40% 50%"
+        }
+      ]
+    },
+    {
+      "key": "title_line_1",
+      "kind": "text",
+      "label": "표제 첫 줄",
+      "spec": "기관의 사명 · 비전 원문의 앞부분(출처를 계획에 적는다). 표어를 지어 붙이지 않는다(design-intelligence §2-2). 원문이 끊어 읽는 자리에서 나눈다 — 1440에서 두 줄, 360에서 세 줄 이내.",
+      "example": "예술로 일상을 잇는"
+    },
+    {
+      "key": "title_line_2",
+      "kind": "text",
+      "label": "표제 둘째 줄",
+      "spec": "사명 · 비전 원문의 나머지. 한글 20자 이내.",
+      "example": "항구도시의 문화 공공기관"
+    },
+    {
+      "key": "lead",
+      "kind": "text",
+      "label": "설명 한 줄",
+      "spec": "기관의 성격을 사실로 한 문장(한글 20~40자, 합쇼체). 1024 이상에서만 보인다. 실적 · 최상급을 쓰지 않는다(R-44).",
+      "example": "항구문화재단은 항구광역시가 출연한 문화예술 공공기관입니다."
+    },
+    {
+      "key": "quick_label",
+      "kind": "text",
+      "label": "바로가기 묶음 이름",
+      "spec": "스크린리더가 읽는 nav 이름. 「자주 찾는 서비스」.",
+      "example": "자주 찾는 서비스"
+    },
+    {
+      "key": "services",
+      "kind": "list",
+      "label": "자주 찾는 서비스",
+      "min": 4,
+      "max": 6,
+      "spec": "4~6개. 1024 이상 한 줄, 그 아래 3열이라 3 · 6개일 때 빈 칸이 없다. 이름은 기관이 실제로 쓰는 메뉴 이름이고 한글 4~7자다 — 360의 세 칸(약 10.9rem)에 한 줄로 들어간다.",
+      "fields": [
+        {
+          "key": "label",
+          "kind": "text",
+          "label": "서비스 이름",
+          "spec": "한글 4~7자."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "목적지 주소",
+          "spec": "실제 목적지 주소(R-30)."
+        },
+        {
+          "key": "icon",
+          "kind": "icon",
+          "label": "아이콘 이름",
+          "spec": "세트에 있는 선 아이콘 이름(list_icons). 여섯 개를 한 표정으로 맞추고 배경 상자에 넣지 않는다(R-27 · R-51)."
+        }
+      ],
+      "examples": [
+        {
+          "label": "입찰·계약정보",
+          "href": "/tender",
+          "icon": "document"
+        },
+        {
+          "label": "채용공고",
+          "href": "/recruit",
+          "icon": "users"
+        },
+        {
+          "label": "공지사항",
+          "href": "/notice",
+          "icon": "bell"
+        },
+        {
+          "label": "보도자료",
+          "href": "/press",
+          "icon": "file"
+        },
+        {
+          "label": "사전정보공표",
+          "href": "/open/disclosure",
+          "icon": "folder"
+        },
+        {
+          "label": "경영공시",
+          "href": "/open/management",
+          "icon": "chart-bar"
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "부분 굽기",
+      "options": [
+        "끔(기본)",
+        "오른쪽 아래(style=\"--photo-gate-burn: 1\")",
+        "왼쪽 아래(style=\"--photo-gate-burn: 1; --photo-gate-burn-flip: -1\")"
+      ],
+      "how": "사진 바닥 한쪽이 밝아(들판 · 모래 · 흰 파도) 바로가기 줄 뒤 밝기가 좌우로 갈리면 섹션에 CSS 변수를 준다. 1024 이상에서 그쪽 바닥 28rem만 한 겹 더 누른다. 줄 뒤 좌우 1/3의 평균 밝기를 장면마다 재어 1.5배 안으로 맞춘다. 화면 폭 띠를 하나 더 겹치지 않는다 — 바닥이 검은 띠가 된다."
+    },
+    {
+      "axis": "사진 높이",
+      "options": [
+        "60 / 68 / 76rem(기본, 1024 · 1280 · 1440 이상, 머리글 포함)"
+      ],
+      "how": ".photo-gate의 laptop · pc · 1440 높이를 같이 바꾼다. 1440×900에서 다음 섹션 제목이 바닥에 걸쳐 보여야 한다(렌더 관문). 화면 높이(100vh · svh)로 바꾸지 않는다(R-42)."
+    },
+    {
+      "axis": "사진 위 로고",
+      "options": [
+        "원래 로고 그대로(기본)",
+        "반전 로고로 바꿈"
+      ],
+      "how": "머리글 브랜드 링크 안의 원래 로고 img에 class=\"photo-header__logo\"를 주고, 바로 뒤에 <img class=\"photo-header__inverse\" src=\"반전 로고\" alt=\"\">를 더한다. 사진 위에서만 반전 로고가 보인다. 반전 로고가 재료에 없으면 로고 SVG의 글자 경로만 흰색으로 바꾼 시안용 반전본을 만들고 교체 목록에 적는다(design-intelligence §5-2). 필터로 색을 뒤집지 않는다."
+    }
+  ],
+  "neighbors": {
+    "before": [],
+    "after": [
+      "notice-board",
+      "bulletin"
+    ],
+    "avoid": []
+  },
+  "shell": {
+    "headerClass": "photo-header"
+  },
+  "bundle": {
+    "parts": [
+      "photo-gate",
+      "photo-header"
+    ],
+    "reason": "머리글은 첫 화면 사진이 뒤에 있어야 투명해도 읽히고, 첫 화면은 머리글 높이(6.4 · 8rem)만큼 위로 끌어올려 사진을 머리글 뒤까지 깐다. 서로의 치수 · 색에 기대어 따로 떼면 깨진다."
+  },
+  "surface": {
+    "tone": "scene",
+    "bottom": "plain",
+    "note": "사진 위에 검정 알파 토큰 선형 스크림 세 곳(머리글 띠 · 표제 뒤 · 바로가기 줄 뒤), 한 겹씩. 아래 블록은 바탕 면(흰색)이다."
+  },
+  "section": {
+    "archetype": "intro"
+  },
+  "styles": [
+    "src/styles/6-components/photo-gate.css",
+    "src/styles/6-components/photo-header.css"
+  ],
+  "requires": {
+    "components": [
+      "icon",
+      "header"
+    ],
+    "icons": [
+      "pause"
+    ],
+    "scripts": [
+      "photo-gate.js",
+      "photo-header.js"
+    ]
+  },
+  "accessibility": [
+    "표제는 main의 h1 하나이고 section의 aria-labelledby가 가리킨다(R-39). 두 줄은 br로 나누고 뒤에 공백을 둬 스크린리더가 한 문장으로 읽는다.",
+    "정지 단추가 섹션의 첫 포커스 요소다(R-33) — 마크업에서 맨 앞에 두고 화면에서는 order로 바로가기 줄 위에 놓는다. 이름(sr-only)이 「정지」「재생」으로 바뀐다. 재생 아이콘(play)은 photo-gate.js가 같은 스프라이트에서 바꿔 끼운다 — 세트에 pause · play가 함께 있어야 한다.",
+    "장면 번호와 진행 막대는 aria-hidden이다. 쉬는 사진은 visibility: hidden이라 보조기기에서 빠진다.",
+    "prefers-reduced-motion이면 첫 장면에 멈춘 채 시작한다(R-22).",
+    "사진 위 글자 대비는 사진마다 다르다 — 장면마다 360 · 768 · 1024 · 1280 · 1440에서 글자 뒤 픽셀을 재어 일반 글자 4.5:1 · 큰 글자 3:1을 확인한다(R-12). 50% 층 위에는 큰 글자만 둔다.",
+    "자주 찾는 서비스는 nav[aria-label] 안 ul이다. 목록 표시를 지웠으므로 role=\"list\"를 남긴다. 칸 높이 5.6rem 이상(R-13).",
+    "머리글은 스크립트가 없으면 흰 바탕 그대로다. 사진 위에서는 의미 토큰만 흰색으로 바뀌고 초점 링도 흰색이다."
+  ],
+  "exceptions": [
+    {
+      "rule": "R-22",
+      "file": "src/styles/6-components/photo-gate.css",
+      "selector": ".photo-gate__photo",
+      "match": "[transition:opacity_1.6s_ease,visibility_0s_linear_1.6s]",
+      "reason": "사진 장면이 겹쳐 바뀌는 시간이다. 0.5초로 바꾸면 사진이 깜박이듯 넘어가 장면이 끊긴다. 움직임 줄이기 설정에서는 전환하지 않는다."
+    },
+    {
+      "rule": "R-22",
+      "file": "src/styles/6-components/photo-gate.css",
+      "selector": ".photo-gate__photo[data-active]",
+      "match": "[transition:opacity_1.6s_ease,visibility_0s_linear_0s]",
+      "reason": "들어오는 사진이 1.6초 동안 겹쳐 나타난다(나가는 사진과 같은 시간). 움직임 줄이기 설정에서는 전환하지 않는다."
+    }
+  ],
+  "origin": "견본 — 운영자 판정 대기. 제주관광공사 메인 시안 13~16회차(2026-11-19~20)의 첫 화면(jto-gate · sky-header)을 기관 이름 · 문구를 빼고 옮겼다. 16회차가 가린 평가에서 13회차 5차를 이긴 스크림 구성(한 겹씩, 1024 미만 설명 감춤, 부분 굽기)을 따른다. 굽기 끝 75%와 장면 제어 줄 relative z-1은 23회차(2026-11-21 — 직전 최고안과 한전KPS 견본을 각각 순서를 바꾼 가린 평가 두 번 모두 이김) 값이다."
+}

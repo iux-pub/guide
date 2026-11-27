@@ -1,22 +1,22 @@
 # INFOMIND UX Guide System
 
 > KRDS(범정부 UI/UX 디자인 시스템)의 품질 원칙 + INFOMIND 실무 표준의 **단일 소스**.
-> 색상 토큰 · 컴포넌트 패턴 · 마크업 스니펫 · AI 컨트랙트(스킬)를 한 저장소에서 발행한다.
+> 색상 토큰 · 컴포넌트 패턴 · 마크업 스니펫 · AI 컨트랙트(infoUX MCP)를 한 저장소에서 발행한다.
 
 ---
 
-## 🧭 당신은 누구신가요?
+## 역할별 시작
 
 | 역할 | 이동 |
 |------|------|
-| 🆕 **새 프로젝트를 시작하는 개발자** | [→ 스타터 키트로 시작](#-신규-프로젝트-시작-개발자) |
-| 🛠 **이 표준 저장소를 손보는 UX팀** | [→ 5분 시작](#-5분-시작-ux팀--표준-관리자) |
-| 🤝 **컨트리뷰션하려는 사람** | `CONTRIBUTING.md` |
-| 🤖 **Claude/AI에게 디자인 작업 시키는 사람** | [→ 예방형 작업 흐름](#-ai-코딩-에이전트와-함께-쓰기-다중-llm-호환) |
+| 새 프로젝트를 시작하는 개발자 | [스타터 키트로 시작](#신규-프로젝트-시작-개발자) |
+| 이 표준 저장소를 관리하는 UX팀 | [5분 시작](#5분-시작-ux팀--표준-관리자) |
+| 기여하려는 사람 | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| AI 코딩 에이전트로 작업하는 사람 | [예방형 작업 흐름](#ai-코딩-에이전트와-함께-쓰기-다중-llm-호환) |
 
 ---
 
-## 🆕 신규 프로젝트 시작 (개발자)
+## 신규 프로젝트 시작 (개발자)
 
 ```bash
 npx create-infomind-ux my-project
@@ -24,11 +24,11 @@ cd my-project
 npm run dev          # 개발 서버 (http://localhost:8080)
 ```
 
-자동으로:
-- ✅ starter 키트 다운로드 + 압축 해제
-- ✅ `package.json` 이름 갱신
-- ✅ `git init` + 초기 커밋
-- ✅ `npm install` 실행
+명령이 하는 일:
+- starter 키트 다운로드 + 압축 해제
+- `package.json` 이름 갱신
+- `git init` + 초기 커밋
+- `npm install` 실행
 
 수동 clone 방식도 가능:
 ```bash
@@ -36,22 +36,22 @@ git clone https://github.com/iux-pub/starter.git my-project
 cd my-project && rm -rf .git && git init && npm install && npm run build
 ```
 
-자동 동봉되는 것:
-- ✅ INFOUX 색상/기본 폰트/브레이크포인트 토큰
-- ✅ KRDS 기반 컴포넌트 CSS
-- ✅ infoUX MCP — Claude Code·Codex·Cursor 공통 (`npx -y @infomind-ux/infoux-mcp`)
-- ✅ MCP `get_workflow` — 페이지·폼·위젯·토큰 작업별 절차
-- ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
-- ✅ `contracts/task-contract.md` — 구현 전 판단 계약
+스타터에 들어 있는 것:
+- INFOUX 색상/기본 폰트/브레이크포인트 토큰
+- KRDS 기반 컴포넌트 CSS
+- infoUX MCP — Claude Code·Codex·Cursor 공통 (`npx -y @infomind-ux/infoux-mcp`)
+- MCP `get_workflow` — 페이지·폼·위젯·토큰 작업별 절차
+- `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
+- `contracts/task-contract.md` — 구현 전 판단 계약
 
-브랜드 색상 또는 기본 폰트 변경: `tokens/foundation.json` 편집 → `npm run build`.
+브랜드 색상 또는 기본 폰트 변경: `tokens/brand.json` 편집 → `npm run build`. `tokens/foundation.json`은 불변 계층이라 프로젝트에서 고치지 않는다.
 
 > 스타터 저장소: https://github.com/iux-pub/starter
 > CLI 저장소: [`cli/`](cli/README.md) (`create-infomind-ux` npm 패키지)
 
 ---
 
-## 🛠 5분 시작 (UX팀 — 표준 관리자)
+## 5분 시작 (UX팀 — 표준 관리자)
 
 ```bash
 nvm use              # .nvmrc 따라 Node 20
@@ -71,9 +71,9 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 
 ---
 
-## 🤖 AI 코딩 에이전트와 함께 쓰기 (다중 LLM 호환)
+## AI 코딩 에이전트와 함께 쓰기 (다중 LLM 호환)
 
-본 저장소는 **모든 AI 코딩 에이전트**가 INFOMIND UX Core Rules를 따르도록 설계됐다. KRDS는 원칙과 접근성 기준으로 적용하고, 수치 체계는 프로젝트 맥락에 맞게 조정한다.
+이 저장소는 어떤 AI 코딩 에이전트를 쓰든 INFOMIND UX Core Rules를 따르도록 설계됐다. KRDS가 최우선 기준이다. 본문·제목 크기와 자간·행간은 KRDS 타이포 표 값만 쓰고(R-38), 프로젝트에 맞게 조정할 수 있는 것은 간격·밀도뿐이다.
 
 ### 작업 시작 시 — 자동 적용
 
@@ -86,13 +86,13 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 - 공공 아이덴티티 적용 여부와 예외
 
 이후 AI는:
-- ✅ 코드 생성 전 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 먼저 판정
-- ✅ 공식 배너, 정부 상징, 운영기관 식별자는 적용 대상이 확인된 경우에만 생성
-- ✅ 색상은 토큰만 사용 (raw hex/rgb/hsl 금지)
-- ✅ 간격/크기/타이포는 KRDS를 참고하되 프로젝트 밀도에 맞게 조정
-- ✅ 기존 컴포넌트 패턴 우선 사용, 필요한 컴포넌트는 UX팀 판단으로 확장
-- ✅ rules.json 규칙 전체 자동 준수 (MCP `get_rules`)
-- ✅ 위반 발견 시 작업 중단 + 사용자에게 보고
+- 코드 생성 전 일반사이트/공공서비스/공공기관/CMS·관리자/커머스·예약 중 먼저 판정
+- 공식 배너, 정부 상징, 운영기관 식별자는 적용 대상이 확인된 경우에만 생성
+- 색상은 토큰만 사용 (raw hex/rgb/hsl 금지)
+- 간격·밀도는 프로젝트에 맞게 조정. 본문·제목 크기와 자간·행간은 KRDS 타이포 표 값만 사용 (R-38, `references/korean-web-patterns.md` §5)
+- 기존 컴포넌트 패턴 우선 사용, 필요한 컴포넌트는 UX팀 판단으로 확장
+- rules.json 규칙 전체 준수 (MCP `get_rules`)
+- 위반 발견 시 작업 중단 + 사용자에게 보고
 
 정부 아이덴티티 요소는 모든 프로젝트의 기본값이 아니다. 민간 사이트, 사내 시스템, 일반 CMS에서는 공식 배너·정부 상징·운영기관 식별자를 생성하지 않고 KRDS 접근성/구조/사용성 원칙만 적용한다.
 
@@ -110,20 +110,21 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 
 자동 인식 못 하는 LLM은 `prompts/context.md` 또는 `AGENTS.md`를 대화에 첨부.
 
-### 작업별 스킬
+### 작업별 절차 (MCP `get_workflow`)
 
-작업 절차는 `references/workflows/`가 원본이며 `npm run build:mcp`가 MCP 번들로 발행한다.
+작업 절차는 `references/workflows/`가 원본이며 `npm run build:mcp`가 MCP 번들로 발행한다. 스킬 계층은 2026-07-29 폐기했다.
 
+- `init-project`: 스타터 기반 새 프로젝트 초기화, 브랜드 토큰 설정
 - `design-page`: 사이트 유형, page shell, section 패턴
 - `create-component`: 기존 컴포넌트 검색과 신규 공통화 판단
 - `design-form`: label, 도움말, 오류, 제출 흐름
 - `design-widget`: ARIA 관계, 키보드, 포커스
 - `change-token`: 토큰 영향 범위와 생성물
-- `review-ui`: Task Contract와 구현 차이 검토
+- `review-ui`: Task Contract와 구현 차이 검토, 납품 전 리뷰
 
 ---
 
-## 📦 발행 채널
+## 발행 채널
 
 이 저장소는 단일 소스(SoT). 빌드 산출물이 아래 채널로 배포된다.
 
@@ -138,7 +139,7 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 
 ---
 
-## 🎯 아이콘
+## 아이콘
 
 72종을 세트로 관리한다. 구글 Material Symbols를 씨앗으로 삼고, 없는 아이콘은
 스튜디오에서 만들어 사람이 승인한 것만 넣는다.
@@ -168,7 +169,7 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 
 ---
 
-## 🛠 일상 명령어 (5개)
+## 일상 명령어
 
 | 명령 | 용도 |
 |------|------|
@@ -192,11 +193,12 @@ npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 
 ---
 
-## 📁 프로젝트 구조
+## 프로젝트 구조
 
 ```
 tokens/                   디자인 토큰 단일 소스
-  foundation.json         색상 + 기본 폰트 단일 소스
+  foundation.json         불변 계층 — gray·상태색·의미 토큰·브레이크포인트 (프로젝트에서 수정 금지)
+  brand.json              교체 계층 — 브랜드 팔레트 + 기본 폰트 (프로젝트가 고치는 유일한 토큰 파일)
   build/tokens.css        자동 생성 — 직접 수정 금지
 
 src/styles/               CSS 소스 (ITCSS 5레이어 + Tailwind v4)
@@ -221,7 +223,7 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 
 ---
 
-## 🎨 기술 스택
+## 기술 스택
 
 - **CSS Framework**: Tailwind v4
 - **방법론**: ITCSS 5-layer + BEM (5-objects · 6-components 한정)
@@ -236,32 +238,32 @@ CLAUDE.md                 LLM이 항상 따르는 룰
 
 ---
 
-## 📜 코딩 규칙 (요약)
+## 코딩 규칙 (요약)
 
 `rules.json`이 단일 소스. `npm run check`가 자동 검출. 전체 규칙은 [`/conventions/`](http://localhost:8080/conventions/) 또는 `CLAUDE.md` 참조.
 
 | 규칙 | 영역 | 내용 |
 |------|------|------|
-| R-01 | css | 색상은 `var(--token)` 강제, 간격/크기/타이포 스케일은 권장 |
-| R-05 / R-08 | bem | element 2단계 중첩 금지 (`.card__body__title` ❌) |
+| R-01 | css | 색은 어디에 쓰든 `var(--color-*)`만. 간격·크기는 rem 임의값(R-37) |
+| R-05 / R-08 | bem | element 2단계 중첩 금지 (`.card__body__title`은 `.card__title`로) |
 | R-06 / R-18 | bem | modifier는 의미적 — `--blue`/`--big` 등 시각 단어 금지 |
 | R-09 / R-10 | html | `<img alt>` 필수 · `div/span 클릭 핸들러 패턴` 금지 |
 | R-11 ~ R-13 | a11y | 포커스 스타일 · 색상 대비 4.5:1 · 터치 영역 44×44px |
 | R-14 | a11y | `.skip-to-content` 필수 |
 | R-15 | html | HTML 기본 구조는 기존 인포마인드 사이트 패턴 우선 |
 | R-16 | a11y | 인터랙티브 위젯 필수 ARIA 누락 금지 |
-| R-17 | bem | 상태는 BEM modifier만 — `.is-*`/`.has-*` 금지 |
+| R-17 | bem | 상태는 ARIA·hidden 속성을 먼저. ARIA로 표현할 수 없을 때만 BEM modifier — `.is-*`/`.has-*` 금지 |
 
 ---
 
-## 🔄 갱신 흐름
+## 갱신 흐름
 
 ```
 KRDS 새 버전 또는 UX팀 기준 변경
    ↓
-tokens/foundation.json 갱신
+tokens/foundation.json 갱신   (UX팀 표준 관리자만. 프로젝트는 tokens/brand.json만 고친다)
    ↓
-npm run build  ← 토큰·규칙·CSS·프롬프트·스킬·사이트 전체 재빌드
+npm run build  ← 토큰·규칙·CSS·프롬프트·레퍼런스·MCP 번들·사이트 전체 재빌드
    ↓
 npm run sync:starter        → 로컬 starter/ 생성물 갱신
 npm run sync:starter:push   → 검토 후 iux-pub/starter 푸시
@@ -270,7 +272,7 @@ npm run build:mcp      → MCP 번들 갱신 (팀원은 등록만으로 최신 �
 
 ---
 
-## 📚 더 알아보기
+## 더 알아보기
 
 | 자료 | 위치 |
 |------|------|
@@ -279,7 +281,7 @@ npm run build:mcp      → MCP 번들 갱신 (팀원은 등록만으로 최신 �
 | **다중 LLM 컨트랙트** (Cursor · Aider · Codex · Hermes 등) | [`AGENTS.md`](AGENTS.md) |
 | **Claude Code 자동 컨텍스트** | [`CLAUDE.md`](CLAUDE.md) |
 | 신규 컴포넌트 작성 가이드 | `references/snippet-template.md` |
-| HTML 구조 매핑 (32종 × Root/ARIA/키보드) | `references/html-semantics.md` |
+| HTML 구조 매핑 (Root/ARIA/키보드) | `references/html-semantics.md` |
 | 토큰 카탈로그 | `references/krds-tokens.md` |
 | 컴포넌트 카탈로그 | `references/krds-components.md` |
 | Tailwind v4 매핑 | `references/tailwind-mapping.md` |

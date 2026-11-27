@@ -42,7 +42,7 @@
         "effects": [
           "fade"
         ],
-        "note": "장식·스크롤 진입 모션 한정 규정이다. 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing.md 소유로 등급 무관 — Spring 프리셋 포함."
+        "note": "장식·스크롤 진입 모션 한정 규정이다. 컴포넌트 피드백 모션(모달·토스트·인풋 전환)은 interaction-timing.md 소유로 등급 무관."
       },
       "displayFont": "body-only",
       "layout": "symmetric-grid",
@@ -110,7 +110,7 @@
           "scale-2pct",
           "stagger-50-80"
         ],
-        "note": "scroll-jacking 금지. 무한 루프는 장식 요소 1곳 한정(로고 마키 형태 금지). 비디오 hero는 무음 자동재생 + 일시정지 컨트롤. 컴포넌트 피드백 모션은 interaction-timing.md 소유로 등급 무관."
+        "note": "scroll-jacking 금지. 무한 반복은 로딩 표시에만 쓴다(로고 마키 금지, R-22·R-33). 비디오 hero는 자동 재생하지 않는다 — 무음 배경 영상도 사용자가 재생하고, 재생·정지 컨트롤은 키보드로 조작한다(KRDS). 컴포넌트 피드백 모션은 interaction-timing.md 소유로 등급 무관."
       },
       "displayFont": "heading-pairing",
       "layout": "asymmetric",

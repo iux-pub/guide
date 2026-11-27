@@ -51,7 +51,7 @@ KRDS 정의 목록 패턴. 라벨 + 값 쌍 (예: 사양, 상세 정보).
 - **자식**: `<li>` (ul/ol) 또는 `<dt>` + `<dd>` (dl)
 - **변형 클래스**: `.list--text` · `.list--ordered` · `.list--structured`
 - **필수 ARIA**: — (시맨틱 태그만으로 충분)
-- 상세: `skill/references/html-semantics.md#list`
+- 상세: `references/html-semantics.md#list`
 
 ## 접근성
 

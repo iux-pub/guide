@@ -16,7 +16,9 @@ const CONVENTIONS_DIR = path.join(ROOT, 'site', 'conventions')
 
 const { categories, rules } = JSON.parse(fs.readFileSync(RULES_PATH, 'utf-8'))
 
-const SEVERITY_LABEL = { error: '`error`', warning: '`warn`', info: '`info`' }
+// 심각도는 error·warn·info 세 값만 쓴다(검사기 lib의 결과 값과 같다). warning 같은 다른 표기는 빌드를 막는다 —
+// 모르는 값을 그대로 흘리면 문서의 표기가 갈라지고 MCP get_rules 심각도 필터가 규칙을 놓친다.
+const SEVERITY_LABEL = { error: '`error`', warn: '`warn`', info: '`info`' }
 const START = '<!-- RULES_START -->'
 const END = '<!-- RULES_END -->'
 const AGENTS_START = '<!-- AGENTS_RULES_START -->'
@@ -29,7 +31,18 @@ function rulesByCategory(categoryId) {
 }
 
 function severityBadge(s) {
-  return SEVERITY_LABEL[s] || s
+  if (!Object.hasOwn(SEVERITY_LABEL, s)) {
+    throw new Error(`rules.json 심각도 "${s}"는 쓸 수 없다 — ${Object.keys(SEVERITY_LABEL).join('·')} 중 하나로 적는다.`)
+  }
+  return SEVERITY_LABEL[s]
+}
+
+/** 규칙 목록의 심각도를 한꺼번에 본다 — 생성물을 쓰기 전에 실패해야 반쯤 갱신된 문서가 남지 않는다 */
+function validateSeverities(list) {
+  const bad = list.filter(r => !Object.hasOwn(SEVERITY_LABEL, r.severity))
+  if (bad.length) {
+    throw new Error(`rules.json 심각도 오류 — ${bad.map(r => `${r.id}: "${r.severity}"`).join(', ')}. ${Object.keys(SEVERITY_LABEL).join('·')} 중 하나로 적는다.`)
+  }
 }
 
 /** 코드 블록 생성 (lang 자동 감지) */
@@ -129,7 +142,7 @@ function buildConventionPage(cat) {
   const catRules = rulesByCategory(cat.id)
   if (catRules.length === 0) return
 
-  const lang = cat.lang || 'scss'
+  const lang = cat.lang || 'css'
   const lines = []
 
   // 프론트매터
@@ -162,9 +175,8 @@ function buildConventionPage(cat) {
     lines.push(`## ${r.id} — ${r.summary}`)
     lines.push('')
 
-    const severityMap = { error: '`error`', warning: '`warning`', info: '`info`' }
     const enforcementStr = (r.enforcement || []).join(' · ')
-    lines.push(`**심각도:** ${severityMap[r.severity] || r.severity} &nbsp; **검증:** ${enforcementStr}`)
+    lines.push(`**심각도:** ${severityBadge(r.severity)} &nbsp; **검증:** ${enforcementStr}`)
     lines.push('')
 
     if (r.rationale) {
@@ -236,15 +248,27 @@ function updateConventionsIndex() {
 
 // ── 실행 ──────────────────────────────────────────────────────────
 
-console.log('규칙 빌드 시작...')
+module.exports = { SEVERITY_LABEL, severityBadge, validateSeverities }
 
-updateClaudeMd()
-updateAgentsMd()
+// 단위 테스트가 require로 불러 쓸 수 있게 직접 실행할 때만 생성물을 쓴다
+if (require.main === module) {
+  console.log('규칙 빌드 시작...')
 
-for (const cat of categories) {
-  buildConventionPage(cat)
+  try {
+    validateSeverities(rules)
+  } catch (e) {
+    console.error(`✗ ${e.message}`)
+    process.exit(1)
+  }
+
+  updateClaudeMd()
+  updateAgentsMd()
+
+  for (const cat of categories) {
+    buildConventionPage(cat)
+  }
+
+  updateConventionsIndex()
+
+  console.log('규칙 빌드 완료!')
 }
-
-updateConventionsIndex()
-
-console.log('규칙 빌드 완료!')

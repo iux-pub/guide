@@ -1,0 +1,191 @@
+{
+  "id": "link-lines",
+  "name": "제목 서체 링크 줄",
+  "slot": "link-group",
+  "forms": [],
+  "reference": "design-intelligence §6-5 줄 목록(한 단 변주)",
+  "tags": [
+    "열린 경영",
+    "정보공개",
+    "고객참여",
+    "링크 묶음",
+    "한 단",
+    "옅은 면",
+    "쇼케이스"
+  ],
+  "summary": "옅은 색 면에서 위에 큰 면 제목을 세우고, 아래에 「묶음 이름 + 제목 서체 링크」를 한 단 줄로 쌓는다.",
+  "bundle": {
+    "parts": [
+      "link-lines",
+      "display-title"
+    ],
+    "reason": "면 제목(display-title)의 아래 여백을 이 블록이 없애고 줄 목록 위에 세운다. 제목 없이 줄 목록만 쓰면 무엇의 목록인지 알 수 없다."
+  },
+  "useWhen": [
+    "바로 위가 같은 옅은 색 면(field-shore)이다 — 위 여백 없이 한 면으로 이어 붙는다.",
+    "묶음이 2~5개이고 묶음마다 링크가 2~4개이며 링크 이름이 짧다(12자 이내).",
+    "「소제목 + 밑줄 + 링크 세 개」 3열 묶음(전형 조립 E)을 피하고 싶고, 묶음 사이를 선으로만 나누고 싶다."
+  ],
+  "avoidWhen": [
+    "바로 위가 다른 색 면이다 — 위 여백이 없어 윗 블록에 붙는다. link-rows를 쓰거나 위 여백을 준다(변형 축).",
+    "페이지 아래쪽에 짙은 면이 필요하다 — 이 블록은 옅은 색 면이다. link-rows를 쓴다.",
+    "링크가 묶음마다 다섯 개를 넘는다 — 줄이 두세 번 꺾여 묶음의 경계가 흐려진다.",
+    "restrained 이하 등급이다 — 면 제목 크기와 아래 여백이 쇼케이스 수위다. link-rows를 쓴다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "면 제목",
+      "spec": "한글 2~10자. 메뉴 이름(예: 「사업영역」「열린경영」)을 쓴다. 표어·문장형 제목·소개 문장을 지어 붙이지 않는다(design-intelligence §2-2).",
+      "example": "열린경영"
+    },
+    {
+      "key": "groups",
+      "kind": "list",
+      "label": "링크 묶음(줄)",
+      "min": 2,
+      "max": 5,
+      "spec": "2~5줄. 기관 메뉴의 묶음 구분을 그대로 쓴다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "묶음 이름",
+          "spec": "한글 2~5자. 줄 왼쪽 9.6rem 칸의 작은 글자다."
+        },
+        {
+          "key": "links",
+          "kind": "list",
+          "label": "링크",
+          "min": 2,
+          "max": 4,
+          "spec": "묶음마다 2~4개.",
+          "fields": [
+            {
+              "key": "label",
+              "kind": "text",
+              "label": "링크 이름",
+              "spec": "한글 3~12자. 실제 메뉴 이름."
+            },
+            {
+              "key": "href",
+              "kind": "url",
+              "label": "링크 주소",
+              "spec": "실제 목적지 주소(R-30)."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "열린 경영",
+          "links": [
+            {
+              "label": "경영 공시",
+              "href": "/open/disclosure"
+            },
+            {
+              "label": "윤리·인권 경영",
+              "href": "/open/ethics"
+            },
+            {
+              "label": "사업 실명제",
+              "href": "/open/realname"
+            }
+          ]
+        },
+        {
+          "name": "정보공개",
+          "links": [
+            {
+              "label": "사전 정보 공표",
+              "href": "/open/list"
+            },
+            {
+              "label": "정보공개 청구",
+              "href": "/open/request"
+            },
+            {
+              "label": "공공데이터 제공",
+              "href": "/open/data"
+            }
+          ]
+        },
+        {
+          "name": "시민 참여",
+          "links": [
+            {
+              "label": "재단에 바란다",
+              "href": "/voice"
+            },
+            {
+              "label": "설문 조사",
+              "href": "/survey"
+            },
+            {
+              "label": "시민 제안",
+              "href": "/proposal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "면 색",
+      "options": [
+        "point-5(기본)",
+        "윗 블록과 같은 옅은 면 토큰"
+      ],
+      "how": "section에 style=\"--link-lines-surface: var(--color-…)\"를 준다. 위 field-shore의 --field-shore-surface, 아래 logo-row의 --logo-row-surface와 같은 토큰으로 맞춘다."
+    },
+    {
+      "axis": "위 여백",
+      "options": [
+        "없음(기본, 같은 면에 이어 붙임)",
+        "있음"
+      ],
+      "how": "윗 블록이 다른 면이면 프로젝트 CSS에서 .link-lines에 위 여백을 준다. 카탈로그 값(pt-0)은 같은 면에 이어 붙이는 것이 전제다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "field-shore"
+    ],
+    "after": [
+      "logo-row"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "tinted",
+    "joinsAbove": "tinted",
+    "note": "--link-lines-surface(기본 --color-point-5). 줄 선은 --color-border, 맨 윗선과 링크 글자는 --color-text-bolder, 묶음 이름은 --color-text-primary, 호버 밑줄은 --color-point-30."
+  },
+  "section": {
+    "archetype": "list"
+  },
+  "styles": [
+    "src/styles/6-components/link-lines.css",
+    "src/styles/6-components/display-title.css"
+  ],
+  "requires": {
+    "components": [],
+    "icons": [],
+    "scripts": []
+  },
+  "accessibility": [
+    "묶음은 dl이다 — 묶음 이름이 dt, 링크들이 dd. 줄마다 div로 감싼다.",
+    "링크 높이는 4.8rem으로 터치 영역 44px을 넘는다(R-13).",
+    "호버는 글자색과 강조색 밑줄로 함께 알린다 — 색만으로 구분하지 않는다.",
+    "묶음 이름(--color-text-primary)과 링크 글자는 옅은 색 면 위에서 대비 4.5:1을 넘어야 한다. 면 색을 바꾸면 다시 잰다.",
+    "면 제목은 h2이고 section의 aria-labelledby가 가리킨다."
+  ],
+  "krdsPending": [
+    "면 제목 크기 clamp(3.2rem, 4vw, 5.6rem)·행간 1.2 — KRDS heading-xlarge 4rem 상한과 150% 행간 기준 밖이다(행간은 display-title의 R-24 블록 예외로 통과, 크기는 검사기가 잡지 않는다).",
+    "아래 여백 8~12rem — 밀도 기준의 1.5배를 넘는다. 프로필이 정해지지 않은 저장소에서는 R-49가 잡지 않는다."
+  ],
+  "origin": "제주관광공사 메인 E안(2026-11, 견본 — 운영자 판정: 불통과)의 link-lines를 옮겼다. 견본의 수정(한 단으로 쌓기, 링크 글자 1.9rem)을 반영했다."
+}

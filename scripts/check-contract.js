@@ -5,7 +5,8 @@
 //     - infoux.json 없음, contentSources 비었거나 자리값
 //     - 납품 페이지의 data-content-pending 자리 표기, '<!-- contentSources: … -->' 형식 예시 주석
 //     - 규칙 예외(exceptions)의 형식 오류·만료
-// 판독: scripts/lib/contract-exceptions.js, 납품 페이지 범위: scripts/lib/page-scope.js
+//     - CT-04: 메인 페이지(pageTypes main)가 있는데 docs/design-plan.md가 없거나, 일곱 칸·별도 평가자의 비평 기록·사람 판정이 없음
+// 판독: scripts/lib/contract-exceptions.js·design-plan.js, 납품 페이지 범위: scripts/lib/page-scope.js
 
 const fs = require('fs')
 const path = require('path')
@@ -35,6 +36,17 @@ if (!config) {
 } else {
   for (const f of checkContentSources(config, ROOT, { release: RELEASE })) report(f.severity, 'infoux.json', f.message)
   for (const f of checkExceptions(config, { release: RELEASE })) report(f.severity, 'infoux.json', f.message)
+
+  // CT-04 디자인 계획 — 메인 페이지가 있으면 docs/design-plan.md와 별도 평가자의 비평 기록, 사람 판정이 있어야 한다
+  let designPlan = null
+  try {
+    designPlan = require('./lib/design-plan')
+  } catch (e) {
+    if (e.code !== 'MODULE_NOT_FOUND') throw e
+  }
+  if (designPlan) {
+    for (const f of designPlan.checkDesignPlanFile(config, ROOT, { release: RELEASE })) report(f.severity, designPlan.PLAN_PATH, f.message)
+  }
 
   // 납품 페이지의 자리 표기 — 주석을 지운 뒤 요소의 data-content-pending만 본다
   let pages = []

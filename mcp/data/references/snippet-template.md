@@ -1,6 +1,6 @@
 # 스니펫 표준 템플릿 — `src/snippets/{component}.md`
 
-> 28개 KRDS 컴포넌트의 스니펫 문서가 따르는 표준 구조.
+> 카탈로그 컴포넌트의 스니펫 문서가 따르는 표준 구조.
 > 새 컴포넌트 추가 시 본 템플릿을 복사해서 시작한다.
 > `scripts/check-snippet-structure.js`가 필수 섹션 누락을 자동 검출한다.
 
@@ -70,7 +70,7 @@
 - **자식**: `header > h3` (제목) → `body` → `footer`
 - **필수 ARIA**: — (시맨틱 태그만으로 충분)
 
-> 상세: `skill/references/html-semantics.md#card`
+> 상세: `references/html-semantics.md#card`
 ```
 
 ### 3. `## Variant` (선택)
@@ -180,8 +180,8 @@ KRDS 토큰 / 컴포넌트 / 외부 표준 참조.
 
 ## 참고
 
-- 카탈로그: `skill/references/krds-components.md`
-- 시맨틱 매핑: `skill/references/html-semantics.md`
-- 토큰: `skill/references/krds-tokens.md`
-- 접근성: `skill/references/accessibility.md`
-- 금지 패턴: `skill/references/forbidden-patterns.md`
+- 카탈로그: `references/krds-components.md`
+- 시맨틱 매핑: `references/html-semantics.md`
+- 토큰: `references/krds-tokens.md`
+- 접근성: `references/accessibility.md`
+- 금지 패턴: `references/forbidden-patterns.md`

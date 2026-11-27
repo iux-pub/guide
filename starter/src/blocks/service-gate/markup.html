@@ -1,0 +1,29 @@
+<section class="section section--intro service-gate" aria-labelledby="service-gate-title">
+  <img class="service-gate__photo" src="{{photo_src}}" alt="{{photo_alt}}" width="1664" height="936">
+  <div class="container service-gate__body">
+    <h1 class="service-gate__title" id="service-gate-title">{{title}}</h1>
+    <p class="service-gate__lead">{{lead}}</p>
+  </div>
+  <div class="container service-gate__panel">
+    <form class="service-gate__search" role="search" action="{{search_action}}">
+      <label class="service-gate__search-label" for="service-gate-q">{{search_label}}</label>
+      <div class="service-gate__search-row">
+        <input class="service-gate__search-input" id="service-gate-q" type="search" name="q" placeholder="{{search_placeholder}}">
+        <button class="service-gate__search-btn" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#search"></use></svg><span class="sr-only">검색</span></button>
+      </div>
+      <p class="service-gate__keywords">
+        <span class="service-gate__keywords-label">자주 찾는 검색어</span>
+        <!-- @each keywords as keyword -->
+        <a class="service-gate__keyword" href="{{keyword.href}}">{{keyword.label}}</a>
+        <!-- @end -->
+      </p>
+    </form>
+    <nav class="service-gate__services" aria-label="{{services_label}}">
+      <ul class="service-gate__list" role="list">
+        <!-- @each services as service -->
+        <li><a class="service-gate__service" href="{{service.href}}"><img class="service-gate__art" src="{{service.art_src}}" alt="" width="96" height="96"><span>{{service.label}}</span></a></li>
+        <!-- @end -->
+      </ul>
+    </nav>
+  </div>
+</section>

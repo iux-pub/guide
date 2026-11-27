@@ -1,0 +1,132 @@
+{
+  "name": "INFOUX Block Exceptions",
+  "version": "1.0.0",
+  "policy": "블록 예외의 기계용 정본. scripts/build-blocks.js가 src/blocks/<id>/block.json의 exceptions에서 만든다 — 직접 고치지 않는다. 검사기(check-violations.js·check-html-structure.js)는 여기 적힌 「파일 + 규칙 + 선택자 + 값」이 모두 맞는 위반만 통과시키고, 적용 건수를 검사 출력에 한 줄로 보인다. 여기 없는 위반은 블록 파일 안에서도 그대로 잡는다. 프로젝트가 이 파일이나 블록 스타일을 고쳐 범위를 넓히지 않는다 — 필요한 표현은 UX팀에 블록 변형으로 요청한다.",
+  "generated": "scripts/build-blocks.js",
+  "css": [
+    {
+      "block": "field-shore",
+      "rule": "R-24",
+      "file": "src/styles/6-components/field-index.css",
+      "selector": ".field-index__name",
+      "match": "leading-[1.3]",
+      "reason": "굵은 윗선 아래 제목 서체 2.8rem 이름이다. 두 줄로 꺾이는 이름이 있을 때 150% 행간이면 그 칸만 길어져 3단의 윗선 리듬이 깨진다.",
+      "krds": "pending"
+    },
+    {
+      "block": "news-deck",
+      "rule": "R-24",
+      "file": "src/styles/6-components/display-title.css",
+      "selector": ".display-title",
+      "match": "line-height: 1.2",
+      "reason": "3.2~5.6rem로 서는 면 제목이다. 두 줄일 때 150% 행간이면 줄 사이가 벌어져 한 제목으로 읽히지 않는다.",
+      "krds": "pending"
+    },
+    {
+      "block": "news-deck",
+      "rule": "R-24",
+      "file": "src/styles/6-components/news-deck.css",
+      "selector": ".news-deck .post-list__item:first-child .post-list__link",
+      "match": "leading-[1.4]",
+      "reason": "목록에서 한 건만 제목 서체 2.8rem로 세운 대표 글이다. 세 줄까지 보이므로 150% 행간이면 칸이 목록 절반을 차지한다.",
+      "krds": "pending"
+    },
+    {
+      "block": "news-deck",
+      "rule": "R-22",
+      "file": "src/styles/6-components/due-track.css",
+      "selector": ".due-track__fill",
+      "match": "transition:transform_1.2s",
+      "reason": "남은 기간 막대가 화면에 들어올 때 한 번 차오른다. 길이의 차이를 눈으로 따라가게 하려는 것이라 0.5초로는 차오르는 것이 보이지 않는다. 움직임 줄이기 설정에서는 꺼진다."
+    },
+    {
+      "block": "photo-gate",
+      "rule": "R-22",
+      "file": "src/styles/6-components/photo-gate.css",
+      "selector": ".photo-gate__photo",
+      "match": "[transition:opacity_1.6s_ease,visibility_0s_linear_1.6s]",
+      "reason": "사진 장면이 겹쳐 바뀌는 시간이다. 0.5초로 바꾸면 사진이 깜박이듯 넘어가 장면이 끊긴다. 움직임 줄이기 설정에서는 전환하지 않는다."
+    },
+    {
+      "block": "photo-gate",
+      "rule": "R-22",
+      "file": "src/styles/6-components/photo-gate.css",
+      "selector": ".photo-gate__photo[data-active]",
+      "match": "[transition:opacity_1.6s_ease,visibility_0s_linear_0s]",
+      "reason": "들어오는 사진이 1.6초 동안 겹쳐 나타난다(나가는 사진과 같은 시간). 움직임 줄이기 설정에서는 전환하지 않는다."
+    },
+    {
+      "block": "scene",
+      "rule": "R-24",
+      "file": "src/styles/6-components/scene.css",
+      "selector": ".scene__title",
+      "match": "line-height: 1.12",
+      "reason": "화면 폭의 절반을 쓰는 두 줄 표제다. 150% 행간이면 두 줄이 한 덩어리로 읽히지 않고 따로 뜬다.",
+      "krds": "pending"
+    },
+    {
+      "block": "scene",
+      "rule": "R-22",
+      "file": "src/styles/6-components/scene.css",
+      "selector": ".scene__title-line",
+      "match": "animation: scene-rise 0.9s",
+      "reason": "첫 화면에 한 번만 도는 들어오기다. 표제·소개·바로가기·패널이 차례로 올라오는 데 0.5초로는 순서가 읽히지 않는다. 움직임 줄이기 설정에서는 돌지 않는다."
+    },
+    {
+      "block": "scene",
+      "rule": "R-35",
+      "file": "src/styles/6-components/scene-header.css",
+      "selector": ".scene-header .site-header__search",
+      "match": "rounded-[99rem]",
+      "reason": "장면 위에서 검색창을 흰 선 하나로만 그린다. 각진 상자는 장면의 지평선과 겹쳐 틀처럼 보인다."
+    },
+    {
+      "block": "scene",
+      "rule": "R-35",
+      "file": "src/styles/6-components/scene-header.css",
+      "selector": ".scene-header .site-header__search .btn",
+      "match": "rounded-[99rem]",
+      "reason": "알약 검색창 안의 글자 버튼이다. 초점 링과 눌림 면이 바깥 알약 선과 같은 모양이어야 한다."
+    },
+    {
+      "block": "scene",
+      "rule": "R-35",
+      "file": "src/styles/6-components/float-panel.css",
+      "selector": ".float-panel",
+      "match": "box-shadow: 0 1.6rem 3.2rem -1.6rem var(--color-alpha-black-50)",
+      "reason": "밝은 장면 위에 뜬 흰 판이다. 2.4rem blur로는 판이 장면에 붙어 보인다. 검정 알파 토큰만 쓰고 퍼짐을 음수로 줄여 번짐을 판 아래로 모았다."
+    },
+    {
+      "block": "scene",
+      "rule": "R-24",
+      "file": "src/styles/6-components/float-panel.css",
+      "selector": ".float-panel__name",
+      "match": "leading-[1.3]",
+      "reason": "폭 34~40rem 패널 안의 제목 서체 이름이다. 두 줄로 꺾일 때 150% 행간이면 패널 높이가 슬라이드마다 크게 달라진다.",
+      "krds": "pending"
+    },
+    {
+      "block": "service-gate",
+      "rule": "R-24",
+      "file": "src/styles/6-components/service-gate.css",
+      "selector": ".service-gate__title",
+      "match": "line-height: 1.3",
+      "reason": "3.2~6rem 큰 표제다. 두 줄이 되면 150% 행간에서 두 줄이 따로 떠 보인다.",
+      "krds": "pending"
+    }
+  ],
+  "markup": [
+    {
+      "block": "field-shore",
+      "rule": "R-27",
+      "element": "svg.oreum",
+      "reason": "둥근 능선은 아이콘이 아니라 사진 면과 색인 면 사이의 전환 그림이다. 색을 아랫면의 토큰으로 칠해야 해서 스프라이트나 이미지 파일로 둘 수 없다."
+    },
+    {
+      "block": "scene",
+      "rule": "R-27",
+      "element": "svg.ridge",
+      "reason": "능선은 아이콘이 아니라 면과 면 사이의 전환 그림이다. 색을 아랫면의 토큰으로 칠해야 해서 스프라이트나 이미지 파일로 둘 수 없다."
+    }
+  ]
+}

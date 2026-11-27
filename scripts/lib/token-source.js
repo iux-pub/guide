@@ -62,7 +62,7 @@ function assertBrandModeParity(brand) {
  * R-26 폰트 한글 fallback — --font-sans·--font-heading 스택의 한글 가용 폰트 판정 정본.
  * 영문 display 폰트만 적으면 한글이 시스템 기본 서체로 떨어져 조판이 깨진다.
  */
-const HANGUL_FONT_PATTERN = /(Pretendard|Noto\s*(Sans|Serif)\s*KR|Wanted\s*Sans|Hahmlet|IBM\s*Plex\s*Sans\s*KR|Nanum|Spoqa|Malgun|Apple\s*SD\s*Gothic)/i
+const HANGUL_FONT_PATTERN = /(Pretendard|Noto\s*(Sans|Serif)\s*KR|Wanted\s*Sans|Hahmlet|IBM\s*Plex\s*Sans\s*KR|Nanum|Spoqa|Malgun|Apple\s*SD\s*Gothic|Paperlogy)/i
 
 /**
  * 본문·제목 폰트 스택에 한글 가용 폰트가 포함됐는지 검사한다 (R-26).

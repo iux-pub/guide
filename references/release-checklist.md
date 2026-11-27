@@ -49,13 +49,15 @@
 - [ ] 색상이 전부 `var(--color-*)` 토큰인가 (자동검사와 별개로 육안 확인)
 - [ ] 같은 개념을 사이트 안에서 같은 말로 부르는가
 - [ ] 사용자가 조작하는 요소의 테두리에 `--color-border-control`을 썼는가
-- [ ] `art-direction.md` §9 납품 전 리뷰 체크리스트를 1회 실행했는가 — 안티패턴·섹션 리듬·등급 강등·실제 용어 정합
+- [ ] `art-direction.md` §9 납품 전 리뷰 체크리스트를 1회 실행했는가 — 안티패턴·섹션 리듬·등급 강등·실제 용어 정합·KRDS 대조
+- [ ] 메인·랜딩(`pageType: main`)이면 `docs/design-plan.md`가 있고, 비평 기록이 `design-intelligence.md` §8을 따랐는가 — 만든 에이전트가 아닌 별도 평가자, 기계 검사 통과, 무거운 결함 문항 「예」 0개·일반 문항 「예」 2개 이하, 순서를 바꾼 두 번의 짝 비교, 사람 판정 「승인」 (`npm run check:release`가 확인)
 
 ## 6. 품질 — 필수 100%
 
 - [ ] 제출 버튼 **중복 클릭**이 막혀 있는가
 - [ ] 새로고침 · 뒤로가기에서 상태가 깨지지 않는가
 - [ ] 실기기에서 확인했는가 (모바일 Safari · Samsung Internet 최소 1종)
+- [ ] 360·768·1024·1280px 폭에서 렌더를 확인했는가 (넓은 화면 디자인은 1440 추가, 1024에서 메인 메뉴↔전체메뉴 전환)
 - [ ] 360px 폭에서 가로 스크롤이 생기지 않는가
 - [ ] 터치 영역이 44×44px 이상인가
 
@@ -64,7 +66,7 @@
 - [ ] 발주처 개발자가 6개월 뒤 이 코드를 고칠 수 있는 구조인가
 - [ ] 토큰·BEM·카탈로그를 벗어난 부분이 있다면 이유가 주석이나 문서에 남아 있는가
 - [ ] `--deliver`로 만든 납품본이 `npm install` → `npm run build` → `npm run check`로 자립 통과하는가
-- [ ] `npm run check:release`(CT-03)를 통과했는가 — `infoux.json` `contentSources`에 실제 출처가 있고, 납품 페이지에 `data-content-pending` 자리 표기·형식 예시 주석이 없고, 규칙 예외(`exceptions`)가 만료되지 않았다
+- [ ] `npm run check:release`(CT-03·CT-04)를 통과했는가 — `infoux.json` `contentSources`에 실제 출처가 있고, 납품 페이지에 `data-content-pending` 자리 표기·형식 예시 주석이 없고, 규칙 예외(`exceptions`)가 만료되지 않았고, 메인 페이지가 있으면 `docs/design-plan.md`에 통과한 비평 기록이 있다
 - [ ] 외부 origin 리소스(스크립트·스타일·폰트·위젯)가 없는가 — 불가피한 CDN은 버전 고정 + SRI + `crossorigin`인가 (`trade-off-rules.md` §4)
 - [ ] 배포 환경 제약을 확인했는가 — 폐쇄망·CSP 환경이라면 외부 CDN·인라인 스크립트·런타임 컴파일이 그 환경에서 실제로 동작하는가
 
@@ -80,4 +82,6 @@
 
 - 원칙 충돌 시 우선순위: `trade-off-rules.md`
 - 접근성 상세 기준: `accessibility.md`
+- 메인·랜딩 렌더 비평(결함 문항·짝 비교·사람 판정): `design-intelligence.md` §8
+- 리뷰 절차: `workflows/review-ui.md` (MCP `get_workflow("review-ui")`)
 - 사이트 유형별 적용: `project-profiles.md`

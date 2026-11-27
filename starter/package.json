@@ -12,6 +12,7 @@
     "lint:css:fix": "stylelint \"src/styles/**/*.css\" --fix",
     "check": "node ./scripts/check-violations.js && node ./scripts/check-html-structure.js && node ./scripts/check-contrast.js && node ./scripts/check-icons.js && node ./scripts/check-contract.js",
     "check:release": "npm run check && node ./scripts/check-contract.js --release",
+    "capture": "node scripts/capture.js",
     "icons:sheet": "node scripts/build-icon-sheet.js"
   },
   "browserslist": [

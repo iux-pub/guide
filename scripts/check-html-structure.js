@@ -123,13 +123,35 @@ const DIM = '\x1b[2m'
 let errorCount = 0
 let warnCount = 0
 
+// ─── 블록 예외(마크업) ─────────────────────────────────
+// 블록 카탈로그의 면 전환 그림(능선 svg)처럼 contracts/block-exceptions.json에 등록된 인라인 svg만
+// R-27 「직접 그린 인라인 svg」 경고에서 뺀다(scripts/lib/block-exceptions.js). 적용 건수는 끝에 한 줄로 보인다.
+let BLOCK_EX = null
+let BLOCK_EX_REGISTRY = null
+try {
+  BLOCK_EX = require('./lib/block-exceptions')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+}
+const blockExApplied = []
+
+function blockExcepted(msg, code, rule) {
+  if (!BLOCK_EX || rule !== 'R-27') return false
+  if (!BLOCK_EX_REGISTRY) BLOCK_EX_REGISTRY = BLOCK_EX.loadRegistry(ROOT)
+  const hit = BLOCK_EX.matchMarkup(BLOCK_EX_REGISTRY, rule, msg, code)
+  if (hit) blockExApplied.push(hit)
+  return !!hit
+}
+
 function error(file, line, msg, code, rule) {
+  if (blockExcepted(msg, code, rule)) return
   const loc = line ? `${file}:${line}` : file
   console.error(`${RED}[${rule}]${RESET} ${loc}\n  ${msg}${code ? `\n  ${DIM}${code}${RESET}` : ''}`)
   errorCount++
 }
 
 function warn(file, line, msg, code, rule) {
+  if (blockExcepted(msg, code, rule)) return
   const loc = line ? `${file}:${line}` : file
   console.warn(`${YELLOW}[${rule}]${RESET}  ${loc}\n  ${msg}${code ? `\n  ${DIM}${code}${RESET}` : ''}`)
   warnCount++
@@ -1302,6 +1324,7 @@ function main() {
 
   // 결과 요약
   console.log('')
+  if (BLOCK_EX && blockExApplied.length) console.log(`[블록 예외] ${BLOCK_EX.summaryLine(blockExApplied)}`)
   if (errorCount === 0 && warnCount === 0) {
     console.log(`${GREEN}✓ HTML 구조 위반 없음${RESET}`)
     process.exit(0)

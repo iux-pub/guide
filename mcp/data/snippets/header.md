@@ -45,6 +45,7 @@
 - 1024px 이상(KRDS large): 메인 메뉴 노출 + 햄버거 숨김. PC에는 전체메뉴 버튼을 두지 않는다(KRDS 공식 코드). 전체 구조가 필요하면 헤더 유틸리티에 「사이트맵」 페이지 링크를 둔다
 - `position: sticky` 적용 (스크롤 시에도 상단 유지)
 - 통합검색 — KRDS 검색 [필수]는 모든 화면에서 통합검색을 실행할 수 있어야 한다(공공 프로필은 R-40 오류). 1024px 이상은 헤더 안 입력창(`.site-header__search`), 미만은 검색 페이지 링크(`.site-header__search-link`, 아이콘 + sr-only 「통합검색」). 검색 결과는 별도 페이지(`pageType: search-result`)로 보낸다
+- 접힌 통합검색 — 메인 첫 화면에 통합검색 입력을 둔 경우(service-gate 같은 과업 히어로) 머리글에는 form과 search-link 대신 `<a class="site-header__search-button" href="/search"><svg class="icon" aria-hidden="true">…#search</svg><span class="sr-only">통합검색</span></a>` 하나만 둔다. 모든 폭에서 아이콘으로 보여 화면의 검색 입력이 하나로 남는다(R-40은 이름이 「통합검색」인 링크로 통과, design-intelligence §6-1)
 
 ## 접근성
 

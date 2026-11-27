@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>업무 판 첫 화면 — 사진 + 통합검색 + 자주 찾는 서비스 (service-gate) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container">
+      <!-- 브랜드, GNB, 유틸리티 — 전체 마크업은 header 스니펫. 통합검색은 공공 프로필에서 필수(R-40) -->
+      <form class="site-header__search" role="search" action="/search">
+        <label for="site-search" class="sr-only">통합검색</label>
+        <input id="site-search" class="site-header__search-input" type="search" name="q">
+        <button type="submit" class="btn btn--secondary">검색</button>
+      </form>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: service-gate — 업무 판 첫 화면 — 사진 + 통합검색 + 자주 찾는 서비스 -->
+    <section class="section section--intro service-gate" aria-labelledby="service-gate-title">
+      <img class="service-gate__photo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1664 936'%3E%3Crect width='1664' height='936' fill='%23cfe0ee'/%3E%3Cpath d='M0 560 Q420 520 830 560 T1664 540 V936 H0 Z' fill='%234f86b0'/%3E%3Cpath d='M980 560 L1180 380 L1300 470 L1420 400 L1664 560 Z' fill='%233d5f45'/%3E%3C/svg%3E" alt="맑은 아침, 방파제 너머로 부두 크레인과 등대가 보이는 항구" width="1664" height="936">
+      <div class="container service-gate__body">
+        <h1 class="service-gate__title" id="service-gate-title">항구문화재단</h1>
+        <p class="service-gate__lead">항구광역시 출연 문화예술 공공기관 · 공연·전시 기획, 예술 교육, 예술인 지원</p>
+      </div>
+      <div class="container service-gate__panel">
+        <form class="service-gate__search" role="search" action="/search">
+          <label class="service-gate__search-label" for="service-gate-q">무엇을 찾으십니까?</label>
+          <div class="service-gate__search-row">
+            <input class="service-gate__search-input" id="service-gate-q" type="search" name="q" placeholder="예: 채용, 대관 신청">
+            <button class="service-gate__search-btn" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="../../assets/icons/sprite.svg#search"></use></svg><span class="sr-only">검색</span></button>
+          </div>
+          <p class="service-gate__keywords">
+            <span class="service-gate__keywords-label">자주 찾는 검색어</span>
+            <a class="service-gate__keyword" href="/search?q=채용">채용</a>
+            <a class="service-gate__keyword" href="/search?q=대관">대관</a>
+            <a class="service-gate__keyword" href="/search?q=입찰">입찰</a>
+          </p>
+        </form>
+        <nav class="service-gate__services" aria-label="자주 찾는 서비스">
+          <ul class="service-gate__list" role="list">
+            <li><a class="service-gate__service" href="/tender"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%231f4e79'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%236b9cc4'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>입찰·계약 정보</span></a></li>
+            <li><a class="service-gate__service" href="/recruit"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%231f4e79'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%23f2b36b'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>채용 공고</span></a></li>
+            <li><a class="service-gate__service" href="/open/disclosure"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%23d9822b'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%236b9cc4'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>사전정보공표</span></a></li>
+            <li><a class="service-gate__service" href="/open/management"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%23d9822b'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%23f2b36b'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>경영 공시</span></a></li>
+            <li><a class="service-gate__service" href="/voice"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%232e6da4'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%236b9cc4'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>재단에 바란다</span></a></li>
+            <li><a class="service-gate__service" href="/open/data"><img class="service-gate__art" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect x='18' y='26' width='60' height='52' rx='10' fill='%232e6da4'/%3E%3Crect x='28' y='16' width='40' height='30' rx='6' fill='%23f2b36b'/%3E%3C/svg%3E" alt="" width="96" height="96"><span>공공데이터 제공</span></a></li>
+          </ul>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer">
+    <div class="container">
+      <!-- 로고·연락처 다음에 정책 링크(개인정보 처리방침은 KRDS 필수 — R-32), 마지막에 저작권 -->
+      <nav aria-label="약관 및 정책">
+        <ul class="site-footer__legal-list">
+          <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

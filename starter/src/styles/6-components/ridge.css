@@ -1,0 +1,32 @@
+/**
+ * Ridge — 능선 전환 (블록 카탈로그 scene·logo-row의 부품)
+ *   윗면의 바닥에 놓고 아랫면의 색으로 칠하는 각진 실루엣. 면과 면 사이를 직선 대신 대상의 윤곽으로 넘긴다.
+ *   <svg class="ridge" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+ *     <path class="ridge__slope" d="…"/> <path class="ridge__slope-far" d="…"/> <path class="ridge__slope-near" d="…"/>
+ *     <path class="ridge__ground" d="…"/>
+ *   </svg>
+ *   높이는 부모의 --ridge-h. 색은 --ridge-ground·--ridge-slope·--ridge-far·--ridge-near로 받는다.
+ *   기본값은 짙은 면(primary-90) 색이다 — 아랫면이 다른 색이면 부모에서 네 값을 그 면의 토큰으로 바꾼다.
+ *   모양은 프로젝트마다 대상의 지형·사물에서 온 선으로 바꾼다(블록 메타데이터의 변형 축 참고).
+ *   블록 예외(contracts/block-exceptions.json): 인라인 svg(R-27) — 아이콘이 아니라 면 전환 그림이다.
+ * 레이어 밖에 둔다 — scene과 같은 층.
+ */
+.ridge {
+  @apply absolute inset-x-0 bottom-0 block w-full max-w-none h-[var(--ridge-h,8rem)] pointer-events-none;
+}
+
+.ridge__ground {
+  fill: var(--ridge-ground, var(--color-primary-90));
+}
+
+.ridge__slope {
+  fill: var(--ridge-slope, var(--color-primary-80));
+}
+
+.ridge__slope-far {
+  fill: var(--ridge-far, color-mix(in srgb, var(--color-primary-80) 55%, var(--color-primary-70)));
+}
+
+.ridge__slope-near {
+  fill: var(--ridge-near, color-mix(in srgb, var(--color-primary-90) 50%, var(--color-primary-80)));
+}

@@ -1,0 +1,201 @@
+{
+  "id": "field-list",
+  "name": "사진과 글자 줄 목록",
+  "slot": "business",
+  "forms": [
+    "B1"
+  ],
+  "reference": "design-intelligence §6-4 B1 대표 사진 + 줄 목록",
+  "tags": [
+    "사업 소개",
+    "분야",
+    "사진",
+    "줄 목록",
+    "옅은 면"
+  ],
+  "summary": "옅은 브랜드 면 위에 큰 섹션 제목(메뉴 이름)을 두고, 왼쪽에 세로 사진 한 장, 오른쪽에 분야 이름과 하는 일을 줄 목록으로 놓는다.",
+  "useWhen": [
+    "사업 분야가 4~7개이고, 분야마다 좋은 사진을 구하기 어렵다 — 대표 사진 한 장으로 간다.",
+    "분야마다 「하는 일」을 한두 줄로 적을 수 있다.",
+    "카드 그리드로 분야를 늘어놓는 섹션(전형 조립)을 피하고 싶다."
+  ],
+  "avoidWhen": [
+    "분야가 3개 이하다 — 목록이 사진보다 짧아 오른쪽 열이 빈다. section-media 왕복(B3)을 쓴다.",
+    "분야마다 좋은 사진이 있다 — 벤토(B2)를 쓴다.",
+    "분야 사이에 지역·순서·관계가 있다 — 도식(B4)을 쓴다.",
+    "분야마다 상세 페이지로 바로 보내야 한다 — 이 블록의 줄은 링크가 아니다. 아래 버튼 하나가 목록 페이지로 보낸다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "섹션 제목",
+      "spec": "한글 2~10자. 메뉴 이름(예: 「사업영역」「열린경영」)을 쓴다. 표어·문장형 제목·소개 문장을 지어 붙이지 않는다(design-intelligence §2-2).",
+      "example": "사업영역"
+    },
+    {
+      "key": "photo_src",
+      "kind": "image",
+      "label": "대표 사진",
+      "ratio": "넓은 화면 4:5 세로, 좁은 화면 4:3 가로로 잘린다. 긴 변 1200px 이상",
+      "spec": "사업 현장이나 대상을 담은 사진 한 장. 세로와 가로 양쪽으로 잘리므로 주제가 가운데에 있어야 한다. 첫 화면 사진과 다른 장면을 고른다. 장식이라 alt는 비운다.",
+      "example": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 1500'%3E%3Crect width='1200' height='1500' fill='%23c5d4e3'/%3E%3Cpath d='M0 1040 Q300 960 600 1020 T1200 1000 V1500 H0 Z' fill='%2354789e'/%3E%3Crect x='540' y='520' width='120' height='500' fill='%23f4f5f6'/%3E%3Cpath d='M520 520 L600 420 L680 520 Z' fill='%233b5e81'/%3E%3C/svg%3E"
+    },
+    {
+      "key": "fields",
+      "kind": "list",
+      "label": "사업 분야",
+      "min": 4,
+      "max": 7,
+      "spec": "4~7개. 기관 직제나 사업 계획서의 분야 구분을 그대로 쓴다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "분야 이름",
+          "spec": "한글 4~12자."
+        },
+        {
+          "key": "work",
+          "kind": "list",
+          "label": "하는 일",
+          "min": 1,
+          "max": 3,
+          "spec": "분야마다 1~3줄.",
+          "fields": [
+            {
+              "key": "text",
+              "kind": "text",
+              "label": "하는 일 한 줄",
+              "spec": "한글 10~28자의 명사구. 마침표를 찍지 않는다."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "공연·전시 기획",
+          "work": [
+            {
+              "text": "시립 극장 기획 공연과 초청 공연 운영"
+            },
+            {
+              "text": "항구 미술관 상설·기획 전시"
+            }
+          ]
+        },
+        {
+          "name": "문화예술 교육",
+          "work": [
+            {
+              "text": "어린이·청소년 예술 교실"
+            },
+            {
+              "text": "시민 예술 아카데미 운영"
+            }
+          ]
+        },
+        {
+          "name": "예술인 지원",
+          "work": [
+            {
+              "text": "창작 지원금 공모와 심사"
+            },
+            {
+              "text": "청년 예술가 작업실 임대"
+            }
+          ]
+        },
+        {
+          "name": "축제·지역 행사",
+          "work": [
+            {
+              "text": "등대 축제와 거리 공연 축제 개최"
+            },
+            {
+              "text": "마을 단위 문화 행사 지원"
+            }
+          ]
+        },
+        {
+          "name": "시설 운영",
+          "work": [
+            {
+              "text": "극장·전시실·연습실 대관"
+            },
+            {
+              "text": "문화 시설 안전 관리"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "more_label",
+      "kind": "text",
+      "label": "목록 페이지 버튼 이름",
+      "spec": "동사형 6~12자. 목적지를 적는다(「사업 자세히 보기」).",
+      "example": "사업 자세히 보기"
+    },
+    {
+      "key": "more_href",
+      "kind": "url",
+      "label": "목록 페이지 주소",
+      "spec": "사업 소개 페이지 주소(R-30).",
+      "example": "/business"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "면 색",
+      "options": [
+        "primary-5(기본)",
+        "바탕 면"
+      ],
+      "how": "앞뒤 블록이 옅은 색 면이면 프로젝트 CSS에서 .field-list의 배경을 --color-surface로 바꾼다. 이때 줄 선 색(--color-primary-20)은 그대로 둔다."
+    },
+    {
+      "axis": "하는 일 줄 수",
+      "options": [
+        "1줄",
+        "2줄(기본)",
+        "3줄"
+      ],
+      "how": "분야마다 줄 수가 달라도 된다. 다만 한 분야만 길면 그 줄만 높아지므로 비슷하게 맞춘다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "bulletin"
+    ],
+    "after": [
+      "link-rows"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "tinted",
+    "note": "섹션 전체가 --color-primary-5 면이다. 제목과 분야 이름은 --color-primary-80, 줄 선은 --color-primary-20."
+  },
+  "section": {
+    "archetype": "content"
+  },
+  "styles": [
+    "src/styles/6-components/field-list.css"
+  ],
+  "requires": {
+    "components": [
+      "btn"
+    ],
+    "icons": [],
+    "scripts": []
+  },
+  "accessibility": [
+    "섹션 제목은 h2, 분야 이름은 h3이다.",
+    "사진은 장식이라 alt=\"\"이고 첫 화면 아래에 있으므로 loading=\"lazy\"다.",
+    "목록 표시를 지운 ul에는 role=\"list\"를 남긴다.",
+    "넓은 화면에서 사진이 스크롤을 따라 내려온다(sticky). 헤더 높이가 다르면 .field-list__media의 top 값을 헤더 높이에 맞춘다 — 헤더에 가리면 안 된다.",
+    "하는 일 글자(--color-text-subtle)는 --color-primary-5 면 위에서 대비 4.5:1을 넘는다."
+  ],
+  "origin": "제주관광공사 메인 D안(2026-11)의 fields·field-list 블록을 한 블록으로 합쳐 옮겼다."
+}

@@ -1,0 +1,429 @@
+{
+  "id": "scene",
+  "name": "장면형 첫 화면",
+  "slot": "first-screen",
+  "forms": [
+    "H5",
+    "Q3"
+  ],
+  "reference": "design-intelligence §6-1 H5 장면, §6-2 Q3 히어로에 붙은 띠, §9-3 장면 조건",
+  "tags": [
+    "히어로",
+    "메인 비주얼",
+    "장면",
+    "전면 사진",
+    "캔버스",
+    "투명 머리글",
+    "뜬 패널",
+    "캐러셀",
+    "바로가기",
+    "능선",
+    "쇼케이스"
+  ],
+  "summary": "화면 전체를 쓰는 장면(기본은 사진) 위에 큰 표제를 올리고, 바닥에 글자 바로가기 줄과 능선 전환을, 오른쪽에 주요 항목을 넘겨 보는 뜬 패널을 둔다. 머리글은 장면 위에 투명하게 얹힌다.",
+  "bundle": {
+    "parts": [
+      "scene",
+      "scene-header",
+      "float-panel",
+      "quick-row",
+      "ridge"
+    ],
+    "reason": "다섯 부품이 서로의 치수에 기대어 있어 따로 떼면 깨진다. 뜬 패널의 위치는 능선 높이(--ridge-h)와 바로가기 줄 높이(--quick-h)로 계산하고, 바로가기 줄과 표제는 장면의 스크림 위에서만 읽히며, 머리글은 장면이 있어야 투명해도 읽힌다. 능선은 장면의 바닥에 붙어 다음 면의 색으로 칠해진다. 그래서 한 블록으로 묶고 부품 스타일만 파일을 나눴다."
+  },
+  "useWhen": [
+    "기관의 대상에 지형·건물·제품처럼 한눈에 알아보는 고유한 형상이 있고, 그것을 화면 전체로 보여 줄 사진(또는 프로젝트가 만든 장면)이 있다.",
+    "표현 등급이 expressive이고 Task Contract에 근거가 있다. 쇼케이스 수위의 첫 화면을 발주처가 요구했다.",
+    "주요 사업·대표 콘텐츠가 2~5건 있어 뜬 패널로 넘겨 보여 줄 수 있고, 자주 찾는 과업이 여섯 개로 정리된다.",
+    "바로 아래에 짙은 면 블록(news-deck)이 온다 — 능선이 그 면의 색으로 칠해져 장면에서 본문으로 넘어간다."
+  ],
+  "avoidWhen": [
+    "공공서비스 단일 업무형이거나 utility·restrained 등급이다 — 화면 높이 히어로는 R-42 대상이다. 과업 히어로(H3)나 cover(H1)를 쓴다.",
+    "화면 전체를 채울 사진이 없다 — 긴 변 2000px 이상의 가로 사진이 없으면 흐리거나 잘려 장면이 서지 않는다. cover(H1)를 쓴다.",
+    "능선 모양을 그대로 쓰려 한다 — 이 실루엣은 견본 기관의 지형에서 온 선이다. 대상의 지형·사물에서 온 선으로 바꾸지 않을 거면 능선을 빼고 직선 경계로 둔다.",
+    "뜬 패널에 넣을 실제 사진과 문구가 없다 — 패널을 빼고 표제와 바로가기만 쓴다(변형 축).",
+    "서브 페이지다 — 서브 첫 섹션은 비주얼 히어로가 아니다(R-41)."
+  ],
+  "content": [
+    {
+      "key": "title_line_1",
+      "kind": "text",
+      "label": "표제 첫 줄",
+      "spec": "한글 4~7자. 표제는 두 줄로 세운다. 기관명, 또는 출처가 확인된 기관의 공식 문구다. 컨셉 문장을 화면에 싣지 않는다(design-intelligence §2-2).",
+      "example": "항구"
+    },
+    {
+      "key": "title_line_2",
+      "kind": "text",
+      "label": "표제 둘째 줄",
+      "spec": "한글 4~7자. 첫 줄과 길이가 비슷해야 덩어리가 선다.",
+      "example": "문화재단"
+    },
+    {
+      "key": "lead",
+      "kind": "text",
+      "label": "표제 아래 한 문장",
+      "spec": "한글 22~40자, 한 문장. 기관이 무엇을 하는 곳인지 사실로 적는다(합쇼체, 느낌표 없음).",
+      "example": "항구광역시 출연 문화예술 공공기관 · 공연·전시 기획, 예술 교육, 예술인 지원"
+    },
+    {
+      "key": "photo_src",
+      "kind": "image",
+      "label": "장면 사진(기본 배경)",
+      "ratio": "가로 2:1~21:9, 긴 변 2000px 이상. 화면 전체(100svh)를 덮어 세로 화면에서는 가운데가 크게 잘린다",
+      "spec": "대상을 한 장으로 보여 주는 밝은 사진. 위 18%(머리글 자리)와 아래 45%(표제·바로가기 자리)에 스크림이 덮이므로 그 자리가 단순한 사진을 고른다. 초점은 가로 50%·세로 35% 지점이다. 캔버스 장면을 쓰더라도 이 사진은 반드시 둔다 — 움직임 줄이기 설정이나 그리기 실패 때 남는 배경이다. 장식이라 alt는 비운다.",
+      "example": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1000'%3E%3Crect width='2000' height='1000' fill='%2389b4d6'/%3E%3Ccircle cx='1480' cy='250' r='120' fill='%23f4f5f6'/%3E%3Cpath d='M0 520 L260 330 L520 470 L820 250 L1120 450 L1420 360 L1720 480 L2000 400 V1000 H0 Z' fill='%234f7ea8'/%3E%3Cpath d='M0 640 Q500 560 1000 630 T2000 610 V1000 H0 Z' fill='%232f6f9f'/%3E%3Cpath d='M0 780 Q500 720 1000 770 T2000 750 V1000 H0 Z' fill='%231f5a86'/%3E%3C/svg%3E"
+    },
+    {
+      "key": "quick_label",
+      "kind": "text",
+      "label": "바로가기 줄의 이름(화면에는 안 보인다)",
+      "spec": "스크린리더가 읽는 nav 이름. 「자주 찾는 서비스」.",
+      "example": "자주 찾는 서비스"
+    },
+    {
+      "key": "tasks",
+      "kind": "list",
+      "label": "바로가기 항목",
+      "min": 6,
+      "max": 6,
+      "spec": "여섯 개. 1280px 이상에서 6단 한 줄, 768px 이상 3단 두 줄, 그 아래 2단 세 줄이라 여섯 개일 때만 빈 칸이 없다.",
+      "fields": [
+        {
+          "key": "label",
+          "kind": "text",
+          "label": "과업 이름",
+          "spec": "한글 4~10자. 기관이 실제로 쓰는 메뉴 이름."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "목적지 주소",
+          "spec": "실제 목적지 주소(R-30)."
+        },
+        {
+          "key": "icon",
+          "kind": "icon",
+          "label": "아이콘 이름",
+          "spec": "세트에 있는 아이콘 이름(list_icons로 찾는다). 여섯 개를 한 표정으로 맞춘다. 배경 없이 글자 왼쪽에 놓인다."
+        }
+      ],
+      "examples": [
+        {
+          "label": "공연·전시 예매",
+          "href": "/ticket",
+          "icon": "calendar"
+        },
+        {
+          "label": "대관 신청",
+          "href": "/rental",
+          "icon": "document"
+        },
+        {
+          "label": "교육 프로그램",
+          "href": "/education",
+          "icon": "user"
+        },
+        {
+          "label": "입찰·계약 정보",
+          "href": "/tender",
+          "icon": "folder"
+        },
+        {
+          "label": "경영 공시",
+          "href": "/open/disclosure",
+          "icon": "chart-bar"
+        },
+        {
+          "label": "재단에 바란다",
+          "href": "/voice",
+          "icon": "mail"
+        }
+      ]
+    },
+    {
+      "key": "panel_title",
+      "kind": "text",
+      "label": "뜬 패널 제목",
+      "spec": "한글 4~6자(「주요사업」). 캐러셀의 이름이 된다.",
+      "example": "주요사업"
+    },
+    {
+      "key": "slides",
+      "kind": "list",
+      "label": "뜬 패널 슬라이드",
+      "min": 2,
+      "max": 5,
+      "spec": "2~5장. 7초마다 넘어가고 정지 버튼이 첫 컨트롤이다. 한 장이면 캐러셀을 빼고 내용만 둔다.",
+      "fields": [
+        {
+          "key": "img_src",
+          "kind": "image",
+          "label": "슬라이드 사진",
+          "ratio": "원본 16:9, 폭 960px. 넓은 화면에서 2:1·21:9로 잘린다",
+          "spec": "그 사업의 현장 사진. 가로로 길게 잘리므로 주제가 가운데 띠에 있어야 한다."
+        },
+        {
+          "key": "img_alt",
+          "kind": "text",
+          "label": "사진 대체 텍스트",
+          "spec": "사진에 보이는 것을 한 문장으로 적는다. 파일 이름·「사진」 같은 일반 낱말을 쓰지 않는다(R-09)."
+        },
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "사업 이름",
+          "spec": "한글 4~12자."
+        },
+        {
+          "key": "work",
+          "kind": "list",
+          "label": "하는 일",
+          "min": 1,
+          "max": 3,
+          "spec": "슬라이드마다 1~3줄. 줄 수가 다르면 패널 높이가 넘길 때마다 바뀌므로 같게 맞춘다.",
+          "fields": [
+            {
+              "key": "text",
+              "kind": "text",
+              "label": "하는 일 한 줄",
+              "spec": "한글 8~24자의 명사구."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 540'%3E%3Crect width='960' height='540' fill='%23d9a441'/%3E%3Ccircle cx='620' cy='210' r='90' fill='%23f7e3b0'/%3E%3Cpath d='M0 360 Q240 310 480 350 T960 330 V540 H0 Z' fill='%238a5a1c'/%3E%3C/svg%3E",
+          "img_alt": "해 질 녘 노을빛이 번진 항구 앞바다",
+          "name": "공연·전시 기획",
+          "work": [
+            {
+              "text": "시립 극장 기획 공연과 초청 공연 운영"
+            },
+            {
+              "text": "항구 미술관 상설·기획 전시"
+            }
+          ]
+        },
+        {
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 540'%3E%3Crect width='960' height='540' fill='%23c5d4e3'/%3E%3Crect x='180' y='200' width='600' height='220' fill='%2354789e'/%3E%3Cpath d='M150 200 L480 90 L810 200 Z' fill='%233b5e81'/%3E%3C/svg%3E",
+          "img_alt": "박공지붕을 얹은 교육관 건물 정면",
+          "name": "문화예술 교육",
+          "work": [
+            {
+              "text": "어린이·청소년 예술 교실"
+            },
+            {
+              "text": "시민 예술 아카데미 운영"
+            }
+          ]
+        },
+        {
+          "img_src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 540'%3E%3Crect width='960' height='540' fill='%231f5a86'/%3E%3Ccircle cx='260' cy='200' r='14' fill='%23f7e3b0'/%3E%3Ccircle cx='480' cy='150' r='14' fill='%23f7e3b0'/%3E%3Ccircle cx='700' cy='200' r='14' fill='%23f7e3b0'/%3E%3Cpath d='M0 400 H960 V540 H0 Z' fill='%2303163a'/%3E%3C/svg%3E",
+          "img_alt": "밤 방파제 위로 등불이 줄지어 켜진 축제 거리",
+          "name": "축제·지역 행사",
+          "work": [
+            {
+              "text": "등대 축제와 거리 공연 축제 개최"
+            },
+            {
+              "text": "마을 단위 문화 행사 지원"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "more_label",
+      "kind": "text",
+      "label": "패널 아래 링크 이름",
+      "spec": "동사형 6~12자. 목적지를 적는다(「사업 자세히 보기」).",
+      "example": "사업 자세히 보기"
+    },
+    {
+      "key": "more_href",
+      "kind": "url",
+      "label": "패널 아래 링크 주소",
+      "spec": "사업 소개 페이지 주소(R-30).",
+      "example": "/business"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "능선 모양",
+      "options": [
+        "견본의 각진 능선(예시)",
+        "대상의 지형·사물에서 온 선"
+      ],
+      "how": "이 모양을 그대로 쓰지 않는다. 대상의 윤곽(산줄기, 해안선, 지붕선, 제품 옆모습)을 사진에서 따 온다. 만드는 법: viewBox는 0 0 1440 100, preserveAspectRatio는 none으로 두고, 가로 1440을 20~30칸으로 나눠 윤곽의 높이를 y 18~88 사이 점으로 찍는다. 이웃한 두 점과 그 사이 위쪽 꼭짓점으로 삼각형을 만들어 세 겹(ridge__slope·ridge__slope-far·ridge__slope-near)에 돌려 담고, 각 구간 아래를 바닥까지 채운 사각형을 ridge__ground에 담는다. 곡선이 맞는 대상이면 삼각형 대신 C 곡선 한 겹과 ground만 써도 된다. svg에는 aria-hidden과 focusable=\"false\"를 둔다. 클래스 이름(ridge)은 바꾸지 않는다 — 인라인 svg 예외가 이 이름에 걸려 있다."
+    },
+    {
+      "axis": "능선 색",
+      "options": [
+        "짙은 면(기본, primary-90)",
+        "아랫면의 색"
+      ],
+      "how": "아래 블록이 짙은 면이 아니면 section에 style=\"--ridge-ground: var(--color-…); --ridge-slope: …; --ridge-far: …; --ridge-near: …\"로 네 값을 아랫면 토큰에 맞춘다. 원시 색 값을 쓰지 않는다."
+    },
+    {
+      "axis": "캔버스 장면(선택 향상)",
+      "options": [
+        "사진만(기본)",
+        "프로젝트가 만든 캔버스 장면"
+      ],
+      "how": "3D·캔버스 장면은 프로젝트가 직접 만든다(카탈로그는 그리는 코드를 주지 않는다). 약속은 네 가지다. ① 사진(scene__photo)은 그대로 둔다. ② 스크립트는 .scene__canvas에 첫 장면을 다 그린 뒤에만 section에 data-scene=\"ready\"를 붙인다 — 그때 캔버스가 0.5초에 걸쳐 드러난다. ③ prefers-reduced-motion: reduce이거나 WebGL·모듈 로드에 실패하면 아무것도 붙이지 않는다(사진이 남는다). ④ 라이브러리는 외부 CDN이 아니라 프로젝트 assets에 내려 둔다. 조건은 design-intelligence §9-3을 따른다."
+    },
+    {
+      "axis": "뜬 패널",
+      "options": [
+        "캐러셀 패널(기본)",
+        "패널 없음"
+      ],
+      "how": "넣을 사진과 문구가 없으면 .float-panel을 통째로 뺀다. 표제 폭 제한(56%)은 그대로 둬도 된다."
+    },
+    {
+      "axis": "머리글",
+      "options": [
+        "투명 머리글(기본, scene-header)",
+        "카탈로그 기본 머리글"
+      ],
+      "how": "조립기가 header에 scene-header 클래스를 더한다. 흰색 로고 파일을 쓴다. 기본 머리글로 되돌리려면 클래스를 빼고 .scene__body의 위 여백을 머리글 높이만큼 준다."
+    }
+  ],
+  "neighbors": {
+    "before": [],
+    "after": [
+      "news-deck"
+    ],
+    "avoid": [
+      "task-index"
+    ]
+  },
+  "surface": {
+    "tone": "scene",
+    "bottom": "inverse",
+    "joinsBelow": "inverse",
+    "note": "사진·장면 위에 검정 알파 스크림. 바닥의 능선은 아랫면의 색(기본 --color-primary-90)으로 칠한다. 좁은 화면의 바로가기 판은 --color-primary-90."
+  },
+  "section": {
+    "archetype": "intro"
+  },
+  "shell": {
+    "headerClass": "scene-header"
+  },
+  "styles": [
+    "src/styles/6-components/scene.css",
+    "src/styles/6-components/scene-header.css",
+    "src/styles/6-components/float-panel.css",
+    "src/styles/6-components/quick-row.css",
+    "src/styles/6-components/ridge.css"
+  ],
+  "requires": {
+    "components": [
+      "carousel",
+      "icon",
+      "header"
+    ],
+    "icons": [
+      "pause",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "scripts": [
+      "carousel.js",
+      "scene-header.js"
+    ]
+  },
+  "accessibility": [
+    "표제가 페이지의 h1이다. 두 줄은 span으로 나누고 사이에 공백을 둬 스크린리더가 한 문장으로 읽게 한다.",
+    "장면 사진·캔버스·스크림·능선은 장식이다 — alt=\"\"와 aria-hidden. 사진이 전하는 정보가 있으면 글로 옮긴다.",
+    "표제와 바로가기는 스크림(검정 알파) 위에 흰 글자다. 사진을 바꾸면 360·1440 캡처에서 글자 뒤가 충분히 어두운지 눈으로 확인한다 — 대비는 사진마다 다르다.",
+    "뜬 패널은 카탈로그 carousel 그대로다. 자동 넘김에는 정지 버튼이 첫 초점이고(R-33), 슬라이드마다 role=group과 「n / 전체」 이름이 있다.",
+    "들어오기 움직임(0.9초)과 캔버스 드러나기는 prefers-reduced-motion: no-preference일 때만 돈다.",
+    "머리글이 fixed라 본문 바로가기 링크의 초점 이동 뒤 첫 제목이 머리글에 가리지 않는지 확인한다. 스크립트가 없으면 머리글은 계속 투명하다.",
+    "화면 높이(100svh)를 쓰지만 스크롤 유도 표시를 두지 않는다. 바닥의 바로가기 줄과 능선이 아래에 내용이 있음을 알린다."
+  ],
+  "exceptions": [
+    {
+      "rule": "R-24",
+      "file": "src/styles/6-components/scene.css",
+      "selector": ".scene__title",
+      "match": "line-height: 1.12",
+      "reason": "화면 폭의 절반을 쓰는 두 줄 표제다. 150% 행간이면 두 줄이 한 덩어리로 읽히지 않고 따로 뜬다.",
+      "krds": "pending"
+    },
+    {
+      "rule": "R-22",
+      "file": "src/styles/6-components/scene.css",
+      "selector": ".scene__title-line",
+      "match": "animation: scene-rise 0.9s",
+      "reason": "첫 화면에 한 번만 도는 들어오기다. 표제·소개·바로가기·패널이 차례로 올라오는 데 0.5초로는 순서가 읽히지 않는다. 움직임 줄이기 설정에서는 돌지 않는다."
+    },
+    {
+      "rule": "R-35",
+      "file": "src/styles/6-components/scene-header.css",
+      "selector": ".scene-header .site-header__search",
+      "match": "rounded-[99rem]",
+      "reason": "장면 위에서 검색창을 흰 선 하나로만 그린다. 각진 상자는 장면의 지평선과 겹쳐 틀처럼 보인다."
+    },
+    {
+      "rule": "R-35",
+      "file": "src/styles/6-components/scene-header.css",
+      "selector": ".scene-header .site-header__search .btn",
+      "match": "rounded-[99rem]",
+      "reason": "알약 검색창 안의 글자 버튼이다. 초점 링과 눌림 면이 바깥 알약 선과 같은 모양이어야 한다."
+    },
+    {
+      "rule": "R-35",
+      "file": "src/styles/6-components/float-panel.css",
+      "selector": ".float-panel",
+      "match": "box-shadow: 0 1.6rem 3.2rem -1.6rem var(--color-alpha-black-50)",
+      "reason": "밝은 장면 위에 뜬 흰 판이다. 2.4rem blur로는 판이 장면에 붙어 보인다. 검정 알파 토큰만 쓰고 퍼짐을 음수로 줄여 번짐을 판 아래로 모았다."
+    },
+    {
+      "rule": "R-24",
+      "file": "src/styles/6-components/float-panel.css",
+      "selector": ".float-panel__name",
+      "match": "leading-[1.3]",
+      "reason": "폭 34~40rem 패널 안의 제목 서체 이름이다. 두 줄로 꺾일 때 150% 행간이면 패널 높이가 슬라이드마다 크게 달라진다.",
+      "krds": "pending"
+    },
+    {
+      "rule": "R-27",
+      "markup": "svg.ridge",
+      "reason": "능선은 아이콘이 아니라 면과 면 사이의 전환 그림이다. 색을 아랫면의 토큰으로 칠해야 해서 스프라이트나 이미지 파일로 둘 수 없다."
+    }
+  ],
+  "krdsPending": [
+    "표제 크기 clamp(4.4rem, 7.6vw, 12rem) — KRDS display-large 상한 6rem을 넘는다(1440px에서 약 10.9rem). 검사기는 잡지 않는다.",
+    "표제 행간 1.12, 뜬 패널 이름 행간 1.3 — KRDS 제목 행간 150% 기준 밖(R-24 블록 예외로 통과).",
+    "머리글 fixed + 투명 — KRDS 헤더는 밝은 바탕이 기본이다. 검사기는 잡지 않는다.",
+    "화면 높이 첫 화면(100svh) — R-42가 금지하는 형식이다. CSS 검사는 svh를 잡지 않는다."
+  ],
+  "origin": "제주관광공사 메인 E안(2026-11, 견본 — 운영자 판정: 불통과)의 scene·scene-header·float-panel·quick-row·ridge를 옮겼다. 3D 섬 장면 스크립트와 장소 표지, 로고 색 뒤집기 필터는 그 기관 전용이라 뺐다.",
+  "tokens": [
+    "--color-alpha-black-50",
+    "--color-alpha-black-75",
+    "--color-border-control",
+    "--color-border-light",
+    "--color-gray-0",
+    "--color-gray-100",
+    "--color-gray-90",
+    "--color-point-30",
+    "--color-primary-20",
+    "--color-primary-40",
+    "--color-primary-5",
+    "--color-primary-50",
+    "--color-primary-70",
+    "--color-primary-80",
+    "--color-primary-90",
+    "--color-surface",
+    "--color-text",
+    "--color-text-primary",
+    "--color-text-subtle",
+    "--font-heading"
+  ],
+  "markup": "<section class=\"section section--intro scene\" aria-labelledby=\"scene-title\">\n  <img class=\"scene__photo\" src=\"{{photo_src}}\" alt=\"\" width=\"2000\" height=\"1000\">\n  <canvas class=\"scene__canvas\" aria-hidden=\"true\"></canvas>\n  <div class=\"scene__veil\" aria-hidden=\"true\"></div>\n  <svg class=\"ridge\" viewBox=\"0 0 1440 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\">\n    <path class=\"ridge__slope\" d=\"M0 18L26.9 -5.5L53.8 39.8ZM163.4 54.2L192 22.8L220.6 51.1ZM338.7 27.8L361.4 17.8L384.1 59.2ZM486 33.2L523.5 11.1L560.9 59.5ZM656.7 39.5L692.8 -10L728.9 18.8ZM837.2 18.9L859.9 -13L882.7 80.1ZM1000.2 85.1L1023.6 59.9L1046.9 81.1ZM1172.3 84.4L1192.2 18.5L1212.1 29.7ZM1336.2 88L1364.9 30.5L1393.6 48.2Z\"/>\n    <path class=\"ridge__slope-far\" d=\"M53.8 39.8L75.5 29.3L97.1 78.2ZM220.6 51.1L245.5 15.6L270.4 33.3ZM384.1 59.2L418.5 20.1L452.9 44.8ZM560.9 59.5L585.9 26.6L610.9 51.5ZM728.9 18.8L747.5 -0.7L766.2 58.3ZM882.7 80.1L912.4 5.4L942.2 24.8ZM1046.9 81.1L1070.1 53.3L1093.3 68.2ZM1212.1 29.7L1247.5 1.5L1282.8 84.4ZM1393.6 48.2L1416.8 13.7L1440 35.9Z\"/>\n    <path class=\"ridge__slope-near\" d=\"M97.1 78.2L130.3 23.3L163.4 54.2ZM270.4 33.3L304.5 -1.4L338.7 27.8ZM452.9 44.8L469.4 2.3L486 33.2ZM610.9 51.5L633.8 18.3L656.7 39.5ZM766.2 58.3L801.7 -11.5L837.2 18.9ZM942.2 24.8L971.2 -3.1L1000.2 85.1ZM1093.3 68.2L1132.8 57.2L1172.3 84.4ZM1282.8 84.4L1309.5 72L1336.2 88Z\"/>\n    <path class=\"ridge__ground\" d=\"M0 18L53.8 39.8V100H0ZM53.8 39.8L97.1 78.2V100H53.8ZM97.1 78.2L163.4 54.2V100H97.1ZM163.4 54.2L220.6 51.1V100H163.4ZM220.6 51.1L270.4 33.3V100H220.6ZM270.4 33.3L338.7 27.8V100H270.4ZM338.7 27.8L384.1 59.2V100H338.7ZM384.1 59.2L452.9 44.8V100H384.1ZM452.9 44.8L486 33.2V100H452.9ZM486 33.2L560.9 59.5V100H486ZM560.9 59.5L610.9 51.5V100H560.9ZM610.9 51.5L656.7 39.5V100H610.9ZM656.7 39.5L728.9 18.8V100H656.7ZM728.9 18.8L766.2 58.3V100H728.9ZM766.2 58.3L837.2 18.9V100H766.2ZM837.2 18.9L882.7 80.1V100H837.2ZM882.7 80.1L942.2 24.8V100H882.7ZM942.2 24.8L1000.2 85.1V100H942.2ZM1000.2 85.1L1046.9 81.1V100H1000.2ZM1046.9 81.1L1093.3 68.2V100H1046.9ZM1093.3 68.2L1172.3 84.4V100H1093.3ZM1172.3 84.4L1212.1 29.7V100H1172.3ZM1212.1 29.7L1282.8 84.4V100H1212.1ZM1282.8 84.4L1336.2 88V100H1282.8ZM1336.2 88L1393.6 48.2V100H1336.2ZM1393.6 48.2L1440 35.9V100H1393.6Z\"/>\n  </svg>\n  <div class=\"container scene__body\">\n    <h1 class=\"scene__title\" id=\"scene-title\"><span class=\"scene__title-line\">{{title_line_1}}</span> <span class=\"scene__title-line\">{{title_line_2}}</span></h1>\n    <p class=\"scene__lead\">{{lead}}</p>\n\n    <nav class=\"quick-row\" aria-label=\"{{quick_label}}\">\n      <ul class=\"quick-row__list\" role=\"list\">\n        <!-- @each tasks as task -->\n        <li><a class=\"quick-row__link\" href=\"{{task.href}}\"><svg class=\"icon\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#{{task.icon}}\"></use></svg>{{task.label}}</a></li>\n        <!-- @end -->\n      </ul>\n    </nav>\n\n    <div class=\"float-panel\">\n      <h2 class=\"float-panel__title\" id=\"scene-panel-title\">{{panel_title}}</h2>\n      <div class=\"carousel\" role=\"region\" aria-roledescription=\"carousel\" aria-labelledby=\"scene-panel-title\" data-carousel data-carousel-autoplay=\"7000\">\n        <div class=\"carousel__controls\">\n          <button type=\"button\" class=\"carousel__toggle\" data-carousel-toggle>\n            <svg class=\"icon icon--small\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#pause\"></use></svg>\n            <span class=\"sr-only\">자동 넘김 정지</span>\n          </button>\n          <button type=\"button\" class=\"carousel__nav\" data-carousel-prev>\n            <svg class=\"icon icon--small\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#chevron-left\"></use></svg>\n            <span class=\"sr-only\">이전 항목</span>\n          </button>\n          <p class=\"carousel__counter\" aria-hidden=\"true\"><span class=\"float-panel__now\" data-carousel-current>1</span> / <span data-carousel-total>{{slides.@count}}</span></p>\n          <button type=\"button\" class=\"carousel__nav\" data-carousel-next>\n            <svg class=\"icon icon--small\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#chevron-right\"></use></svg>\n            <span class=\"sr-only\">다음 항목</span>\n          </button>\n        </div>\n        <div class=\"carousel__viewport\">\n          <div class=\"carousel__track\" aria-live=\"off\">\n            <!-- @each slides as slide -->\n            <div class=\"carousel__slide\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"{{slide.@n}} / {{slide.@count}}\">\n              <img class=\"float-panel__img\" src=\"{{slide.img_src}}\" alt=\"{{slide.img_alt}}\" width=\"960\" height=\"540\"{{slide.@first:| loading=\"lazy\"}}>\n              <h3 class=\"float-panel__name\">{{slide.name}}</h3>\n              <ul class=\"float-panel__work\" role=\"list\">\n                <!-- @each slide.work as work -->\n                <li class=\"float-panel__task\">{{work.text}}</li>\n                <!-- @end -->\n              </ul>\n            </div>\n            <!-- @end -->\n          </div>\n        </div>\n      </div>\n      <a class=\"float-panel__more\" href=\"{{more_href}}\">{{more_label}}</a>\n    </div>\n  </div>\n</section>\n",
+  "css": "/* src/styles/6-components/scene.css */\n/**\n * Scene — 장면형 첫 화면 (블록 카탈로그 scene · design-intelligence §6-1 H5)\n *   화면 전체를 쓰는 장면(기본은 사진) 위에 큰 표제를 올리고, 바닥에 바로가기 줄(quick-row)과 능선 전환(ridge),\n *   오른쪽에 뜬 패널(float-panel)을 둔다. 정본: src/blocks/scene/. MCP get_block(\"scene\")\n *   <section class=\"section section--intro scene\" aria-labelledby=\"scene-title\">\n *     <img class=\"scene__photo\" src=\"…\" alt=\"\">                          기본 배경(사진)\n *     <canvas class=\"scene__canvas\" aria-hidden=\"true\"></canvas>          프로젝트가 직접 그리는 선택 향상\n *     <div class=\"scene__veil\" aria-hidden=\"true\"></div>                  글자 자리를 어둡게 하는 장막\n *     <svg class=\"ridge\" …>…</svg>\n *     <div class=\"container scene__body\">\n *       <h1 class=\"scene__title\" id=\"scene-title\"><span class=\"scene__title-line\">…</span> <span class=\"scene__title-line\">…</span></h1>\n *       <p class=\"scene__lead\">…</p>\n *       <nav class=\"quick-row\">…</nav>\n *       <div class=\"float-panel\">…</div>\n *     </div>\n *   </section>\n *   캔버스 약속: 프로젝트 스크립트가 첫 장면을 그린 뒤 section에 data-scene=\"ready\"를 붙이면 캔버스가 드러난다.\n *     움직임 줄이기 설정이거나 그리기에 실패하면 아무것도 붙이지 않는다 — 사진이 남는다.\n *   --ridge-h: 바닥 능선 띠 높이. 본문 바닥 여백과 뜬 패널 위치를 이 값으로 계산한다.\n *   --quick-h: 바로가기 줄 한 줄 높이(1280px 이상에서 한 줄, 1024~1279px에서 두 줄).\n *   블록 예외(contracts/block-exceptions.json): 표제 행간 1.12, 0.9초 들어오기 움직임.\n * 레이어 밖에 둔다 — section.css(5-objects)·카탈로그 부품보다 뒤에서 조정한다.\n */\n.scene {\n  --ridge-h: clamp(4.8rem, 7vw, 10rem);\n  --quick-h: 8rem;\n\n  /* 바탕색은 사진도 캔버스도 없을 때만 보인다 */\n  @apply relative overflow-hidden p-0 min-h-[100svh] bg-[var(--color-primary-40)] laptop:p-0;\n}\n\n.scene__photo {\n  @apply absolute inset-0 w-full h-full max-w-none object-cover [object-position:50%_35%];\n}\n\n.scene__canvas {\n  @apply absolute inset-0 block w-full h-full opacity-0 [transition:opacity_0.5s_ease];\n}\n\n.scene[data-scene=\"ready\"] .scene__canvas {\n  @apply opacity-100;\n}\n\n/* 위(머리글 자리)와 아래(표제·바로가기 자리)만 어둡게 하는 스크림 — 검정 알파 토큰만 쓴다 */\n.scene__veil {\n  @apply absolute inset-0 pointer-events-none;\n\n  background: linear-gradient(180deg, var(--color-alpha-black-50) 0%, transparent 18%, transparent 55%, var(--color-alpha-black-75) 100%);\n}\n\n/* 좁은 화면에서는 표제·바로가기가 사진의 밝은 곳 위에 놓인다 — 사진 전체를 한 겹 더 어둡게 한다.\n   1024px 이상은 글자가 아래 스크림 위에 있어 필요 없다 */\n.scene__veil::before {\n  @apply content-[''] absolute inset-0 [transition:opacity_0.4s_ease] laptop:hidden;\n\n  background-color: color-mix(in srgb, var(--color-gray-100) 45%, transparent);\n}\n\n/* 캔버스 장면이 뜨면 옅게만 남긴다 — 장면의 밝은 색을 살린다 */\n.scene[data-scene=\"ready\"] .scene__veil::before {\n  @apply opacity-40;\n}\n\n.scene__body {\n  @apply relative pt-[10rem] pb-[calc(var(--ridge-h)+2.4rem)] text-[var(--color-gray-0)] laptop:flex laptop:flex-col laptop:justify-end laptop:h-[100svh] laptop:min-h-[80rem] laptop:pt-0 laptop:pb-[calc(var(--ridge-h)+1.6rem)];\n}\n\n/* KRDS 기준 밖(운영자 승인 대기): 표제 크기 4.4~12rem(display-large 6rem 상한)·행간 1.12(150% 기준) */\n.scene__title {\n  @apply m-0 [font-family:var(--font-heading)] font-semibold tracking-normal [word-break:keep-all] laptop:max-w-[56%];\n\n  font-size: clamp(4.4rem, 7.6vw, 12rem);\n  line-height: 1.12;\n  text-shadow: 0 0.2rem 2.4rem var(--color-alpha-black-50);\n}\n\n.scene__title-line {\n  @apply block;\n}\n\n.scene__lead {\n  @apply m-0 mt-[2rem] max-w-[46rem] leading-[1.7] text-[var(--color-primary-5)] [word-break:keep-all] laptop:max-w-[56%];\n\n  font-size: clamp(1.7rem, 1.4vw, 2rem);\n}\n\n/* 첫 화면 들어오기 — 표제 줄 → 소개 → 바로가기 → 패널 순으로 한 번 올라온다 */\n@keyframes scene-rise {\n  from {\n    opacity: 0;\n    transform: translateY(3.2rem);\n  }\n\n  to {\n    opacity: 1;\n    transform: none;\n  }\n}\n\n@media (prefers-reduced-motion: no-preference) {\n  .scene__title-line,\n  .scene__lead,\n  .scene .quick-row,\n  .scene .float-panel {\n    animation: scene-rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s backwards;\n  }\n\n  .scene__title-line:nth-child(2) { animation-delay: 0.31s; }\n  .scene__lead { animation-delay: 0.42s; }\n  .scene .quick-row { animation-delay: 0.53s; }\n  .scene .float-panel { animation-delay: 0.64s; }\n}\n\n/* src/styles/6-components/scene-header.css */\n/**\n * Scene Header — 장면 위 투명 머리글 (블록 카탈로그 scene의 부품)\n *   <header id=\"header\" class=\"site-header scene-header\">…카탈로그 헤더 마크업 그대로…</header>\n *   카탈로그 부품을 덮어쓰지 않고, 머리글 안에서 의미 토큰이 가리키는 값을 흰색 계열로 바꾼다.\n *   src/js/scene-header.js가 첫 화면을 벗어나면 data-scrolled를 붙여 짙은 바탕을 입힌다.\n *   로고는 흰색 파일을 쓴다(색을 필터로 뒤집지 않는다).\n *   블록 예외(contracts/block-exceptions.json): 통합검색 알약 반경.\n *   KRDS 헤더는 sticky + 밝은 바탕이 기본이다. 이 변형은 scene 블록과 함께일 때만 쓴다.\n * 레이어 밖에 둔다 — header.css(components 레이어)보다 뒤에서 조정한다.\n */\n.scene-header {\n  --color-text: var(--color-gray-0);\n  --color-primary: var(--color-primary-20);\n  --color-border-control: color-mix(in srgb, var(--color-gray-0) 50%, transparent);\n  --color-button-text-fill-hover: color-mix(in srgb, var(--color-gray-0) 16%, transparent);\n  --color-button-text-fill-pressed: color-mix(in srgb, var(--color-gray-0) 24%, transparent);\n\n  @apply fixed inset-x-0 top-0 border-b-0 bg-transparent text-[var(--color-text)] [transition:background-color_0.3s_ease,box-shadow_0.3s_ease];\n}\n\n.scene-header[data-scrolled] {\n  background-color: color-mix(in srgb, var(--color-primary-90) 92%, transparent);\n  box-shadow: 0 0.1rem 0 color-mix(in srgb, var(--color-gray-0) 8%, transparent);\n}\n\n.scene-header .site-header__brand,\n.scene-header .site-header__menu a,\n.scene-header .site-header__search-link,\n.scene-header .site-header__toggle {\n  @apply text-[var(--color-text)];\n}\n\n/* 통합검색 — 흰 선 알약 안에 입력창과 글자 버튼 */\n.scene-header .site-header__search {\n  @apply gap-0 ps-[1.6rem] border border-[var(--color-border-control)] rounded-[99rem];\n}\n\n.scene-header .site-header__search-input {\n  @apply w-[18rem] px-0 border-0 bg-transparent text-[1.5rem] text-[var(--color-text)];\n}\n\n.scene-header .site-header__search-input::placeholder {\n  color: color-mix(in srgb, var(--color-gray-0) 75%, transparent);\n}\n\n.scene-header .site-header__search .btn {\n  @apply border-transparent bg-transparent rounded-[99rem] text-[1.5rem] text-[var(--color-text)];\n}\n\n.scene-header .site-header__actions .btn--text {\n  @apply text-[var(--color-text)];\n}\n\n/* 펼친 하위 메뉴는 흰 판이다 — 그 안에서는 토큰을 밝은 면 값으로 되돌린다 */\n.scene-header .main-menu__submenu {\n  --color-text: var(--color-gray-90);\n  --color-primary: var(--color-primary-50);\n}\n\n/* src/styles/6-components/float-panel.css */\n/**\n * Float Panel — 장면 위에 뜬 패널 (블록 카탈로그 scene의 부품)\n *   주요 항목을 넘겨 보는 흰 판. 안에 카탈로그 carousel을 그대로 넣는다(분수형 식별자만, 점 식별자 없음).\n *   <div class=\"float-panel\">\n *     <h2 class=\"float-panel__title\" id=\"scene-panel-title\">주요사업</h2>\n *     <div class=\"carousel\" role=\"region\" aria-roledescription=\"carousel\" aria-labelledby=\"scene-panel-title\" data-carousel data-carousel-autoplay=\"7000\">\n *       …carousel__controls · carousel__viewport · carousel__track…\n *       <div class=\"carousel__slide\" …>\n *         <img class=\"float-panel__img\" src=\"…\" alt=\"…\"> <h3 class=\"float-panel__name\">…</h3>\n *         <ul class=\"float-panel__work\" role=\"list\"><li class=\"float-panel__task\">…</li></ul>\n *       </div>\n *     </div>\n *     <a class=\"float-panel__more\" href=\"…\">사업영역 자세히 보기</a>\n *   </div>\n *   1024px 이상에서는 .scene__body의 오른쪽, 바로가기 줄 위에 뜬다. 미만에서는 바로가기 줄 아래에 놓인다.\n *   동작(자동 넘김·정지·초점 진입 시 정지)은 src/js/carousel.js 그대로다.\n *   블록 예외(contracts/block-exceptions.json): 그림자 blur 3.2rem, 이름 행간 1.3.\n * 레이어 밖에 둔다 — carousel.css(components 레이어)보다 뒤에서 조정한다.\n */\n.float-panel {\n  @apply relative z-[2] mt-[3.2rem] pt-[2rem] px-[2.4rem] pb-[2.4rem] rounded-[1.2rem] bg-[var(--color-surface)] text-[var(--color-text)] laptop:absolute laptop:right-[2.4rem] laptop:bottom-[calc(var(--ridge-h)+1.6rem+4rem+var(--quick-h)*2+2.4rem)] laptop:w-[34rem] laptop:mt-0 pc:w-[40rem] pc:bottom-[calc(var(--ridge-h)+1.6rem+4rem+var(--quick-h)+2.4rem)];\n\n  box-shadow: 0 1.6rem 3.2rem -1.6rem var(--color-alpha-black-50);\n}\n\n/* 제목은 캐러셀 컨트롤과 같은 줄 왼쪽에 놓는다(컨트롤 높이 4.4rem에 맞춘 한 줄) */\n.float-panel__title {\n  @apply absolute left-[2.4rem] top-[2rem] m-0 text-[1.9rem] font-bold leading-[4.4rem] tracking-normal whitespace-nowrap;\n}\n\n.float-panel .carousel__controls {\n  @apply gap-[0.4rem] mb-[1.6rem];\n}\n\n.float-panel .carousel__toggle,\n.float-panel .carousel__nav {\n  @apply border-[var(--color-border-light)] rounded-[0.8rem] [transition:background-color_0.2s_ease,border-color_0.2s_ease];\n}\n\n.float-panel .carousel__toggle:hover,\n.float-panel .carousel__nav:hover {\n  @apply bg-[var(--color-primary-5)] border-[var(--color-primary-50)];\n}\n\n/* 분수형 식별자를 모든 폭에서 쓴다(패널이 좁아 점 식별자를 두지 않는다) */\n.float-panel .carousel__counter {\n  @apply min-w-[5.2rem] laptop:block;\n}\n\n.float-panel__now {\n  @apply font-bold text-[var(--color-text)];\n}\n\n.float-panel .carousel__viewport {\n  @apply rounded-none;\n}\n\n.float-panel__img {\n  @apply block w-full h-auto mb-[1.6rem] rounded-[0.8rem] object-cover [aspect-ratio:16/9] laptop:[aspect-ratio:21/9] pc:[aspect-ratio:2/1];\n}\n\n/* KRDS 기준 밖(운영자 승인 대기): 제목 행간 1.3(150% 기준) */\n.float-panel__name {\n  @apply m-0 mb-[1rem] [font-family:var(--font-heading)] text-[2.8rem] font-semibold leading-[1.3] tracking-normal [word-break:keep-all] laptop:text-[2.4rem] pc:text-[2.8rem];\n}\n\n.float-panel__work {\n  @apply list-none m-0 p-0;\n}\n\n.float-panel__task {\n  @apply relative ps-[1.6rem] text-[1.6rem] leading-[1.7] text-[var(--color-text-subtle)] [word-break:keep-all];\n}\n\n.float-panel__task::before {\n  @apply content-[''] absolute left-0 top-[0.78em] w-[0.6rem] h-[0.6rem] rounded-full bg-[var(--color-point-30)];\n}\n\n.float-panel__more {\n  @apply inline-flex items-center min-h-[4.4rem] mt-[1.2rem] font-bold text-[var(--color-text-primary)] [text-underline-offset:0.35em];\n}\n\n.float-panel__more:visited {\n  @apply text-[var(--color-text-primary)];\n}\n\n/* 낮은 화면: 사진을 납작하게 해 머리글과 겹치지 않게 한다 */\n@media (min-width: 1024px) and (max-height: 860px) {\n  .float-panel__img {\n    @apply [aspect-ratio:21/9];\n  }\n\n  .float-panel__name {\n    @apply text-[2.4rem];\n  }\n}\n\n/* src/styles/6-components/quick-row.css */\n/**\n * Quick Row — 장면 바닥의 글자 바로가기 줄 (블록 카탈로그 scene의 부품 · design-intelligence §6-2 Q3)\n *   <nav class=\"quick-row\" aria-label=\"자주 찾는 서비스\">\n *     <ul class=\"quick-row__list\" role=\"list\">\n *       <li><a class=\"quick-row__link\" href=\"…\"><svg class=\"icon\" …>…</svg>입찰·계약정보</a></li>\n *     </ul>\n *   </nav>\n *   짙은 면·장면 위에 놓는다(글자 흰색). 360px 2단 → 768px 3단 → 1280px 6단 한 줄.\n *   아이콘은 배경 없이 글자 왼쪽에 둔다.\n * 레이어 밖에 둔다 — scene과 같은 층.\n */\n\n/* 좁은 화면에서는 짙은 판에 담는다 — 글자가 장면 속 밝은 곳과 겹치면 읽히지 않는다 */\n.quick-row {\n  @apply mt-[4rem] border-t max-laptop:mt-[3.2rem] max-laptop:px-[1.6rem] max-laptop:border-t-0 max-laptop:rounded-[1.2rem] max-laptop:bg-[var(--color-primary-90)];\n\n  border-color: color-mix(in srgb, var(--color-gray-0) 35%, transparent);\n}\n\n.quick-row__list {\n  /* 두 줄로 꺾이는 항목이 있어도 줄 높이가 어긋나지 않게 모든 줄을 같은 높이로 둔다 */\n  @apply grid grid-cols-2 [grid-auto-rows:1fr] list-none m-0 p-0 tablet:grid-cols-3 pc:grid-cols-6;\n}\n\n.quick-row__link {\n  @apply flex items-center gap-[1rem] h-full min-h-[6.4rem] px-[0.4rem] py-[1.2rem] border-b text-[1.6rem] font-bold leading-[1.5] text-[var(--color-gray-0)] no-underline [word-break:keep-all] [transition:color_0.2s_ease] pc:min-h-[8rem] pc:ps-0 pc:pe-[1.2rem] pc:pt-[1.6rem] pc:pb-0 pc:border-b-0;\n\n  border-color: color-mix(in srgb, var(--color-gray-0) 18%, transparent);\n}\n\n.quick-row__link:visited {\n  @apply text-[var(--color-gray-0)];\n}\n\n.quick-row__link:hover {\n  @apply text-[var(--color-primary-20)];\n}\n\n.quick-row__link .icon {\n  @apply text-[var(--color-primary-20)];\n}\n\n/* src/styles/6-components/ridge.css */\n/**\n * Ridge — 능선 전환 (블록 카탈로그 scene·logo-row의 부품)\n *   윗면의 바닥에 놓고 아랫면의 색으로 칠하는 각진 실루엣. 면과 면 사이를 직선 대신 대상의 윤곽으로 넘긴다.\n *   <svg class=\"ridge\" viewBox=\"0 0 1440 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\">\n *     <path class=\"ridge__slope\" d=\"…\"/> <path class=\"ridge__slope-far\" d=\"…\"/> <path class=\"ridge__slope-near\" d=\"…\"/>\n *     <path class=\"ridge__ground\" d=\"…\"/>\n *   </svg>\n *   높이는 부모의 --ridge-h. 색은 --ridge-ground·--ridge-slope·--ridge-far·--ridge-near로 받는다.\n *   기본값은 짙은 면(primary-90) 색이다 — 아랫면이 다른 색이면 부모에서 네 값을 그 면의 토큰으로 바꾼다.\n *   모양은 프로젝트마다 대상의 지형·사물에서 온 선으로 바꾼다(블록 메타데이터의 변형 축 참고).\n *   블록 예외(contracts/block-exceptions.json): 인라인 svg(R-27) — 아이콘이 아니라 면 전환 그림이다.\n * 레이어 밖에 둔다 — scene과 같은 층.\n */\n.ridge {\n  @apply absolute inset-x-0 bottom-0 block w-full max-w-none h-[var(--ridge-h,8rem)] pointer-events-none;\n}\n\n.ridge__ground {\n  fill: var(--ridge-ground, var(--color-primary-90));\n}\n\n.ridge__slope {\n  fill: var(--ridge-slope, var(--color-primary-80));\n}\n\n.ridge__slope-far {\n  fill: var(--ridge-far, color-mix(in srgb, var(--color-primary-80) 55%, var(--color-primary-70)));\n}\n\n.ridge__slope-near {\n  fill: var(--ridge-near, color-mix(in srgb, var(--color-primary-90) 50%, var(--color-primary-80)));\n}"
+}

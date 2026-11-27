@@ -1,0 +1,20 @@
+<section class="section section--list open-panel" aria-labelledby="open-panel-title">
+  <div class="container">
+    <div class="open-panel__panel">
+      <h2 class="open-panel__title" id="open-panel-title">{{title}}</h2>
+      <div class="open-panel__groups">
+        <!-- @each groups as group -->
+        <div class="open-panel__group">
+          <h3 class="open-panel__group-name">{{group.name}}</h3>
+          <ul class="open-panel__links" role="list">
+            <!-- @each group.links as link -->
+            <li><a class="open-panel__link" href="{{link.href}}">{{link.label}}<svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+            <!-- @end -->
+          </ul>
+        </div>
+        <!-- @end -->
+      </div>
+      <p class="open-panel__call">{{call_label}} <a class="open-panel__tel" href="tel:{{tel}}">{{tel}}</a></p>
+    </div>
+  </div>
+</section>

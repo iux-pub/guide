@@ -1,0 +1,12 @@
+<section class="section section--list task-index" aria-labelledby="task-index-title">
+  <div class="container">
+    <div class="task-index__panel">
+      <h2 class="task-index__title" id="task-index-title">{{title}}</h2>
+      <ul class="task-index__list" role="list">
+        <!-- @each tasks as task -->
+        <li class="task-index__item"><a class="task-index__link" href="{{task.href}}">{{task.label}} <svg class="icon icon--small task-index__arrow" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg></a></li>
+        <!-- @end -->
+      </ul>
+    </div>
+  </div>
+</section>

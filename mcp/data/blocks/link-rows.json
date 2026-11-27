@@ -1,0 +1,196 @@
+{
+  "id": "link-rows",
+  "name": "가로 줄 링크 묶음",
+  "slot": "link-group",
+  "forms": [],
+  "reference": "design-intelligence §6-5 4:8 분할 줄 목록",
+  "tags": [
+    "열린 경영",
+    "정보공개",
+    "고객참여",
+    "링크 묶음",
+    "줄 목록",
+    "짙은 면"
+  ],
+  "summary": "왼쪽에 섹션 제목(메뉴 이름), 오른쪽에 「묶음 이름 + 링크들」을 가로 줄로 쌓는다. 짙은 면 위에 놓아 본문과 푸터 사이의 무게를 만든다.",
+  "useWhen": [
+    "열린 경영·정보공개·고객참여처럼 묶음이 2~5개이고 묶음마다 링크가 2~4개다.",
+    "「소제목 + 밑줄 + 링크 세 개」를 3열로 놓는 묶음(전형 조립 E)을 피하고 싶다.",
+    "페이지 아래쪽에 짙은 면이 한 번 필요하다(면 지도)."
+  ],
+  "avoidWhen": [
+    "가장 많이 찾는 링크 두세 개가 뚜렷하다 — 그 링크를 큰 칸으로 올리는 형식을 쓴다(§6-5).",
+    "바로 앞이나 뒤가 짙은 면이다 — 경계가 사라진다. 밝은 면 변형으로 바꾼다.",
+    "링크가 묶음 없이 한 줄이다 — 푸터 유틸리티 링크로 충분하다.",
+    "바로 아래 푸터가 같은 색의 짙은 면이다 — 푸터 색을 다르게 하거나 밝은 면 변형을 쓴다(§6-6)."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "섹션 제목",
+      "spec": "한글 2~10자. 메뉴 이름(예: 「사업영역」「열린경영」)을 쓴다. 표어·문장형 제목·소개 문장을 지어 붙이지 않는다(design-intelligence §2-2).",
+      "example": "열린경영"
+    },
+    {
+      "key": "groups",
+      "kind": "list",
+      "label": "링크 묶음(줄)",
+      "min": 2,
+      "max": 5,
+      "spec": "2~5줄. 기관 메뉴의 묶음 구분을 그대로 쓴다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "묶음 이름",
+          "spec": "한글 2~6자. 줄 왼쪽의 작은 글자다."
+        },
+        {
+          "key": "links",
+          "kind": "list",
+          "label": "링크",
+          "min": 2,
+          "max": 4,
+          "spec": "묶음마다 2~4개.",
+          "fields": [
+            {
+              "key": "label",
+              "kind": "text",
+              "label": "링크 이름",
+              "spec": "한글 3~12자. 실제 메뉴 이름."
+            },
+            {
+              "key": "href",
+              "kind": "url",
+              "label": "링크 주소",
+              "spec": "실제 목적지 주소(R-30)."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "열린 경영",
+          "links": [
+            {
+              "label": "경영 공시",
+              "href": "/open/disclosure"
+            },
+            {
+              "label": "윤리·인권 경영",
+              "href": "/open/ethics"
+            },
+            {
+              "label": "사업 실명제",
+              "href": "/open/realname"
+            }
+          ]
+        },
+        {
+          "name": "정보공개",
+          "links": [
+            {
+              "label": "사전 정보 공표",
+              "href": "/open/list"
+            },
+            {
+              "label": "정보공개 청구",
+              "href": "/open/request"
+            },
+            {
+              "label": "공공데이터 제공",
+              "href": "/open/data"
+            }
+          ]
+        },
+        {
+          "name": "시민 참여",
+          "links": [
+            {
+              "label": "재단에 바란다",
+              "href": "/voice"
+            },
+            {
+              "label": "설문 조사",
+              "href": "/survey"
+            },
+            {
+              "label": "시민 제안",
+              "href": "/proposal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "면",
+      "options": [
+        "짙은 면(기본, inverse-surface)",
+        "밝은 면"
+      ],
+      "how": "section에서 inverse-surface 클래스를 빼면 밝은 면이 된다. 블록은 의미 토큰만 읽으므로 다른 수정이 없다."
+    },
+    {
+      "axis": "짙은 면의 색",
+      "options": [
+        "primary-80(기본)",
+        "gray-90 등"
+      ],
+      "how": "section에 style=\"--surface: var(--color-gray-90)\"처럼 면 토큰을 준다. 첫 화면 블록과 같은 색이면 한 단계 다르게 고른다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "field-list"
+    ],
+    "after": [
+      "partner-row"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "inverse",
+    "note": "inverse-surface의 --surface(기본 --color-primary-80). 글자·선·링크는 inverse-surface가 바꾼 의미 토큰을 읽는다."
+  },
+  "section": {
+    "archetype": "list"
+  },
+  "styles": [
+    "src/styles/6-components/inverse-surface.css",
+    "src/styles/6-components/link-rows.css"
+  ],
+  "requires": {
+    "components": [],
+    "icons": [],
+    "scripts": []
+  },
+  "accessibility": [
+    "묶음은 dl이다 — 묶음 이름이 dt, 링크들이 dd. 줄마다 div로 감싼다.",
+    "링크 높이는 4.4rem으로 터치 영역 44px을 채운다(R-13).",
+    "짙은 면에서 링크는 흰색, 호버는 --color-primary-20이다. 면 색을 바꾸면 대비 4.5:1을 다시 잰다.",
+    "방문한 링크 색을 본문 링크 색과 같게 고정했다 — 짙은 면에서 보라색 방문 링크는 대비가 모자란다.",
+    "섹션 제목은 h2이고 section의 aria-labelledby가 가리킨다."
+  ],
+  "origin": "제주관광공사 메인 D안(2026-11)의 open-data·link-rows 블록을 한 블록으로 합쳐 옮겼다.",
+  "tokens": [
+    "--color-border",
+    "--color-gray-0",
+    "--color-link-hover",
+    "--color-point-30",
+    "--color-primary-10",
+    "--color-primary-20",
+    "--color-primary-60",
+    "--color-primary-70",
+    "--color-primary-80",
+    "--color-primary-90",
+    "--color-text",
+    "--color-text-bolder",
+    "--color-text-subtle",
+    "--font-heading"
+  ],
+  "markup": "<section class=\"section section--list inverse-surface\" aria-labelledby=\"link-rows-title\">\n  <div class=\"container link-rows\">\n    <h2 class=\"link-rows__title\" id=\"link-rows-title\">{{title}}</h2>\n    <dl class=\"link-rows__list\">\n      <!-- @each groups as group -->\n      <div class=\"link-rows__row\">\n        <dt class=\"link-rows__group\">{{group.name}}</dt>\n        <dd class=\"link-rows__links\">\n          <!-- @each group.links as link -->\n          <a class=\"link-rows__link\" href=\"{{link.href}}\">{{link.label}}</a>\n          <!-- @end -->\n        </dd>\n      </div>\n      <!-- @end -->\n    </dl>\n  </div>\n</section>\n",
+  "css": "/* src/styles/6-components/inverse-surface.css */\n/**\n * Inverse Surface — 짙은 면 위에 올라가는 부품의 색을 한꺼번에 바꾼다\n *\n * 카탈로그 부품(tab·btn·링크·초점 링)은 의미 토큰을 읽는다. 이 블록은 부품을 덮어쓰지 않고\n * 블록 안에서 의미 토큰이 가리키는 값을 밝은 단계로 바꾼다. 면의 색은 --surface로 받는다.\n *   <section class=\"section section--intro inverse-surface\">…</section>\n *   <div class=\"inverse-surface\" style=\"--surface: var(--color-gray-90)\">…</div>\n * 근거: design-intelligence.md §5-2 「짙은 면이 시작되면 그 안의 부품도 바꾼다」\n * 레이어 밖에 둔다 — 블록 카탈로그(cover·link-rows)의 면 색과 같은 층에서 겨룬다.\n */\n.inverse-surface {\n  --color-text: var(--color-gray-0);\n  --color-text-bolder: var(--color-gray-0);\n  --color-text-subtle: var(--color-primary-10);\n  --color-text-primary: var(--color-primary-20);\n  --color-text-inverse: var(--color-primary-90);\n  --color-primary: var(--color-primary-20);\n  --color-link: var(--color-gray-0);\n  --color-link-hover: var(--color-primary-20);\n  --color-link-pressed: var(--color-primary-10);\n  --color-link-visited: var(--color-gray-0);\n  --color-point: var(--color-point-30);\n  --color-border: var(--color-primary-60);\n  --color-border-light: var(--color-primary-70);\n  --color-border-primary: var(--color-primary-20);\n  --color-button-primary-fill: var(--color-gray-0);\n  --color-button-primary-fill-hover: var(--color-primary-10);\n  --color-button-primary-fill-pressed: var(--color-primary-20);\n\n  @apply bg-[var(--surface,var(--color-primary-80))] text-[var(--color-text)];\n}\n\n/* src/styles/6-components/link-rows.css */\n/**\n * Link Rows — 링크 묶음을 가로 줄로 (블록 카탈로그 link-rows · design-intelligence §6-5)\n *   왼쪽에 섹션 제목(문장형), 오른쪽에 「묶음 이름 + 링크들」 줄 목록. 「소제목 + 밑줄 + 링크 세 개」 3열 묶음의 대안이다.\n *   색은 의미 토큰만 읽는다 — 짙은 면(inverse-surface)과 밝은 면 어느 쪽에도 놓인다.\n *   정본: src/blocks/link-rows/. MCP get_block(\"link-rows\")\n *   <div class=\"container link-rows\">\n *     <h2 class=\"link-rows__title\" id=\"link-rows-title\">…</h2>\n *     <dl class=\"link-rows__list\">\n *       <div class=\"link-rows__row\">\n *         <dt class=\"link-rows__group\">…</dt>\n *         <dd class=\"link-rows__links\"><a class=\"link-rows__link\" href=\"…\">…</a></dd>\n *       </div>\n *     </dl>\n *   </div>\n * 레이어 밖에 둔다 — inverse-surface와 같은 층.\n */\n.link-rows {\n  @apply grid gap-[3.2rem] laptop:gap-[6.4rem] laptop:[grid-template-columns:minmax(0,5fr)_minmax(0,7fr)];\n}\n\n/* KRDS heading-large(mobile 2.4 / pc 3.2rem) */\n.link-rows__title {\n  @apply m-0 max-w-[11em] [font-family:var(--font-heading)] text-[2.4rem] font-semibold leading-[1.5] tracking-[0.1rem] text-[var(--color-text-bolder)] [word-break:keep-all] tablet:text-[3.2rem];\n}\n\n.link-rows__list {\n  @apply m-0 min-w-0 border-b border-[var(--color-border)];\n}\n\n.link-rows__row {\n  @apply grid gap-y-[0.8rem] gap-x-[2.4rem] py-[2rem] border-t border-[var(--color-border)] tablet:[grid-template-columns:10rem_minmax(0,1fr)];\n}\n\n.link-rows__group {\n  @apply m-0 text-[1.5rem] font-bold leading-[1.7] text-[var(--color-text-subtle)] [word-break:keep-all] tablet:pt-[0.8rem];\n}\n\n.link-rows__links {\n  @apply flex flex-wrap gap-x-[3.2rem] gap-y-[0.4rem] m-0;\n}\n\n.link-rows__link {\n  @apply inline-flex items-center min-h-[4.4rem] text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] [text-underline-offset:0.4rem] hover:underline hover:text-[var(--color-link-hover)];\n}\n\n.link-rows__link:visited {\n  @apply text-[var(--color-text)];\n}"
+}

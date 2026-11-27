@@ -7,8 +7,12 @@ INFOMIND UX 스타터 키트로 새 프로젝트를 생성한다. KRDS(범정부
 ```bash
 npx create-infomind-ux my-project
 cd my-project
-npm run dev          # http://localhost:8080
+npm run build        # 토큰 + CSS 빌드 (dist/css/style.css)
+npm run watch:css    # CSS 변경 감시
+npm run check        # 컨트랙트·HTML 구조·대비·아이콘 검사
 ```
+
+스타터에는 개발 서버가 없다. `index.html`을 브라우저나 쓰는 도구의 미리보기로 연다.
 
 ## 옵션
 
@@ -20,10 +24,11 @@ npx create-infomind-ux <project-name> [옵션]
 --deliver            납품본 생성 — 사내 운영 문서 제외
 --skip-install       의존성 설치 건너뛰기
 --no-git             git init 건너뛰기
---template <name>    스타터 템플릿 (기본: starter)
 --help, -h           도움말
 --version, -v        버전
 ```
+
+`--profile`·`--brand`는 값을 반드시 준다. 값이 빠지거나 모르는 옵션이 오면 프로젝트를 만들지 않고 오류로 끝난다.
 
 ### `--profile`
 
@@ -54,16 +59,14 @@ cd <project> && npm run build && npm run check
 - ✅ KRDS 기반 컴포넌트 CSS (BEM + ITCSS 5-layer)
 - ✅ INFOUX 색상/기본 폰트 토큰
 - ✅ Tailwind v4 + CSS nesting + `@apply`
-- ✅ Eleventy 문서 사이트
 - ✅ `infoux.json` — 사이트 유형 기록과 납품 페이지 범위 `pages`(기본 `*.html`, `pages/**/*.html`) (`--profile` 지정 시). `npm run check`가 이 범위의 페이지를 page 계약으로 검사한다
 - ✅ 편집 직후 검사 훅 — `.claude/settings.json`·`.codex/hooks.json`이 `scripts/hooks/post-edit.js`를 부른다(stylelint·컨트랙트·HTML 구조, 실패는 숨기지 않는다)
 - ✅ `AGENTS.md` + `.cursorrules` — Cursor/Aider/Codex 자동 인식
-- ✅ pa11y-ci + axe-core 접근성 검증
-- ✅ Stylelint + check-violations.js (rules.json 규칙 전체)
+- ✅ Stylelint + 정적 검사기 5종(`npm run check` — 컨트랙트 위반·HTML 구조·대비·아이콘·계약)
 
 ## 다음 단계
 
-1. 브랜드 색상 정의: `tokens/foundation.json` 편집 → `npm run build`
+1. 브랜드 색상 정의: `tokens/brand.json` 편집(`foundation.json`은 고치지 않는다) → `npm run build` → `npm run check`
 2. AI 기준 연결: `claude mcp add infoux -- npx -y @infomind-ux/infoux-mcp`
 3. 자세한 가이드: `README.md`, `CLAUDE.md`, https://footer.kr/guide/
 

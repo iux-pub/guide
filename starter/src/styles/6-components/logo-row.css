@@ -1,0 +1,45 @@
+/**
+ * Logo Row — 옅은 색 면의 마지막 로고 줄 + 푸터로 넘어가는 능선 (블록 카탈로그 logo-row · design-intelligence §6-5)
+ *   따로 흰 띠를 만들지 않고 윗 블록(link-lines)과 같은 면에 이어 붙인다. 바닥에 푸터 색의 ridge를 놓는다.
+ *   <section class="section section--list logo-row" aria-labelledby="logo-row-title">
+ *     <div class="container">
+ *       <h2 class="sr-only" id="logo-row-title">연계 서비스</h2>
+ *       <ul class="logo-row__list" role="list">
+ *         <li><a class="logo-row__link" href="…"><img class="logo-row__logo" src="…" alt="기관명"></a></li>
+ *       </ul>
+ *     </div>
+ *     <svg class="ridge" …>…</svg>
+ *   </section>
+ *   면 색은 --logo-row-surface(기본 point-5). ridge 색은 반전 푸터(site-footer--inverse, gray-90)에 맞췄다.
+ *   로고 파일의 흰 바탕이 색 면 위에서 상자로 보이지 않게 곱하기 혼합을 쓴다.
+ * 레이어 밖에 둔다 — section.css(5-objects)와 같은 층에서 여백을 조정한다.
+ */
+.logo-row {
+  --ridge-h: clamp(3.2rem, 4.5vw, 6.4rem);
+  --ridge-ground: var(--color-gray-90);
+  --ridge-slope: var(--color-gray-80);
+  --ridge-far: var(--color-gray-70);
+  --ridge-near: color-mix(in srgb, var(--color-gray-90) 50%, var(--color-gray-80));
+
+  @apply relative pt-0 pb-[calc(var(--ridge-h)+4rem)] bg-[var(--logo-row-surface,var(--color-point-5))] laptop:pt-0 laptop:pb-[calc(var(--ridge-h)+5.6rem)];
+}
+
+.logo-row__list {
+  @apply grid grid-cols-2 items-center gap-[0.8rem] list-none m-0 px-0 pt-[2.4rem] pb-0 border-t border-[var(--color-border)] tablet:grid-cols-3 laptop:grid-cols-6;
+}
+
+.logo-row__link {
+  @apply flex items-center justify-center min-h-[8rem] p-[1.2rem] rounded-[0.8rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] [transition:background-color_0.2s_ease];
+}
+
+.logo-row__link:visited {
+  @apply text-[var(--color-text)];
+}
+
+.logo-row__link:hover {
+  @apply bg-[var(--color-point-10)];
+}
+
+.logo-row__logo {
+  @apply w-auto max-h-[3.2rem] [mix-blend-mode:multiply];
+}

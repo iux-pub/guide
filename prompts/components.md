@@ -2,6 +2,8 @@
 
 대상: 모든 코드 생성 AI
 
+> 손으로 관리하는 파일이다(`npm run build:prompts`가 만들지 않는다). 자동 합본은 `site/prompts/components.md`다. 클래스는 `src/styles/6-components/*.css`에 있는 것만 쓴다(R-29).
+
 이 컴포넌트 패턴을 우선 따라 HTML을 생성하라. 카탈로그 밖 패턴은 프로젝트 필요성과 공통화 가능성을 판단해 확장한다.
 
 > 전체 마크업·variant·접근성 노트의 권위 있는 소스: `src/snippets/{name}.md`
@@ -15,16 +17,18 @@
 ### 버튼 (btn)
 
 ```html
-<button type="button" class="btn btn--primary">버튼 텍스트</button>
+<button type="button" class="btn btn--primary">신청하기</button>
 <button type="button" class="btn btn--secondary btn--small">취소</button>
-<button type="button" class="btn btn--tertiary btn--large">더보기</button>
-<button type="button" class="btn btn--text">자세히</button>
-<button type="button" class="btn btn--primary btn--block">전체 너비 제출</button>
+<button type="button" class="btn btn--tertiary btn--large">목록 보기</button>
+<button type="button" class="btn btn--text">자세히 보기</button>
+<button type="submit" class="btn btn--primary btn--block">신청서 제출</button>
+<button type="button" class="btn btn--primary" disabled>신청하기</button>
 ```
 
 KRDS Variant: `--primary` `--secondary` `--tertiary` `--text`
 KRDS Size: `--xsmall` `--small` (없음=medium, 기본) `--large` `--xlarge`
 **금지**: `--ghost` `--outline` `--link` `--sm` `--lg` `--hero` (옛 variant)
+레이블은 동사형으로 쓴다. 「~하세요」로 끝내지 않는다(R-43). 비활성은 `disabled` 속성이다.
 
 ### 폼 필드 (form)
 
@@ -33,8 +37,8 @@ KRDS Size: `--xsmall` `--small` (없음=medium, 기본) `--large` `--xlarge`
   <label for="name" class="form-field__label">
     이름<span class="form-field__required" aria-label="필수">*</span>
   </label>
-  <p id="name-hint" class="form-field__hint">주민등록상 실명을 입력하세요</p>
-  <input type="text" id="name" class="input" required aria-describedby="name-hint">
+  <p id="name-hint" class="form-field__hint">사업자등록증에 기재된 대표자명</p>
+  <input type="text" id="name" class="input" placeholder="홍길동" required aria-describedby="name-hint">
 </div>
 
 <div class="form-field">
@@ -44,7 +48,7 @@ KRDS Size: `--xsmall` `--small` (없음=medium, 기본) `--large` `--xlarge`
 </div>
 ```
 
-KRDS 순서: 레이블 → 보조설명 → 입력 → 시스템 메시지. 오류는 `input--error` + `aria-invalid="true"` + 메시지 연결(`aria-describedby`).
+KRDS 순서: 레이블 → 보조설명 → 입력 → 시스템 메시지. placeholder에는 예시만 둔다(R-50). 오류는 `input--error` + `aria-invalid="true"` + 메시지 연결(`aria-describedby`).
 
 ### 체크박스·라디오 (check-radio)
 
@@ -171,9 +175,9 @@ KRDS 순서: 레이블 → 보조설명 → 입력 → 시스템 메시지. 오�
 
 현재 페이지는 `aria-current="page"`만 — CSS가 이 속성으로 표시한다. 첫·마지막 페이지의 이전·다음 버튼은 `disabled`.
 
-### 헤더 (header), 메인 메뉴 (main-menu)
+### 헤더 (header), 메인 메뉴 (main-menu), 전체메뉴 (mobile-menu), 푸터 (footer)
 
-→ `src/snippets/{header,main-menu}.md` 참조
+→ `src/snippets/{header,main-menu,mobile-menu,footer}.md` 참조. 메인 메뉴는 클릭·Enter·Space로만 연다. 1024px 미만에서는 전체메뉴(`mobile-menu`)로 바뀐다. 푸터에는 「개인정보 처리방침」 링크를 실제 주소로 둔다(R-32).
 
 ---
 
@@ -183,8 +187,10 @@ KRDS 순서: 레이블 → 보조설명 → 입력 → 시스템 메시지. 오�
 
 ```html
 <div class="alert alert--success" role="status">
-  <strong class="alert__title">저장 완료</strong>
-  <p class="alert__message">변경 사항이 저장되었습니다.</p>
+  <div class="alert__body">
+    <p class="alert__title">저장 완료</p>
+    <p class="alert__message">변경 사항이 저장되었습니다.</p>
+  </div>
 </div>
 ```
 
@@ -238,6 +244,12 @@ KRDS 긴급 공지. 자리는 `main#main`의 첫 section(메인 메뉴 다음, �
 
 `.table-wrap`은 가로 스크롤 래퍼다. 키보드로도 스크롤하도록 `tabindex="0"` + `role="region"` + `aria-labelledby`(caption `id`)를 함께 둔다.
 
-### 리스트 (list), 캘린더 (calendar), 캐러셀 (carousel)
+### 리스트 (list), 캘린더 (calendar), 캐러셀 (carousel), 오류 페이지 (error-page)
 
-→ `src/snippets/{list,calendar,carousel}.md` 참조
+→ `src/snippets/{list,calendar,carousel,error-page}.md` 참조. 캐러셀은 슬라이드 5장 이내이고, 자동 회전이면 정지 버튼이 첫 상호작용 요소다(R-33).
+
+---
+
+## 상태
+
+컴포넌트별 상태 셋(버튼 loading, 폼 error, 표·목록의 빈 상태·로딩·오류, 알림 4톤, 페이지네이션 양끝 비활성)은 `site/design/ui-states.md`를 따른다. 뼈대 화면(Skeleton)은 카탈로그에 없다 — `spinner`·`progress`를 쓴다.

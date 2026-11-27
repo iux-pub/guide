@@ -1,13 +1,12 @@
 /**
- * info-design 스킬 빌더
+ * 레퍼런스 빌더 — references/의 자동 생성 문서를 만든다
  *
- * 입력:
- *   tokens/foundation.json
- *   tokens/build/tokens.css (이미 빌드되어 있어야 함)
- *   src/styles/6-components/*.css
+ * 입력(단일 원본):
+ *   tokens/build/tokens.css (이미 빌드되어 있어야 함 — 토큰 이름·값의 정본)
  *   src/snippets/*.md
+ *   contracts/class-naming.json
  *
- * 출력:
+ * 출력(생성 대상):
  *   references/krds-tokens.md     (자동 생성 — 토큰 카탈로그)
  *   references/krds-components.md (자동 생성 — 컴포넌트 카탈로그)
  *   references/class-naming.md    (마커 사이 표만 — 정본 contracts/class-naming.json, 나머지는 직접 작성)
@@ -24,145 +23,220 @@
 
 const fs = require('fs')
 const path = require('path')
-const { execSync } = require('child_process')
-
-// 빌드 버전 — git commit hash (같은 SHA = 같은 빌드 결과 보장)
-// 작업 중 생성물을 커밋할 때 불필요한 -dirty diff가 남지 않도록 HEAD만 기록한다.
-function buildVersion() {
-  try {
-    return execSync('git rev-parse --short HEAD', { cwd: __dirname + '/..' }).toString().trim()
-  } catch {
-    return 'unknown'
-  }
-}
-
-const { loadTokenSource } = require('./lib/token-source')
 
 const ROOT = path.resolve(__dirname, '..')
 const SNIPPETS_DIR = path.join(ROOT, 'src', 'snippets')
-const _COMPONENTS_DIR = path.join(ROOT, 'src', 'styles', '6-components')
-const SKILL_REFS_DIR = path.join(ROOT, 'references')
+const REFS_DIR = path.join(ROOT, 'references')
 
-if (!fs.existsSync(SKILL_REFS_DIR)) fs.mkdirSync(SKILL_REFS_DIR, { recursive: true })
+if (!fs.existsSync(REFS_DIR)) fs.mkdirSync(REFS_DIR, { recursive: true })
 
-// 스킬 카탈로그는 프로젝트가 실제로 보는 값을 실어야 한다 — foundation + brand 합성 결과.
-const foundation = loadTokenSource(ROOT)
+// 빌드 표기 — 산출물에는 커밋 sha가 아니라 package.json version을 싣는다.
+// sha를 박으면 빌드할 때마다 diff가 생기고, 커밋 전에 만든 생성물이라 값도 늘 한 커밋 늦다.
+const GUIDE_VERSION = require('../package.json').version
 
 // ─────────────────────────────────────────────────────
 // 1. krds-tokens.md — 토큰 카탈로그
+//    정본은 tokens/build/tokens.css다. 표를 손으로 적으면 토큰이 늘 때마다 문서에서 빠진다
+//    (2026-11 검수: 173개 중 58개 누락). CSS를 읽어 전량을 싣고, 용도 설명만 여기서 붙인다.
 // ─────────────────────────────────────────────────────
 
-function buildKrdsTokensMd() {
+/** tokens.css → { light: [[이름, 값]…], highContrast: Map } — :root와 고대비 블록의 선언을 순서대로 읽는다 */
+function parseTokensCss(css) {
+  const block = (re) => {
+    const m = css.match(re)
+    if (!m) return []
+    return [...m[1].matchAll(/^\s*(--[a-z0-9-]+)\s*:\s*([^;]+);/gim)].map(x => [x[1], x[2].trim()])
+  }
+  return {
+    light: block(/(?:^|\n):root\s*\{([\s\S]*?)\n\}/),
+    highContrast: new Map(block(/\[data-color-mode="high-contrast"\]\s*\{([\s\S]*?)\n\}/))
+  }
+}
+
+// 단계 색상(--color-<분류>-<단계>)의 표 제목. 여기 없는 분류가 생겨도 표는 만들어진다(분류 이름 그대로)
+const STEP_LABEL = {
+  primary: 'Primary (브랜드 / 액션 강조)',
+  secondary: 'Secondary (보조 브랜드)',
+  gray: 'Gray (무채색 — 텍스트/배경/보더)',
+  danger: 'Danger (오류/삭제)',
+  warning: 'Warning (경고)',
+  success: 'Success (성공)',
+  information: 'Information (정보)',
+  point: 'Point (강조)',
+  'alpha-black': 'Alpha (검정 알파 — dim)'
+}
+const STEP_TOKEN = /^--color-([a-z]+(?:-[a-z]+)*)-(\d+)$/
+
+// 시맨틱 토큰의 묶음 — 위에서부터 먼저 맞는 묶음에 들어간다. 마지막 묶음이 나머지를 모두 받아 누락이 없다
+const SEMANTIC_GROUPS = [
+  ['브랜드', n => /^--color-(?:primary|secondary|point)(?:-(?:hover|pressed))?$/.test(n)],
+  ['링크', n => /^--color-link(?:-|$)/.test(n)],
+  ['버튼', n => /^--color-button-/.test(n)],
+  ['입력', n => /^--color-input-/.test(n)],
+  ['텍스트', n => /^--color-text(?:-|$)/.test(n) || /^--color-[a-z]+-text$/.test(n)],
+  ['배경', n => /^--color-bg(?:-|$)/.test(n)],
+  ['표면', n => /^--color-surface(?:-|$)/.test(n) || /^--color-[a-z]+-surface$/.test(n)],
+  ['보더', n => /^--color-border(?:-|$)/.test(n)],
+  ['상태', n => /^--color-(?:danger|warning|success|info)$/.test(n)],
+  ['그 밖', () => true]
+]
+
+const STATE_KO = { primary: 'primary', information: '정보', info: '정보', success: '성공', warning: '경고', danger: '오류' }
+const USAGE = {
+  '--color-primary': '브랜드·주요 액션',
+  '--color-primary-hover': '주요 액션 hover',
+  '--color-primary-pressed': '주요 액션 pressed',
+  '--color-secondary': '보조 브랜드',
+  '--color-point': '강조(포인트)',
+  '--color-text': '본문 (기본)',
+  '--color-text-bolder': '가장 진한 텍스트',
+  '--color-text-subtle': '보조 텍스트',
+  '--color-text-disabled': '비활성 텍스트',
+  '--color-text-inverse': '다크 배경 위 텍스트',
+  '--color-text-primary': '브랜드색 텍스트 (활성 메뉴·강조)',
+  '--color-bg': '페이지 기본 배경',
+  '--color-bg-subtler': '보조 배경 (헤더 띠 등)',
+  '--color-bg-subtle': '더 진한 보조 배경',
+  '--color-bg-inverse': '다크 배경',
+  '--color-bg-dim': '모달 dim',
+  '--color-surface': '카드/패널 표면',
+  '--color-surface-subtler': '보조 표면',
+  '--color-surface-disabled': '비활성 표면',
+  '--color-border': '기본 테두리',
+  '--color-border-light': '옅은 구분선',
+  '--color-border-dark': '진한 테두리 (hover)',
+  '--color-border-control': '폼 컨트롤 테두리 (배경 대비 3:1)',
+  '--color-border-primary': '강조 테두리 (focus·선택)',
+  '--color-border-disabled': '비활성 테두리',
+  '--color-link': '링크 기본',
+  '--color-link-hover': '링크 hover',
+  '--color-link-pressed': '링크 pressed',
+  '--color-link-visited': '방문한 링크',
+  '--color-input-surface': '입력 표면',
+  '--color-input-surface-disabled': '비활성 입력 표면',
+  '--color-input-border': '입력 테두리',
+  '--color-input-border-active': '입력 테두리 (focus)',
+  '--color-input-border-disabled': '비활성 입력 테두리',
+  '--color-input-border-error': '입력 오류 테두리'
+}
+
+/** 용도 설명 — 표에 없으면 이름 규칙으로 만든다. 규칙에도 안 맞으면 '—'(토큰 자체는 표에 실린다) */
+function usageOf(name) {
+  if (USAGE[name]) return USAGE[name]
+  let m = name.match(/^--color-button-(primary|secondary|tertiary|text|disabled)-(fill|border)(?:-(hover|pressed))?$/)
+  if (m) return `${m[1] === 'disabled' ? '비활성' : m[1]} 버튼 ${m[2] === 'fill' ? '채움' : '테두리'}${m[3] ? ` (${m[3]})` : ''}`
+  m = name.match(/^--color-(danger|warning|success|info)(?:-(text|surface))?$/)
+  if (m) return `${STATE_KO[m[1]]} ${m[2] === 'text' ? '텍스트' : m[2] === 'surface' ? '알림 배경' : '상태색 (아이콘·강조)'}`
+  m = name.match(/^--color-surface-(primary|information|success|warning|danger)-subtler$/)
+  if (m) return `옅은 ${STATE_KO[m[1]]} 표면`
+  m = name.match(/^--color-border-(primary|information|success|warning|danger)-light$/)
+  if (m) return `옅은 ${STATE_KO[m[1]]} 테두리`
+  return '—'
+}
+
+const FONT_USAGE = {
+  '--font-sans': '본문/컴포넌트 기본 폰트',
+  '--font-heading': '제목 차등 서체 — brand에 heading 슬롯이 없으면 sans 값 폴백',
+  '--font-mono': '코드/고정폭 텍스트'
+}
+const BREAKPOINT_USAGE = {
+  '--breakpoint-mobile': '모바일 기준 뷰포트',
+  '--breakpoint-tablet': '태블릿 이상 — 글자 크기 mobile→pc 전환',
+  '--breakpoint-laptop': '노트북 이상 — 메인 메뉴↔전체메뉴, 서브 LNB 2단, 레이아웃 간격',
+  '--breakpoint-pc': 'PC 이상'
+}
+
+/** tokens.css 원문 → krds-tokens.md 본문. 파일을 쓰지 않는 순수 함수라 테스트가 누락을 본다 */
+function renderKrdsTokensMd(css) {
+  const { light, highContrast } = parseTokensCss(css)
   const lines = []
   const w = (s) => lines.push(s)
+
+  const colors = light.filter(([n]) => n.startsWith('--color-'))
+  const steps = colors.filter(([n]) => STEP_TOKEN.test(n))
+  const semantic = colors.filter(([n]) => !STEP_TOKEN.test(n))
+
+  // 같은 값의 단계 토큰 — 시맨틱 토큰의 '참조' 칸. 이름에 같은 분류가 들어 있으면 그것을 먼저 고른다
+  const stepByValue = new Map()
+  for (const [n, v] of steps) {
+    if (!stepByValue.has(v)) stepByValue.set(v, [])
+    stepByValue.get(v).push(n.replace(/^--color-/, ''))
+  }
+  const refOf = (name, value) => {
+    const cands = stepByValue.get(value)
+    if (!cands) return '—'
+    const hint = name.replace(/-info(?=-|$)/, '-information')
+    return cands.find(c => hint.includes(c.replace(/-\d+$/, ''))) || cands[0]
+  }
 
   w('# INFOUX 파운데이션 토큰 카탈로그')
   w('')
   w('> 자동 생성됨. 직접 수정 금지.')
-  w('> 출처: `tokens/foundation.json` + `tokens/brand.json` (합성 결과)')
-  w('> 빌드: ' + buildVersion())
+  w('> 출처: `tokens/build/tokens.css` (`tokens/foundation.json` + `tokens/brand.json` 합성 결과)')
+  w('> 기준 버전: ' + GUIDE_VERSION)
   w('')
   w('색상, 기본 폰트, 브레이크포인트는 이 문서의 토큰을 사용한다. 임의 hex/rgb/hsl 색상 작성은 금지한다. 간격·크기·타이포 스케일·모션·z-index는 토큰 카탈로그 대상이 아니다 — 간격·크기·타이포는 rem 임의값(`p-[1.6rem]`, Tailwind 기본 스케일은 62.5% 루트에서 37.5% 작아 R-37 금지), 모션·z-index는 CSS 값이나 Tailwind 임의값(`duration-[200ms]`, `z-[1050]`)으로 작성한다.')
   w('')
+  w(`이 문서는 \`tokens.css\`의 \`--color-*\` ${colors.length}개와 \`--font-*\`·\`--breakpoint-*\` 전량을 싣는다. 여기 없는 이름은 없는 토큰이다 — 지어내지 않는다.`)
+  w('')
   w('---')
   w('')
-
-  w('## 색상')
+  w('## 색상 — 시맨틱 (먼저 쓴다)')
   w('')
-  w('### Primary (브랜드 / 액션 강조)')
+  w('「참조」는 라이트 모드에서 같은 값을 가진 단계 토큰이다. 「고대비」는 `[data-color-mode="high-contrast"]`에서 바뀌는 값이다.')
   w('')
-  w('| 단계 | 토큰 | hex |')
-  w('|------|------|-----|')
-  for (const [stage, t] of Object.entries(foundation.primitive.color.light.primary)) {
-    w(`| ${stage} | \`--color-primary-${stage}\` | \`${t.value}\` |`)
-  }
-  w('')
-  w('**시맨틱 별칭**: `--color-primary` = primary-50 / `--color-primary-hover` = 60 / `--color-primary-pressed` = 70')
-  w('')
-
-  w('### Gray (무채색 — 텍스트/배경/보더)')
-  w('')
-  w('| 단계 | 토큰 | hex |')
-  w('|------|------|-----|')
-  for (const [stage, t] of Object.entries(foundation.primitive.color.light.gray)) {
-    w(`| ${stage} | \`--color-gray-${stage}\` | \`${t.value}\` |`)
-  }
-  w('')
-
-  for (const cat of ['danger', 'warning', 'success', 'information', 'point']) {
-    if (!foundation.primitive.color.light[cat]) continue
-    const labelMap = { danger: 'Danger (오류/삭제)', warning: 'Warning (경고)', success: 'Success (성공)', information: 'Information (정보)', point: 'Point (강조 — 빨강)' }
-    w(`### ${labelMap[cat]}`)
+  const taken = new Set()
+  for (const [title, test] of SEMANTIC_GROUPS) {
+    const rows = semantic.filter(([n]) => !taken.has(n) && test(n))
+    if (rows.length === 0) continue
+    rows.forEach(([n]) => taken.add(n))
+    w(`### 시맨틱 — ${title}`)
     w('')
-    w('| 단계 | 토큰 | hex |')
-    w('|------|------|-----|')
-    // 단계 토큰의 실제 이름은 --color-<분류>-<단계> 이고 정보색의 분류는 information 이다.
-    // 시맨틱 별칭(--color-info, --color-info-surface, --color-info-text)만 info 를 쓴다.
-    for (const [stage, t] of Object.entries(foundation.primitive.color.light[cat])) {
-      w(`| ${stage} | \`--color-${cat}-${stage}\` | \`${t.value}\` |`)
+    w('| 토큰 | 값 | 고대비 | 참조 | 용도 |')
+    w('|------|----|--------|------|------|')
+    for (const [name, value] of rows) {
+      w(`| \`${name}\` | \`${value}\` | \`${highContrast.get(name) ?? value}\` | ${refOf(name, value)} | ${usageOf(name)} |`)
     }
     w('')
   }
 
-  w('### 시맨틱 — 텍스트')
+  w('## 색상 — 단계 (명도가 필요할 때만)')
   w('')
-  w('| 토큰 (시맨틱 별칭) | 참조 | 용도 |')
-  w('|-------------------|------|------|')
-  w('| `--color-text` | gray-90 | 본문 (기본) |')
-  w('| `--color-text-bolder` | gray-95 | 가장 진한 텍스트 |')
-  w('| `--color-text-subtle` | gray-70 | 보조 텍스트 |')
-  w('| `--color-text-disabled` | gray-40 | 비활성 텍스트 |')
-  w('| `--color-text-inverse` | gray-0 | 다크 배경 위 텍스트 |')
-  w('| `--color-danger-text` | danger-60 | 오류 텍스트 |')
-  w('| `--color-warning-text` | warning-60 | 경고 텍스트 |')
-  w('| `--color-success-text` | success-60 | 성공 텍스트 |')
-  w('| `--color-info-text` | information-60 | 정보 텍스트 |')
-  w('')
-
-  w('### 시맨틱 — 배경/표면')
-  w('')
-  w('| 토큰 | 참조 | 용도 |')
-  w('|------|------|------|')
-  w('| `--color-bg` | gray-0 | 페이지 기본 배경 (흰색) |')
-  w('| `--color-bg-subtler` | gray-5 | 보조 배경 (헤더 띠 등) |')
-  w('| `--color-bg-subtle` | gray-10 | 더 진한 보조 배경 |')
-  w('| `--color-bg-inverse` | gray-90 | 다크 배경 |')
-  w('| `--color-bg-dim` | alpha-black-75 | 모달 dim |')
-  w('| `--color-surface` | gray-0 | 카드/패널 표면 |')
-  w('| `--color-surface-subtler` | gray-5 | 보조 표면 |')
-  w('| `--color-surface-disabled` | gray-20 | 비활성 표면 |')
-  w('| `--color-danger-surface` | danger-5 | 오류 알림 배경 |')
-  w('| `--color-warning-surface` | warning-5 | 경고 알림 배경 |')
-  w('| `--color-success-surface` | success-5 | 성공 알림 배경 |')
-  w('| `--color-info-surface` | information-5 | 정보 알림 배경 |')
+  const groups = []
+  for (const [name, value] of steps) {
+    const [, group, stage] = name.match(STEP_TOKEN)
+    let g = groups.find(x => x.group === group)
+    if (!g) groups.push(g = { group, rows: [] })
+    g.rows.push([stage, name, value])
+  }
+  for (const { group, rows } of groups) {
+    w(`### ${STEP_LABEL[group] || group}`)
+    w('')
+    w('| 단계 | 토큰 | hex | 고대비 |')
+    w('|------|------|-----|--------|')
+    for (const [stage, name, value] of rows) {
+      w(`| ${stage} | \`${name}\` | \`${value}\` | \`${highContrast.get(name) ?? value}\` |`)
+    }
+    w('')
+  }
+  w('정보색의 단계 토큰 분류는 `information`이다(`--color-information-60`). 시맨틱 별칭(`--color-info`, `--color-info-text`, `--color-info-surface`)만 `info`를 쓴다.')
   w('')
 
-  w('### 시맨틱 — 보더')
-  w('')
-  w('| 토큰 | 참조 |')
-  w('|------|------|')
-  w('| `--color-border` | gray-30 (default) |')
-  w('| `--color-border-light` | gray-20 |')
-  w('| `--color-border-dark` | gray-60 (active hover) |')
-  w('| `--color-border-primary` | primary-50 (focus) |')
-  w('| `--color-border-disabled` | gray-30 |')
-  w('')
-  w('### 기본 폰트')
+  w('## 기본 폰트')
   w('')
   w('| 토큰 | 값 | 용도 |')
   w('|------|----|------|')
-  w(`| \`--font-sans\` | \`${foundation.font.family.sans.value}\` | 본문/컴포넌트 기본 폰트 |`)
-  w(`| \`--font-heading\` | \`${(foundation.font.family.heading ?? foundation.font.family.sans).value}\` | 제목 차등 서체 — brand에 heading 슬롯이 없으면 sans 값 폴백 |`)
-  w(`| \`--font-mono\` | \`${foundation.font.family.mono.value}\` | 코드/고정폭 텍스트 |`)
+  for (const [name, value] of light.filter(([n]) => n.startsWith('--font-'))) {
+    w(`| \`${name}\` | \`${value}\` | ${FONT_USAGE[name] || '—'} |`)
+  }
   w('')
-  w('### 브레이크포인트')
+  w('## 브레이크포인트')
   w('')
   w('| 토큰 | 값 | 용도 | Tailwind variant |')
   w('|------|----|------|------------------|')
-  w(`| \`--breakpoint-mobile\` | \`${foundation.breakpoint.mobile.value}\` | 모바일 기준 뷰포트 | \`mobile:\` |`)
-  w(`| \`--breakpoint-tablet\` | \`${foundation.breakpoint.tablet.value}\` | 태블릿 이상 — 글자 크기 mobile→pc 전환 | \`tablet:\` |`)
-  w(`| \`--breakpoint-laptop\` | \`${foundation.breakpoint.laptop.value}\` | 노트북 이상 — 메인 메뉴↔전체메뉴, 서브 LNB 2단, 레이아웃 간격 | \`laptop:\` |`)
-  w(`| \`--breakpoint-pc\` | \`${foundation.breakpoint.pc.value}\` | PC 이상 | \`pc:\` |`)
+  for (const [name, value] of light.filter(([n]) => n.startsWith('--breakpoint-'))) {
+    w(`| \`${name}\` | \`${value}\` | ${BREAKPOINT_USAGE[name] || '—'} | \`${name.replace('--breakpoint-', '')}:\` |`)
+  }
   w('')
   w('---')
   w('')
@@ -181,14 +255,45 @@ function buildKrdsTokensMd() {
   w('- 해당 값들은 `@apply`의 Tailwind 유틸리티 또는 명확한 CSS 직접값으로 작성한다.')
   w('- `tokens/build/tokens.css`는 자동 생성물이므로 직접 수정하지 않는다.')
   w('')
+  return lines.join('\n') + '\n'
+}
 
-  fs.writeFileSync(path.join(SKILL_REFS_DIR, 'krds-tokens.md'), lines.join('\n') + '\n')
-  console.log(`✓ references/krds-tokens.md`)
+function buildKrdsTokensMd() {
+  const cssPath = path.join(ROOT, 'tokens', 'build', 'tokens.css')
+  if (!fs.existsSync(cssPath)) throw new Error('tokens/build/tokens.css가 없다 — npm run build:tokens를 먼저 실행한다.')
+  fs.writeFileSync(path.join(REFS_DIR, 'krds-tokens.md'), renderKrdsTokensMd(fs.readFileSync(cssPath, 'utf-8')))
+  console.log('✓ references/krds-tokens.md')
 }
 
 // ─────────────────────────────────────────────────────
 // 2. krds-components.md — 컴포넌트 카탈로그
 // ─────────────────────────────────────────────────────
+
+/**
+ * 스니펫 문서를 카탈로그의 한 항목으로 낮춘다 — 첫 H1은 `### 제목 {#이름}`, 나머지 제목은 두 단계씩(최대 6단계).
+ * 한 줄씩 한 번만 바꾼다(H1을 ###로 바꾼 뒤 `^### `를 다시 치환하면 방금 만든 제목까지 #####가 된다).
+ * 코드 펜스 안의 `# …`(셸 주석·마크다운 예시)는 제목이 아니므로 건드리지 않는다.
+ */
+function demoteHeadings(markdown, anchor) {
+  let fence = null
+  let titled = false
+  return markdown.split('\n').map(line => {
+    const fm = line.match(/^\s*(`{3,}|~{3,})/)
+    if (fm) {
+      if (!fence) fence = fm[1]
+      else if (fm[1][0] === fence[0] && fm[1].length >= fence.length && line.trim() === fm[1]) fence = null
+      return line
+    }
+    if (fence) return line
+    const h = line.match(/^(#{1,6}) (.*)$/)
+    if (!h) return line
+    if (h[1].length === 1 && !titled) {
+      titled = true
+      return `### ${h[2]}${anchor ? ` {#${anchor}}` : ''}`
+    }
+    return `${'#'.repeat(Math.min(6, h[1].length + 2))} ${h[2]}`
+  }).join('\n')
+}
 
 function buildKrdsComponentsMd() {
   const lines = []
@@ -198,7 +303,7 @@ function buildKrdsComponentsMd() {
   w('')
   w('> 자동 생성됨. 직접 수정 금지.')
   w('> 출처: `src/snippets/*.md`')
-  w('> 빌드: ' + buildVersion())
+  w('> 기준 버전: ' + GUIDE_VERSION)
   w('')
   w('아래 카탈로그에 없는 컴포넌트는 임의 생성 금지. § "카탈로그에 없는 컴포넌트 요구 시" 절차 따름.')
   w('')
@@ -237,25 +342,16 @@ function buildKrdsComponentsMd() {
         continue
       }
       const snippetContent = fs.readFileSync(snippetPath, 'utf-8')
-      // 첫 H1을 H3으로 강등
-      const adapted = snippetContent
-        .replace(/^# (.+)$/m, `### $1 {#${comp}}`)
-        .replace(/^## /gm, '#### ')
-        .replace(/^### /gm, '##### ')
-      w(adapted)
+      w(demoteHeadings(snippetContent, comp))
       w('')
       w('---')
       w('')
     }
   }
 
-  fs.writeFileSync(path.join(SKILL_REFS_DIR, 'krds-components.md'), lines.join('\n') + '\n')
-  console.log(`✓ references/krds-components.md`)
+  fs.writeFileSync(path.join(REFS_DIR, 'krds-components.md'), lines.join('\n') + '\n')
+  console.log('✓ references/krds-components.md')
 }
-
-// ─────────────────────────────────────────────────────
-// 실행
-// ─────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────
 // class-naming.md — contracts/class-naming.json의 표를 마커 사이에 채운다
@@ -301,17 +397,17 @@ function renderClassNamingMd(spec, doc) {
 
 function buildClassNamingMd() {
   const specPath = path.join(ROOT, 'contracts', 'class-naming.json')
-  const target = path.join(SKILL_REFS_DIR, 'class-naming.md')
+  const target = path.join(REFS_DIR, 'class-naming.md')
   if (!fs.existsSync(specPath) || !fs.existsSync(target)) return
   const spec = JSON.parse(fs.readFileSync(specPath, 'utf-8'))
   fs.writeFileSync(target, renderClassNamingMd(spec, fs.readFileSync(target, 'utf-8')))
   console.log('✓ references/class-naming.md — 어휘·금지어·파일 대응 표')
 }
 
-module.exports = { renderClassNamingMd }
+module.exports = { renderClassNamingMd, renderKrdsTokensMd, parseTokensCss, demoteHeadings }
 
 if (require.main === module) {
-  console.log('스킬 빌드 시작...')
+  console.log('레퍼런스 빌드 시작...')
   buildKrdsTokensMd()
   buildKrdsComponentsMd()
   buildClassNamingMd()

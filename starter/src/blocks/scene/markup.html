@@ -1,0 +1,60 @@
+<section class="section section--intro scene" aria-labelledby="scene-title">
+  <img class="scene__photo" src="{{photo_src}}" alt="" width="2000" height="1000">
+  <canvas class="scene__canvas" aria-hidden="true"></canvas>
+  <div class="scene__veil" aria-hidden="true"></div>
+  <svg class="ridge" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path class="ridge__slope" d="M0 18L26.9 -5.5L53.8 39.8ZM163.4 54.2L192 22.8L220.6 51.1ZM338.7 27.8L361.4 17.8L384.1 59.2ZM486 33.2L523.5 11.1L560.9 59.5ZM656.7 39.5L692.8 -10L728.9 18.8ZM837.2 18.9L859.9 -13L882.7 80.1ZM1000.2 85.1L1023.6 59.9L1046.9 81.1ZM1172.3 84.4L1192.2 18.5L1212.1 29.7ZM1336.2 88L1364.9 30.5L1393.6 48.2Z"/>
+    <path class="ridge__slope-far" d="M53.8 39.8L75.5 29.3L97.1 78.2ZM220.6 51.1L245.5 15.6L270.4 33.3ZM384.1 59.2L418.5 20.1L452.9 44.8ZM560.9 59.5L585.9 26.6L610.9 51.5ZM728.9 18.8L747.5 -0.7L766.2 58.3ZM882.7 80.1L912.4 5.4L942.2 24.8ZM1046.9 81.1L1070.1 53.3L1093.3 68.2ZM1212.1 29.7L1247.5 1.5L1282.8 84.4ZM1393.6 48.2L1416.8 13.7L1440 35.9Z"/>
+    <path class="ridge__slope-near" d="M97.1 78.2L130.3 23.3L163.4 54.2ZM270.4 33.3L304.5 -1.4L338.7 27.8ZM452.9 44.8L469.4 2.3L486 33.2ZM610.9 51.5L633.8 18.3L656.7 39.5ZM766.2 58.3L801.7 -11.5L837.2 18.9ZM942.2 24.8L971.2 -3.1L1000.2 85.1ZM1093.3 68.2L1132.8 57.2L1172.3 84.4ZM1282.8 84.4L1309.5 72L1336.2 88Z"/>
+    <path class="ridge__ground" d="M0 18L53.8 39.8V100H0ZM53.8 39.8L97.1 78.2V100H53.8ZM97.1 78.2L163.4 54.2V100H97.1ZM163.4 54.2L220.6 51.1V100H163.4ZM220.6 51.1L270.4 33.3V100H220.6ZM270.4 33.3L338.7 27.8V100H270.4ZM338.7 27.8L384.1 59.2V100H338.7ZM384.1 59.2L452.9 44.8V100H384.1ZM452.9 44.8L486 33.2V100H452.9ZM486 33.2L560.9 59.5V100H486ZM560.9 59.5L610.9 51.5V100H560.9ZM610.9 51.5L656.7 39.5V100H610.9ZM656.7 39.5L728.9 18.8V100H656.7ZM728.9 18.8L766.2 58.3V100H728.9ZM766.2 58.3L837.2 18.9V100H766.2ZM837.2 18.9L882.7 80.1V100H837.2ZM882.7 80.1L942.2 24.8V100H882.7ZM942.2 24.8L1000.2 85.1V100H942.2ZM1000.2 85.1L1046.9 81.1V100H1000.2ZM1046.9 81.1L1093.3 68.2V100H1046.9ZM1093.3 68.2L1172.3 84.4V100H1093.3ZM1172.3 84.4L1212.1 29.7V100H1172.3ZM1212.1 29.7L1282.8 84.4V100H1212.1ZM1282.8 84.4L1336.2 88V100H1282.8ZM1336.2 88L1393.6 48.2V100H1336.2ZM1393.6 48.2L1440 35.9V100H1393.6Z"/>
+  </svg>
+  <div class="container scene__body">
+    <h1 class="scene__title" id="scene-title"><span class="scene__title-line">{{title_line_1}}</span> <span class="scene__title-line">{{title_line_2}}</span></h1>
+    <p class="scene__lead">{{lead}}</p>
+
+    <nav class="quick-row" aria-label="{{quick_label}}">
+      <ul class="quick-row__list" role="list">
+        <!-- @each tasks as task -->
+        <li><a class="quick-row__link" href="{{task.href}}"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#{{task.icon}}"></use></svg>{{task.label}}</a></li>
+        <!-- @end -->
+      </ul>
+    </nav>
+
+    <div class="float-panel">
+      <h2 class="float-panel__title" id="scene-panel-title">{{panel_title}}</h2>
+      <div class="carousel" role="region" aria-roledescription="carousel" aria-labelledby="scene-panel-title" data-carousel data-carousel-autoplay="7000">
+        <div class="carousel__controls">
+          <button type="button" class="carousel__toggle" data-carousel-toggle>
+            <svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#pause"></use></svg>
+            <span class="sr-only">자동 넘김 정지</span>
+          </button>
+          <button type="button" class="carousel__nav" data-carousel-prev>
+            <svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-left"></use></svg>
+            <span class="sr-only">이전 항목</span>
+          </button>
+          <p class="carousel__counter" aria-hidden="true"><span class="float-panel__now" data-carousel-current>1</span> / <span data-carousel-total>{{slides.@count}}</span></p>
+          <button type="button" class="carousel__nav" data-carousel-next>
+            <svg class="icon icon--small" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+            <span class="sr-only">다음 항목</span>
+          </button>
+        </div>
+        <div class="carousel__viewport">
+          <div class="carousel__track" aria-live="off">
+            <!-- @each slides as slide -->
+            <div class="carousel__slide" role="group" aria-roledescription="slide" aria-label="{{slide.@n}} / {{slide.@count}}">
+              <img class="float-panel__img" src="{{slide.img_src}}" alt="{{slide.img_alt}}" width="960" height="540"{{slide.@first:| loading="lazy"}}>
+              <h3 class="float-panel__name">{{slide.name}}</h3>
+              <ul class="float-panel__work" role="list">
+                <!-- @each slide.work as work -->
+                <li class="float-panel__task">{{work.text}}</li>
+                <!-- @end -->
+              </ul>
+            </div>
+            <!-- @end -->
+          </div>
+        </div>
+      </div>
+      <a class="float-panel__more" href="{{more_href}}">{{more_label}}</a>
+    </div>
+  </div>
+</section>

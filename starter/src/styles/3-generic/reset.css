@@ -13,9 +13,11 @@
     @apply [box-sizing:border-box];
   }
 
-  /* 프로젝트 기준: 1rem = 10px */
+  /* 프로젝트 기준: 1rem = 10px.
+     scroll-padding-top — 고정 머리글(.site-header sticky, 높이 6.4 · 1280 이상 8rem)이 앵커 이동과 Tab 초점을 가리지 않게
+     머리글 높이 + 0.8rem을 비운다(WCAG 2.2 2.4.11 초점이 가려지지 않음, Vercel Web Interface Guidelines) */
   html {
-    @apply text-[62.5%] [text-size-adjust:100%];
+    @apply text-[62.5%] [text-size-adjust:100%] [scroll-padding-top:7.2rem] pc:[scroll-padding-top:8.8rem];
   }
 
   /* 기본 본문: KRDS body-medium(1.7rem) + line-height 170% + 한글 조판 기본값(keep-all·break-word) */

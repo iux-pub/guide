@@ -1,0 +1,152 @@
+{
+  "id": "task-index",
+  "name": "글자 바로가기 판",
+  "slot": "quick-links",
+  "forms": [
+    "Q1"
+  ],
+  "reference": "design-intelligence §6-2 Q1 글자 목록",
+  "tags": [
+    "바로가기",
+    "자주 찾는 서비스",
+    "글자 목록",
+    "과업 진입",
+    "걸침"
+  ],
+  "summary": "첫 화면 아래쪽에 걸쳐 올라오는 흰 판이다. 왼쪽 색 면에 제목, 오른쪽에 큰 글자 바로가기를 3열로 놓는다.",
+  "useWhen": [
+    "자주 찾는 과업이 3·6·9개이고 이름이 길어 아이콘 없이 글자로 읽히는 편이 낫다.",
+    "첫 화면 블록 바로 아래에서 과업 진입을 첫 스크롤 안에 보여 줘야 한다(공공 메인 R-40).",
+    "원 배경 아이콘을 같은 크기로 늘어놓는 바로가기(전형 조립 B)를 피하고 싶다."
+  ],
+  "avoidWhen": [
+    "앞 블록이 첫 화면 블록이 아니다 — 이 판은 앞 블록 위로 걸쳐 올라가므로 본문 중간에 두면 앞 내용을 덮는다.",
+    "한두 항목에 이용이 몰린다 — 대표 + 나머지(Q2)를 쓴다.",
+    "통합검색이 1순위 과업이다 — 검색 결합(Q4)을 쓴다.",
+    "항목이 10개를 넘는다 — 바로가기가 아니라 메뉴다. 항목을 줄인다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "판 제목",
+      "spec": "한글 4~10자. 「자주 찾는 서비스」처럼 무엇의 목록인지 적는다.",
+      "example": "자주 찾는 서비스"
+    },
+    {
+      "key": "tasks",
+      "kind": "list",
+      "label": "바로가기 항목",
+      "min": 3,
+      "max": 9,
+      "spec": "넓은 화면에서 3열이다 — 3·6·9개일 때 빈 칸이 없다. 그 밖의 수면 마지막 줄이 비므로 항목을 더하거나 덜어 맞춘다. 이용 통계가 있으면 많이 찾는 순서로 놓는다.",
+      "fields": [
+        {
+          "key": "label",
+          "kind": "text",
+          "label": "과업 이름",
+          "spec": "한글 4~12자. 기관이 실제로 쓰는 메뉴 이름을 그대로 쓴다."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "목적지 주소",
+          "spec": "실제 목적지 주소(R-30)."
+        }
+      ],
+      "examples": [
+        {
+          "label": "공연·전시 예매",
+          "href": "/ticket"
+        },
+        {
+          "label": "대관 신청",
+          "href": "/rental"
+        },
+        {
+          "label": "교육 프로그램 신청",
+          "href": "/education"
+        },
+        {
+          "label": "입찰·계약 정보",
+          "href": "/tender"
+        },
+        {
+          "label": "채용 공고",
+          "href": "/recruit"
+        },
+        {
+          "label": "정보공개 청구",
+          "href": "/open/request"
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "제목 면 색",
+      "options": [
+        "primary-60(기본)",
+        "브랜드의 다른 짙은 단계"
+      ],
+      "how": "제목 칸 배경은 .task-index__title의 토큰 하나다. 앞 블록의 면 색과 다른 단계를 고른다 — 같으면 판과 배경의 경계가 사라진다."
+    },
+    {
+      "axis": "걸침 높이",
+      "options": [
+        "8rem(기본)"
+      ],
+      "how": "앞 블록이 정한 --cover-overlap을 읽는다. 앞 블록이 cover가 아니면 그 블록이 아래 여백에 걸침 몫을 남겨야 한다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "cover"
+    ],
+    "after": [
+      "bulletin"
+    ],
+    "avoid": [],
+    "requiresBeforeSlot": "first-screen"
+  },
+  "surface": {
+    "tone": "overlap",
+    "note": "섹션은 투명하고 판만 --color-surface다. 제목 칸은 --color-primary-60. 앞 블록 위에 걸치므로 면 흐름에서 한 칸으로 세지 않는다."
+  },
+  "section": {
+    "archetype": "list"
+  },
+  "styles": [
+    "src/styles/6-components/task-index.css"
+  ],
+  "requires": {
+    "components": [
+      "icon"
+    ],
+    "icons": [
+      "chevron-right"
+    ],
+    "scripts": []
+  },
+  "accessibility": [
+    "제목은 h2이고 section의 aria-labelledby가 가리킨다.",
+    "목록은 ul이다. 목록 표시를 지웠으므로 role=\"list\"를 남긴다.",
+    "링크 칸 높이는 모바일 7.2rem으로 터치 영역 44px을 넘는다(R-13).",
+    "chevron은 장식이라 aria-hidden이다. 링크 이름은 글자가 전한다.",
+    "초점 링은 칸 안쪽으로 들여 그린다(outline-offset). outline을 지우지 않는다(R-11).",
+    "호버의 화살표 이동은 prefers-reduced-motion에서 꺼진다."
+  ],
+  "origin": "제주관광공사 메인 D안(2026-11)의 task-index 블록을 옮겼다. 판 가장자리는 그림자 대신 테두리로 바꿨다.",
+  "tokens": [
+    "--color-border-light",
+    "--color-gray-0",
+    "--color-primary-5",
+    "--color-primary-50",
+    "--color-primary-60",
+    "--color-surface",
+    "--color-text",
+    "--font-heading"
+  ],
+  "markup": "<section class=\"section section--list task-index\" aria-labelledby=\"task-index-title\">\n  <div class=\"container\">\n    <div class=\"task-index__panel\">\n      <h2 class=\"task-index__title\" id=\"task-index-title\">{{title}}</h2>\n      <ul class=\"task-index__list\" role=\"list\">\n        <!-- @each tasks as task -->\n        <li class=\"task-index__item\"><a class=\"task-index__link\" href=\"{{task.href}}\">{{task.label}} <svg class=\"icon icon--small task-index__arrow\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#chevron-right\"></use></svg></a></li>\n        <!-- @end -->\n      </ul>\n    </div>\n  </div>\n</section>\n",
+  "css": "/* src/styles/6-components/task-index.css */\n/**\n * Task Index — 첫 화면에 걸치는 글자 바로가기 판 (블록 카탈로그 task-index · design-intelligence §6-2 Q1)\n *   왼쪽 색 면에 제목, 오른쪽에 글자 목록. 아이콘 타일 없이 글자 크기와 칸 높이로 무게를 만든다.\n *   정본: src/blocks/task-index/. MCP get_block(\"task-index\")\n *   <section class=\"section section--list task-index\" aria-labelledby=\"task-index-title\">\n *     <div class=\"container\">\n *       <div class=\"task-index__panel\">\n *         <h2 class=\"task-index__title\" id=\"task-index-title\">자주 찾는 서비스</h2>\n *         <ul class=\"task-index__list\" role=\"list\">\n *           <li class=\"task-index__item\"><a class=\"task-index__link\" href=\"…\">이름 <svg class=\"icon icon--small task-index__arrow\">…</svg></a></li>\n *         </ul>\n *       </div>\n *     </div>\n *   </section>\n *   앞 블록 위로 --cover-overlap(cover가 정한다, 없으면 8rem)만큼 걸쳐 올라간다 — 앞 블록은 첫 화면 블록이어야 한다.\n *   판의 가장자리는 그림자가 아니라 테두리로 긋는다(그림자는 떠 있는 요소에만 — design-intelligence §5-8).\n * 레이어 밖에 둔다 — section.css(5-objects)의 섹션 여백과 같은 층에서 조정한다.\n */\n.task-index {\n  @apply relative z-[1] mt-[calc(-1*var(--cover-overlap,8rem))] py-0 bg-transparent;\n}\n\n.task-index__panel {\n  @apply grid border border-[var(--color-border-light)] bg-[var(--color-surface)] laptop:[grid-template-columns:minmax(0,3fr)_minmax(0,9fr)];\n}\n\n/* KRDS heading-medium(mobile 2.2 / pc 2.4rem) */\n.task-index__title {\n  @apply m-0 flex items-end px-[2.4rem] py-[2rem] bg-[var(--color-primary-60)] [font-family:var(--font-heading)] text-[2.2rem] font-semibold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all] laptop:px-[3.2rem] laptop:py-[3.2rem] laptop:text-[2.4rem];\n}\n\n.task-index__list {\n  @apply grid list-none m-0 p-0 tablet:grid-cols-2 laptop:grid-cols-3;\n}\n\n.task-index__item {\n  @apply border-t border-[var(--color-border-light)] tablet:border-s;\n}\n\n.task-index__link {\n  @apply flex items-center justify-between gap-[1.6rem] min-h-[7.2rem] px-[2.4rem] py-[1.6rem] text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] [outline-offset:-0.4rem] [transition:background-color_0.15s_ease-in-out,color_0.15s_ease-in-out] laptop:min-h-[9.6rem] laptop:px-[3.2rem];\n}\n\n.task-index__link:hover {\n  @apply bg-[var(--color-primary-5)] text-[var(--color-primary-60)];\n}\n\n.task-index__arrow {\n  @apply text-[var(--color-primary-50)] [transition:transform_0.15s_ease-in-out];\n}\n\n.task-index__link:hover .task-index__arrow {\n  @apply [transform:translateX(0.4rem)];\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .task-index__link,\n  .task-index__arrow {\n    @apply [transition:none];\n  }\n}\n\n/* 판 아래 숨 쉴 자리 — 걸친 판 바로 다음 섹션은 위 여백을 넓힌다 */\n.task-index + .section {\n  @apply pt-[6rem] laptop:pt-[9.6rem];\n}"
+}

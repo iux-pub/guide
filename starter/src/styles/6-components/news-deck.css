@@ -1,0 +1,86 @@
+/**
+ * News Deck — 짙은 면 소식 (블록 카탈로그 news-deck · design-intelligence §6-3 N1 + N2)
+ *   <section class="section section--notice inverse-surface news-deck" aria-labelledby="news-deck-title">
+ *     <div class="container news-deck__grid">
+ *       <div class="news-deck__board"><h2 class="display-title">새 소식</h2> <div class="tab">…post-list…more-link…</div></div>
+ *       <aside class="due-track">…</aside>
+ *     </div>
+ *   </section>
+ *   inverse-surface가 바꾼 토큰 위에서 면 색과 선·보조 글자색만 다시 잡는다.
+ *   목록의 첫 글 한 건만 제목 서체 큰 글자로 세우고 나머지는 보통 굵기로 낮춘다. 마감 칸은 목록 높이에 맞춰 늘어난다.
+ *   블록 예외(contracts/block-exceptions.json): 섹션 세로 여백 8~12rem, 대표 글 행간 1.4.
+ * 레이어 밖에 둔다 — 탭·목록의 색과 간격을 이 면 안에서 조정한다.
+ */
+.news-deck {
+  --surface: var(--color-primary-90);
+  --color-primary: var(--color-gray-0);
+  --color-text-subtle: color-mix(in srgb, var(--color-primary-10) 75%, var(--color-primary-90));
+  --color-border: color-mix(in srgb, var(--color-gray-0) 20%, transparent);
+  --color-border-light: color-mix(in srgb, var(--color-gray-0) 12%, transparent);
+
+  @apply pt-[8rem] pb-[4.8rem] laptop:pt-[12rem] laptop:pb-[6.4rem];
+}
+
+.news-deck__grid {
+  @apply grid gap-[4.8rem] laptop:gap-[6.4rem] laptop:[grid-template-columns:minmax(0,1fr)_44rem];
+}
+
+/* 격자 칸이 내용 폭 때문에 넘치지 않게 */
+.news-deck__board {
+  @apply min-w-0;
+}
+
+/* 탭 — 선택 탭은 흰 글자 + 강조색 밑줄 */
+.news-deck .tab__list {
+  @apply gap-[0.4rem] shadow-[inset_0_-0.1rem_0_var(--color-border)];
+}
+
+.news-deck .tab__item {
+  @apply px-[1.8rem];
+}
+
+.news-deck .tab__item::after {
+  @apply left-[1.2rem] right-[1.2rem] h-[0.3rem];
+}
+
+.news-deck .tab__item[aria-selected="true"]::after {
+  @apply bg-[var(--color-point-30)];
+}
+
+.news-deck .tab__panel {
+  @apply pt-0 pb-0;
+}
+
+.news-deck .post-list {
+  @apply border-t-0;
+}
+
+.news-deck .post-list__item {
+  @apply py-[1.6rem];
+}
+
+.news-deck .post-list__link,
+.news-deck .post-list__link:visited {
+  @apply font-normal text-[var(--color-primary-10)];
+}
+
+.news-deck .post-list__link:hover {
+  @apply text-[var(--color-gray-0)];
+}
+
+/* 첫 글 — 대표 글. KRDS 기준 밖(운영자 승인 대기): 행간 1.4(150% 기준) */
+.news-deck .post-list__item:first-child {
+  @apply py-[2.4rem] tablet:py-[3.2rem];
+}
+
+.news-deck .post-list__item:first-child .post-list__link {
+  @apply [font-family:var(--font-heading)] text-[2.2rem] font-semibold leading-[1.4] text-[var(--color-gray-0)] [word-break:keep-all] tablet:text-[2.8rem] tablet:[-webkit-line-clamp:3];
+}
+
+.news-deck .more-link {
+  @apply mt-[2rem] text-[var(--color-primary-20)] underline [text-underline-offset:0.35em];
+}
+
+.news-deck .more-link:visited {
+  @apply text-[var(--color-primary-20)];
+}

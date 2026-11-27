@@ -1,0 +1,65 @@
+/**
+ * Field List — 사진 한 장 + 글자 줄 목록 (블록 카탈로그 field-list · design-intelligence §6-4 B1)
+ *   옅은 브랜드 면 위에 큰 제목, 왼쪽에 세로 사진(넓은 화면에서 따라 내려온다), 오른쪽에 분야 이름과 하는 일 목록.
+ *   정본: src/blocks/field-list/. MCP get_block("field-list")
+ *   <section class="section section--content field-list" aria-labelledby="field-list-title">
+ *     <div class="container">
+ *       <h2 class="field-list__title" id="field-list-title">…</h2>
+ *       <div class="field-list__grid">
+ *         <figure class="field-list__media"><img class="field-list__img" src="…" alt=""></figure>
+ *         <div class="field-list__body">
+ *           <ul class="field-list__list" role="list">
+ *             <li class="field-list__item"><h3 class="field-list__name">…</h3><ul class="field-list__work" role="list"><li>…</li></ul></li>
+ *           </ul>
+ *           <p class="field-list__more"><a class="btn btn--secondary btn--large" href="…">…</a></p>
+ *         </div>
+ *       </div>
+ *     </div>
+ *   </section>
+ * 레이어 밖에 둔다 — section.css(5-objects)와 같은 층에서 면 색을 입힌다.
+ */
+.field-list {
+  @apply bg-[var(--color-primary-5)];
+}
+
+/* KRDS heading-xlarge(mobile 2.8 / pc 4rem) */
+.field-list__title {
+  @apply m-0 mb-[4rem] max-w-[13em] [font-family:var(--font-heading)] text-[2.8rem] font-semibold leading-[1.5] tracking-[0.1rem] text-[var(--color-primary-80)] [word-break:keep-all] tablet:text-[4rem] laptop:mb-[5.6rem];
+}
+
+.field-list__grid {
+  @apply grid gap-[3.2rem] laptop:gap-[6.4rem] laptop:[grid-template-columns:minmax(0,5fr)_minmax(0,7fr)];
+}
+
+.field-list__media {
+  @apply m-0 overflow-hidden laptop:sticky laptop:top-[10.4rem] laptop:self-start;
+}
+
+.field-list__img {
+  @apply block w-full object-cover [aspect-ratio:4/3] laptop:[aspect-ratio:4/5];
+}
+
+.field-list__body {
+  @apply min-w-0;
+}
+
+.field-list__list {
+  @apply list-none m-0 p-0 border-b border-[var(--color-primary-20)];
+}
+
+.field-list__item {
+  @apply grid gap-y-[0.8rem] gap-x-[3.2rem] py-[2.4rem] border-t border-[var(--color-primary-20)] tablet:[grid-template-columns:minmax(0,5fr)_minmax(0,7fr)];
+}
+
+/* KRDS heading-medium(mobile 2.2 / pc 2.4rem) */
+.field-list__name {
+  @apply m-0 text-[2.2rem] font-bold leading-[1.5] text-[var(--color-primary-80)] [word-break:keep-all] tablet:text-[2.4rem];
+}
+
+.field-list__work {
+  @apply list-none m-0 p-0 text-[1.7rem] leading-[1.7] text-[var(--color-text-subtle)] [word-break:keep-all];
+}
+
+.field-list__more {
+  @apply m-0 mt-[3.2rem];
+}

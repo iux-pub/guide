@@ -108,7 +108,8 @@ HTML 컴포넌트화는 페이지 전체가 아니라 `main` 내부의 section �
 ## 반응형
 
 - **모바일 퍼스트** 접근
-- 단순 속성 변경은 CSS에서도 Tailwind v4 variant `tablet:` / `pc:` 우선
+- 브레이크포인트는 4단계 — 모바일 360 / `tablet:` 768 / `laptop:` 1024 / `pc:` 1280
+- 단순 속성 변경은 CSS에서도 Tailwind v4 variant `tablet:` / `laptop:` / `pc:` 우선
 - 직접 `@media`는 복잡한 중첩 선택자나 여러 하위 요소 동시 제어에만 사용
 - 직접 `@media`는 관련 선택자 내부에 중첩하고, 파일 하단에 브레이크포인트별로 몰아두지 않음
 - `@media (min-width: var(--breakpoint-*))`는 표준으로 쓰지 않음

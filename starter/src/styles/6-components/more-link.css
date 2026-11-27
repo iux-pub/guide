@@ -1,0 +1,19 @@
+/**
+ * More Link — 「<게시판명> 전체 보기」 링크 (블록 카탈로그 bulletin의 부품)
+ *   이름에 목적지를 적는다 — 「더보기」만 쓰지 않는다(R-30).
+ *   <a class="more-link" href="…">공지사항 전체 보기
+ *     <svg class="icon icon--xsmall" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg>
+ *   </a>
+ * 레이어 밖에 둔다 — bulletin과 같은 층.
+ */
+.more-link {
+  @apply inline-flex items-center gap-[0.4rem] min-h-[4.4rem] mt-[0.8rem] text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [transition:color_0.15s_ease-in-out];
+}
+
+.more-link:visited {
+  @apply text-[var(--color-text)];
+}
+
+.more-link:hover {
+  @apply text-[var(--color-link-hover)] underline;
+}

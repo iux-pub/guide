@@ -106,7 +106,7 @@
         "motion": { "type": "integer", "minimum": 1, "maximum": 6 },
         "density": { "type": "integer", "minimum": 1, "maximum": 10 }
       },
-      "description": "디자인 다이얼(references/design-intelligence.md §2). 표현 등급 안에서 배치 변화도·장식 모션·밀도의 위치를 1~10으로 적는다. 등급별 상한은 같은 문서 표가 정한다. motion 7 이상은 쓰지 않는다."
+      "description": "디자인 다이얼(references/design-intelligence.md §9). 표현 등급 안에서 배치 변화도·장식 모션·밀도의 위치를 1~10으로 적는다. 등급별 상한은 같은 문서 표가 정한다. motion 7 이상은 쓰지 않는다."
     },
     "contentSources": {
       "type": "array",

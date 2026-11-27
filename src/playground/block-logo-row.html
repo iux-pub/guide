@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>옅은 면 로고 줄과 푸터 능선 (logo-row) - 블록 미리보기</title>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Regular.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../assets/fonts/standard-gov/PretendardGOV-Bold.subset.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="../../dist/css/style.css">
+</head>
+<body>
+  <a href="#main" class="skip-to-content">본문 바로가기</a>
+
+  <header id="header" class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-header__brand" href="/">
+        <span>항구도시 문화재단</span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="메인 메뉴">
+        <ul class="site-header__menu">
+          <li><a href="/about">소개</a></li>
+          <li><a href="/services" aria-current="page">서비스</a></li>
+          <li><a href="/notice">공지</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" role="search" action="/search">
+          <label for="site-search" class="sr-only">통합검색</label>
+          <input id="site-search" class="site-header__search-input" type="search" name="q" placeholder="검색어를 입력합니다">
+          <button type="submit" class="btn btn--secondary">검색</button>
+        </form>
+        <a class="site-header__search-link" href="/search">
+          <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#search"></use></svg>
+          <span class="sr-only">통합검색</span>
+        </a>
+        <button type="button" class="btn btn--text btn--small">로그인</button>
+        <button type="button" class="site-header__toggle" aria-label="전체메뉴" aria-expanded="false" aria-controls="mobile-menu" data-mobile-menu-open="mobile-menu">
+          <svg class="icon" aria-hidden="true"><use href="../../assets/icons/sprite.svg#menu"></use></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 블록: link-lines — 제목 서체 링크 줄 -->
+    <section class="section section--list link-lines" aria-labelledby="link-lines-title">
+      <div class="container link-lines__grid">
+        <h2 class="display-title link-lines__title" id="link-lines-title">열린경영</h2>
+        <dl class="link-lines__list">
+          <div class="link-lines__row">
+            <dt class="link-lines__group">열린 경영</dt>
+            <dd class="link-lines__links">
+              <a class="link-lines__link" href="/open/disclosure">경영 공시</a>
+              <a class="link-lines__link" href="/open/ethics">윤리·인권 경영</a>
+              <a class="link-lines__link" href="/open/realname">사업 실명제</a>
+            </dd>
+          </div>
+          <div class="link-lines__row">
+            <dt class="link-lines__group">정보공개</dt>
+            <dd class="link-lines__links">
+              <a class="link-lines__link" href="/open/list">사전 정보 공표</a>
+              <a class="link-lines__link" href="/open/request">정보공개 청구</a>
+              <a class="link-lines__link" href="/open/data">공공데이터 제공</a>
+            </dd>
+          </div>
+          <div class="link-lines__row">
+            <dt class="link-lines__group">시민 참여</dt>
+            <dd class="link-lines__links">
+              <a class="link-lines__link" href="/voice">재단에 바란다</a>
+              <a class="link-lines__link" href="/survey">설문 조사</a>
+              <a class="link-lines__link" href="/proposal">시민 제안</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 블록: logo-row — 옅은 면 로고 줄과 푸터 능선 -->
+    <section class="section section--list logo-row" aria-labelledby="logo-row-title">
+      <div class="container">
+        <h2 class="sr-only" id="logo-row-title">관련 기관</h2>
+        <ul class="logo-row__list" role="list">
+          <li><a class="logo-row__link" href="https://www.example.go.kr/" target="_blank" rel="noopener noreferrer"><img class="logo-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 32'%3E%3Crect width='32' height='32' fill='%230b50d0'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E항구시청%3C/text%3E%3C/svg%3E" alt="항구시청" width="128" height="32"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="logo-row__link" href="https://museum.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="logo-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23ab2b36'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E항구 미술관%3C/text%3E%3C/svg%3E" alt="항구 미술관" width="144" height="32"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="logo-row__link" href="https://theater.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="logo-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 32'%3E%3Cpath d='M0 32 L16 0 L32 32 Z' fill='%23052561'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E시립 극장%3C/text%3E%3C/svg%3E" alt="시립 극장" width="128" height="32"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="logo-row__link" href="https://edu.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="logo-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 32'%3E%3Crect width='32' height='32' fill='%23228738'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E문화예술 교육센터%3C/text%3E%3C/svg%3E" alt="문화예술 교육센터" width="192" height="32"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="logo-row__link" href="https://tour.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="logo-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2354789e'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E항구 관광 안내%3C/text%3E%3C/svg%3E" alt="항구 관광 안내" width="160" height="32"><span class="sr-only"> 새 창</span></a></li>
+          <li><a class="logo-row__link" href="https://archive.example.or.kr/" target="_blank" rel="noopener noreferrer"><img class="logo-row__logo" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 176 32'%3E%3Crect width='32' height='32' fill='%238a5a1c'/%3E%3Ctext x='42' y='22' font-size='17' font-weight='700' fill='%231e2124'%3E지역 축제 기록관%3C/text%3E%3C/svg%3E" alt="지역 축제 기록관" width="176" height="32"><span class="sr-only"> 새 창</span></a></li>
+        </ul>
+      </div>
+      <svg class="ridge" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path class="ridge__slope" d="M0 18L20.6 -2.3L41.1 44.5ZM152.2 23.7L188.6 -4.5L225 61.7ZM345.7 25.9L371.1 -4.2L396.5 34.1ZM488.8 75.3L521.9 36.9L555 60.2ZM661.6 50.3L685.1 0.8L708.6 26.1ZM819.6 83.6L853.3 8.6L887.1 20.5ZM998.4 56.5L1023.8 35.2L1049.2 73.6ZM1166 61.5L1189.7 51.1L1213.3 86.9ZM1324.7 37.1L1347.7 12.9L1370.7 62.1Z"/>
+        <path class="ridge__slope-far" d="M41.1 44.5L76.7 18.7L112.2 35.8ZM225 61.7L250.9 47.5L276.9 75.4ZM396.5 34.1L415.1 15.4L433.6 48.6ZM555 60.2L586.5 27L618.1 56.3ZM708.6 26.1L735.1 8.1L761.6 57.8ZM887.1 20.5L908.2 -7L929.3 83.1ZM1049.2 73.6L1077 37.4L1104.8 65.7ZM1213.3 86.9L1246.1 40.9L1279 54.9ZM1370.7 62.1L1405.4 48.7L1440 87.1Z"/>
+        <path class="ridge__slope-near" d="M112.2 35.8L132.2 8L152.2 23.7ZM276.9 75.4L311.3 1.6L345.7 25.9ZM433.6 48.6L461.2 20.8L488.8 75.3ZM618.1 56.3L639.9 32.9L661.6 50.3ZM761.6 57.8L790.6 45.1L819.6 83.6ZM929.3 83.1L963.8 31.2L998.4 56.5ZM1104.8 65.7L1135.4 43.3L1166 61.5ZM1279 54.9L1301.8 12.1L1324.7 37.1Z"/>
+        <path class="ridge__ground" d="M0 18L41.1 44.5V100H0ZM41.1 44.5L112.2 35.8V100H41.1ZM112.2 35.8L152.2 23.7V100H112.2ZM152.2 23.7L225 61.7V100H152.2ZM225 61.7L276.9 75.4V100H225ZM276.9 75.4L345.7 25.9V100H276.9ZM345.7 25.9L396.5 34.1V100H345.7ZM396.5 34.1L433.6 48.6V100H396.5ZM433.6 48.6L488.8 75.3V100H433.6ZM488.8 75.3L555 60.2V100H488.8ZM555 60.2L618.1 56.3V100H555ZM618.1 56.3L661.6 50.3V100H618.1ZM661.6 50.3L708.6 26.1V100H661.6ZM708.6 26.1L761.6 57.8V100H708.6ZM761.6 57.8L819.6 83.6V100H761.6ZM819.6 83.6L887.1 20.5V100H819.6ZM887.1 20.5L929.3 83.1V100H887.1ZM929.3 83.1L998.4 56.5V100H929.3ZM998.4 56.5L1049.2 73.6V100H998.4ZM1049.2 73.6L1104.8 65.7V100H1049.2ZM1104.8 65.7L1166 61.5V100H1104.8ZM1166 61.5L1213.3 86.9V100H1166ZM1213.3 86.9L1279 54.9V100H1213.3ZM1279 54.9L1324.7 37.1V100H1279ZM1324.7 37.1L1370.7 62.1V100H1324.7ZM1370.7 62.1L1440 87.1V100H1370.7Z"/>
+      </svg>
+    </section>
+  </main>
+
+  <footer id="footer" class="site-footer site-footer--inverse">
+    <div class="container">
+      <!-- 서비스 내비게이션(선택): 메인 메뉴 최상위 링크를 모두 같은 레이블로 -->
+      <div class="site-footer__top">
+        <nav class="site-footer__nav" aria-label="푸터 메뉴">
+          <div class="site-footer__group">
+            <h2 class="site-footer__heading" id="footer-group-about">기관 소개</h2>
+            <ul class="site-footer__list" aria-labelledby="footer-group-about">
+              <li><a class="site-footer__link" href="/about/greeting">인사말</a></li>
+              <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__group">
+            <h2 class="site-footer__heading" id="footer-group-service">주요 사업</h2>
+            <ul class="site-footer__list" aria-labelledby="footer-group-service">
+              <li><a class="site-footer__link" href="/service/support">지원 사업</a></li>
+              <li><a class="site-footer__link" href="/service/education">교육</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__group">
+            <h2 class="site-footer__heading" id="footer-group-news">알림마당</h2>
+            <ul class="site-footer__list" aria-labelledby="footer-group-news">
+              <li><a class="site-footer__link" href="/news/notice">공지사항</a></li>
+              <li><a class="site-footer__link" href="/news/press">보도자료</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="site-footer__bottom">
+        <!-- ① 서비스 로고 ② 연락처 ③ 유틸리티 링크 — 한 그룹 -->
+        <div class="site-footer__info">
+          <a class="site-footer__brand" href="/">항구도시 문화재단</a>
+          <!-- contentSources: 주소·대표전화·운영시간 — 아래는 형식 예시다 -->
+          <address class="site-footer__address">
+            항구광역시 중구 등대로 12 항구도시 문화재단<br>
+            평일 09:00~18:00
+          </address>
+          <ul class="site-footer__utility" aria-label="바로가기">
+            <li><a class="site-footer__link" href="/about/location">오시는 길</a></li>
+            <li><a class="site-footer__link" href="/sitemap">사이트맵</a></li>
+            </ul>
+        </div>
+
+        <!-- ④ 정책 링크 — 개인정보 처리방침은 명칭 고정·강조 -->
+        <nav aria-label="약관 및 정책">
+          <ul class="site-footer__legal-list">
+            <li><a class="site-footer__link site-footer__link--important" href="/privacy">개인정보 처리방침</a></li>
+            <li><a class="site-footer__link" href="/accessibility">웹 접근성 정책</a></li>
+            <li><a class="site-footer__link" href="/copyright">저작권 정책</a></li>
+          </ul>
+        </nav>
+
+        <!-- ⑤ 저작권 정보 -->
+        <small class="site-footer__copy">© 2026 항구도시 문화재단</small>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

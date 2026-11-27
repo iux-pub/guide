@@ -1,0 +1,275 @@
+{
+  "id": "field-shore",
+  "name": "사진 면과 사업영역 색인",
+  "slot": "business",
+  "forms": [],
+  "reference": "design-intelligence §6-4 사진 면 + 색인(B1의 변주), §5-5 사진",
+  "tags": [
+    "사업 소개",
+    "분야",
+    "전면 사진",
+    "색인",
+    "둥근 능선",
+    "옅은 면",
+    "쇼케이스"
+  ],
+  "summary": "짙은 면에서 녹아 나오는 큰 사진 위에 섹션 제목(메뉴 이름)을 놓고, 둥근 능선으로 옅은 색 면에 넘어가 사업 분야를 3단 색인으로 싣는다.",
+  "bundle": {
+    "parts": [
+      "field-shore",
+      "dusk",
+      "oreum",
+      "field-index",
+      "display-title"
+    ],
+    "reason": "사진 면(dusk)의 제목이 이 섹션의 제목이고 색인(field-index)이 그 내용이라 한 section이어야 한다(R-15). 둥근 능선(oreum)은 사진 면의 바닥에 붙어 색인 면의 색으로 칠해지고, 사진 면의 바닥 여백은 능선 높이(--oreum-h)로 계산한다."
+  },
+  "useWhen": [
+    "바로 위가 짙은 면(news-deck)이다 — 사진 위쪽이 그 색으로 녹아들어 경계 없이 이어진다.",
+    "가로로 긴 풍경 사진이 있고 아래 왼쪽이 어두워 제목을 올릴 수 있다.",
+    "사업 분야가 3·6·9개이고 분야마다 하는 일을 한두 줄로 적을 수 있다.",
+    "페이지 가운데에서 짙은 면을 옅은 색 면으로 바꾸는 전환이 필요하다."
+  ],
+  "avoidWhen": [
+    "둥근 능선 모양을 그대로 쓰려 한다 — 이 실루엣은 견본 기관의 지형에서 온 선이다. 대상의 지형·사물에서 온 선으로 바꾸지 않을 거면 능선을 빼고 직선 경계로 둔다.",
+    "바로 위가 밝은 면이다 — 사진 위쪽이 짙은 색으로 녹아들어 검은 띠가 생긴다. --dusk-surface를 윗면 색으로 바꾸거나 field-list(B1)를 쓴다.",
+    "쓸 사진이 밝아 제목 자리가 어둡지 않다 — 흰 제목이 읽히지 않는다.",
+    "분야가 2개 이하이거나 분야마다 좋은 사진이 있다 — section-media 왕복(B3)이나 벤토(B2)를 쓴다.",
+    "첫 화면도 전면 사진(scene의 사진 배경)이고 두 사진의 분위기가 같다 — 같은 장면이 두 번 나온다. 시간대·거리·색이 다른 사진을 쓴다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "사진 위 제목",
+      "spec": "한글 2~10자. 메뉴 이름(예: 「사업영역」「열린경영」)을 쓴다. 표어·문장형 제목·소개 문장을 지어 붙이지 않는다(design-intelligence §2-2).",
+      "example": "사업영역"
+    },
+    {
+      "key": "photo_src",
+      "kind": "image",
+      "label": "사진 면의 사진",
+      "ratio": "가로 2:1~21:9, 긴 변 2000px 이상. 높이 48~72rem 띠로 잘린다",
+      "spec": "해 질 녘·역광처럼 어두운 쪽이 넓은 풍경 사진. 위 42%는 윗면 색으로 녹아 사라지고, 아래에는 검정 알파 스크림과 능선이 덮인다 — 주제(밝은 곳)가 가운데에서 오른쪽(가로 68%)에 있어야 한다. 장식이라 alt는 비운다.",
+      "example": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 760'%3E%3Crect width='2000' height='760' fill='%23c9793a'/%3E%3Ccircle cx='1380' cy='330' r='130' fill='%23f7e3b0'/%3E%3Cpath d='M0 470 L300 360 L620 450 L980 300 L1320 440 L1680 350 L2000 430 V760 H0 Z' fill='%236b3d1c'/%3E%3Cpath d='M0 600 Q500 540 1000 590 T2000 570 V760 H0 Z' fill='%233a2414'/%3E%3C/svg%3E"
+    },
+    {
+      "key": "more_label",
+      "kind": "text",
+      "label": "제목 아래 링크 이름",
+      "spec": "동사형 6~12자. 목적지를 적는다.",
+      "example": "사업 자세히 보기"
+    },
+    {
+      "key": "more_href",
+      "kind": "url",
+      "label": "제목 아래 링크 주소",
+      "spec": "사업 소개 페이지 주소(R-30).",
+      "example": "/business"
+    },
+    {
+      "key": "fields",
+      "kind": "list",
+      "label": "사업 분야",
+      "min": 3,
+      "max": 9,
+      "spec": "넓은 화면 3단이다 — 3·6·9개일 때 빈 칸이 없다. 기관 직제나 사업 계획서의 분야 구분을 그대로 쓴다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "분야 이름",
+          "spec": "한글 4~12자. 제목 서체로 선다."
+        },
+        {
+          "key": "work",
+          "kind": "list",
+          "label": "하는 일",
+          "min": 1,
+          "max": 3,
+          "spec": "분야마다 1~3줄.",
+          "fields": [
+            {
+              "key": "text",
+              "kind": "text",
+              "label": "하는 일 한 줄",
+              "spec": "한글 8~28자의 명사구. 마침표를 찍지 않는다."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "공연·전시 기획",
+          "work": [
+            {
+              "text": "시립 극장 기획 공연과 초청 공연 운영"
+            },
+            {
+              "text": "항구 미술관 상설·기획 전시"
+            }
+          ]
+        },
+        {
+          "name": "문화예술 교육",
+          "work": [
+            {
+              "text": "어린이·청소년 예술 교실"
+            },
+            {
+              "text": "시민 예술 아카데미 운영"
+            }
+          ]
+        },
+        {
+          "name": "예술인 지원",
+          "work": [
+            {
+              "text": "창작 지원금 공모와 심사"
+            },
+            {
+              "text": "청년 예술가 작업실 임대"
+            }
+          ]
+        },
+        {
+          "name": "축제·지역 행사",
+          "work": [
+            {
+              "text": "등대 축제와 거리 공연 축제 개최"
+            },
+            {
+              "text": "마을 단위 문화 행사 지원"
+            }
+          ]
+        },
+        {
+          "name": "시설 운영",
+          "work": [
+            {
+              "text": "극장·전시실·연습실 대관"
+            },
+            {
+              "text": "문화 시설 안전 관리"
+            }
+          ]
+        },
+        {
+          "name": "조사·연구",
+          "work": [
+            {
+              "text": "시민 문화 향유 실태 조사"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "능선 모양",
+      "options": [
+        "견본의 둥근 언덕(예시)",
+        "대상의 지형·사물에서 온 선"
+      ],
+      "how": "이 모양을 그대로 쓰지 않는다. 대상의 윤곽을 사진에서 따 온다. 만드는 법: viewBox는 0 0 1440 160, preserveAspectRatio는 none, 바닥 기준선은 y 124다. 언덕 하나는 「가운데 x, 너비, 높이」 세 값으로 정하고 M(왼쪽 끝, 160) V124 C … 꼭대기 C … 오른쪽 끝 124 V160 Z의 곡선 두 개로 그린다. 언덕 네다섯 개를 서로 겹치게 놓고 마지막에 기준선 아래를 채우는 사각형(M0 124H1440V160H0Z)을 더해 한 path(oreum__near)에 담는다. 각진 대상이면 첫 화면의 ridge와 같은 방식으로 직선으로 그린다. 첫 화면 능선과 같은 모양을 두 번 쓰지 않는다. 클래스 이름(oreum)은 바꾸지 않는다 — 인라인 svg 예외가 이 이름에 걸려 있다."
+    },
+    {
+      "axis": "녹아드는 색",
+      "options": [
+        "primary-90(기본)",
+        "윗면의 색"
+      ],
+      "how": "윗면이 primary-90이 아니면 .dusk에 style=\"--dusk-surface: var(--color-…)\"를 준다."
+    },
+    {
+      "axis": "색인 면 색",
+      "options": [
+        "point-5(기본)",
+        "다른 옅은 면 토큰"
+      ],
+      "how": "section에 style=\"--field-shore-surface: var(--color-…)\"를 준다. 능선도 같은 값으로 칠해진다. 아래에 이어 붙는 link-lines·logo-row의 면 색 변수도 같은 토큰으로 맞춘다."
+    },
+    {
+      "axis": "사진 초점",
+      "options": [
+        "68% 50%(기본)"
+      ],
+      "how": "주제가 잘리면 프로젝트 CSS에서 .dusk__photo의 object-position을 고친다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "news-deck"
+    ],
+    "after": [
+      "link-lines"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "tinted",
+    "top": "inverse",
+    "joinsAbove": "inverse",
+    "note": "위는 --dusk-surface(기본 --color-primary-90)에서 녹아 나오는 사진, 아래는 --field-shore-surface(기본 --color-point-5) 색인 면이다. 색인의 윗선은 --color-text-bolder, 점은 --color-point-30."
+  },
+  "section": {
+    "archetype": "content"
+  },
+  "styles": [
+    "src/styles/6-components/field-shore.css",
+    "src/styles/6-components/dusk.css",
+    "src/styles/6-components/oreum.css",
+    "src/styles/6-components/field-index.css",
+    "src/styles/6-components/display-title.css"
+  ],
+  "requires": {
+    "components": [
+      "icon"
+    ],
+    "icons": [
+      "arrow-right"
+    ],
+    "scripts": []
+  },
+  "accessibility": [
+    "사진 위 제목이 이 섹션의 h2이고 section의 aria-labelledby가 가리킨다. 분야 이름은 h3이다.",
+    "사진·스크림·능선은 장식이다 — alt=\"\"와 aria-hidden.",
+    "흰 제목과 링크는 검정 알파 스크림(75% → 0) 위에 있다. 사진을 바꾸면 제목 뒤가 충분히 어두운지 캡처로 확인한다.",
+    "목록 표시를 지운 ul에는 role=\"list\"를 남긴다. 줄 앞 점은 CSS 장식이다.",
+    "사진은 첫 화면 아래에 있으므로 loading=\"lazy\"다."
+  ],
+  "exceptions": [
+    {
+      "rule": "R-24",
+      "file": "src/styles/6-components/field-index.css",
+      "selector": ".field-index__name",
+      "match": "leading-[1.3]",
+      "reason": "굵은 윗선 아래 제목 서체 2.8rem 이름이다. 두 줄로 꺾이는 이름이 있을 때 150% 행간이면 그 칸만 길어져 3단의 윗선 리듬이 깨진다.",
+      "krds": "pending"
+    },
+    {
+      "rule": "R-27",
+      "markup": "svg.oreum",
+      "reason": "둥근 능선은 아이콘이 아니라 사진 면과 색인 면 사이의 전환 그림이다. 색을 아랫면의 토큰으로 칠해야 해서 스프라이트나 이미지 파일로 둘 수 없다."
+    }
+  ],
+  "krdsPending": [
+    "사진 위 제목 크기 clamp(3.2rem, 4vw, 5.6rem) — KRDS heading-xlarge 상한 4rem을 넘는다. 검사기는 잡지 않는다.",
+    "제목 행간 1.2(display-title), 분야 이름 행간 1.3 — KRDS 제목 행간 150% 기준 밖(R-24 블록 예외로 통과).",
+    "색인 아래 여백 8~12rem — 밀도 기준의 1.5배를 넘는다. 프로필이 정해지지 않은 저장소에서는 R-49가 잡지 않는다."
+  ],
+  "origin": "제주관광공사 메인 E안(2026-11, 견본 — 운영자 판정: 불통과)의 field-shore·dusk·oreum·field-index를 옮겼다.",
+  "tokens": [
+    "--color-alpha-black-75",
+    "--color-gray-0",
+    "--color-point-30",
+    "--color-point-5",
+    "--color-primary-90",
+    "--color-text-bolder",
+    "--color-text-subtle",
+    "--font-heading"
+  ],
+  "markup": "<section class=\"section section--content field-shore\" aria-labelledby=\"field-shore-title\">\n  <div class=\"dusk\">\n    <img class=\"dusk__photo\" src=\"{{photo_src}}\" alt=\"\" width=\"2000\" height=\"760\" loading=\"lazy\">\n    <div class=\"dusk__veil\" aria-hidden=\"true\"></div>\n    <svg class=\"oreum\" viewBox=\"0 0 1440 160\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\">\n      <path class=\"oreum__near\" d=\"M-120 160V124C-15 124 -15 62 90 62C195 62 195 124 300 124V160ZM240 160V124C335 124 335 84 430 84C525 84 525 124 620 124V160ZM520 160V124C660 124 660 38 800 38C940 38 940 124 1080 124V160ZM950 160V124C1050 124 1050 76 1150 76C1250 76 1250 124 1350 124V160ZM1220 160V124C1310 124 1310 52 1400 52C1490 52 1490 124 1580 124V160ZM0 124H1440V160H0Z\"/>\n    </svg>\n    <div class=\"container dusk__body\">\n      <h2 class=\"display-title dusk__title\" id=\"field-shore-title\">{{title}}</h2>\n      <a class=\"dusk__more\" href=\"{{more_href}}\">{{more_label}} <svg class=\"icon icon--small\" aria-hidden=\"true\" focusable=\"false\"><use href=\"/assets/icons/sprite.svg#arrow-right\"></use></svg></a>\n    </div>\n  </div>\n  <div class=\"container\">\n    <ul class=\"field-index\" role=\"list\">\n      <!-- @each fields as field -->\n      <li class=\"field-index__item\">\n        <h3 class=\"field-index__name\">{{field.name}}</h3>\n        <ul class=\"field-index__work\" role=\"list\">\n          <!-- @each field.work as work -->\n          <li class=\"field-index__task\">{{work.text}}</li>\n          <!-- @end -->\n        </ul>\n      </li>\n      <!-- @end -->\n    </ul>\n  </div>\n</section>\n",
+  "css": "/* src/styles/6-components/field-shore.css */\n/**\n * Field Shore — 사진 면과 색인을 한 구획으로 묶는 섹션 (블록 카탈로그 field-shore · design-intelligence §6-4)\n *   <section class=\"section section--content field-shore\" aria-labelledby=\"field-shore-title\">\n *     <div class=\"dusk\">…<h2 class=\"display-title dusk__title\" id=\"field-shore-title\">…</h2>…<svg class=\"oreum\">…</svg></div>\n *     <div class=\"container\"><ul class=\"field-index\" role=\"list\">…</ul></div>\n *   </section>\n *   짙은 면에서 녹아 나오는 큰 사진(dusk) → 둥근 능선(oreum) → 옅은 색 면의 색인(field-index) 순이다.\n *   섹션 여백은 없애고 안쪽 부품이 정한다. 면 색은 --field-shore-surface로 바꾼다(기본 point-5).\n * 레이어 밖에 둔다 — section.css(5-objects)와 같은 층에서 여백을 없앤다.\n */\n.field-shore {\n  @apply p-0 bg-[var(--field-shore-surface,var(--color-point-5))] laptop:p-0;\n}\n\n/* src/styles/6-components/dusk.css */\n/**\n * Dusk — 짙은 면에서 녹아 나오는 사진 면 (블록 카탈로그 field-shore의 부품)\n *   사진 위쪽은 짙은 바탕으로 녹아들고(마스크), 아래쪽은 둥근 능선(oreum)이 덮어 다음 면으로 넘어간다.\n *   제목은 사진의 어두운 곳 위에 놓는다.\n *   <div class=\"dusk\">\n *     <img class=\"dusk__photo\" src=\"…\" alt=\"\">\n *     <div class=\"dusk__veil\" aria-hidden=\"true\"></div>\n *     <svg class=\"oreum\" …>…</svg>\n *     <div class=\"container dusk__body\">\n *       <h2 class=\"display-title dusk__title\">…</h2>\n *       <a class=\"dusk__more\" href=\"…\">사업영역 자세히 보기</a>\n *     </div>\n *   </div>\n *   --oreum-h: 바닥 오름 띠 높이. 본문 바닥 여백을 이 값으로 계산한다.\n *   --dusk-surface: 사진 위쪽이 녹아드는 색(기본 primary-90). 윗면의 색과 같게 둔다.\n *   마스크의 그라데이션은 색이 아니라 투명도다(검정 = 보임).\n * 레이어 밖에 둔다 — field-shore와 같은 층.\n */\n.dusk {\n  --oreum-h: clamp(6.4rem, 11vw, 16rem);\n\n  @apply relative flex items-end overflow-hidden bg-[var(--dusk-surface,var(--color-primary-90))] text-[var(--color-gray-0)];\n\n  min-height: clamp(48rem, 50vw, 72rem);\n}\n\n.dusk__photo {\n  @apply absolute inset-0 w-full h-full max-w-none object-cover [object-position:68%_50%];\n\n  mask-image: linear-gradient(180deg, transparent 0%, black 42%);\n}\n\n/* 제목 자리(아래 왼쪽)를 눌러 주는 스크림 — 검정 알파 토큰만 쓴다 */\n.dusk__veil {\n  @apply absolute inset-0 pointer-events-none;\n\n  background: linear-gradient(0deg, var(--color-alpha-black-75) 0%, transparent 70%);\n}\n\n.dusk__body {\n  @apply relative pt-[16rem] pb-[calc(var(--oreum-h)+2.4rem)] laptop:pb-[calc(var(--oreum-h)+4rem)];\n}\n\n.dusk__title {\n  @apply max-w-[16em] mb-[2.4rem];\n}\n\n.dusk__more {\n  @apply inline-flex items-center gap-[0.4rem] min-h-[4.4rem] font-bold text-[var(--color-gray-0)] [text-underline-offset:0.35em];\n}\n\n.dusk__more:visited {\n  @apply text-[var(--color-gray-0)];\n}\n\n.dusk__more:hover {\n  @apply text-[var(--color-point-30)];\n}\n\n/* src/styles/6-components/oreum.css */\n/**\n * Oreum — 둥근 능선 전환 (블록 카탈로그 field-shore의 부품)\n *   둥근 언덕 실루엣. 윗면(dusk)의 바닥에 놓고 아랫면의 색으로 칠한다. 각진 ridge와 짝을 이루는 두 번째 전환이다.\n *   <svg class=\"oreum\" viewBox=\"0 0 1440 160\" preserveAspectRatio=\"none\" aria-hidden=\"true\" focusable=\"false\">\n *     <path class=\"oreum__near\" d=\"…\"/>\n *   </svg>\n *   높이는 부모의 --oreum-h. 색은 --field-shore-surface(기본 point-5)를 따른다.\n *   모양은 프로젝트마다 대상의 지형·사물에서 온 선으로 바꾼다(블록 메타데이터의 변형 축 참고).\n *   블록 예외(contracts/block-exceptions.json): 인라인 svg(R-27) — 아이콘이 아니라 면 전환 그림이다.\n * 레이어 밖에 둔다 — field-shore와 같은 층.\n */\n.oreum {\n  /* 바닥을 조금 내려 사진 면과 아랫면 사이에 실선이 비치지 않게 한다 */\n  @apply absolute inset-x-0 bottom-[-0.1rem] block w-full max-w-none h-[var(--oreum-h,12rem)] pointer-events-none;\n}\n\n.oreum__near {\n  fill: var(--field-shore-surface, var(--color-point-5));\n}\n\n/* src/styles/6-components/field-index.css */\n/**\n * Field Index — 사업영역 색인 (블록 카탈로그 field-shore의 부품)\n *   분야마다 굵은 윗선 + 제목 서체 이름 + 하는 일 목록. 360px 1단 → 768px 2단 → 1024px 3단.\n *   <ul class=\"field-index\" role=\"list\">\n *     <li class=\"field-index__item\">\n *       <h3 class=\"field-index__name\">통합 홍보·마케팅</h3>\n *       <ul class=\"field-index__work\" role=\"list\"><li class=\"field-index__task\">…</li></ul>\n *     </li>\n *   </ul>\n *   블록 예외(contracts/block-exceptions.json): 이름 행간 1.3, 아래 여백 8~12rem.\n * 레이어 밖에 둔다 — field-shore와 같은 층.\n */\n.field-index {\n  @apply grid gap-x-[4rem] gap-y-[4rem] list-none m-0 px-0 pt-[3.2rem] pb-[8rem] tablet:grid-cols-2 laptop:grid-cols-3 laptop:gap-y-[5.6rem] laptop:pt-[4.8rem] laptop:pb-[12rem];\n}\n\n.field-index__item {\n  @apply pt-[2rem] border-t-2 border-[var(--color-text-bolder)];\n}\n\n/* KRDS 기준 밖(운영자 승인 대기): 행간 1.3(150% 기준) */\n.field-index__name {\n  @apply m-0 mb-[1.6rem] [font-family:var(--font-heading)] text-[2.4rem] font-semibold leading-[1.3] tracking-normal text-[var(--color-text-bolder)] [word-break:keep-all] tablet:text-[2.8rem];\n}\n\n.field-index__work {\n  @apply list-none m-0 p-0;\n}\n\n.field-index__task {\n  @apply relative ps-[1.6rem] text-[1.7rem] leading-[1.7] text-[var(--color-text-subtle)] [word-break:keep-all];\n}\n\n.field-index__task::before {\n  @apply content-[''] absolute left-0 top-[0.78em] w-[0.6rem] h-[0.6rem] rounded-full bg-[var(--color-point-30)];\n}\n\n/* src/styles/6-components/display-title.css */\n/**\n * Display Title — 면 제목 (블록 카탈로그 news-deck·field-shore·link-lines가 함께 쓴다)\n *   <h2 class=\"display-title\">새 소식</h2>\n *   제목 서체(--font-heading)로 크게 세운다. 색은 놓인 면의 글자색을 따른다.\n *   블록 예외(contracts/block-exceptions.json): 행간 1.2.\n *   KRDS 기준 밖(운영자 승인 대기): 크기 3.2~5.6rem(heading-xlarge 4rem 상한)·행간 1.2(150% 기준)\n * 레이어 밖에 둔다 — 블록이 여백을 덮어쓴다.\n */\n.display-title {\n  @apply m-0 mb-[4rem] [font-family:var(--font-heading)] font-semibold tracking-normal [word-break:keep-all] [text-wrap:balance];\n\n  font-size: clamp(3.2rem, 4vw, 5.6rem);\n  line-height: 1.2;\n}"
+}

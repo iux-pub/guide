@@ -230,9 +230,36 @@ function isSingleLineSel(sel, single) {
 }
 const lastCompound = sel => String(sel).trim().split(/\s+|\s*[>+~]\s*/).pop()
 
+// 제목 자간 예외 — 같은 블록이 2.4rem 이상 글자 크기를 선언하고, 자간이 em 단위 -0.03em 이내일 때만 허용한다
+const HEADING_TRACK_MIN_REM = 2.4
+const HEADING_TRACK_MAX_EM = 0.03
+function negEm(text) {
+  const m = String(text).match(/-\s*(\d*\.?\d+)em\b/)
+  return m ? +m[1] : null
+}
+function blockMaxFontRem(b) {
+  let max = 0
+  for (const d of b.decls) {
+    if (d.prop === '@apply') {
+      for (const tok of d.value.split(/\s+/)) {
+        const m = stripVariant(tok).match(/^text-\[(\d*\.?\d+)rem\]$/)
+        if (m) max = Math.max(max, +m[1])
+      }
+    } else if (d.prop === 'font-size') {
+      const m = String(d.value).match(/^(\d*\.?\d+)rem$/)
+      if (m) max = Math.max(max, +m[1])
+    }
+  }
+  return max
+}
+function isHeadingTracking(b, text) {
+  const em = negEm(text)
+  return em !== null && em <= HEADING_TRACK_MAX_EM && blockMaxFontRem(b) >= HEADING_TRACK_MIN_REM
+}
+
 const MSG = {
   a: v => `행간 ${v} — 한글 조판 하한 1.5 미만. 본문 1.6~1.7, 제목 1.5(KRDS 150%). 한 줄 고정 UI면 whitespace-nowrap을 함께 둔다.`,
-  neg: v => `음수 자간 ${v} — 한글은 자간을 좁히지 않는다(KRDS 타이포그래피: 0, 3.2rem 이상 제목만 0.1rem).`,
+  neg: v => `음수 자간 ${v} — 본문·작은 글자는 자간을 좁히지 않는다. 2.4rem 이상 제목 블록에서만 -0.03em 이내(em 단위)로 좁힐 수 있다.`,
   global: v => `전역 선택자의 자간 ${v} — 문서 전체 자간을 바꾸지 않는다. 제목·디스플레이에만 0.1rem.`,
   wb: v => `${v} — 한글 단어 중간 줄바꿈으로 keep-all을 무력화한다. 긴 URL·영문은 [overflow-wrap:anywhere]로 처리한다.`
 }
@@ -252,6 +279,8 @@ function scanCssHangul(css, opts = {}) {
           if (sels.length && sels.every(s => isSingleLineSel(s, single) || (opts.exemptLeadingSel && opts.exemptLeadingSel.test(s)))) continue
           out.push({ rule: 'R-24', severity: 'warn', line: d.line, message: MSG.a(h.text), code: codeOf() })
         } else if (h.part === 'neg') {
+          // 예외(2026-11-23 오너 승인): 2.4rem 이상 제목 블록의 -0.03em 이내 자간 — 국내 수상 공공사이트 실측(-0.01~-0.06em)
+          if (isHeadingTracking(b, h.text)) continue
           out.push({ rule: 'R-24', severity: 'error', line: d.line, message: MSG.neg(h.text), code: codeOf() })
         } else if (h.part === 'ls') {
           const comp = sels.map(lastCompound)

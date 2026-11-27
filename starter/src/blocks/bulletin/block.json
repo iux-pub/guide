@@ -1,0 +1,369 @@
+{
+  "id": "bulletin",
+  "name": "소식 2단 — 마감 그림과 탭 게시판",
+  "slot": "news",
+  "forms": [
+    "N2",
+    "N1"
+  ],
+  "reference": "design-intelligence §6-3 N2 마감 축 결합 + N1 대표 글, §5-6 데이터를 그림으로",
+  "tags": [
+    "공지",
+    "소식",
+    "게시판",
+    "탭",
+    "마감",
+    "남은 날수",
+    "실데이터"
+  ],
+  "summary": "왼쪽 열에 섹션 제목과 접수 중인 항목의 남은 날수 그림을, 오른쪽 열에 탭 게시판을 둔다. 게시판 첫 글은 크게 키운다.",
+  "useWhen": [
+    "공모·모집·접수처럼 마감일이 있는 항목이 지금 한 건 이상 있다.",
+    "게시판이 둘 이상이라 KRDS 탭으로 묶어야 한다(KS-04).",
+    "「탭 + 제목 다섯 줄」만 있는 게시판 섹션(전형 조립)에 실데이터 그림으로 무게를 주고 싶다."
+  ],
+  "avoidWhen": [
+    "마감이 있는 항목이 없다 — 왼쪽 열이 빈다. 대표 + 목록(N1)이나 날짜 열(N3)을 쓴다.",
+    "남은 날수를 서버에서 계산해 줄 수 없다 — 정적 HTML에 적은 날수는 다음 날 틀린 정보가 된다.",
+    "보도자료에 사진이 있고 사진이 주인공이다 — 사진 소식(N4)을 쓴다.",
+    "게시판이 하나뿐이다 — 탭을 빼고 post-list만 쓰거나 다른 형식을 고른다."
+  ],
+  "content": [
+    {
+      "key": "title",
+      "kind": "text",
+      "label": "섹션 제목",
+      "spec": "한글 2~8자. 기관이 쓰는 메뉴 이름(「알림마당」「새소식」).",
+      "example": "알림마당"
+    },
+    {
+      "key": "deadline_title",
+      "kind": "text",
+      "label": "마감 그림 제목",
+      "spec": "한글 6~14자. 무엇의 마감인지 적는다.",
+      "example": "접수 중인 공모·모집"
+    },
+    {
+      "key": "asof_datetime",
+      "kind": "date",
+      "label": "기준일(기계용)",
+      "spec": "YYYY-MM-DD. 남은 날수를 계산한 날이다. 페이지를 만들 때마다 서버가 채운다.",
+      "example": "2026-11-13"
+    },
+    {
+      "key": "asof_label",
+      "kind": "text",
+      "label": "기준일(표시용)",
+      "spec": "MM.DD 형식.",
+      "example": "11.13"
+    },
+    {
+      "key": "dues",
+      "kind": "list",
+      "label": "접수 중인 항목",
+      "min": 1,
+      "max": 4,
+      "spec": "마감이 가까운 순서로 1~4건. 마감이 지난 항목은 싣지 않는다.",
+      "fields": [
+        {
+          "key": "days",
+          "kind": "number",
+          "label": "남은 날수",
+          "spec": "정수. 기준일부터 마감일까지."
+        },
+        {
+          "key": "title",
+          "kind": "text",
+          "label": "공고 제목",
+          "spec": "한글 10~28자. 게시판 원문 제목에서 접수 기간 머리말은 뺀다."
+        },
+        {
+          "key": "href",
+          "kind": "url",
+          "label": "공고 주소",
+          "spec": "해당 게시글 주소."
+        },
+        {
+          "key": "percent",
+          "kind": "number",
+          "label": "막대 길이(%)",
+          "spec": "0~100 정수. 남은 날수 ÷ 목록에서 가장 긴 남은 날수 × 100. 가장 늦은 마감이 100이다."
+        },
+        {
+          "key": "datetime",
+          "kind": "date",
+          "label": "마감일(기계용)",
+          "spec": "YYYY-MM-DD."
+        },
+        {
+          "key": "date_label",
+          "kind": "text",
+          "label": "마감일(표시용)",
+          "spec": "MM.DD 형식."
+        }
+      ],
+      "examples": [
+        {
+          "days": 8,
+          "title": "청년 예술가 창작 지원 공모",
+          "href": "/notice/1575",
+          "percent": 47,
+          "datetime": "2026-11-21",
+          "date_label": "11.21"
+        },
+        {
+          "days": 17,
+          "title": "시민 합창단 신규 단원 모집",
+          "href": "/notice/1559",
+          "percent": 100,
+          "datetime": "2026-11-30",
+          "date_label": "11.30"
+        }
+      ]
+    },
+    {
+      "key": "board_label",
+      "kind": "text",
+      "label": "탭 묶음의 이름",
+      "spec": "스크린리더가 읽는 tablist 이름. 「<섹션 제목> 게시판」.",
+      "example": "알림마당 게시판"
+    },
+    {
+      "key": "boards",
+      "kind": "list",
+      "label": "게시판(탭)",
+      "min": 2,
+      "max": 4,
+      "spec": "탭은 2~4개. 가장 많이 찾는 게시판을 첫 탭에 둔다.",
+      "fields": [
+        {
+          "key": "name",
+          "kind": "text",
+          "label": "게시판 이름",
+          "spec": "한글 2~6자. 탭 이름이자 「<이름> 전체 보기」 링크의 이름이 된다."
+        },
+        {
+          "key": "more_href",
+          "kind": "url",
+          "label": "게시판 목록 주소",
+          "spec": "해당 게시판 목록 페이지."
+        },
+        {
+          "key": "posts",
+          "kind": "list",
+          "label": "최신 글",
+          "min": 3,
+          "max": 6,
+          "spec": "게시판마다 최신 글 3~6건(기본 5건). 첫 글이 대표 글로 크게 보이므로 고정 공지가 있으면 첫 줄에 둔다.",
+          "fields": [
+            {
+              "key": "title",
+              "kind": "text",
+              "label": "글 제목",
+              "spec": "게시판 원문 제목 그대로. 넓은 화면에서 두 줄까지 보이고 넘치면 잘린다."
+            },
+            {
+              "key": "href",
+              "kind": "url",
+              "label": "글 주소",
+              "spec": "해당 게시글 주소."
+            },
+            {
+              "key": "datetime",
+              "kind": "date",
+              "label": "게시일(기계용)",
+              "spec": "YYYY-MM-DD."
+            },
+            {
+              "key": "date_label",
+              "kind": "text",
+              "label": "게시일(표시용)",
+              "spec": "YYYY.MM.DD 형식."
+            }
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "name": "공지사항",
+          "more_href": "/notice",
+          "posts": [
+            {
+              "title": "청년 예술가 창작 지원 공모 안내",
+              "href": "/notice/1575",
+              "datetime": "2026-11-02",
+              "date_label": "2026.11.02"
+            },
+            {
+              "title": "시민 합창단 신규 단원 모집",
+              "href": "/notice/1559",
+              "datetime": "2026-10-28",
+              "date_label": "2026.10.28"
+            },
+            {
+              "title": "겨울 방학 어린이 미술 교실 수강 신청 일정",
+              "href": "/notice/1551",
+              "datetime": "2026-10-21",
+              "date_label": "2026.10.21"
+            },
+            {
+              "title": "소극장 무대 조명 교체 공사에 따른 대관 일시 중단 안내",
+              "href": "/notice/1544",
+              "datetime": "2026-10-14",
+              "date_label": "2026.10.14"
+            },
+            {
+              "title": "누리집 개인정보 처리방침 개정 안내",
+              "href": "/notice/1538",
+              "datetime": "2026-10-06",
+              "date_label": "2026.10.06"
+            }
+          ]
+        },
+        {
+          "name": "입찰·계약",
+          "more_href": "/tender",
+          "posts": [
+            {
+              "title": "전시실 항온항습 설비 유지관리 용역",
+              "href": "/tender/991",
+              "datetime": "2026-10-21",
+              "date_label": "2026.10.21"
+            },
+            {
+              "title": "거리 공연 축제 무대 설치 및 운영 용역",
+              "href": "/tender/990",
+              "datetime": "2026-10-16",
+              "date_label": "2026.10.16"
+            },
+            {
+              "title": "예매 시스템 통합 유지관리 용역",
+              "href": "/tender/989",
+              "datetime": "2026-10-14",
+              "date_label": "2026.10.14"
+            },
+            {
+              "title": "회계감사인 선임을 위한 제안서 모집 공고",
+              "href": "/tender/988",
+              "datetime": "2026-10-06",
+              "date_label": "2026.10.06"
+            },
+            {
+              "title": "문화 소식지 인쇄 및 발송 용역",
+              "href": "/tender/987",
+              "datetime": "2026-10-02",
+              "date_label": "2026.10.02"
+            }
+          ]
+        },
+        {
+          "name": "채용",
+          "more_href": "/recruit",
+          "posts": [
+            {
+              "title": "2026년 제3차 정규직 채용 필기시험 일시와 장소 공고",
+              "href": "/recruit/702",
+              "datetime": "2026-10-08",
+              "date_label": "2026.10.08"
+            },
+            {
+              "title": "공연 기획 분야 기간제 근로자 채용 공고",
+              "href": "/recruit/700",
+              "datetime": "2026-09-10",
+              "date_label": "2026.09.10"
+            },
+            {
+              "title": "청년 인턴(체험형) 최종 합격자 임용 등록 안내",
+              "href": "/recruit/699",
+              "datetime": "2026-09-03",
+              "date_label": "2026.09.03"
+            },
+            {
+              "title": "전시 해설사 채용 서류 전형 합격자 공고",
+              "href": "/recruit/697",
+              "datetime": "2026-08-27",
+              "date_label": "2026.08.27"
+            },
+            {
+              "title": "2026년 제2차 정규직 채용 최종 합격자 공고",
+              "href": "/recruit/695",
+              "datetime": "2026-08-13",
+              "date_label": "2026.08.13"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "axis": "탭 수",
+      "options": [
+        "2개",
+        "3개(기본)",
+        "4개"
+      ],
+      "how": "탭 버튼과 패널을 짝으로 더하거나 뺀다. aria-controls·id·aria-labelledby 번호를 맞추고, 첫 패널만 hidden이 없다."
+    },
+    {
+      "axis": "마감 그림 면 색",
+      "options": [
+        "point-5(기본)",
+        "primary-5"
+      ],
+      "how": "강조색(point)이 위험·오류 알림과 가까이 놓이면 deadline의 point 토큰을 primary 단계로 바꾼 프로젝트 블록을 만든다."
+    },
+    {
+      "axis": "대표 글",
+      "options": [
+        "첫 글을 키운다(기본)",
+        "모두 같은 크기"
+      ],
+      "how": "첫 글 강조는 .bulletin__board 안에서만 걸린다. post-list를 다른 곳에서 쓰면 모든 글이 같은 크기다."
+    }
+  ],
+  "neighbors": {
+    "before": [
+      "task-index"
+    ],
+    "after": [
+      "field-list"
+    ],
+    "avoid": []
+  },
+  "surface": {
+    "tone": "plain",
+    "note": "섹션은 바탕 면이다. 마감 그림 칸만 --color-point-5 면이고 숫자와 막대가 --color-point-50이다.",
+    "framed": true
+  },
+  "section": {
+    "archetype": "notice"
+  },
+  "styles": [
+    "src/styles/6-components/bulletin.css",
+    "src/styles/6-components/deadline.css",
+    "src/styles/6-components/post-list.css",
+    "src/styles/6-components/more-link.css"
+  ],
+  "requires": {
+    "components": [
+      "tab",
+      "icon"
+    ],
+    "icons": [
+      "chevron-right"
+    ],
+    "scripts": [
+      "tab.js"
+    ]
+  },
+  "accessibility": [
+    "탭은 KRDS 탭 마크업 그대로다 — role=tablist·tab·tabpanel, aria-selected, aria-controls, 첫 패널 밖은 hidden. 동작은 src/js/tab.js가 맡는다(R-16).",
+    "남은 날수는 숫자와 글자(「8일 남음」「11.21 마감」)로 적는다. 막대는 같은 정보를 반복하는 장식이라 aria-hidden이다.",
+    "날짜는 time 요소에 datetime을 준다. 숫자 열은 tabular-nums로 자릿수를 맞춘다.",
+    "「전체 보기」 링크는 게시판 이름을 앞에 붙인다 — 「더보기」만 쓰지 않는다(R-30).",
+    "섹션 제목은 h2, 마감 그림 제목은 h3이다. 제목 단계를 건너뛰지 않는다(R-39).",
+    "point 색 글자(--color-point-60)는 --color-point-5 면 위에서 대비 4.5:1을 넘는다. 브랜드를 바꾸면 npm run check:contrast로 다시 잰다."
+  ],
+  "origin": "제주관광공사 메인 D안(2026-11)의 bulletin·deadline·post-list·more-link 블록을 옮겼다."
+}

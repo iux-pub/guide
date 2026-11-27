@@ -1,0 +1,14 @@
+/**
+ * Display Title — 면 제목 (블록 카탈로그 news-deck·field-shore·link-lines가 함께 쓴다)
+ *   <h2 class="display-title">새 소식</h2>
+ *   제목 서체(--font-heading)로 크게 세운다. 색은 놓인 면의 글자색을 따른다.
+ *   블록 예외(contracts/block-exceptions.json): 행간 1.2.
+ *   KRDS 기준 밖(운영자 승인 대기): 크기 3.2~5.6rem(heading-xlarge 4rem 상한)·행간 1.2(150% 기준)
+ * 레이어 밖에 둔다 — 블록이 여백을 덮어쓴다.
+ */
+.display-title {
+  @apply m-0 mb-[4rem] [font-family:var(--font-heading)] font-semibold tracking-normal [word-break:keep-all] [text-wrap:balance];
+
+  font-size: clamp(3.2rem, 4vw, 5.6rem);
+  line-height: 1.2;
+}

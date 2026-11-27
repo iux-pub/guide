@@ -30,6 +30,18 @@ test('R-44: 공공 화면의 홍보 어조·해요체는 경고, 고유명사·�
   assert.equal(copy('<button type="button">좋아요</button>', pub).length, 0)
 })
 
+test('R-44: 제목·도입부의 대비 구문 표어(「~을 넘어」「그 이상」「단순한 ~가 아닌」)는 경고, 본문·동사·비전 페이지는 통과', () => {
+  assert.equal(copy('<h2>오늘의 전력을 넘어, 내일의 에너지로</h2>').length, 1)
+  assert.equal(copy('<h2>관광을 넘어 문화로</h2>').length, 1)
+  assert.equal(copy('<h2>관광 그 이상의 가치</h2>').length, 1)
+  assert.equal(copy('<h2>단순한 여행지가 아닌 제주</h2>').length, 1)
+  assert.ok(copy('<h2>관광을 넘어 문화로</h2>').every(f => f.severity === 'warn'))
+  assert.equal(copy('<p>관광을 넘어 문화로 이어집니다.</p>').length, 0)
+  assert.equal(copy('<h2>한라산을 넘어가는 길</h2>').length, 0)
+  assert.equal(copy('<h2>만 65세 이상의 신청 자격</h2>').length, 0)
+  assert.equal(copy('<h1>비전</h1><h2>관광을 넘어 문화로</h2>').length, 0)
+})
+
 test('R-44: 일반 화면은 합쇼체·해요체가 각각 3문장 이상 섞일 때만 경고', () => {
   const mixed = '<p>안내합니다. 확인합니다. 접수합니다.</p><p>좋아요. 쉬워요. 빨라요.</p>'
   assert.equal(copy(mixed, { profile: 'general-site' }).length, 1)

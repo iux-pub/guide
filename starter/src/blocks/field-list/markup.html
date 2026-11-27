@@ -1,0 +1,25 @@
+<section class="section section--content field-list" aria-labelledby="field-list-title">
+  <div class="container">
+    <h2 class="field-list__title" id="field-list-title">{{title}}</h2>
+    <div class="field-list__grid">
+      <figure class="field-list__media">
+        <img class="field-list__img" src="{{photo_src}}" alt="" width="1200" height="1500" loading="lazy">
+      </figure>
+      <div class="field-list__body">
+        <ul class="field-list__list" role="list">
+          <!-- @each fields as field -->
+          <li class="field-list__item">
+            <h3 class="field-list__name">{{field.name}}</h3>
+            <ul class="field-list__work" role="list">
+              <!-- @each field.work as work -->
+              <li>{{work.text}}</li>
+              <!-- @end -->
+            </ul>
+          </li>
+          <!-- @end -->
+        </ul>
+        <p class="field-list__more"><a class="btn btn--secondary btn--large" href="{{more_href}}">{{more_label}}</a></p>
+      </div>
+    </div>
+  </div>
+</section>

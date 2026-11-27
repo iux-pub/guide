@@ -1,0 +1,47 @@
+<section class="section section--notice" aria-labelledby="bulletin-title">
+  <div class="container bulletin">
+    <div class="bulletin__aside">
+      <h2 class="bulletin__title" id="bulletin-title">{{title}}</h2>
+      <div class="deadline">
+        <div class="deadline__head">
+          <h3 class="deadline__title">{{deadline_title}}</h3>
+          <p class="deadline__asof"><time datetime="{{asof_datetime}}">{{asof_label}}</time> 기준</p>
+        </div>
+        <ol class="deadline__list" role="list">
+          <!-- @each dues as due -->
+          <li class="deadline__item">
+            <p class="deadline__days"><strong class="deadline__count">{{due.days}}</strong>일 남음</p>
+            <div class="deadline__body">
+              <a class="deadline__link" href="{{due.href}}">{{due.title}}</a>
+              <span class="deadline__bar" style="--left: {{due.percent}}%" aria-hidden="true"></span>
+              <p class="deadline__meta"><time datetime="{{due.datetime}}">{{due.date_label}}</time> 마감</p>
+            </div>
+          </li>
+          <!-- @end -->
+        </ol>
+      </div>
+    </div>
+    <div class="bulletin__board">
+      <div class="tab">
+        <div class="tab__list" role="tablist" aria-label="{{board_label}}">
+          <!-- @each boards as board -->
+          <button type="button" class="tab__item" role="tab" aria-selected="{{board.@first:true|false}}" aria-controls="bulletin-panel-{{board.@n}}" id="bulletin-tab-{{board.@n}}">{{board.name}}</button>
+          <!-- @end -->
+        </div>
+        <!-- @each boards as board -->
+        <div class="tab__panel" role="tabpanel" id="bulletin-panel-{{board.@n}}" aria-labelledby="bulletin-tab-{{board.@n}}"{{board.@first:| hidden}}>
+          <ul class="post-list" role="list">
+            <!-- @each board.posts as post -->
+            <li class="post-list__item">
+              <a class="post-list__link" href="{{post.href}}">{{post.title}}</a>
+              <time class="post-list__date" datetime="{{post.datetime}}">{{post.date_label}}</time>
+            </li>
+            <!-- @end -->
+          </ul>
+          <a class="more-link" href="{{board.more_href}}">{{board.name}} 전체 보기 <svg class="icon icon--xsmall" aria-hidden="true" focusable="false"><use href="/assets/icons/sprite.svg#chevron-right"></use></svg></a>
+        </div>
+        <!-- @end -->
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+/**
+ * Inverse Surface — 짙은 면 위에 올라가는 부품의 색을 한꺼번에 바꾼다
+ *
+ * 카탈로그 부품(tab·btn·링크·초점 링)은 의미 토큰을 읽는다. 이 블록은 부품을 덮어쓰지 않고
+ * 블록 안에서 의미 토큰이 가리키는 값을 밝은 단계로 바꾼다. 면의 색은 --surface로 받는다.
+ *   <section class="section section--intro inverse-surface">…</section>
+ *   <div class="inverse-surface" style="--surface: var(--color-gray-90)">…</div>
+ * 근거: design-intelligence.md §5-2 「짙은 면이 시작되면 그 안의 부품도 바꾼다」
+ * 레이어 밖에 둔다 — 블록 카탈로그(cover·link-rows)의 면 색과 같은 층에서 겨룬다.
+ */
+.inverse-surface {
+  --color-text: var(--color-gray-0);
+  --color-text-bolder: var(--color-gray-0);
+  --color-text-subtle: var(--color-primary-10);
+  --color-text-primary: var(--color-primary-20);
+  --color-text-inverse: var(--color-primary-90);
+  --color-primary: var(--color-primary-20);
+  --color-link: var(--color-gray-0);
+  --color-link-hover: var(--color-primary-20);
+  --color-link-pressed: var(--color-primary-10);
+  --color-link-visited: var(--color-gray-0);
+  --color-point: var(--color-point-30);
+  --color-border: var(--color-primary-60);
+  --color-border-light: var(--color-primary-70);
+  --color-border-primary: var(--color-primary-20);
+  --color-button-primary-fill: var(--color-gray-0);
+  --color-button-primary-fill-hover: var(--color-primary-10);
+  --color-button-primary-fill-pressed: var(--color-primary-20);
+
+  @apply bg-[var(--surface,var(--color-primary-80))] text-[var(--color-text)];
+}

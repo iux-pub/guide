@@ -17,7 +17,7 @@ cd guide
 # .npmrc 가 legacy-peer-deps 자동 적용 — 별도 플래그 불필요
 npm install
 
-# 전체 빌드 (토큰 → 규칙 → CSS → 프롬프트 → 스킬 → 사이트)
+# 전체 빌드 (토큰 → 규칙 → CSS → 프롬프트 → 레퍼런스 → MCP 번들 → 사이트)
 npm run build
 
 # 개발 서버 (Tailwind 워치 + 11ty 서브)
@@ -32,9 +32,10 @@ http://localhost:8080 에서 문서 사이트 확인.
 
 | 변경 대상 | 파일 | 영향 범위 |
 |----------|------|----------|
-| 디자인 토큰 (색상/기본 폰트) | `tokens/foundation.json` | CSS · 스킬 · 사이트 · 스타터 |
+| 디자인 토큰 — 브랜드 팔레트·기본 폰트 (교체 계층) | `tokens/brand.json` | CSS · MCP 번들 · 사이트 · 스타터 |
+| 디자인 토큰 — gray·상태색·의미 토큰 (불변 계층, UX팀만) | `tokens/foundation.json` | CSS · MCP 번들 · 사이트 · 스타터 |
 | CSS 컴포넌트 | `src/styles/6-components/{name}.css` | 사이트 · 스타터 |
-| 마크업 스니펫 | `src/snippets/{name}.md` | 스킬 자동 생성 · 사이트 |
+| 마크업 스니펫 | `src/snippets/{name}.md` | `references/krds-components.md` 생성 · MCP 번들 · 사이트 |
 | 코딩 규칙 | `rules.json` | CLAUDE.md · site/conventions/ |
 | 작업 컨트랙트 | `references/CONTRACT.md` · `references/*.md` (수동 작성분만) | infoUX MCP (`get_contract` / `get_reference`) |
 | 빌드 스크립트 | `scripts/*.js` | 발행 파이프라인 |
@@ -65,7 +66,7 @@ http://localhost:8080 에서 문서 사이트 확인.
      npm run test      # 전체 CI 시뮬레이션
    ↓
 6. 커밋 — 한국어 명령형, 형식 strict
-     예: feat(rules): R-19 추가 — 폼 자동완성 속성 강제
+     예: feat(rules): R-52 추가 — 폼 자동완성 속성 강제
    ↓
 7. PR 생성 → CI 통과 → 머지
 ```
@@ -88,7 +89,7 @@ http://localhost:8080 에서 문서 사이트 확인.
 
 | scope | 영역 |
 |-------|------|
-| `tokens` | 디자인 토큰 (foundation, build-tokens.js) |
+| `tokens` | 디자인 토큰 (foundation·brand, build-tokens.js) |
 | `components` | CSS 컴포넌트 (`src/styles/6-components/`) |
 | `snippets` | 마크업 스니펫 (`src/snippets/`) |
 | `references` | 기준 본체 (`references/`, MCP 번들 원본) |
@@ -113,9 +114,9 @@ http://localhost:8080 에서 문서 사이트 확인.
 ### 예시
 
 ```
-feat(rules): R-19 추가 — 폼 자동완성 속성 강제
+feat(rules): R-52 추가 — 폼 자동완성 속성 강제
 fix(tokens): 옛 토큰명 --color-bg-secondary 4건 정정
-docs(skill): html-semantics.md 카드 매핑에 anchor 케이스 추가
+docs(references): html-semantics.md 카드 매핑에 anchor 케이스 추가
 build(harness): drift 검사 CI 단계 추가
 chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 ```
@@ -130,7 +131,7 @@ chore(deps): Eleventy 3.1.5 → 3.2.0 업그레이드
 | husky pre-commit 실패 — `R-XX` | stylelint 또는 check-violations 위반 | 출력 메시지의 규칙 ID 확인, `references/forbidden-patterns.md` 참조 |
 | HTML 구조 경고 — R-15 | 기존 인포마인드 HTML 기본 골격과 다르거나 시맨틱 보강 필요 | `header/main/footer`, `main > section > .container` 구조와 ARIA 보강 확인 |
 | HTML 구조 위반 — R-18 | `--blue`, `--big` 같은 시각 단어 modifier 사용 | KRDS 의미 어휘로 (`--primary`, `--large` 등) |
-| 스킬이 적용되지 않음 | 도구가 루트/경로별 계약을 인식하지 못함 | `AGENTS.md`, infoUX MCP 등록, `.github/instructions` 인식 여부 확인 |
+| infoUX 기준이 적용되지 않음 | 도구가 루트/경로별 계약을 인식하지 못함 | `AGENTS.md`, infoUX MCP 등록, `.github/instructions` 인식 여부 확인 |
 | starter 변경이 다운스트림에 안 감 | `npm run sync:starter` 안 돌림 | 표준 변경 후 `sync:starter` 실행 |
 
 ---
@@ -173,7 +174,12 @@ UX팀 결정 완료 후:
 
 ### 7.3 토큰 변경
 
-공개 토큰은 `tokens/foundation.json` 하나만 관리한다. 범위는 색상(`--color-*`)과 기본 폰트(`--font-*`)로 제한한다.
+토큰 파일은 두 계층이다.
+
+- `tokens/foundation.json` — 불변 계층(gray·상태색·의미 토큰·브레이크포인트). 이 저장소에서 UX팀만 고친다. 프로젝트에서는 수정하지 않는다.
+- `tokens/brand.json` — 교체 계층(브랜드 팔레트와 `--font-sans`). 프로젝트가 고치는 유일한 토큰 파일이다.
+
+공개 토큰의 범위는 색상(`--color-*`)과 기본 폰트(`--font-*`)로 제한한다. 브랜드를 바꾼 뒤에는 `npm run build:tokens`와 `npm run check:contrast`를 실행한다.
 
 간격, 크기, 타이포 스케일, 반경, 그림자, 모션, z-index는 토큰으로 추가하지 않는다. 컴포넌트 CSS에서 Tailwind v4 `@apply` 또는 명확한 CSS 직접값으로 작성한다.
 
@@ -184,7 +190,8 @@ UX팀 결정 완료 후:
 UX팀 표준 관리자만 해당:
 
 ```bash
-npm run sync:starter   # iux-pub/starter 저장소로 푸시
+npm run sync:starter       # 로컬 starter/ 생성물 갱신
+npm run sync:starter:push  # 검토 후 iux-pub/starter 원격 배포
 ```
 
 ---

@@ -1,0 +1,112 @@
+/**
+ * Scene — 장면형 첫 화면 (블록 카탈로그 scene · design-intelligence §6-1 H5)
+ *   화면 전체를 쓰는 장면(기본은 사진) 위에 큰 표제를 올리고, 바닥에 바로가기 줄(quick-row)과 능선 전환(ridge),
+ *   오른쪽에 뜬 패널(float-panel)을 둔다. 정본: src/blocks/scene/. MCP get_block("scene")
+ *   <section class="section section--intro scene" aria-labelledby="scene-title">
+ *     <img class="scene__photo" src="…" alt="">                          기본 배경(사진)
+ *     <canvas class="scene__canvas" aria-hidden="true"></canvas>          프로젝트가 직접 그리는 선택 향상
+ *     <div class="scene__veil" aria-hidden="true"></div>                  글자 자리를 어둡게 하는 장막
+ *     <svg class="ridge" …>…</svg>
+ *     <div class="container scene__body">
+ *       <h1 class="scene__title" id="scene-title"><span class="scene__title-line">…</span> <span class="scene__title-line">…</span></h1>
+ *       <p class="scene__lead">…</p>
+ *       <nav class="quick-row">…</nav>
+ *       <div class="float-panel">…</div>
+ *     </div>
+ *   </section>
+ *   캔버스 약속: 프로젝트 스크립트가 첫 장면을 그린 뒤 section에 data-scene="ready"를 붙이면 캔버스가 드러난다.
+ *     움직임 줄이기 설정이거나 그리기에 실패하면 아무것도 붙이지 않는다 — 사진이 남는다.
+ *   --ridge-h: 바닥 능선 띠 높이. 본문 바닥 여백과 뜬 패널 위치를 이 값으로 계산한다.
+ *   --quick-h: 바로가기 줄 한 줄 높이(1280px 이상에서 한 줄, 1024~1279px에서 두 줄).
+ *   블록 예외(contracts/block-exceptions.json): 표제 행간 1.12, 0.9초 들어오기 움직임.
+ * 레이어 밖에 둔다 — section.css(5-objects)·카탈로그 부품보다 뒤에서 조정한다.
+ */
+.scene {
+  --ridge-h: clamp(4.8rem, 7vw, 10rem);
+  --quick-h: 8rem;
+
+  /* 바탕색은 사진도 캔버스도 없을 때만 보인다 */
+  @apply relative overflow-hidden p-0 min-h-[100svh] bg-[var(--color-primary-40)] laptop:p-0;
+}
+
+.scene__photo {
+  @apply absolute inset-0 w-full h-full max-w-none object-cover [object-position:50%_35%];
+}
+
+.scene__canvas {
+  @apply absolute inset-0 block w-full h-full opacity-0 [transition:opacity_0.5s_ease];
+}
+
+.scene[data-scene="ready"] .scene__canvas {
+  @apply opacity-100;
+}
+
+/* 위(머리글 자리)와 아래(표제·바로가기 자리)만 어둡게 하는 스크림 — 검정 알파 토큰만 쓴다 */
+.scene__veil {
+  @apply absolute inset-0 pointer-events-none;
+
+  background: linear-gradient(180deg, var(--color-alpha-black-50) 0%, transparent 18%, transparent 55%, var(--color-alpha-black-75) 100%);
+}
+
+/* 좁은 화면에서는 표제·바로가기가 사진의 밝은 곳 위에 놓인다 — 사진 전체를 한 겹 더 어둡게 한다.
+   1024px 이상은 글자가 아래 스크림 위에 있어 필요 없다 */
+.scene__veil::before {
+  @apply content-[''] absolute inset-0 [transition:opacity_0.4s_ease] laptop:hidden;
+
+  background-color: color-mix(in srgb, var(--color-gray-100) 45%, transparent);
+}
+
+/* 캔버스 장면이 뜨면 옅게만 남긴다 — 장면의 밝은 색을 살린다 */
+.scene[data-scene="ready"] .scene__veil::before {
+  @apply opacity-40;
+}
+
+.scene__body {
+  @apply relative pt-[10rem] pb-[calc(var(--ridge-h)+2.4rem)] text-[var(--color-gray-0)] laptop:flex laptop:flex-col laptop:justify-end laptop:h-[100svh] laptop:min-h-[80rem] laptop:pt-0 laptop:pb-[calc(var(--ridge-h)+1.6rem)];
+}
+
+/* KRDS 기준 밖(운영자 승인 대기): 표제 크기 4.4~12rem(display-large 6rem 상한)·행간 1.12(150% 기준) */
+.scene__title {
+  @apply m-0 [font-family:var(--font-heading)] font-semibold tracking-normal [word-break:keep-all] laptop:max-w-[56%];
+
+  font-size: clamp(4.4rem, 7.6vw, 12rem);
+  line-height: 1.12;
+  text-shadow: 0 0.2rem 2.4rem var(--color-alpha-black-50);
+}
+
+.scene__title-line {
+  @apply block;
+}
+
+.scene__lead {
+  @apply m-0 mt-[2rem] max-w-[46rem] leading-[1.7] text-[var(--color-primary-5)] [word-break:keep-all] laptop:max-w-[56%];
+
+  font-size: clamp(1.7rem, 1.4vw, 2rem);
+}
+
+/* 첫 화면 들어오기 — 표제 줄 → 소개 → 바로가기 → 패널 순으로 한 번 올라온다 */
+@keyframes scene-rise {
+  from {
+    opacity: 0;
+    transform: translateY(3.2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene__title-line,
+  .scene__lead,
+  .scene .quick-row,
+  .scene .float-panel {
+    animation: scene-rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s backwards;
+  }
+
+  .scene__title-line:nth-child(2) { animation-delay: 0.31s; }
+  .scene__lead { animation-delay: 0.42s; }
+  .scene .quick-row { animation-delay: 0.53s; }
+  .scene .float-panel { animation-delay: 0.64s; }
+}

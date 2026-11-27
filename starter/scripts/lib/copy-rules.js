@@ -575,6 +575,10 @@ function r43(root, chunks, ctx, out) {
 const SUPERLATIVE_STRONG = /혁신적|최고의(?!결|사결정)|최상의|차별화된|압도적|독보적|완벽한|게임\s?체인저|새로운\s(?:경험|기준|차원)|스마트한/g
 const SUPERLATIVE_WEAK = /차세대|원스톱|최적의/g
 const PROMO = /선도하는|(?<![가-힣])도약(?!계좌)|글로벌\s?(?:리더|허브(?!도시))|세계\s?(?:최고|일류)|대한민국\s?대표(?!\s?(?:문화관광)?축제)|새로운\s?미래|비전\s?20\d\d|함께\s?만들어\s?(?:가는|갑니다)/
+// 대비 구문 표어 — 「~을 넘어(,)」「그 이상의」「단순한 ~가 아닌」. 해외·AI 표어(beyond X, more than X, not just X)를 옮긴 틀로,
+// 반(反)슬롭 지침이 2세대 문구 슬롭으로 꼽는다(taste-skill — 「~가 아니라」 대비 구문). 무엇을 하는 곳인지 말하지 않고 비교만 한다.
+// 제목·도입부·캐러셀에서만, 비전 페이지는 뺀다. 「산을 넘어가는」처럼 붙은 동사는 걸리지 않는다
+const CONTRAST_SLOGAN = /[을를]\s?넘어(?:서)?\s*[,·]|[을를]\s?넘어\s[가-힣]+(?:으로|로)(?![가-힣])|그\s?이상(?:의|을)|단순한\s?[가-힣]+(?:이|가)?\s?아닌/
 // 서술형 해요체 — '~세요'(재촉형, R-43)와 '~나요·~까요' 의문형은 뺀다
 const HAEYO = /(?:[아어여와워해돼봐줘려져라러]|이에|예|네|거든|는데|던데|군|게)요[.!]?$|죠[.!]?$/
 const HAPSHO = /(?:습니다|ㅂ니다|니다|십시오)[.!]?$/
@@ -605,6 +609,10 @@ function r44(chunks, ctx, out) {
     if (isPublic && prominent && !visionPage) {
       const m = t.match(PROMO)
       if (m) push(lineOfMatch(ch, m[0]), `공공 화면의 성과 홍보 어조 "${m[0]}" — 사실 서술로 쓴다(art-direction 공공기관 카피 톤).`, t)
+    }
+    if (prominent && !visionPage) {
+      const m = t.match(CONTRAST_SLOGAN)
+      if (m) push(lineOfMatch(ch, m[0]), `대비 구문 표어 "${m[0].trim()}" — 「~을 넘어」「그 이상」은 해외 표어를 옮긴 틀이다. 무엇을 하는 곳인지 사실로 쓴다(art-direction §8, 2세대 문구 슬롭).`, t)
     }
     // 종결 어미 — 문장 단위. 버튼·링크·레이블의 한 단어('좋아요')는 서술문이 아니다
     const labelLike = place === 'button' || chainOf(ch.el).some(a => ['a', 'label', 'option'].includes(a.tag))

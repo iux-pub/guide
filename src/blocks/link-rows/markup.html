@@ -1,0 +1,17 @@
+<section class="section section--list inverse-surface" aria-labelledby="link-rows-title">
+  <div class="container link-rows">
+    <h2 class="link-rows__title" id="link-rows-title">{{title}}</h2>
+    <dl class="link-rows__list">
+      <!-- @each groups as group -->
+      <div class="link-rows__row">
+        <dt class="link-rows__group">{{group.name}}</dt>
+        <dd class="link-rows__links">
+          <!-- @each group.links as link -->
+          <a class="link-rows__link" href="{{link.href}}">{{link.label}}</a>
+          <!-- @end -->
+        </dd>
+      </div>
+      <!-- @end -->
+    </dl>
+  </div>
+</section>

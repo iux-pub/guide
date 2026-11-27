@@ -1,0 +1,58 @@
+/**
+ * Link Lines — 제목 서체 링크 줄 (블록 카탈로그 link-lines · design-intelligence §6-5)
+ *   옅은 색 면. 위에 면 제목, 아래에 묶음마다 한 줄 — 묶음 이름(작게) + 링크(제목 서체 1.9rem).
+ *   한 단으로 쌓는다 — 두 단일 때 제목 아래 왼쪽 단이 통째로 비었다.
+ *   <section class="section section--list link-lines" aria-labelledby="link-lines-title">
+ *     <div class="container link-lines__grid">
+ *       <h2 class="display-title link-lines__title" id="link-lines-title">…</h2>
+ *       <dl class="link-lines__list">
+ *         <div class="link-lines__row">
+ *           <dt class="link-lines__group">열린경영</dt>
+ *           <dd class="link-lines__links"><a class="link-lines__link" href="…">ESG 경영비전</a>…</dd>
+ *         </div>
+ *       </dl>
+ *     </div>
+ *   </section>
+ *   위 여백이 없다 — 같은 면 색의 블록(field-shore) 바로 아래에 이어 붙인다. 면 색은 --link-lines-surface(기본 point-5).
+ *   블록 예외(contracts/block-exceptions.json): 아래 여백 8~12rem.
+ * 레이어 밖에 둔다 — section.css(5-objects)와 같은 층에서 여백을 조정한다.
+ */
+.link-lines {
+  @apply pt-0 pb-[8rem] bg-[var(--link-lines-surface,var(--color-point-5))] laptop:pt-0 laptop:pb-[12rem];
+}
+
+.link-lines__grid {
+  @apply grid gap-[3.2rem] laptop:gap-[4.8rem];
+}
+
+.link-lines__title {
+  @apply mb-0;
+}
+
+.link-lines__list {
+  @apply m-0 min-w-0 border-t-2 border-[var(--color-text-bolder)];
+}
+
+.link-lines__row {
+  @apply grid gap-y-[0.4rem] gap-x-[2.4rem] py-[2rem] border-b border-[var(--color-border)] tablet:py-[2.4rem] tablet:[grid-template-columns:9.6rem_minmax(0,1fr)];
+}
+
+.link-lines__group {
+  @apply m-0 text-[1.7rem] font-bold leading-[1.5] text-[var(--color-text-primary)] [word-break:keep-all] tablet:pt-[1rem];
+}
+
+.link-lines__links {
+  @apply flex flex-wrap gap-x-[3.2rem] m-0;
+}
+
+.link-lines__link {
+  @apply inline-flex items-center min-h-[4.8rem] [font-family:var(--font-heading)] text-[1.9rem] font-semibold leading-[1.5] text-[var(--color-text-bolder)] no-underline [word-break:keep-all] [text-decoration-color:var(--color-point-30)] [text-decoration-thickness:0.3rem] [text-underline-offset:0.4em] [transition:color_0.2s_ease];
+}
+
+.link-lines__link:visited {
+  @apply text-[var(--color-text-bolder)];
+}
+
+.link-lines__link:hover {
+  @apply text-[var(--color-text-primary)] underline;
+}

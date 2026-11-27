@@ -11,8 +11,8 @@ HTML 마크업 작성 규칙이다.
 
 | ID | 규칙 | 심각도 | 검증 |
 |----|------|--------|------|
-| R-07 | inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용 | warning | check-violations.js |
-| R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warning | check-violations.js |
+| R-07 | inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용 | warn | check-violations.js |
+| R-08 | HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동) | warn | check-violations.js |
 | R-09 | img alt 속성 필수 — 일반 어휘·파일명·연번 alt는 경고 | error | check-violations.js, check-html-structure.js |
 | R-10 | 인터랙티브 요소는 시맨틱 HTML 사용 — div onclick 금지 | error | check-violations.js |
 | R-15 | HTML 기본 구조는 기존 인포마인드 사이트 패턴을 우선 유지한다 | error | check-html-structure.js |
@@ -28,18 +28,18 @@ HTML 마크업 작성 규칙이다.
 | R-41 | 브레드크럼·사이드 메뉴는 본문 바로가기 목적지 밖, main 첫 제목은 h1, 3단계 이상 서브는 브레드크럼, 서브 첫 섹션은 비주얼 히어로가 아니다 | error | check-html-structure.js |
 | R-42 | 메인 히어로는 하나·첫 섹션, utility 등급은 히어로를 쓰지 않고, 화면 높이·스크롤 유도 큐를 두지 않는다 | error | check-html-structure.js |
 | R-43 | 카피 톤 — 번역투·2인칭 마케팅 문구 금지, 버튼은 '~하세요'가 아닌 동사형, 공공 화면 느낌표 금지 | error | check-violations.js |
-| R-44 | 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다 | warn | check-violations.js |
+| R-44 | 근거 없는 최상급·공공 화면의 성과 홍보 어조·대비 구문 표어와 해요체·경어 혼용을 경고한다 | warn | check-violations.js |
 | R-45 | 한국어 화면의 영문 전용 UI 레이블, lang 없는 언어 링크, 고르기만 해도 이동하는 select를 쓰지 않는다 | error | check-html-structure.js |
 | R-46 | publicIdentity가 required로 확정되지 않으면 공식 배너·운영기관 식별자·정부 상징을 만들지 않는다 | error | check-html-structure.js |
 | R-47 | 개인정보 수집 폼은 동의 옆에 목적·항목·보유 기간·거부권을 알리고, 동의를 미리 체크하지 않으며, 주민등록번호를 받지 않는다 | error | check-html-structure.js |
 | R-50 | placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고 | warn | check-html-structure.js |
-| R-51 | 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선은 경고 | warn | check-html-structure.js, check-violations.js |
+| R-51 | 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선, 아이콘 타일 바로가기 반복은 경고 | warn | check-html-structure.js, check-violations.js |
 
 ---
 
 ## R-07 — inline style 금지 — CSS 커스텀 프로퍼티 style="--var: val"은 허용
 
-**심각도:** `warning` &nbsp; **검증:** check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-violations.js
 
 > 스타일은 CSS 파일에서만 관리한다. 인라인 스타일은 특이도가 높아 오버라이드가 어렵고 토큰 시스템을 우회한다. CSS 커스텀 프로퍼티 주입(style="--width: 320px")은 동적 값 전달 패턴이므로 허용한다.
 
@@ -60,7 +60,7 @@ HTML 마크업 작성 규칙이다.
 
 ## R-08 — HTML 클래스에도 BEM 2단계 element 금지 (R-05 연동)
 
-**심각도:** `warning` &nbsp; **검증:** check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-violations.js
 
 > R-05와 동일 원칙. HTML 클래스가 CSS에서 정의된 것과 일치해야 한다.
 
@@ -331,7 +331,7 @@ HTML 마크업 작성 규칙이다.
 
 **심각도:** `error` &nbsp; **검증:** check-violations.js
 
-> 이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고 KRDS 아이콘 대비(3:1·7:1)를 보장할 수 없다. 플랫폼마다 모양이 다르고, 국내 사이트 99곳 중 1곳만 쓴다 — 흡수할 관행이 없는 AI 슬롭 서명이다. 제목(h1~h6)·버튼·링크·label·summary·th·li·legend·caption·.badge·.tag·__title·__label·__icon 안, 이모지만 있는 텍스트, CSS content(Tailwind [content:"…"]·content-[…] 포함)는 error, 그 밖의 본문은 warn, alt는 이미지 속 글자 전사일 수 있어 warn이다. HTML 엔티티(`&#x1F680;`)·CSS 이스케이프(`\1F449`)도 풀어 본다. ©·®·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니라 통과한다. 링크·버튼 끝의 → ➜ » ▶는 warn — 카탈로그 chevron + aria-hidden을 쓴다. 웹 콘텐츠(스니펫 코드 블록·플레이그라운드·사이트 문서·납품 페이지)에만 적용하고 저장소 안내 문서(README·CLAUDE.md 등)는 대상이 아니다.
+> 이모지는 글리프 색이 고정돼 토큰·고대비 모드를 따르지 못하고 KRDS 아이콘 대비(3:1·7:1)를 보장할 수 없다. 플랫폼마다 모양이 다르고, 국내 사이트 96곳 중 1곳만 쓴다 — 흡수할 관행이 없는 AI 슬롭 서명이다. 제목(h1~h6)·버튼·링크·label·summary·th·li·legend·caption·.badge·.tag·__title·__label·__icon 안, 이모지만 있는 텍스트, CSS content(Tailwind [content:"…"]·content-[…] 포함)는 error, 그 밖의 본문은 warn, alt는 이미지 속 글자 전사일 수 있어 warn이다. HTML 엔티티(`&#x1F680;`)·CSS 이스케이프(`\1F449`)도 풀어 본다. ©·®·※·★·▲·①·☎·✔ 같은 텍스트 기호는 이모지가 아니라 통과한다. 링크·버튼 끝의 → ➜ » ▶는 warn — 카탈로그 chevron + aria-hidden을 쓴다. 웹 콘텐츠(스니펫 코드 블록·플레이그라운드·사이트 문서·납품 페이지)에만 적용하고 저장소 안내 문서(README·CLAUDE.md 등)는 대상이 아니다.
 
 **금지 예시**
 
@@ -472,11 +472,11 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-44 — 근거 없는 최상급·공공 화면의 성과 홍보 어조와 해요체·경어 혼용을 경고한다
+## R-44 — 근거 없는 최상급·공공 화면의 성과 홍보 어조·대비 구문 표어와 해요체·경어 혼용을 경고한다
 
-**심각도:** warn &nbsp; **검증:** check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-violations.js
 
-> art-direction 카피 톤은 일반사이트 합쇼체 기본, 공공서비스 합쇼체 고정, 공공기관 성과 홍보 어조 금지, 커머스 근거 없는 최상급 금지다(infoUX 판단 — KRDS에는 문체 규정이 없어 경고로 둔다). 문구 덩어리 단위로 본다(scripts/lib/copy-rules.js, 사이트 문서 제외). (1) 혁신적·최고의·최상의·차별화된·압도적·독보적·완벽한·게임 체인저·새로운 경험/기준/차원·스마트한이 제목·도입부·캐러셀에 나오면 경고, 차세대·원스톱·최적의를 포함한 최상급이 페이지에 2회 이상이면 경고('최고의결기구'는 아니다). (2) 공공 프로필의 제목·도입부·캐러셀이 선도하는·도약·글로벌 리더/허브·세계 최고/일류·대한민국 대표·새로운 미래·비전 20XX·함께 만들어 가는이면 경고(청년도약계좌·글로벌허브도시·대한민국 대표 축제, h1이 비전·경영목표인 페이지는 제외). (3) 공공 프로필의 서술형 해요체(~어요·~예요·~네요·~죠, 문장 단위)는 경고 — '~세요'는 R-43, '~나요·~까요' 의문형과 버튼·링크의 한 단어 레이블은 제외. 그 밖의 프로필은 합쇼체와 해요체가 한 페이지에 각각 3문장 이상 섞이면 경고. 고유 문구는 copy-lexicon allow·infoux.json copyAllow로 뺀다.
+> art-direction 카피 톤은 일반사이트 합쇼체 기본, 공공서비스 합쇼체 고정, 공공기관 성과 홍보 어조 금지, 커머스 근거 없는 최상급 금지다(infoUX 판단 — KRDS에는 문체 규정이 없어 경고로 둔다). 문구 덩어리 단위로 본다(scripts/lib/copy-rules.js, 사이트 문서 제외). (1) 혁신적·최고의·최상의·차별화된·압도적·독보적·완벽한·게임 체인저·새로운 경험/기준/차원·스마트한이 제목·도입부·캐러셀에 나오면 경고, 차세대·원스톱·최적의를 포함한 최상급이 페이지에 2회 이상이면 경고('최고의결기구'는 아니다). (2) 공공 프로필의 제목·도입부·캐러셀이 선도하는·도약·글로벌 리더/허브·세계 최고/일류·대한민국 대표·새로운 미래·비전 20XX·함께 만들어 가는이면 경고(청년도약계좌·글로벌허브도시·대한민국 대표 축제, h1이 비전·경영목표인 페이지는 제외). (3) 공공 프로필의 서술형 해요체(~어요·~예요·~네요·~죠, 문장 단위)는 경고 — '~세요'는 R-43, '~나요·~까요' 의문형과 버튼·링크의 한 단어 레이블은 제외. 그 밖의 프로필은 합쇼체와 해요체가 한 페이지에 각각 3문장 이상 섞이면 경고. (4) 모든 프로필의 제목·도입부·캐러셀에 대비 구문 표어(「~을 넘어,」「~을 넘어 ~로」「그 이상의」「단순한 ~가 아닌」)가 있으면 경고 — 해외·AI 표어(beyond·more than·not just)를 옮긴 2세대 문구 슬롭이다(taste-skill 등 반슬롭 지침, 2026-11-23 조사). 「넘어가는」처럼 붙은 동사, 본문 문장, 비전 페이지는 제외. 고유 문구는 copy-lexicon allow·infoux.json copyAllow로 뺀다.
 
 **금지 예시**
 
@@ -568,7 +568,7 @@ HTML 마크업 작성 규칙이다.
 
 ## R-50 — placeholder에는 예시만 둔다 — '내용을 입력하세요' 같은 빈 안내와 레이블 반복은 경고
 
-**심각도:** warn &nbsp; **검증:** check-html-structure.js
+**심각도:** `warn` &nbsp; **검증:** check-html-structure.js
 
 > placeholder는 입력하면 사라지고 대비가 낮아 안내를 맡길 수 없다. '내용을 입력하세요'·'입력해 주십시오'처럼 아무 정보도 없는 안내와, 연결된 레이블(필수 표시 * 제외)을 되풀이할 뿐인 placeholder는 경고다(scripts/lib/content-quality.js placeholderFindings). '{레이블}을 입력하세요'는 microcopy 기준(site/design/microcopy.md)이 허용하므로 걸지 않는다. 형식 안내는 '예: 2026-11-03' 같은 예시로, 설명은 form-field__hint와 aria-describedby로 준다. 근거는 KRDS가 아니라 팀 마이크로카피 기준이다. 스니펫·플레이그라운드·납품 페이지에만 쓴다.
 
@@ -589,11 +589,11 @@ HTML 마크업 작성 규칙이다.
 
 ---
 
-## R-51 — 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선은 경고
+## R-51 — 템플릿 장식 서명 — 제목 위 eyebrow, 순서가 아닌 01·02 장식 번호, 모든 섹션 등장 효과, 색 있는 굵은 옆선, 아이콘 타일 바로가기 반복은 경고
 
-**심각도:** warn &nbsp; **검증:** check-html-structure.js · check-violations.js
+**심각도:** `warn` &nbsp; **검증:** check-html-structure.js · check-violations.js
 
-> 어떤 LLM이 만들어도 AI 템플릿 티가 나지 않게, 생성 페이지가 습관처럼 붙이는 장식을 기계로 짚는다. 출처는 Impeccable(pbakaus/impeccable, Apache 2.0)의 craft-floor 금지 목록과 Anthropic frontend-design 스킬이 꼽은 '생성 페이지의 흔한 서명'이다. 원칙은 셋이다 — 제목은 스스로 무게를 가져야 하고(그 위에 분류 꼬리표를 얹어 무게를 빌리지 않는다), 번호는 순서가 정보일 때만 쓰며, 등장 효과는 한 화면에 한 번 의도한 순간에만 둔다. 검출(scripts/lib/template-signature.js): (1) class 조각에 eyebrow·kicker가 든 요소, h2~h3 바로 앞 형제가 20자 이하 짧은 글만 든 p·span이고 class가 __label·__category로 끝나는 경우. 영문 대문자 eyebrow는 R-45도 따로 경고한다. (2) ol 밖에서 글이 01~09(뒤에 공백·끝·마침표)로 시작하는 요소와 class에 __index·__number·__num이 든 요소 — ol·li 안, step-indicator·pagination·calendar 블록, 표 칸, time·code는 뺀다. (3) main 안 section 3개 이상에 data-reveal·data-aos·data-animate 속성이나 reveal·fade-up·animate-on-scroll class가 있으면 문서당 1건 — 기능형 화면의 스크롤 진입 모션 자체는 R-22가 다룬다. (4) 링크·버튼 끝의 → ➜ » ▶ 화살표 글리프는 R-36이 이미 경고하므로 여기서 다시 보지 않는다. (5) CSS·<style>·class의 border-left·border-right(inline-start·inline-end 포함) 폭 1px 초과 + 색 지정, Tailwind border-l-2~8·border-l-[…]·border-r-*·border-s-*·border-e-*·[border-left:…] — 카드·목록·인용·알림에 흔한 강조선이다. 현재 위치 표시(.tab·.main-menu·.side-navigation·.breadcrumb·aria-current·--current), 입력 오류 표시(.form-field·.input·aria-invalid·--error), blockquote, 회전으로 그린 셰브런은 뺀다. 오탐 위험이 있어 모두 경고이고, 의도한 표현이면 남겨도 된다. 마크업은 스니펫·플레이그라운드·납품 페이지에, CSS는 스타일 파일(docs.css 제외)과 스니펫 css 펜스에 쓴다.
+> 어떤 LLM이 만들어도 AI 템플릿 티가 나지 않게, 생성 페이지가 습관처럼 붙이는 장식을 기계로 짚는다. 출처는 Impeccable(pbakaus/impeccable, Apache 2.0)의 craft-floor 금지 목록과 Anthropic frontend-design 스킬이 꼽은 '생성 페이지의 흔한 서명'이다. 원칙은 셋이다 — 제목은 스스로 무게를 가져야 하고(그 위에 분류 꼬리표를 얹어 무게를 빌리지 않는다), 번호는 순서가 정보일 때만 쓰며, 등장 효과는 한 화면에 한 번 의도한 순간에만 둔다. 검출(scripts/lib/template-signature.js): (1) class 조각에 eyebrow·kicker·pretitle·suptitle이 든 요소(__overline 같은 변형 이름 포함 — Tailwind overline 유틸은 아니다), h2~h3 바로 앞 형제가 20자 이하 짧은 글만 든 p·span이고 class가 __label·__category로 끝나는 경우. 영문 대문자 eyebrow는 R-45도 따로 경고한다. (2) ol 밖에서 글이 01~09(뒤에 공백·끝·마침표)로 시작하는 요소와, class에 __index·__number·__num이 있고 글이 한두 자리 번호(1·01·12)인 요소 — 통계 수치(stat__number 1,234건)·전화번호(contact__number)·입력칸(input.form__number)처럼 번호가 아닌 것은 class만으로 걸지 않는다. ol·li 안, step-indicator·pagination·calendar 블록, 표 칸, time·code, 날짜 배지(time·datetime 안, __date·__day 블록의 일·월 숫자)는 뺀다. (3) main 안 section 3개 이상에 data-reveal·data-aos·data-animate 속성이나 reveal·fade-up·animate-on-scroll class가 있으면 문서당 1건 — 기능형 화면의 스크롤 진입 모션 자체는 R-22가 다룬다. (4) 링크·버튼 끝의 → ➜ » ▶ 화살표 글리프는 R-36이 이미 경고하므로 여기서 다시 보지 않는다. (5) CSS·<style>·class·style 속성의 border-left·border-right(inline-start·inline-end 포함) 폭 1px 초과 + 색 지정, 옆만 굵은 border-width 단축(0 0 0 4px) + 색, 번짐 없는 옆 inset 그림자(box-shadow: inset 4px 0 0 색), Tailwind border-l-2~8·border-l-[…]·border-r-*·border-s-*·border-e-*·[border-left:…]·shadow-[inset_4px_0_0_…] — 카드·목록·인용·알림에 흔한 강조선이다. 현재 위치 표시(.tab·.main-menu·.side-navigation·.breadcrumb·aria-current·--current), 입력 오류 표시(.form-field·.input·aria-invalid·--error), blockquote, 표 칸 구분선(td·th·.table), 투명색 옆선(border-transparent — 상태에서만 색이 켜지는 자리 잡기), 회전으로 그린 셰브런은 뺀다. (6) 아이콘 타일 바로가기 — 같은 부모(ul·div) 아래 형제 4개 이상이 각각 링크·버튼 하나이고, 그 첫 요소 자식이 아이콘 하나만 감싼 span·div(원·사각 배경 상자)이며 뒤에 글 레이블이 오는 구조면 문서당 1건. 한국 공공 메인의 전형 조립 서명이다(references/design-intelligence.md §7-1 B) — 글자를 키운 목록·대표 칸·색 띠·검색 결합(§6-2 Q1~Q4)을 먼저 비교하고, 의도한 선택이면 docs/design-plan.md에 이유를 적는다. header·footer·메뉴 블록(.main-menu·.mobile-menu·.tab)은 뺀다. 마크업 구조만 보므로 상자에 실제로 배경이 있는지, 타일이 같은 크기인지는 렌더 비평에서 확인한다. 오탐 위험이 있어 모두 경고이고, 의도한 표현이면 남겨도 된다. 마크업은 스니펫·플레이그라운드·납품 페이지에, CSS는 스타일 파일(docs.css 제외)과 스니펫 css 펜스에 쓴다.
 
 **금지 예시**
 
@@ -603,6 +603,14 @@ HTML 마크업 작성 규칙이다.
 <div class="benefit"><span class="benefit__number">01</span><h3>간편 신청</h3></div>   // 순서가 아닌 장식 번호
 <main><section data-aos="fade-up">…</section><section data-aos="fade-up">…</section><section data-aos="fade-up">…</section></main>   // 모든 섹션 등장 효과
 .notice-card { border-left: 4px solid var(--color-primary); }   // 색 있는 굵은 옆선
+<div class="notice-card" style="border-left: 4px solid var(--color-primary)">…</div>   // style 속성의 굵은 옆선
+.notice-card { box-shadow: inset 4px 0 0 var(--color-primary); }   // inset 그림자로 그린 옆선
+<ul class="quick">
+  <li><a href="/cert"><span class="quick__icon"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#document"></use></svg></span>증명서 발급</a></li>
+  <li><a href="/reserve"><span class="quick__icon"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#calendar"></use></svg></span>시설 예약</a></li>
+  <li><a href="/status"><span class="quick__icon"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg></span>민원 조회</a></li>
+  <li><a href="/map"><span class="quick__icon"><svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#map-pin"></use></svg></span>찾아오는 길</a></li>
+</ul>   // 아이콘 타일 바로가기 — 배경 상자 속 아이콘 + 아래 레이블 4개 이상(전형 조립 §7-1 B)
 ```
 
 **올바른 형식**
@@ -611,8 +619,15 @@ HTML 마크업 작성 규칙이다.
 <h2 class="section__title">자주 찾는 민원</h2>   // 제목이 스스로 무게를 갖는다
 <ol class="step-indicator"><li class="step-indicator__item" aria-current="step"><span class="step-indicator__num" aria-hidden="true">1</span>신청서 작성</li></ol>   // 순서가 정보인 번호
 .side-navigation__link[aria-current="page"] { border-left: 4px solid var(--color-primary); }   // 현재 위치 표시
+<strong class="stat__number">1,234건</strong>   // 번호가 아닌 수치 — class 이름만으로 걸지 않는다
+<ul class="quick-list">
+  <li><a class="quick-list__link" href="/cert">증명서 발급</a></li>
+  <li><a class="quick-list__link" href="/reserve">시설 예약</a></li>
+  <li><a class="quick-list__link" href="/status">민원 조회</a></li>
+  <li><a class="quick-list__link" href="/map">찾아오는 길</a></li>
+</ul>   // 글자를 키운 바로가기 목록(§6-2 Q1) — 아이콘 상자 없이
 ```
 
-**참고:** scripts/lib/template-signature.js, https://github.com/pbakaus/impeccable
+**참고:** scripts/lib/template-signature.js, references/design-intelligence.md, https://github.com/pbakaus/impeccable
 
 ---

@@ -115,7 +115,12 @@ function buildCss(icons, variants) {
  *   </button>
  *
  * 스프라이트 방식(권장): src/styles/6-components/icon.css의 .icon을 쓴다.
+ *
+ * 레이어 순서를 먼저 선언한다. 이 파일을 style.css보다 먼저 불러와도 base가
+ * components를 덮지 않는다(첫 @layer 등장 순서가 우선순위를 정한다).
  */
+
+@layer base, components, utilities;
 
 @layer components {
   @font-face {

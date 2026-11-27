@@ -288,3 +288,90 @@ test('저장소의 스타일·스니펫·플레이그라운드는 네 규칙 오
   const errors = (result.stderr.match(/\[ERROR\][^\n]*\n\s*\[R-(01|34|36|37)\][^\n]*/g) || [])
   assert.deepEqual(errors, [])
 })
+
+// ─── R-01 SVG 표현 속성·bgcolor ───────────────────────────
+
+test('R-01: SVG 표현 속성과 bgcolor의 raw 색을 잡는다', () => {
+  for (const html of [
+    '<svg viewBox="0 0 24 24"><path fill="#ff0000" d="M0 0h24v24H0z"/></svg>',
+    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke="rgb(255, 0, 0)" fill="none"/></svg>',
+    '<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="red"/></svg>',
+    '<svg><linearGradient id="g"><stop offset="0" stop-color="#7c3aed"/></linearGradient></svg>',
+    '<table bgcolor="#eeeeee"><tr><td>a</td></tr></table>',
+    "<td bgcolor='white'>a</td>"
+  ]) {
+    const r = v.scanHtml(html, { ...restrained, emoji: false })
+    assert.ok(has(r, 'R-01'), `${html}\n${rules(r)}`)
+  }
+})
+
+test('R-01: none·currentColor·토큰·그라데이션 참조·data URI 속 글자는 통과한다', () => {
+  for (const html of [
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/></svg>',
+    '<svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"></use></svg>',
+    '<svg viewBox="0 0 24 24"><path fill="var(--color-primary)" d="M0 0h24v24H0z"/></svg>',
+    '<svg viewBox="0 0 24 24"><path fill="url(#abc)" stroke="transparent" d="M0 0h24v24H0z"/></svg>',
+    '<svg viewBox="0 0 24 24"><path fill="{{ color }}" d="M0 0h24v24H0z"/></svg>',
+    '<div class="wave" data-mask="data:image/svg+xml,%3Cpath fill=\'black\'/%3E">a</div>',
+    '<p>아이콘에 fill="#333"을 직접 쓰지 않는다</p>',
+    '<script>const icon = \'<path fill="#333" d="M0 0"/>\'</script>',
+    '<!-- <path fill="#333"/> -->'
+  ]) {
+    const r = v.scanHtml(html, { ...restrained, emoji: false })
+    assert.ok(none(r, 'R-01'), `${html}\n${rules(r)}\n${r.map(f => f.message).join('\n')}`)
+  }
+})
+
+// ─── R-34 그림 자산 SVG ───────────────────────────────────
+
+test('R-34: 그림 자산 SVG 안 보라·남색 계열 그라데이션은 그림 안이어도 오류다', () => {
+  for (const svg of [
+    '<svg><defs><linearGradient id="a"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs></svg>',
+    "<svg><radialGradient id='b'><stop offset='0' style='stop-color: #6d28d9; stop-opacity: .8'/></radialGradient></svg>",
+    '<svg><linearGradient id="c">\n<stop offset="0" stop-color="indigo"/>\n</linearGradient></svg>'
+  ]) {
+    const r = v.svgAssetFindings(svg)
+    assert.ok(has(r, 'R-34'), `${svg}\n${rules(r)}`)
+  }
+  const r = v.svgAssetFindings('<svg>\n<rect/>\n<linearGradient id="a"><stop offset="0" stop-color="#7c3aed"/></linearGradient></svg>')
+  assert.equal(r[0].line, 3)
+})
+
+test('R-34: 장면의 하늘·물·퇴적층 그라데이션, 주석 속 보라색은 통과한다', () => {
+  for (const svg of [
+    // 낮 하늘 → 수평선, 얕은 물 → 깊은 물(청록·남청 hue 190~220°), 모래 퇴적층
+    '<svg><linearGradient id="sky"><stop offset="0" stop-color="#cfe3f0"/><stop offset="1" stop-color="#f4f5f6"/></linearGradient>' +
+      '<linearGradient id="water"><stop offset="0" stop-color="#1f7a99"/><stop offset="1" stop-color="#0b2a4a"/></linearGradient>' +
+      '<linearGradient id="sediment"><stop offset="0" stop-color="#c9c0ae"/><stop offset="1" stop-color="#f4f5f6"/></linearGradient></svg>',
+    '<svg><!-- <linearGradient id="x"><stop stop-color="#7c3aed"/></linearGradient> --></svg>',
+    '<svg><linearGradient id="ref" href="#sky"/></svg>'
+  ]) {
+    const r = v.svgAssetFindings(svg)
+    assert.ok(none(r, 'R-34'), `${svg}\n${r.map(f => f.message).join('\n')}`)
+  }
+})
+
+test('R-34: 페이지가 그림으로 넣은 로컬 SVG만 모으고 로고·아이콘은 뺀다', () => {
+  const html = '<picture><source media="(min-width: 1024px)" srcset="../../assets/scene-wide.svg"><img src="../../assets/scene-narrow.svg" alt="단면"></picture>' +
+    '<img src="https://example.com/a.svg" alt="외부"><img src="data:image/svg+xml,%3Csvg/%3E" alt="d"><img src="photo.jpg" alt="p">' +
+    '<object data="/assets/diagram.svg?v=2" type="image/svg+xml"></object><!-- <img src="old.svg"> -->'
+  assert.deepEqual(v.svgAssetRefs(html).sort(), ['../../assets/scene-narrow.svg', '../../assets/scene-wide.svg', '/assets/diagram.svg'].sort())
+  for (const p of ['/assets/logo.svg', '/assets/kiost-ci.svg', '/assets/icons/search.svg', '/img/brand-logos/a.svg', '/assets/sprite.svg']) assert.ok(v.isMarkAsset(p), p)
+  for (const p of ['/assets/ieodo-section-wide.svg', '/assets/scene-narrow.svg', '/assets/social-cities.svg']) assert.ok(!v.isMarkAsset(p), p)
+})
+
+test('check-violations가 인자로 받은 그림 SVG에 R-34를 적용하고 로고 SVG는 건너뛴다', () => {
+  const violet = '<svg><linearGradient id="a"><stop offset="0" stop-color="#7c3aed"/></linearGradient></svg>'
+  const scene = runOn({ 'scene.svg': violet })
+  assert.equal(scene.status, 2, scene.stdout + scene.stderr)
+  assert.match(scene.stderr, /\[R-34\] 그림 자산 안 보라/)
+  const logo = runOn({ 'logo.svg': violet })
+  assert.doesNotMatch(logo.stderr, /\[R-34\]/)
+})
+
+test('R-01: 표현 속성 위반은 속성이 있는 태그의 줄을 가리킨다', () => {
+  const r = v.scanHtml('<svg viewBox="0 0 24 24">\n  <path d="M0 0"/>\n  <path fill="#ff0000" d="M0 0"/>\n</svg>', { ...restrained, emoji: false })
+  assert.equal(r.length, 1)
+  assert.equal(r[0].line, 3)
+  assert.match(r[0].message, /fill 속성/)
+})

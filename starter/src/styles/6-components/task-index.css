@@ -1,0 +1,66 @@
+/**
+ * Task Index — 첫 화면에 걸치는 글자 바로가기 판 (블록 카탈로그 task-index · design-intelligence §6-2 Q1)
+ *   왼쪽 색 면에 제목, 오른쪽에 글자 목록. 아이콘 타일 없이 글자 크기와 칸 높이로 무게를 만든다.
+ *   정본: src/blocks/task-index/. MCP get_block("task-index")
+ *   <section class="section section--list task-index" aria-labelledby="task-index-title">
+ *     <div class="container">
+ *       <div class="task-index__panel">
+ *         <h2 class="task-index__title" id="task-index-title">자주 찾는 서비스</h2>
+ *         <ul class="task-index__list" role="list">
+ *           <li class="task-index__item"><a class="task-index__link" href="…">이름 <svg class="icon icon--small task-index__arrow">…</svg></a></li>
+ *         </ul>
+ *       </div>
+ *     </div>
+ *   </section>
+ *   앞 블록 위로 --cover-overlap(cover가 정한다, 없으면 8rem)만큼 걸쳐 올라간다 — 앞 블록은 첫 화면 블록이어야 한다.
+ *   판의 가장자리는 그림자가 아니라 테두리로 긋는다(그림자는 떠 있는 요소에만 — design-intelligence §5-8).
+ * 레이어 밖에 둔다 — section.css(5-objects)의 섹션 여백과 같은 층에서 조정한다.
+ */
+.task-index {
+  @apply relative z-[1] mt-[calc(-1*var(--cover-overlap,8rem))] py-0 bg-transparent;
+}
+
+.task-index__panel {
+  @apply grid border border-[var(--color-border-light)] bg-[var(--color-surface)] laptop:[grid-template-columns:minmax(0,3fr)_minmax(0,9fr)];
+}
+
+/* KRDS heading-medium(mobile 2.2 / pc 2.4rem) */
+.task-index__title {
+  @apply m-0 flex items-end px-[2.4rem] py-[2rem] bg-[var(--color-primary-60)] [font-family:var(--font-heading)] text-[2.2rem] font-semibold leading-[1.5] text-[var(--color-gray-0)] [word-break:keep-all] laptop:px-[3.2rem] laptop:py-[3.2rem] laptop:text-[2.4rem];
+}
+
+.task-index__list {
+  @apply grid list-none m-0 p-0 tablet:grid-cols-2 laptop:grid-cols-3;
+}
+
+.task-index__item {
+  @apply border-t border-[var(--color-border-light)] tablet:border-s;
+}
+
+.task-index__link {
+  @apply flex items-center justify-between gap-[1.6rem] min-h-[7.2rem] px-[2.4rem] py-[1.6rem] text-[1.9rem] font-bold leading-[1.5] text-[var(--color-text)] no-underline [word-break:keep-all] [outline-offset:-0.4rem] [transition:background-color_0.15s_ease-in-out,color_0.15s_ease-in-out] laptop:min-h-[9.6rem] laptop:px-[3.2rem];
+}
+
+.task-index__link:hover {
+  @apply bg-[var(--color-primary-5)] text-[var(--color-primary-60)];
+}
+
+.task-index__arrow {
+  @apply text-[var(--color-primary-50)] [transition:transform_0.15s_ease-in-out];
+}
+
+.task-index__link:hover .task-index__arrow {
+  @apply [transform:translateX(0.4rem)];
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-index__link,
+  .task-index__arrow {
+    @apply [transition:none];
+  }
+}
+
+/* 판 아래 숨 쉴 자리 — 걸친 판 바로 다음 섹션은 위 여백을 넓힌다 */
+.task-index + .section {
+  @apply pt-[6rem] laptop:pt-[9.6rem];
+}

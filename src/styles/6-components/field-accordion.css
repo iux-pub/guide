@@ -1,0 +1,150 @@
+/**
+ * Field Accordion — 사업영역 사진 아코디언 (블록 카탈로그 field-accordion · design-intelligence §6-4 B2 변주)
+ *   1024px 이상: 세로로 긴 사진 판이 가로로 늘어서고, 가리키거나 키보드 초점이 들어온 판이 넓어지며 설명이 보인다.
+ *   1024px 미만: 2·3열 사진 카드(이름만, 설명은 숨긴다).
+ *   :has()를 쓰지 않는다(R-20) — 목록의 :hover·:focus-within과 판의 :hover·:focus-within만으로 펼친다.
+ *   판마다 링크 하나가 판 전체를 덮어(::after) 초점을 받는다. 초점이 오면 그 판이 펼쳐진다.
+ *   정본: src/blocks/field-accordion/. MCP get_block("field-accordion")
+ *   <section class="section section--content field-accordion" aria-labelledby="field-accordion-title">
+ *     <div class="container">
+ *       <div class="field-accordion__head"><h2 class="field-accordion__title">…</h2><p class="field-accordion__lead">…</p><a class="field-accordion__more">…</a></div>
+ *       <ul class="field-accordion__list" role="list">
+ *         <li class="field-accordion__item"><img class="field-accordion__img" …>
+ *           <div class="field-accordion__text"><h3 class="field-accordion__name"><a class="field-accordion__link" href="…">이름</a></h3><p class="field-accordion__desc">…</p></div>
+ *         </li>
+ *       </ul>
+ *     </div>
+ *   </section>
+ * 섹션 바탕은 바탕 면(흰색)이다 — 2026-11-20 이전에는 gray-5였다. 흰 섹션과 연회색 섹션의 교대는 띠 나열(D04)이라
+ *   본문 섹션 바탕은 흰색 하나로 두고 연회색은 판에 쓴다(design-intelligence §5-2). 옅은 면은 변형 축으로 남겼다.
+ * 레이어 밖에 둔다.
+ */
+.field-accordion {
+  @apply relative;
+}
+
+.field-accordion__head {
+  @apply grid gap-[1.6rem] mb-[4rem] laptop:[grid-template-columns:minmax(0,7fr)_minmax(0,5fr)] laptop:items-end laptop:gap-x-[4.8rem] laptop:mb-[5.6rem];
+}
+
+/* KRDS heading-xlarge(mobile 2.8 / pc 4rem) */
+.field-accordion__title {
+  @apply m-0 [font-family:var(--font-heading)] text-[2.8rem] font-bold leading-[1.5] tracking-normal text-[var(--color-text-bolder)] [word-break:keep-all] tablet:text-[4rem] laptop:row-span-2;
+}
+
+.field-accordion__lead {
+  @apply m-0 text-[1.7rem] leading-[1.7] text-[var(--color-text)] [word-break:keep-all];
+}
+
+.field-accordion__more {
+  @apply inline-flex items-center gap-[0.8rem] justify-self-start min-h-[4.4rem] text-[1.6rem] font-bold text-[var(--color-text-bolder)] no-underline hover:underline;
+}
+
+.field-accordion__list {
+  @apply grid grid-cols-2 gap-[1.2rem] list-none m-0 p-0 tablet:grid-cols-3 laptop:flex laptop:h-[52rem];
+}
+
+.field-accordion__item {
+  @apply relative overflow-hidden rounded-[1.2rem] bg-[var(--color-gray-90)] [aspect-ratio:3/4] [transition:flex-grow_0.4s_ease] laptop:[aspect-ratio:auto] laptop:flex-1 laptop:min-w-0;
+}
+
+/* 기본은 첫 판이 넓다. 목록 안에 가리킴·초점이 들어오면 그 판만 넓다 */
+.field-accordion__item:first-child {
+  @apply laptop:grow-[3.2];
+}
+
+.field-accordion__list:hover .field-accordion__item,
+.field-accordion__list:focus-within .field-accordion__item {
+  @apply laptop:grow;
+}
+
+.field-accordion__list .field-accordion__item:hover,
+.field-accordion__list .field-accordion__item:focus-within {
+  @apply laptop:grow-[3.2];
+}
+
+.field-accordion__img {
+  @apply absolute inset-0 block w-full h-full object-cover [transition:transform_0.4s_ease];
+}
+
+.field-accordion__item:hover .field-accordion__img {
+  @apply [transform:scale(1.04)];
+}
+
+/* 글자 자리만 아래에서 어둡게 — 검정 알파 토큰 스크림(R-34 허용 형태) */
+.field-accordion__text {
+  @apply absolute inset-x-0 bottom-0 p-[1.6rem] text-[var(--color-gray-0)] laptop:p-[2.8rem];
+
+  background: linear-gradient(transparent, var(--color-alpha-black-75));
+}
+
+.field-accordion__name {
+  @apply m-0 text-[1.6rem] font-bold leading-[1.5] [word-break:keep-all] tablet:text-[1.9rem] laptop:text-[2.2rem] laptop:whitespace-nowrap;
+}
+
+/* 판 전체가 링크 — 이름의 링크가 ::after로 판을 덮는다 */
+.field-accordion__link {
+  @apply inline-flex items-center min-h-[4.4rem] text-[var(--color-gray-0)] no-underline;
+
+  &::after {
+    @apply absolute inset-0 content-[''] rounded-[1.2rem];
+  }
+
+  &:visited {
+    @apply text-[var(--color-gray-0)];
+  }
+
+  &:focus-visible {
+    @apply [outline:0.3rem_solid_var(--color-gray-0)] [outline-offset:0.2rem];
+  }
+
+  &:focus-visible::after {
+    @apply [outline:0.3rem_solid_var(--color-gray-0)] [outline-offset:-0.6rem];
+  }
+}
+
+.field-accordion__desc {
+  @apply hidden m-0 mt-[0.8rem] text-[1.6rem] leading-[1.6] text-[var(--color-gray-10)] [word-break:keep-all] [transition:opacity_0.3s_ease] laptop:block laptop:max-w-[28em] laptop:max-h-0 laptop:overflow-hidden laptop:opacity-0;
+}
+
+/* 좁은 판에서는 이름을 세로로 세운다 */
+.field-accordion__item:not(:first-child) .field-accordion__name {
+  @apply laptop:[writing-mode:vertical-rl];
+}
+
+/* 접힌 판의 설명은 자리를 차지하지 않는다(max-h 0) — 세로 이름이 밀려 잘리지 않게 */
+.field-accordion__item:first-child .field-accordion__desc {
+  @apply laptop:max-h-[24rem] laptop:opacity-100;
+}
+
+.field-accordion__list:hover .field-accordion__item .field-accordion__name,
+.field-accordion__list:focus-within .field-accordion__item .field-accordion__name {
+  @apply laptop:[writing-mode:vertical-rl];
+}
+
+.field-accordion__list:hover .field-accordion__item .field-accordion__desc,
+.field-accordion__list:focus-within .field-accordion__item .field-accordion__desc {
+  @apply laptop:max-h-0 laptop:opacity-0;
+}
+
+.field-accordion__list .field-accordion__item:hover .field-accordion__name,
+.field-accordion__list .field-accordion__item:focus-within .field-accordion__name {
+  @apply laptop:[writing-mode:horizontal-tb];
+}
+
+.field-accordion__list .field-accordion__item:hover .field-accordion__desc,
+.field-accordion__list .field-accordion__item:focus-within .field-accordion__desc {
+  @apply laptop:max-h-[24rem] laptop:opacity-100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-accordion__item,
+  .field-accordion__img,
+  .field-accordion__desc {
+    @apply [transition:none];
+  }
+
+  .field-accordion__item:hover .field-accordion__img {
+    @apply [transform:none];
+  }
+}
